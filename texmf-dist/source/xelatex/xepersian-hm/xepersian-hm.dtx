@@ -1,0 +1,916 @@
+% \iffalse meta-comment
+%
+% This is file `xepersian-hm.dtx'
+%
+% Copyright (C) 2020 Hossein Movahhedian
+%
+% It may be distributed and/or modified under the LaTeX Project Public License,
+% version 1.3c or higher (your choice). The latest version of
+% this license is at: http://www.latex-project.org/lppl.txt
+%
+%<*internal>
+\iffalse
+%</internal>
+%<*README-txt>
+The XEPERSIAN-HM package
+------------------------
+
+In some cursive scripts such as Persian or Arabic, kashida is used to create
+justification. In this type of justification characters are elongated rather
+than expanding spaces between words.
+
+The kashida justification in 'xepersian' has many bugs. Also it has problems
+with some fonts such as 'HM Series' available at
+'https://dma8hm1334.bitbucket.io' and 'X Series 2' available at
+'http://wiki.irmug.com/index.php/X_Series_2'.
+
+This package fixes the known bugs in 'xepersian' which uses the xetex engine.
+
+The files 'xepersian-hm-*.tex' in the directory
+'texmf-dist/doc/xelatex/xepersian-hm/' can be used as simple examples of
+the usage of the package.
+
+Please use the Bitbucket issue tracker:
+'https://bitbucket.org/dma8hm1334/xepersian-hm/issues' to report a bug, request
+a feature or if you have a comment.
+
+I will do my best to fix all the bugs you report, but, unfortunately, time is a
+big hurdle to overcome; so, my apologies in advance for those which I cannot
+make time to fix.
+%</README-txt>
+%<*internal>
+\fi
+%</internal>
+%
+%<*driver|package>
+% The version of expl3 required is tested as early as possible, as
+% some really old versions do not define \ProvidesExplPackage.
+\RequirePackage{expl3}[2018/02/21]
+%<package>\@ifpackagelater{expl3}{2018/02/21}
+%<package>  {}
+%<package>  {%
+%<package>    \PackageError{xtemplate}{Support package l3kernel too old}
+%<package>      {%
+%<package>        Please install an up to date version of l3kernel\MessageBreak
+%<package>        using your TeX package manager or from CTAN.\MessageBreak
+%<package>        \MessageBreak
+%<package>        Loading xtemplate will abort!%
+%<package>      }%
+%<package>    \endinput
+%<package>  }
+%</driver|package>
+%<*driver>
+\documentclass[full]{l3doc}
+\usepackage{enumitem}
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \ifluatex
+% \immediate\directlua{os.execute([[ lualatex xepersian-hm-doc.ltx ]])}
+% \immediate\directlua{os.execute([[ lualatex xepersian-hm-doc.ltx ]])}
+% \immediate\directlua{os.execute([[ makeindex -c xepersian-hm-doc.idx ]])}
+% \immediate\directlua{os.execute([[ lualatex xepersian-hm-doc.ltx ]])}
+% \fi
+% 
+% \ifxetex
+% \immediate\write18{lualatex xepersian-hm-doc.ltx}
+% \immediate\write18{lualatex xepersian-hm-doc.ltx}
+% \immediate\write18{makeindex -c xepersian-hm-doc.idx}
+% \immediate\write18{lualatex xepersian-hm-doc.ltx}
+% \fi
+%
+% \begin{implementation}
+%
+% \def\XePersianHM{XePersianHM}
+%
+% \title{^^A
+%   The \textsf{xepersian-hm} package\\Fixing kashida in xepersian\\Source code documentation^^A
+% }
+%
+% \author{^^A
+%  Hossein Movahhedian\thanks
+%    {^^A
+%      E-mail:
+%        \href{mailto:dma8hm1334@gmail.com}
+%          {\textsf{dma8hm1334@gmail.com}}
+%    }^^A
+% }
+%
+% \date{Released \quad 2020-09-04 \quad v1.1a}
+%
+% \maketitle
+%
+% \vskip 40mm
+% \begin{function}{HM:}
+%   \begin{minipage}{0.65\linewidth}
+%     \textit{\noindent
+%       HM is an initialism for ``Hossein Movahhedian'' -- the author's name and family.
+%     }
+%   \end{minipage}
+% \end{function}
+%
+% \newpage
+%
+% \tableofcontents
+%
+% \newpage
+% 
+% \section{\XePersianHM{} Implementation}
+%
+% \subsection{File: \texttt{xepersian-hm.sty}}
+%
+%    \begin{macrocode}
+%<*xepersian-hm-sty>
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3}[2020-03-06]
+\@ifpackagelater{expl3}{2020-03-06}
+  {}
+  {%
+    \PackageError{xepersian-hm}{Support package l3kernel too old}
+      {%
+        Please install an up to date version of l3kernel\MessageBreak
+        using your TeX package manager or from CTAN.\MessageBreak
+        \MessageBreak
+        Loading xtemplate will abort!%
+      }%
+    \endinput
+  }
+\RequirePackage{l3keys2e}
+\RequirePackage{graphicx}[2019-11-30]
+\RequirePackage{zref-savepos}[2020-03-03]
+\RequirePackage{xcolor}[2016/05/11]
+\RequirePackage{xepersian}
+\ProvidesExplPackage {xepersian-hm} {2020-09-04} {1.1a} { Fixes~issues~in~xepersian~package }
+
+\def\XePersianHM{XePersianHM}
+
+\box_new:N \l_xephm_ksh_box
+
+\int_const:Nn \c_xephm_ksh_int {"0640} % kashida
+\int_const:Nn \c_xephm_lrm_int {"200E} % left-right-mark
+\int_const:Nn \c_xephm_zwj_int {"200D} % zero-width joiner
+
+\int_const:Nn \c_xephm_two_int {2}
+\int_const:Nn \c_xephm_four_int {4}
+
+\tl_const:Nn \c_xephm_skip_a_tl { 0 em plus 0.5 em }
+\tl_const:Nn \c_xephm_skip_b_tl { 0.14 em plus 5.5 em }
+
+\int_new:N \l_xephm_counter_int
+
+\int_new:N \l_xephm_kashida_slot_int
+
+\int_new:N \l_xephm_line_break_penalty_int
+
+\int_new:N \l_xephm_min_penalty_int
+\int_new:N \l_xephm_low_penalty_int
+\int_new:N \l_xephm_med_penalty_int
+\int_new:N \l_xephm_high_penalty_int
+\int_new:N \l_xephm_max_penalty_int
+
+\tl_new:N \l_xephm_line_break_tl
+
+\tl_new:N \l_xephm_main_font_full_tl
+\tl_new:N \l_xephm_main_font_name_tl
+
+\tl_new:N \l_xephm_font_full_tl
+\tl_new:N \l_xephm_font_name_tl
+
+\tl_new:N \l_xephm_skip_default_tl
+
+\tl_new:N \l_xephm_active_ligs_tl
+
+\tl_new:N \l_xephm_gap_filler_tl
+
+\tl_new:N \l_xephm_use_color_tl
+\tl_new:N \l_xephm_color_tl
+\tl_new:N \l_xephm_color_rgb_tl
+
+\dim_new:N \l_xephm_diff_pos_dim
+
+\bool_set_false:N \l_xephm_kashida_fix_bool
+
+\bool_set_false:N \l_xephm_ligature_bool
+\bool_set_false:N \l_xephm_linebreakpenalty_bool
+\bool_set_false:N \l_xephm_color_bool
+
+\int_set:Nn \l_xephm_min_penalty_int { 0 }
+\int_set:Nn \l_xephm_low_penalty_int { 8 }
+\int_set:Nn \l_xephm_med_penalty_int { 15 }
+\int_set:Nn \l_xephm_high_penalty_int { 25 }
+\int_set:Nn \l_xephm_max_penalty_int { 10000 }
+
+\tl_set:Nn \l_xephm_stretch_glyph_tl { glyph }
+\tl_set:Nn \l_xephm_stretch_leaders_glyph_tl { leaders+glyph }
+\tl_set:Nn \l_xephm_stretch_leaders_hrule_tl { leaders+hrule }
+\tl_set:Nn \l_xephm_stretch_off_tl { Off }
+\tl_set:Nn \l_xephm_stretch_on_tl { On }
+
+\tl_set:Nn \l_xephm_fnt_kayhan_tl       { kayhan }
+\tl_set:Nn \l_xephm_fnt_kayhannavaar_tl { kayhannavaar }
+\tl_set:Nn \l_xephm_fnt_kayhanpook_tl   { kayhanpook }
+\tl_set:Nn \l_xephm_fnt_kayhansayeh_tl  { kayhansayeh }
+\tl_set:Nn \l_xephm_fnt_khoramshahr_tl  { khoramshahr }
+\tl_set:Nn \l_xephm_fnt_khorramshahr_tl { khorramshahr }
+\tl_set:Nn \l_xephm_fnt_niloofar_tl     { niloofar }
+\tl_set:Nn \l_xephm_fnt_paatch_tl       { paatch }
+\tl_set:Nn \l_xephm_fnt_riyaz_tl        { riyaz }
+\tl_set:Nn \l_xephm_fnt_roya_tl         { roya }
+\tl_set:Nn \l_xephm_fnt_shafigh_tl      { shafigh }
+\tl_set:Nn \l_xephm_fnt_shafighKurd_tl  { shafighKurd }
+\tl_set:Nn \l_xephm_fnt_shafighUzbek_tl { shafighUzbek }
+\tl_set:Nn \l_xephm_fnt_shiraz_tl       { shiraz }
+\tl_set:Nn \l_xephm_fnt_sols_tl         { sols }
+\tl_set:Nn \l_xephm_fnt_tabriz_tl       { tabriz }
+\tl_set:Nn \l_xephm_fnt_titr_tl         { titr }
+\tl_set:Nn \l_xephm_fnt_titre_tl        { titre }
+\tl_set:Nn \l_xephm_fnt_traffic_tl      { traffic }
+\tl_set:Nn \l_xephm_fnt_vahid_tl        { vahid }
+\tl_set:Nn \l_xephm_fnt_vosta_tl        { vosta }
+\tl_set:Nn \l_xephm_fnt_yaghut_tl       { yaghut }
+\tl_set:Nn \l_xephm_fnt_yagut_tl        { yagut }
+\tl_set:Nn \l_xephm_fnt_yas_tl          { yas }
+\tl_set:Nn \l_xephm_fnt_yekan_tl        { yekan }
+\tl_set:Nn \l_xephm_fnt_yermook_tl      { yermook }
+\tl_set:Nn \l_xephm_fnt_zar_tl          { zar }
+\tl_set:Nn \l_xephm_fnt_ziba_tl         { ziba }
+\tl_set:Nn \l_xephm_fnt_default_tl      { default }
+\tl_set:Nn \l_xephm_fnt_noskip_tl       { noskip }
+
+\tl_set:Nn \l_xephm_lig_aalt_tl    { aalt } % Access All Alternatives
+\tl_set:Nn \l_xephm_lig_ccmp_tl    { ccmp } % Glyph Composition/Decomposition
+\tl_set:Nn \l_xephm_lig_dlig_tl    { dlig } % Discretionary Ligatures
+\tl_set:Nn \l_xephm_lig_fina_tl    { fina } % Final (Terminal) Forms
+\tl_set:Nn \l_xephm_lig_init_tl    { init } % Initial Forms
+\tl_set:Nn \l_xephm_lig_locl_tl    { locl } % Localized Forms
+\tl_set:Nn \l_xephm_lig_medi_tl    { medi } % Medial Forms
+\tl_set:Nn \l_xephm_lig_rlig_tl    { rlig } % Required Ligatures
+\tl_set:Nn \l_xephm_lig_default_tl { default }
+
+\tl_set:Nn \l_xephm_col_default_tl { magenta }
+
+\clist_set:Nn \l_xephm_lig_aalt_clist    { } % Access All Alternatives
+\clist_set:Nn \l_xephm_lig_ccmp_clist    { } % Glyph Composition/Decomposition
+\clist_set:Nn \l_xephm_lig_dlig_clist    { FDF2 = الله , FDF3 = اکبر , FDFB = جلجلاله } % Discretionary Ligatures
+\clist_set:Nn \l_xephm_lig_fina_clist    { } % Final (Terminal) Forms
+\clist_set:Nn \l_xephm_lig_init_clist    { } % Initial Forms
+\clist_set:Nn \l_xephm_lig_locl_clist    { } % Localized Forms
+\clist_set:Nn \l_xephm_lig_medi_clist    { } % Medial Forms
+\clist_set:Nn \l_xephm_lig_rlig_clist    { } % Required Ligatures
+\clist_set:Nn \l_xephm_lig_default_clist { }
+
+\clist_set:Nn \l_xephm_lig_names_clist
+  {
+    \l_xephm_lig_aalt_tl , { \l_xephm_lig_aalt_clist } ,
+    \l_xephm_lig_ccmp_tl , { \l_xephm_lig_ccmp_clist } ,
+    \l_xephm_lig_dlig_tl , { \l_xephm_lig_dlig_clist } ,
+    \l_xephm_lig_fina_tl , { \l_xephm_lig_fina_clist } ,
+    \l_xephm_lig_init_tl , { \l_xephm_lig_init_clist } ,
+    \l_xephm_lig_locl_tl , { \l_xephm_lig_locl_clist } ,
+    \l_xephm_lig_medi_tl , { \l_xephm_lig_medi_clist } ,
+    \l_xephm_lig_rlig_tl , { \l_xephm_lig_rlig_clist } ,
+  }
+
+\msg_new:nnn { xepersian-hm } { error-kashida-character-is-not-available-in-the-main-font }
+  {
+    Sorry,~ kashida~ character~ is~ not~ available~ in~ the~ main~ font~#1!
+  }
+
+\msg_new:nnn { xepersian-hm } { error-value-not-available-for-kashida-option }
+  {
+    Sorry,~ value~ `#1'~ is~ not~ available~ for~ `Kashida'~ option~ yet~!
+  }
+
+\msg_new:nnn { xepersian-hm } { error-specify-value-for-kashida-option }
+  {
+    Sorry,~ you~ must~ specify~ a~ value~ for~ `Kashida'~ option~ yet~!
+  }
+
+\msg_new:nnn { xepersian-hm } { warning-experimental-feature }
+  {
+    Please~ note~ that~ the~ feature~ `#1'~ is~ still~ experimental~
+    and~ is~ not~ regarded~ as~ stable.
+  }
+
+\msg_new:nnn { xepersian-hm } { hm-series-font-not-found }
+  {
+    Either~ the~ font~`#1'~ is~ not~ installed~ on~ your~ system~ or~ does~ not~
+    belong~ to~ HM~Series~fonts.~
+    Please~ note~ that~ the~ option~ `Kashida=leaders+glyph'~ is~ currently~ only~
+    supported~ by~ HM~Series~fonts.~
+    If~ you~ know~ of~ any~ other~ font~ that~ supports~ this~ option,~ please~
+    let~ me~ know~ to~ add~ it~ to~ the~ list~ of~ corresponding~ fonts.~
+  }
+
+\keys_define:nn { xepersian-hm }
+  {
+    Kashida .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+            \l_xephm_stretch_glyph_tl
+              {
+                \msg_warning:nnn { xepersian-hm } { warning-experimental-feature } { Kashida=glyph }
+                \tl_set:Nx \l_xephm_gap_filler_tl { \l_xephm_stretch_glyph_tl }
+                \AtBeginDocument
+                  {
+                    \tl_set:Nx \l_xephm_main_font_full_tl { \tex_fontname:D \tex_the:D \tex_font:D }
+                    \tl_set:Nx \l_xephm_main_font_name_tl { \l_xephm_main_font_full_tl }
+                    \regex_replace_once:nnN { ^"([^/]+)/.* } { \1 } \l_xephm_main_font_name_tl
+                  }
+                \bool_set_true:N \l_xephm_kashida_fix_bool
+              }
+            \l_xephm_stretch_leaders_glyph_tl
+              {
+                \tl_set:Nx \l_xephm_gap_filler_tl { \l_xephm_stretch_leaders_glyph_tl }
+                \bool_set_true:N \l_xephm_kashida_fix_bool
+              }
+            \l_xephm_stretch_leaders_hrule_tl
+              {
+                \tl_set:Nx \l_xephm_gap_filler_tl { \l_xephm_stretch_leaders_hrule_tl }
+                \bool_set_true:N \l_xephm_kashida_fix_bool
+              }
+            \l_xephm_stretch_off_tl
+              {
+                \tl_set:Nx \l_xephm_gap_filler_tl { \l_xephm_stretch_off_tl }
+                \bool_set_false:N \l_xephm_kashida_fix_bool
+              }
+            \l_xephm_stretch_on_tl
+              {
+                \tl_set:Nx \l_xephm_gap_filler_tl { \l_xephm_stretch_leaders_glyph_tl }
+                \bool_set_true:N \l_xephm_kashida_fix_bool
+              }
+          } { } { \tl_set:Nx \l_xephm_gap_filler_tl { #1 } }
+        \tl_if_empty:NT \l_xephm_gap_filler_tl { \msg_error:nn { xepersian-hm } { error-specify-value-for-kashida-option } }
+      } ,
+
+    linebreakpenalty .code:n =
+      {
+        \int_set:Nn \l_tmpa_int { #1 }
+        \int_case:nnTF \l_tmpa_int
+          {
+            \l_xephm_min_penalty_int  { \int_set:Nn \l_xephm_line_break_penalty_int { \l_xephm_min_penalty_int } }
+            \l_xephm_low_penalty_int  { \int_set:Nn \l_xephm_line_break_penalty_int { \l_xephm_low_penalty_int } }
+            \l_xephm_med_penalty_int  { \int_set:Nn \l_xephm_line_break_penalty_int { \l_xephm_med_penalty_int } }
+            \l_xephm_high_penalty_int { \int_set:Nn \l_xephm_line_break_penalty_int { \l_xephm_high_penalty_int } }
+            \l_xephm_max_penalty_int  { \int_set:Nn \l_xephm_line_break_penalty_int { \l_xephm_max_penalty_int } }
+          } { } { \int_set:Nn \l_xephm_line_break_penalty_int { #1 } }
+        \bool_set_true:N \l_xephm_linebreakpenalty_bool
+      } ,
+
+    kashidastretch .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+             \l_xephm_fnt_kayhan_tl       { \tl_set:Nn \l_xephm_skip_default_tl { 0.14  em plus 0.5 em } }
+             \l_xephm_fnt_kayhannavaar_tl { \tl_set:Nn \l_xephm_skip_default_tl { 0.129 em plus 0.5 em } }
+             \l_xephm_fnt_kayhanpook_tl   { \tl_set:Nn \l_xephm_skip_default_tl { 0.133 em plus 0.5 em } }
+             \l_xephm_fnt_kayhansayeh_tl  { \tl_set:Nn \l_xephm_skip_default_tl { 0.135 em plus 0.5 em } }
+             \l_xephm_fnt_khoramshahr_tl  { \tl_set:Nn \l_xephm_skip_default_tl { 0.128 em plus 0.5 em } }
+             \l_xephm_fnt_khorramshahr_tl { \tl_set:Nn \l_xephm_skip_default_tl { 0.13  em plus 0.5 em } }
+             \l_xephm_fnt_niloofar_tl     { \tl_set:Nn \l_xephm_skip_default_tl { 0.132 em plus 0.5 em } }
+             \l_xephm_fnt_paatch_tl       { \tl_set:Nn \l_xephm_skip_default_tl { 0.127 em plus 0.5 em } }
+             \l_xephm_fnt_riyaz_tl        { \tl_set:Nn \l_xephm_skip_default_tl { 0.125 em plus 0.5 em } }
+             \l_xephm_fnt_roya_tl         { \tl_set:Nn \l_xephm_skip_default_tl { 0.142 em plus 0.5 em } }
+             \l_xephm_fnt_shafigh_tl      { \tl_set:Nn \l_xephm_skip_default_tl { 0.143 em plus 0.5 em } }
+             \l_xephm_fnt_shafighKurd_tl  { \tl_set:Nn \l_xephm_skip_default_tl { 0.126 em plus 0.5 em } }
+             \l_xephm_fnt_shafighUzbek_tl { \tl_set:Nn \l_xephm_skip_default_tl { 0.123 em plus 0.5 em } }
+             \l_xephm_fnt_shiraz_tl       { \tl_set:Nn \l_xephm_skip_default_tl { 0.122 em plus 0.5 em } }
+             \l_xephm_fnt_sols_tl         { \tl_set:Nn \l_xephm_skip_default_tl { 0.124 em plus 0.5 em } }
+             \l_xephm_fnt_tabriz_tl       { \tl_set:Nn \l_xephm_skip_default_tl { 0.119 em plus 0.5 em } }
+             \l_xephm_fnt_titr_tl         { \tl_set:Nn \l_xephm_skip_default_tl { 0.12  em plus 0.5 em } }
+             \l_xephm_fnt_titre_tl        { \tl_set:Nn \l_xephm_skip_default_tl { 0.121 em plus 0.5 em } }
+             \l_xephm_fnt_traffic_tl      { \tl_set:Nn \l_xephm_skip_default_tl { 0.124 em plus 0.5 em } }
+             \l_xephm_fnt_vahid_tl        { \tl_set:Nn \l_xephm_skip_default_tl { 0.134 em plus 0.5 em } }
+             \l_xephm_fnt_vosta_tl        { \tl_set:Nn \l_xephm_skip_default_tl { 0.136 em plus 0.5 em } }
+             \l_xephm_fnt_yaghut_tl       { \tl_set:Nn \l_xephm_skip_default_tl { 0.138 em plus 0.5 em } }
+             \l_xephm_fnt_yagut_tl        { \tl_set:Nn \l_xephm_skip_default_tl { 0.137 em plus 0.5 em } }
+             \l_xephm_fnt_yas_tl          { \tl_set:Nn \l_xephm_skip_default_tl { 0.126 em plus 0.5 em } }
+             \l_xephm_fnt_yekan_tl        { \tl_set:Nn \l_xephm_skip_default_tl { 0.141 em plus 0.5 em } }
+             \l_xephm_fnt_yermook_tl      { \tl_set:Nn \l_xephm_skip_default_tl { 0.139 em plus 0.5 em } }
+             \l_xephm_fnt_zar_tl          { \tl_set:Nn \l_xephm_skip_default_tl { 0.116 em plus 0.5 em } }
+             \l_xephm_fnt_ziba_tl         { \tl_set:Nn \l_xephm_skip_default_tl { 0.119 em plus 0.5 em } }
+             \l_xephm_fnt_default_tl      { \tl_set:Nn \l_xephm_skip_default_tl { 0.14  em plus 0.5 em } }
+             \l_xephm_fnt_noskip_tl       { \tl_set:Nn \l_xephm_skip_default_tl { 0     em plus 0.5 em } }
+          } { } { \tl_set:Nn \l_xephm_skip_default_tl { #1 } }
+      } ,
+    kashidastretch .default:n = \tl_set:Nn \l_xephm_skip_default_tl { 0 em plus 0.5 em } ,
+
+    ligatures .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+            \l_xephm_lig_aalt_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_aalt_tl } }
+            \l_xephm_lig_ccmp_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_ccmp_tl } }
+            \l_xephm_lig_dlig_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_dlig_tl } }
+            \l_xephm_lig_fina_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_fina_tl } }
+            \l_xephm_lig_init_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_init_tl } }
+            \l_xephm_lig_locl_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_locl_tl } }
+            \l_xephm_lig_medi_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_medi_tl } }
+            \l_xephm_lig_rlig_tl    { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_rlig_tl } }
+            \l_xephm_lig_default_tl { \tl_set:Nx \l_xephm_active_ligs_tl { \l_xephm_lig_default_tl } }
+          } { } { \tl_set:Nn \l_xephm_active_ligs_tl { #1 } }
+        \bool_set_true:N \l_xephm_ligature_bool
+      } ,
+    ligatures .default:n = \tl_set:Nn \l_xephm_active_ligs_tl { \l_xephm_lig_default_tl } ,
+
+    color .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_if_empty:NTF \l_tmpa_tl
+          {
+            \tl_set:Nx \l_xephm_color_tl { \l_xephm_col_default_tl }
+          }
+          {
+            \tl_set:Nx \l_xephm_color_tl { \l_tmpa_tl }
+          }
+        \bool_set_true:N  \l_xephm_color_bool
+      } ,
+
+  }
+
+\ProcessKeysOptions { xepersian-hm }
+
+\bool_if:NTF \l_xephm_kashida_fix_bool
+  {
+    \tex_input:D { xepersian-hm-kashida.tex }
+
+    \NewDocumentCommand \KashidaHMFixOn {} { \bool_set_true:N \l_xephm_kashida_fix_bool }
+    \NewDocumentCommand \KashidaHMFixOff {} { \bool_set_false:N \l_xephm_kashida_fix_bool }
+
+    \tex_let:D \KashidaOn \KashidaHMFixOn
+    \tex_let:D \KashidaOff \KashidaHMFixOff
+
+    \tl_if_empty:NT \l_xephm_skip_default_tl { \tl_set:Nn \l_xephm_skip_default_tl  { 0.14 em plus 0.5 em } }
+  }
+  {
+    \tl_set:NV \l_xephm_skip_default_tl  \c_xephm_skip_a_tl
+  }
+
+\makeatletter
+\newif\if@Kashida@on
+%% Becuase Vafa Khalighi has copied the above code (injecting the character uni+200E) in xepersian-23.0
+%% (https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/xelatex/xepersian/kashida-xepersian.def?revision=55165&view=co),
+%% the following line of code is not needed in xepersian anymore.
+%% % \newif\if@Kashida@XB@fix
+\makeatother
+
+ \endinput
+%</xepersian-hm-sty>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{xepersian-hm-kashida.tex}}
+%
+%    \begin{macrocode}
+%<*xepersian-hm-kashida-tex>
+\ProvidesExplFile {xepersian-hm-kashida.tex} {2020-09-04} {1.1a} { Fixes~implementation~of~Kashida~in~xepersian~package }
+
+\tex_input:D { xepersian-hm-common-kashida.tex }
+
+\newXeTeXintercharclass \c_xephm_d_charclass % dual-joiner class
+\newXeTeXintercharclass \c_xephm_l_charclass % lam
+\newXeTeXintercharclass \c_xephm_r_charclass % right-joiner
+\newXeTeXintercharclass \c_xephm_a_charclass % alef
+\newXeTeXintercharclass \c_xephm_y_charclass % yeh
+
+\tl_set:Nn \l_xephm_use_color_tl
+  {
+    \bool_if:NTF \l_xephm_color_bool
+      {
+        \colorlet{default}{\l_xephm_color_tl}
+      }
+      {
+        \colorlet{default}{.}
+      }
+      \color{default}
+  }
+
+%% Partly adapted from the code provided by David Carlisle in:
+%% https://tex.stackexchange.com/questions/356709/how-to-know-the-width-and-fill-the-glue-space-between-two-characters-when-using/356721#356721
+\cs_new:Npn \xephm_kashida_glyph #1
+{
+  \bool_if:NT \l_xephm_kashida_fix_bool
+  {
+    \c_xephm_lrm_int\tex_penalty:D 10000
+    \mode_leave_vertical:
+    \tex_global:D \tex_advance:D \l_xephm_counter_int \c_one_int
+
+    \tl_set:Nx \l_xephm_pos_tl { p\tex_romannumeral:D \l_xephm_counter_int }
+    \tl_set:Nx \l_xephm_zref_tl { z\tex_romannumeral:D \l_xephm_counter_int }
+
+    \zsaveposx{x_i_\l_xephm_zref_tl}
+    \tl_set:Nx \l_tmpa_tl
+      {
+        \iow_now:cx { @auxout }
+        {
+          \token_to_str:N \gdef \exp_after:wN \token_to_str:N \cs:w xi\l_xephm_pos_tl \cs_end: { \zposx{ x_i_\l_xephm_zref_tl } }
+        }
+      }
+    \l_tmpa_tl
+    \skip_horizontal:n { #1 }
+    \zsaveposx{x_f_\l_xephm_zref_tl}
+    \tl_set:Nx \l_tmpa_tl
+      {
+        \iow_now:cx { @auxout }
+        {
+          \token_to_str:N \gdef \exp_after:wN \token_to_str:N \cs:w xf\l_xephm_pos_tl \cs_end: { \zposx{ x_f_\l_xephm_zref_tl } }
+        }
+      }
+    \l_tmpa_tl
+    \exp_after:wN
+    \if_meaning:w
+      \cs:w xi\l_xephm_pos_tl \cs_end: \tex_relax:D
+    \else:
+      \dim_set:Nn \l_xephm_diff_pos_dim
+        {
+          \dim_eval:n { \cs:w xi\l_xephm_pos_tl \cs_end: sp - \cs:w xf\l_xephm_pos_tl \cs_end: sp }
+        }
+      \dim_compare:nTF { \l_xephm_diff_pos_dim == 0sp }
+        { }
+        { \llap { \resizebox { \l_xephm_diff_pos_dim \tex_relax:D } { \height } { \l_xephm_use_color_tl \c_xephm_ksh_int } } }
+    \fi:
+  }
+}
+
+\cs_new:Npn \xephm_kashida_leaders #1
+{
+  \bool_if:NT \l_xephm_kashida_fix_bool
+    {
+      \tl_if_eq:NNTF \l_xephm_gap_filler_tl  \l_xephm_stretch_leaders_glyph_tl
+        {
+          \tl_set:Nx \l_xephm_font_full_tl { \tex_fontname:D \tex_the:D \tex_font:D }
+          \tl_set:Nx \l_xephm_font_name_tl { \l_xephm_font_full_tl }
+          \tl_set:Nx \l_xephm_font_init_tl { \l_xephm_font_name_tl }
+          \regex_replace_once:nnN { ^"\[?(HM)[\_\ ](X|F).* } { \1\2 } \l_xephm_font_init_tl\relax
+          \tl_set:Nn \l_tmpa_tl { HMF }
+          \tl_set:Nn \l_tmpb_tl { HMX }
+          \bool_if:nTF { \str_if_eq_p:NN { \l_xephm_font_init_tl } { \l_tmpa_tl } || \str_if_eq_p:NN { \l_xephm_font_init_tl } { \l_tmpb_tl } }
+            {
+              \hbox_set:Nn \l_xephm_ksh_box { \l_xephm_use_color_tl \XeTeXglyph\XeTeXglyphindex"kashida" }
+              \c_xephm_zwj_int \tex_penalty:D 10000
+              \tex_leaders:D \copy\l_xephm_ksh_box \skip_horizontal:n { #1 }
+              \c_xephm_zwj_int
+            }
+            {
+              \msg_error:nnx { xepersian-hm } { hm-series-font-not-found } { \l_xephm_font_name_tl }
+            }
+        }
+        {
+          %% Partly adapted from the code provided by Jonathan Kew in:
+          %% https://tug.org/pipermail/xetex/2009-February/012307.html.
+          %% Somebody notified me that the code in 'kashida-xepersian.def' from xepersian
+          %% package is an exact copy of Jonathan Kew's code. Being unaware of this, in
+          %% the earlier versions of this package I made a mistake and acknowledged
+          %% Vafa Khalighi instead of Jonathan Kew. A sincere thank you to Jonathan Kew
+          %% for his excellent code.
+          \c_xephm_lrm_int\c_xephm_zwj_int
+          {\l_xephm_use_color_tl\tex_penalty:D 10000
+          \tex_leaders:D \tex_hrule:D height \XeTeXglyphbounds \c_xephm_two_int
+          \int_use:N \XeTeXcharglyph \c_xephm_ksh_int depth \XeTeXglyphbounds \c_xephm_four_int
+          \int_use:N \XeTeXcharglyph \c_xephm_ksh_int \skip_horizontal:n { #1 }
+          }
+          \c_xephm_zwj_int
+        }
+    }
+}
+
+\XeTeXinterchartokenstate = 1
+
+\clist_set:Nn \l_xephm_a_clist { 0622,0623,0625,0627 } % ‏ا، إ، أ، آ‏
+\clist_map_inline:Nn \l_xephm_a_clist
+  {
+    \XeTeXcharclass "#1 \c_xephm_a_charclass
+  }
+
+\clist_set:Nn \l_xephm_d_clist { 0626,0628,062A,062B,062C,062D,062E,0633,0634,0635,0636,0637,0638,0639,063A,0640,0641,0642,0643,0645,0646,0647,067E,0686,06A9,06AF } % ‏ئ,ب,ت,ث,ج,ح,خ,س,ش,ص,ض,ط,ظ,ع,غ,ـ,ف,ق,ك,م,ن,ه,پ,چ,ک,گ‏
+\clist_map_inline:Nn \l_xephm_d_clist
+  {
+    \XeTeXcharclass "#1 \c_xephm_d_charclass
+  }
+
+\clist_set:Nn \l_xephm_l_clist { 0644 } % ‏ل‏
+\clist_map_inline:Nn \l_xephm_l_clist
+  {
+    \XeTeXcharclass "#1 \c_xephm_l_charclass
+  }
+
+\clist_set:Nn \l_xephm_r_clist { 0624,0629,062F,0630,0631,0632,0648,0698 } % ‏ؤ,ة,د,ذ,ر,ز,و,ژ‏
+\clist_map_inline:Nn \l_xephm_r_clist
+  {
+    \XeTeXcharclass "#1 \c_xephm_r_charclass
+  }
+
+\clist_set:Nn \l_xephm_y_clist { 0649,064A,06CC } % ‏ی,ي,ى‏
+\clist_map_inline:Nn \l_xephm_y_clist
+  {
+    \XeTeXcharclass "#1 \c_xephm_y_charclass
+  }
+
+\tl_if_eq:NNTF  \l_xephm_gap_filler_tl  \l_xephm_stretch_glyph_tl {
+  \XeTeXinterchartoks \c_xephm_y_charclass \c_xephm_y_charclass = {
+    \bool_if:NTF \l_xephm_kashida_fix_bool
+    { \c_xephm_zwj_int \xephm_kashida_glyph \l_xephm_skip_default_tl \c_xephm_zwj_int }
+    { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  }
+  \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_y_charclass = {
+    \bool_if:NTF \l_xephm_kashida_fix_bool
+    { \c_xephm_zwj_int \xephm_kashida_glyph \l_xephm_skip_default_tl \c_xephm_zwj_int }
+    { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  }
+  \XeTeXinterchartoks \c_xephm_y_charclass \c_xephm_d_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_d_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_d_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_l_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_l_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_r_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_a_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_r_charclass = { \c_xephm_zwj_int \xephm_kashida_glyph \c_xephm_skip_a_tl \c_xephm_zwj_int }
+  \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_a_charclass = { }
+}
+{
+  \bool_if:nTF {
+    \tl_if_eq_p:NN  \l_xephm_gap_filler_tl  \l_xephm_stretch_leaders_glyph_tl ||
+    \tl_if_eq_p:NN  \l_xephm_gap_filler_tl  \l_xephm_stretch_leaders_hrule_tl
+  }
+  {
+    \XeTeXinterchartoks \c_xephm_y_charclass \c_xephm_y_charclass = {
+      \bool_if:NTF \l_xephm_kashida_fix_bool
+      { \xephm_kashida_leaders \l_xephm_skip_default_tl }
+      { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    }
+    \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_y_charclass = {
+      \bool_if:NTF \l_xephm_kashida_fix_bool
+      { \xephm_kashida_leaders \l_xephm_skip_default_tl }
+      { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    }
+    \XeTeXinterchartoks \c_xephm_y_charclass \c_xephm_d_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_d_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_d_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_l_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_l_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_r_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_d_charclass \c_xephm_a_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_r_charclass = { \xephm_kashida_leaders \c_xephm_skip_a_tl }
+    \XeTeXinterchartoks \c_xephm_l_charclass \c_xephm_a_charclass = { }
+  }
+  {
+    \msg_error:nnx { xepersian-hm } { error-value-not-available-for-kashida-option } { \l_xephm_gap_filler_tl }
+  }
+}
+
+ \endinput
+%</xepersian-hm-kashida-tex>
+%    \end{macrocode} 
+%
+% \subsection{File: \texttt{xepersian-hm-common-kashida.tex}}
+%
+%    \begin{macrocode}
+%<*xepersian-hm-common-kashida-tex>
+\ProvidesExplFile {xepersian-hm-common-kashida.tex} {2020-09-04} {1.1a} { Fixes~implementation~of~Kashida~in~xepersian~package }
+
+\bool_if:NT \l_xephm_ligature_bool
+{
+  \clist_new:N \l_xephm_ligatures_clist
+  \int_new:N \l_xephm_lig_names_len_int
+  \int_set:Nn \l_xephm_lig_names_len_int { \clist_count:N \l_xephm_lig_names_clist }
+  \int_step_inline:nnnn { 1 } { 2 } { \l_xephm_lig_names_len_int }
+    {
+      \int_set:Nn \l_tmpa_int { #1 }
+      \int_set:Nn \l_tmpb_int { \int_eval:n { \l_tmpa_int + 1 } }
+      \tl_set:Nf \l_tmpa_tl { \clist_item:Nn \l_xephm_lig_names_clist { \l_tmpa_int } }
+      \clist_set:Nx \l_tmpa_clist { { \clist_item:Nn \l_xephm_lig_names_clist { \l_tmpb_int } } }
+      \bool_if:nT { \tl_if_eq_p:NN  \l_xephm_active_ligs_tl  \l_tmpa_tl || \tl_if_eq_p:NN  \l_xephm_active_ligs_tl \l_xephm_lig_default_tl }
+        {
+          \clist_put_left:Nx \l_xephm_ligatures_clist { \l_tmpa_clist }
+        }
+    }
+  \clist_map_inline:Nn \l_xephm_ligatures_clist
+    {
+      \seq_set_split:Nnn \l_tmpa_seq { = } { #1 }
+      \seq_pop_left:NN \l_tmpa_seq \l_tmpa_tl { } { }
+      \seq_pop_left:NN \l_tmpa_seq \l_tmpb_tl { } { }
+      \tl_const:cx { \tl_use:N \l_tmpb_tl } { \char"\l_tmpa_tl \ }
+    }
+}
+
+\bool_if:NT \l_xephm_linebreakpenalty_bool
+{
+  %% Partly adapted from LaTeX2e source
+  \cs_new:Nn \xephm_line_break: {
+    \if_mode_vertical:
+      \GenericError{
+        \space\space\space\space\space\space\space\space\space\space\space\space\space\space\space
+        }{
+           LaTeX Error: There’s no line here to end
+        }{
+           See the LaTeX manual or LaTeX Companion for explanation.
+        }{
+           Your command was ignored.\MessageBreak
+           Type \space I <command> <return> \space to replace it~
+           with another command,\MessageBreak
+           or \space <return> \space to continue without it.}
+    \else:
+      \l_tmpa_skip \tex_lastskip:D
+      \tex_unskip:D
+      \tex_penalty:D -\l_xephm_line_break_penalty_int
+      \dim_compare:nT { \l_tmpa_skip > \c_zero_skip }
+        { \skip_horizontal:N \l_tmpa_skip  \tex_ignorespaces:D }
+    \fi:
+  }
+
+  \NewDocumentCommand { \discouragebadlinebreaks } { O{\l_xephm_line_break_penalty_int} O{\c_xephm_skip_b_tl} m }
+    {
+      \IfNoValueF {#1}
+        { \int_set:Nn \l_xephm_line_break_penalty_int {#1} }
+      \IfNoValueF {#2}
+        { \tl_set:Nn \l_xephm_skip_default_tl {#2} }
+      \xephm_put_line_breaks:n { #3 }
+   }
+
+  \cs_new_protected:Nn \xephm_put_line_breaks:n
+    {
+      \tl_set:Nn \l_xephm_line_break_tl { #1 }
+      \regex_replace_all:nnN { ([ابپتثجحخچدذرزژسشعغصضفقطظکگلمنوهیـ])+ } { \ \0 \  \c{xephm_line_break:}\  } \l_xephm_line_break_tl
+      \tl_use:N \l_xephm_line_break_tl
+    }
+}
+
+ \endinput
+%</xepersian-hm-common-kashida-tex>
+%    \end{macrocode}
+%
+% \section{Acknowledgments}
+% In the first place I have to thank Donald Knuth for inventing TeX.
+% During the development of this package I refered to  Stack Exchange network of
+% question-and-answer (Q\&A) websites to solve problems for which I am grateful.
+% I also would like to thank the developer teams of TeX's friends especially LaTeX, LuaTeX and XeTeX teams.
+%
+% \section{Change History}
+%
+% \def\SubSecItem#1{\subsubsection*{\hskip 2em\large #1}\addcontentsline{toc}{subsection}{[#1]}}
+% \newenvironment{Itemize}{\begin{itemize}[leftmargin=4em]}{\end{itemize}}
+% 
+% \SubSecItem{2020-03-17~v0.1}
+% \begin{Itemize}
+%   \item First standalone version.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-03-19~v0.2}
+% \begin{Itemize}
+%   \item Some minor changes.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-03-23~v0.3}
+% \begin{Itemize}
+%   \item Added documentation
+% \end{Itemize}
+% 
+% \SubSecItem{2020-03-26~v0.4}
+% \begin{Itemize}
+%   \item Added DTX and INS files
+% \end{Itemize}
+% 
+% \SubSecItem{2020-04-20~v0.5a}
+% \begin{Itemize}
+%   \item Added Kashida=glyph to the package options
+%   \item Added \bslash discouragebadlinebreaks to prevent bad line breaks in a text (less than a paragragraph).
+% \end{Itemize}
+% 
+% \SubSecItem{2020-04-26~v0.5b}
+% \begin{Itemize}
+%   \item If the kashida glyph is used to stretch the text, then the main font is checked for availability of the kashida character.
+%   \item Two optional arguments added in \bslash discouragebadlinebreaks macro.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-05-01~v0.5c}
+% \begin{Itemize}
+%   \item The documentation is divided into two parts: User documentation and Source code documentation.
+%   \item The example file is divided into two parts: An example for the option Kashida=glyph and the other one for Kashida=hrule.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-05-07~v0.5d}
+% \begin{Itemize}
+%   \item Added a new section to the user documentation titled: Brief outline of the issues.
+%   \item An error is trigerred if the value of Kashida option is not specified.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-05-12~v0.5e}
+% \begin{Itemize}
+%   \item Disturbance of ligatures caused by activation of kashida is fixed.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-05-20~v0.5f}
+% \begin{Itemize}
+%   \item Reduced the length of items created by zref package in \bslash jobname.aux file.
+%   \item If the option Kashida=glyph is used, a warning message is added to the log file
+%     which emphasizes that the option is experimental.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-05-31~v1.0a}
+% \begin{Itemize}
+%   \item The option 'Kashida=hrule' is changed to 'Kashida=leaders+hrule'.
+%   \item The option 'Kashida=leaders+glyph' is added. Since with this option kashida glyph
+%     leaders are used to stretch the text, nothing is saved in .aux files.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-06-04~v1.0b}
+% \begin{Itemize}
+%   \item Added two options Kashida=On and Kashida=Off.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-07-20~v1.0c}
+% \begin{Itemize}
+%   \item Fixed the problem with the option ligatures=default.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-08-05~v1.0d}
+% \begin{Itemize}
+%   \item In the new version of LaTeX3, the name of some of the XeTeX control sequences has changed.
+%     These changes are applied in this version of xepersion-hm.
+% \end{Itemize}
+% 
+% \SubSecItem{2020-09-04~v1.1a}
+% \begin{Itemize}
+%   \item Added the color option.
+%   \item Added a few sections to the User Documentation.
+%   \item Split the file containing kashida code.
+% \end{Itemize}
+%
+% \section*{To Do's}
+%
+% To do
+%
+% \renewcommand{\refname}{References: \\ {\normalsize\it(Actually, this is not a ``References'' nor a ``Literature'', but the most important
+% although not a complete list of ``Resources Used'' to develop this package.)}}
+%
+% \begin{thebibliography}{9}
+%
+%  \bibitem{DEK-TTB} Donald E. Knuth,
+%    \emph{The \hologo{TeX} book},
+%    Addison-Wesley, 1986.
+%
+%  \bibitem{VE-TBT} Victor Eijkhout,
+%    \emph{\hologo{TeX} BY TOPIC},
+%    Addison-Wesley, 2013.
+%
+%  \bibitem{PWA-KAH-KB-TFI} Paul W. Abrahams, Kathryn A. Hargreaves, and Karl Berry,
+%    \emph{\hologo{TeX} for the Impatient},
+%    Addison-Wesley, 2013.
+%
+%  \bibitem{LL-LADPS} Leslie Lamport,
+%     \emph{\hologo{LaTeX}, A document preparation System},
+%     Addison-Wesley, 1986.
+%
+%  \bibitem{FM-MG-JB-DC-CR-TLC} Frank Mittelbach and Michel Goossens with Johannes Braams, David Carlisle, and Chris Rowley, 
+%     \emph{The \hologo{LaTeX} Companion},
+%     Addison-Wesley, second edition, 2004.
+%
+%  \bibitem{TLT-TLS} Package \texttt{latex}: The LaTeX Team,
+%     \emph{The \hologo{LaTeX2e} Sources},
+%     \href{http://mirrors.ctan.org/macros/latex/base/source2e.pdf}{\texttt{CTAN:macros/latex/base/source2e.pdf}}, 2020-02-02
+%
+%  \bibitem{TL3T-TLS} Package \texttt{l3kernel}: The LaTeX3 Team,
+%      \emph{The \hologo{LaTeX}3 Sources},
+%     \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/source3.pdf}{\texttt{CTAN:macros/latex/contrib/l3kernel/source3.pdf}}, 2020-07-17
+%
+%  \bibitem{TL3T-TLI} Package \texttt{l3kernel}: The LaTeX3 Team,
+%      \emph{The \hologo{LaTeX}3 Interfaces},
+%     \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}{\texttt{CTAN:macros/latex/contrib/l3kernel/interface3.pdf}}, 2020-07-17
+%
+%  \bibitem{WR-KH-KB-XRG} Package \texttt{xetexref}: Will Robertson, Khaled Hosny, and Karl Berry,
+%     \hologo{XeTeX} reference guide,
+%     \href{http://mirrors.ctan.org/info/xetexref/xetex-reference.pdf}{\texttt{CTAN:info/xetexref/xetex-reference.pdf}}, 2019-12-09
+%
+%  \bibitem{JQ-AX} Package \texttt{xetex}: Jonathan Kew,
+%     About \hologo{XeTeX},
+%     \href{http://mirrors.ctan.org/systems/doc/xetex/XeTeX-notes.pdf}{\texttt{CTAN:systems/doc/xetex/XeTeX-notes.pdf}}, 2005-10-17
+%
+%  \bibitem{NG-TXC} Package \texttt{xetex}: Michel Goossens,
+%     The \hologo{XeTeX} Companion,
+%     \href{http://xml.web.cern.ch/XML/lgc2/xetexmain.pdf}{\texttt{http://xml.web.cern.ch/XML/lgc2/xetexmain.pdf}}, 2009-08-19
+%
+%  \bibitem{TEX-STACKEXCHANGE}  Website: Stack Exchange: Hot Questions,
+%     \hologo{TeX}-\hologo{LaTeX} Q\&A for users of TeX, LaTeX, ConTeXt, and related typesetting systems,
+%     \href{https://tex.stackexchange.com}{\texttt{tex.stackexchange.com}}
+%
+% \end{thebibliography}
+%
+%\end{implementation}
+%
+% \ifluatex
+% \immediate\directlua{os.execute([[ makeindex -s gind.ist -o \jobname.ind  \jobname.idx ]])}
+% \immediate\directlua{os.execute([[ makeindex -s gglo.ist -o \jobname.gls  \jobname.glo ]])}
+% \fi
+% \ifxetex
+% \immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
+% \immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
+% \fi
+% \PrintIndex
+% %\PrintChanges
+% \Finale

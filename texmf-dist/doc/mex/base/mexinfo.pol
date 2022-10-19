@@ -1,0 +1,863 @@
+----------------------------------------------------------------------------
+MEXINFO.POL: plik informacyjny opisujący pakiet MeX 1.05, 18 grudnia 1993 r.
+
+Niewielkie zmiany w dokumentacjach: 8 listopada 1997 r.
+
+Zmiany w sekcjach Zasady rozpowszechniania i Jak kontaktować się z autorami
+oraz przekodowanie pliku do UTF-8: 30 marca 2020 r.
+----------------------------------------------------------------------------
+
+Co to jest MeX?
+===============
+
+MeX jest pakietem plików do TeX-a i METAFONT-a.
+TeX jest systemem składu drukarskiego, a METAFONT jest systemem
+do generowania fontów; oba zostały stworzone przez prof. Donalda E. Knutha.
+
+Większość użytkowników TeX-a wykorzystuje go wraz ze standardowym
+oprogramowaniem: z pakietami makr o nazwach PLAIN oraz LaTeX. (Pakiety
+makr są też nazywane „formatami”.) MeX jest adaptacją formatów PLAIN
+i LaTeX (v.209) do składu w języku polskim z uwzględnieniem polskich
+zwyczajów drukarskich.
+
+Pakiet MeX składa się z:
+
+    – fontów (w postaci źródłowych plików METAFONT-owych)
+       zawierających polskie znaki diakrytyczne i dodatkowe używane
+       w języku polskim znaki cudzysłowów
+    – reguł dzielenia wyrazów w języku polskim
+    – plików makr TeX-owych (w wersji źródłowej), zwanych MeX i LaMeX,
+       umożliwiających skład tekstów w języku polskim.
+
+Autorzy
+=======
+
+Fonty:
+       Bogusław Jackowski (BJ) i Marek Ryćko (MR),
+       konsultacja: Roman Tomaszewski
+
+Formaty MeX i LaMeX (polska wersja pakietów makr PLAIN i LaTeX209):
+       MR & BJ.
+
+Polskie wzorce dzielenia wyrazów:
+       Hanna Kołodziejska (HK),
+       BJ & MR.
+       (Patrz „Historia powstania pakietu MeX”)
+
+Zasady rozpowszechniania
+========================
+
+MeX jest dobrem wspólnym (ang. „public domain”).
+
+Pakiet MeX nie podlega gwarancji żadnego rodzaju. Autorzy nie ponoszą
+odpowiedzialności za konsekwencje jego używania.
+
+Ponadto użytkownik musi stosować się do określonych przez
+D. E. Knutha reguł dotyczących wykorzystania TeX-a, METAFONT-a
+i związanego z nimi oprogramowania.
+
+Jak kontaktować się z autorami
+==============================
+
+Korespondencję do autorów można kierować poprzez
+Polską Grupę Użytkowników Systemu TeX – GUST.
+
+Bieżący adres GUST-u:
+
+Polska Grupa Użytkowników Systemu TeX – GUST
+Pl. Rapackiego 1
+80-952 Gdańsk
+POLAND
+http://www.gust.org.pl
+
+Wszelkie uwagi dotyczące pakietu MeX są mile widziane.
+
+Historia powstania pakietu MeX
+==============================
+
+Pakiet MeX powstał w firmie „MacroSoft” Sp. z o. o. w Warszawie.
+
+Powstał na bazie poprzedniej polskiej adaptacji TeX-a, noszącej nazwę
+LeX. Składały się na nią pliki makr oraz rodzina fontów P1. BJ & MR,
+autorzy LeX-a, pracowali nad tą wersją od listopada 1987 do grudnia 1989.
+MeX jest udoskonaloną wersją LeX-a, wykorzystującą nowe możliwości
+TeX-a 3.x.
+
+Zestaw wzorców, zawierający reguły dzielenia polskich wyrazów
+wykorzystany w formacie LeX został zaprojektowany i utworzony
+przez HK w 1987, a przystosowany do formatu LeX, przetestowany
+i uzupełniony – przez BJ & MR w latach 1987–1989.
+
+W firmie „MacroSoft” Sp. z o. o. zostały wykonane następujące prace:
+
+ – udoskonalenie reguł dzielenia wyrazów i dostosowanie ich do nowych
+    możliwości TeX-a 3.x – HK, lipiec–sierpień 1991
+
+ – przejście od formatu LeX, wersja 1.75, do formatu MeX, wersja 1.01,
+    oraz od fontów P1 do fontów PL, wersja 1.01 – BJ & MR,
+    październik 1991–luty 1992.
+
+Autorzy dziękują firmie „MacroSoft” za zapewnienie warunków
+umożliwiających wykonanie tych prac.
+
+Ważniejsze zmiany od czasu powstania pakietu MeX 1.01
+=====================================================
+
+Wersja 1.03,  18 grudnia 1992 r.:
+    – wyeliminowano przykry błąd z nieprawidłowym zachowaniem makra
+       \notin i makr pokrewnych (przepraszamy – BJ & MR);
+    – dodano makra \emulateplain i \emulateLaTeX służące do emulacji
+       formatów plain i LaTeX209 odpowiednio wewnątrz formatów MeX
+       i LaMeX;
+    – poprawiono dyskretyzację niektórych polskich znaków;
+    – zmieniono kolejność czytania plików w programach METAFONT-owych,
+       tak aby nie było konieczne tworzenie formatu CM.BAS;
+    – dokonano kilku innych, kosmetycznych zmian, głównie w komentarzach.
+
+Wersja 1.05,  18 grudnia 1993 r.:
+    – wyeliminowano błąd (przepraszamy – BJ & MR), wskutek którego
+       niektóre znaki miały przypisaną nieprawidłową kategorię,
+       mianowicie zbyt wiele znaków miało kategorię „litera”
+       (\catcode=11); powodowało to m. in., że w akcentowanym słowie
+       „r\^^Dole” sygnalizowany był błąd „nieznany symbol kontrolny
+       \^^Dole”, podczas gdy wszystko byłoby dobrze, gdyby znak ^^D
+       nie miał kategorii „litera”; obecnie (na początku pracy MeX-a
+       lub LaMeX-a) znaki o kodach 0–127 mają kategorie dokładnie takie
+       same, jak w odpowiednich formatach angielskich, natomiast wśród
+       znaków o kodach powyżej 127 obowiązuje następująca zasada:
+       znaki o kodach odpowiadających pozycjom polskich znaków
+       diakrytycznych w układzie PL mają kategorię „litera”,
+       pozostałe znaki mają kategorię „inny” (\catcode=12);
+    – pliki MFJ, jako związane z instalacją em-TeX-ową, zostały
+       umieszczone razem z plikami instalacyjnymi dla em-TeX-a
+       (plik GPLMODES.MFJ został dostosowany do nowych wersji sterowników
+       Eberharda Matesa);
+       pozostałe pliki METAFONT-owe nie uległy żadnym zmianom
+       i zachowały dotychczasowy numer wersji (1.03);
+    – zrezygnowano z pakowania plików do celów dystrybucyjnych;
+       w związku z tym nie ma potrzeby dołączania programu LHa
+       do zestawu dystrybucyjnego MeX-a.
+Wersja 1.05a, 30 marca 2020 r.:
+    – Wyczyszczono informacje licencyjne w pakiecie: nie powinno być
+      wątpliwości że pakiet jest udostępniany pod licencją Knutha.
+    – W wielu plikach kodowanie tekstów/komentarzy zamieniono na UTF-8
+
+Instalacja formatów MeX i LaMeX
+================================
+
+Do rozpoczęcia pracy z polską wersją formatów PLAIN oraz LaTeX (v.209)
+niezbędne jest utworzenie za pomocą wersji inicjalizacyjnej programu TeX
+(INITEX) plików MEX.FMT i LAMEX.FMT i umieszczenie ich w odpowiednim
+miejscu zależnym od użytego systemu operacyjnego i od implementacji TeX-a.
+W plikach FMT zapamiętane są w skondensowanej postaci makra oraz reguły
+przenoszenia wyrazów.
+
+Przed utworzeniem plików MEX.FMT i LAMEX.FMT użytkownik powinien
+przygotować w miejscu dostępnym dla TeX-a, np. w bieżącym katalogu,
+zestaw plików źródłowych:
+  MEX.TEX, LAMEX.TEX, MEX1.TEX, MEX2.TEX, MEXCONF.TEX, PLHYPH.TEX
+oraz źródłowe wersje oryginalnych formatów angielskojęzycznych
+przystosowanych do TeX-a 3.x, tj.:
+  PLAIN.TEX, LATEX.TEX, LPLAIN.TEX, LFONTS.TEX, HYPHEN.TEX.
+
+(Pliki PLAIN.TEX i LFONTS.TEX zawierają między innymi listę fontów
+wykorzystywanych przez angielskojęzyczne wersje formatów PLAIN i LaTeX
+(v.209). W typowych wersjach plików PLAIN.TEX i LFONTS.TEX większość
+fontów ma nazwy rozpoczynających się od „cm”. W czasie generacji
+plików MEX.FMT i LAMEX.FMT przedrostek „cm” zamieniany jest
+automatyczne na „pl” – nie mylić z „p1” – i do plików FMT są
+wbudowywane informacje o fontach PL. Plików z fontami CM może w tym
+czasie w ogóle nie być w pamięci.)
+
+Sposób generowania plików FMT zależy od systemu operacyjnego i od
+implementacji TeX-a.
+
+Większość najnowszych implementacji TeX-a, w tym emTeX (autorstwa
+Eberharda Mattesa), ma możliwość automatycznej zamiany kodów znaków
+czytanych z pliku na kody wewnętrzne TeX-a. Pozwala to na wykorzystanie
+pełni możliwości TeX-a przy jednoczesnym uniezależnieniu się od sposobu
+kodowania polskich liter w danej instalacji komputera.
+
+W pakiecie MeX znajdują się pliki wsadowe (ang. batch files) służące do
+generowania plików FMT pod kontrolą systemu operacyjnego MS-DOS przy
+użyciu emTeX-a (np. TEX386.EXE). Pliki te wykorzystują tabele konwersji
+zapisane w postaci źródłowej w plikach MAZ2PL.PCT, ISO2PL.PCT, LAT2PL.PCT
+i WIN2PL.PCT a w postaci przygotowanej do pracy z INITEX-em w plikach
+MAZ2PL.TCP, ISO2PL.TCP, LAT2PL.TCP i WIN2PL.TCP. (Pliki TCP powstają
+z plików PCT po wykonaniu komendy MK-TCP.BAT.)
+
+Jeśli użytkownik wykorzystuje kodowanie polskich liter w systemie Mazovia,
+powinien utworzyć pliki FMT za pomocą GM-MEX.BAT (generowanie MEX.FMT)
+oraz GM-LAMEX.BAT (generowanie LAMEX.FMT) i odpowiednio:
+kodowanie w ISO8859-2 (ISO LAtin2) – GI-MEX.BAT oraz GI-LAMEX.BAT.
+kodowanie w Latin 2 (CP852) – GL-MEX.BAT oraz GL-LAMEX.BAT.
+kodowanie w Windows (CP1250) – GW-MEX.BAT oraz GW-LAMEX.BAT.
+
+Utworzone w ten sposób pliki FMT należy przenieść do odpowiednich
+kartotek.
+
+Konfigurowanie formatów
+-----------------------
+
+W momencie rozpoczęcia pracy ze standardową konfiguracją formatów MeX
+i LaMeX obowiązują następujące zasady opisane w pliku MEXCONF.TEX:
+
+  1. bieżącym językiem jest język polski,
+  2. stosowanym układem polskich znaków diakrytycznych w fontach
+     jest układ PL (nie mylić ze sposobem kodowania znaków
+     w plikach wejściowych),
+  3. obowiązującym sposobem notacji polskich znaków w plikach wejściowych
+     jest notacja jednoznakowa (bezprefiksowa) – zwykle jest to
+     Mazovia lub Latin 2, zależnie od stosowanej tabeli konwersji
+     znaków wejściowych,
+  4. obowiązującym sposobem spacjowania po znakach przestankowych jest
+     \frenchspacing, tzn. wielkość odstępów międzywyrazowych nie zależy
+     od tego jaki znak poprzedza odstęp.
+
+Użytkownik może zmienić te zasady modyfikując plik MEXCONF.TEX
+(p. informacje zawarte w tym pliku).
+
+Podręcznik Użytkownika pakietu MeX
+==================================
+
+Polskie znaki diakrytyczne
+--------------------------
+
+W standardowej konfiguracji formatów MeX i LaMeX polskie znaki diakrytyczne
+zapisywane są jako zwykłe znaki o kodach zależnych od standardu
+stosowanego na danym komputerze (zwykle Mazovia lub Latin 2). Pozwala to na
+bardzo wygodne składanie tekstów z użyciem TeX-a: polskie litery widoczne
+są na ekranie w trakcie przygotowywania tekstu, ponadto możliwe jest
+definiowanie polskich komend TeX-owych, jak np. \światło, \ślad,
+\żółć, itp.
+
+Niezależnie od standardu kodowania polskich znaków możliwe jest
+w formatach MeX i LaMeX włączenie za pomocą komendy \prefixing tzw.
+notacji prefiksowej. (Notację bezprefiksową, obowiązująca na początku
+przetwarzania każdego dokumentu, przywraca komenda \nonprefixing.)
+
+W notacji prefiksowej specyficznie polska litera, taka jak „ą”, „ś”
+czy „ł” zapisywana jest w pliku danych dla MeX-a za pomocą dwóch
+znaków, z których pierwszy to znak „/” („ciach”, ang. slash). Litery
+   ą  ć  ę  ł  ń  ó  ś  ź  ż   Ą  Ć  Ę  Ł  Ń  Ó  Ś  Ź  Ż
+zapisywane są odpowiednio jako:
+  /a /c /e /l /n /o /s /x /z  /A /C /E /L /N /O /S /X /Z
+
+Ponieważ znak / został w notacji prefiksowej wykorzystany do oznaczania
+polskich liter, konieczna jest dodatkowa konwencja notacyjna pozwalająca
+uzyskać w druku symbol „ciach”. W MeX-u przyjęto naturalną zasadę
+reprezentowania znaku „ciach” poprzez // (2 znaki „ciach”). Można
+również używać komendy \normalslash.
+
+Należy zwrócić uwagę, że oznaczenie /z, które mogłoby reprezentować
+albo „ż” albo „ź”, zdecydowano przypisać literze „ż” jako znacznie
+częściej używanej (w bieżącym zdaniu użyta została pięć razy, nie
+licząc cytatów).  Litera „ź” jest zapisywana w postaci /x, ponieważ
+klawisz „X” zwykle sąsiaduje z klawiszem „Z” i jest rzadko używany
+w języku polskim.
+
+UWAGI:
+
+1. Podczas obowiązywania notacji prefiksowej znak „/” jest znakiem
+   aktywnym (kategoria 13). Świadomie zrezygnowano ze stosowanego niekiedy
+   sposobu uzyskiwania znaków diakrytycznych poprzez ligatury.
+
+2. Należy pamiętać, że w czasie pisania do pliku za pomocą komendy
+   \write makra są rozwijane. Dotyczy to w szczególności makra „/”
+   i trzeba na to zwracać uwagę przy pisaniu do plików, które mają
+   być potem czytane przez TeX-a. Format LaMeX automatycznie przejmuje
+   kontrolę nad odpowiednim pisaniem i czytaniem standardowych plików
+   pomocniczych (np. pliku ze spisem treści).
+
+Cudzysłowy
+----------
+
+“Anglosaski” sposób pisania cudzysłowów jest niezgodny z polskimi
+zwyczajami. Polski cudzysłów otwierający znajduje się na wysokości
+linii bazowej pisma i ma kształt zbliżony do dwóch przecinków.
+
+Formaty MeX i LaMeX oraz fonty PL zostały tak skonstruowane, że polski
+cudzysłów otwierający zapisuje się w pliku danych wejściowych jako dwa
+przecinki, a cudzysłów zamykający (podobnie jak w języku angielskim) jako
+dwa apostrofy. To są właśnie „polskie” cudzysłowy.
+
+Niekiedy w języku polskim używany jest też drugi rodzaj cudzysłowów,
+tzw. cudzysłowy «francuskie». Lewy francuski cudzysłów oznaczany
+jest dwoma znakami mniejszości, a prawy dwoma znakami większości.
+
+Przy zamianie znaków ,, '' << i >> na odpowiednie cudzysłowy wykorzystywany
+jest TeX-owy mechanizm ligatur. Informacje o ligaturach wbudowane są do
+fontów PL. W zestawie fontów PL fonty stosowane do składu formuł
+matematycznych oraz fonty nieproporcjonalne (np. włączane komendą \tt) nie
+zawierają jednak mechanizmu tworzenia ligatur związanych z cudzysłowami.
+Cudzysłowy można wtedy pisać poprzez użycie komend \plqq, \prqq, \flqq
+oraz \frqq (\plqq i \prqq oznaczają odpowiednio lewe i prawe polskie
+cudzysłowy, \flqq i \frqq oznaczają odpowiednio lewe i prawe francuskie
+cudzysłowy).
+
+Dzielenie wyrazów
+-----------------
+
+Z punktu widzenia TeX-a zasady dzielenia wyrazów zależą zarówno od
+języka, jak też od układu liter w bieżącym foncie. W związku z tym dla
+TeX-a istnieje kilka „języków polskich”. W konsekwencji jeśli
+użytkownik przełącza się na font o innym układzie (innych kodach)
+polskich znaków diakrytycznych, to towarzyszyć temu powinno przełączenie
+TeX-a na inne reguły przenoszenia wyrazów.
+
+Pakiet MeX przygotowany jest do pracy z fontami w układzie PL jako
+podstawowymi oraz dodatkowo z fontami zawierającymi polskie litery
+w położeniach zgodnych z kodem Mazovia, Latin 2 oraz P1.
+
+Podczas tworzenia plików MEX.FMT i LAMEX.FMT standardowo wbudowywane są
+reguły przenoszenia wyrazów:
+  a) w języku angielskim,
+  b) w języku polskim dla użytkowników stosujących fonty w układzie PL.
+
+Użytkownik, zależnie od wielkości dostępnej pamięci, może wbudować do
+formatu reguły przenoszenia dla innych układów polskich fontów. Wystarczy
+w tym celu dokonać prostej modyfikacji pliku konfiguracyjnego MEXCONF.TEX.
+Odpowiednie makra formatu MeX lub LaMeX automatycznie przeczytają
+odpowiednią liczbę razy ten sam plik zawierający polskie reguły
+przenoszenia (PLHYPH.TEX), za każdym razem interpretując go w inny sposób.
+
+Zależnie od informacji wpisanych w pliku MEXCONF.TEX podczas generowania
+plików FMT, w czasie późniejszego składania tekstów, przy zmianie
+układu fontu z polskimi znakami diakrytycznymi MeX (lub LaMeX) będzie
+włączał bądź ZAKAZ przenoszenia wyrazów (jeśli odpowiednie wzorce nie
+zostały wbudowane) bądź reguły przenoszenia odpowiednie dla tego układu.
+
+Polskie reguły ortograficzne zalecają by wyrazy łączone, takie jak np.
+„dżentelmen-włamywacz”, przenosić w następujący sposób:
+   dżentelmen-
+   -włamywacz.
+Dozwolony jest oczywiście podział wewnątrz pierwszego bądź drugiego
+członu wyrazu, np.
+   dżen-
+   telmen-włamywacz.
+
+W języku angielskim nie powtarza się łącznika na początku drugiego
+wiersza.  Z tego powodu w polskiej wersji została wprowadzona komenda \=,
+która użyta w miejsce łącznika (dżentelmen\=włamywacz) zapewnia
+dzielenie słów złożonych zgodne z wyżej opisaną zasadą.
+
+UWAGA:
+Ponieważ w formatach PLAIN i LaTeX komenda \= oznacza akcent „macron”,
+w formatach MeX i LaMeX wprowadzona została w to miejsce komenda \macron.
+
+Układy polskich fontów
+----------------------
+
+Standardowym układem polskiego fontu jest układ PL  (p. rozdział
+„Fonty PL”).  Dopuszczalne jest jednak stosowanie fontów o innych
+niż PL układach polskich znaków, a nawet mieszanie różnych układów
+w obrębie jednego dokumentu.  Możliwe jest to dzięki komendzie \layout.
+
+Następujące wywołania komendy \layout:
+    \layout{pl}
+    \layout{mazovia}
+    \layout{latintwo}
+    \layout{pone}
+służą do przestawienia systemu MeX lub LaMeX do pracy z fontami
+w układach odpowiednio:
+         PL – standardowy układ PL
+    Mazovia – polskie znaki (w foncie!) w pozycjach takich jak w kodzie
+               Mazovia, cudzysłów otwierający – kod 255
+    Latin 2 – polskie znaki (w foncie!) w pozycjach takich jak w kodzie
+               Latin 2, cudzysłów otwierający – kod 255
+         P1 – układ fontów P1 (używany dawniej z formatem LeX)
+
+Wykonanie komendy \layout polega na:
+    – w przypadku włączania układu PL, który jest standardowym,
+       wyróżnionym układem:
+         * przypisanie polskim znakom diakrytycznym kategorii „litera”,
+       w przypadku włączania układu innego niż PL:
+         * przypisanie polskim znakom diakrytycznym kategorii „aktywny”
+           i zdefiniowanie ich jako makr rozwijających się do odpowiednich
+           liter,
+    – odpowiednia zmiana tablicy \sfcode,
+    – utworzenie tablic \uccode i \lccode zgodnych z układem fontu,
+    – przypisanie pozycjom polskich znaków w foncie odpowiednich kodów
+       matematycznych,
+    – włączenie reguł przenoszenia wyrazów w języku polskim
+       zgodnych z układem fontu, jeśli takie reguły zostały przeczytane
+       podczas tworzenia pliku FMT – patrz rozdziały „Instalacja formatów
+       MeX i LaMeX” oraz „Dzielenie wyrazów”; jeśli nie ma odpowiednich
+       reguł, włączany jest zakaz dzielenia wyrazów,
+    – nadanie odpowiedniego znaczenia symbolowi \polish; od tego momentu
+       komenda \language\english może służyć do włączania angielskich
+       reguł dzielenia wyrazów, a komenda \language\polish do włączania
+       dzielenia wyrazów w języku polskim względem bieżącego układu
+       fontu,
+    – przypisanie nowego znaczenia notacji prefiksowej, gdyby była używana
+       (dzięki temu zawsze /a /c /e itp. odwołują się do pozycji
+       znaków w bieżącym układzie fontu), odpowiednio zmieniają się
+       też znaczenia komend \plqq\prqq \flqq\frqq.
+
+Należy zwrócić uwagę, że komenda \layout przygotowuje tylko system MeX
+lub LaMeX do pracy z fontami w odpowiednim układzie, nie włącza jednak
+samego fontu.
+
+Zaleca się stosowanie makra \layout lokalnie (wewnątrz nawiasów
+grupowych), ze względy na brak komendy odwołującej zmiany spowodowane
+jego użyciem.
+
+(Niezależnie od obowiązującego układu fontu i zmieniającego się wraz
+z tym układem znaczenia symbolu \polish, symbole \pllanguage,
+\mazovialanguage, \latintwolanguage, \ponelanguage oznaczają numery
+języków w sensie TeX-a, czyli numery odpowiednich reguł dzielenia
+wyrazów. Można więc w razie potrzeby pisać \language\mazovialanguage itp.
+Dla jednolitości przyjęto, że symbol \englishlanguage oznacza to samo co
+\english.)
+
+Składanie formuł matematycznych
+-------------------------------
+
+W formułach matematycznych jest bardzo niewiele elementów
+zależnych od języka. Równanie $2x^2+3x-1=0$ wygląda tak samo w tekście
+napisanym w języku polskim, jak i w tekście angielskim. Zwykle stosuje
+się w matematyce jednoliterowe oznaczenia obiektów matematycznych
+i polskie znaki diakrytyczne nie są używane do tego celu.
+
+Pewne sytuacje wymagają stosowania w matematyce nazw wieloliterowych.
+Zarówno w TeX-u, jak i w jego polskiej wersji należy w takim przypadku
+określać jawnie nazwę kroju pisma, które ma być użyte, na przykład:
+    $$\it objętość=wysokość \times szerokość \times głębokość$$
+Komenda \it jest poleceniem wykonywania składu kursywą tekstową (a nie
+matematyczną).
+
+Polskie litery mogą być używane w formułach matematycznych w indeksach
+górnych i dolnych, np.:
+ $$x_{\rm średnie} = {{x_{\rm małe} + x_{\rm duże}} \over 2}$$
+
+Jeśli w danym momencie obowiązuje notacja prefiksowa, dotyczy ona również
+formuł matematycznych.
+
+Stosowane w Polsce znaki mniejsze-równe i większe-równe różnią się od
+znaków w fontach CM zaprojektowanych przez D. E. Knutha (p. rozdział
+„Fonty PL”). Fonty PL (ściślej PLSY) zawierają odpowiednie znaki,
+a uzyskać je można za pomocą komend odpowiednio \xleq lub \xle oraz
+\xgeq lub \xge.
+
+W Polsce używa się nazw „tg”, „ctg”, „tgh” i „ctgh” zamiast
+„tan”, „cot”, „tanh” i „coth”. Formaty MeX i LaMeX zawierają
+komendy \tg, \ctg, \tgh, oraz \ctgh do składania nazw tych funkcji
+w formułach matematycznych.  Dodatkowo wprowadzona została komenda
+\arc, która w połączeniu z takimi komendami jak \sin, \cos, itp.
+(\arc\sin, \arc\cos) umieszcza w składzie napis „arc sin”,
+„arc cos” z odpowiednio małym odstępem między słowem „arc”
+i nazwą funkcji.
+
+Polskie „style” do formatu LaMeX
+--------------------------------
+
+W LaTeX209 styl dokumentu określany jest komendą \documentstyle.
+Parametrem tej komendy jest nazwa pliku zawierającego opis tego stylu:
+article, report, book, letter itd.  Oryginalnych wersji tych plików nie
+można zastosować do składu w języku polskim ze względu na wstawiane
+automatycznie angielskie słowa takie jak „Chapter”, „Figure”,
+„Table of Contents” itp.
+
+Częścią pakietu MeX są specjalne wersje tych plików, przystosowane do
+składu tekstów w języku polskim lub angielskim. Są to: iarticle, ibook,
+iletter, imakeidx, iopenbib, iproc, ireport, ititlepa.  Użycie jednego
+z tych stylów powoduje umieszczanie w składzie odpowiednich polskich
+słów takich jak „Rozdział”, „Rysunek”, „Spis treści” itp. oraz
+składanie daty (automatycznie lub za pomocą komendy \today) po polsku.
+
+Style iarticle, ireport itp. mogą być używane również do składania
+tekstów w języku angielskim. Wymaga to użycia na początku dokumentu
+komend:
+   \captionsenglish \dateenglish
+Polskie nazewnictwo przywracają komendy
+   \captionspolish \datepolish.
+
+(Implementacja stylów iarticle, ireport itp. została oparta na pomysłach
+H. Partla i J. Schroda, wykorzystanych w niemieckiej wersji LaTeX-a.)
+
+Komendy służące do składania nazw formatów MeX i LaMeX
+------------------------------------------------------
+
+W formatach MeX i LaMeX komenda \MeX służy do złożenia nazwy „MeX”
+z użyciem liter z bieżącego fontu.
+
+W formacie LaMeX komenda \LaMeX służy do złożenia nazwy „LaMeX”
+krojem pisma \rm odpowiedniej wielkości.
+
+Fonty PL (polskie rozszerzenie fontów CM)
+=========================================
+
+  0. Fonty PL przeznaczone są do składania polskich lub polsko-angielskich
+     tekstów przy użyciu formatów MeX i LaMeX. Obecnie mogą też być do
+     składu przy użyciu pakietu PLaTeX polonizującego LaTeX2e (autorstwa
+     Mariusza Olko i Marcina Wolińskiego):
+         ftp://ftp.gust.org.pl/pub/TeX/łanguage/polish/platex-1.0.zip
+     lub ftp://ftp.dante.de/tex-archive/łanguage/polish/platex-1.0.zip
+
+     Autorzy starali się zachować „ducha CM-ów” przy projektowaniu
+     polskich znaków diakrytycznych. Np. przekreślenie małej litery
+     „ł” zostało nieco tylko powiększone w stosunku do przekreślenia
+     fontów rodziny CM (METAFONT-owy program „Cross for Polish l and L”
+     w pliku ACCENT.MF) umieszczanego w składzie komendami TeX-owymi
+     \l oraz \L, chociaż w niektórych fontach autorzy chętnie
+     widzieliby przekreślenie znacznie wyraźniejsze. Podobnie podcięcia
+     wstawiane automatycznie pomiędzy znakami (implicit kerns) były
+     dodawane raczej ostrożnie. Np. zdaniem autorów podcięcie między
+     polskim otwierającym cudzysłowem („) a literą „W” bądź „T”
+     mogłoby być znacznie większe, gdyby nie to, że w fontach CM nie
+     ma żadnego podcięcia między literą „A” a cudzysłowem
+     zamykającym (”).
+
+     Fonty PL, podobnie jak macierzyste fonty CM, projektowane były
+     pod kątem zastosowań profesjonalnych, tzn. urządzeń o większych
+     rozdzielczościach. Tym niemniej sporo wysiłku włożono w prawidłową
+     dyskretyzację przy małych rozdzielczościach (dla potrzeb wydruków
+     testowych na drukarkach mozaikowych 9- i 24-igłowych). Gdyby mimo
+     to użytkownik miał inne zdanie niż METAFONT na temat dyskretyzacji,
+     w pakiecie emTeX autorstwa Eberharda Mattesa znajduje się program
+     o nazwie PKEDIT pozwalający ręcznie korygować wygenerowane za pomocą
+     METAFONT-a mapy bitowe.
+
+  1. Fonty PL stanowią rozszerzenie standardowego zestawu rodziny
+     Computer Modern (CM) o polskie znaki diakrytyczne i bazują na tych
+     samych plikach parametrycznych co fonty rodziny CM. Zmiany parametrów
+     odbiegające zbyt daleko od standardu zaproponowanego przez D. E. Knutha
+     mogą spowodować nieoczekiwane efekty (do błędu w trakcie obliczeń
+     włącznie). Przykładowo, założone zostało, że kursywa i grotesk
+     wykluczają się.
+
+     Układ fontów PL charakteryzuje się tym, że znaki o kodach < 128
+     są identyczne ze znakami rodziny CM, natomiast polskim znakom
+     diakrytycznym przypisane zostały kody > 127 (innych cech TeX-a 3.x
+     nie wykorzystuje się). Polskie znaki diakrytyczne mają kody zgodne
+     z układem ECM (Extended Computer Modern, Cork encoding), natomiast
+     cudzysłowy mają kody niestandardowe (w ECM cudzysłowy mają
+     kody < 127):
+
+               Ą – 129     ą – 161
+               Ć – 130     ć – 162
+               Ę – 134     ę – 166
+               Ł – 138     ł – 170
+               Ń – 139     ń – 171
+               Ó – 211     ó – 243
+               Ś – 145     ś – 177
+               Ź – 153     ź – 185
+               Ż – 155     ż – 187
+
+              « (francuski cudzysłów otwierający) – 174
+              » (francuski cudzysłów zamykający)  – 175
+              „ (polski cudzysłów otwierający)    – 255
+
+      Uwagi:
+        * Fonty matematyczne PLMI, PLMIB oraz PLEX nie zawierają polskich
+          znaków diakrytycznych i nie różnią się od odpowiednich fontów CM;
+          przedrostki CM zostały zmienione na PL jedynie dla zachowania
+          jednorodności.
+        * Podobnie font PLTEX10 to po prostu font CMTEX10 ze zmienioną dla
+          jednolitości nazwą; font CMTEX10 odzwierciedla układ klawiatury
+          na komputerze używanym przez profesora Knutha (D. E. Knuth,
+          „Computer Modern Typefaces”, str. 568), tym samym nie powinien
+          raczej zawierać polskich znaków diakrytycznych.
+        * Fonty PLSY zostały poszerzone (w stosunku do CMSY) o znaki
+          „większe-równe” i „mniejsze-równe” odpowiadające
+          polskim zwyczajom drukarskim (dolna kreska skośna zamiast
+          poziomej); na konieczność takiego rozszerzenia zwrócił
+          uwagę p. Włodzimierz J. Martin; majuskuły kaligraficzne tych
+          fontów (opisane w pliku CALU.MF) nie zostały uzupełnione
+          o polskie znaki diakrytyczne.
+
+  2. Jedynymi znakami „polskimi” dostępnymi poprzez ligatury są
+     cudzysłowy (,, << >>). Polskie znaki diakrytyczne są dostępne
+     albo bezpośrednio, albo za pomocą komendy realizowanej przez
+     „aktywny ciach” (/a /c /e /l /n /o /s /x /z /A /C
+     /E /L /N /O /S /X /Z) zaprogramowanej w formatach MeX i LaMeX
+     (p. opis używania formatów MeX i LaMeX). Istnieją zasadnicze powody,
+     dla których autorzy nie wykorzystali do tego celu ligatur.
+
+  3. Ze względu na ograniczenie liczby różnych wysokości znaków w foncie
+     do 15 niezerowych, zrezygnowano z kuszącego wypełniania „górnej
+     połówki” fontu. Ponadto w programach METAFONT-owych podjęte zostały
+     zabiegi mające na celu minimalizację liczby różnych wysokości.
+     Niestety, mimo to w niektórych przypadkach liczba różnych niezerowych
+     wysokości przekracza 15. W takiej sytuacji METAFONT automatycznie
+     zmienia niektóre spośród wysokości. Oznacza to, że w pewnych
+     (bardzo złośliwych i – miejmy nadzieję – niezwykle rzadkich)
+     przypadkach może się zdarzyć, że tekst czysto angielski złożony
+     fontami PL zostanie inaczej przełamany na strony niż tekst złożony
+     fontami CM.
+
+  4. Starano się unikać wprowadzania dodatkowych parametrów, co jednak
+     nie zawsze było możliwe. Szczegóły dotyczące możliwości zmiany
+     zachowania domyślnego opisane są w pliku PL_DOD.MF. Przykłady użycia
+     opcjonalnych parametrów zmieniających zachowanie domyślne znaleźć
+     można w plikach źródłowych fontów PLB10, PLBX5, PLBX6, PLBX7,
+     PLBX8, PLCSC10, PLDUNH10, PLFI10, PLFF10, PLITT10, PLR5, PLR6, PLR7,
+     PLR8, PLR9, PLR12, PLR17, PLSL8, PLSL9, PLSL12, PLSSQ8, PLSSQI8,
+     PLTCSC10, PLTI7, PLTI8, PLTI12 oraz PLVTT10.
+
+  5. Programy opisujące polskie znaki diakrytyczne zostały oparte na
+     odpowiednich programach rodziny CM. Opisy polskich znaków
+     diakrytycznych stanowią niezależne programy, co jest zgodne
+     z ogólną filozofią programów rodziny CM (można by np.
+     zapamiętywać mapy bitowe liter „A”, „C”, „a”, „c”, …,
+     itd., i te mapy bitowe modyfikować; z takiego podejścia i mu
+     podobnych zrezygnowano).
+
+     Nieco trickowe rozwiązanie zastosowano w celu uniknięcia duplikowania
+     plików parametrycznych (PLB10, PLBX10, …, itd.). Wykorzystano tu
+     METAFONT-ową zmienną „jobname” do czytania odpowiednich plików
+     parametrycznych rodziny CM. Pliki te powinny znajdować się w kartotece
+     przeszukiwanej przez METAFONT-a w trakcie realizacji komendy „input”.
+
+  6. Program dla polskiego cudzysłowu otwierającego zaczerpnięty został
+     z programów rodziny CM. Natomiast kształt cudzysłowów francuskich
+     został zaprojektowany i zaprogramowany „od zera”.
+
+  7. Pierwszą i najważniejszą fazą pracy nad fontami PL było
+     zaprojektowanie i zaprogramowanie kształtów polskich znaków
+     diakrytycznych w sześciu podstawowych krojach: PLR, PLSS, PLBX, PLSSBX,
+     PLTT oraz PLTI (stopnie pisma od 5 do 17 punktów).
+
+     Tym etapem pracy opiekował się troskliwie p. Roman Tomaszewski,
+     wybitny polski typograf, członek zarządu Międzynarodowego
+     Stowarzyszenia Typograficznego ATypI i zarazem przewodniczący Polskiego
+     Oddziału ATypI. Autorzy są mu głęboko wdzięczni za życzliwe
+     wspieranie swą wiedzą i doświadczeniem prac projektowych nad
+     fontami PL.
+
+     Pan Roman Tomaszewski zmarł w grudniu 1992 roku.
+
+  8. Akcenty nad minuskułami „ć” „ń” „ó” „ś” „ź”  są takie
+     same jak wstawiany TeX-ową komendą \' akcent „acute”, tyle że
+     w niektórych przypadkach są nieco przesunięte w poziomie. Natomiast
+     akcenty nad majuskułami „Ć” „Ń” „Ó” „Ś” „Ź”  są
+     wprawdzie konstruowane w oparciu o akcent „acute”, ale są nieco
+     „spłaszczone” (w przypadku odmian szeryfowych jest to zwykły obrót,
+     natomiast w przypadku odmian bezszeryfowych – obrót połączony
+     z pewną modyfikacją, ze względu na konieczność zachowania poziomego
+     położenia górnej i dolnej krawędzi akcentu oraz optycznej grubości
+     kreski akcentowej). Wyjątkowo w karykaturalnie smukłym foncie PLDUNH10
+     akcent nad minuskułami i majuskułami jest pochylony tak samo.
+
+     Powyższe zabiegi są zgodne z regułami sztuki typograficznej,
+     powodują natomiast, że akcenty kładzione za pomocą TeX-owej komendy
+     \accent mogą się istotnie różnić od akcentowanych majuskuł
+     w fontach PL.
+
+  9. Akcent nad literami „ż” oraz „Ż” jest taki sam jak kropka nad
+     literą „i”, czyli inny niż akcent wstawiany przez TeX-a (za pomocą
+     komendy \.). W literze „ż” jest także umieszczony na tej samej
+     wysokości co kropka nad „i” (oczywiście nie w foncie kapitalikowym).
+     Dzięki temu w słowach takich jak „gwiżdże” czy „niżej” kropka
+     zachowuje tę samą wysokość. Niestety, w niektórych fontach rodziny
+     CM kropka nad „i” jest stanowczo za mała (np. CMTT), co powoduje,
+     że wartość optyczna kropki nad „ż” oraz „Ż” jest też czasami
+     zbyt mała. Z powiększenia kropki zrezygnowano, uznając jej wielkość
+     za cechę fontów CM.
+
+ 10. Przekreślenie litery „Ł” jest znacznie większe od przekreślenia
+     litery „ł”, a przekreślenie litery „ł” jest z kolei większe od
+     przekreślenia w fontach rodziny CM (p. punkt 0 powyżej).
+
+ 11. „Ogonki” pod literami  „Ą” „Ę” „ą” „ę”  budowane są za
+     pomocą stosunkowo skomplikowanego algorytmu, ale geometria
+     ogonka jest bardzo prosta: zewnętrzna i wewnętrzna krawędź to
+     pojedyncze segmenty krzywych Béziera. Ogonki takie – jak
+     pokazuje doświadczenie – są najzgrabniejsze.
+
+     Opcjonalne parametry dodatkowe wpływające na kształt ogonków
+     opisane są w pliku PL_DOD.MF.
+
+ 12. Polskie znaki diakrytyczne nie są przeznaczone do używania jako
+     znaki matematyczne, dlatego w programach opisujących te znaki
+     pominięta została komenda „math_adjust”.
+
+ 13. Podcięcia wstawiane automatycznie między znakami (implicit kerns)
+     są w zasadzie takie same dla polskich znaków diakrytycznych jak dla
+     odpowiednich liter alfabetu łacińskiego, z pewnymi wszakże wyjątkami
+     (p. pliki POLAN.MF, POLKUR.MF oraz POLKAP.MF); podobnie rzecz się ma
+     z korektą italikową wstawianą za polskimi znakami diakrytycznymi.
+
+ 14. Dla tych, którzy chcieliby wydrukować źródła METAFONT-owe w postaci
+     sformatowanej za pomocą programu MFT, dołączony jest odpowiedni
+     format o nazwie PL.MFT. Format ten jest przygotowany do składania
+     z użyciem fontów rodziny CM; jeśli użytkownik zamienił już
+     wszystkie CM-y na fonty PL, musi odpowiednio zmienić nazwy fontów
+     w plikach PL.MFT oraz MFTMAC.TEX (plik MFTMAC.TEX znaleźć można
+     np. w pakiecie emTeX E. Mattesa lub
+     ftp://ftp.gust.org.pl/pub/TeX/macros/generic/plain/base/mftmac.tex).
+
+ 15. Źródła METAFONT-owe obejmują następujące pliki (zakłada się,
+     że użytkownik posiada komplet plików źródłowych rodziny CM):
+
+     a) pliki zawierające opisy polskich znaków diakrytycznych:
+
+          PL_CUD.MF      PL_DOD.MF      PL_MLK.MF
+          PL_DL.MF       PL_ML.MF       PL_SYM.MF
+
+     b) pliki sterujące:
+
+          POLAN.MF   – odpowiednik pliku ROMAN.MF
+          POLKAP.MF  – odpowiednik pliku CSC.MF
+          POLKUR.MF  – odpowiednik pliku TEXTIT.MF
+          POLMAT.MF  – odpowiednik pliku MATHSY.MF
+          POLTYT.MF  – odpowiednik pliku TITLE.MF
+
+     c) pliki parametryczne rodziny PL:
+
+          PLBSY10.MF     PLMI10.MF      PLSSBI36.MF    PLSY5.MF
+          PLBXSL10.MF    PLMI12.MF      PLSSBI48.MF    PLSY6.MF
+          PLBXTI10.MF    PLMI5.MF       PLSSBX10.MF    PLSY7.MF
+          PLBX10.MF      PLMI6.MF       PLSSBX36.MF    PLSY8.MF
+          PLBX12.MF      PLMI7.MF       PLSSBX48.MF    PLSY9.MF
+          PLBX5.MF       PLMI8.MF       PLSSDC10.MF    PLTCSC10.MF
+          PLBX6.MF       PLMI9.MF       PLSSDC40.MF    PLTEX10.MF
+          PLBX7.MF       PLR10.MF       PLSSI10.MF     PLTEX8.MF
+          PLBX8.MF       PLR12.MF       PLSSI12.MF     PLTEX9.MF
+          PLBX9.MF       PLR17.MF       PLSSI17.MF     PLTI10.MF
+          PLB10.MF       PLR5.MF        PLSSI8.MF      PLTI12.MF
+          PLCSC10.MF     PLR6.MF        PLSSI9.MF      PLTI7.MF
+          PLDUNH10.MF    PLR7.MF        PLSSQI8.MF     PLTI8.MF
+          PLEX10.MF      PLR8.MF        PLSSQ8.MF      PLTI9.MF
+          PLEX9.MF       PLR9.MF        PLSS10.MF      PLTT10.MF
+          PLFF10.MF      PLSLTT10.MF    PLSS12.MF      PLTT12.MF
+          PLFIB8.MF      PLSL10.MF      PLSS17.MF      PLTT8.MF
+          PLFI10.MF      PLSL12.MF      PLSS8.MF       PLTT9.MF
+          PLINCH.MF      PLSL8.MF       PLSS9.MF       PLU10.MF
+          PLITT10.MF     PLSL9.MF       PLSY10.MF      PLVTT10.MF
+          PLMIB10.MF     PLSSBI10.MF
+
+     d) dodatkowe pliki parametryczne:
+
+        * CMSSBI10.MF (odwołują się doń pliki PLSSBI10, PLSSBI36
+          i PLSSBI48)
+
+        * CMBX11.MF, CMR11.MF, CMSL11.MF, CMTI11.MF (te pliki służyły
+          do generowania używanych poprzednio 11-punktowych fontów P1)
+
+        * DLR10 – przykładowy plik służący do generowania fontu
+          PLR10 at 10dd (w jednostkach przyjętych w polskim drukarstwie)
+
+     e) plik pomocniczy wczytywany podczas przetwarzania przez METAFONT-a
+        plików parametrycznych PL:
+
+          FIK_MIK.MF
+
+     f) plik zawierający opis trybu generowania fontów dla
+        fotonaświetlarek Linotronic 100 i Linotronic 300; treść
+        tego pliku należy wkopiować do pliku LOCAL.MF przed generowaniem
+        formatów bazowych (PLAIN.BAS i CM.BAS) za pomocą inicjalizacyjnej
+        wersji METAFONT-a (INIMF):
+
+          LINOMODE.MF
+
+ 16. Generowanie fontów PL
+
+     Konkretnym implementacjom METAFONT-a towarzyszy na ogół oprogramowanie
+     ułatwiające generowanie fontów. Do pakietu MeX dołączone zostały
+     pliki z danymi dla programu MFJOB, obsługującego generowanie fontów
+     z użyciem emMETAFONT-a (szczegóły można znaleźć w dokumentacji
+     pakietu E. Mattesa emTeX). Są to:
+
+       G180PL.MFJ   dane do generowania fontów PL dla drukarek 24-igłowych
+
+       G240PL.MFJ   dane do generowania fontów PL dla drukarek 9-igłowych
+
+       G300PL.MFJ   dane do generowania fontów PL dla drukarek laserowych
+
+       GPLMODES.MFJ plik wczytywany przy przetwarzaniu plików G180PL.MFJ,
+                       G240PL.MFJ i G300PL.MFJ przez program MFJOB.EXE
+
+
+Pliki
+=====
+
+Pakiet MeX składa się z następujących grup plików:
+
+    1. Pliki dokumentacyjne/informacyjne
+    2. Pliki TeX-owe
+    3. Pliki METAFONT-a
+
+Poniżej przedstawiamy listę wszystkich plików składających się na
+pakiet MeX-a. Podkreślamy raz jeszcze, że pakiet MeX może być
+rozpowszechniany tylko tak, jak został przygotowany – musi być kompletny
+i niezmieniony. Dotyczy to również plików dokumentacyjnych/informacyjnych.
+(patrz „Zasady rozpowszechniania”).
+
+  1. Pliki dokumentacyjne/informacyjne
+
+          MEXINFO.POL – plik, który jest właśnie czytamy
+          MEXINFO.ENG – analogiczny tekst w języku angielskim
+
+  2. Pliki TeX-owe
+
+     Pliki makr:
+     -----------
+
+             MEX.TEX – polska wersja pakietu makr PLAIN.TEX
+           LAMEX.TEX – polska wersja pakietu makr LPLAIN.TEX
+            MEX1.TEX – pomocniczy plik wejściowy MeX-a i LaMeX-a
+            MEX2.TEX – pomocniczy plik wejściowy MeX-a i LaMeX-a
+         MEXCONF.TEX – plik konfiguracyjny MeX-a i LaMeX-a
+          PLHYPH.TEX – polskie reguły dzielenia wyrazów
+
+     Wejściowe pliki filtrujące do emTeX-a (do implementacji TeX-a
+     -------------------------------------------------------------
+                        wykonanej przez E. Mattesa):
+                       ------------------------------
+
+                MAZ2PL.PCT – tabela konwersji kodów Mazovii na kody PL
+                LAT2PL.PCT – tabela konwersji kodów Latin 2 na kody PL
+                ISO2PL.PCT – tabela konwersji kodów ISO8859-2 na kody PL
+                WIN2PL.PCT – tabela konwersji kodów CP1250 na kody PL
+    MAZ2PL.TCP, ISO2PL.TCP, LAT2PL.TCP, WIN2PL.TCP – j.w., postać
+                              przygotowana do pracy z INITEX-em
+                MK-TCP.BAT – plik wsadowy do tworzenia tablic konwersji
+                              w postaci plików TCP
+
+    Pliki wsadowe systemu DOS (ang. batch file) do generowania plików
+    -----------------------------------------------------------------
+                          MEX.FMT i LAMEX.FMT:
+                         ----------------------
+
+         GM-MEX.BAT – generuje MEX.FMT    (+ Mazovia)
+         GI-MEX.BAT – generuje MEX.FMT    (+ ISO8859-2)
+         GL-MEX.BAT – generuje MEX.FMT    (+ CP852)
+         GW-MEX.BAT – generuje MEX.FMT    (+ CP1250)
+       GM-LAMEX.BAT – generuje LAMEX.FMT  (+ Mazovia)
+       GI-LAMEX.BAT – generuje LAMEX.FMT  (+ ISO8859-2)
+       GL-LAMEX.BAT – generuje LAMEX.FMT  (+ CP852)
+       GW-LAMEX.BAT – generuje LAMEX.FMT  (+ CP1250)
+
+    Dodatkowe pliki do LaMeX-a (style):
+    –––––––––––––––––
+
+       IARTICLE.STY     IMAKEIDX.STY      IREPORT.STY
+       IBOOK.STY        IOPENBIB.STY      ITITLEPA.STY
+       ILETTER.STY
+
+ 3. Pliki METAFONT-owe opisane zostały w części poświęconej fontom PL.
+
+
+Podziękowania
+=============
+
+Bardzo wiele osób przyczyniło się do szczęśliwego zakończenia prac nad
+długo trwającym projektem adaptacji TeX-a do języka polskiego. Wymienienie
+tu wszystkich, którzy nam pomogli, jest po prostu niemożliwe. Tym niemniej
+czujemy się zobowiązani szczególnie serdecznie podziękować
+następującym osobom:
+
+    Andrzej Blikle
+    Włodzimierz Bzyl
+    Jacek Leszczyłowski
+    Marian Łakomy
+    Włodzimierz J. Martin
+    Frank Mittelbach
+    Grażyna Nowak
+    Andrzej Odyniec
+    Piotr Pianowski
+    Tomasz Przechlewski
+    Stanisław Szczyciński
+    Roman Tomaszewski
+    Stanisław Wawrykiewicz.

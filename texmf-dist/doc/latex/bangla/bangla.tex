@@ -1,0 +1,183 @@
+\documentclass{article}
+\usepackage{bangla}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{float}
+\newcommand{\com}[2]{\textcolor{blue}{\textbackslash\texttt{#1}}\texttt{#2}}
+\begin{document}
+
+\title{The \texttt{bangla} Package}
+
+\author{Nahid Hossain \\Assistant Professor, United International University\\Bangladesh\\nahid@cse.uiu.ac.bd\\mailbox.nahid@gmail.com\\ \textbf{Version 2.0}}
+
+\date{August 4, 2021}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\subsection{About \texttt{bangla} Package}
+The \texttt{bangla} package is a programming tool geared primarily towards LaTeX document authors. It provides all necessary LaTeX frontends for Bangla language.
+
+\subsection{Licence}
+Copyright © 2021 Nahid Hossain. Permission is granted to copy, distribute and/or modify this software under the terms of the LaTeX Project Public License, version 1.3c or later.
+\section{Commands}
+\subsection{Use Package}
+The basic command to use the package is-\\ \\
+\com{usepackage}{\{bangla\}}
+    
+
+\subsection{Font Selection}
+\textbf{The default font of the \texttt{bangla} package is \texttt{Kalpurush}. If you do not mention any font name in the parameter, the Kalpurush will be your default font.} However, an author can easily change the font using the parameter of the \texttt{usepackage} command.
+\\ \\ 
+\com{usepackage}{[<font name>]\{bangla\}}
+\\
+
+For example, if an author wants \texttt{Noto Serif Bengali} as the font for the whole article, he can write-
+\\ \\ 
+\com{usepackage}{[notoserifbengali]\{bangla\}}
+\\
+
+
+The following SIL Open Font Licence(OFL) Bangla fonts are currently associated with the \texttt{bangla} package-
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Font Name} & \textbf{Command Keyword} &  \textbf{Licence} \\
+\hline
+Kalpurush         & \textcolor{blue}{\texttt{kalpurush}} & SIL OFL\\ 
+\hline
+Shimanto          & \textcolor{blue}{\texttt{shimanto}} & SIL OFL  \\
+\hline
+Noto Sans Bengali         & \textcolor{blue}{\texttt{notosansbengali}} & SIL OFL\\ 
+\hline
+Noto Serif Bengali         & \textcolor{blue}{\texttt{notoserifbengali}} & SIL OFL\\ 
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsection{With Parameter Definitions}
+In this subsection, we have demonstrated the commands that requires parameters(at least one or more).
+\subsubsection{\com{banglatext}{\{<bangla text here>\}}}
+\texttt{banglatext} displays any Bangla texts provided inside the parameter. Insert Bangla text in the parameter.\\ 
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Command} & \textbf{Output}  \\
+\hline
+\texttt{\com{banglatext}{\{\banglatext{আমি বাংলায় কথা বলি।}\}}}  & \banglatext{আমি বাংলায় কথা বলি।}\\ 
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{\com{banglabold}{\{<bangla text here>\}}}
+\texttt{banglabold} bolds the Bangla texts provided inside the parameter. It can make texts bold automatically of any font that has no bold fonts available.\\ 
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Command} & \textbf{Output}  \\
+\hline
+\texttt{\com{banglabold}{\{\banglatext{আমি বাংলায় কথা বলি।}\}}}  & \banglabold{আমি বাংলায় কথা বলি।}\\ 
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{\com{banglaitalic}{\{<bangla text here>\}}}
+\texttt{banglaitalic} makes the Bangla texts italic provided inside the parameter. It can make texts italic automatically of any font that has no italic fonts available.\\ 
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Command} & \textbf{Output}  \\
+\hline
+\texttt{\com{banglaitalic}{\{\banglatext{আমি বাংলায় কথা বলি।}\}}}  & \banglaitalic{আমি বাংলায় কথা বলি।}\\ 
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{\com{banglatranslit}{\{<bangla text here>\}}}
+\texttt{banglatranslit} generates a comprehensive and sophisticated transliteration of Bangla into Latin based on ISO 15919. \texttt{banglatranslit} works on character, word, and sentences as well.\\ 
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Command} & \textbf{Output}  \\
+\hline
+\texttt{\com{banglatranslit}{\{\banglatext{আমি বাংলায় কথা বলি।}\}}}  & \banglatranslit{আমি বাংলায় কথা বলি।}\\ 
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{\com{banglaipa}{\{<bangla text here>\}}}
+\texttt{banglaipa} generates equivalent International Phonetic Alphabets(IPA) symbols for Bangla alphabets. \texttt{banglaipa} works on character, word, and sentences as well.\\ 
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Command} & \textbf{Output}  \\
+\hline
+\texttt{\com{banglaipa}{\{\banglatext{আমি বাংলায় কথা বলি।}\}}}  & \banglaipa{আমি বাংলায় কথা বলি।}\\ 
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Without Parameter Definitions}
+In this subsection, we have demonstrated the commands that require no parameter at all.
+
+\subsubsection{\com{banglapage}{}}
+\texttt{banglapage} produces bangla page numbering. \texttt{banglapage} does not need any parameters. 
+Put \texttt{banglapage} command before \textbackslash begin\{document\} command. Such as:\\
+\com{banglapage}{}
+
+
+
+\subsubsection{\com{banglasection}{}}
+\texttt{banglasection} produces bangla numbering for all sections in the article including all subsections and subsubsections. \texttt{banglasection} does not need any parameters. 
+Put \texttt{banglasection} command before \textbackslash begin\{document\} command. Such as:\\
+\com{banglasection}{}
+
+
+\subsubsection{\com{banglaenumerate}{}}
+\texttt{banglaenumerate} produces level-2 bangla numbering for enumerate or the list in latex for the whole article. \texttt{banglaenumerate} does not need any parameters. 
+Put \texttt{banglaenumerate} command before \textbackslash begin\{document\} command or anywhere above the enumerate. Such as:\\
+\com{banglaenumerate}{}
+
+
+\subsubsection{\com{banglaequation}{}}
+\texttt{banglaequation} produces bangla numbering for all equations in the whole article. \texttt{banglaequation} does not need any parameters. 
+Put \texttt{banglaequation} command before \textbackslash begin\{document\} command or anywhere above the equations. Such as:\\
+\com{banglaequation}{}
+
+\subsubsection{\com{banglatable}{}}
+\texttt{banglatable} produces bangla numbering for all tables in the whole article. \texttt{banglatable} does not need any parameters. 
+Put \texttt{banglatable} command before \textbackslash begin\{document\} command or anywhere above the tables. Such as:\\
+\com{banglatable}{}
+
+
+\subsubsection{\com{banglafigure}{}}
+\texttt{banglafigure} produces bangla numbering for all figures/images in the whole article. \texttt{banglafigure} does not need any parameters. 
+Put \texttt{banglafigure} command before \textbackslash begin\{document\} command or anywhere above the figures. Such as:\\
+\com{banglafigure}{}
+
+
+\subsubsection{\com{banglaallcounters}{}}
+\texttt{banglaallcounters} produces bangla numbering for everything in the whole article. \texttt{banglaallcounters} does not need any parameters. 
+Put \texttt{banglaallcounters} command before \textbackslash begin\{document\} command. Such as:\\
+\com{banglaallcounters}{}
+
+\section{Reporting issues}
+To report any error or issue please send an email at nahid@cse.uiu.ac.bd or mailbox.nahid@gmail.com. 
+\section{Revision History}
+Version 2.0 bug fixes.\\
+Version 1.9 new command added. minor bug fixes.\\
+Version 1.8 bug fixes.\\
+Version 1.7 bug fixes.\\  
+Version 1.6 a new OFL SIL font added. bug fixes.\\  
+Version 1.5 solved font licence issues and bug fixes.\\ 
+Version 1.0 primary version.\\
+
+\end{document}

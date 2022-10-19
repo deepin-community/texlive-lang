@@ -1,0 +1,2915 @@
+% 
+% To compile:
+% lualatex docsurvey.tex
+% lualatex docsurvey.tex
+% biber docsurvey
+% lualatex docsurvey.tex
+% lualatex docsurvey.tex
+
+
+\documentclass{article}
+
+
+\begin{filecontents}[overwrite]{docsurvey.bib}
+@book{lamport:latex,
+    title={\LaTeX: A Document Preparation System},
+    author={Leslie Lamport},
+    edition=2,
+    publisher={Addison Wesley Professional},
+    year=1994,
+    pagetotal=272,
+    isbn={0-201-52983-1},
+    url={https://www.pearson.com/us/higher-education/program/Lamport-La-Te-X-A-Document-Preparation-System-2nd-Edition/PGM159713.html},
+    annotation={The classic introduction to \LaTeX, in continuous reprint for
+        decades.},
+}
+
+@book{hokpkadaly:guide,
+    title={Guide to \LaTeX},
+    author={Helmut Kopka and Patrick W. Daly},
+    edition=4,
+    publisher={Addison-Wesley Professional},
+    year=2004,
+    pagetotal=597,
+    isbn={0-321-17385-6},
+    url={https://www.pearson.com/us/higher-education/program/Kopka-Guide-to-La-Te-X-4th-Edition/PGM156755.html},
+    annotation={An introduction and more advanced material, including an extensive
+        reference guide.},
+}
+
+@book{gratzer:moremath,
+    title={More Math Into \LaTeX},
+    author={George Grätzer},
+    edition=5,
+    publisher={Springer},
+    year=2016,
+    isbn={978-3-319-23795-4},
+    url={https://www.springer.com/gp/book/9783319237954},
+    annotation={Updated edition.},
+}
+
+@book{kottwitz:beginner,
+    title={\LaTeX\ Beginner's Guide},
+    author={Stefan Kottwitz},
+    publisher={Packt Publishing},
+    year=2011,
+    isbn=1847199860,
+    url={https://www.packtpub.com/product/latex-beginner-s-guide/9781847199867},
+    annotation={An overview with numerous examples.},
+}
+
+@book{kottwitz:cookbook,
+    title={\LaTeX\ Cookbook},
+    author={Stefan Kottwitz},
+    publisher={Packt Publishing},
+    year=2015,
+    isbn={978-1-784-39514-8},
+    url={http://latex-cookbook.net},
+    annotation={More examples.},
+}
+
+@book{mittelbachgossens:companion,
+    title={The \LaTeX\ Companion},
+    author={Frank Mittelbach and Michel Goossens and Johannes Braams
+        and David Carlisle and Chris Rowley},
+    edition=2,
+    publisher={Addison-Wesley},
+    year=2004,
+    pagetotal=1090,
+    isbn={0-201-36299-6},
+    url={http://www.informit.com/store/latex-companion-9780133387667},
+    annotation={Provides extended discussion and examples of the inner workings
+        of \LaTeX\ and numerous useful packages.},
+}
+
+@book{voss:typesettingmath,
+    title={Typesetting Mathematics with \LaTeX},
+    author={Herbert Voß},
+    publisher={UIT Cambridge},
+    year=2010,
+    url={https://www.uit.co.uk/typesetting-mathematics-with-latex},
+    isbn={978-1-906-86017-2},
+}
+
+@book{voss:typesettingtables,
+    title={Typesetting Tables with \LaTeX},
+    author={Herbert Voß},
+    publisher={UIT Cambridge},
+    year=2011,
+    url={https://www.uit.co.uk/typesetting-tables-with-latex},
+    isbn={978-1-906-86025-7},
+}
+
+@book{voss:pstricks,
+    title={PSTricks: Graphics and PostScript for \TeX\ and \LaTeX},
+    author={Herbert Voß},
+    publisher={UIT Cambridge},
+    year=2011,
+    url={https://www.uit.co.uk/pstricks},
+    isbn={978-1-906-86013-4},
+}
+
+@book{eijkhout:topic,
+    title={\TeX\ by Topic},
+    subtitle={A \TeX{}nician's Reference},
+    author={Victor Eijkhout},
+    publisher={Addison-Wesley UK},
+    year=1991,
+    pagetotal=317,
+    isbn={0-201-56882-9},
+    url={http://eijkhout.net/texbytopic/texbytopic.html},
+    annotation={A reference for \TeX.
+        This may be useful for understanding the source code of \LaTeX\ packages,
+        many of which are quite old and written in
+        low-level \TeX.
+        \texdoc{texbytopic}
+    },
+}
+
+@book{abrahams:impatient,
+    title={\TeX\ for the Impatient},
+    author={Paul W. Abrahams and Kathryn A. Hargreaves and Karl Berry},
+    year=2020,
+    pagetotal=393,
+    url={https://ctan.org/pkg/impatient},
+    annotation={A tutorial and reference for \TeX, plain \TeX, and Eplain.
+        Also available in French and Chinese. \\
+        \texdoc{impatient}
+    },
+}
+
+@book{abrahams:impatient-cn,
+    title={\TeX\ {\setmainfont{FandolFang} 急就帖}},
+    author={Paul W. Abrahams and Kathryn A. Hargreaves and Karl Berry},
+    year=2014,
+    pagetotal=429,
+    langid={Chinese},
+    language={Chinese},
+    url={https://ctan.org/pkg/impatient},
+    annotation={A tutorial and reference for \TeX, plain \TeX, and Eplain.
+        \texdoc{impatient-cn}
+    },
+}
+
+@book{doob:gentle,
+    title={A Gentle Introduction to \TeX},
+    subtitle={A Manual for Self-study},
+    author={Michael Doob},
+    year=2002,
+    pagetotal=97,
+    url={https://ctan.org/pkg/gentle},
+    annotation={A comprehensive tutorial on plain \TeX.
+        \texdoc{gentle}
+    },
+}
+
+@book{wilkins:started,
+    title={Getting Started with Plain \TeX},
+    author={D. R. Wilkins},
+    year=1994,
+    pagetotal=40,
+    url={http://www.ntg.nl/doc/wilkins/pllong.pdf},
+}
+
+@book{huang:notes,
+    title={\LaTeX\ Notes v 1.20},
+    author={Alpha Huang},
+    year=2008,
+    pagetotal=107,
+    langid={Chinese},
+    language={Chinese},
+    url={https://ctan.org/pkg/latex-notes-zh-cn},
+    annotation={An introduction to \TeX\ and \LaTeX, including the use
+        of Chinese fonts.
+        \texdoc{latex-notes}
+    },
+}
+
+@online{ctex-faq,
+    title={CTEXFAQ ({\setmainfont{FandolFang} 常见问题集})},
+    author={{\setmainfont{FandolFang}吴凌云}},
+    year=2007,
+    pagetotal=41,
+    langid={Chinese},
+    language={Chinese},
+    url={https://ctan.org/pkg/ctex-faq},
+    annotation={\FAQ\ from the Chinese \TeX\ Society.
+        \texdoc{ctex-faq}
+    },
+}
+
+@book{wang:install,
+    title={{\setmainfont{FandolFang}一份简短的关于} \LaTeX {\setmainfont{FandolFang}安装的介绍}},
+    author={{\setmainfont{FandolFang}王然}},
+    year=2020,
+    pagetotal=49,
+    langid={Chinese},
+    language={Chinese},
+    url={https://ctan.org/pkg/install-latex-guide-zh-cn},
+    annotation={Installing \LaTeX\ and compiling documents, using various
+        operating systems.\\
+        \texdoc{install-latex-guide-zh-cn}
+    },
+}
+
+@misc{asymptote-example-cn,
+    title={Asymptote {\setmainfont{FandolFang}范例教程}},
+    author={{\setmainfont{FandolFang}刘海洋}},
+    year=2009,
+    pagetotal=51,
+    langid={Chinese},
+    language={Chinese},
+    url={https://ctan.org/pkg/asymptote-by-example-zh-cn},
+    annotation={A tutorial for \pkg{asymptote} in the form of a graphical \FAQ.
+        \texdoc{asymptote-by-example-zh-cn}
+    },
+}
+
+@book{asymptote-faq-cn,
+    title={Asymptote {\setmainfont{FandolFang}中的常见问题} (FAQ)},
+    author={{\setmainfont{FandolFang}译者}},
+    year=2009,
+    pagetotal=26,
+    langid={Chinese},
+    language={Chinese},
+    url={https://ctan.org/pkg/asymptote-faq-zh-cn},
+    annotation={A translation of the Asymptote \FAQ.
+        \texdoc{asymptote-faq-zh-cn}
+    },
+}
+
+@book{abrahams:impatient-fr,
+    title={TEX pour l’Impatient},
+    author={Paul W. Abrahams and Kathryn A. Hargreaves and Karl Berry},
+    year=2004,
+    pagetotal=407,
+    langid={french},
+    language={french},
+    url={https://ctan.org/pkg/impatient},
+    annotation={A tutorial and reference for \TeX, plain \TeX, and Eplain.
+        \texdoc{impatient-fr}
+    },
+}
+
+@manual{hefferon:first,
+    title={Getting something out of \LaTeX},
+    author={Jim Hefferon},
+    year=2009,
+    url={https://ctan.org/pkg/first-latex-doc},
+    annotation={Create your first document in \LaTeX.},
+}
+
+@manual{flynn:veryshort,
+    title={The very short guide to typesetting with \LaTeX},
+    author={Peter Flynn},
+    year=2016,
+    url={https://ctan.org/pkg/latex-veryshortguide},
+    annotation={A four-page introduction.},
+}
+
+@manual{flynn:formatting,
+    title={Formatting Information, A beginner’s introduction to
+        typesetting with \LaTeX},
+    author={Peter Flynn},
+    year=2005,
+    url={https://ctan.org/pkg/beginlatex},
+    annotation={A beginner’s introduction to typesetting with \LaTeX.}
+}
+
+@manual{talbot:novices,
+    title={\LaTeX\ for Complete Novices},
+    author={Nicola L. C. Talbot},
+    year=2012,
+    pagetotal=279,
+    publisher={Dickimaw Books},
+    url={http://www.dickimaw-books.com},
+    annotation={An extensive introduction for a non-technical person.
+        \texdoc{dickimaw-novices}
+    },
+}
+
+@manual{talbot:phd,
+    title={Using \LaTeX\ to Write a PhD Thesis},
+    author={Nicola L. C. Talbot},
+    year=2013,
+    pagetotal=146,
+    publisher={Dickimaw Books},
+    url={http://www.dickimaw-books.com},
+    annotation={A followup to \pub{\LaTeX\ for Complete Novices}, including extensive
+        discussion about bibliographies, indexes, and glossaries.
+        \texdoc{dickimaw-thesis}
+    },
+}
+
+@manual{morris:gettingstarted,
+    title={Getting Started with \LaTeXe},
+    author={Michael P. Morris},
+    year=2020,
+    pagetotal=33,
+    url={https://ctan.org/pkg/startlatex2e},
+    annotation={A beginner's bare-bones overview.
+        \texdoc{startlatex2e}
+    },
+}
+
+@manual{Bennieston:scientific,
+    title={Writing Scientific Documents Using \LaTeX},
+    author={Andrew J. Bennieston},
+    year=2009,
+    url={https://ctan.org/pkg/intro-scientific},
+    annotation={An introduction to typesetting scientific documents.},
+}
+
+@manual{oetiker:introduction,
+    title={The Not So Short Introduction to \LaTeXe},
+    author={Tobias Oetiker},
+    year=2015,
+    pagetotal=153,
+    language={Numerous languages},
+    url={https://ctan.org/pkg/lshort},
+    annotation={Covers introductory material, customizations,
+        and a simple package.
+        \texdoc{-l lshort}
+    },
+}
+
+@manual{greenwade:reference,
+    title={\LaTeXe: An unofficial reference manual},
+    author={George~D. Greenwade and Stephen Gilmore and Torsten~Martinsen and Karl Berry},
+    url={https://latexref.xyz},
+    pagetotal=246,
+    language={English, French, Spanish},
+    annotation={A thorough but concise reference manual for \LaTeXe,
+        available in several languages.\\
+        \texdoc{-l latex2e-help}
+    },
+}
+
+@manual{latex:authors,
+    title={\LaTeXe\ for authors},
+    author={{\LaTeX3 Project Team}},
+    year=2020,
+    pagetotal=31,
+    url={https://ctan.org/pkg/usrguide},
+    annotation={An overview of the new features of \LaTeXe\ compared to \LaTeX 2.09.
+        \texdoc{usrguide}
+    },
+}
+
+@manual{downes:shortmath,
+    title={Short Math Guide for \LaTeX},
+    author={Michael Downes and Barbara Beeton},
+    year=2017,
+    pagetotal=21,
+    url={https://ctan.org/pkg/short-math-guide},
+    annotation={A summary of features in \LaTeX\ and packages for writing
+        math formulas. 
+        \texdoc{short-math-guide}
+    },
+}
+
+@article{voss:farbige,
+    title={Farbige Mathematik},
+    journaltitle={TeXnische Komödie},
+    author={Herbert Voß},
+    year=2004,
+    pagetotal=7,
+    langid={german},
+    language={german},
+    url={https://ctan.org/pkg/voss-mathcol},
+    annotation={Math in color.  In German, but with easy-to-use examples.
+        \texdoc{voss-mathcol}
+    },
+}
+
+@online{weissenburger:anleitung,
+    title={Anleitung},
+    author={Jens Weissenburger and Damir Rakityansky},
+    year=2003,
+    langid={german},
+    language={german},
+    url={https://ctan.org/pkg/anleitung},
+    annotation={Using \LaTeX, Mik\TeX, and TrueType fonts.},
+}
+
+@manual{Gonzato:musicians,
+    title={\LaTeX\ for Musicians},
+    author={Guido Gonzato},
+    year=2019,
+    pagetotal=66,
+    url={https://ctan.org/pkg/latex4musicians},
+    annotation={Packages and programs for music symbols, lyrics, chord sheets,
+        sheet music, and guitar tablature. 
+        \texdoc{latex4musicians}
+    },
+}
+
+@article{mertz:beamer,
+    title={Beamer by Example},
+    author={Andrew Mertz and William Slough},
+    year=2005,
+    pagetotal=17,
+    journaltitle={{The Prac\TeX\ Journal}},
+    volume=2005,
+    number=4,
+    url={http://tug.org/pracjourn/2005-4/mertz/mertz.pdf},
+    annotation={Graduated examples of the \pkg{beamer} package.},
+}
+
+@book{voss:presentations,
+    title={Presentations with \LaTeX},
+    author={Herbert Voß},
+    publisher={Lehmanns Media GmbH},
+    year=2012,
+    pagetotal=206,
+    isbn=9783865414960,
+}
+
+@online{voss:presentations-en,
+    title={Examples from the book Presentations with \LaTeX},
+    author={Herbert Voß},
+    url={https://ctan.org/pkg/presentations-en},
+    year=2012,
+    annotation={Source for examples from the book.}
+}
+
+@online{voss:presentations-de,
+    title={Examples from the book Presentations with \LaTeX},
+    author={Herbert Voß},
+    url={https://ctan.org/pkg/presentations},
+    year=2009,
+    langid={german},
+    language={german},
+    annotation={Source for examples from the book.}
+}
+
+@manual{pakin:list,
+    title={The Comprehensive \LaTeX\ Symbol List},
+    author={Scott Pakin},
+    year=2017,
+    pagetotal=348,
+    url={https://ctan.org/pkg/comprehensive},
+    annotation={More than 14,000 symbols and \LaTeX\ commands.
+        \texdoc{comprehensive}
+    },
+}
+
+@manual{robertson:mathsymbols,
+    title={Every symbol (most symbols) defined by unicode-math},
+    author={Will Robertson},
+    year=2018,
+    pagetotal=119,
+    url={https://ctan.org/pkg/unicode-math},
+    annotation={Unicode math symbols.
+        \texdoc{unimath-symbols}
+    },
+}
+
+@online{detexify,
+    title={Detexify},
+    url={http://detexify.kirelabs.org/classify.html},
+    annotation={Draw a symbol, and the website tells you which macros might
+        make that symbol.}
+}
+
+@online{shapecatcher,
+    title={shapecatcher},
+    url={http://shapecatcher.com/},
+    annotation={Draw a symbol, and the website tells you which Unicode
+    symbols it might be.}
+}
+
+@manual{latexteam:sources,
+    title={The \LaTeXe\ Sources},
+    author={Johannes Braams and David Carlisle and Alan Jeffrey and Leslie Lamport and
+        Frank Mittelbach and Chris Rowley and Rainer Sch\"opf},
+    url={https://ctan.org/pkg/source2e},
+    pagetotal=955,
+    annotation={Occasionally useful for figuring out how something really works.
+        \texdoc{source2e}
+    },
+}
+
+@manual{scharrer:listinternal,
+    title={List of internal \LaTeXe\ Macros useful to Package Authors},
+    author={Martin Scharrer},
+    url={https://ctan.org/pkg/macros2e},
+    pagetotal=14,
+    annotation={A list of the core \LaTeX\ macros, each of which is linked to the
+        source code.
+        \texdoc{macros2e}
+    },
+}
+
+@online{TeX:FAQ,
+    title={\TeX\ FAQ},
+    url={https://texfaq.org/},
+    annotation={An online resource, which includes a detailed list of printed books.}
+}
+
+@online{TUG:interest,
+    title={\TeX\ Resources on the Web},
+    author={{\TeX\ Users Group}},
+    url={http://tug.org/interest.html},
+    annotation={A large collection of links to numerous resources.}
+}
+
+@online{faq:india,
+    title={Online tutorials on \LaTeX},
+    author={{Indian \TeX\ Users Group}},
+    url={http://tug.org/tutorials/tugindia/},
+    year=2000,
+    annotation={An extensive tutorial covering many aspects of \LaTeX.}
+}
+
+@manual{pakin:visual,
+    title={The Visual \LaTeX\ FAQ},
+    author={Scott Pakin},
+    pagetotal=33,
+    url={https://ctan.org/pkg/visualfaq},
+    annotation={Click on a visual element to learn how it is programmed.
+        \texdoc{visualFAQ}
+    },
+}
+
+@manual{casteleyn:pstricks,
+    title={Visual PSTricks},
+    author={Jean Pierre Casteleyn},
+    year=2016,
+    pagetotal=261,
+    language={English, French},
+    url={https://ctan.org/pkg/visualpstricks},
+    annotation={A visual \FAQ\ consisting of a small example for each effect.
+        \texdoc{-l visualpstricks}
+    },
+}
+
+@manual{casteleyn:tikz,
+    title={Visual TikZ},
+    author={Jean Pierre Casteleyn},
+    year=2018,
+    pagetotal=221,
+    language={English, French},
+    url={https://ctan.org/pkg/visualtikz},
+    annotation={A visual \FAQ\ consisting of a small example for each effect.
+        \texdoc{-l visualtikz}
+    },
+}
+
+
+@manual{lammarsch:cheat,
+    title={\LaTeX\ Cheat Sheet},
+    author={Marion Lammarsch},
+    year=2017,
+    pagetotal=4,
+    url={https://ctan.org/pkg/latex-refsheet},
+    annotation={A reference for \LaTeX\ with KOMA-Script.
+        \texdoc{latex-refsheet}
+    },
+}
+
+@manual{schlomer:cheat,
+    title={\TeX\ font errors: Cheatsheet},
+    author={Nico Schlömer},
+    year=2010,
+    pagetotal=3,
+    url={https://ctan.org/pkg/tex-font-errors-cheatsheet},
+    annotation={How \TeX\ integrates fonts, and related error messages.
+        \texdoc{tex-font-errors-cheatsheet}
+    },
+}
+
+@manual{chang:cheat,
+    title={\LaTeXe\ Cheat Sheet},
+    author={Winston Chang},
+    year=2006,
+    pagetotal=2,
+    url={https://ctan.org/pkg/latexcheat},
+    annotation={A quick-reference guide for \LaTeX\ and Bib\TeX.
+        Also in Brazilian Portuguese, German, Japanese, and Spanish.
+        \texdoc{latexcheat}
+    },
+}
+
+@manual{chang:cheat-de,
+    title={\LaTeXe Befehlsübersicht},
+    author={Winston Chang},
+    year=2006,
+    pagetotal=2,
+    langid={german},
+    language={german},
+    translator={Tammo Schwindt},
+    url={https://ctan.org/pkg/latexcheat-de},
+    annotation={A quick-reference guide for \LaTeX\ and Bib\TeX.
+        \texdoc{latexcheat-de}
+    },
+}
+
+@online{faq-de,
+    title={The DANTE \TeX\ Users Group Frequently Asked Questions},
+    langid={german},
+    language={german},
+    url={https://ctan.org/pkg/faq-de},
+}
+
+@manual{chang:cheat-esmx,
+    title={Acordeón para \LaTeXe},
+    author={Winston Chang},
+    year=2006,
+    pagetotal=2,
+    langid={spanish},
+    language={spanish},
+    translator={J. Luis Rivera},
+    url={https://ctan.org/pkg/latexcheat-esmx},
+    annotation={A quick-reference guide for \LaTeX\ and Bib\TeX.
+        \texdoc{latexcheat-esmx}
+    },
+}
+
+@manual{faq-es,
+    title={CervanTeX (Spanish TeX Group) FAQ},
+    langid={spanish},
+    language={spanish},
+    url={https://ctan.org/pkg/faq-es},
+    annotation={\texdoc{es-tex-faq}},
+}
+
+@manual{chang:cheat-ptbr,
+    title={Guia Rápido \LaTeXe},
+    author={Winston Chang},
+    year=2006,
+    pagetotal=2,
+    langid={brazilian},
+    language={brazilian},
+    translator={Silvio C. G. Granja},
+    url={https://ctan.org/pkg/latexcheat-ptbr},
+    annotation={A quick-reference guide for \LaTeX\ and Bib\TeX.
+        \texdoc{latexcheat-ptbr}
+    },
+}
+
+@manual{chang:platexcheat,
+    title={p\LaTeXe\ {\setmainfont{Harano Aji Mincho}チートシート}},
+    author={Winston Chang},
+    year=2006,
+    pagetotal=2,
+    langid={japanese},
+    language={japanese},
+    translator={Takuto Asakura},
+    url={https://ctan.org/pkg/platexcheat},
+    annotation={A quick-reference guide for \LaTeX\ and Bib\TeX.
+        \texdoc{platexcheat}
+    },
+}
+
+@manual{bouzigues:guide,
+    title={Initiation à \LaTeX},
+    subtitle={Pour débutants ou jeunes utilisateurs},
+    author={Adrien Bouzigues},
+    langid={french},
+    language={french},
+    year=2017,
+    pagetotal=273,
+    url={https://ctan.org/pkg/guide-latex-fr},
+    annotation={A guide on \LaTeX\ — for beginners or advanced users.},
+}
+
+@book{rouquette:sciences,
+    title={\XeLaTeX — Appliqué Aux Sciences Humaines},
+    author={Maïeul Rouquette},
+    langid={french},
+    language={french},
+    year=2012,
+    pagetotal=268,
+    url={https://ctan.org/pkg/latex-sciences-humaines},
+}
+
+@manual{Goulet:Redaction,
+    title={Rédaction avec \LaTeX},
+    author={Vincent Goulet},
+    year=2020,
+    pagetotal=196,
+    langid={french},
+    language={french},
+    url={https://ctan.org/pkg/formation-latex-ul},
+    annotation={An introductory course prepared for
+        Université Laval, Québec, Canada. \\
+        \texdoc{formation-latex-ul}, \texdoc{formation-latex-ul-diapos}
+    },
+}
+
+@manual{Holkar:polyglossia,
+    title={A practical guide to \LaTeX\ and polyglossia for Indian Languages},
+    author={Rohit Dilip Holkar},
+    year=2017,
+    pagetotal=37,
+    langid={marathi},
+    language={Marathi},
+    url={https://ctan.org/pkg/latex-mr},
+    annotation={Discusses Marathi, but also relevent to other Indian langauges.
+        \texdoc{latex-mr}
+    },
+}
+
+@manual{massago:exemplos,
+    title={\LaTeXe\ Via Exemplos},
+    author={Sadao Massago},
+    year=2018,
+    pagetotal=264,
+    langid={brazilian},
+    language={brazilian},
+    url={https://ctan.org/pkg/latex-via-exemplos},
+    annotation={A study course.},
+}
+
+@online{texwikibook,
+    title={Wikibooks},
+    subtitle={TeX},
+    url={https://en.wikibooks.org/wiki/TeX},
+    annotation={An online book about low-level \TeX.},
+}
+
+@online{latexwikibook,
+    title={Wikibooks},
+    subtitle={LaTeX},
+    url={https://en.wikibooks.org/wiki/LaTeX},
+    annotation={An online book, includes information about
+        creating \LaTeX\ packages and classes.},
+}
+
+@online{ebookfoundation:free,
+    title={Free Programming Books},
+    author={Ebook Foundation},
+    url={https://github.com/EbookFoundation/free-programming-books},
+    annotation={A variety of \TeX-related and other programming books
+        and documents.},
+}
+
+@book{wilson:design,
+    title={A Few Notes on Book Design},
+    author={Peter Wilson},
+    year=2009,
+    month=8,
+    publisher={The Herries Press},
+    edition=1,
+    pagetotal=139,
+    url={https://ctan.org/pkg/memdesign},
+    annotation={More than 100 pages of discussion about book design and typography.
+        \texdoc{memdesign}
+    },
+}
+
+@manual{kohm:typearea,
+    title={KOMA-Script — The Guide},
+    author={Markus Kohm},
+    year=2018,
+    pagetotal=565,
+    url={https://ctan.org/pkg/koma-script},
+    annotation={Documentation for the KOMA-Script package.
+        Also includes discussion about the page layout of a book.
+        \texdoc{typearea}
+    },
+}
+
+@manual{tufte:book,
+    title={A TUFTE-STYLE BOOK},
+    author={{The Tufte-LaTeX Developers}},
+    year=2015,
+    pagetotal=42,
+    url={https://ctan.org/pkg/tufte-latex},
+    annotation={Documentation for the Tufte-\LaTeX\ document classes.
+        Also includes layout ideas from the books of Edward R. Tufte.
+        \texdoc{tufte-latex}
+    },
+}
+
+@article{revets:octavo,
+    title={The Octavo Package},
+    author={Stefan A. Revets},
+    journaltitle={TUGboat},
+    number={23 3/4},
+    year=2002,
+    pages={269},
+    url={https://ctan.org/pkg/octavo},
+    annotation={Design principles and guidelines emulating books from the Renaissance.
+        \texdoc{octavo}
+    },
+}
+
+@manual{beccari:canoniclayout,
+    title={Package canoniclayout},
+    author={Claudio Beccari},
+    year=2011,
+    pagetotal=8,
+    url={https://ctan.org/pkg/canoniclayout},
+    annotation={Documentation for the \pkg{canoniclayout} package.
+        Also includes ideas regarding text-block proportions.
+        \texdoc{canoniclayout}
+    },
+}
+
+@manual{oostrum:fancyhdr,
+    title={The fancyhdr and extramarks packages},
+    author={Pieter van Oostrum},
+    year=2021,
+    pagetotal=74,
+    url={https://ctan.org/pkg/fancyhdr},
+    annotation={Documents the \pkg{fancyhdr} and \pkg{extramarks} packages.
+        Also includes an overview of the \LaTeX\ page mark system.
+        \texdoc{fancyhdr}
+    },
+}
+
+@manual{fear:booktabs,
+    title={Publication-quality tables in \LaTeX},
+    author={Simon Fear},
+    year=2016,
+    pagetotal=18,
+    url={https://ctan.org/pkg/booktabs},
+    annotation={Documents the \pkg{booktabs} package, and also includes
+        thoughts on the design of tabular layouts in general.
+        \texdoc{booktabs}
+    },
+}
+
+@manual{tantu:pgf,
+    title={The TikZ and PGF Packages},
+    author={Till Tantau},
+    year=2020,
+    pagetotal=1321,
+    url={https://ctan.org/pkg/pgf},
+    annotation={As well as documenting the packages, this manual also includes
+        ``General guidelines and principles concerning the creation of graphics
+        for scientific presentations, papers, and books''. \\
+        \texdoc{pgfmanual}
+    },
+}
+
+@online{texdocnet,
+    title={TeXdoc Online},
+    url={http://texdoc.net},
+    annotation={An online version of \prog{texdoc},
+        with popular packages sorted by category.},
+}
+
+@online{ctan,
+    title={Comprehensive \TeX\ Archive Network},
+    shorttitle={CTAN},
+    url={https://ctan.org},
+    annotation={
+        The Comprehensive \TeX\ Archive Network (\CTAN) provides a master collection of
+        packages.  A search function is available, which is useful when you know the
+        name of a package or its author, and a list of topics is also provided.
+        There are so many topics, however, that finding the right topic can be a
+        problem in itself.  One useful method to find what you are looking for is
+        to search for a related package you may already know about, then look at
+        its description on \CTAN\ to see what topics are shown for it.  Selecting these
+        topics then shows you related packages.
+    },
+}
+
+@manual{pakin:dtxtut,
+    title={How to Package Your \LaTeX\ Package},
+    author={Scott Pakin},
+    pagetotal=36,
+    url={https://ctan.org/pkg/dtxtut},
+    annotation={A tutorial.
+        \texdoc{dtxtut}
+    },
+}
+
+@manual{latexteam:class,
+    title={\LaTeXe\ for class and package writers},
+    author={{\LaTeX3 Project Team}},
+    pagetotal=33,
+    url={https://ctan.org/pkg/clsguide},
+    annotation={Programming a package or class.
+        \texdoc{clsguide}
+    },
+}
+
+@manual{mittelbach:doc,
+    title={The doc and shortvrb packages},
+    author={Frank Mittelbach},
+    pagetotal=64,
+    url={https://ctan.org/pkg/doc},
+    annotation={Packages for documenting packages.
+        \texdoc{doc}
+    },
+}
+
+@manual{mittelbach:docstrip,
+    title={The DocStrip program},
+    author={Frank Mittelbach and Denys Duchier and Johannes Braams and
+        Marcin Woli\'nski and Mark Wooding},
+    pagetotal=61,
+    url={https://ctan.org/pkg/docstrip},
+    annotation={The program which processes \filenm{.dtx}
+        and \filenm{.ins} files to generate documentation and \filenm{.sty} files.\\
+        \texdoc{docstrip}
+    },
+}
+
+@article{flynn:article,
+    title={Rolling your own Document Class:
+        Using \LaTeX\ to keep away from the Dark Side},
+    author={Peter Flynn},
+    journaltitle={TUGboat},
+    number={28:1},
+    year=2007,
+    pages={110--123},
+    url={http://tug.org/TUGboat/tb28-1/tb88flynn.pdf},
+    annotation={An overview of the \pkg{article} class.},
+}
+
+@article{pakin:goodthings,
+    title={Good things come in little packages:
+        An introduction to writing \texttt{.ins} and \texttt{.dtx} files},
+    author={Scott Pakin},
+    journaltitle={TUGboat},
+    number={29:2},
+    year=2008,
+    pages={305--314},
+    url={http://tug.org/TUGboat/tb29-2/tb92pakin.pdf},
+    annotation={How and why to create your own \filenm{.dtx} and \filenm{.ins} files.},
+}
+
+@article{mansfield:class,
+    title={How to develop your own document class\Dash our experience},
+    author={Niall Mansfield},
+    journaltitle={TUGboat},
+    number={29:3},
+    year=2008,
+    pages={356--361},
+    url={http://tug.org/TUGboat/tb29-3/tb93mansfield.pdf},
+    annotation={A comparison of developing class vs.\ package files.},
+}
+
+@online{gutenberg:TeXniques,
+    title={TeXniques},
+    subtitle={Groupe francophone des Utilisateurs de TEX, \LaTeX\ et logiciels compagnons},
+    langid={french},
+    language={french},
+    url={https://www.gutenberg.eu.org/TeXniques},
+    annotation={A collection of resources.},
+}
+
+@online{faq-fr,
+    title={French FAQ of the Gutenberg \TeX\ user group},
+    langid={french},
+    language={french},
+    translator={Marie-Paule Kluth},
+    url={https://ctan.org/pkg/faq-fr},
+}
+
+@book{lozano:everythingLaTeX,
+    title={Tout Ce Que Vous Avez Toujours Voulu Savoir Sur \LaTeX\ Sans Jamais Oser Le Demander},
+    author={Vincent Lozano},
+    year=2011,
+    pagetotal=271,
+    langid={french},
+    language={french},
+    url={http://lozzone.free.fr/index.php?vlunch=latex},
+    annotation={A book for beginners.},
+}
+
+@book{baudoin:learnLaTeX,
+    title={Apprends \LaTeX!},
+    author={Marc Baudoin},
+    year=2012,
+    pagetotal=222,
+    langid={french},
+    language={french},
+    url={http://www.babafou.eu.org/Apprends_LaTeX},
+    annotation={A full textbook written for
+            École Nationale Supérieure de Techniques Avancées.},
+}
+
+@book{tellechea:apprendre,
+    title={Apprendre à programmer en \TeX},
+    author={Christian Tellechea},
+    year=2014,
+    pagetotal=580,
+    langid={french},
+    language={french},
+    url={https://ctan.org/pkg/apprendre-a-programmer-en-tex},
+    annotation={Basic programming of \TeX, with examples.
+        \texdoc{apprendre}
+    },
+}
+
+@book{reckdahl:freps,
+    title={Utilisation de Graphiques Importés dans \LaTeX2},
+    author={Keith Reckdahl},
+    year=2001,
+    pagetotal=148,
+    langid={french},
+    language={french},
+    url={https://ctan.org/pkg/fepslatex},
+    annotation={How to import graphics in \LaTeXe.
+        \texdoc{fepslatex}
+    },
+}
+
+@book{reckdahl:eps,
+    title={Using Imported Graphics in \LaTeX\ and pdf\LaTeX},
+    author={Keith Reckdahl},
+    year=2006,
+    pagetotal=124,
+    url={https://ctan.org/pkg/epslatex},
+}
+
+@manual{amsmath,
+    title={User’s Guide for the amsmath Package},
+    author={{American Mathematical Society} and {\LaTeX3 Project Team}},
+    year=2020,
+    pagetotal=44,
+    url={https://ctan.org/pkg/amsmath},
+    annotation={How to use \pkg{amsmath}.
+        Also see \nameref{sec:international} for the Italian, Japanese,
+        and Vietnamese translations.
+        \texdoc{amsmath}
+    },
+}
+
+@manual{amsmath-it,
+    title={Manuale utente per il pacchetto amsmath},
+    author={{American Mathematical Society} and {\LaTeX3 Project Team}},
+    year=1999,
+    pagetotal=39,
+    langid={italian},
+    language={italian},
+    translator={
+        Giulio Agostini and Giuseppe Bilotta and Flavio Casadei Della Chiesa and Onofrio
+        de Bari and Giacomo Delre and Luca Ferrante and Tommaso Pecorella and
+        Mileto Rigido and Roberto Zanasi
+    },
+    url={http://tug.ctan.org/tex-archive/info/italian/amsldoc/itamsldoc.pdf},
+    annotation={Manual for \pkg{amsmath}.
+        \texdoc{amsldoc-it}
+    },
+}
+
+@manual{campani:tutorial,
+    title={Introdução ao Uso do Preparador de Documentos \LaTeX},
+    author={Carlos A. P. Campani},
+    year=2011,
+    pagetotal=188,
+    langid={portuguese},
+    language={portuguese},
+    url={https://ctan.org/pkg/cursolatex},
+    annotation={A tutorial as \acro{PDF} slides.
+        \texdoc{cursolatex}
+    },
+}
+
+@manual{amsmath-vn,
+    title={{\setmainfont{Latin Modern Roman} \textit{Hướng dẫn sử dụng gói amsmath}}},
+    author={{American Mathematical Society} and {\LaTeX3 Project Team}},
+    year=1999,
+    pagetotal=36,
+    langid={vietnamese},
+    language={Vietnamese},
+    translator={Ky Anh},
+    url={https://ctan.org/pkg/amslatexdoc-vietnamese},
+    annotation={Manual for \pkg{amsmath}.
+        \texdoc{amsldoc-vn}
+    },
+}
+
+@manual{latex2e-japanese,
+    title={\LaTeX2e for authors},
+    author={{\LaTeX3 Project Team}},
+    langid={japanese},
+    language={japanese},
+    translator={Yukitoshi FUJIMURA},
+    year=2015,
+    pagetotal=34,
+    annotation={An overview of the new features of \LaTeXe\ compared to \LaTeX 2.09.},
+    url={https://www.latex-project.org/help/documentation/usrguide_jpn.pdf},
+}
+
+@manual{amsmath-jp,
+    title={User’s Guide for the amsmath Package},
+    author={{American Mathematical Society} and {\LaTeX3 Project Team}},
+    translator={Yukitoshi FUJIMURA},
+    langid={japanese},
+    language={japanese},
+    year=2018,
+    pagetotal=45,
+    url={https://www.latex-project.org/help/documentation/amsldoc_jpn.pdf},
+    annotation={Manual for \pkg{amsmath}.},
+}
+
+@manual{shortmath-jp,
+    title={Short Math Guide for \LaTeX},
+    author={Michael Downes and Barbara Beeton},
+    translator={Yukitoshi FUJIMURA},
+    langid={japanese},
+    language={japanese},
+    year=2017,
+    pagetotal=21,
+    url={https://www.latex-project.org/help/documentation/short-math-guide_jpn.pdf},
+}
+
+@online{LaTeXfontcatalog,
+    title={The \LaTeX\ Font Catalogue},
+    author={Palle Jørgensen},
+    url={https://www.tug.org/FontCatalogue/},
+    annotation={A detailed list of fonts for \LaTeX, each with
+        samples and setup information.}
+}
+
+@online{tug:fonts,
+    title={Fonts and \TeX},
+    author={{\TeX\ User's Group}},
+    url={http://tug.org/fonts/},
+    annotation={A collection of links related to \TeX\ and fonts.},
+}
+
+@manual{fntguide,
+    title={\LaTeXe\ font selection},
+    author={\LaTeX3 Project Team},
+    year=2020,
+    pagetotal=35,
+    url={https://ctan.org/pkg/fntguide},
+    annotation={Documentation of commands for selecting fonts,
+        as well as those for defining the data-structures used by the selection commands.
+        \texdoc{fntguide}
+    },
+}
+
+@manual{encguide,
+    title={\LaTeX\ font encodings},
+    author={Frank Mittelbach and Robin Fairbairns and Werner Lemberg and
+        \LaTeX3 Project Team},
+    year=2016,
+    pagetotal=39,
+    url={https://ctan.org/pkg/encguide},
+    annotation={About T1 encoding, OT1, etc.
+        \texdoc{encguide}
+    },
+}
+
+@article{rahtz:essentialnfss,
+    title={Essential NFSS2, version 2},
+    author={Sebastian Rahtz},
+    journaltitle={TUGBoat},
+    year=1993,
+    volume=14,
+    number=2,
+    pages={132--137},
+    pagetotal=6,
+    url={tug.org/TUGboat/Articles/tb14-2/tb39rahtz-nfss.pdf},
+    annotation={A user's view of the New Font Selection Scheme, version 2.},
+}
+
+@article{schmidt:fontselection,
+    title={Font selection in \LaTeX: The most frequently asked questions},
+    author={Walter Schmidt},
+    journaltitle={The Prac\TeX\ Journal},
+    year=2006,
+    volume=2006,
+    number=1,
+    pagetotal=6,
+    url={tug.org/pracjourn/2006-1/schmidt/schmidt.pdf},
+    annotation={Covers basic commands, default fonts, available font families,
+        fonts for certain parts of the document.}
+}
+
+@manual{cyrguide,
+    title={Cyrillic languages support in \LaTeX},
+    author={Vladimir Volovich and Werner Lemberg and {\LaTeX3 Project Team}},
+    year=1999,
+    url={https://ctan.org/pkg/cyrguide},
+    pagetotal=7,
+    annotation={Installation, usage, encodings.  \texdoc{cyrguide}},
+}
+
+@online{rakityansky:truetype,
+    title={Using TrueType fonts with \TeX\ (\LaTeX) and pdf\TeX\ (pdf\LaTeX)},
+    author={Damir Rakityansky},
+    url={http://www.radamir.com/tex/ttf-tex.htm},
+}
+
+@manual{luatex:reference,
+    title={Lua\TeX\ Reference Manual},
+    author={{Lua\TeX\ development team}},
+    url={http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf},
+    year=2020,
+    pagetotal=318,
+    annotation={The complete reference. \texdoc{luatex}},
+}
+
+@manual{gonnard:lualatex,
+    title={A guide to Lua\LaTeX},
+    author={Manuel Pégourié-Gonnard},
+    year=2013,
+    url={https://ctan.org/pkg/lualatex-doc},
+    pagetotal=14,
+    annotation={An overview, and references to related packages.
+        \texdoc{lualatex-doc}
+    },
+}
+
+@manual{xetex:reference,
+    title={The \XeTeX\ reference guide},
+    author={Will Robertson and Khaled Hosny and Karl Berry},
+    year=2019,
+    pagetotal=25,
+    url={https://ctan.org/pkg/xetex},
+    annotation={A summary of additional features over \TeX.
+        \texdoc{xetex-reference}
+    },
+}
+
+@manual{xetex:companion,
+    title={The \XeTeX\ Companion},
+    subtitle={\TeX\ meets OpenType and Unicode},
+    author={Michel Goossens and Jonathan Kew and Will Robertson
+        and François Charette and Dian Yin},
+    year=2010,
+    pagetotal=112,
+    url={https://ctan.org/pkg/xetex},
+    annotation={Introduction to OpenType and Unicode, using OpenType fonts,
+        handling Unicode-encoded sources.},
+}
+
+@manual{dhawan:font,
+    title={font-change-xetex},
+    subtitle={Macros to use OpenType and TrueType fonts with \XeTeX},
+    author={Amit Raj Dhawan},
+    year=2016,
+    pagetotal=21,
+    url={https://ctan.org/pkg/font-change-xetex},
+    annotation={For plain \XeTeX.
+        \texdoc{font-change-xetex}
+    },
+}
+
+@manual{latex:interface3,
+    title={The \LaTeX3 Interfaces},
+    author={{\LaTeX3 Project Team}},
+    year=2020,
+    pagetotal=310,
+    url={https://ctan.org/pkg/l3kernel},
+    annotation={Reference documentation for the \pkg{expl3} programming environment.
+        \texdoc{interface3}
+    },
+}
+
+@manual{latex:expl3,
+    title={The expl3 package and \LaTeX3 programming},
+    author={{\LaTeX3 Project Team}},
+    year=2020,
+    pagetotal=16,
+    url={https://ctan.org/pkg/l3kernel},
+    annotation={Introduction to \pkg{expl3}. \texdoc{expl3}},
+}
+
+@manual{latex:styleguide3,
+    title={The \LaTeX3 kernel: style guide for code authors},
+    author={{\LaTeX3 Project Team}},
+    year=2020,
+    pagetotal=5,
+    url={https://ctan.org/pkg/l3kernel},
+    annotation={Style guide for authors using \pkg{expl3}.  \texdoc{l3styleguide}},
+}
+
+
+@manual{markey:tame,
+    title={Tame the BeaST},
+    subtitle={The B to X of Bib\TeX},
+    author={Nicolas Markey},
+    year=2009,
+    pagetotal=48,
+    url={https://ctan.org/pkg/tamethebeast/},
+    annotation={About bibliographies and Bib\TeX.
+        \texdoc{tamethebeast}
+    },
+}
+
+@manual{rees:biblatex,
+    title={Biblatex Cheat Sheet},
+    author={Clea F. Rees},
+    year=2017,
+    pagetotal=2,
+    url={https://ctan.org/pkg/biblatex-cheatsheet},
+    annotation={A tri-fold quick reference. \texdoc{biblatex-cheatsheet}},
+}
+
+@online{tugboat,
+    title={TUGBoat},
+    author={{\TeX\ Users Group}},
+    url={http://tug.org/TUGboat/},
+    annotation={The Communications of the \TeX\ Users Group.
+        Published since 1980.
+        Articles covering every aspect of \TeX.},
+}
+
+@online{practex,
+    title={The Prac\TeX\ Journal},
+    author={{\TeX\ Users Group}},
+    url={http://tug.org/pracjourn/},
+    issn={1556-6994},
+    annotation={The online journal of the \TeX\ Users Group.
+        Twenty issues, from 2005--2012.},
+}
+
+@online{tug:books,
+    title={Books about \TeX, typography, and friends},
+    author={{\TeX\ Users Group}},
+    url={http://tug.org/books/},
+    annotation={\TeX\ Users Group book store, with reviews.
+        Includes more than 75 books.
+        Categories: published by TUG, by Donald E. Knuth,
+        about \TeX\ and its applications, about typography and fonts,
+        and about other related topics.
+        Discounts for TUG members.
+    },
+}
+
+@online{tug:interviews,
+    title={TUG Interview Corner},
+    author={{\TeX\ Users Group}},
+    url={http://tug.org/interviews/},
+    annotation={A large collection of interviews and articles
+        about people related to \TeX.
+        Includes links to more than 250 lectures and other recordings by Donald Knuth,
+        and various historical information.
+    }
+}
+
+\end{filecontents}
+
+
+\begin{filecontents}[overwrite]{docsurvey.bbx}
+% Based on reading.bbx from the biblatex package.
+\ProvidesFile{docsurvey.bbx}
+[\abx@bbxid]
+
+\RequireBibliographyStyle{standard}
+
+\DeclareBibliographyDriver{manual}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+%  \usebibmacro{author/editor}%     docsurvey modification
+  \usebibmacro{author/editor+others/translator+others}%     docsurvey modification
+  \setunit{\printdelim{nametitledelim}}\newblock
+  \usebibmacro{title}%
+  \newunit
+  \printlist{language}%
+  \newunit\newblock
+  \usebibmacro{byauthor}%
+  \newunit\newblock
+  \usebibmacro{byeditor+others}%    docsurvey modification
+  \newunit\newblock%    docsurvey modification
+  \usebibmacro{byeditor}%
+  \newunit\newblock
+  \printfield{edition}%
+  \newunit\newblock
+  \usebibmacro{series+number}%
+  \newunit\newblock
+  \printfield{type}%
+  \newunit
+  \printfield{version}%
+  \newunit
+  \printfield{note}%
+  \newunit\newblock
+  \printlist{organization}%
+  \newunit
+  \usebibmacro{publisher+location+date}%
+  \newunit\newblock
+  \usebibmacro{chapter+pages}%
+  \newunit
+  \printfield{pagetotal}%
+  \newunit\newblock
+  \iftoggle{bbx:isbn}
+    {\printfield{isbn}}
+    {}%
+  \newunit\newblock
+  \usebibmacro{doi+eprint+url}%
+  \newunit\newblock
+  \usebibmacro{addendum+pubstate}%
+  \setunit{\bibpagerefpunct}\newblock
+  \usebibmacro{pageref}%
+  \newunit\newblock
+  \iftoggle{bbx:related}
+    {\usebibmacro{related:init}%
+     \usebibmacro{related}}
+    {}%
+  \usebibmacro{finentry}}
+
+
+\DeclareNameAlias{author}{default}
+\DeclareNameAlias{editor}{default}
+
+\DeclareFieldFormat{entrykey}{\mbox{\bfseries#1}}
+\DeclareFieldFormat{annotation}{%
+%     \bibstring{annotation}\addcolon\space %
+    #1%
+}
+\DeclareFieldFormat{abstract}{\bibstring{abstract}\addcolon\space #1}
+\DeclareFieldFormat{library}{\bibstring{library}\addcolon\space #1}
+\DeclareFieldFormat{file}{\bibstring{file}\addcolon\space \url{#1}}
+\DeclareFieldFormat{shorthandwidth}{#1}
+
+\InitializeBibliographyStyle{%
+  \global\undef\bbx@lasthash}
+
+\setlength{\bibitemsep}{.75\baselineskip}
+\setlength{\bibparsep}{0pt}
+
+\defbibenvironment{bibliography}
+  {\list
+     {}
+     {\setlength{\leftmargin}{0pt}%
+      \setlength{\itemindent}{0pt}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\bbx@item}
+
+\defbibenvironment{shorthand}
+  {\list
+     {\printfield[shorthandwidth]{shorthand}}
+     {\setlength{\labelwidth}{\shorthandwidth}%
+      \setlength{\leftmargin}{\labelwidth}%
+      \setlength{\labelsep}{\biblabelsep}%
+      \addtolength{\leftmargin}{\labelsep}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}%
+      \renewcommand*{\makelabel}[1]{##1\hss}}}
+  {\endlist}
+  {\item}
+
+\def\bbx@item@false{%
+  \itemsep2\bibitemsep
+  \item\relax
+  \itemsep\bibitemsep}
+
+\def\bbx@item@true{%
+  \bbx@item@full}
+
+\def\bbx@item@full{%
+  \itemsep2\bibitemsep
+  \@itempenalty\z@
+  \item\relax
+  \begingroup
+  \samepage\bfseries
+  \def\finentrypunct{\strut}%
+  \usebibmacro{entryhead:full}%
+  \ifbool{bbx:entrykey}
+    {\def\newblockpunct{%
+       \nobreak\hskip\z@skip\strut
+       \hfill\penalty100\hskip1em\relax
+       \hbox{}\nobreak\hfill\strut}%
+     \def\finentrypunct{%
+       \parfillskip\z@\finalhyphendemerits\z@
+       \par\nobreak}%
+     \newblock
+     \printfield{entrykey}}
+    {}%
+  \finentry
+  \endgroup
+  \nopagebreak%     docsurvey modification
+  \\[-.7ex]%   docsurvey modification
+  \textcolor{lightgray}{\rule[\smallskipamount]{\linewidth}{1.2pt}}%     docsurvey modification
+  \vspace*{-\medskipamount}%   docsurvey modification
+  \itemsep\bibitemsep
+  \@itempenalty\@M
+  \item\strut
+  \@itempenalty\z@}
+
+\def\bbx@item@name{%
+  \iffieldequals{fullhash}{\bbx@lasthash}
+    {\bbx@item@false}
+    {\itemsep2\bibitemsep
+     \@itempenalty\z@
+     \item\relax
+     \begingroup
+     \samepage\bfseries
+     \def\finentrypunct{\strut}%
+     \usebibmacro{entryhead:name}%
+     \finentry
+     \endgroup
+     \nopagebreak%     docsurvey modification
+     \\[-.7ex]%   docsurvey modification
+     \textcolor{lightgray}{\rule[\smallskipamount]{\linewidth}{1.2pt}}%     docsurvey modification
+     \vspace*{-\medskipamount}%   docsurvey modification
+     \itemsep\bibitemsep
+     \@itempenalty\@M
+     \item\strut
+     \@itempenalty\z@}}
+
+\newbool{bbx:entrykey}
+\newbool{bbx:annotation}
+\newbool{bbx:abstract}
+\newbool{bbx:library}
+\newbool{bbx:file}
+
+\DeclareBiblatexOption{global,type,entry}[boolean]{entryhead}[true]{%
+  \ifcsdef{bbx@item@#1}
+    {\letcs\bbx@item{bbx@item@#1}}
+    {\PackageError{biblatex}
+       {Invalid option 'header=#1'}
+       {Valid values: header=true, false, full, name.}}}
+\DeclareBiblatexOption{global,type,entry}[boolean]{entrykey}[true]{%
+  \setbool{bbx:entrykey}{#1}}
+\DeclareBiblatexOption{global,type,entry}[boolean]{annotation}[true]{%
+  \setbool{bbx:annotation}{#1}}
+\DeclareBiblatexOption{global,type,entry}[boolean]{abstract}[true]{%
+  \setbool{bbx:abstract}{#1}}
+\DeclareBiblatexOption{global,type,entry}[boolean]{library}[true]{%
+  \setbool{bbx:library}{#1}}
+\DeclareBiblatexOption{global,type,entry}[boolean]{file}[true]{%
+  \setbool{bbx:file}{#1}}
+
+\ExecuteBibliographyOptions{loadfiles,entryhead,%
+%     entrykey,%    docsurvey modification
+annotation,abstract,library,file}
+
+\newbibmacro*{entryhead:full}{%
+%   \printnames[labelname][-1]{labelname}%
+%   \setunit*{\addcolon\space}%
+  \printfield{labeltitle}%
+    \hspace*{\fill}%     docsurvey modification
+  \printnames[labelname][-1]{labelname}%    docsurvey modification
+}
+
+\newbibmacro*{entryhead:name}{%
+  \ifnameundef{labelname}
+    {\printfield{labeltitle}}
+    {\printnames[labelname]{labelname}}%
+  \savefield{fullhash}{\bbx@lasthash}}
+
+\newbibmacro*{entrytail}{%
+  \newunit\newblock
+  \begingroup
+  \def\newblockpunct{\item}%
+  \ifbool{bbx:annotation}
+    {\usebibmacro{annotation}%
+     \newunit\newblock}
+    {}%
+  \ifbool{bbx:abstract}
+    {\usebibmacro{abstract}%
+     \newunit\newblock}
+    {}%
+  \ifbool{bbx:file}
+    {\printfield{file}%
+     \newunit\newblock}
+    {}%
+  \ifbool{bbx:library}
+    {\printfield{library}%
+     \newunit\newblock}
+    {}%
+  \endgroup}
+
+\renewbibmacro*{finentry}{%
+  \ifbibliography
+    {\usebibmacro{entrytail}}
+    {}%
+  \finentry}
+
+\DeclareBibliographyDriver{set}{%
+  \renewbibmacro*{finentry}{\finentry}%
+  \entryset{}{}%
+  \newunit\newblock
+  \usebibmacro{setpageref}%
+  \ifbibliography
+    {\usebibmacro{entrytail}}
+    {}%
+  \finentry}
+
+\endinput
+\end{filecontents}
+
+\begin{filecontents}[overwrite]{docsurvey.cbx}
+% Based on reading.cbx from the biblatex package.
+\ProvidesFile{docsurvey.cbx}
+[\abx@cbxid]
+
+\RequireCitationStyle{authortitle}
+
+\endinput
+\end{filecontents}
+
+
+
+% \usepackage[T1]{fontenc} 
+% \usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+% \setmonofont{Inconsolata}
+% \setmainfont{Erewhon}
+% \setsansfont{SourceSansPro}
+
+
+\usepackage{lmodern}
+\usepackage{erewhon}
+% \usepackage[type1,scaled=.95]{cabin} % sans serif like Gill Sans, full styles
+\usepackage{sourcesanspro}
+\usepackage[varqu,varl]{inconsolata} % typewriter
+% \renewcommand{\familydefault}{\sfdefault}
+
+
+\usepackage[bottom=1in]{geometry}
+
+\usepackage{graphicx}
+
+\usepackage{metalogox}
+
+\usepackage{needspace}
+
+
+\usepackage[bibstyle=docsurvey, citestyle=draft, block=space]{biblatex}
+\addbibresource{docsurvey.bib}
+
+% \DeclareSourcemap{
+%     \maps[datatype=bibtex]{
+%       \map{
+%         \step[fieldsource=texdoc]
+%         \step[fieldset=usera,origfieldval]
+%     }
+%   }
+% }
+% 
+% \DeclareFieldFormat{usera}{\hspace*{\fill}\mbox{\texttt{(texdoc #1)}}\smallskip}
+% 
+% \AtEveryBibitem{%
+%     \csappto{blx@bbx@\thefield{entrytype}}{% put at end of entry
+%         \iffieldundef{usera}%
+%             {}%
+%             {\space\printfield{usera}}%
+%     }%
+% }
+
+% *category
+
+\DeclareBibliographyCategory{printedbooks}
+\addtocategory{printedbooks}{lamport:latex, hokpkadaly:guide, gratzer:moremath,
+    voss:typesettingmath, voss:typesettingtables, voss:pstricks,
+    kottwitz:beginner, kottwitz:cookbook,
+    mittelbachgossens:companion, TeX:FAQ, tug:books, voss:presentations}
+
+\DeclareBibliographyCategory{TeX}
+\addtocategory{TeX}{eijkhout:topic, abrahams:impatient, texwikibook, doob:gentle,
+    wilkins:started}
+
+\DeclareBibliographyCategory{LaTeX}
+\addtocategory{LaTeX}{hefferon:first, flynn:veryshort, flynn:formatting,
+    talbot:novices, talbot:phd, morris:gettingstarted, Bennieston:scientific,
+    oetiker:introduction, greenwade:reference, latexwikibook, latex:authors,
+    lamport:latex, hokpkadaly:guide, kottwitz:beginner, kottwitz:cookbook,
+    mittelbachgossens:companion
+}
+
+\DeclareBibliographyCategory{LuaLaTeX}
+\addtocategory{LuaLaTeX}{gonnard:lualatex, luatex:reference}
+
+\DeclareBibliographyCategory{XeLaTeX}
+\addtocategory{XeLaTeX}{xetex:reference, xetex:companion, dhawan:font}
+
+\DeclareBibliographyCategory{expl3}
+\addtocategory{expl3}{latex:interface3, latex:expl3, latex:styleguide3}
+
+\DeclareBibliographyCategory{bibliography}
+\addtocategory{bibliography}{markey:tame, rees:biblatex}
+
+\DeclareBibliographyCategory{math}
+\addtocategory{math}{amsmath, downes:shortmath, voss:farbige, voss:typesettingmath,
+    gratzer:moremath}
+
+\DeclareBibliographyCategory{pageheadings}
+\addtocategory{pageheadings}{oostrum:fancyhdr}
+
+\DeclareBibliographyCategory{tables}
+\addtocategory{tables}{fear:booktabs, voss:typesettingtables}
+
+\DeclareBibliographyCategory{graphics}
+\addtocategory{graphics}{reckdahl:eps, tantu:pgf, casteleyn:pstricks, casteleyn:tikz,
+    voss:pstricks}
+
+\DeclareBibliographyCategory{music}
+\addtocategory{music}{Gonzato:musicians}
+
+\DeclareBibliographyCategory{presentation}
+\addtocategory{presentation}{mertz:beamer, voss:presentations-en, voss:presentations-de,
+    voss:presentations}
+
+\DeclareBibliographyCategory{font}
+\addtocategory{font}{LaTeXfontcatalog, rakityansky:truetype,
+    fntguide, encguide, cyrguide,
+    rahtz:essentialnfss, schmidt:fontselection, tug:fonts}
+
+\DeclareBibliographyCategory{source}
+\addtocategory{source}{latexteam:sources, scharrer:listinternal}
+
+\DeclareBibliographyCategory{FAQ}
+\addtocategory{FAQ}{TeX:FAQ, pakin:visual, pakin:list, robertson:mathsymbols,
+    chang:cheat, lammarsch:cheat, schlomer:cheat, casteleyn:pstricks, casteleyn:tikz,
+    rees:biblatex, detexify, shapecatcher, faq:india, TUG:interest}
+
+\DeclareBibliographyCategory{langmultiple}
+\addtocategory{langmultiple}{oetiker:introduction, greenwade:reference,
+    ebookfoundation:free}
+
+\DeclareBibliographyCategory{brazilian}
+\addtocategory{brazilian}{massago:exemplos, chang:cheat-ptbr}
+
+\DeclareBibliographyCategory{chinese}
+\addtocategory{chinese}{abrahams:impatient-cn, huang:notes, ctex-faq, wang:install,
+    asymptote-example-cn, asymptote-faq-cn}
+
+\DeclareBibliographyCategory{french}
+\addtocategory{french}{gutenberg:TeXniques, lozano:everythingLaTeX, baudoin:learnLaTeX,
+    bouzigues:guide, Goulet:Redaction, tellechea:apprendre, faq-fr, reckdahl:freps,
+    casteleyn:pstricks, casteleyn:tikz, greenwade:reference, oetiker:introduction,
+    abrahams:impatient-fr, rouquette:sciences}
+
+\DeclareBibliographyCategory{german}
+\addtocategory{german}{chang:cheat-de, faq-de, oetiker:introduction, voss:farbige,
+    weissenburger:anleitung}
+
+\DeclareBibliographyCategory{indian}
+\addtocategory{indian}{Holkar:polyglossia}
+
+\DeclareBibliographyCategory{italian}
+\addtocategory{italian}{amsmath-it, oetiker:introduction}
+
+\DeclareBibliographyCategory{japanese}
+\addtocategory{japanese}{latex2e-japanese, amsmath-jp, shortmath-jp, chang:platexcheat,
+    oetiker:introduction}
+
+\DeclareBibliographyCategory{portuguese}
+\addtocategory{portuguese}{campani:tutorial, oetiker:introduction}
+
+\DeclareBibliographyCategory{spanish}
+\addtocategory{spanish}{chang:cheat-esmx, faq-es, greenwade:reference,
+    oetiker:introduction}
+
+\DeclareBibliographyCategory{vietnamese}
+\addtocategory{vietnamese}{amsmath-vn, oetiker:introduction}
+
+\DeclareBibliographyCategory{typesetting}
+\addtocategory{typesetting}{wilson:design, kohm:typearea, tufte:book,
+revets:octavo, beccari:canoniclayout, fear:booktabs, tantu:pgf}
+
+\DeclareBibliographyCategory{creating}
+\addtocategory{creating}{pakin:dtxtut, latexteam:class, mittelbach:doc,
+mittelbach:docstrip, flynn:article, pakin:goodthings, mansfield:class}
+
+\DeclareBibliographyCategory{journals}
+\addtocategory{journals}{practex, tugboat}
+
+\DeclareBibliographyCategory{interviews}
+\addtocategory{interviews}{tug:interviews}
+
+
+
+\nocite{*}
+
+
+
+\usepackage[nottoc,numbib]{tocbibind}
+
+
+% colored section headers:
+\usepackage[x11names]{xcolor}
+\usepackage[compact,pagestyles]{titlesec}
+
+\definecolor{sectioncolor}{rgb}{.38,.59,.77}
+\definecolor{sectioncolor}{HTML}{033E8C}
+\definecolor{burgundycolor}{HTML}{900020}
+\definecolor{plumcolor}{HTML}{8E4585}
+
+
+\titleformat{\section}[block]
+  {\normalfont\sffamily\Large\bfseries\color{sectioncolor}}{\thesection}{1em}{}%[\hrule]
+\titlespacing*{\section}{0pt}{*4}{1ex}
+
+\titleformat{\subsection}[display]
+  {\normalfont\sffamily\large\bfseries\color{sectioncolor}}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{3ex}{1ex}
+
+\titleformat{\subsubsection}
+  {\normalfont\sffamily\bfseries\normalsize\itshape\color{sectioncolor}}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{3ex}{1ex}
+
+
+
+\newpagestyle{pageheadfoot}{
+	\headrule
+	\sethead{Programming \LaTeX\Dash{}A survey of documentation and packages}{}{\thepage}
+% 	\renewcommand{\makefootrule}{\rule[2.5ex]{\linewidth}{.4pt}}
+	\setfoot{}{}{}
+}
+
+\pagestyle{pageheadfoot}
+
+
+\newcommand*{\XeTeXrevE}
+{\protect\hspace{-.1667em}\protect\raisebox{-.5ex}{\protect\reflectbox{E}}\protect\hspace{-.125em}}
+\providecommand*{\XeTeX}{\mbox{X\XeTeXrevE\TeX}}
+\providecommand*{\XeLaTeX}{\mbox{X\XeTeXrevE\LaTeX}}
+
+\newcommand{\shortTitle}[1]{}
+\newcommand{\thisnetaddress}{}
+\newcommand{\netaddress}[1]{\renewcommand{\thisnetaddress}{#1}}
+\newcommand{\thispersonalURL}{}
+\newcommand{\personalURL}[1]{\renewcommand{\thispersonalURL}{#1}}
+
+\DeclareRobustCommand{\cs}[1]{{\tt \char`\\#1}}
+\DeclareRobustCommand{\tubbraced}[1]{\mbox{\texttt{\char`\{#1\char`\}}}}
+\DeclareRobustCommand{\env}[1]{\cs{begin}\tubbraced{#1}}
+\DeclareRobustCommand{\thinskip}{\hskip 0.16667em\relax}
+\def\endash{–}
+\def\emdash{—}
+\def\d@sh#1#2{\unskip#1\thinskip#2\thinskip\ignorespaces}
+% \def\dash{\d@sh\nobreak\endash}
+% \def\Dash{\d@sh\nobreak\emdash}
+\newcommand{\thinbrspace}{\hspace{.16667em}\penalty\exhyphenpenalty\hspace{0pt}}
+\newrobustcmd{\Dash}{\unskip\thinspace\textemdash\thinbrspace}
+\newrobustcmd{\dash}{\unskip\thinspace\mbox{--}\thinbrspace}
+\def\ldash{\d@sh\empty{\hbox{\endash}\nobreak}}
+\def\rdash{\d@sh\nobreak\endash}
+\def\Ldash{\d@sh\empty{\hbox{\emdash}\nobreak}}
+\def\Rdash{\d@sh\nobreak\emdash}
+\def\hyph{-\penalty\z@\hskip\z@skip }
+% \def\slash{/\penalty\z@\hskip\z@skip }
+\renewcommand{\slash}{/\penalty\exhyphenpenalty\hspace{0pt}}
+\newcommand{\spslash}{\unskip\kern.085em/\hspace{.085em}\penalty\exhyphenpenalty\hspace{0pt}}
+
+\DeclareRobustCommand{\filenm}[1]{\texttt{#1}}
+
+\let\texttub\textsl              % redefined in other situations
+% \DeclareRobustCommand{\AllTeX}{(\La\kern-.075em)\kern-.075em\TeX}
+% \def\AMS{American Mathematical Society}
+% \def\AmS{$\mathcal{A}$\kern-.1667em\lower.5ex\hbox
+%     {$\mathcal{M}$}\kern-.125em$\mathcal{S}$}
+% \def\AmSLaTeX{\AmS-\LaTeX}
+% \def\AmSTeX{\AmS-\TeX}
+% \def\ANSI{\acro{ANSI}}
+% \def\API{\acro{API}}
+% \def\ASCII{\acro{ASCII}}
+% \def\aw{\acro{A\kern.04em\raise.115ex\hbox{-}W}}
+% \def\AW{Addison\kern.1em-\penalty\z@\hskip\z@skip Wesley}
+% \def\Bib{%
+%   \ifdim \fontdimen1\font>0pt
+%      B{\SMC\SMC IB}%
+%   \else
+%      \textsc{Bib}%
+%   \fi
+% }
+% \def\BibTeX{\Bib\kern-.08em \TeX}
+% \def\BSD{\acro{BSD}}
+% \def\CandT{\textsl{Computers \& Typesetting}}
+% \def\ConTeXt{C\kern-.0333emon\-\kern-.0667em\TeX\kern-.0333emt}
+% \def\CMkIV{\ConTeXt\ \MkIV}
+% \def\Cplusplus{C\plusplus}
+% \def\plusplus{\raisebox{.7ex}{$_{++}$}}
+% \def\CPU{\acro{CPU}}
+% \def\CSS{\acro{CSS}}
+% \def\CSV{\acro{CSV}}
+\def\CTAN{\acro{CTAN}}
+% \def\DTD{\acro{DTD}}
+% \def\DTK{\acro{DTK}}
+% \def\DVD{\acro{DVD}}
+% \def\DVI{\acro{DVI}}
+% \def\DVIPDFMx{\acro{DVIPDFM}$x$}
+% \def\DVItoVDU{DVIto\kern-.12em VDU}
+% \def\ECMA{\acro{ECMA}}
+% \def\EPS{\acro{EPS}}
+% \DeclareRobustCommand{\eTeX}{\ensuremath{\varepsilon}-\kern-.125em\TeX}
+% \DeclareRobustCommand{\ExTeX}{%
+%   \ensuremath{\textstyle\varepsilon_{\kern-0.15em\cal{X}}}\kern-.2em\TeX}
+\def\FAQ{\acro{FAQ}}
+% \def\FTP{\acro{FTP}}
+% \def\Ghostscript{Ghost\-script}
+% \def\GNU{\acro{GNU}}
+% \def\GUI{\acro{GUI}}
+% \def\Hawaii{Hawai`i}
+\def\HTML{\acro{HTML}}
+\def\EPUB{\acro{EPUB}}
+\def\ODT{\acro{ODT}}
+% \def\HTTP{\acro{HTTP}}
+% \def\IDE{\acro{IDE}}
+% \def\IEEE{\acro{IEEE}}
+% \def\ISBN{\acro{ISBN}}
+% \def\ISO{\acro{ISO}}
+% \def\ISSN{\acro{ISSN}}
+% \def\JPEG{\acro{JPEG}}
+% \def\JTeX{\leavevmode\hbox{\lower.5ex\hbox{J}\kern-.18em\TeX}}
+% \def\JoT{\textsl{The Joy of \TeX}}
+% \def\LAMSTeX{L\raise.42ex\hbox{\kern-.3em
+%                    $\m@th$\fontsize\sf@size\z@\selectfont
+%                    $\m@th\mathcal{A}$}%
+%     \kern-.2em\lower.376ex\hbox{$\m@th\mathcal{M}$}\kern-.125em
+%     {$\m@th\mathcal{S}$}-\TeX}
+% \DeclareRobustCommand{\La}%
+%    {L\kern-.36em
+%         {\setbox0\hbox{T}%
+%          \vbox to\ht0{\hbox{$\m@th$%
+%                             \csname S@\f@size\endcsname
+%                             \fontsize\sf@size\z@
+%                             \math@fontsfalse\selectfont
+%                             A}%
+%                       \vss}%
+%         }}
+% \def\LyX{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX}
+% \def\MacOSX{Mac\,\acro{OS\,X}}
+% \def\MathML{Math\acro{ML}}
+% \def\Mc{\setbox\TestBox=\hbox{M}M\vbox
+%    to\ht\TestBox{\hbox{c}\vfil}} %  for Robert McGaffey
+% \def\mf{\textsc{Metafont}}
+% \def\MFB{\textsl{The \MF book}}
+% \def\MkIV{Mk\acro{IV}}
+% % \let\TB@@mp\mp
+% \DeclareRobustCommand{\mp}{\ifmmode\TB@@mp\else MetaPost\fi}
+% \DeclareRobustCommand{\NTG}{\acro{NTG}}
+% \DeclareRobustCommand{\NTS}{\ensuremath{\mathcal{N}\mkern-4mu
+%   \raisebox{-0.5ex}{$\mathcal{T}$}\mkern-2mu \mathcal{S}}}
+% \DeclareTextSymbol{\textohm}{OT1}{'012}
+% \DeclareTextSymbolDefault{\textohm}{OT1}
+% \newcommand{\OMEGA}{\textohm}
+% \DeclareRobustCommand{\OCP}{\OMEGA\acro{CP}}
+% \DeclareRobustCommand{\OOXML}{\acro{OOXML}}
+% \DeclareRobustCommand{\OTF}{\acro{OTF}}
+% \DeclareRobustCommand{\OTP}{\OMEGA\acro{TP}}
+% \def\mtex{T\kern-.1667em\lower.424ex\hbox{\^E}\kern-.125emX\@}
+% \def\Pas{Pascal}
+% \def\pcMF{\leavevmode\raise.5ex\hbox{p\kern-.3\p@ c}MF\@}
+% \def\PCTeX{PC\thinspace\TeX}
+% \def\pcTeX{\leavevmode\raise.5ex\hbox{p\kern-.3\p@ c}\TeX}
+% \def\PDF{\acro{PDF}}
+% \def\PGF{\acro{PGF}}
+% \def\PHP{\acro{PHP}}
+% \def\PiC{P\kern-.12em\lower.5ex\hbox{I}\kern-.075emC\@}
+% \def\PiCTeX{\PiC\kern-.11em\TeX}
+% \def\plain{\texttt{plain}}
+% \def\PNG{\acro{PNG}}
+% \def\POBox{P.\thinspace O.~Box }
+% \def\PS{{Post\-Script}}
+% \def\PSTricks{\acro{PST}ricks}
+% \def\RTF{\acro{RTF}}
+% \def\SC{Steering Committee}
+% \def\SGML{\acro{SGML}}
+% \def\SliTeX{\textrm{S\kern-.06em\textsc{l\kern-.035emi}%
+%                      \kern-.06em\TeX}}
+% \def\slMF{\textsl{\MF}} % should never be used
+% \def\SQL{\acro{SQL}}
+% \def\stTeX{\textsc{st}\kern-0.13em\TeX}
+% \def\STIX{\acro{STIX}}
+% \def\SVG{\acro{SVG}}
+% \def\TANGLE{\texttt{TANGLE}\@}
+% \def\TB{\textsl{The \TeX book}}
+% \def\TIFF{\acro{TIFF}}
+% \def\TP{\textsl{\TeX}: \textsl{The Program}}
+% \DeclareRobustCommand{\TeX}{T\kern-.1667em\lower.424ex\hbox{E}\kern-.125emX\@}
+% \def\TeXhax{\TeX hax}
+% \def\TeXMaG{\TeX M\kern-.1667em\lower.5ex\hbox{A}%
+%    \kern-.2267emG\@}
+% \def\TeXtures{\textit{Textures}}
+% \let\Textures=\TeXtures
+% \def\TeXworks{\TeX\kern-.07em works}
+% \def\TeXXeT{\TeX-{}-\XeT}
+% \def\TFM{\acro{TFM}}
+% \expandafter\ifx\csname XeTeXrevision\endcsname\relax
+% \def\Thanh{H\`an~Th\^e\llap{\raise 0.5ex\hbox{\'{}}}~Th\`anh}% non-XeTeX
+% \else
+% \def\Thanh{H\`an~Th\textcircumacute{e}~Th\`anh}% xunicode drops the acute else
+% \fi
+% \def\TikZ{Ti{\em k}Z}
+% \def\ttn{\textsl{TTN}\@}
+% \def\TTN{\textsl{\TeX{} and TUG News}}
+% \let\texttub\textsl              % redefined in other situations
+\def\TUB{\texttub{TUGboat}}
+% \def\TUG{\TeX\ \UG}
+% \def\tug{\acro{TUG}}
+% \def\UG{Users Group}
+% \def\UNIX{\acro{UNIX}}
+% \def\VAX{V\kern-.12em A\kern-.1em X\@}
+% \def\VnTeX{V\kern-.03em n\kern-.02em \TeX}
+% \def\VorTeX{V\kern-2.7\p@\lower.5ex\hbox{O\kern-1.4\p@ R}\kern-2.6\p@\TeX}
+% \def\XeT{X\kern-.125em\lower.424ex\hbox{E}\kern-.1667emT\@}
+% \def\XML{\acro{XML}}
+% \def\WEB{\texttt{WEB}\@}
+% \def\WEAVE{\texttt{WEAVE}\@}
+% \def\WYSIWYG{\acro{WYSIWYG}}
+% \def\tubreflect#1{%
+%   \@ifundefined{reflectbox}{%
+%     \TBerror{A graphics package must be loaded for \string\XeTeX}%
+%   }{%
+%     \ifdim \fontdimen1\font>0pt
+%       \raise 1.75ex \hbox{\kern.1em\rotatebox{180}{#1}}\kern-.1em
+%     \else
+%       \reflectbox{#1}%
+%     \fi
+%   }%
+% }
+% \def\tubhideheight#1{\setbox0=\hbox{#1}\ht0=0pt \dp0=0pt \box0 }
+% \def\XekernbeforeE{-.125em}
+% \def\XekernafterE{-.1667em}
+% \DeclareRobustCommand{\Xe}{\leavevmode
+%   \tubhideheight{\hbox{X%
+%     \setbox0=\hbox{\TeX}\setbox1=\hbox{E}%
+%     \lower\dp0\hbox{\raise\dp1\hbox{\kern\XekernbeforeE\tubreflect{E}}}%
+%     \kern\XekernafterE}}}
+% \def\XeTeX{\Xe\TeX}
+% \def\XeLaTeX{\Xe{\kern.11em \LaTeX}}
+% \def\XHTML{\acro{XHTML}}
+% \def\XSL{\acro{XSL}}
+% \def\XSLFO{\acro{XSL}\raise.08ex\hbox{-}\acro{FO}}
+% \def\XSLT{\acro{XSLT}}
+
+\newcommand{\pub}[1]{\textit{#1}}
+
+\newcommand{\acro}[1]{\textsc{\MakeLowercase{#1}}}
+
+
+\newcommand{\EDITORnoaddress}{}
+
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{ifpdf}
+\ifpdf
+\definecolor{myurlcolor}{rgb}{.4,0,0}
+\definecolor{mylinkcolor}{rgb}{.4,0,0}
+\definecolor{mycitecolor}{rgb}{.4,0,0}
+\usepackage[breaklinks,colorlinks,
+    linkcolor=mylinkcolor,
+    urlcolor=myurlcolor,
+    citecolor=mycitecolor]{hyperref}
+\else
+\usepackage{url}
+\fi
+
+\hypersetup{%
+pdfinfo={%
+Title={Programming LaTeX - A survey of documentation and packages},%
+Author={Brian Dunn},%
+Subject={LaTeX programming documentation},%
+Keywords={LaTeX, programming, documentation, BD Tech Concepts LLC}%
+}}
+
+\pdfstringdefDisableCommands{%
+    \def\quad{ }%
+    \def\\{ }%
+    \def\pkg#1{#1}%
+    \def\ctr#1{#1}%
+    \def\bool#1{#1}%
+    \def\optn#1{#1}%
+    \def\env#1{#1}%
+    \def\cs#1{\textbackslash#1}%
+    \def\,{ }%
+    \def\TeX{TeX}%
+    \def\LaTeX{LaTeX}%
+    \def\LaTeXe{LaTeX2e}%
+    \def\LuaTeX{LuaTeX}%
+    \def\LuaLaTeX{LuaLaTeX}%
+    \def\XeTeX{XeTeX}%
+    \def\XeLaTeX{XeLaTeX}%
+    \def\AmS{AMS}%
+    \def\Dash{ --- }%
+    \def\dash{ -- }%
+    \def\Slash{/}%
+    \def\prog#1{\detokenize{#1}}%
+    \def\progcode#1{#1}%
+    \def\filenm#1{\detokenize{#1}}%
+    \def\brand#1{#1}%
+    \def\acro#1{#1}%
+    \def\HTML{HTML}%
+    \def\ODT{ODT}%
+    \def\SVG{SVG}%
+    \def\PNG{PNG}%
+    \def\GIF{GIF}%
+    \def\JPG{JPG}%
+    \def\EPS{EPS}%
+    \def\PDF{PDF}%
+    \def\DVI{DVI}%
+    \def\UTF{UTF}%
+    \def\URL{URL}%
+    \def\element#1{#1}%
+    \def\attribute#1{#1}%
+    \def\HTMLfive{HTML5}%
+    \def\CSS{CSS}%
+    \def\CSSthree{CSS3}%
+    \def\EPUB{EPUB}%
+    \def\TOC{TOC}%
+    \def\LOF{LOF}%
+    \def\LOT{LOT}%
+}
+
+\usepackage{enumitem}
+\setlist[description]{style=nextline,font=\small}
+\setlist[description]{style=nextline,font=\small,before={\raggedright}}
+
+\usepackage{multicol}
+
+
+\usepackage{titling}
+\setlength{\droptitle}{-1in}
+\predate{\begin{center}\small}
+
+
+\newrobustcmd*{\pkg}[1]{\textsf{#1}}
+\newrobustcmd*{\prog}[1]{\texttt{#1}}
+\newrobustcmd*{\tag}[1]{\texttt{<#1>}}
+\newrobustcmd*{\prop}[1]{\textsl{\texttt{#1}}}
+\newrobustcmd*{\texdoc}[1]{\hspace*{\fill}\mbox{(\texttt{texdoc #1})}}
+\newrobustcmd*{\hfurl}[1]{\hspace*{\fill}\mbox{(\url{#1})}}
+\newrobustcmd*{\hfciteurl}[1]{\hspace*{\fill}\mbox{(\citeurl{#1})}}
+\newrobustcmd*{\userentry}[1]{%
+\leavevmode\par\hspace*{2em}\texttt{#1}\smallskip\\}
+
+\pdfstringdefDisableCommands{
+\renewcommand*{\quad}{ }
+\renewcommand*{\pkg}[1]{#1}
+\renewcommand*{\prog}[1]{#1}
+\renewcommand*{\LuaLaTeX}{LuaLaTeX}
+\renewcommand*{\XeLaTeX}{XeLaTeX}
+\renewcommand*{\TeX}{TeX}
+\renewcommand*{\LaTeX}{LaTeX}
+\renewcommand*{\Dash}{ --- }
+\renewcommand*{\dash}{ -- }
+}
+
+\title{Programming \LaTeX\Dash \\ A survey of documentation and packages}
+
+\author{Brian Dunn \\
+	\small \href{mailto:bd@BDTechConcepts.com}{bd@BDTechConcepts.com} \\
+	\small Copyright 2017--2021 Brian Dunn\thanks{
+		This work may be distributed and/or modified under the
+		conditions of the \LaTeX\ Project Public License, either version 1.3
+		of this license or (at your option) any later version.
+		The latest version of this license is in
+		\url{http://www.latex-project.org/lppl.txt}
+		and version 1.3 or later is part of all distributions of \LaTeX\
+		version 2005/12/01 or later.
+	}
+}
+
+
+\setcounter{secnumdepth}{0}
+
+
+\begin{document}
+
+\maketitle
+
+
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent
+A survey of documentation for \LaTeX.
+Included are references to printed and electronic books and manuals,
+symbol lists, \FAQ{}s, the \LaTeX\ source code, CTAN and distributions,
+programming-related packages, users groups and online communities,
+and information on creating packages and documentation.
+\end{abstract}
+
+
+\tableofcontents
+
+
+\section{Introduction}
+
+Reinventing the wheel may be useful if you think that you can do it better.
+Worse, though, is not even being aware that the wheel has already been
+invented in the first place, which can be an embarrassing waste of time.
+Such can be the case both for a new \LaTeX\ programmer who isn't aware of
+the many ways things may be done, but also for someone, this author included,
+who learned \LaTeX\ many years ago but may have missed some of the recent
+advancements in package code and documentation.
+
+A wealth of information is available, not only in print and online,
+but also directly embedded in the typical \LaTeX\ distribution.
+The following is meant to be a broad overview of some of today's resources
+for \LaTeX\ programmers.
+
+In some cases the same document may be listed in several categories.
+For example, a graphics \FAQ\ also available in French may be listed under
+graphics, \FAQ{}s, and also French documents.
+
+Many older documents are not included.
+
+(The latest version of this document is available as the \LaTeX\ \pkg{docsurvey} package.)
+
+
+\section{Printed books}
+
+Even in an electronic/online era, printed books still have the advantage
+of being able to be opened for reference without taking up space
+on the screen.  Printed books also provide extended discussion of
+useful topics, have extensive human-edited indexes which are more useful
+than a simple document-wide search function, and some are also available in
+electronic format.
+
+\printbibliography[
+    heading=none,
+    category=printedbooks,
+]
+
+
+\section{Books and documentation by category}
+
+Most of these are provided with the \TeX\ distribution, and may be updated
+with each release.
+Access the embedded documentation from a command line using the \texttt{texdoc}
+program.
+
+\subsection{\TeX}
+
+For a list of older books, see \url{https://www.texfaq.org/FAQ-tex-books}.
+
+\printbibliography[
+    heading=none,
+    category=TeX,
+]
+
+
+\subsection{\LaTeX}
+
+\printbibliography[
+    heading=none,
+    category=LaTeX,
+]
+
+
+\subsection{Lua\LaTeX}
+
+\printbibliography[
+    heading=none,
+    category=LuaLaTeX,
+]
+
+
+\subsection{\XeLaTeX}
+
+\printbibliography[
+    heading=none,
+    category=XeLaTeX,
+]
+
+
+\subsection{\LaTeX3 and \pkg{expl3}}
+
+\printbibliography[
+    heading=none,
+    category=expl3,
+]
+
+
+\subsection{Bibliography}
+
+\printbibliography[
+    heading=none,
+    category=bibliography,
+]
+
+
+\subsection{Math}
+\label{sec:math}
+
+\printbibliography[
+    heading=none,
+    category=math,
+]
+
+
+\subsection{Page headings}
+
+\printbibliography[
+    heading=none,
+    category=pageheadings,
+]
+
+
+\subsection{Tables}
+
+Also see the \TeX\ FAQ\ Floats section: \url{https://www.texfaq.org/#floats}
+
+\printbibliography[
+    heading=none,
+    category=tables,
+]
+
+
+\subsection{Graphics}
+
+Also see the \TeX\ FAQ\ Graphics section: \url{https://www.texfaq.org/#graphics}
+
+\printbibliography[
+    heading=none,
+    category=graphics,
+]
+
+
+\subsection{Music}
+
+
+\printbibliography[
+    heading=none,
+    category=music,
+]
+
+
+\subsection{Presentations}
+
+\printbibliography[
+    heading=none,
+    category=presentation,
+]
+
+
+\subsection{Fonts}
+
+Also see the \TeX\ FAQ\ Fonts section: \url{https://www.texfaq.org/#fonts}
+
+\printbibliography[
+    heading=none,
+    category=font,
+]
+
+
+\subsection{\FAQ{}s, symbol references, cheat sheets}
+
+\printbibliography[
+    heading=none,
+    category=FAQ,
+]
+
+
+\subsection{Source code}
+
+The source code for \LaTeXe\ itself is also included in the distribution.
+
+\printbibliography[
+    heading=none,
+    category=source,
+]
+
+
+\subsection{International languages}
+\label{sec:international}
+
+\subsubsection{Multiple languages}
+
+    The following are available in several languages.
+    Also see CTAN's topic for each language for additional translations of
+    package and other documentation.
+        \printbibliography[
+            heading=none,
+            category=langmultiple,
+        ]
+
+\subsubsection{Brazilian Portuguese}
+        \printbibliography[
+            heading=none,
+            category=brazilian,
+        ]
+
+\subsubsection{Chinese}
+    (Also see the Chinese category of the package list: p. \pageref{pkgs:chinese})
+        \printbibliography[
+            heading=none,
+            category=chinese,
+        ]
+
+\subsubsection{French}
+        Also see \nameref{sec:online}.
+        \printbibliography[
+            heading=none,
+            category=french,
+        ]
+
+\subsubsection{German}
+
+        Also see \nameref{sec:groups}, and \nameref{sec:online}.
+        \printbibliography[
+            heading=none,
+            category=german,
+        ]
+
+\subsubsection{Indian}
+        \printbibliography[
+            heading=none,
+            category=indian,
+        ]
+
+\subsubsection{Italian}
+        \printbibliography[
+            heading=none,
+            category=italian,
+        ]
+
+\subsubsection{Japanese}
+    (Also see the Japanese category of the package list: p. \pageref{pkgs:japanese})
+        \printbibliography[
+            heading=none,
+            category=japanese,
+        ]
+
+\subsubsection{Korean}
+    (See the Korean category of the package list: p. \pageref{pkgs:korean})
+
+\subsubsection{Portuguese}
+        \printbibliography[
+            heading=none,
+            category=portuguese,
+        ]
+
+\subsubsection{Spanish}
+        \printbibliography[
+            heading=none,
+            category=spanish,
+        ]
+
+\subsubsection{Vietnamese}
+        \printbibliography[
+            heading=none,
+            category=vietnamese,
+        ]
+
+
+\subsection{Journals}
+
+\printbibliography[
+    heading=none,
+    category=journals,
+]
+
+
+\subsection{Interviews}
+
+\printbibliography[
+    heading=none,
+    category=interviews,
+]
+
+
+\subsection{Typesetting examples}
+
+\begin{itemize}
+\item A large collection of examples: \url{https://texample.net/}
+\item A collection of small examples: \url{http://tug.org/texshowcase/}
+\item Excerpts from many books: \url{https://ctan.org/topic/book-ex}
+\item Entire books: \url{http://www.tsengbooks.com/}
+\item Discussion: \href{https://tex.stackexchange.com/questions/1319/showcase-of-beautiful-typography-done-in-tex-friends}{\texttt{https://tex.stackexchange.com/questions/1319/showcase-of-beautiful-\\typography-done-in-tex-friends}}
+\item Discussion: \href{https://tex.stackexchange.com/questions/281415/showcase-of-beautiful-invitations-in-tex}{\texttt{https://tex.stackexchange.com/questions/281415/showcase-of-beautiful-\\invitations-in-tex}}
+\end{itemize}
+
+
+\subsection{General typesetting theory}
+
+Discussion about general typesetting theory,
+presented by various \TeX-related authors.
+
+For a list of non-\LaTeX-specific books, see \url{https://www.texfaq.org/FAQ-type-books}.
+
+\printbibliography[
+    heading=none,
+    category=typesetting,
+]
+
+
+\section{Accessing embedded information}
+
+\subsection{\prog{texdoc} and \prog{mthelp}}
+
+A large amount of documentation is included in a \TeX\ distribution.
+For TeXLive distributions, package documentation
+can be accessed with the \prog{texdoc} program.
+Enter ``\prog{texdoc -l <name>}'' to search for
+matching package, file, or program names.  In some cases the same document
+is available in both letter or A4 paper sizes, or in several languages.
+\prog{texdoc} is also available online,
+with popular packages sorted by category. \hfurl{http://www.texdoc.net/}
+
+For Mik\TeX, the \prog{mthelp} program accesses package documentation.
+Enter ``\prog{mthelp <name>}''.
+
+\subsection{\prog{kpsewhich}}
+
+The program \prog{kpsewhich} may be used to find out where a file is
+located.  \prog{kpsewhich filename} searches for and returns the
+path to the given filename.
+
+\prog{kpsewhich} can also return directories, such as:
+\begin{verbatim}
+        kpsewhich -var-value TEXMFROOT
+        kpsewhich -var-value TEXMFDIST
+        kpsewhich -var-value TEXMFLOCAL
+\end{verbatim}
+\medskip
+
+Some package authors choose not to include the source code in the
+package documentation.  To view the source code:
+
+\begin{enumerate}
+\item To locate and read a package's \verb+.sty+ file:
+\userentry{kpsewhich package.sty}
+Usually these files have their comments removed,
+so it is better to use the \verb+.dtx+ file instead.
+\item The \verb+.dtx+ file is usually available,
+and will have the package's source code.
+\userentry{kpsewhich package.dtx}
+If it is not installed on your local system, it will
+be necessary to download the \verb+.dtx+ file from
+CTAN (see the next section).
+
+The comments are not yet typeset and so
+will not be as easily read.
+\item To typeset the documentation with the source code,
+copy the \verb+.dtx+ file and any associated image files
+somewhere local and then look for
+\cs{OnlyDescription}
+in the source.
+This command tells the \pkg{ltxdoc} package not to print the source code.
+\item Remove \cs{OnlyDescription}, then process the \verb+.dtx+ file with
+\userentry{pdflatex package.dtx}
+Barring unusual circumstances, this will create a new documentation
+\verb+.pdf+ file with the package source code included.
+\end{enumerate}
+
+
+
+\section{%
+    Obtaining packages \Dash Comprehensive \TeX\ Archive Network \protect\quad (CTAN)%
+}
+
+\TeX{}Live installations use the \prog{tlmgr} program to obtain packages.
+Mik\TeX\ installations automatically install packages as needed.
+Where \TeX\ is installed by an operating-system package manager, that manager should
+be used to install additional packages.
+
+For custom installations, it may be necessary to manually install packages
+downloaded from the Comprehensive \TeX\ Archive Network
+(\CTAN), which provides a master collection of
+packages.  A search function is available, which is useful when you know the
+name of a package or its author, and a list of topics is also provided.
+There are so many topics, however, that finding the right topic can be a
+problem in itself.  One useful method to find what you are looking for is
+to search for a related package you may already know about, then look at
+its description on \CTAN\ to see what topics are shown for it.  Selecting these
+topics then shows you related packages.\hfurl{https://ctan.org/}
+
+
+\needspace{7\baselineskip}
+
+\section{Useful classes, packages, and programs}
+
+Use \prog{texdoc} or \prog{mthelp} to access information about each of the following.
+
+\subsection{General-use packages and classes}
+
+\begin{multicols}{2}
+
+\begin{description}
+
+\item[Classes:] \pkg{memoir}, \pkg{koma-script}
+
+\item[Page layout and headings:] \pkg{fancyhdr}, \pkg{geometry}, \pkg{microtype},
+    \pkg{nowidow}, \pkg{titleps}
+
+\item[Fonts:] \pkg{font-change-xetex}, \pkg{fontspec}, \pkg{mathspec}, \pkg{unicode-math}
+
+\item[Sectioning:] \pkg{epigraph}, \pkg{fncychap}, \pkg{quotchap},
+    \pkg{sectionbreak}, \pkg{sectsty},
+    \pkg{titlesec}, \pkg{tocvsec2}
+
+\item[Table of contents:] \pkg{etoc}, \pkg{minitoc}, \pkg{multitoc}, \pkg{shorttoc},
+    \pkg{titletoc}, \pkg{tocbibind}, \pkg{tocdata}, \pkg{tocloft}, \pkg{tocvsec2}
+
+\item[Title page:] \pkg{authblk}, \pkg{titling}
+
+\item[Front and back matter:] \pkg{abstract}, \pkg{appendix}
+
+\item[Indexing:] \prog{makeindex}, \prog{xindy}, \prog{xindex}, \pkg{gindex},
+    \pkg{hvindex}, \pkg{idxlayout}, \pkg{imakeidx}, \pkg{index}, \pkg{makeidx},
+    \pkg{splitidx}, \pkg{varindex}, \pkg{xindex}
+
+\item[Glossary:] \pkg{glossaries}, \pkg{nomencl}
+
+\item[Bibliography:] \prog{bibtex}, \pkg{biblatex}, \prog{custom-bib}
+
+\item[Cross-referencing:] \pkg{cleveref}, \pkg{hyperref}, \pkg{url}, \pkg{xr-hyper},
+    \pkg{xurl}, \pkg{zref}
+
+\item[Foot notes, margin notes, page notes:]
+    \pkg{bigfoot}, \pkg{endheads}, \pkg{endnotes}, \pkg{footmisc},
+    \pkg{manyfoot}, \pkg{marginfit}, \pkg{marginfix}, \pkg{marginnote},
+    \pkg{pagenote}, \pkg{parnotes}, \pkg{sidenotes}
+
+\item[Math:] \pkg{amsmath}, \pkg{amssymb}, \pkg{breqn}, \pkg{mathtools},
+    \pkg{resizegather}, \pkg{nicematrix}, \pkg{scalerel}, \pkg{stackrel}
+
+\item[Theorems:]
+    \pkg{amsthm}, \pkg{apxproof}, \pkg{ntheorem}, \pkg{shadethm},
+    \pkg{theorem}, \pkg{thmbox}, \pkg{thmtools}
+
+\item[Units and fractions:] \pkg{nicefrac}, \pkg{siunitx}, \pkg{xfrac}
+
+\item[Floats:] \pkg{caption}, \pkg{dblfloatfix}, \pkg{endfloat}, \pkg{fewerfloatpages},
+    \pkg{float}, \pkg{floatrow}, \pkg{hypcap}, \pkg{keyfloat}, \pkg{newfloat},
+    \pkg{placeins}, \pkg{rotfloat}, \pkg{stfloats}, \pkg{subcaption}, \pkg{subfig},
+    \pkg{subfloat}, \pkg{wrapfig}
+
+\item[Tabular:] \pkg{array}, \pkg{booktabs}, \pkg{colortbl}, \pkg{longtable},
+    \pkg{ltxtable}, \pkg{multirow},
+    \pkg{supertabular}, \pkg{tabularx}, \pkg{tabulary},
+    \pkg{threeparttable}, \pkg{threeparttablex},
+    \pkg{widetable}, \pkg{xltabular}, \pkg{xtab}
+
+\item[Graphics:] \pkg{asymptote}, \pkg{curves}, \pkg{fitbox}, \pkg{graphicx},
+    \pkg{pict2e}, \pkg{pstricks}, \pkg{tikz}, \pkg{xy}
+
+\item[Color:] \pkg{normalcolor}, \pkg{xcolor}
+
+\item[Lists:] \pkg{enumerate}, \pkg{enumitem}, \pkg{paralist}
+
+\item[Minipages:] \pkg{eqparbox}, \pkg{minibox}, \pkg{pbox}, \pkg{shapepar}
+
+\item[Quotations and verse:] \pkg{csquotes}, \pkg{epigraph}, \pkg{quoting}, \pkg{verse}
+
+\item[Verbatim:] \pkg{fancyvrb}, \pkg{fvextra}, \pkg{moreverb}, \pkg{shortvrb},
+    \pkg{upquote}, \pkg{verbatim}
+
+\item[Frames:] \pkg{boxedminipage2e}, \pkg{fancybox}, \pkg{fbox}, \pkg{framed},
+    \pkg{mdframed}, \pkg{niceframe}, \pkg{shadow}, \pkg{tcolorbox}
+
+\item[Embellishments:] \pkg{fancypar}, \pkg{fancytabs}, \pkg{fourier-orns},
+    \pkg{lettrine}, \pkg{pgfornament}, \pkg{pst-vectorian}, \pkg{sectionbreak}
+
+\item[Multi-column:] \pkg{adjmulticol}, \pkg{multicol}, \pkg{multicolrule}, \pkg{vwcol}
+
+\item[Margins:] \pkg{fullwidth}, \pkg{hanging}, \pkg{midpage}
+
+\item[Line numbering:] \pkg{lineno}
+
+\item[Algorithms and listings:] \pkg{algorithm2e}, \pkg{algorithmicx},
+    \pkg{listings}, \pkg{listingsutf8}, \pkg{minted}
+
+\item[Acronyms:] \pkg{acro}, \pkg{acronym}
+
+\item[Ordinals:] \pkg{engord}, \pkg{fmtcount}, \pkg{nth}
+
+\item[Direct formatting:]
+    \pkg{cancel}, \pkg{ellipsis}, \pkg{embrac}, \pkg{enparen},
+    \pkg{hyphenat}, \pkg{lips},
+    \pkg{lua-check-hyphen}, \pkg{luacolor},
+    \pkg{pdfcol}, \pkg{pdfcolmk},
+    \pkg{pdfrender}, \pkg{realscripts}, \pkg{relsize},
+    \pkg{seqsplit}, \pkg{soul}, \pkg{soulpos},
+    \pkg{soulutf8}, \pkg{stackengine},
+    \pkg{textfit}, \pkg{thinsp}, \pkg{trimclip}, \pkg{truncate},
+    \pkg{ulem}, \pkg{umoline}, \pkg{underscore}, \pkg{uspace},
+    \pkg{xellipsis}
+
+\item[Symbols:] \pkg{academicons}, \pkg{amssymb}, \pkg{bbding},
+    \pkg{chemgreek}, \pkg{dingbat}, \pkg{euro}, \pkg{eurosym},
+    \pkg{fontawesome}, \pkg{fontawesome5}, \pkg{fourier-orns},
+    \pkg{gensymb}, \pkg{latexsym},
+    \pkg{marvosym},  \pkg{metalogo}, \pkg{metalogox},
+    \pkg{pifont},  \pkg{textalpha},  \pkg{textcomp}, \pkg{textgreek},
+    \pkg{typicons}, \pkg{xunicode}
+
+\item[Files:]
+    \pkg{attachfile}, \pkg{attachfile2}, \pkg{hyperxmp},
+    \pkg{intopdf}, \pkg{pdfpages}, \pkg{pdfx}, \pkg{xmpincl}
+
+\item[Admonitions:] \pkg{awesomebox}, \pkg{notes}
+
+\item[Editorial:] \pkg{changebar}, \pkg{changelog}, \pkg{changes},
+    \pkg{easy-todo}, \pkg{easyReview}, \pkg{ed}, \pkg{errata}, \pkg{fixme},
+    \pkg{fixmetodonotes},
+    \pkg{pdfcomment}, \pkg{pdfmarginpar},
+    \pkg{todo}, \pkg{todonotes}, \pkg{tram}, \pkg{xechangebar}
+
+\item[Accessibility:] \pkg{accessibility}, \pkg{accsupp},
+    \pkg{axessibility},
+    \pkg{pdfcomment}, \pkg{repltext}, \pkg{tagpdf}
+
+\item[Presentations:] \pkg{beamer}, \pkg{powerdot}
+
+\item[Multi-langauge:] \pkg{babel}, \pkg{beamer-rl}, \pkg{bidi},
+    \pkg{polyglossia}
+
+\item[Chinese / Japanese / Korean (CJK):] \pkg{cjkpunct}, \pkg{xeCJK}
+
+\item[Chinese:]
+    \phantomsection
+    \label{pkgs:chinese}
+    \pkg{ctex}, \pkg{upzhkinsoku},
+      \pkg{xpinyin}, \pkg{zhlineskip}, \pkg{zhspacing}
+
+
+\item[Japanese:]
+    \phantomsection
+    \label{pkgs:japanese}
+    \pkg{bxjscls}, \pkg{luatexja}, \pkg{platex},
+    \pkg{plautopatch}, \pkg{tascmac}, \pkg{uplatex}, \pkg{zxjatype}
+
+
+\item[Korean:]
+    \phantomsection
+    \label{pkgs:korean}
+    \pkg{kotex}, \pkg{luatexko}, \pkg{xetexko}.
+
+\item[Debug:] \pkg{chkfloat}, \pkg{cmdtrack}, \pkg{dprogress}, \pkg{inputtrc},
+    \pkg{lua-visual-debug}, \pkg{refcheck}
+
+\end{description}
+
+\end{multicols}
+
+\subsection{Automatic compiling}
+
+The programs \prog{arara} and \prog{latexmk} automatically recompile as necessary to
+resolve all dependencies.
+
+
+\subsection{Converting to \HTML\ and other document formats}
+
+\begin{description}
+    \item[Using \TeX\ to generate the \HTML:]
+        The \pkg{lwarp} package and the \prog{tex4ht} program
+        each use native \LaTeX\ to interpret the document and generate \HTML.
+        More of \LaTeX\ is supported compared to the translators listed below.
+        \begin{description}
+        \item [\pkg{lwarp} package:] Supports hundreds of packages.  Generates \HTML,
+            and provides indirect assistance for \EPUB\ conversion and
+            copy/paste into a word-processor.
+            \url{https://ctan.org/pkg/lwarp}
+        \item [\prog{tex4ht} program:] Generates \HTML, \EPUB, \ODT, and Docbook.
+            \url{http://tug.org/tex4ht/}
+        \end{description}
+
+    \item[Translators:]
+        These systems use external programs to translate a subset of \LaTeX\ syntax
+        into \HTML.  Search for each on \CTAN\ (\url{http:\\ctan.org}).
+        \begin{description}
+        \item [H\textsuperscript{E}v\textsuperscript{E}a:] \url{http://hevea.inria.fr/}
+        \item [T\textsubscript{T}H:] \url{http://hutchinson.belmont.ma.us/tth/}
+        \item [GELLMU:] \url{http://www.albany.edu/~hammond/gellmu/}
+        \item [\LaTeX{}ML:] \url{http://dlmf.nist.gov/LaTeXML/}
+        \item [PlasTeX:] \url{https://github.com/tiarno/plastex}
+        \item [\LaTeX2HTML:] \url{http://www.latex2html.org/}
+                            and \url{http://ctan.org/pkg/latex2html}
+        \item [\TeX2page:] \url{http://ds26gte.github.io/tex2page/index.html}
+        \end{description}
+    \item[\LaTeX\ math to \HTML:]
+        \prog{Glad\TeX} takes a \LaTeX\ math expression and generates
+        the corresponding \HTML.
+        \begin{description}
+        \item[\prog{Glad\TeX}:] \url{http://humenda.github.io/GladTeX/}
+        \end{description}
+\end{description}
+
+
+
+\subsection{Programming \LaTeX}
+
+A number of packages are especially useful for \LaTeX\ programmers:
+\texdoc{<packagename>}
+
+\begin{multicols}{2}
+
+\begin{description}[style=unboxed]
+\raggedright
+\item[\pkg{xifthen}:] Conditionals.
+\item[\pkg{etoolbox}:] A wide range of programming tools, often avoiding
+	the need to resort to low-level \TeX.
+\item[\pkg{etextools}:] Adds to \pkg{etoolbox}.
+	Strings, lists, and more.
+\item[\pkg{xparse}:] Define macros and environments with
+	flexible argument types.
+\item[\pkg{environ}:] Process environment contents.
+\item[\pkg{arrayjobx}, \pkg{fifo-stack}, \pkg{forarray},
+	\pkg{forloop}, \pkg{xfor}:]
+	Programming arrays, stacks, and loops.
+\item[\pkg{iftex}:] Detect \TeX\ engine.
+\item[\pkg{ifplatform}:] Detect operating system.
+\item[\pkg{xstring}:] String manipulation.
+\item[\pkg{keyval}, \pkg{xkeyval}, \pkg{kvsetkeys}:] Key\slash{}value arguments.
+\item[\pkg{pgfkeys}, \pkg{pgfkeyx}:] Another form of key\slash{}value arguments.
+\item[\pkg{kvoptions}:] Key\slash{}value package options.
+\item[\pkg{expl3}:] \LaTeX3 programming.
+\item[\pkg{l3keys}, \pkg{l3keys2e}:] Key\slash{}value for \LaTeX3.
+\item[\pkg{chktex}:] Locates typographic errors.
+\item[\CTAN\ topic \pkg{macro-supp}:] An entire topic of
+	useful programming macros.
+\end{description}
+\end{multicols}
+
+
+\section{Creating and documenting new packages}
+
+Documentation for those interested in creating their own package or class:
+
+\printbibliography[
+    heading=none,
+    category=creating,
+]
+
+
+\section{Users groups}
+\label{sec:groups}
+
+\begin{description}[style=unboxed]
+\item[\TeX\ Users Group:] \url{http://tug.org}
+\item[Lists of international users groups:] \
+    \begin{itemize}
+    \item \url{http://tug.org/usergroups.html}
+    \item \url{https://ctan.org/lugs}
+    \item \url{http://www.ntg.nl/lug/}
+    \end{itemize}
+\end{description}
+
+\section{Online communities}
+\label{sec:online}
+
+\begin{description}[style=unboxed]
+\item[English forums:] \
+    \begin{description}[style=unboxed]
+    \raggedright
+    \item[TeX\Dash \LaTeX\ Stack Exchange:] 
+        Almost any question has already
+        been asked, and a quick web search will find answers, ranked by vote.
+        \url{http://tex.stackexchange.com}
+    \item[\LaTeX\ Community:]
+        A traditional forum with quick replies
+        to your questions
+        \url{http://www.latex-community.org}
+    \end{description}
+
+\item[German forums:] \
+    \begin{description}[style=unboxed]
+    \item[TeXwelt:] \url{http://texwelt.de/wissen/}
+    \item[goLaTeX:] \url{http://golatex.de}
+    \end{description}
+
+\item[French forums:] \
+    \begin{description}[style=unboxed]
+    \item[TeXnique.fr:] \url{http://texnique.fr}
+    \end{description}
+
+\item[Mailing lists:]
+    Several dozen, spanning a wide range of \TeX-related topics.
+    \url{http://tug.org/mailman/listinfo}
+
+\item[Newsgroup:] \url{comp.text.tex}
+\end{description}
+
+
+\section{Online editing and collaboration}
+
+\begin{description}[style=unboxed]
+\item[Overleaf:] Collaborative editing of \LaTeX\ documents online.
+    \url{https://www.overleaf.com/}
+\end{description}
+
+
+\section{Distributions \Dash \LaTeX\ for various operating systems}
+\begin{description}[style=unboxed]
+\item[TeXLive:] \url{http://tug.org/texlive} \hfill Unix and Windows
+\item[MiKTex:] \url{https://miktex.org}  \hfill Windows and Mac
+\item[proTeXt:] \url{http://tug.org/protext/}  \hfill Windows
+\item[MacTex:] \url{http://tug.org/mactex/} \hfill Mac
+\end{description}
+
+
+
+\section{Change log}
+
+\begin{description}[style=standard]
+\item[2017/03/06:] Initial version.
+\item[2017/10/04:] Added users groups, mailing lists,
+    distributions, \LuaTeX, \XeTeX, \pkg{chktex}.
+    Organization and formatting improvements.
+\item[2017/10/14:] More information about accessing embedded documentation.
+\item[2018/01/18:] Added \url{texdoc.net}.
+\item[2018/01/21:] Added \pkg{la­tex-veryshort­guide}, \pkg{first-latex-doc},
+                    \pkg{beginlatex},
+                    \pkg{intro-scientific}, \pkg{guide-latex-fr}.
+\item[2018/03/24:] Added \pkg{interface3}, \pkg{dickimaw-novices}, \pkg{dickimaw-thesis}.
+\item[2018/04/01:] Added TeXnique.fr.
+\item[2018/06/28:] Added sections for non-English documents and general typesetting theory.
+    Updated host and name for \TeX\ FAQ.  Added \pkg{latex-via-exemplos} and
+    Ebook Foundation free programming books.
+\item[2018/10/18:] Updated \acro{URL} for \pub{\LaTeXe: An unofficial reference manual}.
+\item[2020/12/14:] Improved bibliography.
+    Added categories for math and music; \pkg{startlatex2e};
+    items written in French, German, Indian, Italian, Japanese, Portuguese, Vietnamese;
+    Dante users group.
+\item[2021/01/02:] Now uses \pkg{biblatex}.
+    Added \prog{mthelp}, many international documents,
+    and categories for \FAQ{}s and cheat sheets, graphics, tables, and fonts.
+    Added lists of packages by category.  Added Overleaf.
+\item[2021/01/09:] Added several resources from TUG including journals and interviews,
+    and more for the list of packages.
+\end{description}
+
+
+\end{document}

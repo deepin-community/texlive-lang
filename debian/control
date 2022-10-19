@@ -1,0 +1,1341 @@
+Source: texlive-lang
+Section: tex
+Priority: optional
+Maintainer: Debian TeX Task Force <debian-tex-maint@lists.debian.org>
+Uploaders: Norbert Preining <norbert@preining.info>, Hilmar Preusse <hille42@web.de>
+Build-Depends: debhelper-compat (= 13), dh-strip-nondeterminism
+Build-Depends-Indep: sharutils, tex-common (>= 6.14), findutils (>=4.2.0)
+Standards-Version: 4.5.1
+Homepage: http://www.tug.org/texlive/
+Vcs-Git: https://github.com/debian-tex/texlive-nonbin.git
+Vcs-Browser: https://github.com/debian-tex/texlive-nonbin
+
+Package: texlive-lang-arabic
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, fonts-hosny-amiri, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-plain-generic (>= 2021.20210921)
+Replaces: texlive-xetex (<< 2020.20200519)
+Breaks: texlive-base (<< 2021.20210628), texlive-xetex (<< 2020.20200519)
+Description: TeX Live: Arabic
+ Support for Arabic and Persian.
+ .
+ This package includes the following CTAN packages:
+ .
+ alkalami -- A font for Arabic-based writing systems in Nigeria and Niger
+ .
+ alpha-persian -- Persian version of alpha.bst
+ .
+ amiri -- A classical Arabic typeface, Naskh style
+ .
+ arabi -- (La)TeX support for Arabic and Farsi, compliant with Babel
+ .
+ arabi-add -- Using hyperref and bookmark packages with arabic and farsi
+ languages
+ .
+ arabic-book -- An Arabic book class
+ .
+ arabluatex -- ArabTeX for LuaLaTeX
+ .
+ arabtex -- Macros and fonts for typesetting Arabic
+ .
+ bidi -- Bidirectional typesetting in plain TeX and LaTeX, using XeTeX
+ .
+ bidihl -- Experimental bidi-aware text highlighting
+ .
+ dad -- Simple typesetting system for mixed Arabic/Latin documents
+ .
+ ghab -- Typeset ghab boxes in LaTeX
+ .
+ hvarabic -- Macros for RTL typesetting
+ .
+ hyphen-arabic -- (No) Arabic hyphenation patterns.
+ .
+ hyphen-farsi -- (No) Persian hyphenation patterns.
+ .
+ imsproc -- Typeset IMS conference proceedings
+ .
+ kurdishlipsum -- A 'lipsum' package for the Kurdish language
+ .
+ lshort-persian -- Persian (Farsi) introduction to LaTeX
+ .
+ luabidi -- Bidi functions for LuaTeX
+ .
+ na-box -- Arabic-aware version of pas-cours package
+ .
+ persian-bib -- Persian translations of classic BibTeX styles
+ .
+ quran -- An easy way to typeset any part of The Holy Quran
+ .
+ sexam -- Package for typesetting arabic exam scripts
+ .
+ simurgh -- Typeset Parsi in LuaLaTeX
+ .
+ texnegar -- Kashida justification in XeLaTeX and LuaLaTeX
+ .
+ tram -- Typeset tram boxes in LaTeX
+ .
+ xepersian -- Persian for LaTeX, using XeTeX
+ .
+ xepersian-hm -- Fixes kashida feature in xepersian package
+ .
+ xindy-persian -- Support for the Persian language in xindy
+
+Package: texlive-lang-cjk
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, poppler-data, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-binaries (>= 2021.20210626), texlive-latex-base (>= 2021.20210921)
+Recommends: latex-cjk-all (>= 4.6.0+cvs20060714-2), ruby, texlive-lang-chinese, texlive-lang-japanese, texlive-lang-korean
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Chinese/Japanese/Korean (base)
+ Packages supporting a combination of Chinese, Japanese, Korean, including 
+ macros, fonts, documentation. Also Thai in the c90 encoding, since there is 
+ some overlap in those fonts; standard Thai support is in 
+ collection-langother. Additional packages for CJK are in their individual 
+ language collections.
+ .
+ This package includes the following CTAN packages:
+ .
+ c90 -- c90 font encoding for Thai
+ .
+ cjk-gs-integrate -- Tools to integrate CJK fonts into Ghostscript
+ .
+ cjkpunct -- Adjust locations and kerning of CJK punctuation marks
+ .
+ fixjfm -- Fix JFM (for *pTeX)
+ .
+ garuda-c90 -- TeX support (from CJK) for the garuda font
+ .
+ jfmutil -- Utility to process pTeX-extended TFM and VF
+ .
+ norasi-c90 -- TeX support (from CJK) for the norasi font
+ .
+ pxtatescale -- Patch to graphics driver for scaling in vertical direction of
+ pTeX
+ .
+ xcjk2uni -- Convert CJK characters to Unicode, in pdfTeX
+ .
+ zxjafont -- Set up Japanese font families for XeLaTeX
+
+Package: texlive-lang-korean
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, fonts-baekmuk, fonts-unfonts-core, fonts-unfonts-extra, texlive-base (>= 2021.20210628), texlive-binaries (>= 2021.20210626), texlive-lang-cjk (>= 2021.20210921)
+Conflicts: ko.tex-bin
+Provides: ko.tex
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Korean
+ Support for Korean; additional packages in collection-langcjk.
+ .
+ This package includes the following CTAN packages:
+ .
+ baekmuk -- Baekmuk Korean TrueType fonts
+ .
+ cjk-ko -- Extension of the CJK package for Korean typesetting
+ .
+ kotex-oblivoir -- A LaTeX document class for typesetting Korean documents
+ .
+ kotex-plain -- Macros for typesetting Korean under Plain TeX
+ .
+ kotex-utf -- Typeset Hangul, coded in UTF-8
+ .
+ kotex-utils -- Utility scripts and support files for typesetting Korean
+ .
+ lshort-korean -- Korean introduction to LaTeX
+ .
+ nanumtype1 -- Type1 subfonts of Nanum Korean fonts
+ .
+ pmhanguljamo -- Poor man's Hangul Jamo input method
+ .
+ uhc -- Fonts for the Korean language
+ .
+ unfonts-core -- TrueType version of Un-fonts
+ .
+ unfonts-extra -- TrueType version of Un-fonts
+
+Package: texlive-lang-chinese
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, fonts-arphic-bkai00mp, fonts-arphic-bsmi00lp, fonts-arphic-gbsn00lp, fonts-arphic-gkai00mp, texlive-base (>= 2021.20210628), texlive-lang-cjk (>= 2021.20210921)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Chinese
+ Support for Chinese; additional packages in collection-langcjk.
+ .
+ This package includes the following CTAN packages:
+ .
+ arphic-ttf -- TrueType version of Chinese Arphic fonts
+ .
+ asymptote-by-example-zh-cn -- Asymptote by example
+ .
+ asymptote-faq-zh-cn -- Asymptote FAQ (Chinese translation)
+ .
+ asymptote-manual-zh-cn -- A Chinese translation of the asymptote manual
+ .
+ cns -- Chinese/Japanese/Korean bitmap fonts
+ .
+ ctex -- LaTeX classes and packages for Chinese typesetting
+ .
+ ctex-faq -- LaTeX FAQ by the Chinese TeX Society (ctex.org)
+ .
+ fandol -- Four basic fonts for Chinese typesetting
+ .
+ fduthesis -- LaTeX thesis template for Fudan University
+ .
+ hyphen-chinese -- Chinese pinyin hyphenation patterns.
+ .
+ impatient-cn -- Free edition of the book "TeX for the Impatient"
+ .
+ install-latex-guide-zh-cn -- A short introduction to LaTeX installation
+ written in Chinese
+ .
+ latex-notes-zh-cn -- Chinese Introduction to TeX and LaTeX
+ .
+ lshort-chinese -- Introduction to LaTeX, in Chinese
+ .
+ nanicolle -- Typesetting herbarium specimen labels
+ .
+ njurepo -- Reports for Nanjing University
+ .
+ pgfornament-han -- pgfornament library for Chinese traditional motifs and
+ patterns
+ .
+ qyxf-book -- Book Template for Qian Yuan Xue Fu
+ .
+ texlive-zh-cn -- TeX Live manual (Chinese)
+ .
+ texproposal -- A proposal prototype for LaTeX promotion in Chinese
+ universities
+ .
+ tlmgr-intro-zh-cn -- A short tutorial on using tlmgr in Chinese
+ .
+ upzhkinsoku -- Supplementary Chinese kinsoku for Unicode *pTeX
+ .
+ xpinyin -- Automatically add pinyin to Chinese characters
+ .
+ xtuthesis -- XTU thesis template
+ .
+ zhlineskip -- Line spacing for CJK documents
+ .
+ zhlipsum -- Chinese dummy text
+ .
+ zhmetrics -- TFM subfont files for using Chinese fonts in 8-bit TeX
+ .
+ zhmetrics-uptex -- Chinese font metrics for upTeX
+ .
+ zhnumber -- Typeset Chinese representations of numbers
+ .
+ zhspacing -- Spacing for mixed CJK-English documents in XeTeX
+
+Package: texlive-lang-japanese
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, fonts-ipaexfont-gothic, fonts-ipaexfont-mincho, fonts-ipafont-gothic, fonts-ipafont-mincho, ruby, texlive-base (>= 2021.20210628), texlive-binaries (>= 2021.20210626), texlive-lang-cjk (>= 2021.20210921)
+Conflicts: ptex-jisfonts
+Provides: okumura-clsfiles, ptex-jisfonts, vfdata-morisawa5
+Replaces: mendexk
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Japanese
+ Support for Japanese; additional packages are in collection-langcjk.
+ .
+ This package includes the following CTAN packages:
+ .
+ ascmac -- Boxes and picture macros with Japanese vertical writing support
+ .
+ babel-japanese -- Babel support for Japanese
+ .
+ bxbase -- BX bundle base components
+ .
+ bxcjkjatype -- Typeset Japanese with pdfLaTeX and CJK
+ .
+ bxghost -- Ghost insertion for proper xkanjiskip
+ .
+ bxjaholiday -- Support for Japanese holidays
+ .
+ bxjalipsum -- Dummy text in Japanese
+ .
+ bxjaprnind -- Adjust the position of parentheses at paragraph head
+ .
+ bxjatoucs -- Convert Japanese character code to Unicode
+ .
+ bxjscls -- Japanese document class collection for all major engines
+ .
+ bxorigcapt -- To retain the original caption names when using Babel
+ .
+ bxwareki -- Convert dates from Gregorian to Japanese calender
+ .
+ convbkmk -- Correct platex/uplatex bookmarks in PDF created with hyperref
+ .
+ endnotesj -- Japanese-style endnotes
+ .
+ gckanbun -- Kanbun typesetting for (u)pLaTeX and LuaLaTeX
+ .
+ gentombow -- Generate Japanese-style crop marks
+ .
+ haranoaji -- Harano Aji Fonts
+ .
+ haranoaji-extra -- Harano Aji Fonts
+ .
+ ifptex -- Check if the engine is pTeX or one of its derivatives
+ .
+ ifxptex -- Detect pTeX and its derivatives
+ .
+ ipaex -- IPA (Japanese) fonts
+ .
+ japanese-otf -- Advanced font selection for platex and its friends
+ .
+ japanese-otf-uptex -- Support for Japanese OTF files in upLaTeX
+ .
+ jlreq -- Japanese document class based on requirements for Japanese text
+ layout
+ .
+ jlreq-deluxe -- Multi-weight Japanese font support for the jlreq class
+ .
+ jsclasses -- Classes tailored for use with Japanese
+ .
+ lshort-japanese -- Japanese version of A Short Introduction to LaTeX2e
+ .
+ luatexja -- Typeset Japanese with Lua(La)TeX
+ .
+ mendex-doc -- Documentation for Mendex index processor
+ .
+ morisawa -- Enables selection of 5 standard Japanese fonts for pLaTeX +
+ dvips
+ .
+ pbibtex-base -- Bibliography styles and miscellaneous files for pBibTeX
+ .
+ platex -- pLaTeX2e and miscellaneous macros for pTeX
+ .
+ platex-tools -- pLaTeX standard tools bundle
+ .
+ platexcheat -- A LaTeX cheat sheet, in Japanese
+ .
+ plautopatch -- Automated patches for pLaTeX/upLaTeX
+ .
+ ptex -- A TeX system for publishing in Japanese
+ .
+ ptex-base -- Plain TeX format for pTeX and e-pTeX
+ .
+ ptex-fontmaps -- Font maps and configuration tools for
+ Japanese/Chinese/Korean fonts with (u)ptex
+ .
+ ptex-fonts -- Fonts for use with pTeX
+ .
+ ptex-manual -- Japanese pTeX manual
+ .
+ ptex2pdf -- Convert Japanese TeX documents to PDF
+ .
+ pxbase -- Tools for use with (u)pLaTeX
+ .
+ pxchfon -- Japanese font setup for pLaTeX and upLaTeX
+ .
+ pxcjkcat -- LaTeX interface for the CJK category codes of upTeX
+ .
+ pxjahyper -- Hyperref support for pLaTeX
+ .
+ pxjodel -- Help change metrics of fonts from japanese-otf
+ .
+ pxrubrica -- Ruby annotations according to JIS X 4051
+ .
+ pxufont -- Emulate non-Unicode Japanese fonts using Unicode fonts
+ .
+ texlive-ja -- TeX Live manual (Japanese)
+ .
+ uplatex -- pLaTeX2e and miscellaneous macros for upTeX
+ .
+ uptex -- Unicode version of pTeX
+ .
+ uptex-base -- Plain TeX formats and documents for upTeX
+ .
+ uptex-fonts -- Fonts for use with upTeX
+ .
+ zxjafbfont -- Fallback CJK font support for xeCJK
+ .
+ zxjatype -- Standard conforming typesetting of Japanese, for XeLaTeX
+
+Package: texlive-lang-cyrillic
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-binaries (>= 2021.20210626), texlive-latex-base (>= 2021.20210921)
+Replaces: texlive-base (<< 2019.20190506)
+Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2021.20210628)
+Description: TeX Live: Cyrillic
+ Support for Cyrillic scripts (Bulgarian, Russian, Serbian, Ukrainian), even 
+ if Latin alphabets may also be used.
+ .
+ This package includes the following CTAN packages:
+ .
+ babel-belarusian -- Babel support for Belarusian
+ .
+ babel-bulgarian -- Babel contributed support for Bulgarian
+ .
+ babel-russian -- Russian language module for Babel
+ .
+ babel-serbian -- Babel/Polyglossia support for Serbian
+ .
+ babel-serbianc -- Babel module to support Serbian Cyrillic
+ .
+ babel-ukrainian -- Babel support for Ukrainian
+ .
+ churchslavonic -- Typeset documents in Church Slavonic language using
+ Unicode
+ .
+ cmcyr -- Computer Modern fonts with cyrillic extensions
+ .
+ cyrillic -- Support for Cyrillic fonts in LaTeX
+ .
+ cyrillic-bin -- Cyrillic bibtex and makeindex
+ .
+ cyrplain -- Support for using T2 encoding
+ .
+ disser -- Class and templates for typesetting dissertations in Russian
+ .
+ eskd -- Modern Russian typesetting
+ .
+ eskdx -- Modern Russian typesetting
+ .
+ gost -- BibTeX styles to format according to GOST
+ .
+ hyphen-belarusian -- Belarusian hyphenation patterns.
+ .
+ hyphen-bulgarian -- Bulgarian hyphenation patterns.
+ .
+ hyphen-churchslavonic -- Church Slavonic hyphenation patterns.
+ .
+ hyphen-mongolian -- Mongolian hyphenation patterns in Cyrillic script.
+ .
+ hyphen-russian -- Russian hyphenation patterns.
+ .
+ hyphen-serbian -- Serbian hyphenation patterns.
+ .
+ hyphen-ukrainian -- Ukrainian hyphenation patterns.
+ .
+ lcyw -- Make Classic Cyrillic CM fonts accessible in LaTeX
+ .
+ lh -- Cyrillic fonts that support LaTeX standard encodings
+ .
+ lhcyr -- A non-standard Cyrillic input scheme
+ .
+ lshort-bulgarian -- Bulgarian translation of the "Short Introduction to
+ LaTeX2e"
+ .
+ lshort-mongol -- Short introduction to LaTeX, in Mongolian
+ .
+ lshort-russian -- Russian introduction to LaTeX
+ .
+ lshort-ukr -- Ukrainian version of the LaTeX introduction
+ .
+ mongolian-babel -- A language definition file for Mongolian in Babel
+ .
+ montex -- Mongolian LaTeX
+ .
+ mpman-ru -- A Russian translation of the MetaPost manual
+ .
+ numnameru -- Converts a number to the russian spelled out name
+ .
+ pst-eucl-translation-bg -- Bulgarian translation of the pst-eucl
+ documentation
+ .
+ ruhyphen -- Russian hyphenation
+ .
+ russ -- LaTeX in Russian, without babel
+ .
+ serbian-apostrophe -- Commands for Serbian words with apostrophes
+ .
+ serbian-date-lat -- Updated date typesetting for Serbian
+ .
+ serbian-def-cyr -- Serbian cyrillic localization
+ .
+ serbian-lig -- Control ligatures in Serbian
+ .
+ t2 -- Support for using T2 encoding
+ .
+ texlive-ru -- TeX Live manual (Russian)
+ .
+ texlive-sr -- TeX Live manual (Serbian)
+ .
+ ukrhyph -- Hyphenation Patterns for Ukrainian
+ .
+ xecyrmongolian -- Basic support for the typesetting of Cyrillic Mongolian
+ documents using (Xe|Lua)LaTeX
+
+Package: texlive-lang-czechslovak
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-binaries (>= 2021.20210626), texlive-lang-english (>= 2021.20210921), texlive-lang-european (>= 2021.20210921), texlive-lang-french (>= 2021.20210921), texlive-lang-german (>= 2021.20210921), texlive-lang-italian (>= 2021.20210921), texlive-lang-polish (>= 2021.20210921), texlive-lang-spanish (>= 2021.20210921), texlive-latex-base (>= 2021.20210921), texlive-luatex (>= 2021.20210921)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Czech/Slovak
+ Support for Czech/Slovak.
+ .
+ This package includes the following CTAN packages:
+ .
+ babel-czech -- Babel support for Czech
+ .
+ babel-slovak -- Babel support for typesetting Slovak
+ .
+ cnbwp -- Typeset working papers of the Czech National Bank
+ .
+ cs -- Czech/Slovak-tuned Computer Modern fonts
+ .
+ csbulletin -- LaTeX class for articles submitted to the CSTUG Bulletin
+ (Zpravodaj)
+ .
+ cslatex -- LaTeX support for Czech/Slovak typesetting
+ .
+ csplain -- Plain TeX multilanguage support
+ .
+ cstex -- Support for Czech/Slovak languages
+ .
+ hyphen-czech -- Czech hyphenation patterns.
+ .
+ hyphen-slovak -- Slovak hyphenation patterns.
+ .
+ lshort-czech -- Czech translation of the "Short Introduction to LaTeX2e"
+ .
+ lshort-slovak -- Slovak introduction to LaTeX
+ .
+ texlive-cz -- TeX Live manual (Czech/Slovak)
+ .
+ vlna -- add ~ after non-syllabic preposition, for Czech/Slovak
+
+Package: texlive-lang-english
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: US and UK English
+ Support for, and documentation in, English.
+ .
+ This package includes the following CTAN packages:
+ .
+ amiweb2c-guide -- How to install AmiWeb2c
+ .
+ amscls-doc -- User documentation for AMS document classes
+ .
+ amslatex-primer -- Getting up and running with AMS-LaTeX
+ .
+ around-the-bend -- Typeset exercises in TeX, with answers
+ .
+ ascii-chart -- An ASCII wall chart
+ .
+ biblatex-cheatsheet -- BibLaTeX/Biber 'cheat sheet'
+ .
+ components-of-TeX -- Components of TeX
+ .
+ comprehensive -- Symbols accessible from LaTeX
+ .
+ docsurvey -- A survey of LaTeX documentation
+ .
+ dtxtut -- Tutorial on writing .dtx and .ins files
+ .
+ first-latex-doc -- A document for absolute LaTeX beginners
+ .
+ fontinstallationguide -- Font installation guide
+ .
+ forest-quickstart -- Quickstart Guide for Linguists package "forest"
+ .
+ gentle -- A Gentle Introduction to TeX
+ .
+ guide-to-latex -- examples and more from Guide to LaTeX, by Kopka and Daly
+ .
+ happy4th -- A firework display in obfuscated TeX
+ .
+ hyphen-english -- English hyphenation patterns.
+ .
+ impatient -- Free edition of the book "TeX for the Impatient"
+ .
+ intro-scientific -- Introducing scientific/mathematical documents using
+ LaTeX
+ .
+ knuth-errata -- Knuth's published errata
+ .
+ knuth-pdf -- PDF library for C/WEB sources in TeX Live
+ .
+ l2tabu-english -- English translation of "Obsolete packages and commands"
+ .
+ latex-brochure -- A publicity flyer for LaTeX
+ .
+ latex-course -- A LaTeX course as a projected presentation
+ .
+ latex-doc-ptr -- A direction-finder for LaTeX resources available online
+ .
+ latex-graphics-companion -- Examples from The LaTeX Graphics Companion
+ .
+ latex-refsheet -- LaTeX Reference Sheet for a thesis with KOMA-Script
+ .
+ latex-veryshortguide -- The Very Short Guide to LaTeX
+ .
+ latex-web-companion -- Examples from The LaTeX Web Companion
+ .
+ latex2e-help-texinfo -- Unofficial reference manual covering LaTeX2e
+ .
+ latex4wp -- A LaTeX guide specifically designed for word processor users
+ .
+ latexcheat -- A LaTeX cheat sheet
+ .
+ latexcourse-rug -- A LaTeX course book
+ .
+ latexfileinfo-pkgs -- A comparison of packages showing LaTeX file
+ information
+ .
+ lshort-english -- A (Not So) Short Introduction to LaTeX2e
+ .
+ macros2e -- A list of internal LaTeX2e macros
+ .
+ math-into-latex-4 -- Samples from Math into LaTeX, 4th Edition
+ .
+ maths-symbols -- Summary of mathematical symbols available in LaTeX
+ .
+ memdesign -- Notes on book design
+ .
+ memoirchapterstyles -- Chapter styles in memoir class
+ .
+ metafont-beginners -- An introductory tutorial for Metafont
+ .
+ metapost-examples -- Example drawings using MetaPost
+ .
+ patgen2-tutorial -- A tutorial on the use of Patgen 2
+ .
+ pictexsum -- A summary of PicTeX commands
+ .
+ plain-doc -- A list of plain.tex cs names
+ .
+ short-math-guide -- Guide to using amsmath and related packages to typeset
+ mathematical notation with LaTeX
+ .
+ simplified-latex -- A Simplified Introduction to LaTeX
+ .
+ startlatex2e -- A guide to getting started with LaTeX2e
+ .
+ svg-inkscape -- How to include an SVG image in LaTeX using Inkscape
+ .
+ tamethebeast -- A manual about bibliographies and especially BibTeX
+ .
+ tds -- The TeX Directory Structure standard
+ .
+ tex-font-errors-cheatsheet -- Cheat sheet outlining the most common TeX font
+ errors
+ .
+ tex-nutshell -- A short document about TeX principles
+ .
+ tex-overview -- An overview of the development of TeX
+ .
+ tex-refs -- References for TeX and Friends
+ .
+ texbytopic -- Freed version of the book TeX by Topic
+ .
+ texonly -- A sample document in Plain TeX
+ .
+ titlepages -- Sample titlepages, and how to code them
+ .
+ tlc2 -- Examples from "The LaTeX Companion", second edition
+ .
+ tlmgrbasics -- A simplified documentation for tlmgr
+ .
+ undergradmath -- LaTeX Math for Undergraduates cheat sheet
+ .
+ visualfaq -- A Visual LaTeX FAQ
+ .
+ webguide -- Brief Guide to LaTeX Tools for Web publishing
+ .
+ xetexref -- Reference documentation of XeTeX
+
+Package: texlive-lang-european
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Replaces: texlive-base (<< 2019.20190506)
+Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2021.20210628)
+Description: TeX Live: Other European languages
+ Support for a number of European languages; others (Greek, German, 
+ French, ...) have their own collections, depending simply on the size of the 
+ support.
+ .
+ This package includes the following CTAN packages:
+ .
+ armtex -- A system for writing Armenian with TeX and LaTeX
+ .
+ babel-albanian -- Support for Albanian within babel
+ .
+ babel-bosnian -- Babel contrib support for Bosnian
+ .
+ babel-breton -- Babel contributed support for Breton
+ .
+ babel-croatian -- Babel contributed support for Croatian
+ .
+ babel-danish -- Babel contributed support for Danish
+ .
+ babel-dutch -- Babel contributed support for Dutch
+ .
+ babel-estonian -- Babel support for Estonian
+ .
+ babel-finnish -- Babel support for Finnish
+ .
+ babel-friulan -- Babel/Polyglossia support for Friulan(Furlan)
+ .
+ babel-hungarian -- Babel support for Hungarian (Magyar)
+ .
+ babel-icelandic -- Babel support for Icelandic
+ .
+ babel-irish -- Babel support for Irish
+ .
+ babel-kurmanji -- Babel support for Kurmanji
+ .
+ babel-latin -- Babel support for Latin
+ .
+ babel-latvian -- Babel support for Latvian
+ .
+ babel-macedonian -- Babel module to support Macedonian Cyrillic
+ .
+ babel-norsk -- Babel support for Norwegian
+ .
+ babel-occitan -- Babel support for Occitan
+ .
+ babel-piedmontese -- Babel support for Piedmontese
+ .
+ babel-romanian -- Babel support for Romanian
+ .
+ babel-romansh -- Babel/Polyglossia support for the Romansh language
+ .
+ babel-samin -- Babel support for Samin
+ .
+ babel-scottish -- Babel support for Scottish Gaelic
+ .
+ babel-slovenian -- Babel support for typesetting Slovenian
+ .
+ babel-swedish -- Babel support for typesetting Swedish
+ .
+ babel-turkish -- Babel support for Turkish documents
+ .
+ babel-welsh -- Babel support for Welsh
+ .
+ finbib -- A Finnish version of plain.bst
+ .
+ gloss-occitan -- Polyglossia support for Occitan
+ .
+ hrlatex -- LaTeX support for Croatian documents
+ .
+ hulipsum -- Hungarian dummy text (Lorum ipse)
+ .
+ hyphen-croatian -- Croatian hyphenation patterns.
+ .
+ hyphen-danish -- Danish hyphenation patterns.
+ .
+ hyphen-dutch -- Dutch hyphenation patterns.
+ .
+ hyphen-estonian -- Estonian hyphenation patterns.
+ .
+ hyphen-finnish -- Finnish hyphenation patterns.
+ .
+ hyphen-friulan -- Friulan hyphenation patterns.
+ .
+ hyphen-hungarian -- Hungarian hyphenation patterns.
+ .
+ hyphen-icelandic -- Icelandic hyphenation patterns.
+ .
+ hyphen-irish -- Irish hyphenation patterns.
+ .
+ hyphen-kurmanji -- Kurmanji hyphenation patterns.
+ .
+ hyphen-latin -- Latin hyphenation patterns.
+ .
+ hyphen-latvian -- Latvian hyphenation patterns.
+ .
+ hyphen-lithuanian -- Lithuanian hyphenation patterns.
+ .
+ hyphen-macedonian -- Macedonian hyphenation patterns.
+ .
+ hyphen-norwegian -- Norwegian Bokmal and Nynorsk hyphenation patterns.
+ .
+ hyphen-occitan -- Occitan hyphenation patterns.
+ .
+ hyphen-piedmontese -- Piedmontese hyphenation patterns.
+ .
+ hyphen-romanian -- Romanian hyphenation patterns.
+ .
+ hyphen-romansh -- Romansh hyphenation patterns.
+ .
+ hyphen-slovenian -- Slovenian hyphenation patterns.
+ .
+ hyphen-swedish -- Swedish hyphenation patterns.
+ .
+ hyphen-turkish -- Turkish hyphenation patterns.
+ .
+ hyphen-uppersorbian -- Upper Sorbian hyphenation patterns.
+ .
+ hyphen-welsh -- Welsh hyphenation patterns.
+ .
+ lithuanian -- Lithuanian language support
+ .
+ lshort-dutch -- Introduction to LaTeX in Dutch
+ .
+ lshort-estonian -- Estonian introduction to LaTeX
+ .
+ lshort-finnish -- Finnish introduction to LaTeX
+ .
+ lshort-slovenian -- Slovenian translation of lshort
+ .
+ lshort-turkish -- Turkish introduction to LaTeX
+ .
+ nevelok -- LaTeX package for automatic definite articles for Hungarian
+ .
+ rojud -- A font with the images of the counties of Romania
+ .
+ swebib -- Swedish bibliography styles
+ .
+ turkmen -- Babel support for Turkmen
+
+Package: texlive-lang-french
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: French
+ Support for French and Basque.
+ .
+ This package includes the following CTAN packages:
+ .
+ aeguill -- Add several kinds of guillemets to the ae fonts
+ .
+ annee-scolaire -- Automatically typeset the academic year (French way)
+ .
+ apprendre-a-programmer-en-tex -- The book "Apprendre a programmer en TeX"
+ .
+ apprends-latex -- Apprends LaTeX!
+ .
+ babel-basque -- Babel contributed support for Basque
+ .
+ babel-french -- Babel contributed support for French
+ .
+ basque-book -- Class for book-type documents written in Basque
+ .
+ basque-date -- Print the date in Basque
+ .
+ bib-fr -- French translation of classical BibTeX styles
+ .
+ bibleref-french -- French translations for bibleref
+ .
+ booktabs-fr -- French translation of booktabs documentation
+ .
+ droit-fr -- Document class and bibliographic style for French law
+ .
+ e-french -- Comprehensive LaTeX support for French-language typesetting
+ .
+ epslatex-fr -- French version of "graphics in LaTeX"
+ .
+ expose-expl3-dunkerque-2019 -- Using expl3 to implement some numerical
+ algorithms
+ .
+ facture -- Generate an invoice
+ .
+ formation-latex-ul -- Introductory LaTeX course in French
+ .
+ frenchmath -- Typesetting mathematics according to French rules
+ .
+ frletter -- Typeset letters in the French style
+ .
+ frpseudocode -- French translation for the algorithmicx package
+ .
+ hyphen-basque -- Basque hyphenation patterns.
+ .
+ hyphen-french -- French hyphenation patterns.
+ .
+ impatient-fr -- Free edition of the book "TeX for the Impatient"
+ .
+ impnattypo -- Support typography of l'Imprimerie Nationale Francaise
+ .
+ l2tabu-french -- French translation of l2tabu
+ .
+ latex2e-help-texinfo-fr -- A French translation of "latex2e-help-texinfo"
+ .
+ lshort-french -- Short introduction to LaTeX, French translation
+ .
+ mafr -- Mathematics in accord with French usage
+ .
+ matapli -- Class for the french journal "MATAPLI"
+ .
+ profcollege -- A LaTeX package for French maths teachers in college
+ .
+ tabvar -- Typesetting tables showing variations of functions
+ .
+ tdsfrmath -- Macros for French teachers of mathematics
+ .
+ texlive-fr -- TeX Live manual (French)
+ .
+ translation-array-fr -- French translation of the documentation of array
+ .
+ translation-dcolumn-fr -- French translation of the documentation of dcolumn
+ .
+ translation-natbib-fr -- French translation of the documentation of natbib
+ .
+ translation-tabbing-fr -- French translation of the documentation of Tabbing
+ .
+ variations -- Typeset tables of variations of functions
+ .
+ visualfaq-fr -- FAQ LaTeX visuelle francophone
+ .
+ visualtikz -- Visual help for TikZ based on images with minimum text
+
+Package: texlive-lang-german
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Replaces: texlive-xetex (<< 2020.20200519)
+Breaks: texlive-base (<< 2021.20210628), texlive-xetex (<< 2020.20200519)
+Description: TeX Live: German
+ Support for German.
+ .
+ This package includes the following CTAN packages:
+ .
+ apalike-german -- A copy of apalike.bst with German localization
+ .
+ babel-german -- Babel support for documents written in German
+ .
+ bibleref-german -- German adaptation of bibleref
+ .
+ booktabs-de -- German version of booktabs
+ .
+ csquotes-de -- German translation of csquotes documentation
+ .
+ dehyph -- German hyphenation patterns for traditional orthography
+ .
+ dehyph-exptl -- Experimental hyphenation patterns for the German language
+ .
+ dhua -- German abbreviations using thin space
+ .
+ dtk-bibliography -- Bibliography of "Die TeXnische Komodie"
+ .
+ etdipa -- Simple, lightweight template for scientific documents
+ .
+ etoolbox-de -- German translation of documentation of etoolbox
+ .
+ fifinddo-info -- German HTML beamer presentation on nicetext and morehype
+ .
+ german -- Support for German typography
+ .
+ germbib -- German variants of standard BibTeX styles
+ .
+ germkorr -- Change kerning for German quotation marks
+ .
+ hausarbeit-jura -- Class for writing "juristische Hausarbeiten" at German
+ Universities
+ .
+ hyphen-german -- German hyphenation patterns.
+ .
+ koma-script-examples -- Examples from the KOMA-Script book
+ .
+ l2picfaq -- LaTeX pictures "how-to" (German)
+ .
+ l2tabu -- Obsolete packages and commands
+ .
+ latexcheat-de -- A LaTeX cheat sheet, in German
+ .
+ lshort-german -- German version of A Short Introduction to LaTeX2e:
+ LaTeX2e-Kurzbeschreibung
+ .
+ lualatex-doc-de -- Guide to LuaLaTeX (German translation)
+ .
+ microtype-de -- Translation into German of the documentation of microtype
+ .
+ milog -- A LaTeX class for fulfilling the documentation duties according to
+ the German minimum wage law MiLoG
+ .
+ quran-de -- German translations to the quran package
+ .
+ r_und_s -- Chemical hazard codes
+ .
+ schulmathematik -- Commands and document classes for German-speaking
+ teachers of mathematics and physics
+ .
+ templates-fenn -- Templates for TeX usage
+ .
+ templates-sommer -- Templates for TeX usage
+ .
+ termcal-de -- German localization for termcal
+ .
+ texlive-de -- TeX Live manual (German)
+ .
+ tipa-de -- German translation of tipa documentation
+ .
+ translation-arsclassica-de -- German version of arsclassica
+ .
+ translation-biblatex-de -- German translation of the User Guide for BibLaTeX
+ .
+ translation-chemsym-de -- German version of chemsym
+ .
+ translation-ecv-de -- Ecv documentation, in German
+ .
+ translation-enumitem-de -- Enumitem documentation, in German
+ .
+ translation-europecv-de -- German version of europecv
+ .
+ translation-filecontents-de -- German version of filecontents
+ .
+ translation-moreverb-de -- German version of moreverb
+ .
+ udesoftec -- Thesis class for the University of Duisburg-Essen
+ .
+ uhrzeit -- Time printing, in German
+ .
+ umlaute -- German input encodings in LaTeX
+ .
+ voss-mathcol -- Typesetting mathematics in colour, in (La)TeX
+
+Package: texlive-lang-greek
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, fonts-gfs-baskerville, fonts-gfs-porson, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-binaries (>= 2021.20210626)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Greek
+ Support for Greek.
+ .
+ This package includes the following CTAN packages:
+ .
+ babel-greek -- Babel support for documents written in Greek
+ .
+ begingreek -- Greek environment to be used with pdfLaTeX only
+ .
+ betababel -- Insert ancient greek text coded in Beta Code
+ .
+ cbfonts -- Complete set of Greek fonts
+ .
+ cbfonts-fd -- LaTeX font description files for the CB Greek fonts
+ .
+ gfsbaskerville -- A Greek font, from one such by Baskerville
+ .
+ gfsporson -- A Greek font, originally from Porson
+ .
+ greek-fontenc -- LICR macros and encoding definition files for Greek
+ .
+ greek-inputenc -- Greek encoding support for inputenc
+ .
+ greekdates -- Provides ancient Greek day and month names, dates, etc
+ .
+ greektex -- Fonts for typesetting Greek/English documents
+ .
+ greektonoi -- Facilitates writing/editing of multiaccented greek
+ .
+ hyphen-ancientgreek -- Ancient Greek hyphenation patterns.
+ .
+ hyphen-greek -- Modern Greek hyphenation patterns.
+ .
+ ibycus-babel -- Use the Ibycus 4 Greek font with Babel
+ .
+ ibygrk -- Fonts and macros to typeset ancient Greek
+ .
+ kerkis -- Kerkis (Greek) font family
+ .
+ levy -- Fonts for typesetting classical greek
+ .
+ lgreek -- LaTeX macros for using Silvio Levy's Greek fonts
+ .
+ mkgrkindex -- Makeindex working with Greek
+ .
+ teubner -- Philological typesetting of classical Greek
+ .
+ xgreek -- XeLaTeX package for typesetting Greek language documents (beta
+ release)
+ .
+ yannisgr -- Greek fonts by Yannis Haralambous
+
+Package: texlive-lang-italian
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Italian
+ Support for Italian.
+ .
+ This package includes the following CTAN packages:
+ .
+ amsldoc-it -- Italian translation of amsldoc
+ .
+ amsmath-it -- Italian translations of some old amsmath documents
+ .
+ amsthdoc-it -- Italian translation of amsthdoc: Using the amsthm package
+ .
+ antanilipsum -- Generate sentences in the style of "Amici miei"
+ .
+ babel-italian -- Babel support for Italian text
+ .
+ codicefiscaleitaliano -- Test the consistency of the Italian personal Fiscal
+ Code
+ .
+ fancyhdr-it -- Italian translation of fancyhdr documentation
+ .
+ fixltxhyph -- Allow hyphenation of partially-emphasised substrings
+ .
+ frontespizio -- Create a frontispiece for Italian theses
+ .
+ hyphen-italian -- Italian hyphenation patterns.
+ .
+ itnumpar -- Spell numbers in words (Italian)
+ .
+ l2tabu-italian -- Italian Translation of Obsolete packages and commands
+ .
+ latex4wp-it -- LaTeX guide for word processor users, in Italian
+ .
+ layaureo -- A package to improve the A4 page layout
+ .
+ lshort-italian -- Introduction to LaTeX in Italian
+ .
+ psfrag-italian -- PSfrag documentation in Italian
+ .
+ texlive-it -- TeX Live manual (Italian)
+ .
+ verifica -- Typeset (Italian high school) exercises
+
+Package: texlive-lang-other
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, fonts-sil-padauk (>= 3.003-1), fonts-tlwg-garuda-otf, fonts-tlwg-kinnari-otf, fonts-tlwg-laksaman-otf, fonts-tlwg-loma-otf, fonts-tlwg-mono-otf, fonts-tlwg-norasi-otf, fonts-tlwg-purisa-otf, fonts-tlwg-sawasdee-otf, fonts-tlwg-typewriter-otf, fonts-tlwg-typist-otf, fonts-tlwg-typo-otf, fonts-tlwg-umpush-otf, fonts-tlwg-waree-otf, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-binaries (>= 2021.20210626)
+Replaces: texlive-base (<< 2019.20190506)
+Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2021.20210628)
+Description: TeX Live: Other languages
+ Support for languages not otherwise listed, including Indic, Thai, 
+ Vietnamese, Hebrew, Indonesian, African languages, and plenty more. The 
+ split is made simply on the basis of the size of the support, to keep both 
+ collection sizes and the number of collections reasonable.
+ .
+ This package includes the following CTAN packages:
+ .
+ aalok -- LaTeX class file for the Marathi journal 'Aalok'
+ .
+ akshar -- Support for syllables in the Devanagari script
+ .
+ amsldoc-vn -- Vietnamese translation of AMSLaTeX documentation
+ .
+ aramaic-serto -- Fonts and LaTeX for Syriac written in Serto
+ .
+ babel-azerbaijani -- Support for Azerbaijani within babel
+ .
+ babel-esperanto -- Babel support for Esperanto
+ .
+ babel-georgian -- Babel support for Georgian
+ .
+ babel-hebrew -- Babel support for Hebrew
+ .
+ babel-indonesian -- Support for Indonesian within babel
+ .
+ babel-interlingua -- Babel support for Interlingua
+ .
+ babel-malay -- Support for Malay within babel
+ .
+ babel-sorbian -- Babel support for Upper and Lower Sorbian
+ .
+ babel-thai -- Support for Thai within babel
+ .
+ babel-vietnamese -- Babel support for typesetting Vietnamese
+ .
+ bangla -- A comprehensive Bangla LaTeX package
+ .
+ bangtex -- Writing Bangla and Assamese with LaTeX
+ .
+ bengali -- Support for the Bengali language
+ .
+ burmese -- Basic Support for Writing Burmese
+ .
+ chhaya -- Linguistic glossing in Marathi language
+ .
+ cjhebrew -- Typeset Hebrew with LaTeX
+ .
+ ctib -- Tibetan for TeX and LaTeX2e
+ .
+ ethiop -- LaTeX macros and fonts for typesetting Amharic
+ .
+ ethiop-t1 -- Type 1 versions of Amharic fonts
+ .
+ fc -- Fonts for African languages
+ .
+ fonts-tlwg -- Thai fonts for LaTeX from TLWG
+ .
+ hindawi-latex-template -- A LaTeX template for authors of the Hindawi
+ journals
+ .
+ hyphen-afrikaans -- Afrikaans hyphenation patterns.
+ .
+ hyphen-armenian -- Armenian hyphenation patterns.
+ .
+ hyphen-coptic -- Coptic hyphenation patterns.
+ .
+ hyphen-esperanto -- Esperanto hyphenation patterns.
+ .
+ hyphen-ethiopic -- Hyphenation patterns for Ethiopic scripts.
+ .
+ hyphen-georgian -- Georgian hyphenation patterns.
+ .
+ hyphen-indic -- Indic hyphenation patterns.
+ .
+ hyphen-indonesian -- Indonesian hyphenation patterns.
+ .
+ hyphen-interlingua -- Interlingua hyphenation patterns.
+ .
+ hyphen-sanskrit -- Sanskrit hyphenation patterns.
+ .
+ hyphen-thai -- Thai hyphenation patterns.
+ .
+ hyphen-turkmen -- Turkmen hyphenation patterns.
+ .
+ latex-mr -- A practical guide to LaTeX and Polyglossia for Marathi and other
+ Indian languages
+ .
+ latexbangla -- Enhanced LaTeX integration for Bangla
+ .
+ latino-sine-flexione -- LaTeX support for documents written in Peano's
+ Interlingua
+ .
+ lshort-thai -- Introduction to LaTeX in Thai
+ .
+ lshort-vietnamese -- Vietnamese version of the LaTeX introduction
+ .
+ marathi -- Typeset Marathi language using XeLaTeX or LuaLaTeX
+ .
+ ntheorem-vn -- Vietnamese translation of documentation of ntheorem
+ .
+ padauk -- A high-quality TrueType font that supports the many diverse
+ languages that use the Myanmar script
+ .
+ quran-bn -- Bengali translations to the quran package
+ .
+ quran-ur -- Urdu translations to the quran package
+ .
+ sanskrit -- Sanskrit support
+ .
+ sanskrit-t1 -- Type 1 version of 'skt' fonts for Sanskrit
+ .
+ thaienum -- Thai labels in enumerate environments
+ .
+ thaispec -- Thai Language Typesetting in XeLaTeX
+ .
+ unicode-alphabets -- Macros for using characters from Unicode's Private Use
+ Area
+ .
+ velthuis -- Typeset Devanagari
+ .
+ vntex -- Support for Vietnamese
+ .
+ wnri -- Ridgeway's fonts
+ .
+ wnri-latex -- LaTeX support for wnri fonts
+ .
+ xetex-devanagari -- XeTeX input map for Unicode Devanagari
+
+Package: texlive-lang-polish
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921), texlive-binaries (>= 2021.20210626), texlive-latex-base (>= 2021.20210921)
+Suggests: texlive-fonts-extra
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Polish
+ Support for Polish.
+ .
+ This package includes the following CTAN packages:
+ .
+ babel-polish -- Babel support for Polish
+ .
+ bredzenie -- A Polish version of "lorem ipsum..." in the form of a LaTeX
+ package
+ .
+ cc-pl -- Polish extension of Computer Concrete fonts
+ .
+ gustlib -- plain macros for much core and extra functionality, from GUST
+ .
+ gustprog -- utility programs for Polish users of TeX
+ .
+ hyphen-polish -- Polish hyphenation patterns.
+ .
+ lshort-polish -- Introduction to LaTeX in Polish
+ .
+ mex -- Polish formats for TeX
+ .
+ mwcls -- Polish-oriented document classes
+ .
+ pl -- Polish extension of Computer Modern fonts
+ .
+ polski -- Typeset Polish documents with LaTeX and Polish fonts
+ .
+ przechlewski-book -- Examples from Przechlewski's LaTeX book
+ .
+ qpxqtx -- Polish macros and fonts supporting Pagella/pxfonts and
+ Termes/txfonts
+ .
+ tap -- TeX macros for typesetting complex tables
+ .
+ tex-virtual-academy-pl -- TeX usage web pages, in Polish
+ .
+ texlive-pl -- TeX Live manual (Polish)
+ .
+ utf8mex -- Tools to produce formats that read Polish language input
+
+Package: texlive-lang-portuguese
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Breaks: texlive-base (<< 2021.20210628)
+Description: TeX Live: Portuguese
+ Support for Portuguese.
+ .
+ This package includes the following CTAN packages:
+ .
+ babel-portuges -- Babel support for Portuges
+ .
+ beamer-tut-pt -- An introduction to the Beamer class, in Portuguese
+ .
+ cursolatex -- A LaTeX tutorial
+ .
+ feupphdteses -- Typeset Engineering PhD theses at the University of Porto
+ .
+ hyphen-portuguese -- Portuguese hyphenation patterns.
+ .
+ latex-via-exemplos -- A LaTeX course written in brazilian portuguese
+ language
+ .
+ latexcheat-ptbr -- A LaTeX cheat sheet, in Brazilian Portuguese
+ .
+ lshort-portuguese -- Introduction to LaTeX in Portuguese
+ .
+ numberpt -- Counters spelled out in Portuguese
+ .
+ ordinalpt -- Counters as ordinal numbers in Portuguese
+ .
+ xypic-tut-pt -- A tutorial for XY-pic, in Portuguese
+
+Package: texlive-lang-spanish
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-base (>= 2021.20210628), texlive-base (>= 2021.20210921)
+Replaces: texlive-base (<< 2019.20190506)
+Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2021.20210628)
+Description: TeX Live: Spanish
+ Support for Spanish.
+ .
+ This package includes the following CTAN packages:
+ .
+ babel-catalan -- Babel contributed support for Catalan
+ .
+ babel-galician -- Babel/Polyglossia support for Galician
+ .
+ babel-spanish -- Babel support for Spanish
+ .
+ es-tex-faq -- CervanTeX (Spanish TeX Group) FAQ
+ .
+ hyphen-catalan -- Catalan hyphenation patterns.
+ .
+ hyphen-galician -- Galician hyphenation patterns.
+ .
+ hyphen-spanish -- Spanish hyphenation patterns.
+ .
+ l2tabu-spanish -- Spanish translation of "Obsolete packages and commands"
+ .
+ latex2e-help-texinfo-spanish -- Unofficial reference manual covering LaTeX2e
+ .
+ latexcheat-esmx -- A LaTeX cheat sheet, in Spanish
+ .
+ lshort-spanish -- Short introduction to LaTeX, Spanish translation
+ .
+ texlive-es -- TeX Live manual (Spanish)
+
+Package: texlive-lang-all
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, texlive-lang-arabic (>= 2021.20210921), texlive-lang-chinese (>= 2021.20210921), texlive-lang-cjk (>= 2021.20210921), texlive-lang-cyrillic (>= 2021.20210921), texlive-lang-czechslovak (>= 2021.20210921), texlive-lang-english (>= 2021.20210921), texlive-lang-european (>= 2021.20210921), texlive-lang-french (>= 2021.20210921), texlive-lang-german (>= 2021.20210921), texlive-lang-greek (>= 2021.20210921), texlive-lang-italian (>= 2021.20210921), texlive-lang-japanese (>= 2021.20210921), texlive-lang-korean (>= 2021.20210921), texlive-lang-other (>= 2021.20210921), texlive-lang-polish (>= 2021.20210921), texlive-lang-portuguese (>= 2021.20210921), texlive-lang-spanish (>= 2021.20210921)
+Description: TeX Live: metapackage depending on all TeX Live language packages
+ This package pulls in all texlive-lang-* packages. 

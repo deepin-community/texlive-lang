@@ -1,0 +1,59 @@
+@c $Id: common.texi 729 2018-11-13 23:22:27Z karl $
+@c Public domain.
+@set LTXREFMAN_HOME_PAGE https://latexref.xyz
+@set LTXREFMAN_BUGS latexrefman@@tug.org
+@clear HAS-MATH 
+@iftex
+@set HAS-MATH
+@macro iftexthenelse {then,else}
+\then\@c
+@end macro
+@end iftex
+@ifnottex
+@macro iftexthenelse {then,else}
+\else\@c
+@end macro
+@end ifnottex
+
+@tex
+\globaldefs=1
+% lasyfont characters for Texinfo (latexsym package in LaTeX).
+% JH 2018-Nov-12, ideas from wasyfont.tex. Public domain.
+% not going to try to make fonts 
+\font\tenlasy = lasy10
+% \font\ninelasy = lasy9
+% \font\eightlasy = lasy8
+\font\sevenlasy = lasy7
+\font\fivelasy = lasy5
+\newfam\lasyfam
+\newcount\lasyfamcount
+% family number is third-least-significant hex digit of mathchar
+\lasyfamcount=\lasyfam \multiply\lasyfamcount by 256
+%
+\textfont\lasyfam=\tenlasy
+ \scriptfont\lasyfam=\sevenlasy
+ \scriptscriptfont\lasyfam=\fivelasy
+%
+\def\lasymathchardef#1#2{%
+    \count255=\lasyfamcount
+    \advance\count255 by"#1
+    \mathchardef#2\count255 }
+% char 1 (math class): 0=ord, 2=bin, 3=rel (taken from latexsym.dtx).
+% char 2: family number, added in by \lasymathchardef.
+% chars 3-4: character code in font. All in hex.
+\lasymathchardef{0030}{\mho}
+\lasymathchardef{3031}{\Join}
+\lasymathchardef{0032}{\Box}
+\lasymathchardef{0033}{\Diamond}
+\lasymathchardef{303B}{\leadsto}
+\lasymathchardef{303C}{\sqsubset}
+\lasymathchardef{303D}{\sqsupset}
+\lasymathchardef{2001}{\lhd}
+\lasymathchardef{2003}{\rhd}
+\lasymathchardef{2002}{\unlhd}
+\lasymathchardef{2004}{\unrhd}
+%
+% must explicitly reset before the (at)end tex, not let the (at)end group
+% reset it; else internal Texinfo variables get messed up.
+\globaldefs=0
+@end tex

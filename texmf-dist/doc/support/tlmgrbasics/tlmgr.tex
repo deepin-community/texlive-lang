@@ -1,0 +1,735 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage[osf]{mathpazo}
+
+% using OT1 encoding for tt to avoid need for cm-super fonts
+\renewcommand{\ttfamily}{\fontencoding{OT1}\fontfamily{cmtt}\selectfont}
+
+\usepackage{hyperref}
+
+\title{Basic Usage of \texttt{tlmgr}, the \TeX\,Live Manager}
+\author{edited by Bob Tennent\thanks{\scriptsize Derived
+from the man page \texttt{tlmgr.1} and licensed under
+the GNU General Public Licence, Version 2 or later.}\\
+\url{rdt@cs.queensu.ca}}
+
+\usepackage[headheight=14pt]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+
+\tableofcontents
+
+\clearpage
+
+\section{Introduction}
+
+\texttt{tlmgr} manages an existing \TeX\,Live installation,
+both packages and configuration options. For information
+on initially downloading and installing \TeX\,Live, see
+\url{https://tug.org/texlive/acquire.html}.
+
+\TeX\,Live is organized into a few top-level
+\textit{schemes}, each of which specifies a set of
+\textit{collections} and \textit{packages}, where a
+collection is a set of packages, and a package is what
+contains actual files. Schemes typically contain a mix of
+collections and packages, but each package is included in
+exactly one collection, no more and no less. A \TeX\,Live
+installation can be customized and managed at any level.
+
+We will describe usage of \texttt{tlmgr} in the
+command-line interface. There are graphical front-ends
+for \texttt{tlmgr}: \texttt{tlshell}, \texttt{tlcockpit}
+and, for Macs, a \TeX\,Live Utility; these must
+be started as separate programs. These is also a
+graphical user interface in \texttt{tlmgr} itself;
+consult the documentation here: 
+\begin{center}
+  \url{https://tug.org/texlive/doc/tlmgr.html#GUI-FOR-TLMGR}.
+\end{center}
+
+
+
+\section{Usage}
+
+\begin{quote}
+  \texttt{tlmgr} 
+  \verb|[|\textit{global options} \verb|]| 
+  \textit{action} 
+  \verb|[|\textit{action-specific options}\verb|]|  
+  \verb|[|\textit{operands}\verb|]|
+\end{quote}
+
+The actions and relevant action-specific options and
+operands are described in Section~\ref{Actions}. The global
+options are described in Section~\ref{GlobalOptions}.
+
+Options, whether global or action-specific, may be
+given anywhere on the command line, and in any order.
+The first non-option argument will be treated as the
+main action. In all cases, \verb|--|\textit{option} and
+\verb|-|\textit{option} are equivalent, and an \verb|=| is
+optional between an option name and its value.
+
+This report documents only the most commonly-used actions
+and options for \texttt{tlmgr}. Complete documentation may
+be found at
+\begin{center}
+  \url{https://tug.org/texlive/doc/tlmgr.html}. 
+\end{center}
+The file \texttt{tlmgr.html} may also be installed on your system; try \texttt{texdoc -l tlmgr}.
+Reference documentation for any action is also available using 
+\texttt{tlmgr  -help}~\textit{action}.
+
+\section{Examples}
+
+After successfully installing \TeX\,Live, the following are
+examples of common operations with \texttt{tlmgr}:
+\begin{description}
+
+\item\texttt{tlmgr -help install}\par
+
+Displays reference documentation on the \texttt{install} action.
+
+\item\texttt{tlmgr option repository ctan}\par 
+
+Tells \texttt{tlmgr} to use a nearby CTAN mirror for
+future updates; \texttt{ctan} is just an alias for
+\url{https://mirrors.ctan.org/systems/texlive/tlnet}. Caveat:
+\texttt{mirrors.ctan.org} resolves to many different
+hosts, and they are not perfectly synchronized; we
+recommend updating only daily (at most), and not more
+often. You can choose a particular mirror in place of
+\texttt{mirrors.ctan.org} if there are problems; the
+list of all CTAN mirrors with the status of each is at
+\url{https://ctan.org/mirrors/mirmon}. Don't forget to add
+\texttt{.../systems/texlive/tlnet} to the path.
+
+\item\texttt{tlmgr update -all}\par 
+
+Makes your local \TeX\ installation correspond to what is in
+the default package repository.
+
+\item\texttt{tlmgr update -self}\par 
+
+Updates \texttt{tlmgr} itself (that is, the infrastructure
+packages) if updates to it are present. If the
+\texttt{-self} option is given together with either
+\texttt{-all} or a list of packages, then \texttt{tlmgr}
+will be updated first and, if this update succeeds, the
+new version will be restarted to complete the rest of the
+updates.
+
+\item\texttt{tlmgr info fontspec}\par 
+
+Displays detailed information about package
+\texttt{fontspec}, such as the installation status and
+description.
+
+\item\texttt{tlmgr info -list fontspec}\par 
+
+The list of files in package \texttt{fontspec} is
+also displayed, including those for platform-specific
+dependencies.
+
+\item\texttt{tlmgr install fontspec}\par 
+
+Installs the \texttt{fontspec} package (unless it is already
+installed). By default all packages on which the given
+package is dependent are also installed. Existing packages
+are not touched.
+
+\item\texttt{tlmgr search -file cabin}\par 
+
+Searches locally installed packages and displays all filenames
+containing \texttt{cabin}.
+
+\item\texttt{tlmgr conf}\par
+
+Displays general configuration information for \TeX\,Live, including active configuration files, path settings, and more. 
+
+\end{description}
+
+\clearpage
+
+\section{Actions}
+\label{Actions}
+
+\subsection{The {\tt info} Action}
+\label{info}
+
+\paragraph{Usage:}
+
+\begin{list}{}{}
+\item \texttt{tlmgr info} 
+\item \texttt{tlmgr info collections} 
+\item \texttt{tlmgr info schemes}
+\item \texttt{tlmgr info} \textsl{pkgs} 
+\end{list}
+
+With no argument, lists all packages available at the
+package repository, prefixing those already installed with
+\texttt{i}.
+
+With the single word \texttt{collections} or
+\texttt{schemes} as the argument, lists all the collections
+and schemes, respectively, instead of all packages.
+
+With any other arguments, displays information about each
+of the \textsl{pkgs}: the name, category, short and long
+description, sizes, installation status, and \TeX\,Live
+revision number. If the package is not locally installed,
+searches in the remote installation source.
+
+For normal packages (not collections or schemes), the sizes
+of the four groups of files (run/src/doc/bin) are shown
+separately. For collections, the cumulative size is shown,
+including all directly-dependent packages (but not dependent
+collections). For schemes, the cumulative size is also
+shown, including all directly-dependent collections and
+packages.
+
+If a package is not found locally or remotely, the
+\texttt{search} action (see Section~\ref{search}) is used
+and lists matching packages and files.
+
+It also displays information taken from the \TeX\ Catalogue,
+namely the package version, date, and license. Consider
+these, especially the package version, as approximations
+only, due to timing skew of the updates of the different
+pieces. By contrast, the \texttt{revision} value comes
+directly from TL and is reliable.
+
+
+\paragraph{Options for \mdseries\texttt{info}:}
+
+\begin{description}
+
+\item\texttt{-list}\par 
+
+If the option \texttt{-list} is given with a package, the
+list of contained files is also shown, including those for
+platform-specific dependencies. When given with schemes and
+collections, \texttt{-list} outputs their dependencies in a
+similar way.
+
+\item\texttt{-only-installed}\par 
+
+If this option is given, the installation source will not
+be used; only locally installed packages, collections, or
+schemes are listed.
+
+\item\texttt{-only-remote}\par 
+
+Only list packages from the remote repository. Useful when
+checking what is available in a remote repository using
+\begin{center}
+\texttt{tlmgr -repo ... -only-remote info}. 
+\end{center}
+
+\end{description}
+
+Note that \texttt{-only-installed} and \texttt{-only-remote}
+cannot both be specified.
+
+\clearpage
+
+\subsection{The {\tt search} Action}
+\label{search}
+
+\paragraph{Usage:}
+\begin{list}{}{}
+
+\item \texttt{tlmgr search} \textsl{what} \end{list} By
+default, search the names, short descriptions, and long
+descriptions of all locally installed packages for the
+argument \textsl{what}, interpreted as a (Perl) regular
+expression.
+
+\paragraph{Options for {\tt search}:}
+
+\begin{description}
+
+\item\texttt{-file}\par 
+
+List all filenames containing \textsl{what}.
+
+\item\texttt{-global}\par 
+
+Search the \TeX\,Live Database of the installation medium,
+instead of the local installation.
+
+\item\texttt{-word}\par 
+
+Restrict the search of package names and descriptions (but
+not filenames) to match only full words. For example,
+searching for \texttt{table} with this option will not
+output a package containing the word \texttt{tables} (unless
+it also contains the word \texttt{table} on its own).
+
+\end{description}
+
+\clearpage
+
+\subsection{The {\tt install} Action}
+\label{install}
+
+\paragraph{Usage:}
+\begin{list}{}{}
+\item  \texttt{tlmgr install} \textsl{pkgs}
+\end{list}
+
+Install each of the \textsl{pkgs} (unless it is already
+installed). By default all packages on which the given
+package is dependent are also installed. Existing packages
+are not touched; use the \texttt{update} action described in
+Section~\ref{update} to get the latest version of a package.
+
+
+\paragraph{Options for \mdseries\texttt{install}:}
+
+\begin{description}
+
+\item\texttt{-dry-run}\par 
+
+Nothing is actually installed; instead, the actions to be
+performed are written to the terminal.
+
+\item\texttt{-reinstall}\par 
+
+Reinstall a package (including dependencies for collections)
+even if it already seems to be installed (i.e, is present in
+the \TeX\,Live Package Database). This is useful to recover
+from accidental removal of files in the hierarchy.
+
+When re-installing, only dependencies on normal packages are
+followed (i.e., not those of category Scheme or Collection).
+
+\item\texttt{-with-doc}, \texttt{-with-src}\par 
+
+The \texttt{install-tl} program provides the option of
+omitting installation of all documentation and/or source
+files. (By default, everything is installed.) After such an
+installation, you may find that you want the documentation
+or source files for a given package after all. You can
+get them by using these options in conjunction with
+\texttt{-reinstall}, as in 
+\begin{center} 
+  \texttt{tlmgr install -reinstall -with-doc -with-src} \textsl{pkgs}
+\end{center}
+
+\item\texttt{-no-depends}\par 
+
+Do not install dependencies. (By default, installing a
+package ensures that all dependencies of this package are
+fulfilled.)
+
+\end{description}
+
+\par\noindent 
+The \texttt{install} action does not
+automatically add new symlinks in system directories; you
+need to run
+\begin{center}
+  \texttt{tlmgr path add} 
+\end{center}
+yourself if you are using this feature and want new symlinks
+added; see Section~\ref{path}.
+
+\clearpage
+
+\subsection{The {\tt update} Action}
+\label{update}
+
+\paragraph{Usage:}
+
+\begin{list}{}{}
+\item \texttt{tlmgr update} \textsl{pkgs} 
+\end{list}
+Updates the packages given as arguments to the latest
+version available at the installation source. Either
+\texttt{-all} or at least one package name must be
+specified.
+
+\paragraph{Options for {\tt update}:}
+
+\begin{description}
+
+\item\texttt{-all}\par 
+
+Update all installed packages (except for \texttt{tlmgr}
+itself). If updates to \texttt{tlmgr} itself are listed,
+this gives an error, unless also the option \texttt{-force}
+or \texttt{-self} is given. (See below.)
+
+In addition to updating the installed packages, during
+the update of a collection the local installation is (by
+default) synchronized to the status of the collection on the
+server, for both additions and removals.
+
+This means that if a package has been removed on the
+server (and thus has also been removed from the respective
+collection), \texttt{tlmgr} will remove the package in the
+local installation. This is called ``auto-remove'' and is
+announced as such when using the option \texttt{-list}.
+
+Analogously, if a package has been added to a collection
+on the server that is also installed locally, it will
+be added to the local installation. This is called
+``auto-install'' and is announced as such when using the
+option \texttt{-list}.
+
+An exception to the collection dependency checks (including
+the auto-installation of packages just mentioned) are
+those that have been ``forcibly removed'' by you,
+that is, you called \texttt{tlmgr remove -force} on
+them. (See the \texttt{remove} action documentation.)
+To reinstall any such forcibly removed packages use
+\texttt{-reinstall-forcibly-removed}.
+
+If you want to exclude some packages from the current update
+run (e.g., due to a slow link), see the \texttt{-exclude}
+option below.
+
+\item\texttt{-self}\par 
+
+Update \texttt{tlmgr} itself (that is, the infrastructure
+packages) if updates to it are present. On Windows this
+includes updates to the private Perl interpreter shipped
+inside \TeX\,Live.
+
+If this option is given together with either \texttt{-all}
+or a list of packages, then \texttt{tlmgr} will be updated
+first and, if this update succeeds, the new version will be
+restarted to complete the rest of the updates.
+
+\item\texttt{-dry-run}\par 
+
+Nothing is actually installed; instead, the actions to
+be performed are written to the terminal. This is a more
+detailed report than using \texttt{-list}.
+
+\item\texttt{-list} [\textsl{pkg}]\par 
+
+Concisely list the packages which would be updated, newly
+installed, or removed, without actually changing anything.
+If \texttt{-all} is also given, all available updates are
+listed. If \texttt{-self} is given, but not \texttt{-all},
+only updates to the critical packages (\texttt{tlmgr},
+\TeX\,Live infrastructure, Perl on Windows, etc.) are listed.
+
+If neither \texttt{-all} nor \texttt{-self} is given, and
+in addition no \textsl{pkg} is given, then \texttt{-all} is
+assumed. Thus, \mbox{\texttt{tlmgr update -list}} is the
+same as \mbox{\texttt{tlmgr update -list -all}}. If neither
+\texttt{-all} nor \texttt{-self} is given, but specific
+package names are given, those packages are checked for
+updates.
+
+\item\texttt{-exclude} \textsl{pkg}\par 
+
+Exclude \textsl{pkg} from the update process. If this option
+is given more than once, its arguments accumulate.
+
+An argument \textsl{pkg} excludes both the package
+\textsl{pkg} itself and any related platform-specific
+packages. For example,
+
+\begin{center}
+  \texttt{tlmgr update -all -exclude a2ping}
+\end{center}
+
+will not update \texttt{a2ping}, \texttt{a2ping.i386-linux},
+or any other \mbox{\texttt{a2ping}.xxx} package.
+
+If this option specifies a package that would otherwise
+be a candidate for auto-installation, auto-removal, or
+reinstallation of a forcibly removed package, \texttt{tlmgr}
+quits with an error message. Excludes are not supported in
+these circumstances.
+
+
+
+\item\texttt{-no-depends}\par 
+
+If you call for updating a package, normally all depending
+packages will also be checked for updates and updated if
+necessary. This switch suppresses this behavior.
+
+\end{description}
+
+\noindent
+If the package on the server is older than the package
+already installed (e.g., if the selected mirror is out of
+date), \texttt{tlmgr} does not downgrade. Also, packages for
+uninstalled platforms are not installed.
+
+This action does not automatically add or remove
+new symlinks in system directories. You need to run
+\texttt{tlmgr path} yourself if you are using this feature
+and want new symlinks added; see Section~\ref{path}.
+
+\clearpage
+
+\subsection{The {\tt remove} Action}
+\label{remove}
+
+\paragraph{Usage:}
+\begin{list}{}{}
+\item  \texttt{tlmgr remove} \textsl{pkgs}
+\end{list}
+
+Remove each of the \textsl{pkgs}. Removing a collection
+removes all package dependencies (unless \texttt{-no-depends}
+is specified), but not any collection dependencies of that
+collection. However, when removing a package, dependencies
+are never removed.
+
+
+
+\paragraph{Options for \mdseries\texttt{remove}:}
+
+\begin{description}
+
+\item\texttt{-dry-run}\par 
+
+Nothing is actually removed; instead, the actions to be
+performed are written to the terminal.
+
+\item\texttt{-no-depends}\par 
+
+Do not remove dependent packages.
+
+\item\texttt{-all}\par 
+
+Uninstalls all of \TeX\,Live, asking for confirmation unless
+\texttt{-force} is also specified.
+
+\end{description}
+
+\begin{sloppypar}
+\par\noindent
+Except with --all, the \texttt{remove} action does not automatically remove symlinks to executables
+from system directories; you need to run 
+\end{sloppypar}
+\begin{center}
+\texttt{tlmgr path remove} 
+\end{center}
+yourself if you are using this feature and want stale
+symlinks removed; see Section~\ref{path}.
+
+\clearpage
+
+\subsection{The {\tt option} Action}
+\label{option}
+
+\paragraph{Usage:}
+
+\begin{list}{}{}
+\item \texttt{tlmgr option} 
+\item \texttt{tlmgr option help} 
+\item \texttt{tlmgr option} \textsl{key}
+\item \texttt{tlmgr option} \textsl{key value}
+\end{list}
+
+The first form shows the global \TeX\,Live settings currently
+saved with a short description and the \texttt{key}
+used for changing it in parentheses. The second form is
+similar, but also shows options which can be defined but
+are not currently set to any value. In the third form, the
+setting for \textsl{key} is displayed. In the fourth form,
+\textsl{key} is set to \textsl{value}.
+
+Some of the possible values for \textsl{key} are (run \texttt{tlmgr
+option help} for the definitive list):
+
+\begin{center}
+\begin{small}
+\begin{tabular}{@{\ttfamily}ll}
+    repository &default package repository,\\
+    docfiles & install documentation files,\\
+    srcfiles & install source files,\\
+    sys\_bin &  directory to which executables are linked by the \texttt{path} action\\
+    sys\_man &  directory to which man pages are linked by the \texttt{path} action\\
+    sys\_info&  directory to which info files are linked by the \texttt{path} action\\
+    desktop\_integration & Windows-only: create Start menu shortcuts\\
+    fileassocs& Windows-only: change file associations\\
+    multiuser &Windows-only: install for all users\\
+\end{tabular}
+\end{small}
+\end{center}
+
+\noindent
+One common use of \texttt{option} is to permanently change
+the installation to get further updates from the Internet,
+after originally installing from DVD\@. For example, you can
+run
+\begin{center}\ttfamily
+   tlmgr option repository ctan
+\end{center}
+to use a nearby CTAN mirror for future updates.
+
+The \texttt{docfiles} and \texttt{srcfiles} keys control the
+installation of their respective file groups (documentation,
+sources; grouping is approximate) per package. By default
+both are enabled (\verb|1|). Either or both can be disabled
+(set to \verb|0|) if disk space is limited or for minimal
+testing installations, etc. When disabled, the respective
+files are not downloaded at all.
+
+The \verb|sys_bin|, \verb|sys_man|, and \verb|sys_info|
+options are used on Unix systems to control the generation
+of links for executables, info files and man pages. See the
+\texttt{path} action in Section~\ref{path} for details.
+
+The remaining options affect behavior on Windows installations.  
+
+\begin{itemize}
+  \item If \texttt{desktop\_integration} is set,
+then some packages will install items in a sub-folder of the Start menu for \texttt{tlmgr gui},
+documentation, etc.  
+  \item If \texttt{fileassocs} is set, Windows file associations are made (see also the
+\texttt{postaction} action).  
+   \item If \texttt{multiuser} is set, then adaptions to the registry and the
+menus are done for all users on the system instead of only the current user.  
+\end{itemize}
+All three of these options are on by default.
+
+\clearpage
+
+\subsection{The {\tt path} Action}
+\label{path}
+
+\paragraph{Usage:}
+
+\begin{list}{}{}
+ \item     \texttt{tlmgr path [-w32mode=user|admin] add}
+ \item     \texttt{tlmgr path [--w32mode=user|admin] remove}
+\end{list}
+
+On Unix, adds or removes symlinks for executables, man
+pages, and info pages in the system directories specified by
+the respective options (see the \texttt{option} description
+above). Does not change any initialization files, either
+system or personal. Furthermore, any executables added
+or removed by future updates are not taken care of
+automatically; this command must be rerun as needed.
+
+On Windows, the registry part where the binary directory is
+added or removed is determined in the following way:
+\begin{itemize}
+
+\item If the user has admin rights, and the option
+\texttt{-w32mode} is not given, the setting
+\texttt{w32\_multi\_user} determines the location (i.e.,
+if it is on the system path, otherwise the user path is
+changed).
+
+\item If the user has admin rights, and the option
+\texttt{-w32mode} is given, this option determines the path
+to be adjusted.
+
+\item If the user does not have admin rights, and the
+option \texttt{-w32mode} is not given, and the setting
+\texttt{w32\_multi\_user} is off, the user path is changed,
+while if the setting \texttt{w32\_multi\_user} is on, a
+warning is issued that the caller does not have enough
+privileges.
+
+\item If the user does not have admin rights, and the option
+\texttt{-w32mode} is given, it must be \texttt{user} and
+the user path will be adjusted. If a user without admin
+rights uses the option \texttt{-w32mode admin} a warning
+is issued that the caller does not have enough privileges.
+\end{itemize}
+
+\clearpage
+
+\subsection{The \texttt{paper} Action}
+\label{paper}
+
+\paragraph{Usage}
+\begin{list}{}{}
+\item \texttt{tlmgr paper} 
+\item \texttt{tlmgr paper [a4|letter]} 
+\item \texttt{tlmgr \textit{program} paper [a4|letter]} 
+\end{list}
+
+With no arguments, \texttt{tlmgr paper} shows the default paper size for all known programs.
+With one argument (e.g., \texttt{tlmgr paper a4}), sets the default for all known programs to that
+paper size.
+With a \textit{program} given as the first argument and a paper size as the last argument 
+(e.g., \texttt{tlmgr dvips paper a4}), sets the default for that program to that paper size.
+
+\clearpage
+
+\subsection{The \texttt{conf} Action}
+\label{conf}
+\paragraph{Usage}
+\begin{list}{}{}
+\item \texttt{tlmgr conf}
+\end{list}
+
+Displays general configuration information for \TeX\,Live, including active configuration files.
+
+\clearpage
+
+\clearpage
+\section{Global Options}
+\label{GlobalOptions}
+
+\begin{description}
+
+\item\texttt{-\relax-help}, \texttt{-help}, \texttt{-h}, \texttt{-?}\par
+
+These options display reference documentation for any
+action.
+
+\item\texttt{-\relax-version}, \texttt{-version}\par
+
+Displays version information about the \TeX\,Live release
+and the \texttt{tlmgr} script itself. If \texttt{-v} is
+also given, revision numbers for the loaded \TeX\,Live Perl
+modules are shown as well.
+
+\item\texttt{-q}\par  
+
+Suppresses informational messages.
+
+\item\texttt{-v}\par 
+
+Displays debugging messages; can be repeated for more
+output.
+
+\item\texttt{-command-logfile} \textsl{file}\par
+
+\texttt{tlmgr} logs the output of all programs invoked
+(\verb|mktexlr|, \verb|mtxrun|, \verb|fmtutil|,
+\verb|updmap|) to a log file, by default
+\texttt{TEXMFSYSVAR/web2c/tlmgr-commands.log}. This option
+allows you to specify a different \textsl{file} for the log.
+
+\item\texttt{-package-logfile} \textsl{file}\par
+
+\texttt{tlmgr} logs all package actions (\verb|install|,
+\verb|remove|, \verb|update|, failed updates,
+failed restores) to a log file, by default
+\texttt{TEXMFSYSVAR/web2c/tlmgr.log}. This option allows you
+to specify a different \textsl{file} for the log.
+
+\item\texttt{-pause}\par 
+
+This option makes \texttt{tlmgr} wait for user input before
+exiting. Useful on Windows to avoid disappearing command
+windows.
+
+
+\end{description}
+
+
+\end{document}

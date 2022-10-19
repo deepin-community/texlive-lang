@@ -1,0 +1,36 @@
+%!TEX TS-program = Arara
+% arara: pdflatex
+% arara: biber
+% arara: pdflatex
+% arara: pdflatex
+\documentclass[12pt, a4paper]{scrartcl}
+%\usepackage[paperwidth=128mm,paperheight=96mm,left=5mm,right=10mm,top=5mm,bottom=5mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+\usepackage[bibstyle=dtk-authoryear, backend=biber, dashed=false]{biblatex}
+\usepackage[babel, german=quotes]{csquotes}
+
+\usepackage{dtk-logos} 
+
+\addbibresource{dtk-bibliography.bib}
+
+
+% Supress warnings about overfull boxes
+\hfuzz=100cm
+
+\begin{document}
+
+\noindent Last Update: \today~ for DTK 2021-03
+
+\nocite{*}
+
+\printbibliography
+
+%\printbibliography[keyword=grusswort,title={Verzeichnis der Grußworte}]
+%\printbibliography[filter=hinterderbuehne_ohne_grusswort,title={Hinter der Bühne}]
+%\printbibliography[filter=artikel]
+
+
+\end{document}

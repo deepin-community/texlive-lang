@@ -1,0 +1,590 @@
+% \iffalse meta-comment
+%
+% This file is part of the `japanese' package,
+% providing Japanese language support for Babel.
+%
+% Copyright (C) 1999--2007 by ING (Toru INAGAKI)
+%               2016--2021 by Japanese TeX Development Community
+%
+% \fi
+%
+% ^^A  Ensure UTF-8 input encoding for pLaTeX
+% ^^A  (effective since e-pTeX 20160201, thus TeX Live 2016)
+\ifx\epTeXinputencoding\undefined\else
+  \epTeXinputencoding utf8
+\fi
+%
+%\iffalse
+%    Tell the \LaTeX\ system who we are and write an entry on the
+%    transcript.
+%<*dtx>
+\ProvidesFile{babel-japanese.dtx}
+%</dtx>
+%<code>\ProvidesLanguage{japanese}
+%<*!sample>
+%\ProvidesFile{babel-japanese.dtx}
+        [2021/02/13 v3.1 Japanese support for babel (texjporg)]
+%</!sample>
+%\fi
+%
+%\iffalse
+%
+%<*filedriver>
+\ifx\directlua\undefined
+  \documentclass{jltxdoc}
+  \usepackage{minijs}
+\else
+  \documentclass{ltjltxdoc}
+\fi
+\usepackage[japanese]{babel}% load it
+\GetFileInfo{babel-japanese.dtx}
+\setcounter{StandardModuleDepth}{1}
+\CodelineNumbered
+\MakeShortVerb{\|}
+\OnlyDescription
+\newcommand*\babel{\textsf{babel}}
+\newcommand*\langvar{$\langle \it lang \rangle$}
+\usepackage{hologo}% for XeLaTeX logo
+\def\pTeX{p\kern-.15em\TeX}
+\def\pdfTeX{\hologo{pdfTeX}}
+\def\XeTeX{\hologo{XeTeX}}
+\def\LuaTeX{\hologo{LuaTeX}}
+\def\pdfLaTeX{\hologo{pdfLaTeX}}
+\def\XeLaTeX{\hologo{XeLaTeX}}
+\def\LuaLaTeX{\hologo{LuaLaTeX}}
+\def\pLaTeX{p\hologo{LaTeX}}
+\def\upLaTeX{up\hologo{LaTeX}}
+\begin{document}
+  \DocInput{babel-japanese.dtx}
+\end{document}
+%</filedriver>
+%
+%\fi
+%
+% \title{Babel-Option {\sffamily japanese} version \fileversion}
+% \author{\copyright\ 1999--2007 ING\\
+%                     2016--2021 Japanese \TeX\ Development Community}
+% \date{\filedate}
+% \maketitle
+% \baselineskip=14pt
+%
+% \section*{The Japanese language definition file}
+%
+% The package ``babel-japanese'' provides ``\texttt{japanese}''
+% option for Babel package.
+%
+% \begin{itemize}
+%  \def\textbf#1{{\fontseries{b}\selectfont #1}}
+%  \def\repl#1{``\nobreak#1\nobreak''}
+%  \item \textbf{This package provides only translated
+%     replacement texts for caption keywords and date}
+%     (e.g. \repl{Table of contents} $\rightarrow$ \repl{目次},
+%           \verb+\today+ $\rightarrow$ \repl{\和暦\today}).
+%     \textbf{To display such Japanese terms correctly,
+%     you will need to select a proper Japanese font
+%     and set up Japanese typesetting rules beforehand.}
+%     This is because typesetting requirements of Japanese
+%     (including line breaking and spacing) are completely
+%     different from those of Western languages, so setting
+%     parameter values and additional hyphenation patterns
+%     are not enough. You may need to enable some engine
+%     extensions (\pTeX\ family) or use extensive package
+%     with Japanese support (Lua\TeX-ja).
+%     Please refer to \file{japanese.pdf} for detail.
+%  \item Moreover, \textbf{the translations provided by
+%     this package are \emph{incomplete} either}:
+%     to make full use of this package, you will need some
+%     common Japanese classes.\footnote{e.g.
+%       (u)jclasses or jsclasses for (u)\pLaTeX,
+%       ltj(s)classes for \LuaLaTeX\ with Lua\TeX-ja package.}
+%     This is due to the following reasons:
+%   \begin{itemize}
+%    \item The word order in Japanese is sometimes different
+%     from that in most Western languages
+%     (e.g. ``Part 1'' $\rightarrow$ ``第1部'').
+%    \item Common Western classes (article.cls etc)
+%     provide placeholders in front of the numbering
+%     (e.g. \cs{chaptername}), but lack any placeholders
+%     behind the numbering.\footnote{Update: starting from
+%     Babel v3.53 (2021-01-26), a new feature to adjust
+%     e.g. chapter format to have placeholders like
+%     \cs{prechaptername} ... \cs{postchaptername} is
+%     available, which seems to work with standard classes.}
+%     Therefore, the keywords like ``Part'' or ``Chapter''
+%     cannot be simply replaced with Japanese counterpart.
+%   \end{itemize}
+% \end{itemize}
+%
+% The importance of this package is to ``restore'' Japanese
+% keywords which have been defined by Japanese classes
+% but (partially) redefined by other languages while
+% the main text is in Japanese. Example usage:
+%\begin{verbatim}
+% \documentclass{jbook}
+% \usepackage[german,english,japanese]{babel}
+%\end{verbatim}
+%
+% \section*{Babel日本語定義ファイル}
+%
+% \file{japanese}パッケージは，
+% 日本語による見出し語と日付を出力するためのマクロを
+% 定義しています。\babel のオプションの最後で日本語を指定します。
+% \begin{quote}
+% |\usepackage[...,japanese]{babel}|
+% \end{quote}
+%
+% バージョンv2.0以降では，\pTeX{}系（\pLaTeX{}，\upLaTeX{}）に加えて，
+% ネイティブUnicodeなエンジン（\XeTeX{}，\LuaTeX{}）もサポートしました。
+% また，バージョンv3.0以降では\pdfLaTeX{}でも動作します。
+% このため，ファイルはUTF-8エンコーディングで保存するようにしてください。
+%
+% 2016年以降，本パッケージのメンテナンスは日本語\TeX{}開発コミュニティ
+% (Japanese \TeX\ Development Community)によって行われています。開発版は
+% GitHubリポジトリ
+%\begin{verbatim}
+%      https://github.com/texjporg/babel-japanese
+%\end{verbatim}
+% にあります。バグ報告は上記のリポジトリ，またはIssue Mailing List
+%\begin{verbatim}
+%      issue@texjp.org
+%\end{verbatim}
+% までお願いします。
+%
+%
+% \section{この文書について}
+%
+% このソースコード説明書(\jobname.pdf)自体は
+% \pLaTeX{}，\upLaTeX{}，\LuaLaTeX{}で処理できるようになっています。
+%
+%
+% \section{コード}
+%
+% [2020-11-27] エンジン検査は削除しました。
+% ^^A \pTeX{}系（\pLaTeX{}，\upLaTeX{}）でなく，
+% ^^A かつUnicodeな\TeX{}（\XeLaTeX{}，
+% ^^A \LuaLaTeX{}）でもない場合は，最初にエラーを出します。
+%
+%    \begin{macrocode}
+%<*code>
+%\ifx\kanjiskip\@undefined\ifx\Umathcode\@undefined
+%  \@latex@error{Option '\CurrentOption' requires
+%                one of the followings:\MessageBreak
+%                pTeX, upTeX, XeTeX, LuaTeX\MessageBreak
+%                It seems you are running unsupported engine!}\@ehc
+%\fi\fi
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\LdfInit\CurrentOption{captions\CurrentOption}
+%    \end{macrocode}
+%
+% \DescribeMacro{\l@japanese}
+% ここでは|\l@japanese|が定義されているか否かを判断し，定義されていれば
+% 日本語用ハイフネーションパターンを読み込みます。
+% \DescribeMacro{\adddialect}
+% しかし，日本語にはハイフネーションパタンが存在しないので
+% |\adddialect|に|\l@japanese|を代入し，\file{language.dat}
+% で最初に指定した言語（言語番号0，通常は英語）のハイフネーションパターンを
+% 使用します。
+%
+% [2016-12-16] 旧バージョン(v1.3)では
+%\begin{quote}\small\begin{verbatim}
+% Package babel Warning: No hyphenation patterns were loaded for
+% (babel)                the language `Japanese'
+% (babel)                I will use the patterns loaded for \language=0
+%                        instead.
+%\end{verbatim}\end{quote}
+% という警告が出るのを無視する方針でしたが，新しい\babel では警告が
+% よりうるさくなっていました。
+%\begin{quote}\small\begin{verbatim}
+% Package babel Warning: No hyphenation patterns were preloaded for
+% (babel)                the language `Japanese' into the format.
+% (babel)                Please, configure your TeX system to add them and
+% (babel)                rebuild the format. Now I will use the patterns
+% (babel)                preloaded for english instead on input line 47.
+%\end{verbatim}\end{quote}
+% そこで，新しいバージョン(v2.0)からは警告を出さないことにして，代わりに
+% ログファイルにのみInfoを出力します。
+%
+%    \begin{macrocode}
+\ifx\l@japanese\@undefined
+%  \@nopatterns{Japanese}% comment out (2016-12-16)
+  \PackageInfo{babel}{%
+    No hyphenation patterns are available for Japanese,\MessageBreak
+    so I will use the patterns preloaded for \bbl@nulllanguage\MessageBreak
+    instead}
+  \adddialect\l@japanese0\fi
+%    \end{macrocode}
+%
+% \DescribeMacro{\captionsjapanese}
+% |\captionsjapanese|マクロは\pLaTeX{}の標準のクラスファイルで使われる
+% 見出し語を日本語で出力します。\LaTeX{}の標準のクラスファイルなど，
+% 西欧で開発されたものでも一部しますが，
+% 語順の関係上すべてが日本語化されない場合があります
+% （たとえば，Part 1→第1部とは変更することは不可能です）。
+%
+% [2016-12-15] 「証明」と「用語集」も日本語化するようにしました。
+% |\postpartname| がタイポで |\postpartnam| になっていたのを直しました。
+%
+% [2021-02-06] Babel v3.53で追加された新機能により，西欧で開発された
+% クラスファイルでも見出しの日本語化サポートが改善されました。
+% 少なくとも\LaTeX{}の標準のクラスファイルでは動作するようです。
+% 後の |\setlocalecaption| のコードを参照してください。
+%
+% UTF-8エンコーディングで直接和文文字を記述します。
+%    \begin{macrocode}
+\def\bbl@jpn@prefacename{前書き}%
+\def\bbl@jpn@refname{参考文献}%
+\def\bbl@jpn@abstractname{概要}%
+\def\bbl@jpn@bibname{参考文献}%
+%\def\bbl@jpn@chaptername{Chapter}%
+\def\bbl@jpn@prechaptername{第}%    -- added
+\def\bbl@jpn@postchaptername{章}%   -- added
+\def\bbl@jpn@presectionname{}%  第  -- added
+\def\bbl@jpn@postsectionname{}% 節  -- added
+\def\bbl@jpn@appendixname{付録}%
+\def\bbl@jpn@contentsname{目次}%
+\def\bbl@jpn@listfigurename{図目次}%
+\def\bbl@jpn@listtablename{表目次}%
+\def\bbl@jpn@indexname{索引}%
+\def\bbl@jpn@figurename{図}%
+\def\bbl@jpn@tablename{表}%
+%\def\bbl@jpn@partname{Part}%
+\def\bbl@jpn@prepartname{第}%       -- added
+\def\bbl@jpn@postpartname{部}%      -- added
+%\def\bbl@jpn@enclname{encl}%     同封物
+%\def\bbl@jpn@ccname{cc}%         Cc
+%\def\bbl@jpn@headtoname{To}%     To（宛先）
+%\def\bbl@jpn@pagename{Page}%     ページ
+%\def\bbl@jpn@seename{see}%       参照
+%\def\bbl@jpn@alsoname{see also}% も参照
+\def\bbl@jpn@proofname{証明}%
+\def\bbl@jpn@glossaryname{用語集}%
+%    \end{macrocode}
+%
+% 実際の命令にこれらをコピーします。
+%    \begin{macrocode}
+\@namedef{captions\CurrentOption}{%
+  \let\prefacename\bbl@jpn@prefacename
+  \let\refname\bbl@jpn@refname
+  \let\abstractname\bbl@jpn@abstractname
+  \let\bibname\bbl@jpn@bibname
+  %\def\chaptername{Chapter}%
+  \let\prechaptername\bbl@jpn@prechaptername   % -- added
+  \let\postchaptername\bbl@jpn@postchaptername % -- added
+  \let\presectionname\bbl@jpn@presectionname   % -- added
+  \let\postsectionname\bbl@jpn@postsectionname % -- added
+  \let\appendixname\bbl@jpn@appendixname
+  \let\contentsname\bbl@jpn@contentsname
+  \let\listfigurename\bbl@jpn@listfigurename
+  \let\listtablename\bbl@jpn@listtablename
+  \let\indexname\bbl@jpn@indexname
+  \let\figurename\bbl@jpn@figurename
+  \let\tablename\bbl@jpn@tablename
+  %\def\partname{Part}%
+  \let\prepartname\bbl@jpn@prepartname   % -- added
+  \let\postpartname\bbl@jpn@postpartname % -- added
+  %\def\enclname{encl}%     同封物
+  %\def\ccname{cc}%         Cc
+  %\def\headtoname{To}%     To（宛先）
+  %\def\pagename{Page}%     ページ
+  %\def\seename{see}%       参照
+  %\def\alsoname{see also}% も参照
+  \let\proofname\bbl@jpn@proofname
+  \let\glossaryname\bbl@jpn@glossaryname
+  }
+%    \end{macrocode}
+%
+% \DescribeMacro{\datejapanese}
+% |\datejapanese|マクロは日本語で日付を出力するように |\today|コマンドを
+% 再定義します。デフォルトの出力は西暦です。和暦を使用する際は，プリアンブルで 
+% |\和暦| を指定するか，本文で |\和暦\today| のように指定します。
+%
+% フラグの準備。
+%    \begin{macrocode}
+\newif\ifbbl@jpn@Seireki \bbl@jpn@Seirekitrue
+%    \end{macrocode}
+%
+% UTF-8エンコーディングで直接和文文字を記述します。
+% \pdfLaTeX{}や\XeLaTeX{}の場合は
+% |\bbl@jpn@Tate...| の2つは実際には使いません。
+%    \begin{macrocode}
+\def\西暦{\bbl@jpn@Seirekitrue}%
+\def\和暦{\bbl@jpn@Seirekifalse}%
+\def\bbl@jpn@kanjishowa{昭和}
+\def\bbl@jpn@kanjiheisei{平成}
+\def\bbl@jpn@kanjireiwa{令和}
+\def\bbl@jpn@kanjigan{元}%
+\def\bbl@jpn@TateSeirekiToday{%
+    \bbl@jpn@maybekansuji\year 年%
+    \bbl@jpn@maybekansuji\month 月%
+    \bbl@jpn@maybekansuji\day 日}
+\def\bbl@jpn@TateWarekiToday{%
+    \bbl@jpn@gengo\bbl@jpn@maybekansuji\bbl@jpn@gengoyear 年%
+    \bbl@jpn@maybekansuji\month 月%
+    \bbl@jpn@maybekansuji\day 日}
+\def\bbl@jpn@SeirekiToday{%
+    \number\year 年%
+    \number\month 月%
+    \number\day 日}
+\def\bbl@jpn@WarekiToday{%
+    \bbl@jpn@gengo\number\bbl@jpn@gengoyear 年%
+    \number\month 月%
+    \number\day 日}
+%    \end{macrocode}
+%
+% |\bbl@jpn@gengo| の内部で，元号を計算します。
+%
+% [2019-04-03] 2019年5月1日から始まる予定の新元号「令和」に対応しました。
+%    \begin{macrocode}
+\def\bbl@jpn@gengo#1\bbl@jpn@gengoyear{%
+  \@tempcnta\year\relax
+  \multiply\@tempcnta100
+  \advance\@tempcnta\month
+  \multiply\@tempcnta100
+  \advance\@tempcnta\day
+  \@tempcntb\year\relax
+  \ifnum\@tempcnta<19890108
+    \bbl@jpn@kanjishowa
+    \advance\@tempcntb-1925
+  \else\ifnum\@tempcnta<20190501
+    \bbl@jpn@kanjiheisei
+    \advance\@tempcntb-1988
+  \else
+    \bbl@jpn@kanjireiwa
+    \advance\@tempcntb-2018
+  \fi\fi
+  \ifnum\@tempcntb=1
+    \bbl@jpn@kanjigan   % 元年は \number も \kansuji も関係ない
+  \else
+    #1\@tempcntb % この #1 は \number または \bbl@jpn@maybekansuji
+  \fi
+}
+%    \end{macrocode}
+%
+% (u)\pLaTeX{}とLua\TeX-jaで組方向判定方法が異なるため，
+% |\catcode| のトリックで別々のコードを使い分けます。
+% \pdfLaTeX{}や\XeLaTeX{}の場合，および\LuaLaTeX{}で
+% Lua\TeX-ja不使用の場合は，縦組をサポートしません。
+%    \begin{macrocode}
+\chardef\bbl@jpn@l@catcode=\catcode`\L\relax
+\chardef\bbl@jpn@p@catcode=\catcode`\P\relax
+\chardef\bbl@jpn@x@catcode=\catcode`\X\relax
+\ifx\directlua\@undefined
+  \ifx\kanjiskip\@undefined       % pdftex/xetex
+    \catcode`\L=14\relax
+    \catcode`\P=14\relax
+    \catcode`\X=14\relax
+  \else                           % ptex/uptex
+    \catcode`\L=14\relax
+    \catcode`\P=9\relax
+    \catcode`\X=9\relax
+  \fi
+\else
+  \ifx\luatexjaLoaded\@undefined  % luatex
+    \catcode`\L=14\relax
+    \catcode`\P=14\relax
+    \catcode`\X=14\relax
+  \else                           % luatex + luatexja
+    \catcode`\L=9\relax
+    \catcode`\P=14\relax
+    \catcode`\X=9\relax
+  \fi
+\fi
+%    \end{macrocode}
+%
+% 実際に使用する命令にコピーします。
+%
+% [2019-04-03] 縦数式ディレクションは横組と同じ出力とします。
+%    \begin{macrocode}
+\@namedef{date\CurrentOption}{%
+  \def\today{{%
+P   \ifnum1=\iftdir\ifmdir0\else1\fi\else0\fi % tate
+L   \ifnum\ltjgetparameter{direction}=3 % tate
+X     \ifbbl@jpn@Seireki
+X       \bbl@jpn@TateSeirekiToday
+X     \else
+X       \bbl@jpn@TateWarekiToday
+X     \fi
+X   \else
+      \ifbbl@jpn@Seireki
+        \bbl@jpn@SeirekiToday
+      \else
+        \bbl@jpn@WarekiToday
+      \fi
+X   \fi
+  }}%
+}
+%    \end{macrocode}
+%
+% [2017-02-05] 新機能：|\languageattribute{japanese}{kansujitoday}|を指定すると，
+% 縦書きでは |\today| の表記が漢数字（例：二〇一六年一二月二八日）になります。
+%    \begin{macrocode}
+\let\bbl@jpn@maybekansuji\number
+\bbl@declare@ttribute{japanese}{kansujitoday}{\let\bbl@jpn@maybekansuji\kansuji}
+%    \end{macrocode}
+%
+% トリックに使用した文字の |\catcode| を元に戻します。
+%    \begin{macrocode}
+\catcode`\L=\bbl@jpn@l@catcode\relax
+\catcode`\P=\bbl@jpn@p@catcode\relax
+\catcode`\X=\bbl@jpn@x@catcode\relax
+%    \end{macrocode}
+%
+% \DescribeMacro{\setlocalecaption}
+% [2021-02-06] Babel v3.53の新機能を使い，
+% 西欧のクラスファイルの |\part| と |\chapter| の形式を
+% |\pre...name| と |\post...name| で挟む形式に変更します。
+%
+% 参考：|\xkanjiskip| の自動挿入が不可能なエンジンでは
+%\begin{verbatim}
+%   [[prepart]][part][[postpart]]
+%   [[prechapter]][chapter][[postchapter]]
+%\end{verbatim}
+% ではなく
+%\begin{verbatim}
+%   [[prepart]] [part] [[postpart]]
+%   [[prechapter]] [chapter] [[postchapter]]
+%\end{verbatim}
+% のほうが見栄えが良いかもしれません。
+%    \begin{macrocode}
+\ifx\setlocalecaption\@undefined \else
+\setlocalecaption{\CurrentOption}{part.template}%
+  {[[prepart]][part][[postpart]]}
+\setlocalecaption{\CurrentOption}{chapter.template}%
+  {[[prechapter]][chapter][[postchapter]]}
+\fi
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\@namedef{extras\CurrentOption}{}
+\@namedef{noextras\CurrentOption}{}
+\ldf@finish\CurrentOption
+%</code>
+%    \end{macrocode}
+%
+% \section*{謝辞}
+%
+% Babel-Option \Lopt{japanese}の作成に当って，バグフィックスや改良案を
+% ご提案いただいた方に感謝します。
+% bookworm $<$BYV01204$>$さんから，新しい言語を定義し，それに固有の
+% 言語番号を付けるマクロ \verb+\addlanguage+の機能について，詳しい
+% 解説をいただきました。本パッケージでは採用していませんが，\babel
+% の言語切り替え機能を理解する上でたいへん参考になりました。
+% Tony $<$PAG01322$>$さんから，キャプションと日付の定義について
+% ご提案をいただきました。
+% 大石勝 $<$DZH00446$>$さんから，初版に含まれていた \verb+\ifx\undefined+
+% のバグをご指摘いただきました。
+%
+% \section*{変更履歴}
+% \begin{itemize}
+% \item 2005年2月：日付の定義を修正しました。
+% \item 2007年10月：ZRさんからいただいた詳細なご指摘をもとに修正しました。\\
+% \verb|http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/48625.html|
+% \item 2007年12月：ZRさん，ttkさんからいただいたご指摘を反映しました。
+% \item 2016年12月：日本語\TeX{}開発コミュニティが開発を引き継ぎました。
+%   以降の変更履歴は本文中に直接書いてあります。
+% \item 2020年12月：冒頭のドキュメントを英語にしました。
+%   また，このドキュメントを\file{japanese.pdf}から
+%   \file{babel-japanese.pdf}にリネームし，新たに「ちゃんと日本語
+%   する方法」を概説する新版\file{japanese.pdf}を追加しました。
+% \item 2021年2月：Babel v3.53の新機能を活用しました。
+% \end{itemize}
+%
+% \StopEventually{}
+%
+%    \begin{macrocode}
+%<*sample>
+\ifx\directlua\undefined
+ \ifx\kanjiskip\undefined
+  \ifx\XeTeXversion\undefined
+    % pdfLaTeX: not beautiful
+    \documentclass{book}
+    \usepackage[whole]{bxcjkjatype}
+  \else
+    % XeLaTeX: not beautiful
+    \documentclass{book}
+    \usepackage{zxjatype}
+    \setCJKmainfont{ipaexm.ttf}
+  \fi
+ \else
+  \ifx\ucs\undefined
+    % pLaTeX: OK
+    \documentclass{jbook}
+    \usepackage{minijs}
+  \else
+    % upLaTeX: OK
+    \documentclass{ujbook}
+  \fi
+ \fi
+\else
+    % LuaLaTeX: OK
+    \documentclass{ltjbook}
+\fi
+\usepackage[german,english,japanese]{babel}
+\makeatletter
+\def\tbcaption{\def\@captype{table}\caption{キャプションの例}}
+\def\fgcaption{\def\@captype{figure}\caption{キャプションの例}}
+\makeatother
+\def\yes{--- はい。}
+\def\no{--- いいえ。}
+\def\TEXT{Textverarbeitung mit einem Rechner kann in vielf\"altiger Weise
+erfolgen. Eigenschaften und Leistungsf\"ahigkeit sind hierbei weniger
+vom jeweiligen Rechnertype, sondern vielmehr vom verwendeten
+\textit{Textverarbeitungsprogramm} bestimmt.}
+\def\se{\selectlanguage{english}}
+\def\sj{\selectlanguage{japanese}}
+\def\sg{\selectlanguage{german}}
+\setlength{\hoffset}{-13mm}
+\setlength{\textwidth}{16cm}
+\begin{document}
+
+\chapter{babel}
+\section{japaneseパッケージ}
+japaneseパッケージは日本語による見出し語と日付を出力するためのマクロを
+定義しています。
+
+\fgcaption
+
+\begin{itemize}
+\se
+\item ここで英語（\texttt{english}）に変更します。
+（languageの値は\the\language）
+
+\TEXT
+
+ここは英語？ \iflanguage{english}{\yes}{\no}\par
+ここはドイツ語？ \iflanguage{german}{\yes}{\no}\par
+ここは日本語？ \iflanguage{japanese}{\yes}{\no}
+
+※ \verb:\adddialect\l@japanese0: と設定しているため，
+日本語？も「はい」となります。
+
+\sg
+\item ここでドイツ語（\texttt{german}）に変更します。
+（languageの値は\the\language）
+
+\TEXT
+
+ここは英語？ \iflanguage{english}{\yes}{\no}\par
+ここはドイツ語？ \iflanguage{german}{\yes}{\no}\par
+ここは日本語？ \iflanguage{japanese}{\yes}{\no}
+
+※ ハイフネーションがドイツ語―旧正書法―に切り替わっている点に注目。
+なお，新正書法（\texttt{ngerman}）では
+\texttt{Leis-tungs-f\"a-hig-keit}のように分綴します。
+
+\sj
+\item ここで日本語（\texttt{japanese}）に変更します。
+（languageの値は\the\language）
+\tbcaption
+\item \verb:\和暦: は日付の表示をデフォルトの西暦「\today 」から
+和暦「\和暦\today 」に変更します。
+\end{itemize}
+\end{document}
+%</sample>
+%    \end{macrocode>
+%
+% \Finale
+%
+\endinput

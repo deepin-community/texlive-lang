@@ -1,0 +1,80 @@
+\documentclass{report}
+\usepackage{xcolor}
+\usepackage[Kashida=on]{xepersian}
+\settextfont[Scale=4.5,Colour=000001]{XB Kayhan}
+\setlatintextfont[Scale=1.5,Colour=0000FF]{XB Kayhan}
+
+\defpersianfont\XBKayhanEn[Scale=1.2,Colour=000001]{XB Kayhan}
+\defpersianfont\XBKayhanIt[Scale=4.5,Colour=000001]{XB Kayhan Italic}
+\defpersianfont\XBKayhanOb[Scale=4.5,Colour=000001]{XB Zar Oblique}
+\defpersianfont\XBKayhanOl[Scale=4.5,Colour=000001]{XB Kayhan Pook}
+\defpersianfont\XBKayhanSd[Scale=4.5,Colour=000001]{XB Kayhan Sayeh}
+\defpersianfont\XBKayhanPo[Scale=4.5,Colour=000001]{XB Kayhan Pook}
+\defpersianfont\XBKayhanSa[Scale=4.5,Colour=000001]{XB Kayhan Sayeh}
+\defpersianfont\XBKayhanNa[Scale=4.5,Colour=000001]{XB Kayhan Navaar}
+
+\def\SampleText{
+  راهی جایی تابی چاپی چاههی تلاشهایی
+  شتابهایی تابی چاپی راهی تلاشهــایی
+  که کتابهایی که کلاههایی که کتابهایی }
+
+\def\SampleTitle#1#2#3{{{\begin{latin}\XBKayhanEn Engine: {\color{blue}\texttt{#1,}} \\
+     Style: {\color{blue}\texttt{#2,}} \\ Kashida: {\color{blue}\texttt{#3}}\end{latin}}}\hbox{}\vskip 5mm}
+
+\pretolerance = 10000
+% \exhyphenpenalty=10000
+% \hyphenpenalty=10000
+% \penalty -10000
+% \tolerance=10000
+% \tolerance  = -10000
+% \looseness = 10000
+
+\setlength\parindent{0pt}
+% \pagestyle{empty}
+\setcounter{page}{16}
+\let\tmppage=\thepage
+\gdef\thepage{\scriptsize\lr\tmppage}
+
+\begin{document}
+
+\begin{latin}
+\begin{center}
+% \Huge\textsf{xepersian}\vspace{20pt}\\ Example of Use\vspace{20pt}\\  \texttt{Kashida=On} \vspace{40pt}
+{\Huge\textsf{\XePersian} \\
+ \vspace{20pt} Example of Use \\
+ \vspace{20pt}\texttt{Engine: XeTeX {\normalsize using xepersian}} \\
+ \vspace{20pt}\texttt{Kashida=leaders+hrule}} \\
+ \vspace{20pt}\makebox{\textsf{File:} \texttt{TEXMFDIST/doc/latex/texnegar/xepersian-XB.tex}} \\
+ \vspace{20pt}
+
+{\Large
+\begin{tabular}{ll}
+  \textsf{Font:} & \textsf{XB Kayhan} \\
+  \textsf{Font Scale:} & \texttt{4.5} \\
+  \textsf{color:} &  \texttt{red}
+\end{tabular}
+}
+\end{center}
+
+\end{latin}
+
+\color{red}
+\newpage \KashidaOff \SampleTitle{XeTeX using xepersian}{Regular}{Off}               \par \SampleText
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Regular}{leaders+hrule On}  \par \SampleText
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Italic}{leaders+hrule On}   \par {\XBKayhanIt \SampleText}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Oblique}{leaders+hrule On}  \par {\XBKayhanOb \SampleText}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Outline}{leaders+hrule On}  \par {\XBKayhanOl \SampleText}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Sayeh}{leaders+hrule On}    \par {\XBKayhanSd \SampleText}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Pook}{leaders+hrule On}     \par {\XBKayhanPo \SampleText}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Sayeh}{leaders+hrule On}    \par {\XBKayhanSa \SampleText}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using xepersian}{Navaar}{leaders+hrule On}   \par {\XBKayhanNa \SampleText}
+
+\end{document}

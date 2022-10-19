@@ -1,0 +1,286 @@
+%%
+%% This is file `annee-scolaire-eng.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% annee-scolaire.dtx  (with options: `doc,ENG')
+%% 
+%% Do not distribute this file without also distributing the
+%% source files specified above.
+%% 
+%% Do not distribute a modified version of this file.
+%% 
+%% File: annee-scolaire.dtx
+%% Copyright (C) 2020 Yvon Henel aka Le TeXnicien de surface
+%%
+%% It may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License (LPPL), either version 1.3c of this
+%% license or (at your option) any later version.  The latest version
+%% of this license is in the file
+%%
+%%    http://www.latex-project.org/lppl.txt
+%%
+\RequirePackage{expl3}[2013/03/12]
+\GetIdInfo$Id: annee-scolaire.dtx 1.6 2020-07-29 TdS $
+  {}
+\documentclass[full]{l3doc}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french,main=english]{babel}
+\usepackage{xparse}
+\usepackage[decalage=0]{annee-scolaire}
+\newcommand\BOP{\discretionary{}{}{}}
+\usepackage{xspace}
+\usepackage{csquotes}
+\usepackage{fancyvrb,fancyvrb-ex}
+\begin{document}
+\title{\pkg{annee-scolaire} user guide\thanks{This file describes
+    version~\ExplFileVersion, last revised~\ExplFileDate. Special
+    \emph{quarantine} edition.}}
+\author{Yvon Henel\thanks{E-mail:
+    \href{mailto:le.texnicien.de.surface@yvon-henel.fr}
+    {le.texnicien.de.surface@yvon-henel.fr}}}
+\maketitle
+\noindent\hrulefill
+
+\begin{abstract}
+A macro \cs{anneescolaire} to automatically write academic year (French way)
+according to the date of compilation day.
+\end{abstract}
+
+\noindent\hrulefill
+
+ \begin{otherlanguage}{french}
+\begin{abstract}
+Une macro \cs{anneescolaire} pour écrire automatiquement l'année scolaire en
+fonction de la date du jour de compilation.
+
+La documentation française pour l'utilisateur de l'extension
+\pkg{annee-scolaire} est disponible sous le nom de \texttt{annee-scolaire-fra}.
+\end{abstract}
+\end{otherlanguage}
+
+\noindent\hrulefill
+\vspace{\baselineskip}
+
+\section{The Macros}
+\label{sec:macros}
+
+\pkg{annee-scolaire} offers three main document macros which produce
+text in the final document and one macro which is used to determine the
+presentation of the said text.
+
+\subsection{Main Macros}
+\label{sec:main}
+
+This package has three main document macros viz.
+\begin{function}{\anneescolaire}
+  \begin{syntax}
+    \cs{anneescolaire}\oarg{shift}
+  \end{syntax}
+  where \meta{shift} is an integer the default value of which is~\(0\). It is
+  the number of years the academic year is shifted. The same optional argument
+  with the same aim is available for the next two macros.
+\end{function}
+
+In French \foreignquote{french}{année scolaire} means \enquote{school year}.
+
+\begin{function}{\debutanneescolaire}
+  \begin{syntax}
+    \cs{debutanneescolaire}\oarg{shift}
+  \end{syntax}
+\end{function}
+
+In French \foreignquote{french}{début d'année scolaire} means \enquote{beginning
+  of school year}.
+
+\begin{function}{\finanneescolaire}
+  \begin{syntax}
+    \cs{finanneescolaire}\oarg{shift}
+  \end{syntax}
+\end{function}
+
+In French \foreignquote{french}{fin d'année scolaire} means \enquote{end of
+  school year}.
+
+See examples on page~\pageref{sec:writingyear}.
+
+\subsection{Presentation Macro}
+\label{sec:look}
+
+The presentation of the years as written by the three preceding commands may be
+changed redefining the following macro:
+\begin{function}{\AnneeScolairePresentation}
+  \begin{syntax}
+    \cs{AnneeScolairePresentation}\oarg{number}\marg{year}
+  \end{syntax}
+  where \meta{year} is a integer (a \LaTeX3 \texttt{\textit{int}}) which is the
+  number of the year to be written in the document. The optional argument
+  \meta{number} can be used to tailor the presentation according to the
+  following scheme
+  \begin{description}
+  \item[\textbf{1}] presentation of the beginning year in the text created by the
+    macro \cs{anneescolaire};
+  \item[\textbf{2}] presentation of the ending year in the text created by the
+    macro \cs{anneescolaire};
+  \item[\textbf{3}] presentation of the year in the text created by the
+    macro \cs{debutanneescolaire};
+  \item[\textbf{4}]  presentation of the year in the text created by the
+    macro \cs{finanneescolaire}.
+  \end{description}
+
+  By default, the macro is an alias of \cs{int_to_arabic:n}.
+  %
+  If you want to change the presentation, you have to redefine the command with
+  \cs{RenewDocumentCommand}.
+\end{function}
+
+See examples on page \pageref{sec:changelook}.
+
+
+\section{The Package Options}
+\label{sec:keys}
+
+The package uses the key-value options. There are four keys:
+\texttt{premiermois} (\emph{first month}), \texttt{premierjour} (\emph{first
+  day}), \texttt{decalage} (\emph{shift}) and \texttt{separateur}
+(\emph{separator}).
+
+\begin{description}
+\item[\texttt{premiermois} (\textit{\texttt{int}})] is the number of the first
+  month of the school year. It defaults to~\(8\).
+
+\item[\texttt{premierjour} (\textit{\texttt{int}})] is the number of the first
+  day of the first month of the school year. Its default value is~\(1\) so the
+  school year begins, by default, on the first of August.
+
+  \emph{Beware: no attempt is made in order to ensure the consistency of the
+    chosen date --- you can chose the 32nd February if you dare. You have to
+    take care of that by yourself.}
+
+\item[\texttt{decalage} (\textit{\texttt{int}})] is an integer which defaults
+  to~\(0\). It is used to shift the school year: passing the option
+  \verb|decalage=1| to the package forces \cs{anneescolaire} to give the next
+  school year.
+
+\item[\texttt{separateur} (\textit{\texttt{token list}})] is the text used
+  between the numbers of the two calendar years which the school year spans. Its
+  default value is~\enquote{\texttt{-}}.
+\end{description}
+
+
+\section{Examples}
+\label{sec:examples}
+
+\subsection{Writing the School Year}
+\label{sec:writingyear}
+
+The text\\[0.5\baselineskip]
+\enquote{Today is \today, academic year \anneescolaire, beginning
+  in~\debutanneescolaire{} and ending in~\finanneescolaire.}\\[0.5\baselineskip]
+is obtained with the code\\[0.5\baselineskip]
+\texttt{Today is \cs{today}, academic year \cs{anneescolaire}, beginning
+  in}\verb|~|\cs{debutannee}\BOP \texttt{sco}\BOP \texttt{laire}\verb|{}|
+\texttt{and ending in\verb|~|\cs{finanneescolaire}.}
+
+\medskip{}
+
+What follows illustrates the use of the optional argument of the three document
+commands.
+
+
+\vspace{\baselineskip}
+
+\framebox[0.85\textwidth]{\begin{minipage}{.65\linewidth}
+\vspace*{.5\baselineskip}
+
+ On
+\today{}:
+
+\vspace{.5\baselineskip}
+
+\noindent{}
+{\cs{anneescolaire[-1]}}: \anneescolaire[-1] \par\noindent{}
+{\cs{debutanneescolaire[-1]}}: \debutanneescolaire[-1] \par\noindent{}
+{\cs{finanneescolaire[-1]}}: \finanneescolaire[-1]
+
+\vspace{.5\baselineskip}
+
+\noindent{}
+{\cs{anneescolaire}}: \anneescolaire \par\noindent{}
+{\cs{debutanneescolaire}}: \debutanneescolaire \par\noindent{}
+{\cs{finanneescolaire}}: \finanneescolaire
+
+\vspace{.5\baselineskip}
+
+\noindent{}
+{\cs{anneescolaire[1]}}: \anneescolaire[1] \par\noindent{}
+{\cs{debutanneescolaire[1]}}: \debutanneescolaire[1] \par\noindent{}
+{\cs{finanneescolaire[1]}}: \finanneescolaire[1]
+
+\vspace*{.5\baselineskip}
+\end{minipage}}
+
+\subsection{Changing the Look}
+\label{sec:changelook}
+
+With the following code:
+
+
+
+\begin{Verbatim}[gobble=0, frame=lines, label={code}, labelposition=topline]
+\ExplSyntaxOn
+\RenewDocumentCommand{\AnneeScolairePresentation}{ o m }
+{
+  \int_case:nn { #1 }
+  {
+    {1} { \textbf{ \int_to_arabic:n { #2 } } }
+    {2} { \int_to_roman:n { #2 } }
+    {3} { \textit{ \int_to_arabic:n { #2 } } }
+    {4} { \int_to_Roman:n { #2 } }
+  }
+}
+\ExplSyntaxOff
+
+\anneescolaire \quad \debutanneescolaire \quad \finanneescolaire
+\end{Verbatim}
+
+ We obtain:
+
+\bgroup{}
+\ExplSyntaxOn
+\RenewDocumentCommand{\AnneeScolairePresentation}{ o m }
+{
+  \int_case:nn { #1 }
+  {
+    {1} { \textbf{ \int_to_arabic:n { #2 } } }
+    {2} { \int_to_roman:n { #2 } }
+    {3} { \textit{ \int_to_arabic:n { #2 } } }
+    {4} { \int_to_Roman:n { #2 } }
+  }
+}
+\ExplSyntaxOff
+
+\anneescolaire \quad \debutanneescolaire \quad \finanneescolaire
+\egroup{}
+
+\medskip{}
+
+It should be obvious to everyone that the preceding code is given as a mere
+example of what we can do and certainly not as an example of what we \emph{have to}!
+
+\vspace{\stretch{2}}
+
+\noindent\hspace*{0.2\textwidth}\hrulefill\hspace*{0.2\textwidth}
+\begin{center}
+  \textsl{Le TeXnicien de Surface scripsit.}
+\end{center}
+\noindent\hspace*{0.2\textwidth}\hrulefill\hspace*{0.2\textwidth}
+
+\vspace*{\stretch{2}}
+
+\end{document}
+\endinput
+%%
+%% End of file `annee-scolaire-eng.tex'.

@@ -1,0 +1,641 @@
+%%
+%% This is file `texnegar-doc.tex'
+%%
+%%   Copyright (C) 2020-2021 Hossein Movahhedian
+%%
+%%   It may be distributed and/or modified under the LaTeX Project Public License,
+%%   version 1.3c or higher (your choice). The latest version of
+%%   this license is at: http://www.latex-project.org/lppl.txt
+%%
+
+\documentclass{ltxdoc}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{longtable}
+\usepackage[colorlinks]{hyperref}
+\usepackage{hologo}
+\usepackage{xcolor}
+\usepackage{iftex}
+\usepackage{enumitem}
+
+\setfontfamily\PeFont[Script=Arabic,Language=Persian]{HM XKayhan}
+
+\def\TeXNegar{\TeX Negar}
+
+\usepackage{multicol,makeidx}
+\makeindex %%%
+
+% Partly adapted from the code provided by Maroš Beťko in: 
+% https://tex.stackexchange.com/questions/404820/create-2-column-index-in-1-column-document-on-the-same-page
+% Redefine theindex enviroment so it won't place index on new page
+% This also makes the index 1 columns, which I don't want
+\makeatletter
+\renewenvironment{theindex}
+  {\section*{\indexname}\begin{multicols}{2}%
+   \@mkboth{\MakeUppercase\indexname}%
+           {\MakeUppercase\indexname}%
+   \thispagestyle{plain}\parindent\z@
+   \parskip\z@ \@plus .3\p@\relax
+   \columnseprule \z@
+   \columnsep 35\p@
+   \let\item\@idxitem}
+  {\end{multicols}}
+\makeatother
+
+\ifluatex
+  \def\RtoL#1{\PeFont\pagedir TRT \bodydir TRT \pardir TRT \textdir TRT #1}
+\fi
+\ifxetex
+  \def\RtoL#1{\PeFont\TeXXeTstate=1 \beginR #1 \endR}
+\fi
+
+\title{
+  The \textsf{texnegar} package\\Kashida justification in LuaTeX and XeTeX\\User Documentation
+}
+
+\author{
+ Hossein Movahhedian\thanks
+   {
+     E-mail:
+       \href{mailto:dma8hm1334@gmail.com}
+         {\textsf{dma8hm1334@gmail.com}}
+   }
+}
+
+\date{Released \quad 2021-02-09 \quad v0.1e}
+
+\definecolor{HMhighlightBlueI}{rgb}{0,0,1}
+\definecolor{HMhighlightbgYellowII}{rgb}{1,1,1}
+\definecolor{HMhighlightbgPinkI}{rgb}{1,1,1}
+\definecolor{HMhighlightbgPinkII}{rgb}{1,1,1}
+\definecolor{HMhighlightbgPinkIII}{rgb}{1,1,1}
+
+\definecolor{HMcitecolor}{rgb}{1,0,1}
+
+\definecolor{HMnotecolor}{rgb}{0.6,0,0}
+
+\def\indexterm#1#2{{\color{HMhighlightBlueI} #2}\index{#1@#2}}
+\def\indextermsub#1#2#3{{\color{HMhighlightBlueI} #3}\index{#1@#2!#3}}
+\def\indextermsubsub#1#2#3#4{{\color{HMhighlightBlueI} #4}\index{#1@#2!#3!#4}}
+\def\ccsterm#1{{\color{HMhighlightBlueI}\tt \textbackslash #1}\index{#1@\tt \textbackslash #1}}
+\def\ccstermsub#1#2#3{{\color{HMhighlightBlueI}\tt \textbackslash #3}\index{#1@#2!\tt \textbackslash #3}}
+
+\begin{document}
+
+\maketitle
+
+\vskip 50mm
+\newbox\hnegar
+\setbox\hnegar\hbox{\texttt{Negar:}}
+\newbox\vnegar
+\setbox\vnegar\vbox{
+\hbox{\leaders\hrule\hskip \the\wd\hnegar}
+\hbox to -\the\wd\hnegar{\texttt{Negar:}}\vskip-0.6em
+\hbox{\leaders\hrule\hskip \the\wd\hnegar}}
+\unvbox\vnegar
+\vskip -\the\baselineskip
+\hskip 3em
+\begin{minipage}{0.65\linewidth}
+  \textit{\noindent
+    Negar, in Persian, is the present stem of negaashtan meaning to design; to paint;
+    to write; and as a noun it means ``sweetheart, idol, beloved, figuratively refering
+    to a beautiful woman, pattern, painting, and artistic design''
+  }
+\end{minipage}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+\indexterm{Kashida}{Kashida} is used in Persian and Arabic typography to justify the text regardless
+of the number of the words on the line by elongating characters at certain
+points instead of expanding spaces between words or individual letters.
+
+One of the packages that implements kashida feature in Persian typesetting is
+\hyperref[HM:Brief-outline-of-the-issues]{\indexterm{xepersian}{\textsf{xepersian}} which
+ unfortunately has many bugs}. In addition kashida feature in
+\textsf{xepersian} has problems with some fonts such as \mbox{\textsf{HM Series}}
+available at\linebreak[4]
+\href{https://dma8hm1334.bitbucket.io}{\texttt{https://dma8hm1334.bitbucket.io}}
+and \mbox{\textsf{X Series 2}} available at\linebreak[4]
+\href{http://wiki.irmug.com/index.php/X_Series_2}{\texttt{http://wiki.irmug.com/index.php/X\_Series\_2}}.
+
+The \indexterm{texnegar}{\TeXNegar} package implements kashida justification in LuaTeX and XeTeX
+and fixes known bugs in \textsf{xepersian}.
+
+The following files in the directory \texttt{texmf-dist/doc/latex/texnegar/} can be used as simple
+examples of the usage of the package:
+\newcounter{beanx}
+\begin{list}{\arabic{beanx}.}{\usecounter{beanx}\setlength{\rightmargin}{\leftmargin}}
+  \item \texttt{texnegar-luatex-glyph.tex} \\
+    See pages 26 -- 35 for PDF output.
+  \item \texttt{texnegar-luatex-leaders-glyph.tex} \\
+    See pages 36 -- 45 for PDF output.
+  \item \texttt{texnegar-luatex-leaders-hrule.tex} \\
+    See pages 46 -- 55 for PDF output.
+  \item \texttt{texnegar-xetex-bidi-glyph.tex} \\
+    See pages 56 -- 65 for PDF output.
+  \item \texttt{texnegar-xetex-bidi-leaders-glyph.tex} \\
+    See pages 66 -- 75 for PDF output.
+  \item \texttt{texnegar-xetex-bidi-leaders-hrule.tex} \\
+    See pages 76 -- 85 for PDF output.
+  \item \texttt{texnegar-xetex-xepersian-glyph.tex} \\
+    See pages 86 -- 95 for PDF output.
+  \item \texttt{texnegar-xetex-xepersian-leaders-glyph.tex} \\
+    See pages 96 -- 105 for PDF output.
+  \item \texttt{texnegar-xetex-xepersian-leaders-hrule.tex} \\
+    See pages 106 -- 115 for PDF output.
+  % \item \texttt{xepersian-XB.tex} \\
+  %   See pages 16 -- 25 for PDF output.
+\end{list}
+
+Please use the Bitbucket issue tracker:
+\href{https://bitbucket.org/dma8hm1334/texnegar/issues}{\textsf{https://bitbucket.org/dma8hm1334/\linebreak[4]texnegar/issues}}
+to report a bug, request a feature or if you have a comment.
+
+I will do my best to fix all the bugs you report, but, unfortunately,
+time is a big hurdle to overcome; so, my apologies in advance for those
+which I cannot make time to fix.
+
+\section{Brief outline of the issues}\label{HM:Brief-outline-of-the-issues}
+
+Kashida is one of the most important features that must be included in any
+Persian typesetter. In \textsf{xepersian} this feature is implemented but with some
+problems. See pages 16 -- 25 for pictorial illustrations for various font styles.
+These problems along with the fixes in \TeXNegar{} are briefly:
+
+\newcounter{bean}
+  \begin{list}{P-\Roman{bean}}{\usecounter{bean}\setlength{\rightmargin}{\leftmargin}}
+    \item In \textsf{xepersian} \indexterm{overlapping of glyphs}{overlapping of glyphs} occurs in letter
+      combinations such as "{\RtoL{ﺑ + ﻰ}}", "{\RtoL{ﺗ + ﻰ}}", and
+      "{\RtoL{ﭘ + ﻰ}}" because the character
+      \textsf{U+FEF0 (ARABIC LETTER FARSI YEH FINAL FORM)} is replaced with
+      another character. This is fixed by modifying the fixed part of the
+      glue inserted between the consecutive characters. Furthermore, both,
+      the fixed and the stretchable parts of the glue can be changed by the
+      user.
+    \item In \indexterm{letter combinations}{letter combinations} such as "{\RtoL{ﻫ + ﻰ}}", in \textsf{xepersian},
+      the character \textsf{U+FEEB (ARABIC LETTER HEH INITIAL FORM)} is
+      replaced with \textsf{U+06BE (ARABIC LETTER HEH DOACHASHEMEE)}. This
+      is fixed by inserting the character \textsf{U+200E} before the
+      combination "\textsf{U+200D + hrule + U+200D}" which is used as
+      stretching item.
+  
+      {\color{gray}
+      Note: \indexterm{Vafa Khalighi}{Vafa Khalighi} has fixed this problem in
+      \href{https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/xelatex/xepersian/kashida-xepersian.def?revision=55165&view=co}%
+           {\texttt{xepersian-23.0}},
+      by copying the corresponding code from 
+      \href{http://www.tug.org/svn/texlive/trunk/Master/texmf-dist/tex/xelatex/xepersian-hm/kashida-xepersian-hm.def?revision=55123&view=co}%
+           {\texttt{xepersian-hm-0.5e}}.
+      Consequently, the
+      option \texttt{KashidaXBFix} along with the commands \linebreak[4]
+      \texttt{\textbackslash KashidaXBFixOn} and
+      \texttt{\textbackslash KashidaXBFixOff} has been removed in \linebreak[4]
+      \texttt{xepersian-23.0} and the later versions.}
+          
+    \item In \textsf{xepersian} when outline or shadow fonts are used, the gaps
+      filled by horizontal rule appears as a solid box. This is fixed by
+      using the \textsf{kashida} glyph instead of the horizontal rule in
+      \TeXNegar.
+    \item Activating kashida in \textsf{xepersian} disturbs \indexterm{ligatures}{ligatures}. This is
+      fixed in \TeXNegar{} by escaping the components of the
+      ligature which form the glyph, i.e. by inserting an escape character
+      before Persian letters joined to form the ligature without any empty
+      characters, blank characters, invisible characters and whitespace
+      characters which form the glyph. See
+      \mbox{Figures \ref{fig:ligatures-xep} and \ref{fig:ligatures-texnegar}}.
+      Currently only 3 ligature glyphs are available in
+      \TeXNegar, but you can add as many as you want or let
+      me know the ligature glyphs that you need, so that I can add them in
+      the next release of the package. Of course, this is not the best
+      solution, but it works.
+  
+    \item If italic or oblique style of some fonts, such as \textsf{X Series 2},
+      is used in \textsf{xepersian}, an extra \indexterm{gap}{gap} is left between the
+      stretched characters. This is fixed in \textsf{HM Series} fonts.
+\end{list}
+
+For comparing the outputs of \textsf{xepersian} and \TeXNegar{} with
+a variety of options available to these packages, please see the
+\mbox{Figures \ref{fig:xepersian-XB}, \ref{fig:texnegar-hrule}}, and \ref{fig:texnegar-glyph}.
+
+\begin{figure}
+  \centerline{\fbox{\includegraphics[scale=1]{doc-ligature-xep.pdf}}}
+  \caption{Package: \textsf{xeprsian}, Font: \textsf{Noto Sans Arabic}, \textsf{Scale=1.1}, \textsf{Kashida=On}}
+  \label{fig:ligatures-xep}
+\end{figure}
+
+\begin{figure}
+  \centerline{\fbox{\includegraphics[scale=1]{doc-ligature-texnegar.pdf}}}
+  \caption{Package: \textsf{texnegar}, Font: \textsf{Noto Sans Arabic}, \textsf{Scale=1.1}, \textsf{Kashida=glyph}}
+  \label{fig:ligatures-texnegar}
+\end{figure}
+
+\begin{figure}
+  \centerline{\fbox{\includegraphics[scale=1]{doc-samples-xep.pdf}}}
+  \caption{Package: \textsf{xeprsian}, Font: \textsf{XB Kayhan}, \textsf{Scale=4.5}, \textsf{Kashida=On}}
+  \label{fig:xepersian-XB}
+\end{figure}
+
+\begin{figure}
+  \centerline{\fbox{\includegraphics[scale=1]{doc-samples-hrule.pdf}}}
+  \caption{Package: \textsf{texnegar}, Font: \textsf{HM XKayhan}, \textsf{Scale=4.5}, \textsf{Kashida=hrule}}
+  \label{fig:texnegar-hrule}
+\end{figure}
+
+\begin{figure}
+  \centerline{\fbox{\includegraphics[scale=1]{doc-samples-glyph.pdf}}}
+  \caption{Package: \textsf{texnegar}, Font: \textsf{HM XKayhan}, \textsf{Scale=4.5}, \textsf{Kashida=glyph}}
+  \label{fig:texnegar-glyph}
+\end{figure}
+
+\clearpage
+
+\section{Package loading and options}
+
+If you are going to use \TeXNegar{} with \textsf{bidi} or \textsf{xepersian} then
+please note that \TeXNegar{} should be loaded before \textsf{xepersian}.
+
+For example:
+\begin{verbatim}
+\documentclass{report}
+\usepackage[Minimal=On,Kashida=leaders+glyph]{texnegar}
+\usepackage{xepersian}
+\end{verbatim}
+
+The options available in \TeXNegar{} are:
+
+\begin{itemize}
+  \item \indexterm{General Options}{\textbf{General Options}}: \\
+    \begin{itemize}
+      \item \indextermsub{General Options}{\textbf{General Options}}{\texttt{Minimal}}: \\
+        which has two possible values:
+        \begin{itemize}
+          \item \indextermsubsub{General Options}{\textbf{General Options}}{\texttt{Minimal}}{On}: \\
+            for using \texttt{texnegar} to implement kashida feature only.
+  
+          \item \indextermsubsub{General Options}{\textbf{General Options}}{\texttt{Minimal}}{Off}: \\
+            for using \texttt{texnegar} as a general purpose Persian typesetter (including kashida implementation).
+            This is the default value.
+        \end{itemize}
+
+      \item \indextermsub{General Options}{\textbf{General Options}}{\texttt{Kashida}}: \\
+        which implements kashida feature with three possible values:
+        \begin{itemize}
+          \item \indextermsubsub{General Options}{\textbf{General Options}}{\texttt{Kashida}}{glyph}: \\
+            which uses the \texttt{kashida} character to stretch the text. \\
+  
+            {\color{magenta}
+            Imortant notes for \hologo{XeLaTeX} users: \\
+  
+            \begin{itemize}
+              \item
+                If you are going to use this option then you should run \texttt{xelatex} thrice. For example: \\
+  
+                \texttt{rm -f kashida-example.aux \\
+                xelatex kashida-example.tex \\
+                xelatex kashida-example.tex \\
+                xelatex kashida-example.tex} \\
+  
+              \item
+                This feature is still experimental in \hologo{XeLaTeX} and is not regarded as stable,
+                so, if you are going to use this option be ready for unpredictable results.
+  
+              \item
+                With this option, for each gap which is to be filled with kashida,
+                some commands, current position on the page, and references are saved in the
+                \texttt{\bslash jobname.aux} file and if the text is long, the file size may get
+                too large.
+            \end{itemize}}
+  
+          \item \indextermsubsub{General Options}{\textbf{General Options}}{\texttt{Kashida}}{leaders+glyph}: \\
+            which uses kashida glyph leaders to stretch the text.
+            Please note that the option `Kashida=leaders+glyph' is currently only
+            supported by \mbox{\textsf{HM Series}} fonts available at
+            \href{https://dma8hm1334.bitbucket.io}{\texttt{https://dma8hm1334.bitbucket.io}}.
+            If you know of any other font that supports this option, please
+            let me know to add it to the list of corresponding fonts.
+  
+            Contrary to the option \texttt{Kashida=glyph}, in this case nothing is saved
+            in \texttt{.aux} files.
+  
+          \item \indextermsubsub{General Options}{\textbf{General Options}}{\texttt{Kashida}}{leaders+hrule}: \\
+            which uses horizontal rule (\verb|\hrule|) leaders to stretch the text.
+  
+          \item \texttt{Off}: \\
+            which disables kashida feature.
+  
+          \item \texttt{On}: \\
+            which is the same as \texttt{leaders+glyph}.
+  
+        \end{itemize}
+        Also, please note that the value of \texttt{Kashida} is mandatory.
+        For example \texttt{Kashida=glyph} inserts a stretched \texttt{kashida} glyph
+        and \linebreak[4] \texttt{Kashida=leaders+glyph} inserts \texttt{kashida} leaders  wherever
+        it is needed.
+  
+      \item \indextermsub{General Options}{\textbf{General Options}}{\texttt{linebreakpenalty}}: \\
+        which specifies the amount of penalty for preventing bad line-breaking.
+        You may strictly specify the value of this option. For example you may either set % \linebreak[4]
+        \texttt{'linebreakpenalty=8'} or
+        use the default values. The available default values of penalties which are put into the
+        horizontal list output are the negative of the followings:
+  
+        \begin{longtable}{ll}
+          \texttt{min}:    & \texttt{0} \\
+          \texttt{low}:    & \texttt{8} \\
+          \texttt{medium}: & \texttt{15} \\
+          \texttt{high}:   & \texttt{25} \\
+          \texttt{max}:    & \texttt{10000}
+        \end{longtable}
+  
+      \item \indextermsub{General Options}{\textbf{General Options}}{\texttt{ligatures}}: \\
+        which fixes the disturbance of ligatures caused by activating kashida
+        justification in \TeXNegar. You may strictly specify the value of this option.
+        For example \texttt{'ligatures=dlig'} or you may use the default value.
+        The available values are:
+  
+        \begin{longtable}{ll}
+          \texttt{aalt}:    & Access All Alternatives \\
+          \texttt{ccmp}:    & Glyph Composition/Decomposition \\
+          \texttt{dlig}:    & Discretionary Ligatures \\
+          \texttt{fina}:    & Final (Terminal) Forms \\
+          \texttt{init}:    & Initial Forms \\
+          \texttt{locl}:    & Localized Forms \\
+          \texttt{medi}:    & Medial Forms \\
+          \texttt{rlig}:    & Required Ligatures \\
+          \texttt{default}: & All the above features
+        \end{longtable}
+        Please note that this feature is still experimental and is not regarded as stable.
+  
+      \item \indextermsub{General Options}{\textbf{General Options}}{\texttt{color}}: \\
+        which colorize the stretched parts of the text for checking the quality of kashida
+        justification. Color must be one of a named color declared in \textsf{xcolor} package.
+        For example: \texttt{color=blue} or \texttt{color=Blue}.
+  
+        Default color name is: \texttt{magenta}
+  
+        Please note that activating this option increases system resource and disk usage.
+  
+    \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+  \item \indexterm{LuaLaTeX-only Options}{\textbf{\hologo{LuaLaTeX}-only Options}}: \\
+    \begin{itemize}
+      \item \indextermsub{LuaLaTeX-only Options}{\textbf{\hologo{LuaLaTeX}-only Options}}{\texttt{Kashidafontfamily}}: \\
+        that fixes the issue in \texttt{ArabLuaTeX} if one uses fonts other than \textsf{HM Series} and \textsf{Adobe Arab},
+        among those are fonts such as \textsf{Scheherazade}, \textsf{Scheherazade New}, and \textsf{Amiri}.
+        The value of this option, as returned by \hologo{LuaTeX}, is the family name of the font without spaces.
+        A few examples of these values and the corresponding fonts are:
+
+        \begin{longtable}{ll}
+          value                    & corresponding fonts \\
+          \hline
+          \texttt{AdobeArab}       & \textsf{\small Adobe Arab Regular}, \\
+                                   & \textsf{\small Adobe Arab Bold}, \dots\unkern. \\
+          \texttt{Amiri}           & \textsf{\small Amiri Regular, Amiri Bold}, \\
+                                   & \textsf{\small Amiri Slanted}, \dots\unkern. \\
+          \texttt{HMXKayhan}       & \textsf{\small HM XKayhan Regular}, \\
+                                   & \textsf{\small HM XKayhan Bold}, \dots\unkern. \\
+          \texttt{ScheherazadeNew} & \textsf{\small Scheherazade New Regular}, \\
+                                   & \textsf{\small Scheherazade New Bold}, \dots\unkern. \\
+          \texttt{Scheherazade}    & \textsf{\small Scheherazade}, \dots\unkern. \\
+        \end{longtable}
+
+      \item \indextermsub{LuaLaTeX-only Options}{\textbf{\hologo{LuaLaTeX}-only Options}}{\texttt{hboxrecursion}}: \\
+        which enables kashida justification inside horizontal boxes recursively.
+
+      \item \indextermsub{LuaLaTeX-only Options}{\textbf{\hologo{LuaLaTeX}-only Options}}{\texttt{vboxrecursion}}: \\
+        which enables kashida justification inside vertical boxes recursively.
+
+    \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+  \item \indexterm{XeLaTeX-only Options}{\textbf{\hologo{XeLaTeX}-only Options}}: \\
+    \begin{itemize}
+      \item \indextermsub{XeLaTeX-only Options}{\textbf{\hologo{XeLaTeX}-only Options}}{\texttt{kashidastretch}}: \\
+        which specifies the amount of extra stretching
+        for some combinations of characters. You may strictly specify the value of
+        this option. For example \texttt{'kashidastretch=0.14 em plus 0.5 em'} or you
+        may use the default values. The available default values are:
+    
+        \begin{longtable}{lll}
+          \texttt{kayhan}       & \texttt{0.14  em plus 0.5 em} \\
+          \texttt{khorramshahr} & \texttt{0.131 em plus 0.5 em} \\
+          \texttt{kayhannavaar} & \texttt{0.129 em plus 0.5 em} \\
+          \texttt{kayhanpook}   & \texttt{0.133 em plus 0.5 em} \\
+          \texttt{kayhansayeh}  & \texttt{0.135 em plus 0.5 em} \\
+          \texttt{khoramshahr}  & \texttt{0.128 em plus 0.5 em} \\
+          \texttt{khorramshahr} & \texttt{0.13  em plus 0.5 em} \\
+          \texttt{niloofar}     & \texttt{0.132 em plus 0.5 em} \\
+          \texttt{paatch}       & \texttt{0.127 em plus 0.5 em} \\
+          \texttt{riyaz}        & \texttt{0.125 em plus 0.5 em} \\
+          \texttt{roya}         & \texttt{0.142 em plus 0.5 em} \\
+          \texttt{shafigh}      & \texttt{0.143 em plus 0.5 em} \\
+          \texttt{shafighKurd}  & \texttt{0.126 em plus 0.5 em} \\
+          \texttt{shafighUzbek} & \texttt{0.123 em plus 0.5 em} \\
+          \texttt{shiraz}       & \texttt{0.122 em plus 0.5 em} \\
+          \texttt{sols}         & \texttt{0.124 em plus 0.5 em} \\
+          \texttt{tabriz}       & \texttt{0.119 em plus 0.5 em} \\
+          \texttt{titr}         & \texttt{0.12  em plus 0.5 em} \\
+          \texttt{titre}        & \texttt{0.121 em plus 0.5 em} \\
+          \texttt{traffic}      & \texttt{0.124 em plus 0.5 em} \\
+          \texttt{vahid}        & \texttt{0.134 em plus 0.5 em} \\
+          \texttt{vosta}        & \texttt{0.136 em plus 0.5 em} \\
+          \texttt{yaghut}       & \texttt{0.138 em plus 0.5 em} \\
+          \texttt{yagut}        & \texttt{0.137 em plus 0.5 em} \\
+          \texttt{yas}          & \texttt{0.126 em plus 0.5 em} \\
+          \texttt{yekan}        & \texttt{0.141 em plus 0.5 em} \\
+          \texttt{yermook}      & \texttt{0.139 em plus 0.5 em} \\
+          \texttt{zar}          & \texttt{0.116 em plus 0.5 em} \\
+          \texttt{ziba}         & \texttt{0.119 em plus 0.5 em} \\
+          \texttt{default}      & \texttt{0.14  em plus 0.5 em} \\
+          \texttt{noskip}       & \texttt{0     em plus 0.5 em}
+        \end{longtable}
+    
+        For example: \mbox{\texttt{'kashidastretch=titr'}} is equivalent to\linebreak
+        \mbox{\texttt{'kashidastretch=0.12  em plus 0.5 em'}}
+
+    \end{itemize}
+\end{itemize}
+
+\section{Commands}
+
+\begin{itemize}
+  \item \indexterm{General Commands}{\textbf{General Commands}}: \\
+    \begin{description}
+      \item \ccstermsub{General Commands}{\textbf{General Commands}}{KashidaOff}: \\
+        disables kashida justification.
+
+      \item \ccstermsub{General Commands}{\textbf{General Commands}}{KashidaOn}: \\
+        enables kashida justification. If the option Kashida is activated
+        stretching the text is the default behavior.
+    \end{description}
+  \item \indexterm{XeLaTeX-only Commands}{\textbf{\hologo{XeLaTeX}-only Commands}}: \\
+    \begin{description}
+      \item \ccstermsub{XeLaTeX-only Commands}{\textbf{\hologo{XeLaTeX}-only Commands}}{discouragebadlinebreaks}{\color{HMhighlightBlueI}\verb|[linebreakpenalty][kashidastretch]{|{\it text}\verb|}|}: \\
+        {\it text} may not contain paragraph breaks.
+        This command puts a penalty after each Persian word.
+        The optional arguments \texttt{linebreakpenalty} and \texttt{kashidastretch} locally
+        specify the value of the penalty and the amount of extra stretching for some
+        combinations of characters respectively as discussed previously. For example
+        you may set this option as follows:
+
+        \texttt{\bslash discouragebadlinebreaks[9][0.12 em plus 0.5 em]\{$\dots\,$\}}
+    \end{description}
+\end{itemize}
+
+\section{Important notes}
+
+\begin{description}
+  \item Kashida and ligatures:
+
+    The method used to implement kashida feature breaks a ligature if it is applied to the letters which are joined to form
+    the ligature. This is fixed in \TeXNegar, but it is not well developed yet.
+\end{description}
+
+\section{Acknowledgments}
+In the first place I have to thank Donald Knuth for inventing TeX.
+During the development of this package I refered to  Stack Exchange network of
+question-and-answer (Q\&A) websites to solve problems for which I am grateful.
+I also would like to thank the developer teams of TeX's friends especially LaTeX, LuaTeX and XeTeX teams.
+
+\section{Change History}
+
+\def\SubSecItem#1{\subsubsection*{\hskip 2em\large #1}\addcontentsline{toc}{subsection}{[#1]}}
+\newenvironment{Itemize}{\begin{itemize}[leftmargin=4em]}{\end{itemize}}
+
+\SubSecItem{2020-08-29~v0.1a}
+\begin{Itemize}
+  \item First standalone version.
+\end{Itemize}
+
+\SubSecItem{2020-08-30~v0.1b}
+\begin{Itemize}
+  \item Changed some file names.
+\end{Itemize}
+
+\SubSecItem{2021-01-27~v0.1c}
+\begin{Itemize}
+  \item Added the option \texttt{Minimal} which is needed if texnegar is used for kashida implementaion only.
+  \item Fixed the problem with \texttt{Scheherazade} and \texttt{Amiri} fonts.
+\end{Itemize}
+
+\SubSecItem{2021-01-31~v0.1d}
+\begin{Itemize}
+  \item Added the option \texttt{Kashidafontfamily} that fixes the issue in \texttt{ArabLuaTeX} if one uses
+        fonts other than \textsf{HM Series} and \textsf{Adobe Arab}.
+\end{Itemize}
+
+\SubSecItem{2021-02-09~v0.1e}
+\begin{Itemize}
+  \item Fixed the problem of inserting the kashida before the diacritical marks. Now, after stretching,
+        the diacritical marks appear before kashida.
+\end{Itemize}
+
+\section*{To Do's}
+
+To do
+
+\renewcommand{\refname}{References: \\ {\normalsize\it Actually, this is not a ``References'' nor a ``Literature'', but the most important
+ although not a complete list of ``Resources Used'' to develop this package.}}
+
+\begin{thebibliography}{9}
+
+ \bibitem{DEK-TTB} Donald E. Knuth,
+   \emph{The \hologo{TeX} book},
+   Addison-Wesley, 1986.
+
+ \bibitem{VE-TBT} Victor Eijkhout,
+   \emph{\hologo{TeX} BY TOPIC},
+   Addison-Wesley, 2013.
+
+ \bibitem{PWA-KAH-KB-TFI} Paul W. Abrahams, Kathryn A. Hargreaves, and Karl Berry,
+   \emph{\hologo{TeX} for the Impatient},
+   Addison-Wesley, 2013.
+
+ \bibitem{LL-LADPS} Leslie Lamport,
+    \emph{\hologo{LaTeX}, A document preparation System},
+    Addison-Wesley, 1986.
+
+ \bibitem{FM-MG-JB-DC-CR-TLC} Frank Mittelbach and Michel Goossens with Johannes Braams, David Carlisle, and Chris Rowley, 
+    \emph{The \hologo{LaTeX} Companion},
+    Addison-Wesley, second edition, 2004.
+
+ \bibitem{PRO-IN-LUA} Roberto Ierusalimschy,
+    \emph{Programming in Lua},
+    Lua.org, fourth edition, 2016
+
+ \bibitem{LUA-REF-MAN}  Lua.org,
+    \emph{Lua 5.3 Reference Manual},
+    Lua.org, 2016
+
+ \bibitem{TLT-TLS} Package \texttt{latex}: The LaTeX Team,
+    \emph{The \hologo{LaTeX2e} Sources},
+    \href{http://mirrors.ctan.org/macros/latex/base/source2e.pdf}{\texttt{CTAN:macros/latex/base/source2e.pdf}}, 2020-02-02
+
+ \bibitem{TL3T-TLS} Package \texttt{l3kernel}: The LaTeX3 Team,
+     \emph{The \hologo{LaTeX}3 Sources},
+    \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/source3.pdf}{\texttt{CTAN:macros/latex/contrib/l3kernel/source3.pdf}}, 2020-07-17
+
+ \bibitem{TL3T-TLI} Package \texttt{l3kernel}: The LaTeX3 Team,
+     \emph{The \hologo{LaTeX}3 Interfaces},
+    \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}{\texttt{CTAN:macros/latex/contrib/l3kernel/interface3.pdf}}, 2020-07-17
+
+ \bibitem{TLT-LRM} Package \texttt{luatex}: The LuaTeX Team,
+    \hologo{LuaTeX} Reference Manual,
+    \href{http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf}{\texttt{CTAN:systems/doc/luatex/luatex.pdf}}, 2020
+
+ \bibitem{WR-KH-KB-XRG} Package \texttt{xetexref}: Will Robertson, Khaled Hosny, and Karl Berry,
+    \hologo{XeTeX} reference guide,
+    \href{http://mirrors.ctan.org/info/xetexref/xetex-reference.pdf}{\texttt{CTAN:info/xetexref/xetex-reference.pdf}}, 2019-12-09
+
+ \bibitem{JQ-AX} Package \texttt{xetex}: Jonathan Kew,
+    About \hologo{XeTeX},
+    \href{http://mirrors.ctan.org/systems/doc/xetex/XeTeX-notes.pdf}{\texttt{CTAN:systems/doc/xetex/XeTeX-notes.pdf}}, 2005-10-17
+
+ \bibitem{NG-TXC} Package \texttt{xetex}: Michel Goossens,
+    The \hologo{XeTeX} Companion,
+    \href{http://xml.web.cern.ch/XML/lgc2/xetexmain.pdf}{\texttt{http://xml.web.cern.ch/XML/lgc2/xetexmain.pdf}}, 2009-08-19
+
+ \bibitem{TEX-STACKEXCHANGE}  Website: Stack Exchange: Hot Questions,
+    \hologo{TeX}-\hologo{LaTeX} Q\&A for users of TeX, LaTeX, ConTeXt, and related typesetting systems,
+    \href{https://tex.stackexchange.com}{\texttt{tex.stackexchange.com}}
+
+ \bibitem{LUATEX-WIKI} Website: LuaTeX Wiki,
+    \hologo{LuaTeX} Wiki,
+    \href{http://wiki.luatex.org/index.php/Main\_Page}{\texttt{wiki.luatex.org}}
+    
+\end{thebibliography}
+
+\newpage
+
+\printindex
+\addcontentsline{toc}{section}{Index}
+
+\includepdf[pages={1-},scale=0.75]{xepersian-XB.pdf}
+
+\includepdf[pages={1-},scale=0.75]{texnegar-luatex-glyph.pdf}
+\includepdf[pages={1-},scale=0.75]{texnegar-luatex-leaders-glyph.pdf}
+\includepdf[pages={1-},scale=0.75]{texnegar-luatex-leaders-hrule.pdf}
+
+\includepdf[pages={1-},scale=0.75]{texnegar-xetex-bidi-glyph.pdf}
+\includepdf[pages={1-},scale=0.75]{texnegar-xetex-bidi-leaders-glyph.pdf}
+\includepdf[pages={1-},scale=0.75]{texnegar-xetex-bidi-leaders-hrule.pdf}
+
+\includepdf[pages={1-},scale=0.75]{texnegar-xetex-xepersian-glyph.pdf}
+\includepdf[pages={1-},scale=0.75]{texnegar-xetex-xepersian-leaders-glyph.pdf}
+\includepdf[pages={1-},scale=0.75]{texnegar-xetex-xepersian-leaders-hrule.pdf}
+
+\end{document}
+%%
+%%
+%% End of file `texnegar-doc.ltx'.

@@ -1,0 +1,276 @@
+% latex-doc-ptr.sty  style for LaTeX doc pointer document  
+% 2021-Jan-02 Jim Hefferon, Karl Berry  public domain
+
+
+% include graphics
+\usepackage{graphicx} % needed for \XeLaTeX command
+
+% Color, for links and titles
+\usepackage{xcolor}
+% Color theme from Rodryggo Sylva
+% https://color.adobe.com/explore?page=2
+\definecolor{darkblue}{HTML}{274375} % {023059}
+\definecolor{lightblue}{HTML}{094085} %{023E73}
+% \definecolor{papyrus}{HTML}{D9D8D7}
+\definecolor{papyrus}{HTML}{E4E4E4}
+\definecolor{darkred}{HTML}{BF1E0F}
+\definecolor{lightred}{HTML}{F24141}
+% \pagecolor{papyrus}
+
+
+%\usepackage{dash}
+% \usepackage{url}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks,breaklinks,
+            linkcolor=black,citecolor=lightblue,
+            filecolor=blue,urlcolor=lightblue,
+            pdfpagemode=UseNone}
+
+% fonts
+% \usepackage{cochineal}
+\usepackage[light,lining]{spectral}
+\usepackage[T1]{fontenc}
+
+\usepackage{microtype}
+
+
+% ====== Page design =========
+% margins, multicolumn
+\usepackage[margin=1in]{geometry}
+\usepackage{multicol}
+\setlength{\columnsep}{2.5em}
+
+% space between paragraphs
+\setlength{\parskip}{.15ex plus .02ex minus .01ex}
+
+% Page headers and footers
+\pagestyle{empty}
+
+% Section titles
+\usepackage{titlesec}
+\titleformat{\section}[hang]{\color{black}\large\bf}{}{0pt}{}
+% \titlespacing{\section}{0pt}{2ex plus 0.1ex minus 0.05ex}{0.85ex plus 0.05ex}
+\titlespacing{\section}{0pt}{*2}{*0.66}
+
+\titleformat{\subsection}[runin]{\color{black}\normalsize\bf}{}{0.65em}{}
+% \titlespacing{\subsection}{0pt}{0.5ex plus 0.1ex minus 0.05ex}{0.15ex plus 0.05ex}
+\titlespacing{\subsection}{0pt}{*0.5}{*1}
+
+\setcounter{secnumdepth}{0} % Number the sections only if level -1 or less 
+
+
+% footnotes and package macro\patchcmd{\@makefntext}{.5em}{0em}{}{}
+\usepackage{ragged2e}
+\usepackage{etoolbox} % for patchcmd
+\usepackage{endnotes}
+\usepackage[para, norule, hang]{footmisc} % from https://tex.stackexchange.com/a/60949
+\patchcmd{\@makefntext}{.5em}{0em}{}{}
+\def\theendnotes{\immediate\closeout\@enotes \global\@enotesopenfalse
+  \begingroup
+    \makeatletter
+    \edef\@tempa{`\string >}%
+    \ifnum\catcode\@tempa=12%
+      \let\@ResetGT\relax
+    \else
+      \edef\@ResetGT{\noexpand\catcode\@tempa=\the\catcode\@tempa}%
+      \@makeother\>%
+    \fi
+    \def\@doanenote##1##2>{\def\@theenmark{##1}\begingroup
+        \@ResetGT
+        \edef\@currentlabel{\csname p@endnote\endcsname\@theenmark}%
+        \enoteformat}
+    \def\@endanenote{\hspace{0.65em plus 0.1em}\endgroup}%
+    \enoteheading
+    \enotesize % worth a look: \RaggedRight
+    \input{\jobname.ent}%
+  \endgroup}
+% ENDNOTE INDENT
+% \patchcmd{\enoteformat}{1.8em}{0em}{}{}
+% \def\makeenmark{\hbox{XX$^\theenmark$}}
+\def\enoteformat{\rightskip\z@ \leftskip\z@ \parindent=0em
+  \leavevmode\hbox{\makeenmark}}
+
+\renewcommand\enoteheading{% from https://tex.stackexchange.com/a/62425
+  \setcounter{secnumdepth}{-2}
+  \section{\notesname}
+  % \mbox{}\par\vskip-\baselineskip
+  \mbox{}\par\vspace{-1.08\baselineskip}%  \vskip-0.9\baselineskip
+  \let\@afterindentfalse\@afterindenttrue
+}
+\renewcommand{\notesname}{Package names, for texdoc}
+% \long\def\@makefntext#1{\leavevmode
+% \@makefnmark\nobreak
+% \hskip.04em\relax#1%
+% }
+
+% computer code
+\usepackage{listings}
+\lstset{basicstyle = \small\ttfamily,
+        keepspaces=true,
+        columns=fullflexible,
+        xleftmargin=10pt}
+\usepackage{upquote}
+
+% Get ISO dates
+\usepackage[style=iso]{datetime2}
+
+% Definitions for this doc
+
+% Refer to texdoc
+\newcommand{\texdoc}[1]{\footnote{\protect\pkg{#1}}}
+\let\footnote=\endnote
+
+% Name package by CTAN and texdoc name
+\newcommand{\pkglink}[2]{\href{https://ctan.org/pkg/#1}{\texttt{#2}}}
+% \newcommand{\pkg}[1]{\href{https://ctan.org/pkg/#1}{\texttt{#1}}}
+\newcommand{\pkg}[1]{\pkglink{#1}{#1}}
+
+
+% \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE} 
+%            optional * [ALTHEADING]{HEADING}
+%    Generic command to start a section.  
+%    NAME       : e.g., 'subsection'
+%    LEVEL      : a number, denoting depth of section -- e.g., chapter=1,
+%                 section = 2, etc.  A section number will be printed if
+%                 and only if LEVEL < or = the value of the secnumdepth
+%                 counter.
+%    INDENT     : Indentation of heading from left margin
+%    BEFORESKIP : Absolute value = skip to leave above the heading.  
+%                 If negative, then paragraph indent of text following 
+%                 heading is suppressed.
+%    AFTERSKIP  : if positive, then skip to leave below heading,
+%                       else - skip to leave to right of run-in heading.
+%    STYLE      : commands to set style
+%  If '*' missing, then increments the counter.  If it is present, then
+%  there should be no [ALTHEADING] argument.  A sectioning command
+%  is normally defined to \@startsection + its first six arguments.
+
+% \makeatletter
+% \def\section{\@startsection {section}{1}{\z@}{-3ex plus -.45ex minus 
+%     -.20ex}{4.75ex plus .45ex minus .20ex}{\centering\Large\bf}}
+% \def\subsection{\@startsection {subsection}{2}{\z@}{-2.5ex plus -.15ex minus 
+%     -.10ex}{.80ex plus .1ex}{\centering\large\bf}}
+% \def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-.85ex plus -.15ex minus 
+%    -.05ex}{-.75em}{\normalsize\sc}}
+% \makeatother
+
+% \newcommand{\program}[1]{\texttt{#1}}
+% \newcommand{\package}[1]{\textit{#1}}
+% Used for backslash
+\newcommand\SLASH{\char`\\}
+% Last thing before the document: define the \XeTeX logo (stolen from
+% TUGboat).  This requires reflecting the first E, hence we complain if
+% the graphics package is not present.  (For plain documents, this can
+% be loaded via Eplain.)  Also, at Barbara's suggestion, if the current
+% font is slanted, we rotate by 180 instead of reflecting so there is at
+% least a chance to look ok.
+% 
+%    \begin{macrocode}
+% \def\tubreflect#1{%
+%   \ifx\reflectbox\relax
+%     \errmessage{A graphics package must be loaded for \string\XeTeX}%
+%   \else
+%     \ifdim \fontdimen1\font>0pt
+%       \raise 1.35ex \hbox{\kern.1em\rotatebox{180}{#1}}\kern-.1em
+%     \else
+%       \reflectbox{#1}%
+%     \fi
+%   \fi
+% }
+% \def\tubhideheight#1{\setbox0=\hbox{#1}\ht0=0pt \dp0=0pt \box0 }
+% \DeclareRobustCommand\Xe[1]{\leavevmode
+%   \tubhideheight{\hbox{X%
+%     \setbox0=\hbox{\TeX}\setbox1=\hbox{E}%
+%     \lower\dp0\hbox{\raise\dp1\hbox{\kern-.125em\tubreflect{E}}}%
+%     \kern-.1667em #1}}}
+% \newcommand{\xetex}{\Xe\TeX}
+% \newcommand{\pdftex}{pdf\TeX}
+% \newcommand{\luatex}{Lua\TeX}
+% \newcommand{\texworks}{\TeX{}works}
+
+
+
+% Logos and acronyms, some of them to match TUGboat commands
+% \RequirePackage{mflogo} % for MetaPost \MP
+ 
+% \newcommand\pdfLaTeX{pdf\LaTeX}
+% \newcommand\PDFLaTeX{\pdfLaTeX}
+% \newcommand\LuaLaTeX{Lua\LaTeX}
+
+% Stuff from ltugboat.cls
+\def\smc{\sc}
+\def\ninepoint{\small}
+\DeclareRobustCommand{\SMC}{%
+  \ifx\@currsize\normalsize\small\else
+   \ifx\@currsize\small\footnotesize\else
+    \ifx\@currsize\footnotesize\scriptsize\else
+     \ifx\@currsize\large\normalsize\else
+      \ifx\@currsize\Large\large\else
+       \ifx\@currsize\LARGE\Large\else
+        \ifx\@currsize\scriptsize\tiny\else
+         \ifx\@currsize\tiny\tiny\else
+          \ifx\@currsize\huge\LARGE\else
+           \ifx\@currsize\Huge\huge\else
+            \small\SMC@unknown@warning
+ \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+}
+\newcommand{\SMC@unknown@warning}{\TBWarning{\string\SMC: nonstandard
+    text font size command -- using \string\small}}
+\newcommand{\textSMC}[1]{{\SMC #1}}
+\newcommand{\acro}[1]{\textSMC{#1}\@}
+
+\def\tubreflect#1{%
+  \@ifundefined{reflectbox}{%
+    \TBerror{A graphics package must be loaded for \string\XeTeX}%
+  }{%
+    \ifdim \fontdimen1\font>0pt
+      \raise 1.75ex \hbox{\kern.1em\rotatebox{180}{#1}}\kern-.1em
+    \else
+      \reflectbox{#1}%
+    \fi
+  }%
+}
+\def\tubhideheight#1{\setbox0=\hbox{#1}\ht0=0pt \dp0=0pt \box0 }
+\def\XekernbeforeE{-.125em}
+\def\XekernafterE{-.1667em}
+\DeclareRobustCommand{\Xe}{\leavevmode
+  \tubhideheight{\hbox{X%
+    \setbox0=\hbox{\TeX}\setbox1=\hbox{E}%
+    \lower\dp0\hbox{\raise\dp1\hbox{\kern\XekernbeforeE\tubreflect{E}}}%
+    \kern\XekernafterE}}}
+\def\XeTeX{\Xe\TeX}
+\def\XeLaTeX{\Xe{\kern.11em \LaTeX}}
+\def\LuaTeX{Lua\TeX}
+\def\pdfTeX{pdf\TeX}
+
+\def\Bib{%
+  \ifdim \fontdimen1\font>0pt
+     B{\SMC\SMC IB}%
+  \else
+     B\textsc{ib}%
+  \fi
+}
+\def\BibLaTeX{\Bib\kern.02em \LaTeX}
+\def\BibTeX{\Bib\kern-.08em \TeX}
+
+\newcommand{\PDF}{\acro{PDF}}
+\newcommand{\CTAN}{\acro{CTAN}}
+\newcommand{\URL}{\acro{URL}}
+\newcommand{\TikZ}{Ti{\textit k}Z}  % from TUB
+\newcommand{\Asymptote}{Asymptote} % the manual uses typewriter
+\newcommand{\gnuplot}{Gnuplot} % the FAQ says lower case first letter
+
+% Style I chopped out of ltugboat.cls
+\usepackage{dash}
+
+
+\newcommand{\program}[1]{\texttt{#1}}
+\newcommand{\package}[1]{#1}
+% stubs
+% \newcommand{\texdoc}[1]{\relax}
+
+% Give paras just a bit of room
+% \setlength{\parskip}{0.45ex}
+
+\pagestyle{empty}

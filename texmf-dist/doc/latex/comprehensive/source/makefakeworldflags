@@ -1,0 +1,68 @@
+#! /usr/bin/env perl
+
+##########################################
+# Patch the worldflags package to reduce #
+# conflicts with other packages          #
+#                                        #
+# By Scott Pakin <scott.clsl@pakin.org>  #
+##########################################
+
+use warnings;
+use strict;
+
+# ------------------ #
+# fakeworldflags.sty #
+# ------------------ #
+
+# Prepare to modify the worldflags.sty file into fakeworldflags.sty.
+my $styname = `kpsewhich worldflags.sty`;
+chomp $styname;
+die "${0}: Failed to find worldflags.sty\n" if !$styname;
+open(STY_IN, "<", $styname) || die "${0}: open failed ($!)\n";
+open(STY_OUT, ">", "fakeworldflags.sty") || die "${0}: open failed ($!)\n";
+
+# Output some header boilerplate.
+print STY_OUT "\%" x 43, "\n";
+print STY_OUT "\% This is a generated file.  DO NOT EDIT. \%\n";
+print STY_OUT "\%" x 43, "\n";
+print STY_OUT "\n";
+
+# Apply a prefix to each of \b, \h, and \ifgrid.
+foreach my $ln (<STY_IN>) {
+    $ln =~ s/\\([bh])\b/\\wflags\@$1/g;
+    $ln =~ s/\\ifgrid\b/\\ifwflags\@grid/g;
+    $ln =~ s/\\grid(true|false)\b/\\wflags\@grid$1/g;
+    print STY_OUT $ln;
+}
+
+# Finish the fakeworldflags.sty file.
+close STY_OUT or die "${0}: close failed ($!)\n";
+close STY_IN or die "${0}: close failed ($!)\n";
+
+# ---------------- #
+# worldflag_GY.tex #
+# ---------------- #
+
+# Prepare to modify the worldflag_GY.tex file into the current directory.
+unlink "worldflag_GY.tex";  # Delete any existing version of the file.
+my $texname = `kpsewhich worldflag_GY.tex`;
+chomp $texname;
+die "${0}: Failed to find worldflag_GY.tex\n" if !$texname;
+open(TEX_IN, "<", $texname) || die "${0}: open failed ($!)\n";
+open(TEX_OUT, ">", "worldflag_GY.tex") || die "${0}: open failed ($!)\n";
+
+# Output some header boilerplate.
+print TEX_OUT "\%" x 43, "\n";
+print TEX_OUT "\% This is a generated file.  DO NOT EDIT. \%\n";
+print TEX_OUT "\%" x 43, "\n";
+print TEX_OUT "\n";
+
+# Apply a prefix to \d.
+foreach my $ln (<TEX_IN>) {
+    $ln =~ s/\\d\b/\\wflagsD/g;
+    print TEX_OUT $ln;
+}
+
+# Finish the worldflag_GY.tex file.
+close TEX_OUT or die "${0}: close failed ($!)\n";
+close TEX_IN or die "${0}: close failed ($!)\n";

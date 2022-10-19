@@ -1,0 +1,197 @@
+%# -*- coding: utf-8 -*-
+\ifx\epTeXinputencoding\undefined\else % defined in e-pTeX (> TL2016)
+  \epTeXinputencoding utf8    % ensure utf-8 encoding for platex
+\fi
+
+\documentclass[a4paper]{jsarticle}
+\usepackage{doc}
+\xspcode"5C=3  % \
+\xspcode"3C=3  % <
+\xspcode"3E=3  % >
+\usepackage{plautopatch}% load this here to make \GetFileInfo work
+\GetFileInfo{plautopatch.sty}
+\title{Package \textsf{plautopatch} \fileversion}
+\author{Hironobu Yamashita}
+\date{\filedate}
+\begin{document}
+
+\maketitle
+
+日本の\pLaTeX/\upLaTeX{}フォーマットや専用パッケージが、
+これらを知らない\LaTeX{}パッケージ（しばしば海外で作られた
+汎用のもの）と衝突することがあります。
+最悪の場合にはエラーが出たり、誤った出力が得られたり
+することがあります。
+
+この\textsf{plautopatch}の目的は、こうした非互換を意識せずに
+済むようにすることです。具体的には、\pLaTeX/\upLaTeX{}と
+衝突するパッケージが使われた場合に、その衝突を解消するパッチを
+提供するパッケージを必要に応じて自動的に読み込みます。
+こうすることで、ソースコードを簡潔にできるだけでなく、
+\pLaTeX/\upLaTeX{}で動作するソースと通常の\LaTeX{}ソースの
+見た目を近づけることができます。
+
+このパッケージはGitHubで開発しています。
+\begin{verbatim}
+    https://github.com/aminophen/plautopatch
+\end{verbatim}
+
+\section*{動作条件}
+
+\LaTeXe~2020-10-01以降の場合は、
+カーネルが提供するフックシステムの
+\verb+\AddToHook{package/before/...}+及び
+\verb+\AddToHook{package/after/...}+を利用します。
+\LaTeXe{}が古い場合は、
+\textsf{filehook}パッケージ（Martin Scharrer氏の作）に依存します。
+
+\section*{使い方}
+
+このパッケージを\LaTeX{}ソースの冒頭で読み込みます。
+このために、\verb+\RequirePackage{plautopatch}+を
+\verb+\documentclass+や他のコマンドよりも\emph{前}に
+読み込むことをお勧めします
+（クラスファイルなどが問題のあるパッケージを読み込む可能性もあるため）。
+
+例を示します。
+\begin{verbatim}
+  %\RequirePackage{plautopatch}
+  \documentclass{tarticle}% 縦組クラス（plext使用）
+  \usepackage{array}% plextと非互換
+  \begin{document}
+  ...
+  \end{document}
+\end{verbatim}
+上記の例では、
+\textsf{tarticle}クラスが内部で読み込む\textsf{plext}パッケージと、
+ソース中で\verb+\usepackage+している\textsf{array}パッケージが
+衝突してエラーになる場合があります。しかし、冒頭で
+\verb+\RequirePackage{plautopatch}+とだけ書いておけば、
+\textsf{array}パッケージの時点で\textsf{plextarray}パッケージが
+追加で読み込まれるため、問題が解消します。
+このように自動追加されたパッケージは、\verb+\end{document}+の
+時点で次のように一覧として表示されます（複数の場合は
+コンマと空白で区切ったリストになります）。
+\begin{verbatim}
+***** List of packages loaded by `plautopatch': *****
+ plextarray.
+*****************************************************
+\end{verbatim}
+
+\section*{現在対応しているパッケージの一覧}
+
+\def\ITEMoTo#1 (#2) -> #3 (#4){%
+  \item \textsf{#1} (\textsf{#2})\\
+    $\rightarrow$ \textsf{#3} (\textsf{#4})}
+\def\ITEMoTx#1 (#2) -> #3 {%
+  \item \textsf{#1} (\textsf{#2})\\
+    $\rightarrow$ \textsf{#3} }
+\def\ITEMxTo#1      -> #2 (#3){%
+  \item \textsf{#1}\\
+    $\rightarrow$ \textsf{#2} (\textsf{#3})}
+\def\ITEMxTx#1      -> #2 {%
+  \item \textsf{#1}\\
+    $\rightarrow$ \textsf{#2} }
+\def\ITEMooTo#1 (#2) + #3 (#4) -> #5 (#6){%
+  \item \textsf{#1} (\textsf{#2}) + \textsf{#3} (\textsf{#4})\\
+    $\rightarrow$ \textsf{#5} (\textsf{#6})}
+\def\ITEMxoTo#1      + #2 (#3) -> #4 (#5){%
+  \item \textsf{#1}               + \textsf{#2} (\textsf{#3})\\
+    $\rightarrow$ \textsf{#4} (\textsf{#5})}
+\def\ITEMxoTx#1      + #2 (#3) -> #4 {%
+  \item \textsf{#1}               + \textsf{#2} (\textsf{#3})\\
+    $\rightarrow$ \textsf{#4} }
+
+凡例：
+\begin{itemize}
+\item \texttt{<元のパッケージ>} (\texttt{<元が含まれるバンドル名>})\\
+  \texttt{<パッチのパッケージ>} (\texttt{<パッチが含まれるバンドル名>})
+\end{itemize}
+
+現在のバージョン (\filedate\space\fileversion) がサポートしているのは
+下記のパッケージです。
+\begin{itemize}
+\ITEMoTo  doc (latex) -> pldocverb (platex-tools)
+\ITEMoTo  tracefnt (latex) -> ptrace/uptrace (platex/uplatex)
+\ITEMoTo  fltrace (latex) -> pfltrace (platex)
+\ITEMoTo  array (latex-tools) -> plarray (platex-tools)
+\ITEMooTo array (latex-tools) + plext (platex) -> plextarray (platex-tools)
+\ITEMooTo delarray (latex-tools) + plext (platex) -> plextdelarray (platex-tools)
+\ITEMxoTo colortbl + plext (platex) -> plextcolortbl (platex-tools)
+\ITEMxTx  arydshln -> plarydshln (maintained here!)
+\ITEMxoTx arydshln + plext (platex) -> plextarydshln (maintained here!)
+\ITEMxTx  siunitx -> plsiunitx (maintained here!)
+\ITEMxTx  collcell -> plcollcell (maintained here!)
+\ITEMoTo  everysel (ms) -> pxeverysel (platex-tools)
+\ITEMoTo  everyshi (ms) -> pxeveryshi (platex-tools)
+\ITEMoTo  atbegshi (oberdiek) -> pxatbegshi (platex-tools)
+\ITEMoTo  ftnright (latex-tools) -> pxftnright (platex-tools)
+\ITEMoTo  multicol (latex-tools) -> pxmulticol (platex-tools)
+\ITEMoTo  xspace (latex-tools) -> pxxspace (platex-tools)
+\ITEMxTo  textpos -> pxtextpos (gentombow)
+\ITEMxTo  eso-pic -> pxesopic (gentombow)
+\ITEMxTo  pdfpages -> pxpdfpages (gentombow)
+\ITEMoTo  stfloats (sttools) -> pxstfloats (pxsttools)
+\ITEMxTx  hyperref -> pxjahyper (by Takayuki YATO)
+\ITEMoTx  pgfrcs (pgf) -> pxpgfrcs (maintained here!)
+\ITEMoTx  pgfcore (pgf) -> pxpgfmark (by Takayuki YATO)
+\end{itemize}
+もちろん、このリストは随時、追加・削除・置き換えていく予定です。
+互換性の問題や追加したいパッケージがある場合はご一報ください。
+
+\section*{特定のパッケージを除外したい場合}
+
+デフォルトでは、上記のリストに登録されている\texttt{<元のパッケージ>}が
+使われたことを検出すると、全て自動的にパッチを読み込みます。
+しかし、時にはこれが逆効果となり、問題が起きる可能性は否定できません。
+そのような場合は
+\begin{verbatim}
+    \plautopatchdisable{<元のパッケージ>}
+\end{verbatim}
+と書くことで、そのパッケージを検出対象から除外します。複数ある場合は
+\begin{verbatim}
+    \plautopatchdisable{<元のパッケージ1>,<元のパッケージ2>}
+\end{verbatim}
+のようにコンマで区切っていくつでも除外できます。
+
+\section*{パッケージ特有の注意}
+
+\begin{itemize}
+  \item \textsf{hyperref}パッケージを使用する場合、パッチを提供する
+    \textsf{pxjahyper}パッケージが\textsf{hyperref}の\emph{直後}に
+    自動的に読み込まれます。
+    もし\textsf{pxjahyper}パッケージのオプションが必要な場合は、
+    \textsf{hyperref}より前に
+    \verb+\PassOptionsToPackage{...}{pxjahyper}+
+    と書くことでオプション衝突のエラーを避けてください（とはいっても、
+    \textsf{pxjahyper}はデフォルトの設定でほとんどの場合に
+    完璧に動作するため、ほとんど必要ないでしょう）。
+\end{itemize}
+
+\section*{変更履歴}
+
+\begin{itemize}
+  \item 2018/08/21 v0.2  最初のCTANリリース版
+  \item 2018/08/22 v0.3  元パッケージ検出の改良
+  \item 2018/09/21 v0.5  \textsf{colortbl}と\textsf{pgf}もサポート
+  \item 2018/10/02 v0.6  \textsf{arydshln}のサポート
+  \item 2018/10/27 v0.8  \textsf{everysel}サポートの改良
+  \item 2018/11/03 v0.9  \textsf{siunitx}のサポート
+  \item 2018/11/25 v0.9b \textsf{multicol}と\textsf{doc}のサポート
+  \item 2019/06/06 v0.9c \textsf{siunitx}のパッチ改良
+  \item 2019/09/05 v0.9d \textsf{xspace}と\textsf{stfloats}のサポート
+  \item 2020/02/25 v0.9e \textsf{textpos}のサポート
+  \item 2020/05/05 v0.9f \textsf{collcell}のサポート
+  \item 2020/05/25 v0.9g \textsf{pxjahyper}の自動読込
+  \item 2020/09/13 v0.9h \LaTeXe~2020-10-01では\textsf{filehook}非依存に
+  \item 2020/09/25 v0.9i \textsf{pxeveryshi}と\textsf{pxatbegshi}を不要に（\LaTeXe~2020-10-01対応）
+  \item 2020/09/27 v0.9j \textsf{eso-pic}のサポート（要\LaTeXe~2020-10-01）
+  \item 2020/10/14 v0.9k トンボ関連パッチを\textsf{gentombow}へ移動
+  \item 2020/10/21 v0.9l \verb+\plautopatchdisable+が機能しなかったバグを修正
+  \item 2020/11/26 v0.9m \textsf{pgf}最新版に追随
+  \item 2021/02/13 v0.9n \textsf{pxeverysel}を不要に（\LaTeXe{}開発版対応）
+  \item 2021/05/15 v0.9o \textsf{pxjahyper}の読込を遅延させない
+  \item 2021/05/31 v0.9p \LaTeXe~2021-06-01への準備
+\end{itemize}
+
+\end{document}

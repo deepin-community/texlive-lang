@@ -1,0 +1,472 @@
+% alphabeta-doc: Documentation and tests for alphabeta.sty
+% ********************************************************
+%
+% :Copyright: © 2010, 2015 Günter Milde
+% :Licence:   This work may be distributed and/or modified under the
+%             conditions of the `LaTeX Project Public License`_, either
+%             version 1.3 of this license or any later version.
+%
+% This LaTeX document can be compiled with 8-bit TeX (latex or pdflatex),
+% XeTeX (xelatex), or LuaTeX (lualatex).
+% As it contains tests for the different limitations, there will be warnings
+% in the log, which can be safely ignored.
+
+\documentclass{article}
+
+\usepackage[unicode,colorlinks=true,linkcolor=blue]{hyperref}
+% \usepackage{bookmark}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,pdfencoding=auto}
+% \usepackage{parskip}
+\usepackage{amssymb, amsmath}
+\frenchspacing
+
+\ifdefined \UnicodeEncodingName % set by LaTeX for Unicode-aware engines
+  \ifdefined\XeTeXrevision
+    \newcommand{\engine}{XeTeX}
+  \fi
+  \ifdefined\luatexversion
+    \newcommand{\engine}{LuaTeX}
+  \fi
+  % Setup for Unicode fonts (Xe-/LuaTeX)
+  \usepackage[no-math,tuenc]{fontspec}
+  \setmainfont{Linux Libertine O}
+  \setsansfont{Linux Biolinum O}
+  \setmonofont{Liberation Mono}[Scale=MatchLowercase]
+  \usepackage[libertine,slantedGreek]{newtxmath}
+  % \usepackage{unicode-math} % package conflict
+  \newcommand{\fontset}{fontspec with Unicode fonts}
+\else
+  \newcommand{\engine}{8-bit TeX}
+  \usepackage[utf8]{inputenc}
+  \DeclareUnicodeCharacter{03DE}{\textKoppa} % in LGR mapped to \textkoppa
+  \usepackage[LGR,T1]{fontenc}
+  \usepackage{textcomp}
+  \usepackage{lmodern}
+  % \usepackage{libertine}
+  % \usepackage{gfsdidot}
+  % \usepackage{kerkis}
+  % \usepackage{newtxtext,newtxmath}
+  % \usepackage{substitutefont}
+  % \substitutefont{LGR}{\rmdefault}{artemisia}
+  \usepackage{isomath}
+  \newcommand{\fontset}{fontenc with TeX fonts}
+\fi
+
+% load alphabeta after math setup and encoding setup!
+% \usepackage{alphabeta}[2015/08/08]
+\usepackage[normalize-symbols]{alphabeta}[2015/08/08]
+
+% Fallback macros:
+
+\newcommand*{\missing}{\ensuremath{\oslash}}
+% varstigma only defined with 8-bit LGR fonts
+\ProvideTextCommandDefault{\textvarstigma}{\missing}
+% varkappa, only defined with newtxmath
+\providecommand*{\varkappa}{\missing}
+% varbeta and varTheta only defined with unicode-math
+\providecommand*{\varbeta}{\missing}
+
+% print current font encoding:
+\makeatletter
+\newcommand{\currentEncoding}{\f@encoding}
+\makeatother
+
+\begin{document}
+
+\title{The \emph{alphabeta} package}
+\author{Günter Milde}
+\date{2020/10/30}
+\maketitle
+
+\begin{abstract}\noindent
+The \emph{alphabeta} package makes the standard macros for Greek letters in
+mathematical mode also available in text mode. This way, you can input Greek
+letters ``by name'' everywhere in the document. The mode determines whether
+the characters are taken from the text or math font.
+
+With 8-bit TeX and
+\emph{\href{http://www.ctan.org/pkg/greek-inputenc}{greek-inputenc}},
+literal Unicode charactes can also be used in mathematical mode.
+\footnote{
+  This document was compiled using the \href{https://ctan.org/pkg/encguide}%
+  {font encoding} \encodingdefault{}
+  \ifdefined \UTFencname % defined by fontspec
+     (Unicode fonts).
+     For a version using 8-bit fonts, see
+     \href{alphabeta-doc.pdf}{alphabeta-doc.pdf}.
+  \else
+     (8-bit fonts).
+     For a version using Unicode fonts, see
+     \href{alphabeta-tu.pdf}{alphabeta-tu.pdf}.
+  \fi
+}
+\end{abstract}
+
+% \tableofcontents
+
+\section{Requirements and Conflicts}
+
+The \emph{alphabeta} package depends on
+\emph{\href{textalpha-doc.pdf}{textalpha}} (both are part of
+\emph{\href{http://www.ctan.org/pkg/greek-fontenc}{greek-fontenc}}). It can
+be used under 8-bit TeX as well as XeTeX/LuaTeX (this document is typeset
+with \engine{} and \fontset). Depending on the converter and fonts, different
+\hyperref[sec:limitations]{limitations} apply.
+
+The package conflicts with
+\href{http://www.ctan.org/pkg/unicode-math}{\emph{unicode-math}}.
+
+It also fails, if the \texttt{utf8x} input encoding is selected (interface
+to the \href{http://www.ctan.org/pkg/ucs}{\emph{ucs}} package using a
+non-compatible definition of \verb+\DeclareUnicodeCharacter+).
+
+\section{Usage}
+
+Load this package in the preamble of your document (after font and math
+setup) with
+\begin{verbatim}
+      \usepackage{alphabeta}
+\end{verbatim}
+%
+Now you can write a single Greek symbol (like \Psi{} or \mu{}) or
+a \lambda\omicron\gamma\omicron\varsigma{} in non-Greek text as well as
+ISO-conforming formulas with upright symbols for constants
+like $A = \text{\pi} r^2$ (instead of $A = \pi r^2$).%
+\footnote{The
+  \href{http://mirrors.ctan.org/macros/latex/contrib/isomath/isomath.html}%
+  {\emph{isomath} documentation} describes more alternatives for upright
+  Greek symbols in math mode.}
+
+Just like Latin letters, the Greek counterparts are by default italic in
+math mode%
+\footnote{Capital Greek letters are upright in TeX unless a package selects
+the ``ISO'' math-style. See the
+\href{http://mirrors.ctan.org/macros/latex/contrib/isomath/isomath.html}%
+{\emph{isomath} documentation} for a detailled discussion of math-styles.}
+and upright in text:
+
+\begin{quote}
+  Text: L \Gamma{} l \gamma,
+  mathematics: $ L \ \Gamma \ l \ \gamma $
+\end{quote}
+%
+See the source of this document \url{alphabeta-doc.tex} for a setup and
+usage example.
+
+
+\subsection{options}
+
+Package options are passed to the \href{textalpha-doc.pdf}{\emph{textalpha}}
+package. Example call with options:
+
+\begin{verbatim}
+      \usepackage[normalize-symbols,keep-semicolon]{alphabeta}
+\end{verbatim}
+
+\texttt{normalize-symbols} merges ``letter'' and ``symbol`` variants of
+some Greek letters to the ``letter'' character:
+\footnote{The normalize-symbols option was added in version 0.13 (2015-08-03).
+  Unicode input of the symbol variants requires at least version~1.6
+  (2015-08-05) of
+  \emph{\href{http://www.ctan.org/pkg/greek-inputenc}{greek-inputenc}}.}
+Without this option, the symbol variant characters cannot be used in text,
+because they are not supported by 8-bit Greek fonts (LGR encoding).
+The \texttt{normalize-symbols} option is ignored, if you compile the
+document with XeTeX or LuaTeX using Unicode fonts.
+\textbf{Attention}: Be careful in cases where the distinction between the
+symbol variants may be important (e.g. in a mathematical or scientific
+context). Use XeTeX/LuaTeX with Unicode fonts or the respective characters
+in mathematical mode (e.g. $\pi$ vs. $\varpi$).
+
+The option \texttt{keep-semicolon} prevents conversion of the
+semicolon to an \emph{ano teleia} in 8-bit TeX
+(see \emph{\href{textalpha-doc.pdf}{textalpha-doc}}).
+
+\subsection{symbol variants}
+
+Mathematical notation uses variant shapes of some Greek letters as
+additional symbols. The variations have no syntactic meaning in Greek text
+and text fonts may use the variant shapes in place of the “regular” ones as
+a stylistic choice.
+
+Unicode defines separate code points for the symbol variants. TeX supports
+some of the variant shape symbols in mathematical mode, but its concept of
+“standard” vs. “variant” symbols differs from the distinction between
+“GREEK LETTER ...” vs. “GREEK ... SYMBOL” in the Unicode standard.
+
+The \emph{alphabeta} package defines generic macros for these variants that
+are short forms of the set defined in \texttt{tuenc-greek.def}
+(cf. \href{test-tuenc-greek.pdf}{test-tuenc-greek}):
+\begin{quote}
+  \verb|\<name>| selects the Unicode GREEK LETTER ... variant,
+
+  \verb|\<name>symbol| selects the Unicode
+     GREEK ... SYMBOL variant,
+
+  \verb|\var<name>| selects the variant
+    shape according to TeX' mathematical mode
+\end{quote}
+See Table \ref{tab:symbol-variant-macros} for the full list.
+
+\section{Limitations \label{sec:limitations}}
+
+With 8-bit TeX, the limitations described in the
+\href{textalpha-doc.pdf}{textalpha documentation} apply. See also the tests
+in section \hyperref[sec:8-bit-limitations]{8 bit limitations}.
+These limitations are lifted, if the text language is switched to ``greek''
+with Babel, the text part is wrapped in \verb+\ensuregreek+, or the
+document is compiled with XeTeX/LuaTeX.
+
+With XeTeX/LuaTeX and Unicode fonts, literal Unicode characters cannot be
+used in formulas (the log file reports missing characters) This is a generic
+TeX limitation which \emph{alphabeta} overcomes if used under 8-bit TeX.
+Under XeTeX/LuaTeX it may be lifted using the
+\href{http://www.ctan.org/pkg/unicode-math}{\emph{unicode-math}} package.
+However, \emph{unicode-math} conflicts with \emph{alphabeta}.
+
+
+\section{Tests and examples}
+
+\subsection{Greek alphabet}
+
+Greek letters via generic ``name'' macros without language/font-encoding
+switch (active font encoding \encodingdefault):
+
+\begin{quote}
+  \Alpha{} \Beta{} \Gamma{} \Delta{} \Epsilon{} \Zeta{} \Eta{} \Theta{}
+  \Iota{} \Kappa{} \Lambda{} \Mu{} \Nu{} \Xi{} \Omicron{} \Pi{} \Rho{}
+  \Sigma{} \Tau{} \Upsilon{} \Phi{} \Chi{} \Psi{} \Omega{}
+  \\
+  \alpha{} \beta{} \gamma{} \delta{} \epsilon{} \zeta{} \eta{} \theta{}
+  \iota{} \kappa{} \lambda{} \mu{} \nu{} \xi{} \omicron{} \pi{} \rho{}
+  \sigma{} \varsigma{} \tau{} \upsilon{} \phi{} \chi{} \psi{} \omega{}
+  \\
+  \digamma{} \Digamma{} \stigma{} \varstigma{}%
+    \footnote{There is no separate Unicode code point for a stigma variant
+      symbol, \texttt{\textbackslash varstigma} is not defined with
+      Xe/LuaTeX and similar to \texttt{\textbackslash stigma} in some fonts.}
+  \koppa{} \Koppa{}%
+    \footnote{In LGR, there is no separate code point for Koppa as
+      typographical practice normally does not observe a
+      contrast between uppercase and lowercase forms for numeric koppa.}
+      % https://en.wikipedia.org/wiki/Koppa_(letter)
+  \qoppa{} \Qoppa{} \Stigma{} \Sampi{} \sampi{}
+\end{quote}
+%
+Greek letters via Unicode (active font encoding \encodingdefault):
+
+\begin{quote}
+  Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω\\
+  α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ ς τ υ φ χ ψ ω\\
+  ϝ Ϝ ϛ ϟ Ϟ ϙ Ϙ Ϛ Ϡ ϡ
+\end{quote}
+
+\subsection{Diacritics}
+
+Accent macros are set up for use with the generic macros by definition of
+``TextComposite'' commands.
+
+Diacritics (except the dialytika) should placed
+before capital letters and dropped with MakeUppercase:
+
+\begin{quote}
+\ensuregreek{
+\<{\alpha} \>{\epsilon} \"'{\iota} \>`{\eta}
+\'<{\omicron} \~<{\upsilon} \~>{\omega}
+\\
+\<{\Alpha} \>{\Epsilon} \'{\Iota} \>`{\Eta}
+\'<{\Omicron} \~<{\Upsilon} \~>{\Omega}
+\\
+\MakeUppercase{%
+ \<{\alpha} \>{\epsilon} \"'{\iota} \>`\eta{}
+ \'<{\omicron} \~<{\upsilon} \~>{\omega}
+}}
+\end{quote}
+
+
+\subsection{normalize-symbols}
+
+The \texttt{normalize-symbols} option merges ``letters'' and ``symbol``
+variants of some Greek letters to the ``letter'' character. It is ignored,
+if the document uses Unicode fonts and is compiled with XeTeX or LuaTeX.
+(This document is compiled using \engine.)
+\begin{quote}
+  The source of this quote uses both variants for beta (β|ϐ),
+  epsilon (ε|ϵ), phi (φ|ϕ), kappa (κ|ϰ), pi (π|ϖ), rho (ρ|ϱ), theta (θ|ϑ),
+  and Theta (Θ|ϴ) in the LaTeX source.%
+\end{quote}
+
+
+\subsection{\ensuregreek{%
+    Ἑλληνικά (\<\Epsilon\lambda\lambda\eta\nu\iota\kappa\'\alpha{})}
+  in PDF strings}
+
+With the alphabeta package, you get Greek letters in both, the document body
+and PDF metadata generated by hyperref if the input uses Unicode literals or
+macros. Wrapping in \verb+\ensuregreek+ ensures the right placement of the
+accents and breathings (before, not above capital letters). With LICR input
+(accent macros as well as symbol macros), non-standard diacritics are
+missing in the PDF data, as hyperref's PU encoding currently does not
+support polytonic Greek. (Here, the dasia is dropped at the start of the
+word in parentheses in the PDF toc. The warning ``\texttt{Glyph not defined
+in PU encoding, removing `\textbackslash<' on input line 145.}'' is written
+to the log.)
+
+
+\subsection{Greek in maths $\Gamma = \sin\alpha / \cos{\beta}$}
+
+In the main document, Greek in math mode should work as usual:
+
+\[\Gamma = \frac{\sin\alpha}{\cos{\beta}}.
+\]
+Greek letters and symbols in math input as macro:%
+\footnote{There are no math macros for Greek letters wich exist with similar
+shape in the Latin alphabet}
+\begin{align*}
+  &
+  % \Alpha{} \Beta{}
+  \Gamma{} \Delta{}
+  % \Epsilon{} \Zeta{} \Eta{}
+  \Theta{}
+  % \Iota{} \Kappa{}
+  \Lambda{}
+  % \Mu{} \Nu{}
+  \Xi{}
+  % \Omicron{}
+  \Pi{}
+  % \Rho{}
+  \Sigma{}
+  % \Tau{}
+  \Upsilon{} \Phi{}
+  % \Chi{}
+  \Psi{} \Omega{}
+\\&
+  \alpha{} \beta{} \gamma{} \delta{} \epsilon{} \zeta{} \eta{} \theta{}
+  \iota{} \kappa{} \lambda{} \mu{} \nu{} \xi{}
+  % \omicron{}
+  \pi{} \rho{}
+  \sigma{} \varsigma{} \tau{} \upsilon{} \phi{} \chi{} \psi{} \omega{}
+\\&
+  \vartheta \varphi \varpi \digamma{} \varrho \varepsilon
+\end{align*}
+%
+PDF strings do not know math mode. The content of a formula or equation is
+evaluated in text mode with non-valid commands discarded (and warnings
+written to the log). This works resonably well for simple formulas (but not,
+e.g., for super-/subscripts). With the \emph{alphabeta} package, it works
+also for Greek letters.
+
+\subsection{Greek Unicode characters in math (only under 8-bit TeX)}
+
+With the \texttt{utf8} option of \emph{inputenc} and
+\href{http://www.ctan.org/pkg/greek-inputenc}{\emph{greek-inputenc}},
+literal Greek Unicode characters are supported also in
+mathematical mode.
+
+\ifdefined\DeclareUnicodeCharacter
+  \[
+       Γ = \frac{\sin α}{\cos β}.
+  \]
+  Greek letters and symbols in math input as Unicode literals:
+  \begin{align*}
+               & Γ ΔΘΛΞΠΣΥ ΦΨ Ω \\
+                 & αβγδεζηθικλμνξπρσςτυφχψω \\
+               & ϑϕϖϝϱϵ
+  \end{align*}
+\fi
+
+This does not work with XeTeX/LuaTeX (unless in 8-bit emulation mode).
+
+The ``normal'' vs. ``variant'' shape of letters is used so that the output
+matches the Unicode reference glyph (cf. Table
+\ref{tab:symbol-variant-macros}). This corresponds to the behaviour of
+\href{http://www.ctan.org/pkg/unicode-math}{\emph{unicode-math}}.
+
+\subsection{8-bit limitations \label{sec:8-bit-limitations}}
+
+Certain limitations apply if Greek symbols are used in non-Greek context.
+
+\begin{itemize}
+
+\item Composition of diacritics (like \verb+\>\'+) fails:
+      \<{\alpha} \>{\epsilon} \"'{\iota} \>`\eta{}
+      \'<{\omicron} \~<{\upsilon} \~>{\omega}
+
+      Simple diacritics and long names (like \verb+\accdasiaoxia+) work in
+      any font encoding, however they do not select precomposed characters
+      (the difference becomes obvious if you drag-and-drop text from the PDF
+      version of this document):
+      %
+      \ensuregreek{\<'\alpha{} \accdasia\acctonos\alpha{} \accdasiaoxia\alpha{}
+      (\currentEncoding)} vs. \accdasiaoxia\alpha{} (\currentEncoding)
+
+\item MakeUppercase fails with composite diacritics in other font encodings.
+      % \MakeUppercase{%
+      %  \<\alpha{} \>\epsilon{} \'\iota{} \`\eta{} \~\upsilon{}
+      % }
+
+\item There is no kerning between Greek letters, if the font encoding does not
+      support Greek: compare \ensuregreek{\Alpha\Upsilon\Alpha{}
+      (\currentEncoding)} to \Alpha\Upsilon\Alpha{} (\currentEncoding).
+\end{itemize}
+%
+The \verb+\ensuregreek+ macro ensures that the argument is typeset with a
+font encoding supporting Greek. This keeps kerning (if the kerning pair is
+inside the argument, \ensuregreek{\Alpha\"\Upsilon\Alpha}), and allows
+combining of accent macros where pre-composed characters are selected
+(\ensuregreek{\<'\alpha}).
+Setting the corrct language for Greek quotes with the \emph{Babel} package
+additionally ensures correct hyphenation .
+
+
+\begin{table}[bp]
+  \centering
+  \begin{tabular}{lcc}
+  \hline
+  macro & text & math \\
+  \hline
+  \verb$\beta$          & \beta          & $\beta$       \\
+  \verb$\varbeta$       & \varbeta       & $\varbeta$    \\
+  \verb$\betasymbol$    & \betasymbol    & $\betasymbol$ \\
+  \hline
+  \verb$\epsilon$       & \epsilon       & $\epsilon$    \\
+  \verb$\varepsilon$    & \varepsilon    & $\varepsilon$ \\
+  \verb$\epsilonsymbol$ & \epsilonsymbol & $\epsilonsymbol$ \\
+  \hline
+  \verb$\phi$           & \phi           & $\phi$        \\
+  \verb$\varphi$        & \varphi        & $\varphi$     \\
+  \verb$\phisymbol$     & \phisymbol     & $\phisymbol$  \\
+  \hline
+  \verb$\kappa$         & \kappa         & $\kappa$      \\
+  \verb$\varkappa$      & \varkappa      & $\varkappa$   \\
+  \verb$\kappasymbol$   & \kappasymbol   & $\kappasymbol$ \\
+  \hline
+  \verb$\pi$            & \pi            & $\pi$         \\
+  \verb$\varpi$         & \varpi         & $\varpi$      \\
+  \verb$\pisymbol$      & \pisymbol      & $\pisymbol$   \\
+  \hline
+  \verb$\rho$           & \rho           & $\rho$        \\
+  \verb$\varrho$        & \varrho        & $\varrho$     \\
+  \verb$\rhosymbol$     & \rhosymbol     & $\rhosymbol$  \\
+  \hline
+  \verb$\sigma$         & \sigma         & $\sigma$      \\
+  \verb$\varsigma$      & \varsigma      & $\varsigma$   \\
+  \verb$\finalsigma$    & \finalsigma    & $\finalsigma$ \\
+  \hline
+  \verb$\theta$         & \theta         & $\theta$      \\
+  \verb$\vartheta$      & \vartheta      & $\vartheta$   \\
+  \verb$\thetasymbol$   & \thetasymbol   & $\thetasymbol$ \\
+  \hline
+  \verb$\Theta$         & \Theta         & $\Theta$      \\
+  \verb$\varTheta$      & \missing       & $\varTheta$   \\
+  \verb$\Thetasymbol$   & \Thetasymbol   & \missing      \\
+  \hline
+  \end{tabular}
+  \caption{Macros for Greek symbol variants (\missing = symbol only
+    available with additional packages).
+    With 8-bit TeX and the \texttt{normalize-symbols} option, the output for
+    both variants in text mode is the same (8-bit Greek text fonts contain
+    only one symbol variant). \label{tab:symbol-variant-macros}}
+\end{table}
+
+\end{document}

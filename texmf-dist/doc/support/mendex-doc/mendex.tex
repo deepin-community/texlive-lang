@@ -1,0 +1,771 @@
+%#!platex -kanji=utf8 mendex.tex
+% この文書は日本語で書かれています (encoding: UTF-8N)
+% エンコード指定 (since e-pTeX 20160201)
+\ifx\epTeXinputencoding\undefined\else
+  \epTeXinputencoding utf8
+\fi
+
+\documentclass[a4paper,dvipdfmx]{jsarticle}
+
+% 依存パッケージ
+\usepackage{otf}
+\usepackage{enumitem}
+\usepackage{shortvrb}
+\usepackage{newverbs}
+\usepackage[colorlinks]{hyperref}
+\usepackage{pxjahyper}
+
+% リスト設定
+\setlist[description]{font=\normalfont, style=nextline}
+\newenvironment{syntax}{\begin{quote}\small}{\end{quote}}
+
+% インラインコード用設定
+\let\xpar\par
+\MakeShortVerb{\|}
+\newverbcommand{\ParamNum}{\jMeta{整数}\quad 規定値：}{\xpar}
+\newverbcommand{\ParamChar}{\jMeta{文字}\quad 規定値：'}{'\xpar}
+\newverbcommand{\ParamString}{\jMeta{文字列}\quad 規定値："}{"\xpar}
+\xspcode`\\=3
+
+% 文書マクロ
+\newcommand{\SoftName}[1]{\textsf{#1}}
+\newcommand{\FileName}[1]{\texttt{#1}}
+\newcommand{\FileExtension}[1]{\texttt{.#1}}
+\newcommand{\Meta}[1]{$\langle$\mbox{}\textit{#1}\mbox{}$\rangle$}
+\newcommand{\jMeta}[1]{$\langle$\mbox{}\textsf{#1}\mbox{}$\rangle$}
+
+% 文書情報
+\title{\SoftName{mendex}：索引整形ツール}
+\author{アスキー・メディアワークス \and 日本語\TeX 開発コミュニティ}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\SoftName{mendex}は文書の索引を作成するコマンドラインツールです．\LaTeX により抽出された
+索引リストファイル（\FileExtension{idx}）を並べ替え，実際の索引のソースファイルの形に
+整形します．\SoftName{makeindex}と互換性があり，さらに「読み」の扱いの手間を減らすように
+特殊化されています．出力される索引の形式は，スタイルファイルに従って決定されます．また，
+辞書ファイルを与えることにより，索引中の漢字の読みが登録されます．索引の階層は3段階まで
+作成することができます．
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\section{使用法}
+
+はじめに\SoftName{mendex}の使用法を示します．
+%
+\begin{syntax}
+|mendex [-ilqrcgfEJSU]|
+|[-s| \Meta{sty}|]|
+|[-d| \Meta{dic}|]|
+|[-o| \Meta{ind}|]|
+|[-t| \Meta{log}|]|
+|[-p| \Meta{no}|]|
+|[-I| \Meta{enc}|]| \\
+\phantom{\texttt{mendex }}%
+|[--help]|
+|[--]|
+|[|\Meta{idx0} \Meta{idx1} \Meta{idx2} |...]|
+\end{syntax}
+
+\subsection{オプション}
+
+\SoftName{mendex}で利用可能なオプションは以下の通りです．
+
+\begin{description}[leftmargin=2cm]
+\item[|-i|]
+索引リストファイルが指定されている場合でも，標準入力を索引リストとして使用します．
+
+\item[|-l|]
+単語と単語の間のスペースを無視して詰め，索引のソートを文字順で行います．
+指定されなければ単語順のソートになります
+（ソート方法については後述）．
+
+\item[|-q|]
+静粛モードです．エラーおよび警告以外は標準エラー出力に出力しません．
+
+\item[|-r|]
+ページ範囲表現を無効にします．指定しないと，連続して出てくる索引については ``1--5'' のように
+ページ範囲で表現されます．
+
+\item[|-c|]
+スペースやタブといったブランクを短縮して，すべて1個の半角スペースにします．
+また，前後のブランクは削除されます．
+
+\item[|-g|]
+日本語の頭文字の区切りを「あかさた……わ」にします．
+指定しないと「あいうえ……わゐゑをん」になります．
+
+\item[|-f|]
+辞書ファイルにない漢字も強制的に出力するモードです．
+
+\item[|-s| \Meta{sty}]
+ファイル\Meta{sty}をスタイルファイルと見なします．スタイルファイルを指定しなければ，
+デフォルトの索引形式で作成します．
+
+\item[|-d| \Meta{dic}]
+ファイル\Meta{dic}を辞書ファイルと見なします．辞書ファイルは日本語の
+``\jMeta{漢字} \jMeta{読み}'' のリストで構成されます．
+
+\item[|-o| \Meta{ind}]
+ファイル\Meta{ind}を出力ファイルと見なします．指定がない場合は最初の入力ファイルの拡張子を
+\FileExtension{ind}としたもの，入力ファイルが標準入力のみであれば標準出力に出力します．
+
+\item[|-t| \Meta{log}]
+ファイル\Meta{log}をログファイルと見なします．指定がない場合は最初の入力ファイルの拡張子を
+\FileExtension{ilg}としたもの，入力ファイルが標準入力のみであれば標準エラー出力のみに
+出力されます．
+
+\item[|-p| \Meta{no}]
+\Meta{no}を索引ページの先頭ページとして指定します．また，\TeX のログファイル
+（\FileExtension{log}）を参照することにより |any|（最終ページの次のページから），
+|odd|（最終ページの次の奇数ページから），|even|（最終ページの次の偶数ページから）といった
+指定の仕方も可能です．
+
+\item[|-E|]
+入出力文字エンコーディングをEUC-JPに指定します．入力ファイル，出力ファイルともEUC-JPとして扱います．
+
+\item[|-J|]
+入出力文字エンコーディングをJIS (ISO-2022-JP)に指定します．入力ファイル，出力ファイルともJISとして扱います．
+
+\item[|-S|]
+入出力文字エンコーディングをShift\_JISに指定します．入力ファイル，出力ファイルともShift\_JISとして扱います．
+
+\item[|-U|]
+入出力文字エンコーディングをUTF-8に指定します．入力ファイル，出力ファイルともUTF-8として扱います．
+
+\item[|-I| \Meta{enc}]
+内部バッファの文字エンコーディングを\Meta{enc}に指定します．\Meta{enc}には |euc|（EUC-JP）
+または |utf8|（UTF-8）が指定可能です．このオプションが指定されていない場合のデフォルト
+値は |utf8| です\footnote{v2.6fまでは「デフォルト値が |euc| で，オプション |-U| が
+明示的に指定されている場合は |utf8| となる」という仕様でしたが，v3.0で変更しました．}．
+
+\item[|--help|]
+オプションの要約を表示します．
+
+\item[|--|]
+以降はオプション文字列と解釈しません．
+これは，ファイル名の先頭の文字が|-|であるファイルを扱う場合に有用です．
+\end{description}
+
+以上のうち，オプション |-U|, |-I|, |--help|, |--| はオリジナルのアスキー版にはなかった機能で，
+日本語\TeX 開発コミュニティによって追加されました．
+また，\SoftName{mendex} |version 3.5 [6-Jun-2021]|以降では，|-s| オプションによる
+スタイルファイルを複数指定することができます．
+同じパラメータが複数回指定された場合は，後から指定された方が有効になります．
+
+\subsection{スタイルファイル}
+
+スタイルファイルは\SoftName{makeindex}のものと上位互換です．
+形式は ``\jMeta{スタイルパラメータ} \jMeta{引数}'' のリストで構成されます．
+パラメータの記述順序は自由です．また `|%|' 以降はコメントと見なされます．
+
+以下にスタイルパラメータとそのデフォルト値の一覧を示します．
+\begin{itemize}
+ \item 文字列型は |'a'| のように単引用符で囲みます．
+ \item 文字型は |"abc"| のように二重引用符で囲みます．
+ \item 整数型は単に「1」のように10進数表記で記述します．
+\end{itemize}
+基本的には1行に1項目を記述しますが，文字列型はその値の直前や値の途中で
+改行しても構いません．
+
+\paragraph{入力ファイルスタイルパラメータ}
+
+\begin{description}[leftmargin=3.5cm]
+\item[|keyword|] \ParamString*|\\indexentry|
+処理対象とする索引エントリを引数として持つコマンド．\\
+入力ファイル（\FileExtension{idx}）に現れるエントリのうち，\SoftName{mendex}は
+|keyword| で指定された以外の項目を無視します．
+% 例：用語集用の gglo.ist は |\\glossaryentry| に変更し，|\indexentry| を無視
+
+\item[|arg\string_open|] \ParamChar|{|
+索引エントリ文字列開始を表す文字．
+
+\item[|arg\string_close|] \ParamChar|}|
+索引エントリ文字列終了を表す文字．
+
+\item[|range\string_open|] \ParamChar|(|
+ページ範囲の開始を示す文字．
+
+\item[|range\string_close|] \ParamChar|)|
+ページ範囲の終了を示す文字．
+
+\item[|level|] \ParamChar|!|
+従属レベルであることを示す文字．
+
+\item[|actual|] \ParamChar|@|
+このシンボルに続く文字列が実際の索引文字列として出力ファイルに書かれる．\\
+\SoftName{makeindex}で日本語の索引を作成しようとすると，全ての項目について
+|\index{かんじ@漢字}| のように |actual| のシンボルの前に「読み」を，
+後ろに実際に表示する索引文字列を書く必要がありました．
+\SoftName{mendex}では，辞書ファイルを用いることで，その手間を最小限にできます．
+
+\item[|encap|] \ParamChar+|+ \par
+このシンボルに続く文字列が，ページ番号に付くコマンド名として使われる．
+
+\item[|page\string_compositor|] \ParamString*|-|
+階層化されたページ番号における階層間の区切り文字．
+
+\item[|page\string_precedence|] \ParamString*|rnaRA|
+ページ番号の記法の優先順位．`|R|' および `|r|' はローマ数字，`|n|' はアラビア数字，
+`|A|' および `|a|' はアルファベットによる記法を表す．
+
+\item[|quote|] \ParamChar|"|
+\SoftName{mendex}のパラメータ文字に対するエスケープキャラクタ．
+
+\item[|escape|] \ParamChar|\\|
+一般的な文字に対するエスケープキャラクタ．
+\end{description}
+
+\paragraph{出力ファイルスタイルパラメータ}
+
+\begin{description}[leftmargin=3.5cm]
+\item[|preamble|] \ParamString*|\\begin{theindex}\n|
+出力ファイル先頭の文字列．
+
+\item[|postamble|] \ParamString*|\n\n\\end{theindex}\n|
+出力ファイル末尾の文字列．
+
+\item[|setpage\string_prefix|] \ParamString*|\n  \\setcounter{page}{|
+開始ページを設定するときの，ページ番号の前に付ける文字列．
+
+\item[|setpage\string_suffix|] \ParamString*|}\n|
+開始ページを設定するときの，ページ番号の後に付ける文字列．
+
+\item[|group\string_skip|] \ParamString*|\n\n  \\indexspace\n|
+新項目（頭文字）の前に挿入する縦スペースを表す文字列．
+
+\item[|lethead\string_prefix|] \ParamString*||
+頭文字の前に付けるコマンド文字列．
+\SoftName{makeindex}はこのパラメータを認識しません．
+
+\item[|heading\string_prefix|] \ParamString*||
+|lethead_prefix| と同じ．（\SoftName{makeindex}互換）
+
+\item[|lethead\string_suffix|] \ParamString*||
+頭文字の後に付けるコマンド文字列．
+\SoftName{makeindex}はこのパラメータを認識しません．
+
+\item[|heading\string_suffix|] \ParamString*||
+|lethead_suffix| と同じ．（\SoftName{makeindex}互換）
+
+\item[|lethead\string_flag|] \ParamNum|0|
+頭文字の出力のフラグ．|0| のとき出力しない．|0|より大きいときは英字を大文字で，
+|0|より小さいときは小文字で出力する．
+\SoftName{makeindex}はこのパラメータを認識しません．
+% 2014年以前の ind.pdf には言及されていたが，少なくとも1993年以降の makeindex の
+% ソースコードを見ると |lethead_flag| を認識しなかった．
+% |lethead_prefix| と |lethead_suffix| も同様．
+
+\item[|heading\string_flag|] \ParamNum|0|
+|lethead_flag| と同じ．\\
+\SoftName{makeindex}では |headings_flag| という名称のため，互換性がありません．
+
+\item[|item\string_0|] \ParamString*|\n  \\item |
+主エントリ間に挿入するコマンド．
+
+\item[|item\string_1|] \ParamString*|\n    \\subitem |
+サブエントリ間に挿入するコマンド．
+
+\item[|item\string_2|] \ParamString*|\n      \\subsubitem |
+サブサブエントリ間に挿入するコマンド．
+
+\item[|item\string_01|] \ParamString*|\n    \\subitem |
+主−サブエントリ間に挿入するコマンド．
+
+\item[|item\string_x1|] \ParamString*|\n    \\subitem |
+主−サブエントリ間に挿入するコマンド（主エントリにページ番号がないとき）．
+
+\item[|item\string_12|] \ParamString*|\n    \\subsubitem |
+サブ−サブサブエントリ間に挿入するコマンド．
+
+\item[|item\string_x2|] \ParamString*|\n    \\subsubitem |
+サブ−サブサブエントリ間に挿入するコマンド（サブエントリにページ番号がないとき）．
+
+\item[|delim\string_0|] \ParamString*|, |
+主エントリと最初のページ番号の間の区切り文字列．
+
+\item[|delim\string_1|] \ParamString*|, |
+サブエントリと最初のページ番号の間の区切り文字列．
+
+\item[|delim\string_2|] \ParamString*|, |
+サブサブエントリと最初のページ番号の間の区切り文字列．
+
+\item[|delim\string_n|] \ParamString*|, |
+ページ番号間の区切り文字列．どのエントリレベルにも共通．
+
+\item[|delim\string_r|] \ParamString*|--|
+ページ範囲を示すときの，ページ番号間の区切り文字列．
+
+\item[|delim\string_t|] \ParamString*||
+ページ番号のリストの終端に出力する文字列．
+
+\item[|suffix\string_2p|] \ParamString*||
+ページ番号が2ページ連続する場合に，|delim_n| と2ページ目の番号の代わりに付加する文字列．
+文字列が定義されている場合にのみ有効．
+
+\item[|suffix\string_3p|] \ParamString*||
+ページ番号が3ページ連続する場合に，|delim_r| と3ページ目の番号の代わりに付加する文字列．
+|suffix_mp| より優先される．文字列が定義されている場合にのみ有効．
+
+\item[|suffix\string_mp|] \ParamString*||
+ページ番号が3ページまたはそれ以上連続する場合に，|delim_r| と末尾のページ番号の代わりに
+付加する文字列．
+文字列が定義されている場合にのみ有効．
+
+\item[|encap\string_prefix|] \ParamString*|\\|
+ページ番号にコマンドを付けるときの，コマンド名の前に付ける文字列．
+
+\item[|encap\string_infix|] \ParamString*|{|
+ページ番号にコマンドを付けるときの，ページ番号の前に付ける文字列．
+
+\item[|encap\string_suffix|] \ParamString*|}|
+ページ番号にコマンドを付けるときの，ページ番号の後に付ける文字列．
+
+\item[|line\string_max|] \ParamNum|72|
+1行の最大文字数．それを超えると折り返す．
+
+\item[|indent\string_space|] \ParamString*||
+折り返した行の頭に挿入するスペース．
+
+\item[|indent\string_length|] \ParamNum|16|
+折り返した行の頭に挿入されるスペースの長さ．
+
+\item[|symhead\string_positive|] \ParamString*|Symbols|
+|lethead_flag| または |heading_flag| が正数の場合に数字・記号の頭文字として出力する文字列．
+
+\item[|symhead\string_negative|] \ParamString*|symbols|
+|lethead_flag| または |heading_flag| が負数の場合に数字・記号の頭文字として出力する文字列．
+
+\item[|symbol|] \ParamString*||
+|symbol_flag| が|0|でない場合に，数字・記号の頭文字として出力する文字列．文字列が定義されて
+いれば，|symhead_positive| および |symhead_negative| より優先される（\SoftName{mendex}専用）．
+
+\item[|symbol\string_flag|] \ParamNum|1|
+数字・記号の頭文字の出力フラグ．|0|のとき出力しない（\SoftName{mendex}専用）．
+
+\item[|letter\string_head|] \ParamNum|1|
+日本語の頭文字の出力のフラグ．|1|のときカタカナ，|2|のときひらがなで出力する
+（\SoftName{mendex}専用）．
+
+\item[|priority|] \ParamNum|0|
+英字と日本語との混在した索引語のソート方法についてのフラグ．|0|でなければ英字と日本語との
+間に半角スペースを入れた状態でソートする（\SoftName{mendex}専用）．
+
+\item[|character\string_order|] \ParamString*|SNEJ|
+記号，英字，日本語の優先順位．`|S|' は記号，`|N|' は数字，`|E|' は英字，`|J|' は日本語を表す
+（\SoftName{mendex}専用）．
+\SoftName{mendex}では，後述のとおり，索引項目の分類として「数字」は「記号」に含める
+仕様としています\footnote{\SoftName{makeindex}では，記号類と数字を別のブロックに
+（|group\_skip|を挿入）しますが，\SoftName{mendex}では同一のブロックにします．}ので，
+`|S|' と `|N|' は必ず隣り合わせてください（数字と数字以外の記号の順序入れ替えは可能です）．
+% もともと "SEJ" とドキュメントされていたが，実装に合わせて "SNEJ" と規定する．
+% 以下の議論も参考に．
+% https://github.com/texjporg/mendex-doc/issues/10
+
+なお，|character_order| に関係する文字種の判別においては，
+半角スペースも「記号」として扱われますので，注意してください．
+% 吉永徹美 著『LaTeX2e 辞典 増補改訂版』翔泳社，2018，p.516
+\end{description}
+
+\subsection{参考：\SoftName{makeindex}との比較}
+\SoftName{mendex}は基本的に\SoftName{makeindex}と互換ですが，以下の点で異なります．
+
+\begin{itemize}
+\item \SoftName{makeindex}には索引項目の分類として「記号」，「アルファベット」の
+  他に，数字のみの項目として「数字」という分類がありますが，
+  \SoftName{mendex}では数字は「記号」に含まれます．
+  また，\SoftName{makeindex}に存在するスタイルパラメータのうち，
+  |numhead_positive|と|numhead_negative|は認識されません．
+
+\item 数字・記号→欧文→和文の順にこだわらない索引の作成が可能です
+  （|character_order|パラメータを追加）．他に\SoftName{mendex}で追加された
+  スタイルパラメータには，|symbol|，|symbol_flag|，|letter_head|，|priority|があります．
+
+\item \SoftName{makeindex}の |headings_flag| は，\SoftName{mendex}では
+  |heading_flag| となっており，互いに互換性がありません．
+  また，|lethead_flag|，|lethead_prefix|，|lethead_suffix|は，かつて\SoftName{makeindex}の
+  文書で言及されていましたが，現在は削除され\SoftName{mendex}専用となっています．
+
+\item \SoftName{makeindex}の項目の並び順は，頭文字は
+  「記号」「数字」「アルファベット」に分けて並べられますが，2文字目以降は単純に
+  ASCIIコード順となり，記号よりアルファベットが先になる場合もあります．
+  \SoftName{mendex}の英数字の並びは，2文字目以降も
+  「記号」「数字」「アルファベット」の分類が考慮されます．
+
+\item \SoftName{makeindex}には |-g| オプションでドイツ語辞書順
+  （記号→アルファベット小文字→アルファベット大文字→数字）で並べるようにできますが，
+  \SoftName{mendex}ではサポートしていません．代わりに，|-g| オプションは
+  日本語の頭文字の区切りを切り換えるオプションになっています．
+\end{itemize}
+
+\section{日本語の扱いについて}
+
+\SoftName{mendex}は日本語の索引をできるだけ楽に扱えるようになっています．
+\SoftName{makeindex}では日本語の索引が正しく辞書順にソートするためには，ひらがなまたは
+カタカナに揃え，拗音，撥音，濁点を除いた読みを付けなければなりませんでした
+（自動的に揃えるバージョンもある）．
+\SoftName{mendex}ではカナについてはすべて自動的に揃え，また漢字については
+辞書ファイルを設定することにより各索引語ごとに読みを付ける作業を
+かなり解消できます．以下に内部でのカナの変換例を示します．
+%
+\begin{quote}
+\begin{tabular}{ll}
+かぶしきがいしゃ & かふしきかいしや \\
+マッキントッシュ & まつきんとつしゆ \\
+ワープロ & わあふろ
+\end{tabular}
+\end{quote}
+
+辞書ファイルは ``\jMeta{漢字} \jMeta{読み}'' のリストで構成されます．
+\jMeta{漢字}と\jMeta{読み}の区切りはタブまたはスペースです．
+以下に辞書の例を示します．
+%
+\begin{quote}
+\begin{tabular}{ll}
+漢字 & かんじ \\
+読み & よみ \\
+環境 & かんきょう \\
+$\alpha$ & アルファ
+\end{tabular}
+\end{quote}
+
+辞書に登録する漢字については，読み方が1通りになるよう送り仮名を付けてください．
+「表」，「性質」のように送り仮名によらず2通りの読み方ができる語についてはどちらか
+1つしか登録できません．他の読み方については各索引語へ読みを付けることで対応してください．
+また，環境変数 |INDEXDEFAULTDICTIONARY| に辞書ファイルを登録することにより，自動的に
+辞書を参照します．環境変数に登録した辞書は |-d| で指定した辞書と併用できます．
+
+\section{ソート方法について}
+
+\SoftName{mendex}は通常は入力された索引語をそのままソートします．|-l| オプションが
+付けられた場合，複数の単語で構成される索引語については，ソートするときに単語と単語の間の
+スペースを詰めてソートします．ここでは前者を単語順ソート，後者を文字順ソートと呼ぶことに
+します．文字順ソートの場合，実際に出力される文字列はスペースを含んだ状態のものですので，
+索引語自体が変化することはありません．以下に例を示します．
+%
+\begin{quote}
+\begin{tabular}{ll}
+\emph{単語順ソート} & \emph{文字順ソート} \\
+X Window & Xlib \\
+Xlib & XView \\
+XView & X Window
+\end{tabular}
+\end{quote}
+
+また，日本語−英字間でも似たようなソート方法があります．
+スタイルファイルで |priority| を|0|以外に指定した場合，隣接した日本語と英字の間に
+半角スペースを入れてソートします．以下に例を示します．
+%
+\begin{quote}
+\begin{tabular}{ll}
+|priority 0| & |priority 1| \\
+index sort & indファイル \\
+indファイル & index sort
+\end{tabular}
+\end{quote}
+
+\section{環境変数について}
+
+\SoftName{mendex}では以下のような環境変数を使用しています．
+
+\begin{description}[leftmargin=5cm]
+\item[|INDEXSTYLE|]
+索引スタイルファイルがあるディレクトリ．
+
+\item[|INDEXDEFAULTSTYLE|]
+デフォルトで参照する索引スタイルファイル．
+
+\item[|INDEXDICTIONARY|]
+辞書があるディレクトリ．
+
+\item[|INDEXDEFAULTDICTIONARY|]
+常に参照する辞書ファイル．
+\end{description}
+
+\section{既知の問題}
+複数のページ記法を使用する場合，ページ順に索引リストファイル（\FileExtension{idx}）を
+与えないとページ番号を誤認することがあります．
+
+% また，\SoftName{makeindex}に比べると実行速度が遅くなっています．
+
+\section{トラブルシューティング}
+\SoftName{mendex}でも，\SoftName{makeindex}用のスタイルファイルを流用することができる
+場合があります．ただし，期待通りに動作しない場合もあるため，注意点を挙げておきます．
+% 2021年6月現在，\TeX\ Liveの |texmf-dist/makeindex| 以下に収録されているものは
+% ほとんど使いづらい．
+
+\subsection{\FileName{gind.ist}や\FileName{gglo.ist}が使えない}
+\LaTeXe 付属の\FileName{gind.ist}や\FileName{gglo.ist}は，\SoftName{doc}パッケージと
+併用することを想定して作られています．
+\begin{verbatim}
+    ! Undefined control sequence.
+    l.3  \makeatletter\scan@allowedfalse
+\end{verbatim}
+のエラーを避けるために，\verb+\usepackage{doc}+ を追加してください．
+
+\subsection{漢字の読みを与えたつもりなのにエラーが出る}
+辞書ファイルを使用しない，あるいは辞書ファイルと異なる読みを個別指定する場合に
+|\index{かんじ@漢字}| の書式で「読み」を指定したにもかかわらず，
+\begin{verbatim}
+  Error: 漢字 is no entry in dictionary file in mybook.idx, line 1.
+  0 entries accepted, 1 rejected.
+\end{verbatim}
+のようなエラーが出て，索引が作成されないことがあります．ここでオプション |-f| を使用しても，
+実際に出力される索引文字列が |かんじ@漢字| となってしまいます．
+
+この原因の多くは，スタイルファイルが |actual| を |@| から他の文字に変更している場合です．
+例えば\FileName{gind.ist}や\FileName{gglo.ist}，その派生スタイルファイルは
+|actual| を |=| に変更していますので，それらを使用する場合は |\index{かんじ=漢字}| の書式を
+用いるのが正しい「読み」の指定法です．
+
+\section{バグ報告先・開発元}
+現在，\SoftName{mendex}は日本語\TeX 開発コミュニティによりメンテナンスされています．
+\begin{itemize}
+  \item \url{https://github.com/texjporg/tex-jp-build} （本体のソースコード）
+  \item \url{https://github.com/texjporg/mendex-doc} （この文書を含むドキュメント類）
+\end{itemize}
+
+\begin{thebibliography}{99}
+ \bibitem{yoshi2018} 吉永 徹美 著，
+   「LaTeX2e 辞典 増補改訂版」，翔泳社，2018．
+ \bibitem{munepi2019} munepi，
+   「ぼくのかんがえたさいきょうのLaTeX索引スタイルファイル」，2019/12/09．\\
+   \url{https://qiita.com/munepi/items/2e1524859e24b5fb44bc}
+ \bibitem{kumazawa} Yoshiki KUMAZAWA，
+   「makeidx.sty: LaTeX パッケージ」．\\
+   \url{http://xyoshiki.web.fc2.com/tex/makeidx.html}
+\end{thebibliography}
+
+\clearpage
+\appendix
+
+\section{索引スタイルの例 (\FileName{jpbase.ist})}
+この文書と一緒に配布している索引スタイル\FileName{jpbase.ist}について説明します．
+
+主な内容は以下の通りです（全体は実際のファイル参照）．
+\begin{quote}
+\hrule\vskip10pt\noautospacing\noautoxspacing
+\begin{verbatim}
+%% Use general commands (M. Yamamoto, @munepi)
+headings_flag    1
+heading_prefix   "\n\\makeidxhead{"
+heading_suffix   "}"
+delim_0          "\\idxdelim "
+delim_1          "\\idxdelim "
+delim_2          "\\idxdelim "
+symhead_positive "\\symbolindexname"
+%
+heading_flag     1
+symbol           "\\symbolindexname"
+%
+%% Custom settings for mendex
+% 見出しをひらがなで出力: 2（既定値はカタカナ: 1）
+letter_head      2
+% 並べ替え順を日本語→英字→記号／数字に変更するなら以下を有効に
+%character_order  "JESN"
+% 日本語と英字の間に半角スペースを入れてソートするなら以下を有効に
+%priority         1
+%
+%% Output design based on dot.ist by Y. Kumazawa
+preamble   "\\begin{theindex}\n
+\\providecommand\\idxdelim{\\space\\dotfill\\space}
+\\providecommand\\makeidxhead[1]{...(略)... #1 ...(略)...}
+\\providecommand\\symbolindexname{Symbols}\n"
+postamble  "\n\n\\end{theindex}\n"
+\end{verbatim}
+\vskip10pt\hrule
+\end{quote}
+
+このスタイルでは
+\begin{itemize}
+ \item 見出しの飾り → |\makeidxhead|
+ \item 索引項目とページ番号の区切り → |\idxdelim|
+ \item 記号・数字類の見出し文字列 → |\symbolindexname|
+\end{itemize}
+という\LaTeX 命令に切り出すことで，ユーザが\LaTeX の範囲内で自由にデザインを定義できる
+ようにしています．デフォルトの定義も |preamble| パラメータで与えますので，
+これらの命令を定義せずに\FileName{jpbase.ist}単体でも動作します．
+既定のデザインは以下のように定義しています．
+\begin{verbatim}
+    \providecommand{\idxdelim}{\space\dotfill\space}
+    \providecommand{\makeidxhead}[1]{{\vbox{\hbox to \linewidth{%
+      \sffamily\bfseries #1\ \hskip\fill}\vskip1pt\hrule}}\nopagebreak}
+    \providecommand{\symbolindexname}{Symbols}
+\end{verbatim}
+
+これらの命令をプリアンブルで予め定義しておけば，それが優先されます．例えば
+\begin{verbatim}
+    \newcommand{\makeidxhead}[1]{{\vbox{\hbox to \linewidth{%
+      ■\hfill\sffamily\bfseries #1\hfill ■}\vskip1pt\hrule}}\nopagebreak}
+\end{verbatim}
+とすれば見出しの表示形式が
+\begingroup
+    \newcommand{\makeidxhead}[1]{{\vbox{\hbox to \linewidth{%
+      ■\hfill\sffamily\bfseries #1\hfill ■}\vskip1pt\hrule}}\nopagebreak}
+    \begin{minipage}{.3\linewidth}
+    \makeidxhead{あ}
+    \end{minipage}
+\endgroup
+になりますし，
+\begin{verbatim}
+    \newcommand{\symbolindexname}{記号・数字}}
+\end{verbatim}
+とすれば記号類の見出しが「Symbols」から「記号・数字」に変わります．
+
+以降のページでは，索引スタイルおよびオプションの適用例を示します．
+\begin{itemize}
+ \item |mendex sample|（デフォルト通り）
+ \item |mendex -s jpbase sample|（スタイル適用）
+ \item |mendex -s jpbase -g sample|（さらに頭文字の区切りを「あかさ…わ」に）
+ \item 上記スタイルに |priority 1| を追加（|align環境| と |alignat環境| の順序に注目）
+ \item 上記スタイルに |character_order "JESN"| を追加
+ \item |mendex -s jpbase -g -l sample|（空白文字を無視して文字順ソートに）
+\end{itemize}
+索引スタイル\FileName{jpbase.ist}をベースに一部変更したい場合は，ファイルを複製して
+別名に変更してから編集すると良いでしょう．
+なお，\SoftName{mendex} |version 3.5 [6-Jun-2021]|以降で利用可能な「スタイルファイルを
+複数指定できる機能」を用いれば，元の\FileName{jpbase.ist}からの追加パラメータのみ記載
+した小さなスタイルファイル（例えば\FileName{mystyle.ist}）を準備して，以下のコマンドで
+簡単に適用できます．
+\begin{verbatim}
+    $ mendex -s jpbase -s mystyle ...
+\end{verbatim}
+
+なお，サンプルとして使用した\FileName{sample.idx}は以下の通りです（一部のみ）．
+\clearpage
+\begin{quote}
+\hrule\vskip10pt\noautospacing\noautoxspacing
+\begin{verbatim}
+% sample.idx
+\indexentry{DVI viewer}{18}
+\indexentry{コンパイル}{18}
+\indexentry{ログファイル}{18}
+\indexentry{dvips}{22}
+...(略)...
+\indexentry{alignかんきょう@align環境}{183}
+\indexentry{alignatかんきょう@alignat環境}{184}
+...(略)...
+\indexentry{キャプション}{288}
+\indexentry{フロート}{288}
+\indexentry{graphicsパッケージ}{300}
+\indexentry{graphicxパッケージ}{300}
+\end{verbatim}
+\vskip10pt\hrule
+\end{quote}
+
+\def\IndexExample#1#2#3{%
+  \def\indexname{索引の例#1（#2）}%
+  \AddToHookNext{env/theindex/end}{\par\baselineskip12pt\vfill\vfill #3\par\vfill}%
+  \InputIfFileExists{\jobname-sub-#1.ind}{}{\typeout{Rerun!}}}
+\IndexExample{0}{\texttt{mendex}デフォルト}{}
+\IndexExample{1}{\texttt{mendex -s jpbase}}{}
+\IndexExample{2}{\texttt{mendex -s jpbase -g}}{}
+\IndexExample{3}{スタイルに\texttt{priority 1}を追加}{%
+  注：例2と注意深く見比べてください．既定では日本語文字よりも英字の方が
+  先（``alignat環境''→``align環境''）ですが，\texttt{priority}を\texttt{1}に設定
+  すると，日本語−英字間に半角スペースを入れてソートされるため，順番が入れ替わります．}
+\IndexExample{4}{スタイルに\texttt{character\_order "JESN"}を追加}{%
+  注：例2と注意深く見比べてください．なお，ここで\texttt{priority}は\texttt{0}のまま
+  としています．\texttt{character\_order}の文字種の判別においては，
+  半角スペースも記号類として扱われます．その結果，日本語文字より英字が
+  後（``align環境''→``alignat環境''）かつ，英字より半角スペースが
+  後（``dvips''→``DVI viewer''）になっています．}
+\IndexExample{5}{\texttt{mendex -s jpbase -g -l}}{%
+  注：例2と注意深く見比べてください．\texttt{-l}オプションにより空白文字を無視して
+  文字順（P→V）に並べたため，``dvips''→``DVI viewer''の順番に入れ替わりました．}
+
+%%% 以下，補助ファイル
+\begin{filecontents*}[overwrite]{\jobname-sub.idx}
+\indexentry{DVI viewer}{18}
+\indexentry{コンパイル}{18}
+\indexentry{ログファイル}{18}
+\indexentry{dvips}{22}
+\indexentry{ごうじ@合字}{34}
+\indexentry{$>$}{35}
+\indexentry{$<$}{35}
+\indexentry{プリアンブル}{44}
+\indexentry{クラスファイル}{45}
+\indexentry{パッケージファイル}{45}
+\indexentry{NFSS}{52}
+\indexentry{エンコード}{52}
+\indexentry{シリーズ}{52}
+\indexentry{ファミリ}{52}
+\indexentry{サイズ}{53}
+\indexentry{シェイプ}{53}
+\indexentry{エンコード}{63}
+\indexentry{ファミリ}{64}
+\indexentry{シリーズ}{66}
+\indexentry{シェイプ}{67}
+\indexentry{サイズ}{68}
+\indexentry{しょたいていぎファイル@書体定義ファイル}{75}
+\indexentry{abstractかんきょう@abstract環境}{87}
+\indexentry{itemizeかんきょう@itemize環境}{92}
+\indexentry{enumerateかんきょう@enumerate環境}{93}
+\indexentry{descriptionかんきょう@description環境}{94}
+\indexentry{quotationかんきょう@quotation環境}{97}
+\indexentry{quoteかんきょう@quote環境}{97}
+\indexentry{verbatimかんきょう@verbatim環境}{99}
+\indexentry{プリミティブ}{113}
+\indexentry{カウンタ}{131}
+\indexentry{ボックス}{134}
+\indexentry{minipageかんきょう@minipage環境}{137}
+\indexentry{$>$}{146}
+\indexentry{$<$}{146}
+\indexentry{ディスプレイすうしき@ディスプレイ数式}{152}
+\indexentry{テキストすうしき@テキスト数式}{152}
+\indexentry{equationかんきょう@equation環境}{153}
+\indexentry{アクセントきごう@アクセント記号}{156}
+\indexentry{えんざんし@演算子}{158}
+\indexentry{かんけいえんざんし@関係演算子}{159}
+\indexentry{ギリシャもじ@ギリシャ文字}{161}
+\indexentry{かんけいえんざんし@関係演算子}{162}
+\indexentry{にこうえんざんし@二項演算子}{163}
+\indexentry{ぶんすう@分数}{167}
+\indexentry{かせん@下線}{168}
+\indexentry{へいほうこん@平方根}{168}
+\indexentry{ぎょうれつ@行列}{169}
+\indexentry{equationかんきょう@equation環境}{172}
+\indexentry{eqnarrayかんきょう@eqnarray環境}{173}
+\indexentry{casesかんきょう@cases環境}{182}
+\indexentry{alignかんきょう@align環境}{183}
+\indexentry{alignatかんきょう@alignat環境}{184}
+\indexentry{gatherかんきょう@gather環境}{185}
+\indexentry{multilineかんきょう@multiline環境}{185}
+\indexentry{tabbingかんきょう@tabbing環境}{190}
+\indexentry{tabbingかんきょう@tabbing環境}{194}
+\indexentry{arrayかんきょう@array環境}{203}
+\indexentry{tabularかんきょう@tabular環境}{203}
+\indexentry{フロートオブジェクト}{210}
+\indexentry{pictureかんきょう@picture環境}{220}
+\indexentry{ascmacパッケージ}{234}
+\indexentry{そうごさんしょう@相互参照}{244}
+\indexentry{plextパッケージ}{266}
+\indexentry{plextパッケージ}{279}
+\indexentry{れんすうじ@連数字}{279}
+\indexentry{かんすうじ@漢数字}{280}
+\indexentry{enumerateかんきょう@enumerate環境}{281}
+\indexentry{ぼうてん@傍点}{282}
+\indexentry{minipageかんきょう@minipage環境}{285}
+\indexentry{tabularかんきょう@tabular環境}{286}
+\indexentry{pictureかんきょう@picture環境}{287}
+\indexentry{キャプション}{288}
+\indexentry{フロート}{288}
+\indexentry{graphicsパッケージ}{300}
+\indexentry{graphicxパッケージ}{300}
+\end{filecontents*}
+%
+\begin{filecontents*}[overwrite]{\jobname-sub-3.ist}
+priority 1
+\end{filecontents*}
+%
+\begin{filecontents*}[overwrite]{\jobname-sub-4.ist}
+character_order "JESN"
+\end{filecontents*}
+%%% 以上，補助ファイル
+
+\end{document}

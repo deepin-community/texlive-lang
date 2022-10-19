@@ -1,0 +1,89 @@
+\documentclass{report}
+
+\usepackage[Minimal=On,Kashida=glyph,linebreakpenalty=8,kashidastretch=0.14 em plus 0.5 em,color=red]{texnegar}  % Succeeds
+
+\usepackage{xepersian}
+% \settextfont[Scale=4.5,Colour=darkgray]{XB Kayhan}
+\settextfont{HM XKayhan}
+\setlatintextfont[Scale=1.5,Colour=0000FF]{HM XKayhan}
+
+\deflatinfont\HMXKayhanEn[Scale=1.2]{HM XKayhan}
+\defpersianfont\HMXKayhanRm[Scale=4.5]{HM XKayhan}
+\defpersianfont\HMXKayhanIt[Scale=4.5]{HM XKayhan Italic}
+\defpersianfont\HMXKayhanOb[Scale=4.5]{HM XKayhanOb Oblique}
+\defpersianfont\HMXKayhanOl[Scale=4.5]{HM XKayhan Outline}
+\defpersianfont\HMXKayhanSd[Scale=4.5]{HM XKayhan Shadow}
+\defpersianfont\HMXKayhanPo[Scale=4.5]{HM XKayhan Pook}
+\defpersianfont\HMXKayhanSa[Scale=4.5]{HM XKayhan Sayeh}
+\defpersianfont\HMXKayhanNa[Scale=4.5]{HM XKayhan Navaar}
+
+\def\SampleText#1#2{\discouragebadlinebreaks[#1][#2]{
+  راهی جایی تابی چاپی چاههی تلاشهایی
+  شتابهایی تابی چاپی راهی تلاشهــایی
+  که کتابهایی که کلاههایی که کتابهایی }}
+
+\def\SampleTitle#1#2#3{{{\HMXKayhanEn\LTR Engine: {\color{blue}\texttt{#1}}, \\
+     Style: {\color{blue}\texttt{#2}}, \\ Kashida: {\color{blue}\texttt{#3}}}}\hbox{}\vskip 5mm}
+
+\pretolerance = 10000
+% \exhyphenpenalty=10000
+% \hyphenpenalty=10000
+% \penalty -10000
+% \tolerance=10000
+% \tolerance  = -10000
+% \looseness = 10000
+
+\setlength\parindent{0pt}
+% \pagestyle{empty}
+\setcounter{page}{86}
+\let\tmppage=\thepage
+\gdef\thepage{\scriptsize\lr\tmppage}
+
+\begin{document}
+
+\begin{latin}
+\begin{center}
+{\Huge\textsf{\TeXNegar} \\
+ \vspace{20pt} Example of Use \\
+ \vspace{20pt}\texttt{Engine: XeTeX {\normalsize using texnegar and xepersian}} \\
+ \vspace{20pt}\texttt{Kashida=glyph}} \\
+ \vspace{20pt}\makebox{\textsf{File:} \texttt{TEXMFDIST/doc/latex/texnegar/texnegar-xetex-xepersian-glyph.tex}} \\
+ \vspace{20pt}
+
+{\Large
+\begin{tabular}{ll}
+  \textsf{Font:} & \textsf{HM XKayhan} \\
+  \textsf{Font Scale:} & \texttt{4.5} \\
+  \textsf{linebreakpenalty:} & \texttt8 \\
+  \textsf{kashidastretch:} & \texttt{0.14em plus 5.5em} \\
+  \textsf{color:} &  \texttt{red}
+\end{tabular}
+}
+\end{center}
+
+\end{latin}
+
+\newpage \KashidaOff \SampleTitle{XeTeX using texnegar and xepersian}{Regular}{Off}        \par {\HMXKayhanRm \SampleText{8}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Regular}{glyph (On)} \par {\HMXKayhanRm \SampleText{15}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Italic}{glyph  (On)} \par {\HMXKayhanIt \SampleText{20}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Oblique}{glyph (On)} \par {\HMXKayhanOb \SampleText{20}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Outline}{glyph (On)} \par {\HMXKayhanOl \SampleText{25}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Shadow}{glyph  (On)} \par {\HMXKayhanSd \SampleText{30}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Pook}{glyph    (On)} \par {\HMXKayhanPo \SampleText{200}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Sayeh}{glyph   (On)} \par {\HMXKayhanSa \SampleText{200}{0.14 em plus 0.5 em}}
+
+\newpage \KashidaOn  \SampleTitle{XeTeX using texnegar and xepersian}{Navaar}{glyph  (On)} \par {\HMXKayhanNa \SampleText{200}{0.14 em plus 0.5 em}}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

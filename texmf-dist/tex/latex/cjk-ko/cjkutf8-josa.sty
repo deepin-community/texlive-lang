@@ -1,0 +1,217 @@
+% cjkutf8-josa.sty
+%
+% Copyright (c) 2016-2021 Dohyun Kim <nomos at ktug org>
+%
+% This program is free software; you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation; either version 2 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program in doc/COPYING; if not, write to the Free
+% Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+% MA 02110-1301 USA
+
+\ProvidesPackage{cjkutf8-josa}[2021/07/20 v2.1 Automatic Josa selection for cjk-ko]
+
+\AtBeginDocument{
+  \ifx\use@josa\undefined\else
+    % redefine \@setref
+    \let\CJKKO@orig@setref\@setref
+    \def\@setref#1#2#3{\CJKKO@orig@setref{#1}{#2}{#3}%
+      \ifx#1\relax\else
+        \cjkko@prepare@josa@str{\expandafter#2#1}%
+      \fi }
+    % redefine \@cite@ofmt
+    \let\CJKKO@orig@cite@ofmt\@cite@ofmt
+    \def\@cite@ofmt#1{\CJKKO@orig@cite@ofmt{#1}%
+      \bgroup
+      \let\@safe@activesfalse\@empty % babel ?
+      \def\hyper@@link[##1]##2##3##4{##4}%
+      \def\beamer@sort##1##2{}%
+      \def\hyperlink##1##2{##2}% for beamer: not from kotexutf
+      \cjkko@prepare@josa@str{#1}%
+      \egroup}
+    % partially support biblatex's \cite
+    \@ifpackageloaded{biblatex}{%
+      \renewrobustcmd*{\blx@imc@printfield}[2][]{%
+      \blx@imc@iffieldundef{#2}
+        {\blx@nounit}
+        {\blx@getformat\blx@theformat{ffd}{#1}{#2}%
+         \ifdefvoid\blx@theformat
+           {\blx@nounit}
+           {\blx@begunit
+            \edef\currentfield{#2}%
+            \expandafter\expandafter
+            \expandafter\blx@theformat
+            \expandafter\expandafter
+            \expandafter{\csname abx@field@#2\endcsname}%
+                    \cjkko@prepare@josa@str{\csname abx@field@#2\endcsname}%
+            \blx@endunit}}}}{}
+  \fi
+  \@ifpackageloaded{hyperref}{\g@addto@macro\pdfstringdefPreHook{%
+      \let\jong\relax
+      \let\rieul\relax
+      \let\jung\relax
+      \def\^^ea{^^ea}%
+      \def\^^eb{^^eb}%
+      \def\^^ec{^^ec}%
+  }}{}
+}
+
+% support hangul syllables (0xAC00..0xD7A3)
+\def\cjkko@josa@ea{\cjkko@josa@hangul@syllableS{"EA}}
+\def\cjkko@josa@eb{\cjkko@josa@hangul@syllableS{"EB}}
+\def\cjkko@josa@ec{\cjkko@josa@hangul@syllableS{"EC}}
+\def\cjkko@josa@ed{\cjkko@josa@hangul@syllableS{"ED}}
+\def\cjkko@josa@hangul@syllableS#1#2#3{%
+  \expandafter\cjkko@josa@hangul@syllable\expandafter{%
+    \number\numexpr (#1 - 224) * 4096 + (`#2 - 128) * 64 + (`#3 - 128) - "AC00\relax }}
+\def\cjkko@josa@hangul@syllable#1{%
+  \ifnum#1<\z@ \else \ifnum#1>11171 \else
+    \expandafter\cjkko@josa@hangul@syllable@\expandafter{%
+      \number\numexpr #1 - (((#1 + 14) / 28 - 1) * 28)\relax }% we need floor, not round
+  \fi\fi
+}
+\def\cjkko@josa@hangul@syllable@#1{%
+  \ifnum#1=\z@
+    2\else \ifnum#1=8 %
+    1\else
+    0\fi\fi
+}
+
+\def\cjkko@prepare@josa@str#1{%
+  \ifx\protect\relax
+    \begingroup
+      \let^^ea\cjkko@josa@ea
+      \let^^eb\cjkko@josa@eb
+      \let^^ec\cjkko@josa@ec
+      \let^^ed\cjkko@josa@ed
+      \let\protect\noexpand
+      \xdef\josa@str{#1}%
+    \endgroup
+  \fi
+}
+
+%%% user commands: \jong \jung \rieul
+\protected\def\jong {\let\josa@str\empty\chardef\@josa\z@ }
+\protected\def\rieul{\let\josa@str\empty\chardef\@josa\@ne}
+\protected\def\jung {\let\josa@str\empty\chardef\@josa\tw@}
+\jung
+
+\def\cjkko@josa@str@end{cjkko@josa@str@end}
+
+\def\makejosa{%
+  \bgroup
+  \expandafter\make@josa\josa@str\cjkko@josa@str@end
+  \expandafter\egroup
+  \expandafter\count@\number\@josa\relax
+  \jung
+  \make@@@josa
+}
+
+\begingroup
+\catcode`a=11 \global\let\cjkko@cat@letter=a\relax
+\catcode`0=12 \global\let\cjkko@cat@other=0\relax
+\endgroup
+
+\def\make@josa{\afterassignment\make@@josa\let\@let@token= }
+\def\make@@josa{%
+  \ifx\@let@token\cjkko@josa@str@end
+  \else
+    \ifx\@let@token 1\rieul\else
+    \ifx\@let@token 3\jong \else
+    \ifx\@let@token 6\jong \else
+    \ifx\@let@token 7\rieul\else
+    \ifx\@let@token 8\rieul\else
+    \ifx\@let@token 0\jong \else
+    \ifx\@let@token l\rieul\else
+    \ifx\@let@token m\jong \else
+    \ifx\@let@token n\jong \else
+    \ifx\@let@token L\rieul\else
+    \ifx\@let@token M\jong \else
+    \ifx\@let@token N\jong \else
+    \ifcat\noexpand\@let@token\cjkko@cat@other \jung\else
+    \ifcat\noexpand\@let@token\cjkko@cat@letter\jung\else
+    \ifx\@let@token ^^c2\jung \else
+    \ifx\@let@token ^^c3\jung \else
+    \ifx\@let@token\jong \jong\else
+    \ifx\@let@token\jung \jung\else
+    \ifx\@let@token\rieul\rieul
+    \fi\fi\fi\fi\fi \fi\fi\fi\fi\fi \fi\fi\fi\fi\fi \fi\fi\fi\fi
+    \expandafter\make@josa
+  \fi}
+
+\def\make@@@josa{%
+  \ifcase\count@
+    \expandafter\@secondoftwo
+  \or
+    \expandafter\make@@@@josa
+  \else
+    \expandafter\@firstoftwo
+  \fi
+}
+\def\make@@@@josa#1{%
+  \ifx\empty#1\empty
+    \expandafter\@gobble
+  \else
+    \expandafter\@firstofone
+  \fi
+}
+
+\def\error@josa{\PackageError{cjkutf8-josa}{Undefined Control Sequence}{}}
+\def\makejosa@ga@i{\makejosa{가}{이}}
+\def\makejosa@wa@gwa{\makejosa{와}{과}}
+\def\makejosa@neun@eun{\makejosa{는}{은}}
+\def\makejosa@ra@ira{\makejosa{라}{이라}}
+\def\makejosa@empty@eu@ro{\makejosa{}{으}로}
+\def\makejosa@reul@eul{\makejosa{를}{을}}
+\def\makejosa@empty@eu{\makejosa{}{으}}
+\def\makejosa@relax@i{\makejosa\relax{이}}
+
+\DeclareRobustCommand*\^^ea[2]{%
+  \ifx#1^^b0\ifx#2^^80\let\do@makejosa\makejosa@ga@i % \가
+    \else\let\do@makejosa\error@josa \fi
+  \else\ifx#1^^b3\ifx#2^^bc\let\do@makejosa\makejosa@wa@gwa % \과
+    \else\let\do@makejosa\error@josa \fi
+  \else\let\do@makejosa\error@josa \fi\fi
+  \do@makejosa}
+\DeclareRobustCommand*\^^eb[2]{%
+  \ifx#1^^8a\ifx#2^^94\let\do@makejosa\makejosa@neun@eun % \는
+    \else\let\do@makejosa\error@josa \fi
+  \else\ifx#1^^9d\ifx#2^^bc\let\do@makejosa\makejosa@ra@ira % \라
+    \else\let\do@makejosa\error@josa \fi
+  \else\ifx#1^^a1\ifx#2^^9c\let\do@makejosa\makejosa@empty@eu@ro % \로
+    \else\let\do@makejosa\error@josa \fi
+  \else\ifx#1^^a5\ifx#2^^bc\let\do@makejosa\makejosa@reul@eul % \를
+    \else\let\do@makejosa\error@josa \fi
+  \else\let\do@makejosa\error@josa \fi\fi\fi\fi
+  \do@makejosa}
+\DeclareRobustCommand*\^^ec[2]{%
+  \let\reserved@a#1\let\reserved@b#2%
+  \futurelet\@let@token\@josa@begin@ec}
+\def\@josa@begin@ec{%
+  \ifx\reserved@a^^99\ifx\reserved@b^^80\let\do@makejosa\makejosa@wa@gwa % \와
+    \else\let\do@makejosa\error@josa \fi
+  \else\ifx\reserved@a^^9c\ifx\reserved@b^^bc\let\do@makejosa\makejosa@empty@eu % \으로
+    \else\let\do@makejosa\error@josa \fi
+  \else\ifx\reserved@a^^9d%
+    \ifx\reserved@b^^80\let\do@makejosa\makejosa@neun@eun % \은
+    \else\ifx\reserved@b^^84\let\do@makejosa\makejosa@reul@eul % \을
+    \else\ifx\reserved@b^^b4%
+      \ifx\@let@token^^ea\let\do@makejosa\makejosa@relax@i % \이라
+      \else\ifx\@let@token^^eb\let\do@makejosa\makejosa@relax@i % \이라
+      \else\ifx\@let@token^^ec\let\do@makejosa\makejosa@relax@i % \이라
+      \else\ifx\@let@token^^ed\let\do@makejosa\makejosa@relax@i % \이라
+      \else\let\do@makejosa\makejosa@ga@i % \이
+      \fi\fi\fi\fi
+    \else\let\do@makejosa\error@josa \fi\fi\fi
+  \else\let\do@makejosa\error@josa \fi\fi\fi
+  \do@makejosa}
+
+\endinput

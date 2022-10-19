@@ -1,0 +1,2110 @@
+% \iffalse meta-comment
+%
+% This is file `texnegar.dtx'
+%
+% Copyright (C) 2020-2021 Hossein Movahhedian
+%
+% It may be distributed and/or modified under the LaTeX Project Public License,
+% version 1.3c or higher (your choice). The latest version of
+% this license is at: http://www.latex-project.org/lppl.txt
+%
+%<*internal>
+\iffalse
+%</internal>
+%<*README-txt>
+The TEXNEGAR package
+------------------------
+
+In some cursive scripts such as Persian or Arabic, kashida is used to create
+justification. In this type of justification characters are elongated rather
+than expanding spaces between words.
+
+The kashida justification in 'xepersian' has many bugs. Also it has problems
+with some fonts such as 'HM Series' available at
+'https://dma8hm1334.bitbucket.io' and 'X Series 2' available at
+'http://wiki.irmug.com/index.php/X_Series_2'. The 'xepersian-hm' package was
+the first attempt to fix these bugs in 'xepersian' which uses the xetex
+engine.
+
+This package extends the kashida justification to be used with the luatex
+engine too.
+
+The files 'texnegar-*.tex' in the directory 'texmf-dist/doc/xelatex/texnegar/'
+can be used as simple examples of the usage of the package.
+
+Please use the Bitbucket issue tracker:
+'https://bitbucket.org/dma8hm1334/texnegar/issues' to report a bug, request
+a feature or if you have a comment.
+
+I will do my best to fix all the bugs you report, but, unfortunately, time is a
+big hurdle to overcome; so, my apologies in advance for those which I cannot
+make time to fix.
+%</README-txt>
+%<*internal>
+\fi
+%</internal>
+%
+%<*driver|package>
+% The version of expl3 required is tested as early as possible, as
+% some really old versions do not define \ProvidesExplPackage.
+\RequirePackage{expl3}[2018/02/21]
+%<package>\@ifpackagelater{expl3}{2018/02/21}
+%<package>  {}
+%<package>  {%
+%<package>    \PackageError{xtemplate}{Support package l3kernel too old}
+%<package>      {%
+%<package>        Please install an up to date version of l3kernel\MessageBreak
+%<package>        using your TeX package manager or from CTAN.\MessageBreak
+%<package>        \MessageBreak
+%<package>        Loading xtemplate will abort!%
+%<package>      }%
+%<package>    \endinput
+%<package>  }
+%</driver|package>
+%<*driver>
+\documentclass[full]{l3doc}
+\usepackage{enumitem}
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \ifluatex
+% \immediate\directlua{os.execute([[ lualatex texnegar-doc.ltx ]])}
+% \immediate\directlua{os.execute([[ lualatex texnegar-doc.ltx ]])}
+% \immediate\directlua{os.execute([[ makeindex -c texnegar-doc.idx ]])}
+% \immediate\directlua{os.execute([[ lualatex texnegar-doc.ltx ]])}
+% \fi
+% 
+% \ifxetex
+% \immediate\write18{lualatex texnegar-doc.ltx}
+% \immediate\write18{lualatex texnegar-doc.ltx}
+% \immediate\write18{makeindex -c texnegar-doc.idx}
+% \immediate\write18{lualatex texnegar-doc.ltx}
+% \fi
+%
+% \begin{implementation}
+%
+% \def\TeXNegar{\TeX Negar}
+% 
+% \title{^^A
+%   The \textsf{texnegar} package\\Kashida justification in LuaTeX and XeTeX\\Source code documentation^^A
+% }
+%
+% \author{^^A
+%  Hossein Movahhedian\thanks
+%    {^^A
+%      E-mail:
+%        \href{mailto:dma8hm1334@gmail.com}
+%          {\textsf{dma8hm1334@gmail.com}}
+%    }^^A
+% }
+%
+% \date{Released \quad 2021-02-09 \quad v0.1e}
+%
+% \maketitle
+%
+% \vskip 40mm
+% \begin{function}{Negar:}
+%   \begin{minipage}{0.65\linewidth}
+%     \textit{\noindent
+%       Negar, in Persian, is the present stem of negaashtan meaning to design; to paint;
+%       to write; and as a noun it means ``sweetheart, idol, beloved, figuratively refering
+%       to a beautiful woman, pattern, painting, and artistic design''
+%     }
+%   \end{minipage}
+% \end{function}
+%
+% \newpage
+%
+% \tableofcontents
+%
+% \newpage
+% 
+% \section{\TeXNegar{} Implementation}
+%
+% \subsection{File: \texttt{texnegar.sty}}
+%
+%    \begin{macrocode}
+%<*texnegar-sty>
+\RequirePackage{xparse}
+\RequirePackage{l3keys2e}
+\RequirePackage{graphicx}[2019-11-30]
+\RequirePackage{array}[2019-10-01]
+\RequirePackage[dvipsnames,svgnames,x11names]{xcolor}[2016/05/11]
+\RequirePackage{fontspec}[2020/02/21]
+\RequirePackage{newverbs}[2010/09/02]
+\RequirePackage{environ}[2014/05/04]
+
+\ProvidesExplPackage {texnegar} {2021-02-09} {0.1e} { Full implementation of kashida feature in XeLaTex and LuaLaTeX }
+
+\sys_if_engine_luatex:T
+  {
+    \RequirePackageWithOptions{texnegar-luatex}
+    \endinput
+  }
+\sys_if_engine_xetex:T
+  {
+    \RequirePackageWithOptions{texnegar-xetex}
+    \endinput
+  }
+\msg_new:nnn {texnegar} {cannot-use-pdftex}
+  {
+    The~ texnegar~ package~ requires~ either~ XeTeX~ or~ LuaTeX.\\\\
+    You~ must~ change~ your~ typesetting~ engine~ to,~ e.g.,~
+    "xelatex"~ or~ "lualatex" instead~ of~ "latex"~ or~ "pdflatex".
+  }
+\msg_fatal:nn {texnegar} {cannot-use-pdftex}
+
+ \endinput
+%</texnegar-sty>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-luatex.sty}}
+%
+%    \begin{macrocode}
+%<*texnegar-luatex-sty>
+\ProvidesExplPackage {texnegar-luatex} {2021-02-09} {0.1e} { Full implementation of kashida feature in xetex and luatex }
+
+\tex_input:D { texnegar-ini.tex }
+
+\bool_if:NT \l_texnegar_kashida_fix_bool
+  {
+    \if_int_compare:w \luatexversion < \c_texnegar_luatexversionmajormin_int\c_texnegar_luatexversionminormin_int
+        \msg_error:nnxxx { texnegar } { luatex-version-is-too-old } { !!!! } { \c_texnegar_luatexversionmajormin_int } { \c_texnegar_luatexversionminormin_int }
+    \fi:
+
+    \hbox_set:Nn \l_texnegar_k_box { \resizebox{5000sp}{\height}{-} }
+
+    \hbox_set:Nn \l_texnegar_ksh_box { \char\lua_now:n { tex.sprint(0, font.getfont(font.current()).resources.unicodes[token.scan_string()]) } hyphen }
+
+    \directlua{dofile(kpse.find_file("texnegar.lua"))}
+  }
+
+\bool_if:NT \l_texnegar_kashida_fix_bool
+  {
+    \tex_input:D { texnegar-common-kashida.tex }
+
+    \AtBeginDocument
+      {
+        \KashidaOn
+      }
+  }
+
+ \endinput
+%</texnegar-luatex-sty>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-xetex.sty}}
+%
+%    \begin{macrocode}
+%<*texnegar-xetex-sty>
+\RequirePackage{zref-savepos}[2020-03-03]
+\ProvidesExplPackage {texnegar-xetex} {2021-02-09} {0.1e} { Full implementation of kashida feature in XeLaTex and LuaLaTeX }
+
+\tex_input:D { texnegar-ini.tex }
+
+\bool_if:NT \l_texnegar_kashida_fix_bool
+  {
+    \tex_input:D { texnegar-xetex-kashida.tex }
+  }
+
+ \endinput
+%</texnegar-xetex-sty>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-ini.tex}}
+%
+%    \begin{macrocode}
+%<*texnegar-ini-tex>
+\ProvidesExplFile {texnegar-ini.tex} {2021-02-09} {0.1e} { Full implementation of kashida feature in XeLaTex and LuaLaTeX }
+
+\def\TeXNegar{\TeX Negar}
+
+\box_new:N \l_texnegar_k_box
+\box_new:N \l_texnegar_ksh_box
+
+\tl_const:Nn \c_texnegar_luatexversionmajormin_int {1}
+\tl_const:Nn \c_texnegar_luatexversionminormin_int {12}
+
+\int_const:Nn \c_texnegar_ksh_int {"0640} % kashida
+\int_const:Nn \c_texnegar_lrm_int {"200E} % left-right-mark
+\int_const:Nn \c_texnegar_zwj_int {"200D} % zero-width joiner
+
+\int_const:Nn \c_texnegar_two_int {2}
+\int_const:Nn \c_texnegar_four_int {4}
+
+\tl_const:Nn \c_texnegar_skip_a_tl { 0 em plus 0.5 em }
+\tl_const:Nn \c_texnegar_skip_b_tl { 0.14 em plus 5.5 em }
+
+\int_new:N \l_texnegar_counter_int
+
+\int_new:N \l_texnegar_kashida_slot_int
+
+\int_new:N \l_texnegar_line_break_penalty_int
+
+\int_new:N \l_texnegar_min_penalty_int
+\int_new:N \l_texnegar_low_penalty_int
+\int_new:N \l_texnegar_med_penalty_int
+\int_new:N \l_texnegar_high_penalty_int
+\int_new:N \l_texnegar_max_penalty_int
+
+\int_new:N \l_fontnumber_int
+
+\tl_new:N \l_texnegar_line_break_tl
+
+\tl_new:N \l_texnegar_main_font_full_tl
+\tl_new:N \l_texnegar_main_font_name_tl
+
+\tl_new:N \l_texnegar_font_full_tl
+\tl_new:N \l_texnegar_font_name_tl
+
+\tl_new:N \l_texnegar_skip_default_tl
+
+\tl_new:N \l_texnegar_active_ligs_tl
+
+\tl_new:N \l_texnegar_gap_filler_tl
+
+\tl_new:N \l_texnegar_use_color_tl
+\tl_new:N \l_texnegar_color_tl
+\tl_new:N \l_texnegar_color_rgb_tl
+
+\dim_new:N \l_texnegar_diff_pos_dim
+
+\bool_set_false:N \l_texnegar_minimal_bool
+\tl_set:Nn \l_texnegar_minimal_off_tl { Off }
+\tl_set:Nn \l_texnegar_minimal_on_tl { On }
+
+\bool_set_false:N \l_texnegar_kashida_fix_bool
+
+\bool_set_false:N \l_texnegar_kashida_fontfamily_bool
+\tl_new:N \l_texnegar_kashida_fontfamily_tl
+\tl_set:Nn \l_texnegar_kashida_fontfamily_tl { N/A }
+
+\bool_set_false:N \l_texnegar_kashida_glyph_bool
+\bool_set_false:N \l_texnegar_kashida_leaders_glyph_bool
+\bool_set_false:N \l_texnegar_kashida_leaders_hrule_bool
+
+\bool_set_false:N \l_texnegar_ligature_bool
+\bool_set_false:N \l_texnegar_linebreakpenalty_bool
+\bool_set_false:N \l_texnegar_hboxrecursion_bool
+\bool_set_false:N \l_texnegar_vboxrecursion_bool
+\bool_set_false:N \l_texnegar_color_bool
+
+\int_set:Nn \l_texnegar_min_penalty_int { 0 }
+\int_set:Nn \l_texnegar_low_penalty_int { 8 }
+\int_set:Nn \l_texnegar_med_penalty_int { 15 }
+\int_set:Nn \l_texnegar_high_penalty_int { 25 }
+\int_set:Nn \l_texnegar_max_penalty_int { 10000 }
+
+\tl_set:Nn \l_texnegar_stretch_glyph_tl { glyph }
+\tl_set:Nn \l_texnegar_stretch_leaders_glyph_tl { leaders+glyph }
+\tl_set:Nn \l_texnegar_stretch_leaders_hrule_tl { leaders+hrule }
+\tl_set:Nn \l_texnegar_stretch_off_tl { Off }
+\tl_set:Nn \l_texnegar_stretch_on_tl { On }
+
+\tl_set:Nn \l_texnegar_hboxrecursion_off_tl { Off }
+\tl_set:Nn \l_texnegar_hboxrecursion_on_tl { On }
+
+\tl_set:Nn \l_texnegar_vboxrecursion_off_tl { Off }
+\tl_set:Nn \l_texnegar_vboxrecursion_on_tl { On }
+
+\tl_set:Nn \l_texnegar_fnt_kayhan_tl       { kayhan }
+\tl_set:Nn \l_texnegar_fnt_kayhannavaar_tl { kayhannavaar }
+\tl_set:Nn \l_texnegar_fnt_kayhanpook_tl   { kayhanpook }
+\tl_set:Nn \l_texnegar_fnt_kayhansayeh_tl  { kayhansayeh }
+\tl_set:Nn \l_texnegar_fnt_khoramshahr_tl  { khoramshahr }
+\tl_set:Nn \l_texnegar_fnt_khorramshahr_tl { khorramshahr }
+\tl_set:Nn \l_texnegar_fnt_niloofar_tl     { niloofar }
+\tl_set:Nn \l_texnegar_fnt_paatch_tl       { paatch }
+\tl_set:Nn \l_texnegar_fnt_riyaz_tl        { riyaz }
+\tl_set:Nn \l_texnegar_fnt_roya_tl         { roya }
+\tl_set:Nn \l_texnegar_fnt_shafigh_tl      { shafigh }
+\tl_set:Nn \l_texnegar_fnt_shafighKurd_tl  { shafighKurd }
+\tl_set:Nn \l_texnegar_fnt_shafighUzbek_tl { shafighUzbek }
+\tl_set:Nn \l_texnegar_fnt_shiraz_tl       { shiraz }
+\tl_set:Nn \l_texnegar_fnt_sols_tl         { sols }
+\tl_set:Nn \l_texnegar_fnt_tabriz_tl       { tabriz }
+\tl_set:Nn \l_texnegar_fnt_titr_tl         { titr }
+\tl_set:Nn \l_texnegar_fnt_titre_tl        { titre }
+\tl_set:Nn \l_texnegar_fnt_traffic_tl      { traffic }
+\tl_set:Nn \l_texnegar_fnt_vahid_tl        { vahid }
+\tl_set:Nn \l_texnegar_fnt_vosta_tl        { vosta }
+\tl_set:Nn \l_texnegar_fnt_yaghut_tl       { yaghut }
+\tl_set:Nn \l_texnegar_fnt_yagut_tl        { yagut }
+\tl_set:Nn \l_texnegar_fnt_yas_tl          { yas }
+\tl_set:Nn \l_texnegar_fnt_yekan_tl        { yekan }
+\tl_set:Nn \l_texnegar_fnt_yermook_tl      { yermook }
+\tl_set:Nn \l_texnegar_fnt_zar_tl          { zar }
+\tl_set:Nn \l_texnegar_fnt_ziba_tl         { ziba }
+\tl_set:Nn \l_texnegar_fnt_default_tl      { default }
+\tl_set:Nn \l_texnegar_fnt_noskip_tl       { noskip }
+
+\tl_set:Nn \l_texnegar_lig_aalt_tl    { aalt } % Access All Alternatives
+\tl_set:Nn \l_texnegar_lig_ccmp_tl    { ccmp } % Glyph Composition/Decomposition
+\tl_set:Nn \l_texnegar_lig_dlig_tl    { dlig } % Discretionary Ligatures
+\tl_set:Nn \l_texnegar_lig_fina_tl    { fina } % Final (Terminal) Forms
+\tl_set:Nn \l_texnegar_lig_init_tl    { init } % Initial Forms
+\tl_set:Nn \l_texnegar_lig_locl_tl    { locl } % Localized Forms
+\tl_set:Nn \l_texnegar_lig_medi_tl    { medi } % Medial Forms
+\tl_set:Nn \l_texnegar_lig_rlig_tl    { rlig } % Required Ligatures
+\tl_set:Nn \l_texnegar_lig_default_tl { default }
+
+\tl_set:Nn \l_texnegar_col_default_tl { magenta }
+
+\clist_set:Nn \l_texnegar_lig_aalt_clist    { } % Access All Alternatives
+\clist_set:Nn \l_texnegar_lig_ccmp_clist    { } % Glyph Composition/Decomposition
+\clist_set:Nn \l_texnegar_lig_dlig_clist    { FDF2 = الله , FDF3 = اکبر , FDFB = جلجلاله } % Discretionary Ligatures
+\clist_set:Nn \l_texnegar_lig_fina_clist    { } % Final (Terminal) Forms
+\clist_set:Nn \l_texnegar_lig_init_clist    { } % Initial Forms
+\clist_set:Nn \l_texnegar_lig_locl_clist    { } % Localized Forms
+\clist_set:Nn \l_texnegar_lig_medi_clist    { } % Medial Forms
+\clist_set:Nn \l_texnegar_lig_rlig_clist    { } % Required Ligatures
+\clist_set:Nn \l_texnegar_lig_default_clist { }
+
+\clist_set:Nn \l_texnegar_lig_names_clist
+  {
+    \l_texnegar_lig_aalt_tl , { \l_texnegar_lig_aalt_clist } ,
+    \l_texnegar_lig_ccmp_tl , { \l_texnegar_lig_ccmp_clist } ,
+    \l_texnegar_lig_dlig_tl , { \l_texnegar_lig_dlig_clist } ,
+    \l_texnegar_lig_fina_tl , { \l_texnegar_lig_fina_clist } ,
+    \l_texnegar_lig_init_tl , { \l_texnegar_lig_init_clist } ,
+    \l_texnegar_lig_locl_tl , { \l_texnegar_lig_locl_clist } ,
+    \l_texnegar_lig_medi_tl , { \l_texnegar_lig_medi_clist } ,
+    \l_texnegar_lig_rlig_tl , { \l_texnegar_lig_rlig_clist } ,
+  }
+
+\msg_new:nnn { texnegar } { error-kashida-character-is-not-available-in-the-main-font }
+  {
+    Sorry,~ kashida~ character~ is~ not~ available~ in~ the~ main~ font~#1!
+  }
+
+\msg_new:nnn { texnegar } { error-value-not-available-for-kashida-option }
+  {
+    Sorry,~ value~ `#1'~ is~ not~ available~ for~ `Kashida'~ option~ yet~!
+  }
+
+\msg_new:nnn { texnegar } { error-specify-value-for-kashida-option }
+  {
+    Sorry,~ you~ must~ specify~ a~ value~ for~ `Kashida'~ option~ yet~!
+  }
+
+\msg_new:nnn { texnegar } { warning-experimental-feature }
+  {
+    Please~ note~ that~ the~ feature~ `#1'~ is~ still~ experimental~
+    and~ is~ not~ regarded~ as~ stable.
+  }
+
+\msg_new:nnn { texnegar } { hm-series-font-not-found }
+  {
+    Either~ the~ font~`#1'~ is~ not~ installed~ on~ your~ system~ or~ does~ not~
+    belong~ to~ HM~Series~fonts.~
+    Please~ note~ that~ the~ option~ `Kashida=leaders+glyph'~ is~ currently~ only~
+    supported~ by~ HM~Series~fonts.~
+    If~ you~ know~ of~ any~ other~ font~ that~ supports~ this~ option,~ please~
+    let~ me~ know~ to~ add~ it~ to~ the~ list~ of~ corresponding~ fonts.~
+  }
+
+\msg_new:nnn { texnegar } { luatex-version-is-too-old }
+  {
+    #1:~Your~luatex~is~too~old,~you~need~at~least~version~#2.#3~!
+  }
+
+\keys_define:nn { texnegar }
+  {
+    Kashidafontfamily .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:Nn \l_tmpa_tl
+          {
+            \tl_if_empty:NTF \l_tmpa_tl
+              {
+                \bool_set_false:N \l_texnegar_kashida_fontfamily_bool
+              }
+              {
+                \bool_set_true:N \l_texnegar_kashida_fontfamily_bool
+                \tl_set:Nx \l_texnegar_kashida_fontfamily_tl { \l_tmpa_tl }
+              }
+          }
+      } ,
+
+    Minimal .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:Nn \l_tmpa_tl
+          {
+            \l_texnegar_minimal_off_tl
+              {
+                \bool_set_false:N \l_texnegar_minimal_bool
+              }
+            \l_texnegar_minimal_on_tl
+              {
+                \bool_set_true:N \l_texnegar_minimal_bool
+              }
+          }
+      } ,
+
+    Kashida .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+            \l_texnegar_stretch_glyph_tl
+              {
+                \msg_warning:nnn { texnegar } { warning-experimental-feature } { Kashida=glyph }
+                \tl_set:Nx \l_texnegar_gap_filler_tl { \l_texnegar_stretch_glyph_tl }
+                \AtBeginDocument
+                  {
+                    \tl_set:Nx \l_texnegar_main_font_full_tl { \tex_fontname:D \tex_the:D \tex_font:D }
+                    \tl_set:Nx \l_texnegar_main_font_name_tl { \l_texnegar_main_font_full_tl }
+                    \regex_replace_once:nnN { ^"([^/]+)/.* } { \1 } \l_texnegar_main_font_name_tl
+                  }
+                \bool_set_true:N \l_texnegar_kashida_fix_bool
+                \bool_set_true:N \l_texnegar_kashida_glyph_bool
+              }
+            \l_texnegar_stretch_leaders_glyph_tl
+              {
+                \tl_set:Nx \l_texnegar_gap_filler_tl { \l_texnegar_stretch_leaders_glyph_tl }
+                \bool_set_true:N \l_texnegar_kashida_fix_bool
+                \bool_set_true:N \l_texnegar_kashida_leaders_glyph_bool
+              }
+            \l_texnegar_stretch_leaders_hrule_tl
+              {
+                \tl_set:Nx \l_texnegar_gap_filler_tl { \l_texnegar_stretch_leaders_hrule_tl }
+                \bool_set_true:N \l_texnegar_kashida_fix_bool
+                \bool_set_true:N \l_texnegar_kashida_leaders_hrule_bool
+              }
+            \l_texnegar_stretch_off_tl
+              {
+                \tl_set:Nx \l_texnegar_gap_filler_tl { \l_texnegar_stretch_off_tl }
+                \bool_set_false:N \l_texnegar_kashida_fix_bool
+              }
+            \l_texnegar_stretch_on_tl
+              {
+                \tl_set:Nx \l_texnegar_gap_filler_tl { \l_texnegar_stretch_leaders_glyph_tl }
+                \bool_set_true:N \l_texnegar_kashida_fix_bool
+                \bool_set_true:N \l_texnegar_kashida_leaders_glyph_bool
+              }
+          } { } { \tl_set:Nx \l_texnegar_gap_filler_tl { #1 } }
+        \tl_if_empty:NT \l_texnegar_gap_filler_tl { \msg_error:nn { texnegar } { error-specify-value-for-kashida-option } }
+      } ,
+
+    linebreakpenalty .code:n =
+      {
+        \int_set:Nn \l_tmpa_int { #1 }
+        \int_case:nnTF \l_tmpa_int
+          {
+            \l_texnegar_min_penalty_int  { \int_set:Nn \l_texnegar_line_break_penalty_int { \l_texnegar_min_penalty_int } }
+            \l_texnegar_low_penalty_int  { \int_set:Nn \l_texnegar_line_break_penalty_int { \l_texnegar_low_penalty_int } }
+            \l_texnegar_med_penalty_int  { \int_set:Nn \l_texnegar_line_break_penalty_int { \l_texnegar_med_penalty_int } }
+            \l_texnegar_high_penalty_int { \int_set:Nn \l_texnegar_line_break_penalty_int { \l_texnegar_high_penalty_int } }
+            \l_texnegar_max_penalty_int  { \int_set:Nn \l_texnegar_line_break_penalty_int { \l_texnegar_max_penalty_int } }
+          } { } { \int_set:Nn \l_texnegar_line_break_penalty_int { #1 } }
+        \bool_set_true:N \l_texnegar_linebreakpenalty_bool
+      } ,
+
+    kashidastretch .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+             \l_texnegar_fnt_kayhan_tl       { \tl_set:Nn \l_texnegar_skip_default_tl { 0.14  em plus 0.5 em } }
+             \l_texnegar_fnt_kayhannavaar_tl { \tl_set:Nn \l_texnegar_skip_default_tl { 0.129 em plus 0.5 em } }
+             \l_texnegar_fnt_kayhanpook_tl   { \tl_set:Nn \l_texnegar_skip_default_tl { 0.133 em plus 0.5 em } }
+             \l_texnegar_fnt_kayhansayeh_tl  { \tl_set:Nn \l_texnegar_skip_default_tl { 0.135 em plus 0.5 em } }
+             \l_texnegar_fnt_khoramshahr_tl  { \tl_set:Nn \l_texnegar_skip_default_tl { 0.128 em plus 0.5 em } }
+             \l_texnegar_fnt_khorramshahr_tl { \tl_set:Nn \l_texnegar_skip_default_tl { 0.13  em plus 0.5 em } }
+             \l_texnegar_fnt_niloofar_tl     { \tl_set:Nn \l_texnegar_skip_default_tl { 0.132 em plus 0.5 em } }
+             \l_texnegar_fnt_paatch_tl       { \tl_set:Nn \l_texnegar_skip_default_tl { 0.127 em plus 0.5 em } }
+             \l_texnegar_fnt_riyaz_tl        { \tl_set:Nn \l_texnegar_skip_default_tl { 0.125 em plus 0.5 em } }
+             \l_texnegar_fnt_roya_tl         { \tl_set:Nn \l_texnegar_skip_default_tl { 0.142 em plus 0.5 em } }
+             \l_texnegar_fnt_shafigh_tl      { \tl_set:Nn \l_texnegar_skip_default_tl { 0.143 em plus 0.5 em } }
+             \l_texnegar_fnt_shafighKurd_tl  { \tl_set:Nn \l_texnegar_skip_default_tl { 0.126 em plus 0.5 em } }
+             \l_texnegar_fnt_shafighUzbek_tl { \tl_set:Nn \l_texnegar_skip_default_tl { 0.123 em plus 0.5 em } }
+             \l_texnegar_fnt_shiraz_tl       { \tl_set:Nn \l_texnegar_skip_default_tl { 0.122 em plus 0.5 em } }
+             \l_texnegar_fnt_sols_tl         { \tl_set:Nn \l_texnegar_skip_default_tl { 0.124 em plus 0.5 em } }
+             \l_texnegar_fnt_tabriz_tl       { \tl_set:Nn \l_texnegar_skip_default_tl { 0.119 em plus 0.5 em } }
+             \l_texnegar_fnt_titr_tl         { \tl_set:Nn \l_texnegar_skip_default_tl { 0.12  em plus 0.5 em } }
+             \l_texnegar_fnt_titre_tl        { \tl_set:Nn \l_texnegar_skip_default_tl { 0.121 em plus 0.5 em } }
+             \l_texnegar_fnt_traffic_tl      { \tl_set:Nn \l_texnegar_skip_default_tl { 0.124 em plus 0.5 em } }
+             \l_texnegar_fnt_vahid_tl        { \tl_set:Nn \l_texnegar_skip_default_tl { 0.134 em plus 0.5 em } }
+             \l_texnegar_fnt_vosta_tl        { \tl_set:Nn \l_texnegar_skip_default_tl { 0.136 em plus 0.5 em } }
+             \l_texnegar_fnt_yaghut_tl       { \tl_set:Nn \l_texnegar_skip_default_tl { 0.138 em plus 0.5 em } }
+             \l_texnegar_fnt_yagut_tl        { \tl_set:Nn \l_texnegar_skip_default_tl { 0.137 em plus 0.5 em } }
+             \l_texnegar_fnt_yas_tl          { \tl_set:Nn \l_texnegar_skip_default_tl { 0.126 em plus 0.5 em } }
+             \l_texnegar_fnt_yekan_tl        { \tl_set:Nn \l_texnegar_skip_default_tl { 0.141 em plus 0.5 em } }
+             \l_texnegar_fnt_yermook_tl      { \tl_set:Nn \l_texnegar_skip_default_tl { 0.139 em plus 0.5 em } }
+             \l_texnegar_fnt_zar_tl          { \tl_set:Nn \l_texnegar_skip_default_tl { 0.116 em plus 0.5 em } }
+             \l_texnegar_fnt_ziba_tl         { \tl_set:Nn \l_texnegar_skip_default_tl { 0.119 em plus 0.5 em } }
+             \l_texnegar_fnt_default_tl      { \tl_set:Nn \l_texnegar_skip_default_tl { 0.14  em plus 0.5 em } }
+             \l_texnegar_fnt_noskip_tl       { \tl_set:Nn \l_texnegar_skip_default_tl { 0     em plus 0.5 em } }
+          } { } { \tl_set:Nn \l_texnegar_skip_default_tl { #1 } }
+      } ,
+    kashidastretch .default:n = \tl_set:Nn \l_texnegar_skip_default_tl { 0 em plus 0.5 em } ,
+
+    ligatures .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+            \l_texnegar_lig_aalt_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_aalt_tl } }
+            \l_texnegar_lig_ccmp_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_ccmp_tl } }
+            \l_texnegar_lig_dlig_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_dlig_tl } }
+            \l_texnegar_lig_fina_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_fina_tl } }
+            \l_texnegar_lig_init_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_init_tl } }
+            \l_texnegar_lig_locl_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_locl_tl } }
+            \l_texnegar_lig_medi_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_medi_tl } }
+            \l_texnegar_lig_rlig_tl    { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_rlig_tl } }
+            \l_texnegar_lig_default_tl { \tl_set:Nx \l_texnegar_active_ligs_tl { \l_texnegar_lig_default_tl } }
+          } { } { \tl_set:Nn \l_texnegar_active_ligs_tl { #1 } }
+        \bool_set_true:N \l_texnegar_ligature_bool
+      } ,
+    ligatures .default:n = \tl_set:Nn \l_texnegar_active_ligs_tl { \l_texnegar_lig_default_tl } ,
+
+    color .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_if_empty:NTF \l_tmpa_tl
+          {
+            \tl_set:Nx \l_texnegar_color_tl { \l_texnegar_col_default_tl }
+          }
+          {
+            \tl_set:Nx \l_texnegar_color_tl { \l_tmpa_tl }
+          }
+        \bool_set_true:N  \l_texnegar_color_bool
+        \sys_if_engine_luatex:T
+          {
+            \convertcolorspec{named}{\l_texnegar_color_tl}{rgb}\l_texnegar_color_rgb_tl
+            \sys_if_engine_luatex:T
+              {
+                \directlua{l_texnegar_color_rgb_tl = "\l_texnegar_color_rgb_tl"}
+              }
+          }
+      } ,
+
+    hboxrecursion .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+            \l_texnegar_hboxrecursion_off_tl
+              {
+                \bool_set_false:N \l_texnegar_hboxrecursion_bool
+              }
+            \l_texnegar_hboxrecursion_on_tl
+              {
+                \bool_set_true:N \l_texnegar_hboxrecursion_bool
+              }
+          } { } { \bool_set_false:N \l_texnegar_hboxrecursion_bool }
+      } ,
+    hboxrecursion .default:n = \bool_set_true:N \l_texnegar_hboxrecursion_bool ,
+
+    vboxrecursion .code:n =
+      {
+        \tl_set:Nn \l_tmpa_tl { #1 }
+        \tl_case:NnTF \l_tmpa_tl
+          {
+            \l_texnegar_vboxrecursion_off_tl
+              {
+                \bool_set_false:N \l_texnegar_vboxrecursion_bool
+              }
+            \l_texnegar_vboxrecursion_on_tl
+              {
+                \bool_set_true:N \l_texnegar_vboxrecursion_bool
+              }
+          } { } { \bool_set_false:N \l_texnegar_vboxrecursion_bool }
+      } ,
+    vboxrecursion .default:n = \bool_set_true:N \l_texnegar_vboxrecursion_bool ,
+  }
+
+\ProcessKeysOptions { texnegar }
+
+\sys_if_engine_luatex:T
+  {
+    \NewDocumentCommand \KashidaHMFixOff {} { \directlua{StopStretching()} }
+    \NewDocumentCommand \KashidaHMFixOn  {} { \directlua{StartStretching()} }
+  }
+
+\sys_if_engine_xetex:T
+  {
+    \NewDocumentCommand \KashidaHMFixOn {} { \bool_set_true:N \l_texnegar_kashida_fix_bool }
+    \NewDocumentCommand \KashidaHMFixOff {} { \bool_set_false:N \l_texnegar_kashida_fix_bool }
+  }
+
+\tex_let:D \KashidaOn \KashidaHMFixOn
+\tex_let:D \KashidaOff \KashidaHMFixOff
+
+\bool_if:NTF \l_texnegar_kashida_fix_bool
+  {
+    \tl_if_empty:NT \l_texnegar_skip_default_tl { \tl_set:Nn \l_texnegar_skip_default_tl  { 0.14 em plus 0.5 em } }
+  }
+  {
+    \tl_set:NV \l_texnegar_skip_default_tl  \c_texnegar_skip_a_tl
+  }
+
+%% % \makeatletter
+%% % \newif\if@Kashida@on
+%% Becuase Vafa Khalighi has copied the above code (injecting the character uni+200E) in xepersian-23.0
+%% (https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/xelatex/xepersian/kashida-xepersian.def?revision=55165&view=co),
+%% the following line of code is not needed in xepersian anymore.
+%% % \newif\if@Kashida@XB@fix
+%% % \makeatother
+
+\bool_if:NF \l_texnegar_minimal_bool
+  {
+    \directlua{dofile(kpse.find_file("luatex-tools.lua"))}
+    \input texnegar-luabidi.tex
+  }
+
+ \endinput
+%</texnegar-ini-tex>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-common-kashida.tex}}
+%    \begin{macrocode}
+%<*texnegar-common-kashida-tex>
+\ProvidesExplFile {texnegar-common-kashida.tex} {2021-02-09} {0.1e} { Full implementation of kashida feature in XeLaTex and LuaLaTeX }
+
+\bool_if:NT \l_texnegar_ligature_bool
+{
+  \clist_new:N \l_texnegar_ligatures_clist
+  \int_new:N \l_texnegar_lig_names_len_int
+  \int_set:Nn \l_texnegar_lig_names_len_int { \clist_count:N \l_texnegar_lig_names_clist }
+  \int_step_inline:nnnn { 1 } { 2 } { \l_texnegar_lig_names_len_int }
+    {
+      \int_set:Nn \l_tmpa_int { #1 }
+      \int_set:Nn \l_tmpb_int { \int_eval:n { \l_tmpa_int + 1 } }
+      \tl_set:Nf \l_tmpa_tl { \clist_item:Nn \l_texnegar_lig_names_clist { \l_tmpa_int } }
+      \clist_set:Nx \l_tmpa_clist { { \clist_item:Nn \l_texnegar_lig_names_clist { \l_tmpb_int } } }
+      \bool_if:nT { \tl_if_eq_p:NN  \l_texnegar_active_ligs_tl  \l_tmpa_tl || \tl_if_eq_p:NN  \l_texnegar_active_ligs_tl \l_texnegar_lig_default_tl }
+        {
+          \clist_put_left:Nx \l_texnegar_ligatures_clist { \l_tmpa_clist }
+        }
+    }
+  \clist_map_inline:Nn \l_texnegar_ligatures_clist
+    {
+      \seq_set_split:Nnn \l_tmpa_seq { = } { #1 }
+      \seq_pop_left:NN \l_tmpa_seq \l_tmpa_tl { } { }
+      \seq_pop_left:NN \l_tmpa_seq \l_tmpb_tl { } { }
+      \tl_const:cx { \tl_use:N \l_tmpb_tl } { \char"\l_tmpa_tl \ }
+    }
+}
+
+\bool_if:NT \l_texnegar_linebreakpenalty_bool
+{
+  %% Partly adapted from LaTeX2e source
+  \cs_new:Nn \texnegar_line_break: {
+    \if_mode_vertical:
+      \GenericError{
+        \space\space\space\space\space\space\space\space\space\space\space\space\space\space\space
+        }{
+           LaTeX Error: There’s no line here to end
+        }{
+           See the LaTeX manual or LaTeX Companion for explanation.
+        }{
+           Your command was ignored.\MessageBreak
+           Type \space I <command> <return> \space to replace it~
+           with another command,\MessageBreak
+           or \space <return> \space to continue without it.}
+    \else:
+      \l_tmpa_skip \tex_lastskip:D
+      \tex_unskip:D
+      \tex_penalty:D -\l_texnegar_line_break_penalty_int
+      \dim_compare:nT { \l_tmpa_skip > \c_zero_skip }
+        { \skip_horizontal:N \l_tmpa_skip  \tex_ignorespaces:D }
+    \fi:
+  }
+
+  \NewDocumentCommand { \discouragebadlinebreaks } { O{\l_texnegar_line_break_penalty_int} O{\c_texnegar_skip_b_tl} m }
+    {
+      \IfNoValueF {#1}
+        { \int_set:Nn \l_texnegar_line_break_penalty_int {#1} }
+      \IfNoValueF {#2}
+        { \tl_set:Nn \l_texnegar_skip_default_tl {#2} }
+      \texnegar_put_line_breaks:n { #3 }
+   }
+
+  \cs_new_protected:Nn \texnegar_put_line_breaks:n
+    {
+      \tl_set:Nn \l_texnegar_line_break_tl { #1 }
+      \regex_replace_all:nnN { ([ابپتثجحخچدذرزژسشعغصضفقطظکگلمنوهیـ])+ } { \ \0 \  \c{texnegar_line_break:}\  } \l_texnegar_line_break_tl
+      \tl_use:N \l_texnegar_line_break_tl
+    }
+}
+
+ \endinput
+%</texnegar-common-kashida-tex>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-xetex-kashida.tex}}
+%
+%    \begin{macrocode}
+%<*texnegar-xetex-kashida-tex>
+\ProvidesExplFile {texnegar-xetex-kashida.tex} {2021-02-09} {0.1e} { Full implementation of kashida feature in XeLaTex and LuaLaTeX }
+
+\newXeTeXintercharclass \c_texnegar_d_charclass % dual-joiner class
+\newXeTeXintercharclass \c_texnegar_l_charclass % lam
+\newXeTeXintercharclass \c_texnegar_r_charclass % right-joiner
+\newXeTeXintercharclass \c_texnegar_a_charclass % alef
+\newXeTeXintercharclass \c_texnegar_y_charclass % yeh
+
+\tex_input:D { texnegar-common-kashida.tex }
+
+\tl_set:Nn \l_texnegar_use_color_tl
+  {
+    \bool_if:NTF \l_texnegar_color_bool
+      {
+        \colorlet{default}{\l_texnegar_color_tl}
+      }
+      {
+        \colorlet{default}{.}
+      }
+      \color{default}
+  }
+
+%% Partly adapted from the code provided by David Carlisle in:
+%% https://tex.stackexchange.com/questions/356709/how-to-know-the-width-and-fill-the-glue-space-between-two-characters-when-using/356721#356721
+\cs_new:Npn \texnegar_kashida_glyph #1
+{
+  \bool_if:NT \l_texnegar_kashida_fix_bool
+  {
+    \c_texnegar_lrm_int\tex_penalty:D 10000
+    \mode_leave_vertical:
+    \tex_global:D \tex_advance:D \l_texnegar_counter_int \c_one_int
+
+    \tl_set:Nx \l_texnegar_pos_tl { p\tex_romannumeral:D \l_texnegar_counter_int }
+    \tl_set:Nx \l_texnegar_zref_tl { z\tex_romannumeral:D \l_texnegar_counter_int }
+
+    \zsaveposx{x_i_\l_texnegar_zref_tl}
+    \tl_set:Nx \l_tmpa_tl
+      {
+        \iow_now:cx { @auxout }
+        {
+          \token_to_str:N \gdef \exp_after:wN \token_to_str:N \cs:w xi\l_texnegar_pos_tl \cs_end: { \zposx{ x_i_\l_texnegar_zref_tl } }
+        }
+      }
+    \l_tmpa_tl
+    \skip_horizontal:n { #1 }
+    \zsaveposx{x_f_\l_texnegar_zref_tl}
+    \tl_set:Nx \l_tmpa_tl
+      {
+        \iow_now:cx { @auxout }
+        {
+          \token_to_str:N \gdef \exp_after:wN \token_to_str:N \cs:w xf\l_texnegar_pos_tl \cs_end: { \zposx{ x_f_\l_texnegar_zref_tl } }
+        }
+      }
+    \l_tmpa_tl
+    \exp_after:wN
+    \if_meaning:w
+      \cs:w xi\l_texnegar_pos_tl \cs_end: \tex_relax:D
+    \else:
+      \dim_set:Nn \l_texnegar_diff_pos_dim
+        {
+          \dim_eval:n { \cs:w xi\l_texnegar_pos_tl \cs_end: sp - \cs:w xf\l_texnegar_pos_tl \cs_end: sp }
+        }
+      \dim_compare:nTF { \l_texnegar_diff_pos_dim == 0sp }
+        { }
+        { \llap { \resizebox { \l_texnegar_diff_pos_dim \tex_relax:D } { \height } { \l_texnegar_use_color_tl \c_texnegar_ksh_int } } }
+    \fi:
+  }
+}
+
+\cs_new:Npn \texnegar_kashida_leaders #1
+{
+  \bool_if:NT \l_texnegar_kashida_fix_bool
+    {
+      \tl_if_eq:NNTF \l_texnegar_gap_filler_tl  \l_texnegar_stretch_leaders_glyph_tl
+        {
+          \tl_set:Nx \l_texnegar_font_full_tl { \tex_fontname:D \tex_the:D \tex_font:D }
+          \tl_set:Nx \l_texnegar_font_name_tl { \l_texnegar_font_full_tl }
+          \tl_set:Nx \l_texnegar_font_init_tl { \l_texnegar_font_name_tl }
+          \regex_replace_once:nnN { ^"\[?(HM)[\_\ ](X|F).* } { \1\2 } \l_texnegar_font_init_tl\relax
+          \tl_set:Nn \l_tmpa_tl { HMF }
+          \tl_set:Nn \l_tmpb_tl { HMX }
+          \bool_if:nTF { \str_if_eq_p:NN { \l_texnegar_font_init_tl } { \l_tmpa_tl } || \str_if_eq_p:NN { \l_texnegar_font_init_tl } { \l_tmpb_tl } }
+            {
+              \hbox_set:Nn \l_texnegar_ksh_box { \l_texnegar_use_color_tl \XeTeXglyph\XeTeXglyphindex"kashida" }
+              \c_texnegar_zwj_int \tex_penalty:D 10000
+              \tex_leaders:D \copy\l_texnegar_ksh_box \skip_horizontal:n { #1 }
+              \c_texnegar_zwj_int
+            }
+            {
+              \msg_error:nnx { texnegar } { hm-series-font-not-found } { \l_texnegar_font_name_tl }
+            }
+        }
+        {
+          %% Partly adapted from the code provided by Jonathan Kew in:
+          %% https://tug.org/pipermail/xetex/2009-February/012307.html.
+          %% Somebody notified me that the code in 'kashida-xepersian.def' from xepersian
+          %% package is an exact copy of Jonathan Kew's code. Being unaware of this, in
+          %% the earlier versions of this package I made a mistake and acknowledged
+          %% Vafa Khalighi instead of Jonathan Kew. A sincere thank you to Jonathan Kew
+          %% for his excellent code.
+          \c_texnegar_lrm_int\c_texnegar_zwj_int
+          {\l_texnegar_use_color_tl\tex_penalty:D 10000
+          \tex_leaders:D \tex_hrule:D height \XeTeXglyphbounds \c_texnegar_two_int
+          \int_use:N \XeTeXcharglyph \c_texnegar_ksh_int depth \XeTeXglyphbounds \c_texnegar_four_int
+          \int_use:N \XeTeXcharglyph \c_texnegar_ksh_int \skip_horizontal:n { #1 }
+          }
+          \c_texnegar_zwj_int
+        }
+    }
+}
+
+\XeTeXinterchartokenstate = 1
+
+\clist_set:Nn \l_texnegar_a_clist { 0622,0623,0625,0627 } % ‏ا، إ، أ، آ‏
+\clist_map_inline:Nn \l_texnegar_a_clist
+  {
+    \XeTeXcharclass "#1 \c_texnegar_a_charclass
+  }
+
+\clist_set:Nn \l_texnegar_d_clist { 0626,0628,062A,062B,062C,062D,062E,0633,0634,0635,0636,0637,0638,0639,063A,0640,0641,0642,0643,0645,0646,0647,067E,0686,06A9,06AF } % ‏ئ,ب,ت,ث,ج,ح,خ,س,ش,ص,ض,ط,ظ,ع,غ,ـ,ف,ق,ك,م,ن,ه,پ,چ,ک,گ‏
+\clist_map_inline:Nn \l_texnegar_d_clist
+  {
+    \XeTeXcharclass "#1 \c_texnegar_d_charclass
+  }
+
+\clist_set:Nn \l_texnegar_l_clist { 0644 } % ‏ل‏
+\clist_map_inline:Nn \l_texnegar_l_clist
+  {
+    \XeTeXcharclass "#1 \c_texnegar_l_charclass
+  }
+
+\clist_set:Nn \l_texnegar_r_clist { 0624,0629,062F,0630,0631,0632,0648,0698 } % ‏ؤ,ة,د,ذ,ر,ز,و,ژ‏
+\clist_map_inline:Nn \l_texnegar_r_clist
+  {
+    \XeTeXcharclass "#1 \c_texnegar_r_charclass
+  }
+
+\clist_set:Nn \l_texnegar_y_clist { 0649,064A,06CC } % ‏ی,ي,ى‏
+\clist_map_inline:Nn \l_texnegar_y_clist
+  {
+    \XeTeXcharclass "#1 \c_texnegar_y_charclass
+  }
+
+\tl_if_eq:NNTF  \l_texnegar_gap_filler_tl  \l_texnegar_stretch_glyph_tl {
+  \XeTeXinterchartoks \c_texnegar_y_charclass \c_texnegar_y_charclass = {
+    \bool_if:NTF \l_texnegar_kashida_fix_bool
+    { \c_texnegar_zwj_int \texnegar_kashida_glyph \l_texnegar_skip_default_tl \c_texnegar_zwj_int }
+    { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  }
+  \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_y_charclass = {
+    \bool_if:NTF \l_texnegar_kashida_fix_bool
+    { \c_texnegar_zwj_int \texnegar_kashida_glyph \l_texnegar_skip_default_tl \c_texnegar_zwj_int }
+    { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  }
+  \XeTeXinterchartoks \c_texnegar_y_charclass \c_texnegar_d_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_d_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_d_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_l_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_l_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_r_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_a_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_r_charclass = { \c_texnegar_zwj_int \texnegar_kashida_glyph \c_texnegar_skip_a_tl \c_texnegar_zwj_int }
+  \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_a_charclass = { }
+}
+{
+  \bool_if:nTF {
+    \tl_if_eq_p:NN  \l_texnegar_gap_filler_tl  \l_texnegar_stretch_leaders_glyph_tl ||
+    \tl_if_eq_p:NN  \l_texnegar_gap_filler_tl  \l_texnegar_stretch_leaders_hrule_tl
+  }
+  {
+    \XeTeXinterchartoks \c_texnegar_y_charclass \c_texnegar_y_charclass = {
+      \bool_if:NTF \l_texnegar_kashida_fix_bool
+      { \texnegar_kashida_leaders \l_texnegar_skip_default_tl }
+      { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    }
+    \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_y_charclass = {
+      \bool_if:NTF \l_texnegar_kashida_fix_bool
+      { \texnegar_kashida_leaders \l_texnegar_skip_default_tl }
+      { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    }
+    \XeTeXinterchartoks \c_texnegar_y_charclass \c_texnegar_d_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_d_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_d_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_l_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_l_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_r_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_d_charclass \c_texnegar_a_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_r_charclass = { \texnegar_kashida_leaders \c_texnegar_skip_a_tl }
+    \XeTeXinterchartoks \c_texnegar_l_charclass \c_texnegar_a_charclass = { }
+  }
+  {
+    \msg_error:nnx { texnegar } { error-value-not-available-for-kashida-option } { \l_texnegar_gap_filler_tl }
+  }
+}
+
+ \endinput
+%</texnegar-xetex-kashida-tex>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-char-table.lua}}
+%
+%    \begin{macrocode}
+%<*texnegar-char-table-lua>
+--
+-- This is file `texnegar-char-table.lua',
+-- generated with the docstrip utility.
+--
+-- The original source files were:
+--
+-- texnegar.dtx  (with options: `texnegar-char-table-lua')
+--
+-- Copyright (C) 2020-2021 Hossein Movahhedian
+--
+-- It may be distributed and/or modified under the LaTeX Project Public License,
+-- version 1.3c or higher (your choice). The latest version of
+-- this license is at: http://www.latex-project.org/lppl.txt
+--
+-- texnegar_char_table        = texnegar_char_table or {}
+-- local texnegar_char_table  = texnegar_char_table
+-- texnegar_char_table.module = {
+--     name                   = "texnegar_char_table",
+--     version                = "0.1e",
+--     date                   = "2021-02-09",
+--     description            = "Full implementation of kashida feature in XeLaTex and LuaLaTeX",
+--     author                 = "Hossein Movahhedian",
+--     copyright              = "Hossein Movahhedian",
+--     license                = "LPPL v1.3c"
+-- }
+--
+-- -- ^^A%%  texnegar-lua.dtx -- part of TEXNEGAR <bitbucket.org/dma8hm1334/texnegar>
+-- local err, warn, info, log = luatexbase.provides_module(texnegar_char_table.module)
+-- texnegar_char_table.log     = log  or (function (s) luatexbase.module_info("texnegar_char_table", s)    end)
+-- texnegar_char_table.warning = warn or (function (s) luatexbase.module_warning("texnegar_char_table", s) end)
+-- texnegar_char_table.error   = err  or (function (s) luatexbase.module_error("texnegar_char_table", s)   end)
+
+local peCharTableDiacritic  = {
+  [1611]  = utf8.char(1611),   -- "ً",  utf8.codepoint("ً") == 1611,   "\u{064B}", ARABIC-FATHATAN
+  [1612]  = utf8.char(1612),   -- "ٌ",  utf8.codepoint("ٌ") == 1612,   "\u{064C}", ARABIC-DAMMATAN
+  [1613]  = utf8.char(1613),   -- "ٍ",  utf8.codepoint("ٍ") == 1613,   "\u{064D}", ARABIC-KASRATAN
+  [1614]  = utf8.char(1614),   -- "َ",  utf8.codepoint("َ") == 1614,   "\u{064E}", ARABIC-FATHA
+  [1615]  = utf8.char(1615),   -- "ُ",  utf8.codepoint("ُ") == 1615,   "\u{064F}", ARABIC-DAMMA
+  [1616]  = utf8.char(1616),   -- "ِ",  utf8.codepoint("ِ") == 1616,   "\u{0650}", ARABIC-KASRA
+  [1617]  = utf8.char(1617),   -- "ّ",  utf8.codepoint("ّ") == 1617,   "\u{0651}", ARABIC-SHADDA
+  [1618]  = utf8.char(1618),   -- "ْ",  utf8.codepoint("ْ") == 1618,   "\u{0652}", ARABIC-SUKUN
+  [1619]  = utf8.char(1619),   -- "ٓ",  utf8.codepoint("ٓ") == 1619,   "\u{0653}", ARABIC-MADDA ABOVE
+  [1620]  = utf8.char(1620),   -- "ٔ",  utf8.codepoint("ٔ") == 1620,   "\u{0654}", ARABIC-HAMZA ABOVE
+  [1621]  = utf8.char(1621),   -- "ٕ",  utf8.codepoint("ٕ") == 1621,   "\u{0655}", ARABIC-HAMZA BELOW
+  [1622]  = utf8.char(1622),   -- "ٖ",  utf8.codepoint("ٖ") == 1622,   "\u{0656}", ARABIC-SUBSCRIPT ALEF
+  [1623]  = utf8.char(1623),   -- "ٗ",  utf8.codepoint("ٗ") == 1623,   "\u{0657}", ARABIC-INVERTED DAMMA
+  [1624]  = utf8.char(1624),   -- "٘",  utf8.codepoint("٘") == 1624,   "\u{0658}", ARABIC-MARK NOON GHUNNA
+  [1625]  = utf8.char(1625),   -- "ٙ",  utf8.codepoint("ٙ") == 1625,   "\u{0659}", ARABIC-ZWARAKAY
+  [1648]  = utf8.char(1648),   -- "",  utf8.codepoint("") == 1648,   "\u{0670}", ARABIC-SUPERSCRIPT ALEF
+  [64606] = utf8.char(64606),  -- "",  utf8.codepoint("") == 64606,  "\u{FC5E}", ARABIC-LIGATURE SHADDA WITH DAMMATAN ISOLATED FORM
+  [64607] = utf8.char(64607),  -- "",  utf8.codepoint("") == 64607,  "\u{FC5F}", ARABIC-LIGATURE SHADDA WITH KASRATAN ISOLATED FORM
+  [64608] = utf8.char(64608),  -- "",  utf8.codepoint("") == 64608,  "\u{FC60}", ARABIC-LIGATURE SHADDA WITH FATHA ISOLATED FORM
+  [64609] = utf8.char(64609),  -- "",  utf8.codepoint("") == 64609,  "\u{FC61}", ARABIC-LIGATURE SHADDA WITH DAMMA ISOLATED FORM
+  [64610] = utf8.char(64610),  -- "",  utf8.codepoint("") == 64610,  "\u{FC62}", ARABIC-LIGATURE SHADDA WITH KASRA ISOLATED FORM
+  [64611] = utf8.char(64611),  -- "",  utf8.codepoint("") == 64611,  "\u{FC63}", ARABIC-LIGATURE SHADDA WITH SUPERSCRIPT ALEF ISOLATED FORM
+}
+
+local peCharTableDigit  = {
+  [1632] = utf8.char(1632),  -- "٠",  utf8.codepoint("٠") == 1632,  "\u{0660}", ARABIC-INDIC DIGIT ZERO
+  [1633] = utf8.char(1633),  -- "١",  utf8.codepoint("١") == 1633,  "\u{0661}", ARABIC-INDIC DIGIT ONE
+  [1634] = utf8.char(1634),  -- "٢",  utf8.codepoint("٢") == 1634,  "\u{0662}", ARABIC-INDIC DIGIT TWO
+  [1635] = utf8.char(1635),  -- "٣",  utf8.codepoint("٣") == 1635,  "\u{0663}", ARABIC-INDIC DIGIT THREE
+  [1636] = utf8.char(1636),  -- "٤",  utf8.codepoint("٤") == 1636,  "\u{0664}", ARABIC-INDIC DIGIT FOUR
+  [1637] = utf8.char(1637),  -- "٥",  utf8.codepoint("٥") == 1637,  "\u{0665}", ARABIC-INDIC DIGIT FIVE
+  [1638] = utf8.char(1638),  -- "٦",  utf8.codepoint("٦") == 1638,  "\u{0666}", ARABIC-INDIC DIGIT SIX
+  [1639] = utf8.char(1639),  -- "٧",  utf8.codepoint("٧") == 1639,  "\u{0667}", ARABIC-INDIC DIGIT SEVEN
+  [1640] = utf8.char(1640),  -- "٨",  utf8.codepoint("٨") == 1640,  "\u{0668}", ARABIC-INDIC DIGIT EIGHT
+  [1641] = utf8.char(1641),  -- "٩",  utf8.codepoint("٩") == 1641,  "\u{0669}", ARABIC-INDIC DIGIT NINE
+  [1780] = utf8.char(1780),  -- "۴",  utf8.codepoint("۴") == 1780,  "\u{06F4}", EXTENDED ARABIC-INDIC DIGIT FOUR
+  [1781] = utf8.char(1781),  -- "۵",  utf8.codepoint("۵") == 1781,  "\u{06F5}", EXTENDED ARABIC-INDIC DIGIT FIVE
+  [1782] = utf8.char(1782),  -- "۶",  utf8.codepoint("۶") == 1782,  "\u{06F6}", EXTENDED ARABIC-INDIC DIGIT SIX
+}
+
+local peCharTablePunctuation  = {
+  [1548] = utf8.char(1548),  -- "،",  utf8.codepoint("،") == 1548,  "\u{060C}", ARABIC COMMA
+  [1549] = utf8.char(1549),  -- "؍",  utf8.codepoint("؍") == 1549,  "\u{060D}", ARABIC DATE SEPARATOR
+  [1563] = utf8.char(1563),  -- "؛",  utf8.codepoint("؛") == 1563,  "\u{061B}", ARABIC SEMICOLON
+  [1567] = utf8.char(1567),  -- "؟",  utf8.codepoint("؟") == 1567,  "\u{061F}", ARABIC QUESTION MARK
+  [1642] = utf8.char(1642),  -- "٪",  utf8.codepoint("٪") == 1642,  "\u{066A}", ARABIC PERCENT SIGN
+  [1643] = utf8.char(1643),  -- "٫",  utf8.codepoint("٫") == 1643,  "\u{066B}", ARABIC DECIMAL SEPARATOR
+  [1644] = utf8.char(1644),  -- "٬",  utf8.codepoint("٬") == 1644,  "\u{066C}", ARABIC THOUSANDS SEPARATOR
+  [1645] = utf8.char(1645),  -- "٭",  utf8.codepoint("٭") == 1645,  "\u{066D}", ARABIC FIVE POINTED STAR
+}
+
+local peCharTable  = {
+  [1569] = utf8.char(1569),    -- "ء",  utf8.codepoint("ء") == 1569,  "\u{0621}", ARABIC LETTER ALEF HAMZA
+  [1570] = utf8.char(1570),    -- "آ",  utf8.codepoint("آ") == 1570,  "\u{0622}", ARABIC LETTER ALEF WITH MADDA ABOVE
+  [1571] = utf8.char(1571),    -- "أ",  utf8.codepoint("أ") == 1571,  "\u{0623}", ARABIC LETTER ALEF WITH HAMZA ABOVE
+  [1572] = utf8.char(1572),    -- "ؤ",  utf8.codepoint("ؤ") == 1572,  "\u{0624}", ARABIC LETTER WAW WITH HAMZA ABOVE
+  [1573] = utf8.char(1573),    -- "إ",  utf8.codepoint("إ") == 1573,  "\u{0625}", ARABIC LETTER ALEF WITH HAMZA BELOW
+  [1574] = utf8.char(1574),    -- "ئ",  utf8.codepoint("ئ") == 1574,  "\u{0626}", ARABIC LETTER YEH WITH HAMZA ABOVE
+  [1575] = utf8.char(1575),    -- "ا",  utf8.codepoint("ا") == 1575,  "\u{0627}", ARABIC LETTER ALEF
+  [1576] = utf8.char(1576),    -- "ب",  utf8.codepoint("ب") == 1576,  "\u{0628}", ARABIC LETTER BEH
+  [1577] = utf8.char(1577),    -- "ة",  utf8.codepoint("ة") == 1577,  "\u{0629}", ARABIC LETTER TEH MARBUTA
+  [1578] = utf8.char(1578),    -- "ت",  utf8.codepoint("ت") == 1578,  "\u{062A}", ARABIC LETTER TEH
+  [1579] = utf8.char(1579),    -- "ث",  utf8.codepoint("ث") == 1579,  "\u{062B}", ARABIC LETTER THEH
+  [1580] = utf8.char(1580),    -- "ج",  utf8.codepoint("ج") == 1580,  "\u{062C}", ARABIC LETTER JEEM
+  [1581] = utf8.char(1581),    -- "ح",  utf8.codepoint("ح") == 1581,  "\u{062D}", ARABIC LETTER HAH
+  [1582] = utf8.char(1582),    -- "خ",  utf8.codepoint("خ") == 1582,  "\u{062E}", ARABIC LETTER KHAH
+  [1583] = utf8.char(1583),    -- "د",  utf8.codepoint("د") == 1583,  "\u{062F}", ARABIC LETTER DAL
+  [1584] = utf8.char(1584),    -- "ذ",  utf8.codepoint("ذ") == 1584,  "\u{0630}", ARABIC LETTER THAL
+  [1585] = utf8.char(1585),    -- "ر",  utf8.codepoint("ر") == 1585,  "\u{0631}", ARABIC LETTER REH
+  [1586] = utf8.char(1586),    -- "ز",  utf8.codepoint("ز") == 1586,  "\u{0632}", ARABIC LETTER ZAIN
+  [1587] = utf8.char(1587),    -- "س",  utf8.codepoint("س") == 1587,  "\u{0633}", ARABIC LETTER SEEN
+  [1588] = utf8.char(1588),    -- "ش",  utf8.codepoint("ش") == 1588,  "\u{0634}", ARABIC LETTER SHEEN
+  [1589] = utf8.char(1589),    -- "ص",  utf8.codepoint("ص") == 1589,  "\u{0635}", ARABIC LETTER SAD
+  [1590] = utf8.char(1590),    -- "ض",  utf8.codepoint("ض") == 1590,  "\u{0636}", ARABIC LETTER DAD
+  [1591] = utf8.char(1591),    -- "ط",  utf8.codepoint("ط") == 1591,  "\u{0637}", ARABIC LETTER TAH
+  [1592] = utf8.char(1592),    -- "ظ",  utf8.codepoint("ظ") == 1592,  "\u{0638}", ARABIC LETTER ZAH
+  [1593] = utf8.char(1593),    -- "ع",  utf8.codepoint("ع") == 1593,  "\u{0639}", ARABIC LETTER AIN
+  [1594] = utf8.char(1594),    -- "غ",  utf8.codepoint("غ") == 1594,  "\u{063A}", ARABIC LETTER GHAIN
+  [1601] = utf8.char(1601),    -- "ف",  utf8.codepoint("ف") == 1601,  "\u{0641}", ARABIC LETTER FEH
+  [1602] = utf8.char(1602),    -- "ق",  utf8.codepoint("ق") == 1602,  "\u{0642}", ARABIC LETTER QAF
+  [1603] = utf8.char(1603),    -- "ك",  utf8.codepoint("ك") == 1603,  "\u{0643}", ARABIC LETTER KAF
+  [1604] = utf8.char(1604),    -- "ل",  utf8.codepoint("ل") == 1604,  "\u{0644}", ARABIC LETTER LAM
+  [1605] = utf8.char(1605),    -- "م",  utf8.codepoint("م") == 1605,  "\u{0645}", ARABIC LETTER MEEM
+  [1606] = utf8.char(1606),    -- "ن",  utf8.codepoint("ن") == 1606,  "\u{0646}", ARABIC LETTER NOON
+  [1607] = utf8.char(1607),    -- "ه",  utf8.codepoint("ه") == 1607,  "\u{0647}", ARABIC LETTER HEH
+  [1608] = utf8.char(1608),    -- "و",  utf8.codepoint("و") == 1608,  "\u{0648}", ARABIC LETTER WAW
+  [1609] = utf8.char(1609),    -- "ى",  utf8.codepoint("ى") == 1609,  "\u{0649}", ARABIC LETTER ALEF MAKSURA
+  [1610] = utf8.char(1610),    -- "ي",  utf8.codepoint("ي") == 1610,  "\u{064A}", ARABIC LETTER YEH
+  [1662] = utf8.char(1662),    -- "پ",  utf8.codepoint("پ") == 1662,  "\u{067E}", ARABIC LETTER PEH
+  [1670] = utf8.char(1670),    -- "چ",  utf8.codepoint("چ") == 1670,  "\u{0686}", ARABIC LETTER TCHEH
+  [1688] = utf8.char(1688),    -- "ژ",  utf8.codepoint("ژ") == 1688,  "\u{0698}", ARABIC LETTER JEH
+  [1705] = utf8.char(1705),    -- "ک",  utf8.codepoint("ک") == 1705,  "\u{06A9}", ARABIC LETTER KEHEH
+  [1706] = utf8.char(1706),    -- "ڪ",  utf8.codepoint("ڪ") == 1706,  "\u{06AA}", ARABIC LETTER SWASH KAF
+  [1711] = utf8.char(1711),    -- "گ",  utf8.codepoint("گ") == 1711,  "\u{06AF}", ARABIC LETTER GAF
+  [1726] = utf8.char(1726),    -- "ھ",  utf8.codepoint("ھ") == 1726,  "\u{06BE}", ARABIC LETTER HEH DOACHASHMEE
+  [1728] = utf8.char(1728),    -- "ۀ",  utf8.codepoint("ۀ") == 1728,  "\u{06C0}", ARABIC LETTER HEH WITH YEH ABOVE
+  [1740] = utf8.char(1740),    -- "ی",  utf8.codepoint("ی") == 1740,  "\u{06CC}", ARABIC LETTER FARSI YEH
+  [1749] = utf8.char(1749),    -- "ە",  utf8.codepoint("ە") == 1740,  "\u{06D5}", ARABIC LETTER AE
+  [65275] = utf8.char(65275),  -- "ﻻ",  utf8.codepoint("ﻻ") == 65275,  "\u{FEFB}", ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM
+  [65276] = utf8.char(65276),  -- "ﻼ",  utf8.codepoint("ﻼ") == 65276,  "\u{FEFC}", ARABIC LIGATURE LAM WITH ALEF FINAL FORM
+}
+
+local peCharTableInitial  = {
+  [64344] = utf8.char(64344),  -- "ﭘ",  utf8.codepoint("ﭘ") == 64344,  "\u{FB58}", INITIAL FORM PEH
+  [64380] = utf8.char(64380),  -- "ﭼ",  utf8.codepoint("ﭼ") == 64380,  "\u{FB7C}", INITIAL FORM TCHEH
+  [64400] = utf8.char(64400),  -- "ﮐ",  utf8.codepoint("ﮐ") == 64400,  "\u{FB90}", INITIAL FORM KEHEH
+  [64404] = utf8.char(64404),  -- "ﮔ",  utf8.codepoint("ﮔ") == 64404,  "\u{FB94}", INITIAL FORM GAF
+  [64510] = utf8.char(64510),  -- "ﯾ",  utf8.codepoint("ﯾ") == 64510,  "\u{FBFE}", INITIAL FORM YEH
+  [65169] = utf8.char(65169),  -- "ﺑ",  utf8.codepoint("ﺑ") == 65169,  "\u{FE91}", INITIAL FORM BEH
+  [65175] = utf8.char(65175),  -- "ﺗ",  utf8.codepoint("ﺗ") == 65175,  "\u{FE97}", INITIAL FORM TEH
+  [65179] = utf8.char(65179),  -- "ﺛ",  utf8.codepoint("ﺛ") == 65179,  "\u{FE9B}", INITIAL FORM THEH
+  [65183] = utf8.char(65183),  -- "ﺟ",  utf8.codepoint("ﺟ") == 65183,  "\u{FE9F}", INITIAL FORM JEEM
+  [65187] = utf8.char(65187),  -- "ﺣ",  utf8.codepoint("ﺣ") == 65187,  "\u{FEA3}", INITIAL FORM HAH
+  [65191] = utf8.char(65191),  -- "ﺧ",  utf8.codepoint("ﺧ") == 65191,  "\u{FEA7}", INITIAL FORM KHAH
+  [65203] = utf8.char(65203),  -- "ﺳ",  utf8.codepoint("ﺳ") == 65203,  "\u{FEB3}", INITIAL FORM SEEN
+  [65207] = utf8.char(65207),  -- "ﺷ",  utf8.codepoint("ﺷ") == 65207,  "\u{FEB7}", INITIAL FORM SHEEN
+  [65211] = utf8.char(65211),  -- "ﺻ",  utf8.codepoint("ﺻ") == 65211,  "\u{FEBB}", INITIAL FORM SAD
+  [65215] = utf8.char(65215),  -- "ﺿ",  utf8.codepoint("ﺿ") == 65215,  "\u{FEBF}", INITIAL FORM DAD
+  [65219] = utf8.char(65219),  -- "ﻃ",  utf8.codepoint("ﻃ") == 65219,  "\u{FEC3}", INITIAL FORM TAH
+  [65223] = utf8.char(65223),  -- "ﻇ",  utf8.codepoint("ﻇ") == 65223,  "\u{FEC7}", INITIAL FORM ZAH
+  [65227] = utf8.char(65227),  -- "ﻋ",  utf8.codepoint("ﻋ") == 65227,  "\u{FECB}", INITIAL FORM AIN
+  [65231] = utf8.char(65231),  -- "ﻏ",  utf8.codepoint("ﻏ") == 65231,  "\u{FECF}", INITIAL FORM GHAIN
+  [65235] = utf8.char(65235),  -- "ﻓ",  utf8.codepoint("ﻓ") == 65235,  "\u{FED3}", INITIAL FORM FEH
+  [65239] = utf8.char(65239),  -- "ﻗ",  utf8.codepoint("ﻗ") == 65239,  "\u{FED7}", INITIAL FORM QAF
+  [65243] = utf8.char(65243),  -- "ﻛ",  utf8.codepoint("ﻛ") == 65243,  "\u{FEDB}", INITIAL FORM KAF
+  [65247] = utf8.char(65247),  -- "ﻟ",  utf8.codepoint("ﻟ") == 65247,  "\u{FEDF}", INITIAL FORM LAM
+  [65251] = utf8.char(65251),  -- "ﻣ",  utf8.codepoint("ﻣ") == 65251,  "\u{FEE3}", INITIAL FORM MEEM
+  [65255] = utf8.char(65255),  -- "ﻧ",  utf8.codepoint("ﻧ") == 65255,  "\u{FEE7}", INITIAL FORM NOON
+  [65259] = utf8.char(65259),  -- "ﻫ",  utf8.codepoint("ﻫ") == 65259,  "\u{FEEB}", INITIAL FORM HEH
+  [65267] = utf8.char(65267),  -- "ﻳ",  utf8.codepoint("ﻳ") == 65267,  "\u{FEF3}", INITIAL FORM YEH
+}
+
+local peCharTableMedial  = {
+  [1600]  = utf8.char(1600),   -- "ـ",  utf8.codepoint("ـ") == 1600,   "\u{0640}", ARABIC TATWEEL
+  [64345] = utf8.char(64345),  -- "ﭙ",  utf8.codepoint("ﭙ") == 64345,  "\u{FB59}", MEDIAL FORM PEH
+  [64381] = utf8.char(64381),  -- "ﭽ",  utf8.codepoint("ﭽ") == 64381,  "\u{FB7D}", MEDIAL FORM TCHEH
+  [64401] = utf8.char(64401),  -- "ﮑ",  utf8.codepoint("ﮑ") == 64401,  "\u{FB91}", MEDIAL FORM KEHEH
+  [64405] = utf8.char(64405),  -- "ﮕ",  utf8.codepoint("ﮕ") == 64405,  "\u{FB95}", MEDIAL FORM GAF
+  [64425] = utf8.char(64425),  -- "ﮩ",  utf8.codepoint("ﮩ") == 64425,  "\u{FBA9}", MEDIAL FORM HEH GOAL
+  [64429] = utf8.char(64429),  -- "ﮭ",  utf8.codepoint("ﮭ") == 64429,  "\u{FBAD}", MEDIAL FORM HEH DOACHESMEE
+  [64511] = utf8.char(64511),  -- "ﯿ",  utf8.codepoint("ﯿ") == 64511,  "\u{FBFF}", MEDIAL FORM YEH
+  [65170] = utf8.char(65170),  -- "ﺒ",  utf8.codepoint("ﺒ") == 65170,  "\u{FE92}", MEDIAL FORM BEH
+  [65176] = utf8.char(65176),  -- "ﺘ",  utf8.codepoint("ﺘ") == 65176,  "\u{FE98}", MEDIAL FORM TEH
+  [65180] = utf8.char(65180),  -- "ﺜ",  utf8.codepoint("ﺜ") == 65180,  "\u{FE9C}", MEDIAL FORM THEH
+  [65184] = utf8.char(65184),  -- "ﺠ",  utf8.codepoint("ﺠ") == 65184,  "\u{FEA0}", MEDIAL FORM JEEM
+  [65188] = utf8.char(65188),  -- "ﺤ",  utf8.codepoint("ﺤ") == 65188,  "\u{FEA4}", MEDIAL FORM HAH
+  [65192] = utf8.char(65192),  -- "ﺨ",  utf8.codepoint("ﺨ") == 65192,  "\u{FEA8}", MEDIAL FORM KHAH
+  [65204] = utf8.char(65204),  -- "ﺴ",  utf8.codepoint("ﺴ") == 65204,  "\u{FEB4}", MEDIAL FORM SEEN
+  [65208] = utf8.char(65208),  -- "ﺸ",  utf8.codepoint("ﺸ") == 65208,  "\u{FEB8}", MEDIAL FORM SHEEN
+  [65212] = utf8.char(65212),  -- "ﺼ",  utf8.codepoint("ﺼ") == 65212,  "\u{FEBC}", MEDIAL FORM SAD
+  [65216] = utf8.char(65216),  -- "ﻀ",  utf8.codepoint("ﻀ") == 65216,  "\u{FEC0}", MEDIAL FORM DAD
+  [65220] = utf8.char(65220),  -- "ﻄ",  utf8.codepoint("ﻄ") == 65220,  "\u{FEC4}", MEDIAL FORM TAH
+  [65224] = utf8.char(65224),  -- "ﻈ",  utf8.codepoint("ﻈ") == 65224,  "\u{FEC8}", MEDIAL FORM ZAH
+  [65228] = utf8.char(65228),  -- "ﻌ",  utf8.codepoint("ﻌ") == 65228,  "\u{FECC}", MEDIAL FORM AIN
+  [65232] = utf8.char(65232),  -- "ﻐ",  utf8.codepoint("ﻐ") == 65232,  "\u{FED0}", MEDIAL FORM GHAIN
+  [65236] = utf8.char(65236),  -- "ﻔ",  utf8.codepoint("ﻔ") == 65236,  "\u{FED4}", MEDIAL FORM FEH
+  [65240] = utf8.char(65240),  -- "ﻘ",  utf8.codepoint("ﻘ") == 65240,  "\u{FED8}", MEDIAL FORM QAF
+  [65244] = utf8.char(65244),  -- "ﻜ",  utf8.codepoint("ﻜ") == 65244,  "\u{FEDC}", MEDIAL FORM KAF
+  [65248] = utf8.char(65248),  -- "ﻠ",  utf8.codepoint("ﻠ") == 65248,  "\u{FEE0}", MEDIAL FORM LAM
+  [65252] = utf8.char(65252),  -- "ﻤ",  utf8.codepoint("ﻤ") == 65252,  "\u{FEE4}", MEDIAL FORM MEEM
+  [65256] = utf8.char(65256),  -- "ﻨ",  utf8.codepoint("ﻨ") == 65256,  "\u{FEE8}", MEDIAL FORM NOON
+  [65260] = utf8.char(65260),  -- "ﻬ",  utf8.codepoint("ﻬ") == 65260,  "\u{FEEC}", MEDIAL FORM HEH
+  [65268] = utf8.char(65268),  -- "ﻴ",  utf8.codepoint("ﻴ") == 65268,  "\u{FEF4}", MEDIAL FORM YEH
+}
+
+local peCharTableFinal  = {
+  [64343] = utf8.char(64343),  -- "ﭗ",  utf8.codepoint("ﭗ") == 64343,  "\u{FB57}", FINAL FORM PEH
+  [64379] = utf8.char(64379),  -- "ﭻ",  utf8.codepoint("ﭻ") == 64379,  "\u{FB7B}", FINAL FORM TCHEH
+  [64395] = utf8.char(64395),  -- "ﮋ",  utf8.codepoint("ﮋ") == 64395,  "\u{FB8B}", FINAL FORM JEH
+  [64399] = utf8.char(64399),  -- "ﮏ",  utf8.codepoint("ﮏ") == 64399,  "\u{FB8F}", FINAL FORM KEHEH
+  [64403] = utf8.char(64403),  -- "ﮓ",  utf8.codepoint("ﮓ") == 64403,  "\u{FB93}", FINAL FORM GAF
+  [64421] = utf8.char(64421),  -- "ﮥ",  utf8.codepoint("ﮥ") == 64421,  "\u{FBA5}", FINAL FORM HEH WITH YEH ABOVE
+  [64509] = utf8.char(64509),  -- "ﯽ",  utf8.codepoint("ﯽ") == 64509,  "\u{FBFD}", FINAL FORM YEH
+  [65166] = utf8.char(65166),  -- "ﺎ",  utf8.codepoint("ﺎ") == 65166,  "\u{FE8E}", FINAL FORM ALEF
+  [65168] = utf8.char(65168),  -- "ﺐ",  utf8.codepoint("ﺐ") == 65168,  "\u{FE90}", FINAL FORM BEH
+  [65172] = utf8.char(65172),  -- "ﺔ",  utf8.codepoint("ﺔ") == 65172,  "\u{FE94}", FINAL FORM TEH MARBUTAH
+  [65174] = utf8.char(65174),  -- "ﺖ",  utf8.codepoint("ﺖ") == 65174,  "\u{FE96}", FINAL FORM TEH
+  [65178] = utf8.char(65178),  -- "ﺚ",  utf8.codepoint("ﺚ") == 65178,  "\u{FE9A}", FINAL FORM THEH
+  [65182] = utf8.char(65182),  -- "ﺞ",  utf8.codepoint("ﺞ") == 65182,  "\u{FE9E}", FINAL FORM JEEM
+  [65186] = utf8.char(65186),  -- "ﺢ",  utf8.codepoint("ﺢ") == 65186,  "\u{FEA2}", FINAL FORM HAH
+  [65190] = utf8.char(65190),  -- "ﺦ",  utf8.codepoint("ﺦ") == 65190,  "\u{FEA6}", FINAL FORM KHAH
+  [65194] = utf8.char(65194),  -- "ﺪ",  utf8.codepoint("ﺪ") == 65194,  "\u{FEAA}", FINAL FORM DAL
+  [65196] = utf8.char(65196),  -- "ﺬ",  utf8.codepoint("ﺬ") == 65196,  "\u{FEAC}", FINAL FORM THAL
+  [65198] = utf8.char(65198),  -- "ﺮ",  utf8.codepoint("ﺮ") == 65198,  "\u{FEAE}", FINAL FORM REH
+  [65200] = utf8.char(65200),  -- "ﺰ",  utf8.codepoint("ﺰ") == 65200,  "\u{FEB0}", FINAL FORM ZAIN
+  [65202] = utf8.char(65202),  -- "ﺲ",  utf8.codepoint("ﺲ") == 65202,  "\u{FEB2}", FINAL FORM SEEN
+  [65206] = utf8.char(65206),  -- "ﺶ",  utf8.codepoint("ﺶ") == 65206,  "\u{FEB6}", FINAL FORM SHEEN
+  [65210] = utf8.char(65210),  -- "ﺺ",  utf8.codepoint("ﺺ") == 65210,  "\u{FEBA}", FINAL FORM SAD
+  [65214] = utf8.char(65214),  -- "ﺾ",  utf8.codepoint("ﺾ") == 65214,  "\u{FEBE}", FINAL FORM DAD
+  [65218] = utf8.char(65218),  -- "ﻂ",  utf8.codepoint("ﻂ") == 65218,  "\u{FEC2}", FINAL FORM TAH
+  [65222] = utf8.char(65222),  -- "ﻆ",  utf8.codepoint("ﻆ") == 65222,  "\u{FEC6}", FINAL FORM ZAH
+  [65226] = utf8.char(65226),  -- "ﻊ",  utf8.codepoint("ﻊ") == 65226,  "\u{FECA}", FINAL FORM AIN
+  [65230] = utf8.char(65230),  -- "ﻎ",  utf8.codepoint("ﻎ") == 65230,  "\u{FECE}", FINAL FORM GHAIN
+  [65234] = utf8.char(65234),  -- "ﻒ",  utf8.codepoint("ﻒ") == 65234,  "\u{FED2}", FINAL FORM FEH
+  [65238] = utf8.char(65238),  -- "ﻖ",  utf8.codepoint("ﻖ") == 65238,  "\u{FED6}", FINAL FORM QAF
+  [65242] = utf8.char(65242),  -- "ﻚ",  utf8.codepoint("ﻚ") == 65242,  "\u{FEDA}", FINAL FORM KAF
+  [65246] = utf8.char(65246),  -- "ﻞ",  utf8.codepoint("ﻞ") == 65246,  "\u{FEDE}", FINAL FORM LAM
+  [65250] = utf8.char(65250),  -- "ﻢ",  utf8.codepoint("ﻢ") == 65250,  "\u{FEE2}", FINAL FORM MEEM
+  [65254] = utf8.char(65254),  -- "ﻦ",  utf8.codepoint("ﻦ") == 65254,  "\u{FEE6}", FINAL FORM NOON
+  [65258] = utf8.char(65258),  -- "ﻪ",  utf8.codepoint("ﻪ") == 65258,  "\u{FEEA}", FINAL FORM HEH
+  [65262] = utf8.char(65262),  -- "ﻮ",  utf8.codepoint("ﻮ") == 65262,  "\u{FEEE}", FINAL FORM WAW
+  [65264] = utf8.char(65264),  -- "ﻰ",  utf8.codepoint("ﻰ") == 65264,  "\u{FEF0}", FINAL FORM ALEF MAKSURAH
+  [65266] = utf8.char(65266),  -- "ﻲ",  utf8.codepoint("ﻲ") == 65266,  "\u{FEF2}", FINAL FORM YEH
+  [65276] = utf8.char(65276),  -- "ﻼ",  utf8.codepoint("ﻼ") == 65276,  "\u{FEFC}", FINAL FORM LIGATURE LAM WITH ALEF
+}
+
+return peCharTableInitial, peCharTableMedial, peCharTableFinal, peCharTableDiacritic
+--
+--
+-- End of file `texnegar-char-table.lua'.
+%</texnegar-char-table-lua>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar.lua}}
+%
+%    \begin{macrocode}
+%<*texnegar-lua>
+--
+-- This is file `texnegar.lua',
+-- generated with the docstrip utility.
+--
+-- The original source files were:
+--
+-- texnegar.dtx  (with options: `texnegar-lua')
+--
+-- Copyright (C) 2020-2021 Hossein Movahhedian
+--
+-- It may be distributed and/or modified under the LaTeX Project Public License,
+-- version 1.3c or higher (your choice). The latest version of
+-- this license is at: http://www.latex-project.org/lppl.txt
+--
+-- texnegar          = texnegar or {}
+-- local texnegar    = texnegar
+-- texnegar.module   = {
+--     name          = "texnegar",
+--     version       = "0.1e",
+--     date          = "2021-02-09",
+--     description   = "Full implementation of kashida feature in XeLaTex and LuaLaTeX",
+--     author        = "Hossein Movahhedian",
+--     copyright     = "Hossein Movahhedian",
+--     license       = "LPPL v1.3c"
+-- }
+--
+-- -- ^^A%%  texnegar-lua.dtx -- part of TEXNEGAR <bitbucket.org/dma8hm1334/texnegar>
+-- local err, warn, info, log = luatexbase.provides_module(texnegar.module)
+-- texnegar.log     = log  or (function (s) luatexbase.module_info("texnegar", s)    end)
+-- texnegar.warning = warn or (function (s) luatexbase.module_warning("texnegar", s) end)
+-- texnegar.error   = err  or (function (s) luatexbase.module_error("texnegar", s)   end)
+
+local l_texnegar_kashida_fontfamily_bool = token.create("l_texnegar_kashida_fontfamily_bool")
+
+local debug_getinfo = debug.getinfo
+local string_format = string.format
+
+function TableLength(t)
+    local i = 0
+    for _ in pairs(t) do
+        i = i + 1
+    end
+    return i
+end
+
+tex.enableprimitives('',tex.extraprimitives ())
+
+local range_tble = {
+    [1536] = 1791,
+    [1872] = 1919,
+    [2208] = 2274,
+    [8204] = 8297,
+    [64336] = 65023,
+    [65136] = 65279,
+    [126464] = 126719,
+    [983040] = 1048575
+  }
+
+local tbl_fonts_used = { }
+local tbl_fonts_chars = { }
+local tbl_fonts_chars_init = { }
+local tbl_fonts_chars_medi = { }
+local tbl_fonts_chars_fina = { }
+
+local pattern_list = {
+  ".*%.(ini)t?$",  ".*%.(ini)t?%..*",
+  ".*%.(med)i?$",  ".*%.(med)i?%..*",
+  ".*%.(fin)a?$",  ".*%.(fin)a?%..*",
+
+  ".*_(ini)t?$",    ".*_(ini)t?_.*",
+  ".*_(med)i?$",    ".*_(med)i?_.*",
+  ".*_(fin)a?$",    ".*_(fin)a?_.*",
+}
+
+function GetFontsChars()
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    for f_num = 1, font.max() do
+        local f_tmp = font.fonts[f_num]
+        if  f_tmp then
+            local f_tmp_fontname = f_tmp.fontname
+            if  f_tmp_fontname then
+                local f_id_tmp       = font.getfont(f_num)
+                local f_fontname_tmp = f_id_tmp.fontname
+                local f_filename_tmp = f_id_tmp.filename
+                if  not tbl_fonts_used[f_fontname_tmp] then
+                    tbl_fonts_used[f_fontname_tmp] = {f_filename_tmp, f_id_tmp}
+                end
+            end
+        end
+    end
+
+    for f_fontname, v in pairs(tbl_fonts_used) do
+        f_filename = v[1]
+        f_id = v[2]
+        if  not tbl_fonts_chars[f_fontname] then
+            tbl_fonts_chars[f_fontname] = { }
+            tbl_fonts_chars_init[f_fontname] = { }
+            tbl_fonts_chars_medi[f_fontname] = { }
+            tbl_fonts_chars_fina[f_fontname] = { }
+            local f = fontloader.open(f_filename)
+            local char_name
+            local char_unicode
+            local char_class
+            for k, v in pairs(range_tble) do
+                for glyph_idx = k, v do
+                    if  f_id.characters[glyph_idx] then
+                        char_name    = f.glyphs[f_id.characters[glyph_idx].index].name
+                        char_unicode = f.glyphs[f_id.characters[glyph_idx].index].unicode
+                        char_class   = f.glyphs[f_id.characters[glyph_idx].index].class
+
+                        kashida_fontfamily = token.get_macro("l_texnegar_kashida_fontfamily_tl")
+                        fontfamily_match = string.match(f_fontname, "^(" .. kashida_fontfamily .. ").*")
+                        if fontfamily_match == kashida_fontfamily then
+                            if  not tbl_fonts_chars[f_fontname][glyph_idx] then
+                                if  string.match(f_fontname, "^(Amiri).*") == "Amiri" and char_name == 'uni0640.long1' then
+                                    current_kashida_unicode = glyph_idx
+                                end
+                                tbl_fonts_chars[f_fontname][glyph_idx] = {char_name, char_unicode, char_class}
+                                for _, pattern in ipairs( pattern_list ) do
+                                    local pos_alt = string.match(char_name, pattern)
+                                    if  pos_alt == 'ini' or pos_alt == 'AltIni' then
+                                        tbl_fonts_chars_init[f_fontname][glyph_idx] = {char_name, char_unicode, char_class}
+                                    elseif pos_alt == 'med' or pos_alt == 'AltMed' then
+                                        tbl_fonts_chars_medi[f_fontname][glyph_idx] = {char_name, char_unicode, char_class}
+                                    elseif pos_alt == 'fin' or pos_alt == 'AltFin' then
+                                        tbl_fonts_chars_fina[f_fontname][glyph_idx] = {char_name, char_unicode, char_class}
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            fontloader.close(f)
+        end
+    end
+    return tbl_fonts_used, tbl_fonts_chars, tbl_fonts_chars_init, tbl_fonts_chars_medi, tbl_fonts_chars_fina
+end
+
+dofile(kpse.find_file("texnegar-ini.lua"))
+--
+--
+-- End of file `texnegar.lua'.
+%</texnegar-lua>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-ini.lua}}
+%
+%    \begin{macrocode}
+%<*texnegar-ini-lua>
+--
+-- This is file `texnegar-ini.lua',
+-- generated with the docstrip utility.
+--
+-- The original source files were:
+--
+-- texnegar.dtx  (with options: `texnegar-ini-lua')
+--
+-- Copyright (C) 2020-2021 Hossein Movahhedian
+--
+-- It may be distributed and/or modified under the LaTeX Project Public License,
+-- version 1.3c or higher (your choice). The latest version of
+-- this license is at: http://www.latex-project.org/lppl.txt
+--
+-- texnegar_ini        = texnegar_ini or {}
+-- local texnegar_ini  = texnegar_ini
+-- texnegar_ini.module = {
+--     name            = "texnegar_ini",
+--     version         = "0.1e",
+--     date            = "2021-02-09",
+--     description     = "Full implementation of kashida feature in XeLaTex and LuaLaTeX",
+--     author          = "Hossein Movahhedian",
+--     copyright       = "Hossein Movahhedian",
+--     license         = "LPPL v1.3c"
+-- }
+--
+-- -- ^^A%%  texnegar-lua.dtx -- part of TEXNEGAR <bitbucket.org/dma8hm1334/texnegar>
+-- local err, warn, info, log = luatexbase.provides_module(texnegar_ini.module)
+-- texnegar_ini.log     = log  or (function (s) luatexbase.module_info("texnegar_ini", s)    end)
+-- texnegar_ini.warning = warn or (function (s) luatexbase.module_warning("texnegar_ini", s) end)
+-- texnegar_ini.error   = err  or (function (s) luatexbase.module_error("texnegar_ini", s)   end)
+
+c_true_bool  = token.create("c_true_bool")
+
+l_texnegar_color_bool                 = token.create("l_texnegar_color_bool")
+
+if  l_texnegar_color_bool.mode == c_true_bool.mode then
+    color_tbl = color_tbl or {}
+    for item in l_texnegar_color_rgb_tl:gmatch("([^,%s]+)") do
+        table.insert(color_tbl, item)
+    end
+end
+
+dofile(kpse.find_file("texnegar-luatex-kashida.lua"))
+--
+--
+-- End of file `texnegar-ini.lua'.
+%</texnegar-ini-lua>
+%    \end{macrocode}
+%
+% \subsection{File: \texttt{texnegar-luatex-kashida.lua}}
+%
+%    \begin{macrocode}
+%<*texnegar-luatex-kashida-lua>
+--
+-- This is file `texnegar-luatex-kashida.lua',
+-- generated with the docstrip utility.
+--
+-- The original source files were:
+--
+-- texnegar.dtx  (with options: `texnegar-luatex-kashida-lua')
+--
+-- Copyright (C) 2020-2021 Hossein Movahhedian
+--
+-- It may be distributed and/or modified under the LaTeX Project Public License,
+-- version 1.3c or higher (your choice). The latest version of
+-- this license is at: http://www.latex-project.org/lppl.txt
+--
+-- texnegar_luatex_kashida        = texnegar_luatex_kashida or {}
+-- local texnegar_luatex_kashida  = texnegar_luatex_kashida
+-- texnegar_luatex_kashida.module = {
+--     name                       = "texnegar_luatex_kashida",
+--     version                    = "0.1e",
+--     date                       = "2021-02-09",
+--     description                = "Full implementation of kashida feature in XeLaTex and LuaLaTeX",
+--     author                     = "Hossein Movahhedian",
+--     copyright                  = "Hossein Movahhedian",
+--     license                    = "LPPL v1.3c"
+-- }
+--
+-- -- ^^A%%  texnegar-lua.dtx -- part of TEXNEGAR <bitbucket.org/dma8hm1334/texnegar>
+-- local err, warn, info, log = luatexbase.provides_module(texnegar_luatex_kashida.module)
+-- texnegar_luatex_kashida.log     = log  or (function (s) luatexbase.module_info("texnegar_luatex_kashida", s)    end)
+-- texnegar_luatex_kashida.warning = warn or (function (s) luatexbase.module_warning("texnegar_luatex_kashida", s) end)
+-- texnegar_luatex_kashida.error   = err  or (function (s) luatexbase.module_error("texnegar_luatex_kashida", s)   end)
+
+local peCharTableInitial, peCharTableMedial, peCharTableFinal, peCharTableDiacritic = dofile(kpse.find_file("texnegar-char-table.lua"))
+
+local kashida_unicode = 1600
+local kashida_subtype = 256
+
+local COLORSTACK = node.subtype("pdf_colorstack")
+local node_id    = node.id
+local GLUE       = node_id("glue")
+local GLYPH      = node_id("glyph")
+local HLIST      = node_id("hlist")
+local RULE       = node_id("rule")
+local VLIST      = node_id("vlist")
+local WHATSIT    = node_id("whatsit")
+
+local l_texnegar_kashida_glyph_bool         = token.create("l_texnegar_kashida_glyph_bool")
+local l_texnegar_kashida_leaders_glyph_bool = token.create("l_texnegar_kashida_leaders_glyph_bool")
+local l_texnegar_kashida_leaders_hrule_bool = token.create("l_texnegar_kashida_leaders_hrule_bool")
+
+local l_texnegar_hboxrecursion_bool         = token.create("l_texnegar_hboxrecursion_bool")
+local l_texnegar_vboxrecursion_bool         = token.create("l_texnegar_vboxrecursion_bool")
+
+local selected_font = font.current()
+local selected_font_old = selected_font
+
+local string_format = string.format
+local debug_getinfo = debug.getinfo
+
+function GetGlyphDimensions(font_file, glyph_index)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    local fnt = fontloader.open(font_file)
+    local idx = 0
+    local fnt_glyphcnt = fnt.glyphcnt
+    local fnt_glyphmin = fnt.glyphmin
+    local fnt_glyphmax = fnt.glyphmax
+    if  fnt_glyphcnt > 0 then
+        for idx = fnt_glyphmin, fnt_glyphmax do
+            local gl = fnt.glyphs[idx]
+            if  gl then
+                local gl_unicode = gl.unicode
+                if  gl_unicode == glyph_index then
+                    local gl_name    = gl.name
+                    gl_width   = gl.width
+                    local gl_bbox    = gl.boundingbox
+                    gl_llx     = gl_bbox[1]
+                    gl_depth   = gl_bbox[2]
+                    gl_urx     = gl_bbox[3]
+                    gl_height  = gl_bbox[4]
+                    break
+                end
+            end
+            idx = idx + 1
+        end
+    end
+    fontloader.close(fnt)
+    return {width = gl_width, height = gl_height, depth = gl_depth, llx = gl_llx, urx = gl_urx}
+end
+
+function GetGlue(t_plb_line_glue_node, t_plb_node)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    local glue_id            = t_plb_line_glue_node.id
+    local glue_subtype       = t_plb_line_glue_node.subtype
+    local glue_width         = t_plb_line_glue_node.width
+    local glue_stretch       = t_plb_line_glue_node.stretch
+    local glue_shrink        = t_plb_line_glue_node.shrink
+    local eff_glue_width     = node.effective_glue(t_plb_line_glue_node, t_plb_node)
+    local glue_stretch_order = t_plb_line_glue_node.stretch_order
+    local glue_shrink_order  = t_plb_line_glue_node.shrink_order
+    local glue_delta         = 0
+    glue_delta = eff_glue_width - glue_width
+    return { id = glue_id, subtype = glue_subtype, width = glue_width, stretch = glue_stretch,
+             shrink = glue_shrink, stretch_order = glue_stretch_order, shrink_order = glue_shrink_order,
+             effective_glue = eff_glue_width, delta = glue_delta }
+end
+
+function GetGlyph(t_plb_line_glyph_node, t_tbl_line_fields, t_CharTableInitial, t_CharTableMedial, t_CharTableFinal)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    local glyph_id      = t_plb_line_glyph_node.id
+    local glyph_subtype = t_plb_line_glyph_node.subtype
+    local glyph_char    = t_plb_line_glyph_node.char
+    local glyph_font    = t_plb_line_glyph_node.font
+    local glyph_lang    = t_plb_line_glyph_node.lang
+    local glyph_width   = t_plb_line_glyph_node.width
+    local glyph_data    = t_plb_line_glyph_node.data
+
+    if  not (t_CharTableInitial[glyph_char] == nil) then
+        t_tbl_line_fields.joinerCharInitial = t_tbl_line_fields.joinerCharInitial + 1
+        t_plb_line_glyph_node.data = 1
+    elseif not (t_CharTableMedial[glyph_char] == nil) then
+        t_tbl_line_fields.joinerCharMedial = t_tbl_line_fields.joinerCharMedial + 1
+        t_plb_line_glyph_node.data = 2
+    elseif not (t_CharTableFinal[glyph_char] == nil) then
+        t_tbl_line_fields.joinerCharFinal = t_tbl_line_fields.joinerCharFinal + 1
+        t_plb_line_glyph_node.data = 3
+    end
+    return { id = glyph_id, subtype = glyph_subtype, char = glyph_char, font = glyph_font, lang = glyph_lang, width = glyph_width, data = glyph_data }, t_tbl_line_fields
+end
+
+function ProcessTableKashidaHlist(ksh_hlistNode, hbox_num, in_font)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    local ksh_hlistNode_id      = ksh_hlistNode.id
+    local ksh_hlistNode_subtype = ksh_hlistNode.subtype
+
+    for tn in node.traverse(ksh_hlistNode.head) do
+        local tn_id = tn.id
+        local tn_subtype = tn.subtype
+
+        if  tn_id == HLIST then
+            for tp in node.traverse(tn.head) do
+                local tp_id = tp.id
+                local tp_subtype = tp.subtype
+                if  tp_id == GLYPH then
+                    if  l_texnegar_color_bool.mode == c_true_bool.mode then
+                        local col_str      = color_tbl[1] .. " " .. color_tbl[2] .. " " .. color_tbl[3]
+                        local col_str_rg   = col_str .. " rg "
+                        local col_str_RG   = col_str .. " RG"
+
+                        local color_push   = node.new(WHATSIT, COLORSTACK)
+                        local color_pop    = node.new(WHATSIT, COLORSTACK)
+                        color_push.stack   = 0
+                        color_pop.stack    = 0
+                        color_push.command = 1
+                        color_pop.command  = 2
+                        glue_ratio         = .2
+                        color_push.data       = col_str_rg .. col_str_RG
+                        color_pop.data        = col_str_rg .. col_str_RG
+                        tn.head = node.insert_before(tn.list, tn.head, node.copy(color_push))
+                        tn.head = node.insert_after(tn.list, node.tail(tn.head), node.copy(color_pop))
+                    end
+
+                    local tp_font = tp.font
+                    local tp_char = tp.char
+                    tp.font = in_font
+
+                    local ksh_unicode
+                    ksh_unicode = font.getfont(in_font).resources.unicodes['kashida']
+                    if  hbox_num == 'l_texnegar_k_box' then
+                        tp.char = current_kashida_unicode or kashida_unicode
+                    elseif hbox_num == 'l_texnegar_ksh_box' then
+                        tp.char = ksh_unicode
+                        tn_width = tn.width
+                        ksh_hlistNode.width = tn_width
+                    end
+                elseif  tp_id == HLIST then
+                    if  tp.subtype ~= 3 then
+                        tbl_kashida_hlist_nodes[ #tbl_kashida_hlist_nodes + 1 ] = tp
+                    end
+                end
+            end
+        elseif tn_id == VLIST then
+            do end
+        elseif tn_id == WHATSIT then
+            do end
+        elseif  tn_id == GLYPH then
+            if  l_texnegar_color_bool.mode == c_true_bool.mode then
+                local col_str      = color_tbl[1] .. " " .. color_tbl[2] .. " " .. color_tbl[3]
+                local col_str_rg   = col_str .. " rg "
+                local col_str_RG   = col_str .. " RG"
+
+                local color_push   = node.new(WHATSIT, COLORSTACK)
+                local color_pop    = node.new(WHATSIT, COLORSTACK)
+                color_push.stack   = 0
+                color_pop.stack    = 0
+                color_push.command = 1
+                color_pop.command  = 2
+                glue_ratio         = .2
+                color_push.data       = col_str_rg .. col_str_RG
+                color_pop.data        = col_str_rg .. col_str_RG
+                ksh_hlistNode.head = node.insert_before(ksh_hlistNode.list, ksh_hlistNode.head, node.copy(color_push))
+                ksh_hlistNode.head = node.insert_after(ksh_hlistNode.list, node.tail(ksh_hlistNode.head), node.copy(color_pop))
+            end
+
+            local tn_font = tn.font
+            local tn_char = tn.char
+            tn.font = in_font
+
+            local ksh_unicode
+            ksh_unicode = font.getfont(in_font).resources.unicodes['kashida']
+            if  hbox_num == 'l_texnegar_k_box' then
+                tn.char = kashida_unicode
+            elseif hbox_num == 'l_texnegar_ksh_box' then
+                tn.char = ksh_unicode
+                tn_width = tn.width
+                ksh_hlistNode.width = tn_width
+            end
+        else
+           print(string_format("\n tn. Not processed node id is: %d", tn_id))
+        end
+    end
+end
+
+function SetFontInHbox(hbox_num, font_num)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    tbl_kashida_hlist_nodes = {}
+
+    local tmp_node
+    tmp_node = node.new("hlist")
+    tmp_node = tex.getbox(hbox_num)
+
+    ProcessTableKashidaHlist(tmp_node, hbox_num, font_num)
+
+    ::kashida_hlist_BEGIN::
+    if  #tbl_kashida_hlist_nodes > 0 then
+        local kashida_hlistNodeAdded = table.remove(tbl_kashida_hlist_nodes,1)
+        ProcessTableKashidaHlist(kashida_hlistNodeAdded, hbox_num, font_num)
+        goto kashida_hlist_BEGIN
+    end
+end
+
+function StretchGlyph(t_plb_node, t_plb_glyph_node, t_gluePerJoiner, t_dir, t_filler)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    if  t_filler == "resized_kashida" then
+        SetFontInHbox('l_texnegar_k_box', selected_font)
+    elseif t_filler == "leaders+kashida" then
+        SetFontInHbox('l_texnegar_ksh_box', selected_font)
+    end
+
+    kashida_node = node.new(GLYPH)
+    node_glue    = node.new(GLUE)
+    node_rule    = node.new(RULE)
+    node_hlist   = node.new(HLIST)
+
+    font_current = selected_font
+    font_name    = font.fonts[font_current].fullname
+    font_file    = font.fonts[font_current].filename
+    kashida_char = font.fonts[font_current].characters[1600]
+
+    kashida_node.subtype = kashida_subtype
+    kashida_node.font    = font_current
+    if  string.match(font_name, "^(Amiri).*") == "Amiri" then
+        kashida_node.char = current_kashida_unicode
+    else
+        kashida_node.char = kashida_unicode
+    end
+    kashida_node.lang    = tex.language
+
+    kashida_width  = kashida_node.width
+    kashida_height = kashida_node.height
+    kashida_depth  = kashida_node.depth
+
+    tbl_gl_dimen = GetGlyphDimensions(font_file, kashida_unicode)
+    ksh_width, ksh_height, ksh_depth, ksh_llx, ksh_urx =
+        tbl_gl_dimen.width, tbl_gl_dimen.height, tbl_gl_dimen.depth, tbl_gl_dimen.llx, tbl_gl_dimen.urx
+
+    ratio_width = kashida_width / ksh_width
+    leaders_height =  ratio_width * ksh_height
+    leaders_depth = - ratio_width * ksh_depth
+
+    node_glue.subtype = 100
+    node.setglue(node_glue, t_gluePerJoiner, 0, 0, 0, 0)
+
+    if  t_filler == "resized_kashida" then
+        node_glue.leader = node.copy_list(tex.box['l_texnegar_k_box'])
+    elseif t_filler == "leaders+kashida" then
+        node_glue.leader = node.copy_list(tex.box['l_texnegar_ksh_box'])
+    elseif t_filler == "leaders+hrule" then
+        node_glue.leader = node_rule
+    end
+
+    node_glue.leader.subtype = 0
+    node_glue.leader.height  = leaders_height
+    node_glue.leader.depth   = leaders_depth
+
+    node_glue.leader.dir     = t_dir
+
+    local t_plb_glyph_node_next = t_plb_glyph_node.next
+    local t_plb_glyph_node_next_id = t_plb_glyph_node_next.id
+    if  not t_plb_glyph_node_next then
+        node.insert_after(t_plb_node.list, t_plb_glyph_node, node_glue)
+    else
+        if  t_plb_glyph_node_next_id == GLYPH then
+            local t_plb_glyph_node_next_char = t_plb_glyph_node_next.char
+            if  peCharTableDiacritic[t_plb_glyph_node_next_char] then
+                node.insert_after(t_plb_node.list, t_plb_glyph_node_next, node_glue)
+            else
+                node.insert_after(t_plb_node.list, t_plb_glyph_node, node_glue)
+            end
+        else
+            node.insert_after(t_plb_node.list, t_plb_glyph_node, node_glue)
+        end
+    end
+    if  t_filler == "leaders+hrule" then
+        for tn in node.traverse(t_plb_node.head) do
+            local tn_id = tn.id
+            local tn_subtype = tn.subtype
+
+            if  tn_id == GLUE and tn_subtype == 100 then
+                local t_hbox = node.new(HLIST)
+                local t_hrule = node.copy(tn)
+
+                if  string.match(font_name, "^(Amiri).*") == "Amiri" then
+                    t_hrule.leader.height = kashida_height
+                    t_hrule.leader.depth  = kashida_depth
+                end
+
+                t_hbox.head = node.insert_after(t_hbox.list, t_hbox.head,t_hrule)
+                t_plb_node.head = node.insert_after(t_plb_node.list, tn, t_hbox)
+
+                if  l_texnegar_color_bool.mode == c_true_bool.mode then
+                    local col_str      = color_tbl[1] .. " " .. color_tbl[2] .. " " .. color_tbl[3]
+                    local col_str_rg   = col_str .. " rg "
+                    local col_str_RG   = col_str .. " RG"
+
+                    local color_push   = node.new(WHATSIT, COLORSTACK)
+                    local color_pop    = node.new(WHATSIT, COLORSTACK)
+                    color_push.stack   = 0
+                    color_pop.stack    = 0
+                    color_push.command = 1
+                    color_pop.command  = 2
+                    glue_ratio         = .2
+                    color_push.data       = col_str_rg .. col_str_RG
+                    color_pop.data        = col_str_rg .. col_str_RG
+                    t_hbox.head = node.insert_before(t_hbox.list, t_hbox.head, node.copy(color_push))
+                    t_hbox.head = node.insert_after(t_hbox.list, node.tail(t_hbox.head), node.copy(color_pop))
+                end
+            end
+        end
+    end
+end
+
+function GetFillerSpec(t_plb_node, t_plb_head_node, t_tbl_line_fields, t_CharTableInitial, t_CharTableMedial, t_CharTableFinal)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    t_plb_node_id = t_plb_node.id
+    t_plb_node_subtype = t_plb_node.subtype
+
+    for p in node.traverse(t_plb_head_node) do
+        local p_id = p.id
+        local p_subtype = p.subtype
+        if  p_id == HLIST then
+            t_tbl_line_fields.lineWidthRemainder = t_tbl_line_fields.lineWidthRemainder - p.width
+            if  p.subtype ~= 3 then
+                tbl_hlist_nodes[ #tbl_hlist_nodes + 1 ] = p
+            end
+        elseif p_id == VLIST then
+            t_tbl_line_fields.lineWidthRemainder = t_tbl_line_fields.lineWidthRemainder - p.width
+            tbl_vlist_nodes[ #tbl_vlist_nodes + 1 ] = p
+        elseif p_id == GLUE then
+            tbl_p_glue = GetGlue(p, t_plb_node)
+            t_tbl_line_fields.lineWidthRemainder = t_tbl_line_fields.lineWidthRemainder - tbl_p_glue["effective_glue"]
+            t_tbl_line_fields.total_glues = t_tbl_line_fields.total_glues + 1
+            t_tbl_line_fields.stretchedGlue = t_tbl_line_fields.stretchedGlue + tbl_p_glue["delta"]
+        elseif p_id == GLYPH then
+            tbl_p_glyph, t_tbl_line_fields = GetGlyph(p, t_tbl_line_fields, t_CharTableInitial, t_CharTableMedial, t_CharTableFinal)
+            selected_font_old = selected_font
+            selected_font = tbl_p_glyph["font"]
+            t_tbl_line_fields.lineWidthRemainder = t_tbl_line_fields.lineWidthRemainder - tbl_p_glyph["width"]
+            t_tbl_line_fields.total_glyphs = t_tbl_line_fields.total_glyphs + 1
+        end
+    end
+
+    t_tbl_line_fields.total_joiners = t_tbl_line_fields.joinerCharInitial + t_tbl_line_fields.joinerCharMedial
+    t_tbl_line_fields.gluePerJoiner = 0
+    if  t_tbl_line_fields.total_glues == 0 then
+        t_tbl_line_fields.stretchedGlue = t_tbl_line_fields.lineWidthRemainder
+    end
+    if  t_tbl_line_fields.total_joiners > 0 then
+        t_tbl_line_fields.gluePerJoiner           = t_tbl_line_fields.stretchedGlue // t_tbl_line_fields.total_joiners
+        t_tbl_line_fields.stretchedGlueRemaineder = t_tbl_line_fields.stretchedGlue % t_tbl_line_fields.total_joiners
+    elseif t_tbl_line_fields.total_joiners == 1 then
+        t_tbl_line_fields.gluePerJoiner = t_tbl_line_fields.stretchedGlue
+    end
+
+    return t_tbl_line_fields
+end
+
+function ProcessTableHlist(tmphl_n)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    local tmphl_n_id      = tmphl_n.id
+    local tmphl_n_subtype = tmphl_n.subtype
+
+    local tbl_line_fields = { line_dir          = "", line_width       = 0, lineWidthRemainder = 0, total_glyphs            = 0,
+                              joinerCharInitial = 0,  joinerCharMedial = 0, joinerCharFinal    = 0, total_joiners           = 0,
+                              stretchedGlue     = 0,  total_glues      = 0, gluePerJoiner      = 0, stretchedGlueRemaineder = 0}
+
+    local tbl_p_glue, tbl_p_glyph
+
+    if  (tmphl_n_id == HLIST) and (tmphl_n_subtype == 1 or tmphl_n_subtype == 2) then
+        tbl_line_fields.line_width = tmphl_n.width
+        tbl_line_fields.line_dir   = tmphl_n.dir
+        tbl_line_fields.lineWidthRemainder = tbl_line_fields.line_width
+
+        if  tbl_line_fields.line_dir == "TLT" then
+            tbl_line_fields = GetFillerSpec(tmphl_n, tmphl_n.head, tbl_line_fields, peCharTableInitial, peCharTableMedial, peCharTableFinal)
+
+            if  tbl_line_fields.total_joiners == 0 or tbl_line_fields.gluePerJoiner == 0 or tbl_line_fields.stretchedGlue <= 0 then
+                goto continue
+            end
+
+            for q in node.traverse_id(GLUE, tmphl_n.head) do
+                local eff_glue_width     = node.effective_glue(q, tmphl_n)
+                node.setglue(q, q.width, 0, 0, q.stretch_order, q.glue_shrink_order)
+            end
+
+            for r in node.traverse_id(GLYPH, tmphl_n.head) do
+                local r_data = r.data
+                if  r_data == 1 or r.data == 2 then
+                    StretchGlyph(tmphl_n, r, tbl_line_fields.gluePerJoiner, tbl_line_fields.line_dir, filler_pe)
+                elseif r.data == 3 then
+                    goto for_loop_01
+                end
+                ::for_loop_01::
+            end
+            tbl_line_fields.line_width = tmphl_n.width
+            tbl_line_fields.lineWidthRemainder = line_width
+        elseif tbl_line_fields.line_dir == "TRT" then
+            tbl_line_fields = GetFillerSpec(tmphl_n, tmphl_n.head, tbl_line_fields, peCharTableInitial, peCharTableMedial, peCharTableFinal)
+            if  tbl_line_fields.total_joiners == 0 or tbl_line_fields.gluePerJoiner == 0 or tbl_line_fields.stretchedGlue <= 0 then
+                goto continue
+            end
+
+            for q in node.traverse_id(GLUE, tmphl_n.head) do
+                local eff_glue_width     = node.effective_glue(q, tmphl_n)
+                node.setglue(q, q.width, 0, 0, q.stretch_order, q.glue_shrink_order)
+            end
+
+            for r in node.traverse_id(GLYPH, tmphl_n.head) do
+                local r_data = r.data
+                if  r_data == 1 or r.data == 2 then
+                    StretchGlyph(tmphl_n, r, tbl_line_fields.gluePerJoiner, tbl_line_fields.line_dir, filler_pe)
+                elseif r.data == 3 then
+                    goto for_loop_02
+                end
+                ::for_loop_02::
+            end
+            tbl_line_fields.line_width = tmphl_n.width
+            tbl_line_fields.lineWidthRemainder = line_width
+        else
+            print(string_format("\n Line direction '%s' is not supported yet!", tbl_line_fields.line_dir))
+        end
+    end
+    ::continue::
+end
+
+function ProcessTableVlist(tmpvl_n)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    local tmpvl_n_id      = tmpvl_n.id
+    local tmpvl_n_subtype = tmpvl_n.subtype
+
+    for vbNode in node.traverse(tmpvl_n) do
+        if  vbNode.id == VLIST and vbNode.subtype == 0 then
+            for tr_vbNode in node.traverse(vbNode.head) do
+                if  (tr_vbNode.id == HLIST) and (tr_vbNode.subtype == 1 or tr_vbNode.subtype == 2) then
+                    ProcessTableHlist(tr_vbNode)
+                end
+            end
+        end
+    end
+end
+
+function PostLineBreakFilter(hboxes_stack, groupcode)
+    local funcName    = debug_getinfo(1).name
+    local funcNparams = debug_getinfo(1).nparams
+
+    funcName = "PostLineBreakFilter"
+
+    local tbl_fonts_used = { }
+    local tbl_fonts_chars = { }
+    local tbl_fonts_chars_init = { }
+    local tbl_fonts_chars_medi = { }
+    local tbl_fonts_chars_fina = { }
+
+    tbl_fonts_used, tbl_fonts_chars, tbl_fonts_chars_init, tbl_fonts_chars_medi, tbl_fonts_chars_fina = GetFontsChars()
+
+    local f_fontname
+
+    for f_fontname, v in pairs(tbl_fonts_used) do
+        for k1, v1 in pairs(tbl_fonts_chars_init[f_fontname]) do
+            if  k1 and not peCharTableInitial[k1] then
+                peCharTableInitial[k1] = utf8.char(k1)
+            end
+        end
+
+        for k1, v1 in pairs(tbl_fonts_chars_medi[f_fontname]) do
+            if  k1 and not peCharTableMedial[k1] then
+                peCharTableMedial[k1] = utf8.char(k1)
+            end
+        end
+
+        for k1, v1 in pairs(tbl_fonts_chars_fina[f_fontname]) do
+            if  k1 and not peCharTableFinal[k1] then
+                peCharTableFinal[k1] = utf8.char(k1)
+            end
+        end
+    end
+
+    tbl_hlist_nodes = {}
+    tbl_vlist_nodes = {}
+    for hlistNode in node.traverse(hboxes_stack) do
+        if  node.next(hlistNode) == nil then
+            goto END
+        end
+
+        ProcessTableHlist(hlistNode)
+
+        if   l_texnegar_hboxrecursion_bool.mode == c_true_bool.mode then
+            ::hboxBEGIN::
+            if  #tbl_hlist_nodes > 0 then
+                local hlistNodeAdded = table.remove(tbl_hlist_nodes,1)
+                ProcessTableHlist(hlistNodeAdded)
+                goto hboxBEGIN
+            end
+        end
+
+        if   l_texnegar_vboxrecursion_bool.mode == c_true_bool.mode then
+            ::vboxBEGIN::
+            if  #tbl_vlist_nodes > 0 then
+                local vlistNodeAdded = table.remove(tbl_vlist_nodes,1)
+                ProcessTableVlist(vlistNodeAdded)
+                goto vboxBEGIN
+            end
+        end
+
+        ::END::
+    end
+    return hboxes_stack
+end
+
+if  l_texnegar_kashida_glyph_bool.mode == c_true_bool.mode then
+    filler_pe = "resized_kashida"
+elseif l_texnegar_kashida_leaders_glyph_bool.mode == c_true_bool.mode then
+     filler_pe = "leaders+kashida"
+elseif l_texnegar_kashida_leaders_hrule_bool.mode == c_true_bool.mode then
+    filler_pe = "leaders+hrule"
+else
+    print(string_format" Unknown kashida value.")
+end
+
+function StartStretching()
+    if  not luatexbase.in_callback('post_linebreak_filter', 'insertKashida') then
+        luatexbase.add_to_callback('post_linebreak_filter', PostLineBreakFilter, 'insertKashida')
+    end
+end
+
+function StopStretching()
+    if  luatexbase.in_callback('post_linebreak_filter', 'insertKashida') then
+        luatexbase.remove_from_callback('post_linebreak_filter', 'insertKashida')
+    end
+end
+--
+--
+-- End of file `texnegar-luatex-kashida.lua'.
+%</texnegar-luatex-kashida-lua>
+%    \end{macrocode}
+%
+% \section{Acknowledgments}
+% In the first place I have to thank Donald Knuth for inventing TeX.
+% During the development of this package I refered to  Stack Exchange network of
+% question-and-answer (Q\&A) websites to solve problems for which I am grateful.
+% I also would like to thank the developer teams of TeX's friends especially LaTeX, LuaTeX and XeTeX teams.
+%
+% \section{Change History}
+%
+% \def\SubSecItem#1{\subsubsection*{\hskip 2em\large #1}\addcontentsline{toc}{subsection}{[#1]}}
+% \newenvironment{Itemize}{\begin{itemize}[leftmargin=4em]}{\end{itemize}}
+%
+% \SubSecItem{2020-08-29~v0.1a}
+% \begin{Itemize}
+%   \item First standalone version.
+% \end{Itemize}
+%
+% \SubSecItem{2020-08-30~v0.1b}
+% \begin{Itemize}
+%   \item Changed some file names.
+% \end{Itemize}
+%
+% \SubSecItem{2021-01-27~v0.1c}
+% \begin{Itemize}
+%   \item Added the option \texttt{Minimal} which is needed if texnegar is used for kashida implementaion only.
+%   \item Fixed the problem with \texttt{Scheherazade} and \texttt{Amiri} fonts.
+% \end{Itemize}
+% 
+% \section*{To Do's}
+%
+% To do
+%
+% \renewcommand{\refname}{References: \\ {\normalsize\it(Actually, this is not a ``References'' nor a ``Literature'', but the most important
+% although not a complete list of ``Resources Used'' to develop this package.)}}
+%
+% \begin{thebibliography}{9}
+%
+%  \bibitem{DEK-TTB} Donald E. Knuth,
+%    \emph{The \hologo{TeX} book},
+%    Addison-Wesley, 1986.
+%
+%  \bibitem{VE-TBT} Victor Eijkhout,
+%    \emph{\hologo{TeX} BY TOPIC},
+%    Addison-Wesley, 2013.
+%
+%  \bibitem{PWA-KAH-KB-TFI} Paul W. Abrahams, Kathryn A. Hargreaves, and Karl Berry,
+%    \emph{\hologo{TeX} for the Impatient},
+%    Addison-Wesley, 2013.
+%
+%  \bibitem{LL-LADPS} Leslie Lamport,
+%     \emph{\hologo{LaTeX}, A document preparation System},
+%     Addison-Wesley, 1986.
+%
+%  \bibitem{FM-MG-JB-DC-CR-TLC} Frank Mittelbach and Michel Goossens with Johannes Braams, David Carlisle, and Chris Rowley, 
+%     \emph{The \hologo{LaTeX} Companion},
+%     Addison-Wesley, second edition, 2004.
+%
+%  \bibitem{PRO-IN-LUA} Roberto Ierusalimschy,
+%     \emph{Programming in Lua},
+%     Lua.org, fourth edition, 2016
+%
+%  \bibitem{LUA-REF-MAN}  Lua.org,
+%     \emph{Lua 5.3 Reference Manual},
+%     Lua.org, 2016
+%
+%  \bibitem{TLT-TLS} Package \texttt{latex}: The LaTeX Team,
+%     \emph{The \hologo{LaTeX2e} Sources},
+%     \href{http://mirrors.ctan.org/macros/latex/base/source2e.pdf}{\texttt{CTAN:macros/latex/base/source2e.pdf}}, 2020-02-02
+%
+%  \bibitem{TL3T-TLS} Package \texttt{l3kernel}: The LaTeX3 Team,
+%      \emph{The \hologo{LaTeX}3 Sources},
+%     \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/source3.pdf}{\texttt{CTAN:macros/latex/contrib/l3kernel/source3.pdf}}, 2020-07-17
+%
+%  \bibitem{TL3T-TLI} Package \texttt{l3kernel}: The LaTeX3 Team,
+%      \emph{The \hologo{LaTeX}3 Interfaces},
+%     \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}{\texttt{CTAN:macros/latex/contrib/l3kernel/interface3.pdf}}, 2020-07-17
+%
+%  \bibitem{TLT-LRM} Package \texttt{luatex}: The LuaTeX Team,
+%     \hologo{LuaTeX} Reference Manual,
+%     \href{http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf}{\texttt{CTAN:systems/doc/luatex/luatex.pdf}}, 2020
+%
+%  \bibitem{WR-KH-KB-XRG} Package \texttt{xetexref}: Will Robertson, Khaled Hosny, and Karl Berry,
+%     \hologo{XeTeX} reference guide,
+%     \href{http://mirrors.ctan.org/info/xetexref/xetex-reference.pdf}{\texttt{CTAN:info/xetexref/xetex-reference.pdf}}, 2019-12-09
+%
+%  \bibitem{JQ-AX} Package \texttt{xetex}: Jonathan Kew,
+%     About \hologo{XeTeX},
+%     \href{http://mirrors.ctan.org/systems/doc/xetex/XeTeX-notes.pdf}{\texttt{CTAN:systems/doc/xetex/XeTeX-notes.pdf}}, 2005-10-17
+%
+%  \bibitem{NG-TXC} Package \texttt{xetex}: Michel Goossens,
+%     The \hologo{XeTeX} Companion,
+%     \href{http://xml.web.cern.ch/XML/lgc2/xetexmain.pdf}{\texttt{http://xml.web.cern.ch/XML/lgc2/xetexmain.pdf}}, 2009-08-19
+%
+%  \bibitem{TEX-STACKEXCHANGE}  Website: Stack Exchange: Hot Questions,
+%     \hologo{TeX}-\hologo{LaTeX} Q\&A for users of TeX, LaTeX, ConTeXt, and related typesetting systems,
+%     \href{https://tex.stackexchange.com}{\texttt{tex.stackexchange.com}}
+%
+%  \bibitem{LUATEX-WIKI} Website: LuaTeX Wiki,
+%     \hologo{LuaTeX} Wiki,
+%     \href{http://wiki.luatex.org/index.php/Main\_Page}{\texttt{wiki.luatex.org}}
+%
+% \end{thebibliography}
+%
+%\end{implementation}
+%
+% \ifluatex
+% \immediate\directlua{os.execute([[ makeindex -s gind.ist -o \jobname.ind  \jobname.idx ]])}
+% \immediate\directlua{os.execute([[ makeindex -s gglo.ist -o \jobname.gls  \jobname.glo ]])}
+% \fi
+% \ifxetex
+% \immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
+% \immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
+% \fi
+% \PrintIndex
+% %\PrintChanges
+% \Finale

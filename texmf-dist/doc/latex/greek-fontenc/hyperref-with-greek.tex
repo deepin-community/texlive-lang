@@ -1,0 +1,509 @@
+\documentclass{article}
+\usepackage[LGR,T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage[unicode,colorlinks=true,linkcolor=blue]{hyperref}
+% \usepackage{bookmark}
+
+\usepackage[greek,english]{babel}
+\usepackage[normalize-symbols]{alphabeta}
+\usepackage[utf8]{inputenc}
+
+% \pagestyle{headings}
+
+\begin{document}
+
+\title{Greek and hyperref}
+\author{Günter Milde}
+\date{2020/10/30}
+\maketitle
+
+\noindent
+On 2010-11-05, Heiko Oberdiek wrote in comp.text.tex:
+%
+\begin{quote}
+   \textbackslash pdfstringdef (converting TeX code to PDF strings for
+   bookmarks) supports NFSS2 and needs active characters. Encoding
+   stuff based on the internal font machinery of TeX (letters with
+   catcode 11 or 12, ligatures) does not work, because the strings
+   don't reach TeX's stomach.
+\end{quote}
+%
+The \emph{greek-fontenc} package allows input of Greek characters in a way
+that ``reaches TeX's stomach'' and hence works in both, the main document as
+well as in PDF strings (e.g. bookmarks). Hyperref's ``puenc.def`` font
+encoding file defines LICR macros for monotonic Greek (Greek characters of
+the ``Greek and Coptic'' unicode block).
+
+All utf8-encoded literal Unicode characters work in PDF strings. With
+\emph{greek-fontenc} and \emph{greek-inputenc}, this enables use of all
+Greek character in text and PDF strings.
+
+\section{Transcription: \ensuregreek{logos}, \foreignlanguage{greek}{logos}}
+
+\textbackslash{}textgreek + LGR transcription or
+Greek language (babel) + LGR transcription:
+In the PDF-bookmark are Latin letters instead of Greek ones.
+
+
+\section{Macros:
+	    \textlambda\textomicron\textgamma\textomicron\textvarsigma{},
+            \lambda\omicron\gamma\omicron\varsigma{},
+	    λογος}
+
+\emph{textalpha} package with \textbackslash{}textalpha \ldots
+\textbackslash{}textomega macros or \emph{alphabeta} package with
+\textbackslash{}alpha \ldots \textbackslash{}Omega macros. With 8-bit TeX
+engines (pdflatex), literal Greek Unicode characters are converted to LICR
+Macros, too.
+
+Works, if the \texttt{unicode} or \texttt{pdfencoding=auto} option is given
+to \emph{hyperref}.%
+\footnote{With the ``xpdf'' viewer, Greek letters are not shown
+	  in PDF bookmarks.}
+
+The generic short macros from the \emph{alphabeta} package result in
+hyperref warnings. See \href{alphabeta-doc.pdf}{alphabeta-doc.pdf} and 
+\href{alphabeta-doc.tex}{alphabeta-doc.tex}
+for details and workarounds.
+
+
+\section{LGR + Macros: \foreignlanguage{greek}{
+  \textlambda\textomicron\textgamma\textomicron\textvarsigma{}}}
+
+LICR-macro input works also if the font encoding is LGR.
+
+\section{%
+  Kerning: \textAlpha\textUpsilon\textLambda{}
+  	   \ensuregreek{\textAlpha\textUpsilon\textLambda}
+  	   \foreignlanguage{greek}{\textAlpha\textUpsilon\textLambda}%
+}
+
+Kerning is impossible if the font encoding is switched for every single
+character. To fix this, wrap the Greek part in a command switching to a font
+encoding supporting Greek, either \verb+\ensuregreek{...}+ (with package
+\emph{textalpha} or \emph{Babel}) or \verb+\foreignlanguage{greek}{...}+
+(with \emph{Babel}).
+
+\section{Literal Unicode input}
+The following subsection headings contain all characters from the ``Greek
+and Coptic'' and ``Greek Extended'' Unicode Blocks that are supported by the
+LGR font encoding.
+\subsection{ʹ͵ͺ; ΄ ΅ Ά·ΈΉΊΌΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝ}
+\subsection{ΞΟΠΡΣΤΥΦΧΨΩΪΫϘϚϜϠ}
+Greek and Coptic Unicode block: punctuation and uppercase letters
+
+\subsection{άέήίΰαβγδεζηθικλμν}
+\subsection{ξοπρςστυφχψωϊϋόύώϐϑϕϖϘϙϛϝϟϡ}
+
+Greek and Coptic Unicode block: lowercase letters
+
+\subsection{ἀἁἂἃἄἅἆἇἈἉἊἋἌἍἎἏ}
+\subsection{ἐἑἒἓἔἕἘἙἚἛἜἝ}
+\subsection{ἠἡἢἣἤἥἦἧἨἩἪἫἬἭἮἯ}
+\subsection{ἰἱἲἳἴἵἶἷἸἹἺἻἼἽἾἿ}
+\subsection{ὀὁὂὃὄὅὈὉὊὋὌὍ}
+\subsection{ὐὑὒὓὔὕὖὗὙὛὝὟ}
+\subsection{ὠὡὢὣὤὥὦὧὨὩὪὫὬὭὮὯ}
+\subsection{ὰάὲέὴήὶίὸόὺύὼώ}
+\subsection{ᾀᾁᾂᾃᾄᾅᾆᾇᾈᾉᾊᾋᾌᾍᾎᾏ}
+\subsection{ᾐᾑᾒᾓᾔᾕᾖᾗᾘᾙᾚᾛᾜᾝᾞᾟ}
+\subsection{ᾠᾡᾢᾣᾤᾥᾦᾧᾨᾩᾪᾫᾬᾭᾮᾯ}
+\subsection{ᾰᾱᾲᾳᾴᾶᾷᾸᾹᾺΆᾼ᾽ι᾿}
+\subsection{῀῁ῂῃῄῆῇῈΈῊΉῌ῍῎῏}
+\subsection{ῐῑῒΐῖῗῘῙῚΊ῝῞῟}
+\subsection{ῠῡῢΰῤῥῦῧῨῩῪΎῬ῭΅`}
+\subsection{ῲῳῴῶῷῸΌῺΏῼ´῾}
+
+Greek Extended Unicode block: Input as literal precomposed Unicode character
+works fine.
+
+\section{LICR command input}
+
+\subsection{\ensuregreek{
+  \textnumeralsigngreek
+  \textnumeralsignlowergreek
+  { }\ypogegrammeni
+  \texterotimatiko
+  \acctonos{ }
+  \"'{ }
+  \'\textAlpha
+  \textanoteleia
+  \'\textEpsilon
+  \'\textEta
+  \'\textIota
+  \'\textOmicron
+  \'\textUpsilon
+  \'\textOmega
+  \'"\textiota
+  \textAlpha
+  \textBeta
+  \textGamma
+  \textDelta
+  \textEpsilon
+  \textZeta
+  \textEta
+  \textTheta
+  \textIota
+  \textKappa
+  \textLambda
+  \textMu
+  \textNu}}
+\subsection{\ensuregreek{
+  \textXi
+  \textOmicron
+  \textPi
+  \textRho
+  \textSigma
+  \textTau
+  \textUpsilon
+  \textPhi
+  \textChi
+  \textPsi
+  \textOmega
+  \"\textIota
+  \"\textUpsilon
+}}
+
+\subsection{\ensuregreek{
+  \'\textalpha
+  \'\textepsilon
+  \'\texteta
+  \'\textiota
+  \"'\textupsilon
+  \textalpha
+  \textbeta
+  \textgamma
+  \textdelta
+  \textepsilon
+  \textzeta
+  \texteta
+  \texttheta
+  \textiota
+  \textkappa
+  \textlambda
+  \textmu
+  \textnu}}
+\subsection{\ensuregreek{
+  \textxi
+  \textomicron
+  \textpi
+  \textrho
+  \textvarsigma
+  \textsigma
+  \texttau
+  \textupsilon
+  \textphi
+  \textchi
+  \textpsi
+  \textomega
+  \"\textiota
+  \"\textupsilon
+  \'\textomicron
+  \'\textupsilon
+  \'\textomega
+  \textbetasymbol
+  \textthetasymbol
+  \textphisymbol
+  \textpisymbol
+  \textQoppa
+  \textqoppa
+  \textStigma
+  \textstigma
+  \textDigamma
+  \textdigamma
+  \textKoppa
+  \textkoppa
+  \textSampi
+  \textsampi
+}}
+
+
+Currently, there is no hyperref support for LICR input with non-standard
+accents or combined diacritics characters.
+
+\subsection{\ensuregreek{
+  \accpsili\textalpha
+  \accdasia\textalpha
+  \accpsili`\textalpha
+  \accdasia`\textalpha
+  \accpsili'\textalpha
+  \accdasia'\textalpha
+  \~>\textalpha
+  \~<\textalpha
+  \accpsili\textAlpha
+  \accdasia\textAlpha
+  \accpsili`\textAlpha
+  \accdasia`\textAlpha
+  \accpsili'\textAlpha
+  \accdasia'\textAlpha
+  \~>\textAlpha
+  \~<\textAlpha
+}}
+\subsection{\ensuregreek{
+  \accpsili\textepsilon
+  \accdasia\textepsilon
+  \accpsili`\textepsilon
+  \accdasia`\textepsilon
+  \accpsili'\textepsilon
+  \accdasia'\textepsilon
+  \accpsili\textEpsilon
+  \accdasia\textEpsilon
+  \accpsili`\textEpsilon
+  \accdasia`\textEpsilon
+  \accpsili'\textEpsilon
+  \accdasia'\textEpsilon
+}}
+\subsection{\ensuregreek{
+  \accpsili\texteta
+  \accdasia\texteta
+  \accpsili`\texteta
+  \accdasia`\texteta
+  \accpsili'\texteta
+  \accdasia'\texteta
+  \~>\texteta
+  \~<\texteta
+  \accpsili\textEta
+  \accdasia\textEta
+  \accpsili`\textEta
+  \accdasia`\textEta
+  \accpsili'\textEta
+  \accdasia'\textEta
+  \~>\textEta
+  \~<\textEta
+}}
+\subsection{\ensuregreek{
+  \accpsili\textiota
+  \accdasia\textiota
+  \accpsili`\textiota
+  \accdasia`\textiota
+  \accpsili'\textiota
+  \accdasia'\textiota
+  \~>\textiota
+  \~<\textiota
+  \accpsili\textIota
+  \accdasia\textIota
+  \accpsili`\textIota
+  \accdasia`\textIota
+  \accpsili'\textIota
+  \accdasia'\textIota
+  \~>\textIota
+  \~<\textIota
+}}
+\subsection{\ensuregreek{
+  \accpsili\textomicron
+  \accdasia\textomicron
+  \accpsili`\textomicron
+  \accdasia`\textomicron
+  \accpsili'\textomicron
+  \accdasia'\textomicron
+  \accpsili\textOmicron
+  \accdasia\textOmicron
+  \accpsili`\textOmicron
+  \accdasia`\textOmicron
+  \accpsili'\textOmicron
+  \accdasia'\textOmicron
+}}
+\subsection{\ensuregreek{
+  \accpsili\textupsilon
+  \accdasia\textupsilon
+  \accpsili`\textupsilon
+  \accdasia`\textupsilon
+  \accpsili'\textupsilon
+  \accdasia'\textupsilon
+  \~>\textupsilon
+  \~<\textupsilon
+  \accdasia\textUpsilon
+  \accdasia`\textUpsilon
+  \accdasia'\textUpsilon
+  \~<\textUpsilon
+}}
+\subsection{\ensuregreek{
+  \accpsili\textomega
+  \accdasia\textomega
+  \accpsili`\textomega
+  \accdasia`\textomega
+  \accpsili'\textomega
+  \accdasia'\textomega
+  \~>\textomega
+  \~<\textomega
+  \accpsili\textOmega
+  \accdasia\textOmega
+  \accpsili`\textOmega
+  \accdasia`\textOmega
+  \accpsili'\textOmega
+  \accdasia'\textOmega
+  \~>\textOmega
+  \~<\textOmega
+}}
+\subsection{\ensuregreek{
+  \accvaria\textalpha
+  \accoxia\textalpha
+  \accvaria\textepsilon
+  \accoxia\textepsilon
+  \accvaria\texteta
+  \accoxia\texteta
+  \accvaria\textiota
+  \accoxia\textiota
+  \accvaria\textomicron
+  \accoxia\textomicron
+  \accvaria\textupsilon
+  \accoxia\textupsilon
+  \accvaria\textomega
+  \accoxia\textomega
+}}
+\subsection{\ensuregreek{
+  \accpsili\textalpha\ypogegrammeni
+  \accdasia\textalpha\ypogegrammeni
+  \accpsili`\textalpha\ypogegrammeni
+  \accdasia`\textalpha\ypogegrammeni
+  \accpsili'\textalpha\ypogegrammeni
+  \accdasia'\textalpha\ypogegrammeni
+  \~>\textalpha\ypogegrammeni
+  \~<\textalpha\ypogegrammeni
+  \accpsili\textAlpha\ypogegrammeni
+  \accdasia\textAlpha\ypogegrammeni
+  \accpsili`\textAlpha\ypogegrammeni
+  \accdasia`\textAlpha\ypogegrammeni
+  \accpsili'\textAlpha\ypogegrammeni
+  \accdasia'\textAlpha\ypogegrammeni
+  \~>\textAlpha\ypogegrammeni
+  \~<\textAlpha\ypogegrammeni
+}}
+\subsection{\ensuregreek{
+  \accpsili\texteta\ypogegrammeni
+  \accdasia\texteta\ypogegrammeni
+  \accpsili`\texteta\ypogegrammeni
+  \accdasia`\texteta\ypogegrammeni
+  \accpsili'\texteta\ypogegrammeni
+  \accdasia'\texteta\ypogegrammeni
+  \~>\texteta\ypogegrammeni
+  \~<\texteta\ypogegrammeni
+  \accpsili\textEta\ypogegrammeni
+  \accdasia\textEta\ypogegrammeni
+  \accpsili`\textEta\ypogegrammeni
+  \accdasia`\textEta\ypogegrammeni
+  \accpsili'\textEta\ypogegrammeni
+  \accdasia'\textEta\ypogegrammeni
+  \~>\textEta\ypogegrammeni
+  \~<\textEta\ypogegrammeni
+}}
+\subsection{\ensuregreek{
+  \accpsili\textomega\ypogegrammeni
+  \accdasia\textomega\ypogegrammeni
+  \accpsili`\textomega\ypogegrammeni
+  \accdasia`\textomega\ypogegrammeni
+  \accpsili'\textomega\ypogegrammeni
+  \accdasia'\textomega\ypogegrammeni
+  \~>\textomega\ypogegrammeni
+  \~<\textomega\ypogegrammeni
+  \accpsili\textOmega\ypogegrammeni
+  \accdasia\textOmega\ypogegrammeni
+  \accpsili`\textOmega\ypogegrammeni
+  \accdasia`\textOmega\ypogegrammeni
+  \accpsili'\textOmega\ypogegrammeni
+  \accdasia'\textOmega\ypogegrammeni
+  \~>\textOmega\ypogegrammeni
+  \~<\textOmega\ypogegrammeni
+}}
+\subsection{\ensuregreek{
+  \u\textalpha
+  \=\textalpha
+  \accvaria\textalpha\ypogegrammeni
+  \textalpha\ypogegrammeni
+  \accoxia\textalpha\ypogegrammeni
+  \~\textalpha
+  \~\textalpha\ypogegrammeni
+  \u\textAlpha
+  \=\textAlpha
+  \accvaria\textAlpha
+  \accoxia\textAlpha
+  \textAlpha\ypogegrammeni
+  \accpsili{ }
+  { }\prosgegrammeni
+  \accpsili{ }
+}}
+\subsection{\ensuregreek{
+  \accperispomeni\textcompwordmark
+  \"\~{ }
+  \accvaria\texteta\ypogegrammeni
+  \texteta\ypogegrammeni
+  \accoxia\texteta\ypogegrammeni
+  \~\texteta
+  \~\texteta\ypogegrammeni
+  \accvaria\textEpsilon
+  \accoxia\textEpsilon
+  \accvaria\textEta
+  \accoxia\textEta
+  \textEta\ypogegrammeni
+  \accpsili`{ }
+  \accpsili'{ }
+  \~>{ }
+}}
+\subsection{\ensuregreek{
+  \u\textiota
+  \=\textiota
+  \`"\textiota
+  \'"\textiota
+  \~\textiota
+  \~"\textiota
+  \u\textIota
+  \=\textIota
+  \accvaria\textIota
+  \accoxia\textIota
+  \accdasia`{ }
+  \accpsili'{ }
+  \~<{ }
+}}
+\subsection{\ensuregreek{
+  \u\textupsilon
+  \=\textupsilon
+  \`"\textupsilon
+  \'"\textupsilon
+  \accpsili\textrho
+  \accdasia\textrho
+  \~\textupsilon
+  \~"\textupsilon
+  \u\textUpsilon
+  \=\textUpsilon
+  \accvaria\textUpsilon
+  \accoxia\textUpsilon
+  \accdasia\textRho
+  \`"{ }
+  \'"{ }
+  \accvaria{ }
+}}
+\subsection{\ensuregreek{
+  \accvaria\textomega\ypogegrammeni
+  \textomega\ypogegrammeni
+  \accoxia\textomega\ypogegrammeni
+  \~\textomega
+  \~\textomega\ypogegrammeni
+  \accvaria\textOmicron
+  \accoxia\textOmicron
+  \accvaria\textOmega
+  \accoxia\textOmega
+  \textOmega\ypogegrammeni
+  \accoxia{ }
+  \accdasia{ }
+}}
+
+\section{Makeuppercase}
+
+According to Greek typesetting conventions,
+diacritics (except the dialytika) are dropped in ALL CAPS.
+
+However, \verb|\Makeuppercase| is not supported in PDF-strings, so we
+do not need to care for this.
+
+\section{Conclusion}
+
+For Greek text parts in section headers use either literal Unicode
+characters%
+\footnote{Pre-composed Unicode characters must be used for multi-accented
+letters or non-standard accents. Combining Unicode characters do not work
+with inputenc and 8-bit LaTeX – this is a general restriction.} or macros.
+For proper kerning in the main document, combine this with the
+\verb+\textgreek+ or \verb+\foreignlanguage{greek}+ macros.
+
+\end{document}

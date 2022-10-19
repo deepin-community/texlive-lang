@@ -1,0 +1,372 @@
+%% $Id: hvarabic.tex 104 2021-06-01 06:01:56Z herbert $
+%
+\listfiles\setcounter{errorcontextlines}{100}
+\documentclass[paper=a4,fontsize=11pt,DIV=13,parskip=half-,
+               captions=tableabove,twoside=on]{scrartcl}
+\usepackage{fontspec}
+\setmainfont{AccanthisADFStdNo3}[
+  UprightFont   =*-Regular,
+  BoldFont      =*-Bold,
+  ItalicFont    =*-Italic,
+  BoldItalicFont=*-BoldItalic,
+  RawFeature    = -rlig,
+]
+\setsansfont{GilliusADF}[
+  UprightFont   =*-Regular,
+  BoldFont      =*-Bold,
+  ItalicFont    =*-Italic,
+  BoldItalicFont=*-BoldItalic,
+  RawFeature    = -rlig,
+]
+\setmonofont{Anonymous Pro}[Scale=MatchLowercase,FakeStretch=0.9]
+
+\usepackage[english]{babel}
+\usepackage{scrlayer-scrpage}
+\usepackage{showexpl}
+\usepackage{dtk-extern,xcolor}
+\lstset{basicstyle=\hvALM\small,language=[LaTeX]TeX,rframe=}
+
+\setkeys{dtk}{cleanup,force=false}
+
+\def\Lfile#1{\texttt{#1}\index{#1 file@\texttt{#1} file}}
+\def\Lext#1{\texttt{.#1}\index{#1 file extension@\texttt{.#1} file extension}}
+\def\Lcs#1{\texttt{\textbackslash#1}\index{#1@\texttt{\textbackslash#1}}}
+\def\Lenv#1{\texttt{#1}\index{#1 environment@\texttt{#1} environment}}
+\def\Lpack#1{\texttt{#1}\index{#1 package@\texttt{#1} package}}
+\def\Lprog#1{\texttt{#1}\index{#1 program@\texttt{#1} program}}
+\def\Loption#1{\texttt{#1}\index{#1@\texttt{#1} package option}}
+\let\Ldim\Lcs
+
+%\usepackage[bibstyle=dtk]{biblatex}
+%\addbibresource{\jobname.bib}
+
+
+\makeatletter% from: doc.sty
+\newcommand*\GetFileInfo[1]{%
+  \def\filename{#1}%
+  \def\@tempb##1 ##2 ##3\relax##4\relax{%
+    \def\filedate{##1}%
+    \def\fileversion{##2}%
+    \def\fileinfo{##3}}%
+  \edef\@tempa{\csname ver@#1\endcsname}%
+  \expandafter\@tempb\@tempa\relax? ? \relax\relax}
+\makeatother
+
+%\GetFileInfo{xltabular.sty}
+\usepackage{xspace}
+\usepackage{hvarabic}
+\def\setVersion#1{\setVVersion#1!!}
+\def\setVVersion#1=#2!!{\def\hvarabicVersion{#2}} 
+
+\usepackage[imakeidx]{xindex}
+\makeindex
+
+\usepackage{url}
+\usepackage[colorlinks,linktocpage]{hyperref}
+
+
+\setVersion{version = 0.01a}%
+
+\title{Package \texttt{hvarabic} \\--\\ Provide macros for RTL typesetting. \\ \normalsize \hvarabicVersion\ (\today)}
+\author{Herbert Voß\thanks{\url{hvoss@tug.org}}}
+\begin{document}
+\maketitle
+%\tableofcontents
+
+\section{Package option}
+
+By default a footnoterule is set from left to right, with left-to-right (LTR) and also with right-to-left (RTL) text.
+Using the optional package argument \Loption{RTLfootnoterule} forces \LaTeX\ to draw the footnoterule also von right to left:
+
+\let\myFont\hvALM
+
+\begin{Verbatim}[fontfamily=myFont,frame=single,label=Source]
+[...]
+\usepackage{hvarabic}% the default
+[...]
+\begin{RTL}
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين \nLTR{١٢٣٤٥} فقرة عربية
+محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين\RTLfootnote{حاشية عربية.} فقرة عربية محاذاة إلى اليمين.
+\end{RTL}
+\end{Verbatim}
+
+
+
+
+\begin{externalDocument}[
+%  grfOptions={width=\dimexpr\linewidth-2\fboxsep-2\fboxrule},
+  pages={1},
+  frame,
+  compiler=lualatex,
+  crop,
+  force,
+  xindex,
+  runs=2,code=false,docType=latex,
+  align=\centering,
+  lstOptions={columns=fixed}]{hvarabic}
+\documentclass[paper=a6,paper=landscape,DIV=13]{scrartcl}
+\textheight=0.6\textheight %% Only for demo
+%StartVisiblePreamble
+\usepackage{hvarabic}
+%StopVisiblePreamble
+\pagestyle{empty}
+\begin{document}
+\begin{RTL}
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين \nLTR{١٢٣٤٥} فقرة عربية
+محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين\RTLfootnote{حاشية عربية.} فقرة عربية محاذاة إلى اليمين.
+\end{RTL}
+\end{document}
+\end{externalDocument}
+
+\begin{Verbatim}[fontfamily=myFont,frame=single,label=Source]
+[...]
+\usepackage[RTLfootnoterule]{hvarabic}% draw footnoterule also RTL!
+[...]
+\begin{RTL}
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين \nLTR{١٢٣٤٥} فقرة عربية
+محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين\RTLfootnote{حاشية عربية.} فقرة عربية محاذاة إلى اليمين.
+\end{RTL}
+\end{Verbatim}
+
+
+
+
+\begin{externalDocument}[
+%  grfOptions={width=\dimexpr\linewidth-2\fboxsep-2\fboxrule},
+  pages={1},
+  frame,
+  compiler=lualatex,
+  crop,
+  force,
+  xindex,
+  runs=2,code=false,docType=latex,
+  align=\centering,
+  lstOptions={columns=fixed}]{hvarabic}
+\documentclass[paper=a6,paper=landscape,DIV=13]{scrartcl}
+\textheight=0.6\textheight %% Only for demo
+%StartVisiblePreamble
+\usepackage[RTLfootnoterule]{hvarabic}
+%StopVisiblePreamble
+\pagestyle{empty}
+\begin{document}
+\begin{RTL}
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين \nLTR{١٢٣٤٥} فقرة عربية
+محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين\RTLfootnote{حاشية عربية.} فقرة عربية محاذاة إلى اليمين.
+\end{RTL}
+\end{document}
+\end{externalDocument}
+
+
+\section{Small RTL text sequences}
+
+\begin{verbatim}
+\textRTL{RTL text sequence}
+\end{verbatim}
+
+\begin{Verbatim}[fontfamily=myFont,frame=single,label=Source]
+English text ``\textRTL{جملة عربية وسط جملة إنجليزية}'' with Arabic in between. 
+To protect the people of Massachusetts from the COVID-19 pandemic you left your 
+classes and, in [...]
+\end{Verbatim}
+
+
+
+
+\begin{externalDocument}[
+%  grfOptions={width=\dimexpr\linewidth-2\fboxsep-2\fboxrule},
+  pages={1},
+  frame,
+  compiler=lualatex,
+  crop,
+  force,
+  xindex,
+  runs=2,code=false,docType=latex,
+  align=\centering,
+  lstOptions={columns=fixed}]{hvarabic}
+\documentclass[paper=a6,paper=landscape,DIV=13]{scrartcl}
+%StartVisiblePreamble
+\usepackage[RTLfootnoterule]{hvarabic}
+%StopVisiblePreamble
+\pagestyle{empty}
+\begin{document}
+English text ``\textRTL{جملة عربية وسط جملة إنجليزية}'' with Arabic in between. 
+To protect the people of Massachusetts from the COVID-19 pandemic you left your 
+classes and, in [...]
+\end{document}
+\end{externalDocument}
+
+
+\section{Long RTL text sequences}
+The macro \Lcs{footnote} is still available but prints the footnote with footnoterule
+left justified. With \Lcs{RTLfootnote} the footnotetext can be printed right justified.
+It depends to current state if the footnoterule should be left or right justified.
+It can be changed by two commands or for the whole document with the package option.
+
+
+\begin{verbatim}
+\begin{RTL}
+...
+\end{RTL}
+\nLTR{digits}% for digits inside Arabic text
+\RTLfootnote{RTL footnote inside RTL environment}
+\setLTRfootnoterule
+\setRTLfootnoterule
+\end{verbatim}
+
+\begin{Verbatim}[fontfamily=myFont,frame=single,label=Source]
+English text ``\textRTL{جملة عربية وسط جملة إنجليزية}'' with Arabic in between. 
+To protect the people of Massachusetts from the COVID-19 pandemic you left your 
+classes and, in many cases, your home at Harvard to move to a virtual mode of education. 
+
+\begin{RTL}
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين \nLTR{١٢٣٤٥} فقرة عربية
+محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين\RTLfootnote{حاشية عربية.} فقرة عربية محاذاة إلى اليمين.
+
+لحماية سكان ماساتشوستس من جائحة \nLTR{COVID-19} تركت دروسك ، وفي
+في كثير من الحالات ، منزلك في هارفارد للانتقال إلى وضع التعليم الافتراضي. في نفس الوقت أنت
+صعد لخدمة مجتمعاتك في جميع أنحاء العالم. انتقل بعضكم مباشرة إلى الأمام
+خطوط الوباء ، مثل طلاب كلية الطب بجامعة هارفارد لعام \nLTR{2020} الذين اختاروا التخرج
+في وقت مبكر حتى يتمكنوا من الانضمام إلى القتال وأولئك من T.H. مدرسة تشان للصحة العامة
+تطوع لتوفير نظام تتبع الاتصال لماساتشوستس.
+\end{RTL}
+\end{Verbatim}
+
+
+
+
+\begin{externalDocument}[
+%  grfOptions={width=\dimexpr\linewidth-2\fboxsep-2\fboxrule},
+  pages={1},
+  frame,
+  compiler=lualatex,
+  crop,
+  force,
+  xindex,
+  runs=2,code=false,docType=latex,
+  align=\centering,
+  lstOptions={columns=fixed}]{hvarabic}
+\documentclass[paper=a5,paper=landscape,DIV=13]{scrartcl}
+\textheight=0.6\textheight % Only for demo
+%StartVisiblePreamble
+\usepackage[RTLfootnoterule]{hvarabic}
+%StopVisiblePreamble
+\pagestyle{empty}
+\begin{document}
+English text ``\textRTL{جملة عربية وسط جملة إنجليزية}'' with Arabic in between. 
+To protect the people of Massachusetts from the COVID-19 pandemic you left your 
+classes and, in many cases, your home at Harvard to move to a virtual mode of education. 
+
+\begin{RTL}
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين \nLTR{١٢٣٤٥} فقرة عربية
+محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين
+فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين فقرة عربية محاذاة إلى اليمين فقرة عربية محاذاة إلى
+اليمين\RTLfootnote{حاشية عربية.} فقرة عربية محاذاة إلى اليمين.
+
+لحماية سكان ماساتشوستس من جائحة \nLTR{COVID-19} تركت دروسك ، وفي
+في كثير من الحالات ، منزلك في هارفارد للانتقال إلى وضع التعليم الافتراضي. في نفس الوقت أنت
+صعد لخدمة مجتمعاتك في جميع أنحاء العالم. انتقل بعضكم مباشرة إلى الأمام
+خطوط الوباء ، مثل طلاب كلية الطب بجامعة هارفارد لعام \nLTR{2020} الذين اختاروا التخرج
+في وقت مبكر حتى يتمكنوا من الانضمام إلى القتال وأولئك من T.H. مدرسة تشان للصحة العامة
+تطوع لتوفير نظام تتبع الاتصال لماساتشوستس.
+\end{RTL}
+\end{document}
+\end{externalDocument}
+
+
+\section{Arabic font}
+The package uses by default the predefined fontface \Lcs{RTLfont}, which defines as
+arabic font Scheherazade and for verbatim text the only possible arabic font with 
+monospace, the ALM (Arabic Latin Modern). It is available by using the macro \Lcs{hvALM}
+and is scaled down to 85\%.:
+
+\begin{verbatim}
+\providefontfamily\RTLfont
+    [Script=Arabic,        % to get correct arabic shaping
+     Scale=1.2]{Scheherazade}         % whatever Arabic font you like
+\newfontfamily\hvALM{ALM Fixed}[Scale=0.9]
+\end{verbatim}
+
+\section{Global change of the text direction}
+
+The two macros start a new paragraph and then changes the text direction to TRT
+or TLT.
+
+\begin{verbatim}
+\setRTL
+\setLTR
+\end{verbatim}
+
+\begin{Verbatim}[fontfamily=myFont,frame=single,label=Source]
+\setRTL\RTLfont
+لحماية سكان ماساتشوستس من جائحة \nLTR{COVID-19} تركت دروسك ، وفي
+في كثير من الحالات ، منزلك في هارفارد للانتقال إلى وضع التعليم الافتراضي. في نفس الوقت أنت
+صعد لخدمة مجتمعاتك في جميع أنحاء العالم. انتقل بعضكم مباشرة إلى الأمام
+خطوط الوباء ، مثل طلاب كلية الطب بجامعة هارفارد لعام \nLTR{2020} الذين اختاروا التخرج
+في وقت مبكر حتى يتمكنوا من الانضمام إلى القتال وأولئك من T.H. مدرسة تشان للصحة العامة
+تطوع لتوفير نظام تتبع الاتصال لماساتشوستس.
+\setLTR
+لحماية سكان ماساتشوستس من جائحة \nLTR{COVID-19} تركت دروسك ، وفي
+في كثير من الحالات ، منزلك في هارفارد للانتقال إلى وضع التعليم الافتراضي. في نفس الوقت أنت
+صعد لخدمة مجتمعاتك في جميع أنحاء العالم. انتقل بعضكم مباشرة إلى الأمام
+خطوط الوباء ، مثل طلاب كلية الطب بجامعة هارفارد لعام \nLTR{2020} الذين اختاروا التخرج
+في وقت مبكر حتى يتمكنوا من الانضمام إلى القتال وأولئك من T.H. مدرسة تشان للصحة العامة
+تطوع لتوفير نظام تتبع الاتصال لماساتشوستس.
+\end{Verbatim}
+
+
+
+
+\begin{externalDocument}[
+%  grfOptions={width=\dimexpr\linewidth-2\fboxsep-2\fboxrule},
+  pages={1},
+  frame,
+  compiler=lualatex,
+  crop,
+  xindex,
+  force,
+  runs=2,code=false,docType=latex,
+  align=\centering,
+  lstOptions={columns=fixed}]{hvarabic}
+\documentclass{scrartcl}
+%StartVisiblePreamble
+\usepackage[RTLfootnoterule]{hvarabic}
+%StopVisiblePreamble
+\pagestyle{empty}
+\begin{document}
+\setRTL\RTLfont
+لحماية سكان ماساتشوستس من جائحة \nLTR{COVID-19} تركت دروسك ، وفي
+في كثير من الحالات ، منزلك في هارفارد للانتقال إلى وضع التعليم الافتراضي. في نفس الوقت أنت
+صعد لخدمة مجتمعاتك في جميع أنحاء العالم. انتقل بعضكم مباشرة إلى الأمام
+خطوط الوباء ، مثل طلاب كلية الطب بجامعة هارفارد لعام \nLTR{2020} الذين اختاروا التخرج
+في وقت مبكر حتى يتمكنوا من الانضمام إلى القتال وأولئك من T.H. مدرسة تشان للصحة العامة
+تطوع لتوفير نظام تتبع الاتصال لماساتشوستس.
+
+\setLTR\bigskip
+لحماية سكان ماساتشوستس من جائحة \nLTR{COVID-19} تركت دروسك ، وفي
+في كثير من الحالات ، منزلك في هارفارد للانتقال إلى وضع التعليم الافتراضي. في نفس الوقت أنت
+صعد لخدمة مجتمعاتك في جميع أنحاء العالم. انتقل بعضكم مباشرة إلى الأمام
+خطوط الوباء ، مثل طلاب كلية الطب بجامعة هارفارد لعام \nLTR{2020} الذين اختاروا التخرج
+في وقت مبكر حتى يتمكنوا من الانضمام إلى القتال وأولئك من T.H. مدرسة تشان للصحة العامة
+تطوع لتوفير نظام تتبع الاتصال لماساتشوستس.
+\end{document}
+\end{externalDocument}
+
+%\printindex
+
+\end{document}

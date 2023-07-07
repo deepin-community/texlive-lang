@@ -6,7 +6,7 @@
 %%
 %% ctex.dtx  (with options: `heading,beamer')
 %% 
-%%     Copyright (C) 2003--2021
+%%     Copyright (C) 2003--2022
 %%     CTEX.ORG and any individual authors listed in the documentation.
 %% ---------------------------------------------------------------------
 %% 
@@ -24,10 +24,10 @@
 %% 
 %% ---------------------------------------------------------------------
 %% 
-\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
   {Heading modification for beamer (CTEX)}
 \ProvidesExplFile{ctex-beamer.def}
-  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
+  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
 \seq_const_from_clist:Nn \c__ctex_headings_seq
   { part , section , subsection }
 \cs_new_protected:Npn \__ctex_initial_heading:n #1
@@ -62,11 +62,11 @@
   }
 \cs_new_protected:Npn \__ctex_def_heading_keys:n #1
   {
-    \tl_put_right:Nx \l__ctex_tmp_tl
+    \exp_args:NNe \tl_put_right:Nn \l__ctex_tmp_tl
       {
-        #1                  .meta:nn = { ctex / #1 } { ####1 } ,
+        #1                  .meta:nn = { ctex / #1 } { ##1 } ,
         #1 / name            .code:n =
-          { \ctex_assign_heading_name:nn {#1} { ####1 } } ,
+          { \ctex_assign_heading_name:nn {#1} { ##1 } } ,
         #1 / number        .tl_set:N = \exp_not:c { CTEX@the#1 } ,
         #1 / beforeskip    .tl_set:N = \exp_not:c { CTEX@#1@beforeskip } ,
         #1 / afterskip     .tl_set:N = \exp_not:c { CTEX@#1@afterskip} ,
@@ -91,9 +91,9 @@
   {
     #1 / #2   .tl_set:N = \exp_not:c { CTEX@#1@#2 } ,
     #1 / #2 +   .code:n =
-      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ####1 } } ,
+      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ##1 } } ,
     #1 / #2 ~ + .code:n =
-      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ####1 } }
+      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ##1 } }
   }
 \NewDocumentCommand \ctex_assign_heading_name:nn
   { m > { \SplitArgument { 1 } { , } } +m }

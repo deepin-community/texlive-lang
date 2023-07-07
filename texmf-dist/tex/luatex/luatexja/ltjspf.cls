@@ -38,7 +38,7 @@
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{ltjspf}
-  [2020/12/23 ltjsclasses ]
+  [2022/09/12 ltjsclasses ]
 \def\jsc@clsname{ltjspf}
 \def\Cjascale{0.903375}
 \RequirePackage{luatexja}
@@ -247,13 +247,15 @@ option, since LuaTeX does not support \string\mag\MessageBreak in pdf output}%
   \begingroup\catcode`\%=12\relax
   \directlua{
     local getdimen, mpt=tex.getdimen, tex.getdimen('jsc@mpt')/65536
+    local floor, cnt_dimen_at = math.floor, luatexbase.registernumber 'dimen@'
+    local print_scaled, sprint = luatexja.print_scaled, tex.sprint
     local t = lua.get_functions_table()
     t[\the\ltjs@@magnify@font@calc] = function()
-      tex.sprint(-2,math.floor(0.5+mpt*getdimen('dimen@')))
+      sprint(-2,floor(0.5+mpt*getdimen(cnt_dimen_at)))
     end
     function luatexja.ltjs_unmagnify_fsize(a)
-      local s = luatexja.print_scaled(math.floor(0.5+a/mpt*65536))
-      tex.sprint(-2, (s:match('%.0$')) and s:sub(1,-3) or s )
+      local s = print_scaled(floor(0.5+a/mpt*65536))
+      sprint(-2, (s:match('%.0$')) and s:sub(1,-3) or s )
     end
   }
   \endgroup
@@ -283,8 +285,8 @@ option, since LuaTeX does not support \string\mag\MessageBreak in pdf output}%
 \newskip\jsc@smallskipamount
 \jsc@smallskipamount=3\jsc@mpt plus 1\jsc@mpt minus 1\jsc@mpt
 \iftombow
-  \newlength{\stockwidth}
-  \newlength{\stockheight}
+  \ifdefined\stockwidth\else\newlength{\stockwidth}\fi
+  \ifdefined\stockheight\else\newlength{\stockheight}\fi
   \setlength{\stockwidth}{\paperwidth}
   \setlength{\stockheight}{\paperheight}
   \advance \stockwidth 2in
@@ -307,12 +309,12 @@ option, since LuaTeX does not support \string\mag\MessageBreak in pdf output}%
 \fi
 \expandafter\let\csname JY3/mc/m/n/10\endcsname\relax
 \ifmingoth
-  \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:jfm=min}{}
-  \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:jfm=min}{}
+  \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:-kern;jfm=min}{}
+  \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:-kern;jfm=min}{}
 \else
   \ifptexjis
-    \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:jfm=jis}{}
-    \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:jfm=jis}{}
+    \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:-kern;jfm=jis}{}
+    \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:-kern;jfm=jis}{}
   \fi
 \fi
 \DeclareFontShape{JY3}{mc}{bx}{n}{<->ssub*gt/m/n}{}
@@ -1242,6 +1244,7 @@ class has defined the old font commands like\MessageBreak
     \splittopskip\footnotesep
     \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
     \hsize\columnwidth \@parboxrestore
+    \def\@currentcounter{footnote}%
     \protected@edef\@currentlabel{%
        \csname p@footnote\endcsname\@thefnmark
     }%
@@ -1258,7 +1261,7 @@ class has defined the old font commands like\MessageBreak
   \advance\leftskip 3\zw
   \parindent 1\zw
   \noindent
-  \llap{\@makefnmark\hskip0.3\zw}#1}
+  \hb@xt@\z@{\hss\@makefnmark\hskip0.3\zw}#1}
 \let\@inhibitglue=\ltjfakeparbegin
 \def\@item[#1]{%
   \if@noparitem

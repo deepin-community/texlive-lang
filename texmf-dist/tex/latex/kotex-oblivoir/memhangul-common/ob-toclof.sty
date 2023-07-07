@@ -1,6 +1,6 @@
 %% File `ob-toclof.sty`
 %%
-%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2022 Kangsoo Kim <modviv2k15 at gmail.com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -71,69 +71,69 @@
 %  \@namedef{print#2title}##1{\printchaptertitle{##1}}
 } % end \newlistof
 
-\def\@chapter[#1]#2{%
-  \ifx\ch@pt@c\m@m@empty % no optional args
-    \def\f@rtoc{#1}%
-    \def\f@rhdr{#1}%
-  \else                  % at least one opt arg
-    \def\f@rtoc{\ch@pt@c}%
-    \nametest{#1}{#2}%
-    \ifsamename          % one opt arg
-      \def\f@rhdr{\ch@pt@c}%
-    \else                % two opt args
-      \def\f@rhdr{#1}%
-    \fi
-  \fi 
-  \m@m@Andfalse
-  \ifnum \c@secnumdepth >\m@ne
-    \if@mainmatter
-      \m@m@Andtrue
-    \fi
-  \fi
-  \ifm@m@And
-   \ifanappendix
-    \refstepcounter{APPchapter}%
-   \else
-    \refstepcounter{chapter}%
-   \fi
-  \fi
-  \chaptermark{\f@rhdr}
-  \ifartopt
-    \@makechapterhead{#2}%
-    \@afterheading
-  \else
-    \insertchapterspace
-    \if@twocolumn
-      \@topnewpage[\@makechapterhead{#2}]%
-    \else
-      \@makechapterhead{#2}%
-    \fi
-    \@afterheading
-  \fi
-  \ifm@m@And
-    \ifanappendix
-      \addcontentsline{toc}{appendix}{%
-       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
-    \else
-      \addcontentsline{toc}{section}{%
-        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
-    \fi
-  \else
-    \addcontentsline{toc}{section}{\f@rtoc}%
-    \ifanappendix
-      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
-    \else
-      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
-    \fi
-  \fi
-  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
-%%% for chapter
-  \ifanappendix
-     \protected@edef\@currentlabel{\thechapter}%
-  \fi
-}
+%\def\@chapter[#1]#2{%
+%  \ifx\ch@pt@c\m@m@empty % no optional args
+%    \def\f@rtoc{#1}%
+%    \def\f@rhdr{#1}%
+%  \else                  % at least one opt arg
+%    \def\f@rtoc{\ch@pt@c}%
+%    \nametest{#1}{#2}%
+%    \ifsamename          % one opt arg
+%      \def\f@rhdr{\ch@pt@c}%
+%    \else                % two opt args
+%      \def\f@rhdr{#1}%
+%    \fi
+%  \fi 
+%  \m@m@Andfalse
+%  \ifnum \c@secnumdepth >\m@ne
+%    \if@mainmatter
+%      \m@m@Andtrue
+%    \fi
+%  \fi
+%  \ifm@m@And
+%   \ifanappendix
+%    \refstepcounter{APPchapter}%
+%   \else
+%    \refstepcounter{chapter}%
+%   \fi
+%  \fi
+%  \chaptermark{\f@rhdr}
+%  \ifartopt
+%    \@makechapterhead{#2}%
+%    \@afterheading
+%  \else
+%    \insertchapterspace
+%    \if@twocolumn
+%      \@topnewpage[\@makechapterhead{#2}]%
+%    \else
+%      \@makechapterhead{#2}%
+%    \fi
+%    \@afterheading
+%  \fi
+%  \ifm@m@And
+%    \ifanappendix
+%      \addcontentsline{toc}{appendix}{%
+%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%    \else
+%      \addcontentsline{toc}{section}{%
+%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%    \fi
+%  \else
+%    \addcontentsline{toc}{section}{\f@rtoc}%
+%    \ifanappendix
+%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
+%    \else
+%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%    \fi
+%  \fi
+%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%%% for chapter
+%  \ifanappendix
+%     \protected@edef\@currentlabel{\thechapter}%
+%  \fi
+%}
 
 \newlistof{tableofcontents}{toc}{\contentsname}
 \newlistof{listoffigures}{lof}{\listfigurename}
@@ -142,3 +142,5 @@
 \fi % of \if@toclofentry
 
 \endinput
+
+%%% redefinition of \@chapter deprecated, 2022/03/05

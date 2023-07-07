@@ -42,6 +42,54 @@ def PopChemin=
   fi;
 enddef;
 
+def PopCheminMathAlea=
+  if indiceChemin<1:
+    RAZPileChemin;
+    for k=-1 upto LargeurLaby:
+      for l=-1 upto LongueurLaby:
+	if (k=-1) or (k=LargeurLaby) or (l=-1) or (l=LongueurLaby):
+	  CaseExploree[k][l]:=true;
+	else:
+	  CaseExploree[k][l]:=false;
+	fi;
+      endfor;
+    endfor;
+    Mobile:=Depart;
+          if Entree="Nord":
+        CaseExploree[choixligneD-1][choixcolonneD]:=true;
+      elseif Entree="Sud":
+        CaseExploree[choixligneD+1][choixcolonneD]:=true;
+      elseif Entree="Est":
+        CaseExploree[choixligneD][choixcolonneD+1]:=true;
+      elseif Entree="Ouest":
+        CaseExploree[choixligneD][choixcolonneD-1]:=true;
+      fi;
+      if SortieUnique:
+        if (Sortie="Est") or (Sortie="Ouest"):
+          for k=0 upto LargeurLaby-1:
+          if k<>choixligneA:
+            CaseExploree[k][choixcolonneA]:=true;
+          fi;
+          endfor;
+        elseif (Sortie="Nord") or (Sortie="Sud"):
+          for k=0 upto LongueurLaby-1:
+          if k<>choixcolonneA:
+            CaseExploree[choixligneA][k]:=true;
+          fi;
+          endfor;    
+        fi;
+      fi;
+    PushChemin((choixligneD,choixcolonneD));
+    CaseExploree[choixligneD][choixcolonneD]:=true;
+    VoisinDispo(choixligneD,choixcolonneD);
+  else:
+    if indiceChemin>0:
+      CaseExploree[xpart(PileChemin[indiceChemin])][ypart(PileChemin[indiceChemin])]:=true;
+    fi;
+    indiceChemin:=indiceChemin-1;
+  fi;
+enddef;
+
 %Pile des cases voisines de la case parcourue
 pair PileVoisin[];
 numeric indiceVoisin;
@@ -152,7 +200,6 @@ vardef murgauche=
   picture $;
   path pl[];
   $=image(
-    %pl1=(0,0)--u*(0.15,0)--u*(0.15,0.2){dir180}..u*(0.08+uniformdeviate(0.05),0.2+uniformdeviate(0.1))..u*(0.09+uniformdeviate(0.015),0.3+uniformdeviate(0.2))..u*(0.08+uniformdeviate(0.04),0.5+uniformdeviate(0.2))..{dir0}u*(0.15,0.8)--u*(0.15,1)--u*(0,1)--cycle;
       pl1=(0,0)--u*(0.1,0)..u*(0.02+uniformdeviate(0.05),0.25)..u*(0.1-uniformdeviate(0.03),0.5)..u*(0.02+uniformdeviate(0.05),0.75)..u*(0.1,1)--u*(0,1)--cycle;
     remplis pl[1];
     trace pl[1];

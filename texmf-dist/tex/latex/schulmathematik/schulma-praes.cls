@@ -1,10 +1,8 @@
 % schulmathematik bundle: document class schulma-praes
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-praes}{2021-03-13}{1.1}{Dokumentenklasse fuer Bildschirmpraesentationen}
-
-\RequirePackage {xparse}
+\ProvidesExplClass{schulma-praes}{2022-08-12}{1.3}{Dokumentenklasse fuer Bildschirmpraesentationen}
 
 \bool_new:N \g_schulma_praes_seitenzahlen_bool
 \bool_new:N \g_schulma_praes_druck_bool
@@ -124,10 +122,10 @@
 
     \bool_if:NTF \g_schulma_praes_zwei_folien_pro_seite_bool
       {
-        \pgfpagesuselayout {2~on~1} [a4paper, border~shrink = 7mm]
+        \pgfpagesuselayout {2~on~1} [a4paper, border~shrink = 8mm]
       }
       {
-        \pgfpagesuselayout {4~on~1} [a4paper, landscape, border~shrink = 7mm]
+        \pgfpagesuselayout {4~on~1} [a4paper, landscape, border~shrink = 8mm]
       }
   }
 

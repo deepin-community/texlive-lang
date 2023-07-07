@@ -7,7 +7,9 @@
 %% bidi.dtx  (with options: `table,footnote-xetex-bidi.def')
 %% 
 %%   __________________________________________________
-%%   Copyright (c) 2007--2020  Vafa Khalighi
+%%   Vafa Khalighi
+%% 
+%%   Copyright (c) 2007--2023  Vafa Khalighi
 %%   Copyright (c) 2018--2020 bidi-tex GitHub Organization
 %% 
 %%   It may be distributed and/or modified under the LaTeX Project Public License,
@@ -18,7 +20,7 @@
 %%   by Vafa Khalighi.
 %% 
 %% 
-%% \CheckSum{50426}
+%% \CheckSum{58794}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,7 +37,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
-\ProvidesFile{footnote-xetex-bidi.def}[2017/08/09 v1.1 bidi footnote macros for XeTeX engine]
+\ProvidesFile{footnote-xetex-bidi.def}[2023/01/18 v1.2 bidi footnote macros for XeTeX engine]
 \if@RTLmain\@RTL@footnotetrue\else\@RTL@footnotefalse\fi
 \newif\ifbidi@autofootnoterule
 \def\bidi@mpfootnoterule{\footnoterule}
@@ -247,8 +249,9 @@
 
 \long\def\@mpRTLfootnotetext#1{%
   \ifbidi@autofootnoterule\ifnum\c@mpfootnote=\@ne\global\let\bidi@mpfootnoterule\right@footnoterule\fi\fi%
-  \global\setbox\@mpfootins\vbox{\@RTLtrue%
+  \global\setbox\@mpfootins\vbox{%
     \unvbox\@mpfootins
+    \@RTLtrue
     \reset@font%
     \bidi@@RTLfootnotetext@font% \reset@font\footnotesize
     \hsize\columnwidth
@@ -261,8 +264,9 @@
     \color@endgroup}}
 \long\def\@mpLTRfootnotetext#1{%
  \ifbidi@autofootnoterule\ifnum\c@mpfootnote=\@ne\global\let\bidi@mpfootnoterule\left@footnoterule\fi\fi%
-  \global\setbox\@mpfootins\vbox{\@RTLfalse%
+  \global\setbox\@mpfootins\vbox{%
     \unvbox\@mpfootins
+    \@RTLfalse
     \reset@font%
     \bidi@@LTRfootnotetext@font% \reset@font\footnotesize
     \hsize\columnwidth
@@ -275,8 +279,9 @@
     \color@endgroup}}
 \long\def\@mpfootnotetext#1{%
  \ifbidi@autofootnoterule\ifnum\c@mpfootnote=\@ne\if@RTL@footnote\global\let\bidi@mpfootnoterule\right@footnoterule\else\global\let\bidi@mpfootnoterule\left@footnoterule\fi\fi\fi%
-  \global\setbox\@mpfootins\vbox{\if@RTL@footnote\@RTLtrue\else\@RTLfalse\fi%
+  \global\setbox\@mpfootins\vbox{%
     \unvbox\@mpfootins
+    \if@RTL@footnote\@RTLtrue\else\@RTLfalse\fi
     \reset@font%
     \bidi@@footnotetext@font% \reset@font\footnotesize
     \hsize\columnwidth

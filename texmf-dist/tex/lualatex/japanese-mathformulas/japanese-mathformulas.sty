@@ -1,0 +1,4298 @@
+\NeedsTeXFormat{LaTeX2e}% lualatex
+
+\ProvidesPackage{mathformula}%[2022/10/5,Version 1.0.2]%
+
+\RequirePackage{luatexja}%
+\RequirePackage{luatexja-fontspec}%
+\RequirePackage{luatexja-otf}%
+%\RequirePackage[hiragino-pron,deluxe,expert,bold]{luatexja-preset}%
+\RequirePackage{mathtools,amssymb,ifthen,xparse,tikz,graphics}%
+\usepackage[b]{esvect}%
+\usetikzlibrary{arrows,shapes,intersections,calc,angles,decorations.shapes,arrows.meta,quotes,through,decorations.text}%
+
+\newcommand{\空行}{\vskip0.00001\baselineskip}%
+%\def\空行{\br{.1}}
+\newlength{\@tempdimf@math}%
+\def\br{\@ifstar{\@br}{\@@br}}%
+\def\@br#1{%
+\allowbreak
+\setlength{\@tempdimf@math}{\baselineskip * \real{#1}}%
+\vspace*{\@tempdimf@math}%
+}%
+\def\@@br#1{%
+\setlength{\@tempdimf@math}{\baselineskip * \real{#1}}%
+\vspace{\@tempdimf@math}%
+}%
+\newcommand{\半空行}{\vskip.5\baselineskip}%
+\newcommand{\証明開始}{\noindent\textgt{【証明】}\par}%
+\newcommand{\証明終了}{\@rightalign{\ （Q.E.D.）}\par}%
+\newcommand{\数式カンマスペース}{,\ }%
+\let\original@sqrt\sqrt%
+\NewDocumentCommand\@@sqrt{ O{} m }%
+  {\ifthenelse{\equal{#1}{}}{\ensuremath{\original@sqrt{\vphantom{b}#2}}}{\ensuremath{\original@sqrt[#1]{\vphantom{b}#2}}}}%
+\def\sqrt{\@@sqrt}%
+\NewDocumentCommand\根号{ O{} m }%
+  {\ifthenelse{\equal{#1}{}}{\ensuremath{\original@sqrt{\vphantom{b}#2\,}}}{\ensuremath{\original@sqrt[#1]{\vphantom{b}#2\,}}}}%
+\newcommand{\ベクトル}[1]{\vv{\mathstrut#1}}%
+\newcommand{\階乗}{\ensuremath{\mkern1mu!\mkern1mu}}%
+\newcommand{\実数入り}{\ensuremath{\in\mathbb{R}}}%
+\newcommand{\共役}[1]{\ensuremath{\overline{\mathstrut#1}}}%
+\def\相似sizeratio#1{\Mulself\sz@s{#1}\Mulself\sz@r{#1}\ignorespaces}%
+\edef\sz@s{1.4}%
+\edef\sz@r{.33}%
+\def\souzisizeratio#1{\Mulself\sz@s{#1}\Mulself\sz@r{#1}\ignorespaces}%
+\DeclareRobustCommand\相似{\@ifnextchar[{\@相似}{\@相似[\empty]}}%
+\def\@相似[#1]{%
+  \ifx\empty #1\else
+    \Mulself\sz@s{#1}%
+    \Mulself\sz@r{#1}%
+  \fi
+  \mathrel{\hbox{\chgfontsizeratio{\sz@s}\raisebox{-\sz@r ex}{∽}\!\!}}%
+}%
+\def\chgfontsizeratio#1{\setlength{\@tempdima@math}{\f@size pt}%
+  \setlength{\@tempdima@math}{#1\@tempdima@math}%
+  \@tempdimb@math=\@tempdima@math\advance\@tempdimb@math2\p@
+  \def\@tmp@size{%
+    \@setfontsize\@tmp@size{\strip@pt\@tempdima@math}{\strip@pt\@tempdimb@math}}%
+  \@tmp@size\ignorespaces
+}%
+\def\平行{\mathrel{/\kern-.25em/}}%
+\newcommand{\vvtext}[1]{\ensuremath{\vv{\text{#1}}}}%
+\newcommand{\overarc}[1]%
+  {%
+    \tikz[baseline=(N.base),every node/.style={}]%
+      {%
+        \node[inner sep=0pt](N){\text{#1}};%
+          \draw[line width=0.4pt]plot[smooth,tension=1.3]coordinates%
+            {($(N.north west)+(0.1ex,0)$)($(N.north)+(0,0.5ex)$)($(N.north east)+(0,0)$)};%
+      }%
+  }%
+\newcommand*{\@rightalign}[1]%
+  {%
+    \hspace{\parfillskip}%
+    \mbox{}\linebreak[0]\mbox{}%
+    \nolinebreak[4]\hfill\mbox{#1}%
+  }%
+\newcommand{\Ttyuukakko}[1]{\left(#1\right)}%
+\newcommand{\Ttyuubracket}[1]{\left[#1\right]}%
+\newcommand{\Tdaikakko}[1]{\left\{#1\right\}}%
+\newcommand{\Tzettaiti}[1]{\left|\,#1\,\right|}%
+\def\shikimaru#1{\text{\quad$\cdots\cdots$\,\ajMaru{#1}}}
+\let\originalbigtriangleup\bigtriangleup
+\def\bigtriangleup#1{\originalbigtriangleup{\text{#1}}}
+\DeclareRobustCommand\bunsuu{\@ifstar{\bunsuu@}{\@@bunsuu}}
+\def\@@bunsuu#1#2{%
+    \dfrac{\lower.44ex\hbox{$\,#1\,$}}{\lower-.1ex\hbox{$\,#2\,$}}}%
+\newlength{\@tempdima@math}
+\newlength{\@tempdimb@math}
+\newlength{\@tempdimd@math@math}
+\newlength{\@tempdimw@math}
+\DeclareRobustCommand\EMvphantom{\@ifstar{\EMvphantom@}{\EM@vphantom}}
+\def\EM@vphantom{\@ifnextchar[{\@EMvphantom}{\@EMvphantom[\apnd@ht]}}
+\def\@EMvphantom[#1]{\@ifnextchar[{\@@EMvphantom[#1]}{%
+  \@@EMvphantom[#1][#1]}}
+\def\@@EMvphantom[#1][#2]#3{{%
+  \@ifundefined{hakobanpush}{%
+    \@@@EMvphantom{#3}\ignorespaces
+  }{%
+    \hakobanpush\@@@EMvphantom{#3}\hakobanpop\ignorespaces
+  }%
+  \setlength{\@tempdima@math}{\ht0+#1}%
+  \setlength{\@tempdimb@math}{\dp0+#2}%
+  \vrule width \z@ height \@tempdima@math depth \@tempdimb@math
+}}
+\def\@@@EMvphantom#1{%
+  \ifmmode
+    \setbox0=\hbox{{$#1$}}%
+  \else
+    \setbox0=\hbox{{#1}}%
+  \fi
+}% 
+\def\EMvphantom@{\@ifnextchar[{\@EMvphantom@}{\@EMvphantom@[\apnd@ht]}}%
+\def\@EMvphantom@[#1]{\@ifnextchar[{\@@EMvphantom@[#1]}{%
+  \@@EMvphantom@[#1][#1]}}%
+\def\@@EMvphantom@[#1][#2]#3{{\smash{#3}}%
+  \@@EMvphantom[#1][#2]{#3}\ignorespaces}%
+\newsavebox{\@tempboxd@math}
+\long\def\@colonfor#1:=#2\do#3{% % \@for の区切り記号を : に変えたバージョン
+  \expandafter\def\expandafter\@fortmp\expandafter{#2}%
+  \ifx\@fortmp\@empty \else
+    \expandafter\@colonforloop#2:{\@nil}:\@nil\@@#1{#3}\fi}
+\long\def\@colonforloop#1:#2:#3\@@#4#5{\def#4{#1}\ifx #4\@nnil \else
+       #5\def#4{#2}\ifx #4\@nnil \else#5\@icolonforloop #3\@@#4{#5}\fi\fi}
+\long\def\@icolonforloop#1:#2\@@#3#4{\def#3{#1}\ifx #3\@nnil
+       \expandafter\@fornoop \else
+      #4\relax\expandafter\@icolonforloop\fi#2\@@#3{#4}}%
+\def\phrasesmath{\renewcommand{\arraystretch}{1}\@ifnextchar<{\@phrases@math}{\@phrases@math<lr>}}
+\def\@phrases@math<#1>{\@ifnextchar[{\@@phrases@math<#1>}{\@@phrases@math<#1>[l]}}
+\def\@@phrases@math<#1>[#2]{\@ifnextchar({\@@@phrases@math<#1>[#2]}{\@@@phrases@math<#1>[#2](c)}}
+\def\@@@phrases@math<#1>[#2](#3){\@ifnextchar|{\@@@@phrases@math<#1>[#2](#3)}{\@@@phrases@math<#1>[#2](#3)|0pt|}}
+\def\@@@@phrases@math<#1>[#2](#3)|#4|#5{%
+  \savebox{\@tempboxd@math}{%
+    \EMvphantom*[5pt]{%
+      \ensuremath{%
+        \ifthenelse{\equal{#1}{lr}\OR\equal{#1}{l}}{\left\{}{\left.}%
+        \kern-.5ex%
+        \setbox8\hbox{\begin{tabular}{#2}#5\end{tabular}}%
+        \setlength{\@tempdimw@math}{\dp8+#4}%
+        \setbox9 \vtop to \@tempdimw@math {\leftskip0pt\rightskip0pt\hsize\wd8\noindent\smash{\usebox8}}%
+        \usebox9%
+        \kern-.5ex%
+        \ifthenelse{\equal{#1}{lr}\OR\equal{#1}{r}}{\right\}\ }{\right.}%
+      }%
+    }%
+  }%
+  \if#3t%
+      \setlength{\@tempdimd@math@math}{-\ht\@tempboxd@math + \baselineskip}%
+  \else
+    \if#3b%
+      \setlength{\@tempdimd@math@math}{\ht\@tempboxd@math - \baselineskip + 1pt}%
+    \else
+      \setlength{\@tempdimd@math@math}{0pt}%
+    \fi
+  \fi
+  \raisebox{\@tempdimd@math@math}{\usebox{\@tempboxd@math}}%
+}
+
+\NewDocumentCommand{\二次式展開}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a+b}^2=a^2+2ab+b^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a+b}^2=a^2+2ab+b^2\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a-b}^2=a^2-2ab+b^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a-b}^2=a^2-2ab+b^2\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{x-a}\Ttyuukakko{x+a}=x^2-a^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}
+      {\[\Ttyuukakko{x-a}\Ttyuukakko{x+a}=x^2-a^2\]}{\relax}%   
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{x+a}\Ttyuukakko{x+b}=x+\Ttyuukakko{a+b}x+ab$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{x+a}\Ttyuukakko{x+b}=x+\Ttyuukakko{a+b}x+ab\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\二次式因数分解}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$a^2+2ab+b^2=\Ttyuukakko{a+b}^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[a^2+2ab+b^2=\Ttyuukakko{a+b}^2\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$a^2-2ab+b^2=\Ttyuukakko{a-b}^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[a^2-2ab+b^2=\Ttyuukakko{a-b}^2\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$x^2-a^2=\Ttyuukakko{x-a}\Ttyuukakko{x+a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}
+      {\[x^2-a^2=\Ttyuukakko{x-a}\Ttyuukakko{x+a}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$x+\Ttyuukakko{a+b}x+ab=\Ttyuukakko{x+a}\Ttyuukakko{x+b}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[x+\Ttyuukakko{a+b}x+ab=\Ttyuukakko{x+a}\Ttyuukakko{x+b}\]}{\relax}%
+
+   }%
+
+
+\NewDocumentCommand{\平方根}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$a$は実数として，\,\,$\sqrt{a^2}=\Tzettaiti{a}$}%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        $a$は実数として，%
+        \[\根号{a^2}=\Tzettaiti{a}\]%
+      }%
+      {\relax}%    
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {%
+        $a\geqq0$のとき，%
+        $\Ttyuukakko{\根号{a}}^2=\Ttyuukakko{-\根号{a}}^2=a\数式カンマスペース\根号{a}\leqq0$%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        $a\leqq0$のとき，%
+\[\Ttyuukakko{\根号{a}}^2=\Ttyuukakko{-\根号{a}}^2=a\数式カンマスペース\根号{a}\leqq0\]%
+      }%
+      {\relax}%     
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {$\根号{a}=\Tzettaiti{a}$}%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {\[\根号{a}=\Tzettaiti{a}\]}%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {%
+        $a>0\数式カンマスペース b>0\数式カンマスペース a\neq b$のとき，%
+        $\根号{a}\根号{b}=\根号{ab}$%
+      }%
+      {\relax}        
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース b>0\数式カンマスペース a\neq b$のとき，%
+\[\根号{a}\根号{b}=\根号{ab}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{i}}%
+      {$\bunsuu{\根号{a}}{\根号{b}}=\根号{\bunsuu{a}{b}}$}%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{b}}%
+      {\[\bunsuu{\根号{a}}{\根号{b}}=\根号{\bunsuu{a}{b}}\]}%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質E}\AND\equal{#2}{i}}%
+      {$\根号{k^2a}=k\根号{a}$}%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質E}\AND\equal{#2}{b}}%
+      {\[\根号{k^2a}=k\根号{a}\]}%
+      {\relax}%
+  }% 
+
+
+\NewDocumentCommand{\一次不等式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {$a<b$のとき\数式カンマスペース $a+c<b+c$}{\relax}% 
+     \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        $a<b$のとき\数式カンマスペース %
+\[a+c<b+c\]%
+
+      }%
+      {\relax}%   
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {$c>0$のとき，$ac<bc$}{\relax}% 
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        $c>0$のとき，%
+\[ac<bc\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {$c<0$のとき，$ac>bc$}{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+        $c<0$のとき，%
+\[ac>bc\]%
+
+      }%
+      {\relax}%
+  }% 
+
+
+\NewDocumentCommand{\集合}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{積集合}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{A\cap B}$}{\relax}%
+    \ifthenelse{\equal{#1}{積集合}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{A\cap B}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{和集合}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{A\cup B}$}{\relax}%
+    \ifthenelse{\equal{#1}{和集合}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{A\cup B}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{補集合}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\共役{A}}$}{\relax}%
+    \ifthenelse{\equal{#1}{補集合}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\共役{A}}\]}{\relax}%
+  }% 
+
+
+\NewDocumentCommand{\対偶}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定理}\AND\equal{#2}{i}}%
+      {%
+        $P$ならば$Q$の命題において，%
+ 
+        逆は$Q$ならば$P$%
+
+        裏は$P$でないならば$Q$でない%
+
+        対偶は$Q$でないならば$P$でない%
+
+        対偶と元の命題の真偽は一致する。%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定理}\AND\equal{#2}{b}}%
+      {%
+        $P$ならば$Q$の命題において，%
+ 
+        逆は$Q$ならば$P$%
+
+        裏は$P$でないならば$Q$でない%
+
+        対偶は$Q$でないならば$P$でない%
+
+        対偶と元の命題の真偽は一致する。%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        命題を「$p$ならば$q$」とし，$p$の真理集合を$P$\数式カンマスペース $q$の真理集合を$Q$とする。%
+
+        「$p$ならば$q$」が真のとき，$Q\subset P\Leftrightarrow\共役{P}\subset\共役{Q}$より対偶命題「$q$でないならば$p$でない」は真。%
+
+        「$p$ならば$q$」が偽のとき，$Q\not\subset P\Leftrightarrow\共役{P}\not\subset\共役{Q}$より対偶命題「$q$でないならば$p$でない」は偽。\par
+        従って，対偶命題と元の命題の真偽は一致する。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\newcommand{\背理法}{命題$P$ならば$Q$に対して$P$でないならば$Q$と仮定して矛盾を示す。}%
+
+
+\NewDocumentCommand{\二次関数}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{標準形}\AND\equal{#2}{i}}%
+      {$y=a\Ttyuukakko{x-p}^2+q$}{\relax}%
+    \ifthenelse{\equal{#1}{標準形}\AND\equal{#2}{b}}%
+      {\[y=a\Ttyuukakko{x-p}^2+q\]}{\relax}% 
+    \ifthenelse{\equal{#1}{一般形}\AND\equal{#2}{i}}%
+      {$y=ax^2+bx+c$}{\relax}%
+    \ifthenelse{\equal{#1}{一般形}\AND\equal{#2}{b}}%
+      {\[y=ax^2+bx+c\]}{\relax}%    
+    \ifthenelse{\equal{#1}{切片形}\AND\equal{#2}{i}}%
+      {$y=a\Ttyuukakko{x-\alpha}\Ttyuukakko{x-\beta}$}{\relax}%
+    \ifthenelse{\equal{#1}{切片形}\AND\equal{#2}{b}}%
+      {\[y=a\Ttyuukakko{x-\alpha}\Ttyuukakko{x-\beta}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{平方完成}\AND\equal{#2}{i}}%
+      {$y=ax^2+bx+c$に対して，$y=a\Ttyuukakko{x+\bunsuu{b}{2a}}-\bunsuu{b^2-4ac}{4a}$}{\relax}% 
+    \ifthenelse{\equal{#1}{平方完成}\AND\equal{#2}{b}}%
+      {%
+        $y=ax^2+bx+c$に対して，%
+\[y=a\Ttyuukakko{x+\bunsuu{b}{2a}}-\bunsuu{b^2-4ac}{4a}\]%
+
+      }%
+      {\relax}%
+  }% 
+
+
+\NewDocumentCommand{\二次方程式の解の公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$ax^2+bx+c=0 \Ttyuukakko{a\neq0}$に対して，$x=\bunsuu{-b\pm\根号{b^2-4ac}}{2a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $ax^2+bx+c=0 \Ttyuukakko{a\neq0}$に対して，%
+\[x=\bunsuu{-b\pm\根号{b^2-4ac}}{2a}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明A}}%
+      {%
+        \証明開始%
+        \vspace{-2.5\zw}%
+        \begin{align*}%
+          ax^2+bx+c&=0&\\% 
+          a\Ttyuukakko{x^2+\bunsuu{b}{a}x}+c&=0&\\%
+          a\Tdaikakko{\Ttyuukakko{x+\bunsuu{b}{2a}}^2-\bunsuu{b^2}{4a^2}}+c&=0&\\% 
+          a\Ttyuukakko{x+\bunsuu{b}{2a}}^2-\bunsuu{b^2}{4a}+c&=0&\\%
+          \Ttyuukakko{x+\bunsuu{b}{2a}}^2&=\bunsuu{b^2-4ac}{4a^2}&\\%   
+          x&=\bunsuu{-b\pm\根号{b^2-4ac}}{2a}%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明B}}%
+      {%
+        \証明開始%
+        \vspace{-2.5\zw}%
+        \begin{align*}% 
+          ax^2+bx+c&=0&\\% 
+          4a^2x^2+4abx+4ac&=0&\\%
+          \Ttyuukakko{2ax+b}^2-b^2+4ac&=0&\\%
+          2ax+b&=\pm\根号{b^2-4ac}&\\%
+          x&=\bunsuu{-b\pm\根号{b^2-4ac}}{2a}%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+      
+
+\NewDocumentCommand{\三角比の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義A}\AND\equal{#2}{i}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(1.5,0)--(1.5,2)--cycle;%
+          \draw(0,0)node[below]{A};%
+          \draw(1.5,0)node[below]{B};%
+          \draw(1.5,2)node[above]{C};%
+          \draw(0,0)coordinate(A);%
+          \draw(1.5,0)coordinate(B);%
+          \draw(1.5,2)coordinate(C);%
+          \draw pic[draw,black,thin,angle radius=0.3cm]{right angle=A--B--C};%
+          \draw pic["$\theta$",draw=black,->,thin,angle eccentricity=1.4,angle radius=0.4cm]{angle=B--A--C};%
+        \end{tikzpicture}%
+        \空行%
+        図の様な直角$\triangle{\text{ABC}}$において$\angle\text{CAB}=\theta$のとき，% 
+        \[%
+          \sin\theta=\bunsuu{\text{BC}}{\text{AC}}\数式カンマスペース%
+          \cos\theta=\bunsuu{\text{AB}}{\text{AC}}\数式カンマスペース%
+          \tan\theta=\bunsuu{\text{BC}}{\text{AB}}%
+        \]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定義B}\AND\equal{#2}{i}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(1.05,1.4);%
+          \draw[dashed](0.75,1)--(0,1);%
+          \draw(0,0)node[below right]{O};%
+          \draw(0.75,0)node[below]{$x$};%
+          \draw(0,1)node[left]{$y$};%
+          \draw(0.8,1)node[right]{P$\Ttyuukakko{x,y}$};%
+          \draw(0,0)circle[radius=1.25];%
+          \draw(0,-1.25)node[below left]{$-r$};%
+          \draw(-1.25,0)node[below left]{$-r$};%
+          \draw(0,1.25)node[above left]{$r$};%
+          \draw(1.25,0)node[below right]{$r$};%
+          \draw[->,>=stealth,semithick](-1.5,0)--(1.5,0)node[right]{$x$};%
+          \draw[->,>=stealth,semithick](0,-1.5)--(0,1.5)node[above]{$y$};%   
+          \draw[dashed](0,0)coordinate(O)-- (0.75,0)coordinate(Q)-- (0.75,1)coordinate(P);%  
+          \draw pic["$\theta$",draw=black,->,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=Q--O--P};%
+        \end{tikzpicture}%
+        \空行% 
+        図において%
+\[\sin\theta=\bunsuu{y}{r}\数式カンマスペース\cos\theta=\bunsuu{x}{r}\数式カンマスペース\tan\theta=\bunsuu{y}{x}\]%
+
+        このとき，$r=1$にしても一般性を失わない。%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角比の相互関係}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin^2\theta+\cos^2\theta=1$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin^2\theta+\cos^2\theta=1\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\tan\theta=\bunsuu{\sin\theta}{\cos\theta}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\tan\theta=\bunsuu{\sin\theta}{\cos\theta}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$1+\tan^2\theta=\bunsuu{1}{\cos^2\theta}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[1+\tan^2\theta=\bunsuu{1}{\cos^2\theta}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(1.05,1.4);%
+          \draw[dashed](0.75,1)--(0,1);%
+          \draw(0,0)node[below right]{O};%
+          \draw(0.75,0)node[below]{$x$};%
+          \draw(0,1)node[left]{$y$};%
+          \draw(0.8,1)node[right]{P$\Ttyuukakko{x,y}$};%
+          \draw(0,0)circle[radius=1.25];%
+          \draw(0,-1.25)node[below left]{$-r$};%
+          \draw(-1.25,0)node[below left]{$-r$};%
+          \draw(0,1.25)node[above left]{$r$};%
+          \draw(1.25,0)node[below right]{$r$};%
+          \draw[->,>=stealth,semithick](-1.5,0)--(1.5,0)node[right]{$x$};%
+          \draw[->,>=stealth,semithick](0,-1.5)--(0,1.5)node[above]{$y$};%
+          \draw[dashed](0,0)coordinate(O)-- (0.75,0)coordinate(Q)-- (0.75,1)coordinate(P);% 
+          \draw pic["$\theta$",draw=black, ->,thin,angle eccentricity=1.4,angle radius=0.4cm]{angle=Q--O--P};%
+        \end{tikzpicture}%
+        \空行% 
+        図において，$\sin\theta=\bunsuu{y}{r}\数式カンマスペース\quad\cos\theta=\bunsuu{x}{r}$より%
+\[\sin^2\theta+\cos^2\theta=\bunsuu{y^2+x^2}{r^2}\]%
+
+        ここで，三平方の定理より$x^2+y^2=r^2$なので%
+\[\sin^2\theta+\cos^2\theta=\bunsuu{r^2}{r^2}=1\]%
+
+        \空行%
+        $\sin\theta=\bunsuu{y}{r}\数式カンマスペース\quad\cos\theta=\bunsuu{x}{r}\quad\tan\theta=\bunsuu{y}{x}$より%  \[\bunsuu{\sin\theta}{\cos\theta}=\bunsuu{y}{x}=\tan\theta\]%
+
+        \空行%
+        $\sin^2\theta+\cos^2\theta=1$の両辺を$\cos^2\theta$で割ることで，%
+\[\bunsuu{\sin^2\theta}{\cos^2\theta}+1=\bunsuu{1}{\cos^2\theta}\]%
+
+        ここで，$\bunsuu{\sin\theta}{\cos\theta}=\tan\theta$なので%
+\[\tan^2\theta+1=\bunsuu{1}{\cos^2\theta}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }% 
+
+
+\NewDocumentCommand{\ユークリッド幾何の公理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公理A}\AND\equal{#2}{i}}%
+      {二つの異なる二点を与えることで，それを通る直線が一意的に決定する。}{\relax}%
+    \ifthenelse{\equal{#1}{公理B}\AND\equal{#2}{i}}%
+      {一つの直線$l$と$l$上にない一つの点が与えられたとき，与えられた点を通り，$l$に平行な直線をただ一つ引くことができる。}{\relax}%    
+  }%
+
+
+\newcommand{\直線}{両方向に限りなく伸びたまっすぐな線。}%
+
+
+\newcommand{\線分}{直線$\text{AB}$のうち，二点$\text{A}\数式カンマスペース\text{B}$を端とする部分。}%
+
+
+\newcommand{\半直線}{直線$\text{AB}$のうち，一方の点を端とし，もう一方に限りなく伸びた部分。}%
+
+
+\newcommand{\距離}
+  {%
+    空でない集合$X$の元$x\数式カンマスペース y$に対して，実数値$d(x\数式カンマスペース y)$が定義され，%
+    \[d(x\数式カンマスペース y)=0\Leftrightarrow x=y\数式カンマスペース\quad(x\数式カンマスペース y)=d(y\数式カンマスペース x)\数式カンマスペース\quad(x\数式カンマスペース y)\leqq d(x\数式カンマスペース y)+d(y\数式カンマスペース x)\]%
+
+    の三つの性質を満たす$d$を$X$上の距離といい，$(X\数式カンマスペース d)$を距離空間という。  %
+  }%
+
+
+\newcommand{\円}{平面上の一点から等しい距離にある点の集合。}%
+
+
+\newcommand{\弧}{円周上の二点$\text{A}\数式カンマスペース\text{B}$に対して，A\数式カンマスペース Bによって分けられた円周の各々の部分を弧$\text{AB}$といい，$\overarc{AB}$と表す。}%
+
+
+\newcommand{\弦}{弧の両端を結んだ線分。}%
+
+
+\newcommand{\中心角}{円の中心を頂点として，2辺が弧の両端を通る角を，その弧に対する中心角という。}%
+
+
+\NewDocumentCommand{\対頂角}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(2,2);%
+          \draw(2,0)--(0,2);%
+          \draw(0,0)coordinate(O);%
+          \draw(2,2)coordinate(A);%
+          \draw(2,0)coordinate(B);%
+          \draw(0,2)coordinate(C); %
+          \draw(1,1)coordinate(D);%
+          \draw pic["A",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=A--D--C};%  
+          \draw pic["B",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=O--D--B};%
+        \end{tikzpicture}%
+        \空行%
+        図において，$\angle\text{A}$と$\angle\text{B}$を対頂角という。%
+     }%
+     {\relax}%
+    \ifthenelse{\equal{#1}{性質}}%
+      {対頂角は等しい。}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(2,2);%
+          \draw(2,0)--(0,2);%
+          \draw(0,0)coordinate(O);%
+          \draw(2,2)coordinate(A);%
+          \draw(2,0)coordinate(B);%
+          \draw(0,2)coordinate(C);%
+          \draw(1,1)coordinate(D);%
+          \draw pic["A",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=A--D--C};%  
+          \draw pic["\,C",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.3cm] {angle=B--D--A};%
+          \draw pic["B",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=O--D--B};%   
+        \end{tikzpicture}%
+        \空行%
+\[180^\circ =\angle\text{A}+\angle\text{C}\]%
+        \[180^\circ=\angle\text{B}+\angle\text{C}\]%
+\[\Leftrightarrow\angle\text{A}=\angle\text{B}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\錯角}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-1,-0.5)--(2,1);%
+          \draw(-1,-1)--(2,-1);%
+          \draw(0,-2)--(2,2);%
+          \draw(2,2)coordinate(A);%
+          \draw(1.3333,0.66666)coordinate(B);%
+          \draw(2,1)coordinate(C);%
+          \draw(2,-1)coordinate(D);%
+          \draw(0.5,-1)coordinate(E);%
+          \draw(0,-2)coordinate(F);%
+          \draw(-1,-1)coordinate(G);%
+          \draw(-1,-0.5)coordinate(H);%
+          \draw pic["\,A",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.3cm] {angle=E--B--C};%
+          \draw pic["B\,\,\,",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.3cm] {angle=B--E--G};%
+        \end{tikzpicture}
+        \空行%
+        図において，$\angle\text{A}$と$\angle\text{B}$を錯角という。%
+       }%
+       {\relax}%
+    \ifthenelse{\equal{#1}{性質}}%
+      {直線$l\数式カンマスペース m$において，錯角が等しい$\Leftrightarrow$直線$l\数式カンマスペース m$は平行}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+         \draw(-1,1)--(2,1);%
+         \draw(-1,-1)--(2,-1);%
+         \draw(0,-2)--(2,2);%
+         \draw(2,2)coordinate(A);%
+         \draw(1.5,1)coordinate(B);%
+         \draw(2,1)coordinate(C);%
+         \draw(2,-1)coordinate(D);%
+         \draw(0.5,-1)coordinate(E);%
+         \draw(0,-2)coordinate(F);%
+         \draw(-1,-1)coordinate(G);%
+         \draw(-1,1)coordinate(H);%
+         \draw pic["\,\,\,A",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.3cm] {angle=E--B--C};%
+         \draw pic["B\,\,\,",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.3cm] {angle=A--E--G};%
+         \draw pic["C\,\,\,",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.3cm] {angle=A--B--H};%
+        \end{tikzpicture}
+        \空行%
+        \begin{enumerate}%
+        \item 「平行ならば錯角が等しい」の証明。%
+        \空行%
+        対頂角は等しいので，%
+\[\angle\text{A}=\angle\text{C}\]%
+
+        ここで，$\angle\text{B}$と$\angle\text{C}$は同位角なので等しいので，%
+\[\angle\text{A}=\angle\text{B}\]%
+
+        \item 「錯角が等しいならば平行」の証明。%
+        \空行%
+        錯角が等しいので，%
+\[\angle\text{A}=\angle\text{B}\]%
+
+        対頂角は等しいので，%
+\[\angle\text{A}=\angle\text{C}\]%
+\[\Leftrightarrow\angle\text{C}=\angle\text{B}\]%
+
+        即ち，同位角が等しいので二直線は平行。%
+        \end{enumerate}%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+\NewDocumentCommand{\同位角}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-1,-0.5)--(2,1);%
+          \draw(-1,-1)--(2,-1);%
+          \draw(0,-2)--(2,2);%
+          \draw(2,2)coordinate(A);%
+          \draw(1.3333,0.66666)coordinate(B);%
+          \draw(2,1)coordinate(C);%
+          \draw(2,-1)coordinate(D);%
+          \draw(0.5,-1)coordinate(E);%
+          \draw(0,-2)coordinate(F);%
+          \draw(-1,-1)coordinate(G);%
+          \draw(-1,-0.5)coordinate(H);%
+          \draw pic["\,\,A",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=C--B--A};%
+          \draw pic["\,\,B",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=D--E--B};%
+        \end{tikzpicture}
+        \空行%
+        図において，$\angle\text{A}$と$\angle\text{B}$を同位角という。
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公理}}%
+      {直線$l,m$において，同位角が等しい$\Leftrightarrow$直線$l\数式カンマスペース m$は平行。}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\平行線と線分比の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,4)--(5,0)--cycle;%
+          \draw(0,0)node[below]{B};%
+          \draw(3,4)node[above]{A};%
+          \draw(5,0)node[below]{C};%
+          \draw(1.5,2)--(4,2);%
+          \draw(1.5,2)node[left]{D};%
+          \draw(4,2)node[right]{E};%
+        \end{tikzpicture}%
+        \空行%
+        図において，%
+\[\text{AD}:\text{AB}=\text{AE}:\text{AC}=\text{DE}:\text{BC}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式B}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,4)--(5,0)--cycle;%
+          \draw(0,0)node[below]{B};%
+          \draw(3,4)node[above]{A};%
+          \draw(5,0)node[below]{C};%
+          \draw(1.5,2)--(4,2);%
+          \draw(1.5,2)node[left]{D};%
+          \draw(4,2)node[right]{E};%
+        \end{tikzpicture}%
+        \空行%
+        図において，%
+\[\text{AD}:\text{DB}=\text{AE}:\text{EC}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,4)--(5,0)--cycle;%
+          \draw(0,0)node[below]{B};%
+          \draw(3,4)node[above]{A};%
+          \draw(5,0)node[below]{C};%
+          \draw(1.5,2)--(4,2);%
+          \draw(1.5,2)node[left]{D};%
+          \draw(4,2)node[right]{E};%
+          \draw(2.5,0)--(4,2);%
+          \draw(2.5,0)node[below]{F};%
+        \end{tikzpicture}%
+        \空行%
+        図において， %
+\[\text{DE}\平行\text{BC}\]%
+\[\Leftrightarrow\angle\text{ADE}=\angle\text{ABC}\数式カンマスペース\angle\text{AED}=\angle\text{ACB}\]%
+
+        よって，$\triangle\text{ADE}\相似\triangle\text{ABC}\Leftrightarrow\text{AD}:\text{AB}=\text{AE}:\text{AC}=\text{DE}:\text{BC}$%
+
+        また，図において，%
+\[\text{AB}\平行\text{EF}\Leftrightarrow\angle\text{CEF}=\angle\text{CAB}\数式カンマスペース\angle\text{CFE}=\angle\text{CBA}\]%
+
+        また，%
+\[\text{DE}\平行\text{BC}\Leftrightarrow\angle\text{EDA}=\angle\text{CBA}\]%
+
+        これと$\angle\text{CFE}=\angle\text{CBA}$より，%
+\[\angle\text{EDA}=\angle\text{CFE}\]%
+
+        よって，$\triangle\text{ADE}\相似\triangle\text{EFC}\Leftrightarrow\text{AD}:\text{EF}=\text{AE}:\text{EC}$%
+        ここで，%
+\[\text{EF}=\text{DB}\Leftrightarrow\text{AD}:\text{DB}=\text{AE}:\text{EC}\]%
+        \証明終了%
+      }%
+      {\relax}%
+   }%
+
+
+\NewDocumentCommand{\正弦定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$\triangle{\text{ABC}}$の外接円の半径を$R$として，$\bunsuu{a}{\sin\text{A}}=2\text{R}\text{\ （\,$b\数式カンマスペース\text{B
+}\数式カンマスペース c\数式カンマスペース\text{C}$についても同様に成立）}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+       $\triangle{\text{ABC}}$の外接円の半径を$R$として，%
+       \[\bunsuu{a}{\sin\text{A}}=2R\text{\ （\,$b\数式カンマスペース\text{B}\数式カンマスペース c\数式カンマスペース\text{C}$についても同様に成立）}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \空行%
+        \begin{tikzpicture}%
+          \draw(0,1.25)coordinate(A)-- (1,-0.75)coordinate(C)-- (-1,-0.75)coordinate(B);%
+          \draw pic[draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=B--A--C};%
+          \draw(-1,0.75)coordinate(D);%
+          \draw pic[draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=B--D--C};%
+          \draw(0,1.25)--(1,-0.75)--(-1,-0.75)--cycle;%
+          \draw(0,1.25)node[above]{A};%
+          \draw(1,-0.75)node[below]{C};%
+          \draw(-1,-0.75)node[left]{B};%
+          \draw(-1,0.75)node[left]{D};%
+          \draw(-1,0.75)--(1,-0.75)--(-1,-0.75)--cycle;%
+          \draw [line width=0.2pt] (B) to [bend right=27] node [fill=white,midway] { $a$ }(C);%
+          \draw(0,0)circle[radius=1.25];%
+          \draw pic[draw,black,thin,angle radius=0.3cm] {right angle=D--B--C};%
+          \draw(0,0)node[above]{O};%
+          \draw(0,0)coordinate(O);%
+          \fill[black](O)circle(0.03);%
+        \end{tikzpicture}%
+        \空行%
+        図において円周角の定理より，%
+\[\angle\text{A}=\angle\text{D}\]%
+
+        なので，円Oの半径をRとして$\sin\text{A}=\sin\text{D}=\bunsuu{a}{2\text{R}}$より，%
+\[\bunsuu{a}{\sin\text{A}}=2\text{R}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\余弦定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$\triangle{\text{ABC}}$において，$a^2=b^2+c^2-2bc\cos\text{A}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $\triangle{\text{ABC}}$において，%
+\[a^2=b^2+c^2-2bc\cos\text{A}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \空行%
+        \begin{tikzpicture}%
+          \draw(0,0)--(2.5,0)--(1.5,2)--cycle;%
+          \draw(0,0)node[below]{A};%
+          \draw(1.5,2)node[above]{B};%
+          \draw(2.5,0)node[below]{C};%
+          \draw(1.5,0)node[below]{H};%
+          \draw(0,0)coordinate(A);%
+          \draw(1.5,0)coordinate(H);%
+          \draw(1.5,2)coordinate(B);%
+          \draw(1.5,0)--(1.5,2);% 
+          \draw pic[draw,black,thin,angle radius=0.3cm] {right angle=A--H--B};%
+          \draw pic[draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=H--A--B};%
+        \end{tikzpicture}%
+        \空行%
+        図において$\text{BC}=a,\text{CA}=b,\text{AC}=c$として，%
+\[\text{BH}=c\sin\text{A},\quad\text{AH}=c\cos\text{A}\]%
+
+        また，$\triangle{\text{BHC}}$に三平方の定理を用いることにより%
+\[\text{CB}^2=\text{BH}^2+\text{HC}^2\]%
+
+        ここで，$\text{HC}=\text{AC}-\text{AH}=b-c\cos\text{A}\数式カンマスペース\text{BH}=c\sin\text{A}$より%
+        \begin{align*}%
+          a^2&=\Ttyuukakko{c\sin\text{A}}^2+\Ttyuukakko{b-c\cos\text{A}}^2&\\%
+          &=c^2\sin^2\text{A}+b^2-2bc\cos\text{A}+c^2\cos^2\text{A}&\\%
+          &=c^2\Ttyuukakko{1-\cos^2\text{A}}+b^2-2bc\cos\text{A}+c^2\cos^2\text{A}&\\%
+          &=b^2+c^2-2bc\cos\text{A}%
+        \end{align*}%
+        よって，%
+\[a^2=b^2+c^2-2bc\cos\text{A}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角比の三角形の面積公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$\triangle{\text{ABC}}$の面積を$S$として，$S=\bunsuu{1}{2}bc\sin\text{A}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $\triangle{\text{ABC}}$の面積を$S$として，%
+\[S=\bunsuu{1}{2}bc\sin\text{A}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(2.5,0)--(1.5,2)--cycle;%
+          \draw(0,0)node[below]{A};%
+          \draw(1.5,2)node[above]{B};%
+          \draw(2.5,0)node[below]{C};%
+          \draw(1.5,0)node[below]{H};%
+          \draw(0,0)coordinate(A);%
+          \draw(1.5,0)coordinate(H);%
+          \draw(1.5,2)coordinate(B);%
+          \draw(1.5,0)--(1.5,2);% 
+          \draw pic[draw,black,thin,angle radius=0.3cm] {right angle=A--H--B};%
+          \draw pic[draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=H--A--B};%
+        \end{tikzpicture}%
+        \空行%
+        図において%
+\[\text{BC}=a\数式カンマスペース\text{CA}=B\数式カンマスペース\text{AC}=c\]%
+
+        また，$\triangle{\text{ABC}}$の面積を$S$として$S=\bunsuu{1}{2}\text{AC}\times\text{BH}$と，$\text{AB}\sin\text{A}=\text{BH}$から，%
+\[S=\bunsuu{1}{2}bc\sin\text{A}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\ヘロンの公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,4)--(5,0)--cycle;%
+          \draw(0,0)node[below]{B};%
+          \draw(3,4)node[above]{A};%
+          \draw(5,0)node[below]{C};%
+          \draw(1.5,2)node[left]{$c$};%
+          \draw(2.5,0)node[below]{$a$};%
+          \draw(4,2)node[right]{$b$};%
+　      \end{tikzpicture}%
+        \空行%
+        図において$s=\bunsuu{a+b+c}{2}$のとき三角形の面積$S$は,$\根号{s(s-a)(s-b)(s-c)}$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,4)--(5,0)--cycle;%
+          \draw(0,0)node[below]{B};%
+          \draw(3,4)node[above]{A};%
+          \draw(5,0)node[below]{C};%
+          \draw(1.5,2)node[left]{$c$};%
+          \draw(2.5,0)node[below]{$a$};%
+          \draw(4,2)node[right]{$b$};%
+　      \end{tikzpicture}%
+        \空行%
+        図において$s=\bunsuu{a+b+c}{2}$のとき三角形の面積$S$は,%
+\[\根号{s(s-a)(s-b)(s-c)}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,4)--(5,0)--cycle;%
+          \draw(0,0)node[below]{B};%
+          \draw(3,4)node[above]{A};%
+          \draw(5,0)node[below]{C};%
+          \draw(1.5,2)node[left]{$c$};%
+          \draw(2.5,0)node[below]{$a$};%
+          \draw(4,2)node[right]{$b$};%
+　      \end{tikzpicture}%
+        \空行%
+        三角形の面積公式より，%
+\[S=\bunsuu{1}{2}ab\sin\text{C}\]%
+
+        ここで$\sin^2\theta+\cos^2\theta=1$より，%
+\[S=\bunsuu{1}{2}ac\根号{1-\cos^2\text{C}}\]%
+
+        余弦定理より$\cos\text{C}=\bunsuu{a^2+b^2-c^2}{2ab}$なので，%
+        \begin{align*}%
+          S&=\bunsuu{1}{2}ab\根号{1-\Ttyuukakko{\bunsuu{a^2+b^2-c^2}{2ab}}^2}&\\%
+          &=\bunsuu{1}{4}\根号{(2ab)^2-(a-2+b^2-c^2)^2}&\\%
+          &=\bunsuu{1}{4}\根号{(2ab+a^2+b^2-c^2)(2ab-a^2-b^2+c^2)}&\\%
+          &=\bunsuu{1}{2}\根号{\Tdaikakko{(a+b)^2-c^2}\Tdaikakko{c^2-(a-b)^2}}&\\%
+          &=\根号{\bunsuu{(a+b+c)(-a+b+c)(a-b+c)(a+b-c)}{2\cdot2\cdot2\cdot2}}&\\%
+          &=\根号{s(s-a)(s-b)(s-c)}
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+   }%
+
+
+\NewDocumentCommand{\外接円の半径と三角形の面積}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {%
+        $3$辺の長さが$a\数式カンマスペース b\数式カンマスペース c$の三角形の外接円の半径を$R$，面積を$S$とおくと，$S=\bunsuu{abc}{4R}$
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $3$辺の長さが$a\数式カンマスペース b\数式カンマスペース c$の三角形の外接円の半径を$R$，面積を$S$とおくと，%
+        \[S=\bunsuu{abc}{4R}\]%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+         \証明開始%
+         正弦定理より，%
+         \[a=2R\sin\text{A}\]%
+
+          三角形の面積の公式から，%
+         \[S=\bunsuu{1}{2}bc\sin\text{A}\]%
+
+         以上の2式より，%
+         \[S=\bunsuu{abc}{4R}\]%
+         \証明終了%
+      }%
+      {\relax}%
+  }%
+
+\newlength{\sankekkeinomensekikoushiki}%
+\settowidth{\sankekkeinomensekikoushiki}{$\sqrt{s(s-a)(s-b)(s-c)}\ \Ttyuukakko{s=\bunsuu{a+b+c}{2}}$}%
+\NewDocumentCommand{\三角形の面積公式}{ O{} }%
+  {%
+    \begin{align*}%
+      S&=\parbox[c]{\the\sankekkeinomensekikoushiki}{$\bunsuu12bc\sin{\text{A}}$}\shikimaru{1}\\%
+       &=\parbox[c]{\the\sankekkeinomensekikoushiki}{$\sqrt{s(s-a)(s-b)(s-c)}\ \Ttyuukakko{s=\bunsuu{a+b+c}{2}}$}\shikimaru{2}\\%
+       &=\parbox[c]{\the\sankekkeinomensekikoushiki}{$rs$}\shikimaru{3}\\%
+       &=\parbox[c]{\the\sankekkeinomensekikoushiki}{$\bunsuu{abc}{4R}$}\shikimaru{4}\\%
+       &=\parbox[c]{\the\sankekkeinomensekikoushiki}{$\bunsuu12\sqrt{\Tzettaiti{\ベクトル{a}}^2\Tzettaiti{\ベクトル{b}}^2-\Ttyuukakko{\ベクトル{a}\cdot\ベクトル{b}}^2}$}\shikimaru{5}\\%
+       &=\parbox[c]{\the\sankekkeinomensekikoushiki}{$\bunsuu12|x_1y_2-x_2y_1|$}\shikimaru{6}%
+    \end{align*}%
+  }%
+
+
+\NewDocumentCommand{\場合の数と確率}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{和集合の要素の個数}\AND\equal{#2}{i}}%
+      {$n\Ttyuukakko{A\cup B}=n\Ttyuukakko{A}+n\Ttyuukakko{B}-n\Ttyuukakko{A\cap B}$}{\relax}%
+    \ifthenelse{\equal{#1}{和集合の要素の個数}\AND\equal{#2}{b}}%
+      {\[n\Ttyuukakko{A\cup B}=n\Ttyuukakko{A}+n\Ttyuukakko{B}-n\Ttyuukakko{A\cap B}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{補集合の要素の個数}\AND\equal{#2}{i}}%
+      {全体集合を$U$として，$n\Ttyuukakko{\共役{A}}=n\Ttyuukakko{U}-n\Ttyuukakko{A}$}{\relax}%
+    \ifthenelse{\equal{#1}{補集合の要素の個数}\AND\equal{#2}{b}}%
+      {全体集合を$U$として，\[n\Ttyuukakko{\共役{A}}=n\Ttyuukakko{U}-n\Ttyuukakko{A}\]}{\relax}%
+    \ifthenelse{\equal{#1}{和の法則}\AND\equal{#2}{i}}%
+      {二つの事象$A$\数式カンマスペース$B$に対して，Aの起こり方が$a$通り，Bの起こり方が$b$通りのとき，AまたはBの起こる場合の数は$a+b$通り}{\relax}% 
+    \ifthenelse{\equal{#1}{和の法則}\AND\equal{#2}{b}}%
+      {二つの事象$A$\数式カンマスペース$B$に対して，Aの起こり方が$a$通り，Bの起こり方が$b$通りのとき，AまたはBの起こる場合の数は$a+b$通り}{\relax}%
+    \ifthenelse{\equal{#1}{積の法則}\AND\equal{#2}{i}}%
+      {二つの事象$A$\数式カンマスペース$B$に対して，Aの起こり方が$a$通り，Bの起こり方が$b$通りのとき，AかつBの起こる場合の数は$ab$通り}{\relax}% 
+     \ifthenelse{\equal{#1}{積の法則}\AND\equal{#2}{b}}%
+      {二つの事象$A$\数式カンマスペース$B$に対して，Aの起こり方が$a$通り，Bの起こり方が$b$通りのとき，AかつBの起こる場合の数は$ab$通り}{\relax}%    
+    \ifthenelse{\equal{#1}{順列}\AND\equal{#2}{i}}%
+      {異なる$n$個のものから$r$個選んで並べる場合の数は${}_{n}\text{P}_{r}=\bunsuu{n\階乗}{\Ttyuukakko{n-r}\階乗}$}{\relax}%
+    \ifthenelse{\equal{#1}{順列}\AND\equal{#2}{b}}%
+      {%
+        異なる$n$個のものから$r$個選んで並べる場合の数は%
+\[{}_{n}\text{P}_{r}=\bunsuu{n\階乗}{\Ttyuukakko{n-r}\階乗}\]%
+
+       }%
+       {\relax}%     
+    \ifthenelse{\equal{#1}{順列の証明}}%
+      {%
+        \証明開始%
+        異なる$n$個のものから$r$個選んで並べる場合の数は，%
+\[n\times\Ttyuukakko{n-1}\times\Ttyuukakko{n-2}\times\cdots\times\Ttyuukakko{n-r+1}=\bunsuu{n\階乗}{\Ttyuukakko{n-r}\階乗}\]%
+  
+        ここで，$\bunsuu{n\階乗}{\Ttyuukakko{n-r}\階乗}$を${}_{n} P_{r}$と表す。%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{円順列}\AND\equal{#2}{i}}%
+      {異なる$n$個のものを円に並べる場合の数は$\Ttyuukakko{n-1}\階乗 $}{\relax}% 
+    \ifthenelse{\equal{#1}{円順列}\AND\equal{#2}{b}}%
+      {異なる$n$個のものを円に並べる場合の数は\[\Ttyuukakko{n-1}\階乗\]}{\relax}%     
+    \ifthenelse{\equal{#1}{円順列の証明}}%
+      {%
+        \証明開始%
+        $n$個のものを円形に並べるとき，1つを固定して考えると，残り$n-1$個を並べる順列の個数に等しい。よって$\Ttyuukakko{n-1}\階乗 $通りとなる。%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{重複順列}\AND\equal{#2}{i}}%
+      {$n$個から$r$個，重複を許して並べる場合の数は$n^r$}{\relax}% 
+    \ifthenelse{\equal{#1}{重複順列}\AND\equal{#2}{b}}%
+      {$n$個から$r$個，重複を許して並べる場合の数は\[n^r\]}{\relax}%     
+    \ifthenelse{\equal{#1}{組み合わせ}\AND\equal{#2}{i}}%
+      {異なる$n$個のものから$r$個選ぶ場合の数は，${}_{n}\text{C}_{r}=\bunsuu{n\階乗}{r\階乗\Ttyuukakko{n-r}\階乗}$}{\relax}% 
+    \ifthenelse{\equal{#1}{組み合わせ}\AND\equal{#2}{b}}%
+      {%
+        異なる$n$個のものから$r$個選ぶ場合の数は，%
+\[{}_{n}\text{C}_{r}=\bunsuu{n\階乗}{r\階乗\Ttyuukakko{n-r}\階乗}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{組み合わせの証明}}%
+      {%
+        \証明開始%
+        異なる$n$個のものから$r$個選ぶ場合の数は，順列を重複度で割ったものなので%
+\[\bunsuu{{}_{n} P_{r}}{r\階乗}=\bunsuu{n\階乗}{r\階乗\Ttyuukakko{n-r}\階乗}\]%
+
+        ここで，$\bunsuu{n\階乗}{r\階乗\Ttyuukakko{n-r}\階乗}$を${}_{n}\text{C}_{r}$と表す。        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{同じものを含む順列}\AND\equal{#2}{i}}%
+      {$a$が$p$個，$b$が$q$個，$c$が$r$個，とあるとき，それら全部を並べる場合の数は，$\bunsuu{n\階乗}{p\階乗 q\階乗 r\階乗}$（ただし，$p+q+r=n$）}{\relax}% 
+    \ifthenelse{\equal{#1}{同じものを含む順列}\AND\equal{#2}{b}}%
+      {%
+        $a$が$p$個，$b$が$q$個，$c$が$r$個，とあるとき，それら全部を並べる場合の数は，%
+\[\bunsuu{n\階乗}{p\階乗 q\階乗 r\階乗}\text{\ （ただし，$p+q+r=n$）}\]%
+
+      }%
+      {\relax}%     
+    \ifthenelse{\equal{#1}{同じものを含む順列の証明}}%
+      {%
+        \証明開始%
+        $n$個のものを並べる場合の数は$n\階乗 $通りだが，$n$個の中に同じものが含まれているので，重複度で割ることで$\bunsuu{n\階乗}{p\階乗 q\階乗 r\階乗}$を得る。%
+        \証明終了%
+      }%
+      {\relax}%
+
+    \ifthenelse{\equal{#1}{確率の定義}\AND\equal{#2}{i}}%
+      {全事象$U$のどの根元事象も同様に確からしいとき，事象$A$の起こる確率は，$P\Ttyuukakko{A}=\bunsuu{n\Ttyuukakko{A}}{n\Ttyuukakko{U}}$}{\relax}% 
+     \ifthenelse{\equal{#1}{確率の定義}\AND\equal{#2}{b}}%
+      {%
+        全事象$U$のどの根元事象も同様に確からしいとき，事象$A$の起こる確率は，%
+\[P\Ttyuukakko{A}=\bunsuu{n\Ttyuukakko{A}}{n\Ttyuukakko{U}}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{排反の定義}\AND\equal{#2}{i}}%
+      {事象$A$\数式カンマスペース$B$が同時に起こりえないとき，$A$と$B$は互いに排反であるという。}{\relax}%
+    \ifthenelse{\equal{#1}{排反の定義}\AND\equal{#2}{b}}%
+      {事象$A$\数式カンマスペース$B$が同時に起こりえないとき，$A$と$B$は互いに排反であるという。}{\relax}% 
+    \ifthenelse{\equal{#1}{確率の性質A}\AND\equal{#2}{i}}%
+      {任意の事象$A$に対して，$0\leqq A\leqq1$}{\relax}% 
+    \ifthenelse{\equal{#1}{確率の性質A}\AND\equal{#2}{b}}%
+      {%
+        任意の事象$A$に対して，%
+\[0\leqq A\leqq1\]%
+
+      }%
+      {\relax}%    
+    \ifthenelse{\equal{#1}{確率の性質B}\AND\equal{#2}{i}}%
+      {全事象$U$の確率$P\Ttyuukakko{U}=1$}{\relax}% 
+    \ifthenelse{\equal{#1}{確率の性質B}\AND\equal{#2}{b}}%
+      {%
+        全事象$U$の確率%
+\[P\Ttyuukakko{U}=1\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{和事象の確率}\AND\equal{#2}{i}}%
+      {$P\Ttyuukakko{A\cup B}=P\Ttyuukakko{A}+P\Ttyuukakko{B}-P\Ttyuukakko{A\cap B}$}{\relax}%
+    \ifthenelse{\equal{#1}{和事象の確率}\AND\equal{#2}{b}}%
+      {\[P\Ttyuukakko{A\cup B}=P\Ttyuukakko{A}+P\Ttyuukakko{B}-P\Ttyuukakko{A\cap B}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{余事象の確率}\AND\equal{#2}{i}}%
+      {$P\Ttyuukakko{\共役{A}}=1-P\Ttyuukakko{A}$}{\relax}%
+    \ifthenelse{\equal{#1}{余事象の確率}\AND\equal{#2}{b}}%
+      {\[P\Ttyuukakko{\共役{A}}=1-P\Ttyuukakko{A}\]}{\relax}%
+    \ifthenelse{\equal{#1}{独立な事象の確率}\AND\equal{#2}{i}}%
+      {事象$A$と$B$が独立のとき，事象$A$が起こりかつ事象$B$が起こる確率$p$は，$p=P\Ttyuukakko{A}P\Ttyuukakko{B}$}{\relax}% 
+     \ifthenelse{\equal{#1}{独立な事象の確率}\AND\equal{#2}{b}}%
+      {%
+        事象$A$と$B$が独立のとき，事象$A$が起こりかつ事象$B$が起こる確率$p$は，%
+\[p=P\Ttyuukakko{A}P\Ttyuukakko{B}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{反復試行の確率}\AND\equal{#2}{i}}%
+      {一回の試行で事象$A$の起こる確率を$p$として，この試行を$n$回行う反復試行でAが$r$回起こる確率は，${}_{n}\text{C}_{r}\Ttyuukakko{p}^r\Ttyuukakko{1-p}^{n-r}$}{\relax}% 
+    \ifthenelse{\equal{#1}{反復試行の確率}\AND\equal{#2}{b}}%
+      {%
+        一回の試行で事象$A$の起こる確率を$p$として，この試行を$n$回行う反復試行でAが$r$回起こる確率は，%
+\[{}_{n}\text{C}_{r}\Ttyuukakko{p}^r\Ttyuukakko{1-p}^{n-r}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{反復試行の確率の証明}}%
+      {%
+        \証明開始%
+        $n$回の試行のうち事象$A$が$r$回起こる順番の場合の数は${}_{n} C_{r}$通り。さらに，Aが起こる確率は$p$で$r$回起こり，Aの余事象が起こる確率は$p-1$で$n-r$回起こるので，%
+\[{}_{n}\text{C}_{r}\Ttyuukakko{p}^r\Ttyuukakko{1-p}^{n-r}\]%
+
+        となる。        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{条件付き確率}\AND\equal{#2}{i}}%
+      {事象$A$が起こったときの事象$B$の起こる確率は，$P_{A}\Ttyuukakko{B}=\bunsuu{P\Ttyuukakko{A\cap B}}{P\Ttyuukakko{A}}$}{\relax}% 
+    \ifthenelse{\equal{#1}{条件付き確率}\AND\equal{#2}{b}}%
+      {%
+        事象$A$が起こったときの事象$B$の起こる確率は，%
+\[P_{A}\Ttyuukakko{B}=\bunsuu{P\Ttyuukakko{A\cap B}}{P\Ttyuukakko{A}}\]%
+
+      }%
+      {\relax}%
+  }% 
+
+
+\newcommand{\図形の性質}[1]%
+  {%
+    \ifthenelse{\equal{#1}{内心}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-2.4,0.2)--(0,2)--(0,-3)--cycle;%
+          \draw(-1,0)circle[radius=1];%
+          \draw(-2.4,0.2)node[left]{A};%
+          \draw(0,2)node[above]{B};%
+          \draw(0,-3)node[below]{C};%
+          \draw(-1,0)node[below]{O};%
+        \end{tikzpicture}%
+        \空行%
+        図においてOが内心%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{外心}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-2,0)--(1.6,1.2)--(1.2,-1.6)--cycle;%
+          \draw(0,0)circle[radius=2];%
+          \draw(0,0)node[below]{O};%
+          \draw(-2,0)node[left]{A};%
+          \draw(1.6,1.2)node[right]{B};%
+          \draw(1.2,-1.6)node[below]{C};%
+        \end{tikzpicture}%
+        \空行%
+        図においてOが外心%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{垂心}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,0)--(2,3)--cycle;%
+          \draw(0,0)--(2.7,0.9);%
+          \draw(2,3)--(2,0);%
+          \draw(3,0)--(0.92,1.4);%
+          \draw(0,0)node[below]{A};%
+          \draw(3,0)node[below]{C};%
+          \draw(2,3)node[above]{B};%
+          \draw(2.7,0.9)node[right]{P};%
+          \draw(2,0)node[below]{Q};%
+          \draw(0.92309,1.46154)node[left]{R};%
+          \draw(2,1)node[right]{H};%
+        \end{tikzpicture}%
+        \空行%
+        図においてHが垂心%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{重心}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,0)--(3,0)--(2,3)--cycle;%
+          \draw(0,0)--(2.5,1.5);%
+          \draw(3,0)--(1,1.5);%
+          \draw(2,3)--(1.5,0);%
+          \draw(0,0)node[below]{A};%
+          \draw(3,0)node[below]{B};%
+          \draw(2,3)node[above]{C};%
+          \draw(1.5,0)node[below]{D};%
+          \draw(2.5,1.5)node[right]{E};%
+          \draw(1,1.5)node[left]{F};%
+          \draw(1.75,1)node[right]{G};%
+        \end{tikzpicture}%
+        \空行%
+        図においてGが重心%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{傍心}}%
+      {%
+        \begin{tikzpicture}
+          \draw(-0.4,2.8)--(-1,2)--(0.666666,2)--cycle;%
+          \draw(-0.4,2.8)node[above]{A};%
+          \draw(-1,2)node[left]{B};%
+          \draw(0.666666,2)node[right]{C};%
+          \draw(-0.4,2.8)--(-2.8,-0.4);%
+          \draw(-2.8,-0.4)node[below]{H};%
+          \draw(-0.4,2.8)--(2.8,0.4);%
+          \draw(2.8,0.4)node[right]{G};%
+          \draw(-0.4,2.8)--(0,0);%
+          \draw(0,0)node[below]{I};%
+          \draw(-1,2)--(0,0);%
+          \draw(0.666666,2)--(0,0);%
+          \draw(0,2)node[above]{D};%
+          \draw(-1.6,1.2)node[left]{E};%
+          \draw(1.2,1.6)node[right]{F};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        図においてIが傍心%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{チェバの定理}}%
+      {%
+        \begin{tikzpicture}
+          \draw(2,3)--(0,0)--(3,0)--cycle;%
+          \draw(2,3)node[above]{A};%
+          \draw(2,3)--(1.5,0);%
+          \draw(0,0)node[below]{B};%
+          \draw(0,0)--(2.75,0.75);%
+          \draw(3,0)node[below]{C};%
+          \draw(3,0)--(0.5,0.75);%
+          \draw(1.5,0)node[below]{P};%
+          \draw(2.75,0.75)node[right]{Q};%
+          \draw(0.5,0.75)node[left]{R};%
+          \draw(1.62,0.8)node[right]{O};%
+        \end{tikzpicture}
+        \空行%
+        $\bunsuu{\text{BP}}{\text{PC}}\cdot\bunsuu{\text{CQ}}{\text{QA}}\cdot\bunsuu{\text{AR}}{\text{RB}}=1$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{チェバの定理の証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(2,3)--(0,0)--(3,0)--cycle;%
+          \draw(2,3)node[above]{A};%
+          \draw(2,3)--(1.5,0);%
+          \draw(0,0)node[below]{B};%
+          \draw(0,0)--(2.75,0.75);%
+          \draw(3,0)node[below]{C};%
+          \draw(3,0)--(0.5,0.75);%
+          \draw(1.5,0)node[below]{P};%
+          \draw(2.75,0.75)node[right]{Q};%
+          \draw(0.5,0.75)node[left]{R};%
+          \draw(1.62,0.8)node[right]{O};%   
+        \end{tikzpicture}%  
+        \空行%
+        図において三角形の面積比を考えると，%
+\[\bigtriangleup{ABO}:\bigtriangleup{ACO}=\text{BP}:\text{CP}\]%
+\[\Leftrightarrow\bunsuu{\bigtriangleup{ABO}}{\bigtriangleup{ACO}}=\bunsuu{\text{BP}}{\text{PC}}\]%
+
+        同様にして，$\bunsuu{\bigtriangleup{BCO}}{\bigtriangleup{BAO}}=\bunsuu{\text{CQ}}{\text{QA}}\数式カンマスペース\bunsuu{\bigtriangleup{CAO}}{\bigtriangleup{CBO}}=\bunsuu{\text{AR}}{\text{RB}}$%
+
+        ここで，%
+\[\bunsuu{\bigtriangleup{ABO}}{\bigtriangleup{ACO}}\cdot\bunsuu{\bigtriangleup{BCO}}{\bigtriangleup{BAO}}\cdot\bunsuu{\bigtriangleup{CAO}}{\bigtriangleup{CBO}}=1\]%
+\[\Leftrightarrow\bunsuu{\text{BP}}{\text{PC}}\cdot\bunsuu{\text{CQ}}{\text{QA}}\cdot\bunsuu{\text{AR}}{\text{RB}}=1\]%
+           \証明終了%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{メネラウスの定理}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(2,3)--(0,0)--(3,0)--cycle;%
+          \draw(2,3)node[above]{A};%
+          \draw(0,0)node[below]{B};%
+          \draw(3,0)node[right]{C};%
+          \draw(3,0)--(3.11111,-0.33333);%
+          \draw(2.25,0)node[below]{P};%
+          \draw(3.11111,-0.33333)node[below]{Q};%
+          \draw(3.11111,-0.33333)--(0.5,0.75);%
+          \draw(0.5,0.75)node[left]{R};%
+        \end{tikzpicture}%
+        \空行%
+        $\bunsuu{\text{BP}}{\text{PC}}\cdot\bunsuu{\text{CQ}}{\text{QA}}\cdot\bunsuu{\text{AR}}{\text{RB}}=1$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{メネラウスの定理の証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(2,3)--(0,0)--(3,0)--cycle;%
+          \draw(2,3)node[above]{A};%
+          \draw(0,0)node[below]{B};%
+          \draw(3,0)node[right]{C};%
+          \draw(3,0)--(3.11111,-0.33333);%
+          \draw(2.25,0)node[below]{P};%
+          \draw(3.11111,-0.33333)node[below]{Q};%
+          \draw(3.11111,-0.33333)--(0.5,0.75);%
+          \draw(0.5,0.75)node[left]{R};%
+          \draw(0.65,0.975)node[above left]{S};%
+          \draw(0.65,0.975)--(3,0);%
+        \end{tikzpicture}%
+        \空行%
+        $\text{SC}\平行\text{RP}$より，%
+\[\text{RA}:\text{SR}=\text{QA}:\text{CQ}\数式カンマスペース\text{BR}:\text{RS}=\text{BP}:\text{PC}\]%
+\[\Leftrightarrow\bunsuu{\text{CQ}}{\text{QA}}=\bunsuu{\text{SR}}{\text{AR}}\数式カンマスペース\bunsuu{\text{BP}}{\text{PC}}=\bunsuu{\text{BR}}{\text{RS}}\]%
+        \[\bunsuu{\text{BP}}{\text{PC}}\cdot\bunsuu{\text{CQ}}{\text{QA}}\cdot\bunsuu{\text{AR}}{\text{RB}}=\bunsuu{\text{BR}}{\text{RS}}\cdot\bunsuu{\text{SR}}{\text{AR}}
+        \cdot\bunsuu{\text{AR}}{\text{RB}}=1\]%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{円周角の定理}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(1.2,1.6)--cycle;%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(-2,0)--cycle;%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.2,-1.6)node[right]{B};%
+          \draw(1.2,1.6)node[above]{P};%
+          \draw(-2,0)node[left]{Q};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\angle\text{APB}=\angle\text{AQB}$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{円周角の定理の証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(1.2,1.6)--cycle;%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(0,0)--cycle;%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.2,-1.6)node[right]{B};%
+          \draw(1.2,1.6)node[above]{P};%
+          \draw(0,0)node[right]{O};%
+          \draw[dashed](-1.2,-1.6)--(1.2,1.6);% 
+          \draw(-0.6,-1.4)node[above]{D};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\triangle{\text{AOP}}$\数式カンマスペース$\triangle{\text{BOP}}$は二等辺三角形なので，%
+\[\angle\text{APO}=\angle\text{OAP}\数式カンマスペース\angle\text{BPO}=\angle\text{OBP}\]%
+
+        外角定理より，%
+\[\angle\text{AOD}=2\angle\text{APO}\数式カンマスペース\angle\text{BOD}=2\angle\text{BPO}\]%
+\[\Leftrightarrow\angle\text{AOB}=2\angle\text{APB}\]%
+
+        \空行%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)--(1.6,-1.2)--(1.6,1.2)--cycle;%
+          \draw(-1.6,-1.2)--(1.6,-1.2)--(0,0)--cycle;%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.6,-1.2)node[right]{B};%
+          \draw(1.6,1.2)node[above]{P};%
+          \draw(0,0)node[above]{O};%    
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\triangle{\text{OPB}}$は二等辺三角形なので，%
+\[\angle\text{OPB}=\angle\text{OBP}\]%
+
+        外角定理より%
+\[\angle\text{AOB}=2\angle\text{OPB}\]%
+
+        \空行%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(0,0)--cycle;%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(-2,0)--cycle;% 
+          \draw[dashed](-2,0)--(2,0);%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.2,-1.6)node[right]{B};%
+          \draw(0,0)node[above]{O};%
+          \draw(2,0)node[right]{D};%  
+          \draw(-2,0)node[left]{Q};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\triangle{\text{QOA}}\数式カンマスペース\triangle{\text{OQB}}$は二等辺三角形なので，%
+\[\angle\text{OQA}=\angle\text{OAQ}\数式カンマスペース\angle\text{OQB}=\angle\text{OBQ}\]%
+
+        外角定理より，%
+\[\angle\text{OQA}+\angle\text{OAQ}=\angle\text{DOA}\数式カンマスペース\angle\text{OQB}+\angle\text{OBQ}=\angle\text{DOB}\]%
+\[\Leftrightarrow\angle\text{DOA}-\angle\text{DOB}=2\Ttyuukakko{\angle\text{OQA}-\angle\text{BQO}}\]%
+\[\Leftrightarrow\angle\text{AOB}=2\angle\text{AQB}\]%
+
+        従って，円に内接する三角形について，円周角の$2$倍が中心角である。%
+        \空行~\空行%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(1.2,1.6)--cycle;%
+          \draw(-1.6,-1.2)--(1.2,-1.6)--(-2,0)--cycle;%
+          \draw(0,0)--(-1.6,-1.2)--(1.2,-1.6)--cycle;%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.2,-1.6)node[right]{B};%
+          \draw(1.2,1.6)node[above]{P};%
+          \draw(-2,0)node[left]{Q};%
+          \draw(0,0)node[above]{O};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        以上より，以下が成立。        \[\angle\text{APB}=2\angle\text{AOB},\angle\text{AQB}=2\angle\text{AOB}\]%
+\[\Leftrightarrow\angle\text{AQB}=\angle\text{APB}\]
+        \証明終了%
+      }%
+      {\relax}% 
+      \ifthenelse{\equal{#1}{内接四角形の定理}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)--(1.6,-1.2)--(1.2,1.6)--(0,2);%
+          \draw(-1.6,-1.2)--(0,2);%
+          \draw(-1.6,-1.2)--(3,-1.2);%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.6,-1.2)node[below]{B};%
+          \draw(1.2,1.6)node[above]{C};%
+          \draw(0,2)node[above]{D};%
+          \draw(3,-1.2)node[below]{T};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\angle\text{ADC}=\angle\text{CBT}$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{内接四角形の定理の証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)--(1.6,-1.2)--(1.2,1.6)--(0,2);%
+          \draw(-1.6,-1.2)--(0,2);%
+          \draw(-1.6,-1.2)--(3,-1.2);%
+          \draw(-1.6,-1.2)node[left]{A};%
+          \draw(1.6,-1.2)node[below]{B};%
+          \draw(1.2,1.6)node[above]{C};%
+          \draw(0,2)node[above]{D};%
+          \draw(3,-1.2)node[below]{T};%
+          \draw(0,0)circle[radius=2];% 
+          \draw(-1.6,-1.2)--(0,0);%
+          \draw(1.2,1.6)--(0,0);%
+          \draw(0,0)coordinate(O);%
+        \fill[black](O)circle(0.03);%
+        \end{tikzpicture}%
+        \空行%
+\[\angle\text{AOC}=2\angle\text{ABC}\]%
+        \[\angle\text{AOC}=2\angle\text{ADC}\]%
+
+        ここで，$\angle\text{ABC}+\angle\text{ADC}=180^\circ$%
+\[\Leftrightarrow\angle\text{AOC}+\angle\text{AOC}=180^\circ\]%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{接弦定理}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,-2)--(2,0)--(-1.2,1.6)--cycle;%
+          \draw(0,-2)node[below]{A};%
+          \draw(2,0)node[right]{B};%
+          \draw(-1.2,1.6)node[above]{C};%
+          \draw(3,-2)--(-3,-2);%
+          \draw(3,-2)node[below]{T};%
+          \draw(-3,-2)node[below]{S};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}
+        \空行%
+        $\angle\text{BAT}=\angle\text{ACB}$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{接弦定理の証明}}%
+      {%
+        \証明開始%
+        \vspace{-1\zw}%
+        \begin{enumerate}%
+          \item 鋭角のとき%  
+                \空行% 
+                \begin{tikzpicture}%
+                  \draw(0,-2)--(2,0)--(-1.2,1.6)--cycle;%
+                  \draw[dashed](0,-2)--(2,0)--(0,2)--cycle;%
+                  \draw(0,-2)node[below]{A};%
+                  \draw(2,0)node[right]{B};%
+                  \draw(-1.2,1.6)node[above]{C};%
+                  \draw(3,-2)--(-3,-2);%
+                  \draw(3,-2)node[below]{T};%   
+                  \draw(-3,-2)node[below]{S};%
+                  \draw(0,2)node[above]{E};%
+                  \draw(0,0)circle[radius=2];%
+                  \draw(0,2)coordinate(E);%
+                  \draw(2,0)coordinate(B);%
+                  \draw(0,-2)coordinate(A);%
+                  \draw pic[draw,black,thin,angle radius=0.3cm] {right angle=E--B--A};%
+                \end{tikzpicture}%
+                \空行%
+                $\triangle{\text{ACB}}$と$\triangle{\text{ABE}}$について円周角の定理より，%
+                \[\angle\text{ACB}=\angle\text{AEB}\]%
+
+                ここで，$\triangle{\text{ABE}}$について%
+                \[\angle\text{BEA}+\angle\text{BAE}=90^\circ\]%
+  
+                また，$\text{AT}$が円の接線なので$\angle\text{BAE}+\angle\text{BAT}=90^\circ$から，%
+                \[\angle\text{BAT}=\angle\text{AEB}\]%
+                \[\Leftrightarrow\angle\text{ACB}=\angle\text{BAT}\]%
+
+                \空行%
+          \item 直角のとき%
+                \空行
+                \begin{tikzpicture}%
+                  \draw(0,-2)--(2,0)--(0,2)--cycle;%
+                  \draw(0,-2)node[below]{A};%
+                  \draw(2,0)node[right]{B};%
+                  \draw(3,-2)--(-3,-2);%
+                  \draw(3,-2)node[below]{T};%
+                  \draw(-3,-2)node[below]{S};%
+                  \draw(0,2)node[above]{E};%
+                  \draw(0,0)circle[radius=2];%
+                  \draw(0,2)coordinate(E);%
+                  \draw(2,0)coordinate(B);%
+                  \draw(0,-2)coordinate(A);%
+                  \draw pic[draw,black,thin,angle radius=0.3cm] {right angle=E--B--A};%
+                \end{tikzpicture}%
+                \空行%
+                ATが円の接線なので，%
+                \[\angle\text{EAS}=90^\circ\]%
+                \[\Leftrightarrow\angle\text{EBA}=\angle\text{EAS}\]%
+
+                \空行%
+          \item 鈍角のとき%
+                \空行%
+                \begin{tikzpicture}%
+                  \draw(0,-2)--(-2,0)--(-1.2,1.6)--cycle;
+                  \draw(0,-2)node[below]{A};%
+                  \draw(-2,0)node[left]{B};%
+                  \draw(-1.2,1.6)node[above]{C};%
+                  \draw(3,-2)--(-3,-2);%
+                  \draw(3,-2)node[below]{T};%
+                  \draw(-3,-2)node[below]{S};%
+                  \draw(0,0)circle[radius=2];%
+                \end{tikzpicture}%
+                \空行%
+                鋭角のときの接弦定理より，%
+                \[\angle\text{BCA}=\angle\text{BAS}\]%
+
+                また，$\triangle{\text{ABC}}$において%
+                \[\angle\text{ABC}=\angle\text{ACB}+\angle\text{BAC}\]%
+                \[\Leftrightarrow\angle\text{ABC}=\angle\text{CAT}\]%
+
+                \空行%
+        \end{enumerate}%
+        従って円に内接する三角形について成り立つことが証明された。%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{内角と外角の二等分線}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(5.3,0.8)--(0,0)--(4.8,0)--cycle;%
+          \draw(5.3,0.8)--(0,0)--(4,0)--cycle;%
+          \draw(5.3,0.8)--(0,0)--(6,0)--cycle;%
+          \draw(5.3,0.8)node[above]{A};%
+          \draw(0,0)--(6.3,0.950943395);%
+          \draw(0,0)node[below]{B};%
+          \draw(4.8,0)node[below]{C};%
+          \draw(4,0)node[below]{P};%
+          \draw(6,0)node[below]{Q};%
+          \draw(6.3,0.950943395)node[above]{R};%
+        \end{tikzpicture}%
+        \空行%
+        $\angle\text{BAP}=\angle\text{PAC},\angle\text{CAQ}=\angle\text{QAR}$のとき，%
+\[\text{BP}:\text{PC}=\text{BQ}:\text{QC}=\text{AB}:\text{AC}\]%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{方べきの定理A}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(0,2)--(1.6,-1.2);%
+          \draw(0,2)node[above]{A};%
+          \draw(1.6,-1.2)node[below]{B};%
+          \draw(-1.6,-1.2)--(1.2,1.6);%
+          \draw(-1.6,-1.2)node[below]{C};%
+          \draw(1.2,1.6)node[above]{D};%
+          \draw(0.7,0.9)node[right]{P};%
+          \draw(0,0)circle[radius=2];%
+          \draw(0,0)node[below]{O};%
+        \end{tikzpicture}%
+        \空行%
+        $\text{PA}\cdot\text{PB}=\text{PC}\cdot\text{PD}$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{方べきの定理Aの証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,2)--(1.6,-1.2);%
+          \draw(0,2)node[above]{A};%
+          \draw(1.6,-1.2)node[below]{B};%
+          \draw(-1.6,-1.2)--(1.2,1.6);%
+          \draw(-1.6,-1.2)node[below]{C};%
+          \draw(1.2,1.6)node[above]{D};%
+          \draw(0.7,0.9)node[right]{P};%
+          \draw(0,0)circle[radius=2];%
+          \draw(0,0)node[below]{O};%
+        \end{tikzpicture}%
+        \空行%
+        円周角の定理より，%
+\[\angle\text{CAP}=\angle\text{BDP},\quad\angle\text{ACP}=\angle\text{DBP}\]%
+
+        $\triangle{\text{ACP}}\相似\triangle{\text{DBP}}$より，%
+\[\text{PA}\cdot\text{PB}=\text{PC}\cdot\text{PD}\]%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{方べきの定理B}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-1.2,-1.6)node[below]{A};%
+          \draw(1.2,-1.6)--(-3.6,-1.6);%
+          \draw(1.2,-1.6)node[below]{B};%
+          \draw(-2,0)node[left]{C};%
+          \draw(0,2)--(-3.6,-1.6);%
+          \draw(0,2)node[above]{D};%
+          \draw(-3.6,-1.6)node[below]{P};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\text{PA}\cdot\text{PB}=\text{PC}\cdot\text{PD}$%
+      }% 
+      {\relax}%
+    \ifthenelse{\equal{#1}{方べきの定理Bの証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}% 
+          \draw(-1.2,-1.6)node[below]{A};%
+          \draw(1.2,-1.6)--(-3.6,-1.6);%
+          \draw(1.2,-1.6)node[below]{B};%
+          \draw(-2,0)node[left]{C};%
+          \draw(0,2)--(-3.6,-1.6);%
+          \draw(0,2)node[above]{D};%
+          \draw(-3.6,-1.6)node[below]{P};%
+          \draw(0,0)circle[radius=2];%
+          \draw(-1.2,-1.6)--(-2,0);%
+        \end{tikzpicture}%
+        \空行%
+        内接四角形の証明より，%
+\[\angle\text{CDB}=\angle\text{CAP}\数式カンマスペース\angle\text{DBA}=\angle\text{PCA}\]%
+
+        $\triangle{\text{ACP}}\相似\triangle{\text{DPB}}$より，%
+\[\text{PA}\cdot\text{PB}=\text{PC}\cdot\text{PD}\]%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{方べきの定理C}}%
+      {%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)node[below]{A};%
+          \draw(1.6,-1.2)--(-4.93,-1.2);%
+          \draw(1.6,-1.2)node[right]{B};%
+          \draw(-1.2,1.6)--(-4.93,-1.2);%
+          \draw(-1.2,1.6)node[above]{T};%
+          \draw(-4.93,-1.2)node[below]{P};%
+          \draw(0,0)circle[radius=2];%
+        \end{tikzpicture}%
+        \空行%
+        $\text{PA}\cdot\text{PB}=\text{PT}^2$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{方べきの定理Cの証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(-1.6,-1.2)node[below]{A};%
+          \draw(1.6,-1.2)--(-4.93,-1.2);%
+          \draw(1.6,-1.2)node[right]{B};%
+          \draw(-1.2,1.6)--(-4.93,-1.2);%
+          \draw(-1.2,1.6)node[above]{T};%
+          \draw(-4.93,-1.2)node[below]{P};%
+          \draw(0,0)circle[radius=2];%
+          \draw(-1.6,-1.2)--(-1.2,1.6);%
+          \draw(-1.2,1.6)--(1.6,-1.2);%
+        \end{tikzpicture}%
+        \空行%
+        接弦定理より，%
+\[\angle\text{TBA}=\angle\text{PTA}\]%
+
+        これと，$\angle\text{P}$は共通なので$\triangle{\text{PTA}}\相似\triangle{\text{PBT}}$より，%
+\[\text{PA}\cdot\text{PB}=\text{PT}^2\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+     
+%%%%%%%%%%%%%%%%%%%%ここから数\UTF{2161}B%%%%%%%%%%%%%%%%%%%%
+\NewDocumentCommand{\三次式展開}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a+b}^{3}=a^{3}+3a^2b+3ab^2+b^{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a+b}^{3}=a^{3}+3a^2b+3ab^2+b^{3}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a-b}^{3}=a^{3}-3a^2b+3ab^2-b^{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a-b}^{3}=a^{3}-3a^2b+3ab^2-b^{3}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a+b}\Ttyuukakko{a^2-ab+b^2}=a^{3}+b^{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a+b}\Ttyuukakko{a^2-ab+b^2}=a^{3}+b^{3}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a-b}\Ttyuukakko{a^2+ab+b^2}=a^{3}-b^{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a-b}\Ttyuukakko{a^2+ab+b^2}=a^{3}-b^{3}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\三次式因数分解}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$a^{3}+b^{3}=\Ttyuukakko{a+b}\Ttyuukakko{a^2-ab+b^2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[a^{3}+b^{3}=\Ttyuukakko{a+b}\Ttyuukakko{a^2-ab+b^2}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$a^{3}-b^{3}=\Ttyuukakko{a-b}\Ttyuukakko{a^2+ab+b^2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[a^{3}-b^{3}=\Ttyuukakko{a-b}\Ttyuukakko{a^2+ab+b^2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$a^{3}+3a^2b+3ab^2+b^{3}=\Ttyuukakko{a+b}^{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[a^{3}+3a^2b+3ab^2+b^{3}=\Ttyuukakko{a+b}^{3}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$a^{3}-3a^2b+3ab^2-b^{3}=\Ttyuukakko{a-b}^{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[a^{3}-3a^2b+3ab^2-b^{3}=\Ttyuukakko{a-b}^{3}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\二項定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a+b}^{n}={}_{n}\text{C}_{0} a^{n}+{}_{n}\text{C}_{1} a^{n-1}b+{}_{n}\text{C}_{2} a^{n-2}b^2+....{}_{n}\text{C}_{n-1} ab^{n-1}+{}_{n}\text{C}_{n} b^{n}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a+b}^{n}={}_{n}\text{C}_{0} a^{n}+{}_{n}\text{C}_{1} a^{n-1}b+{}_{n}\text{C}_{2} a^{n-2}b^2+....{}_{n}\text{C}_{n-1} ab^{n-1}+{}_{n}\text{C}_{n} b^{n}\]}{\relax}%
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{i}}%
+      {${}_{n}\text{C}_{r}a^{n-r}b^{r}$}{\relax}%
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{b}}%
+      {\[{}_{n}\text{C}_{r}a^{n-r}b^{r}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        $\Ttyuukakko{a+b}^{n}$を展開すると，$a^{r}b^{n-r}$の項の係数は$n$個の$a$から$r$個$a$を選ぶ場合の数に等しいので係数は${}_{n} C_{r}$よって，一般項は%
+\[{}_{n}\text{C}_{r}a^{n-r}b^{r}\]%
+
+        この$r$に$1$から順番に自然数を代入したものが二項定理となる。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\分数式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\bunsuu{A}{B}\times\bunsuu{C}{D}=\bunsuu{AC}{BD}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\bunsuu{A}{B}\times\bunsuu{C}{D}=\bunsuu{AC}{BD}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\bunsuu{A}{B}\div \bunsuu{C}{D}=\bunsuu{AD}{BC}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\bunsuu{A}{B}\div \bunsuu{C}{D}=\bunsuu{AD}{BC}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\bunsuu{A}{C}+\bunsuu{B}{C}=\bunsuu{A+B}{C}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\bunsuu{A}{C}+\bunsuu{B}{C}=\bunsuu{A+B}{C}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\bunsuu{A}{C}-\bunsuu{B}{C}=\bunsuu{A-B}{C}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\bunsuu{A}{C}-\bunsuu{B}{C}=\bunsuu{A-B}{C}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\相加相乗平均}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース b>0$のとき，$\bunsuu{a+b}{2}\geqq\根号{ab}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース b>0$のとき，%
+\[\bunsuu{a+b}{2}\geqq\根号{ab}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        $a+b-2\根号{ab}\geqq0$を示す。%
+\[a+b-2\根号{ab}=\Ttyuukakko{\根号{a}-\根号{b}}^2\]%
+
+        より，$\根号{a}-\根号{b}$は実数なので，%
+\[\Ttyuukakko{\根号{a}-\根号{b}}^2\geqq0\]%
+
+        よって，$a>0\数式カンマスペース b>0$のとき，%
+\[\bunsuu{a+b}{2}\geqq\根号{ab}\text{\ （等号成立条件は$a=b$）}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\虚数の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$i=\根号{-1}$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {\[i=\根号{-1}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\複素数の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {実数$a\数式カンマスペース b$を用いて，$a+bi$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        実数$a\数式カンマスペース b$を用いて，%
+\[a+bi\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\newcommand{\二次方程式の解の判別}%
+  {%
+    $ax^2+bx+c=0\数式カンマスペース\Ttyuukakko{a\neq0}$の判別式を$D=b^2-4ac$とすると，%
+    \phrasesmath[l]%
+      {%
+        $D>0$のとき，異なる二つの実数解\\%
+        $D=0$のとき，重解\\%
+        $D<0$のとき，異なる二つの虚数解%
+      }%
+    を持つ。
+  }%
+
+
+\NewDocumentCommand{\解と係数の関係}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{二次方程式の解と係数の関係A}\AND\equal{#2}{i}}%
+      {$ax^2+bx+c=0 \Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta$として，$\alpha+\beta=-\bunsuu{b}{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{二次方程式の解と係数の関係A}\AND\equal{#2}{b}}%
+      {%
+        $ax^2+bx+c=0 \Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta$として，%
+\[\alpha+\beta=-\bunsuu{b}{a}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{二次方程式の解と係数の関係B}\AND\equal{#2}{i}}%
+      {$ax^2+bx+c=0 \Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta$として，$\alpha\beta=\bunsuu{c}{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{二次方程式の解と係数の関係B}\AND\equal{#2}{b}}%
+      {%
+        $ax^2+bx+c=0 \Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta$として，%
+\[\alpha\beta=\bunsuu{c}{a}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{二次方程式の解と係数の関係の証明}}%
+      {%
+        \証明開始%
+        \vspace{-2.5\zw}%
+\[ax^2+bx+c=a\Ttyuukakko{x-\alpha}\Ttyuukakko{x-\beta}=a\Tdaikakko{x^2-\Ttyuukakko{\alpha+\beta}x+\alpha\beta}\]%
+\[\Leftrightarrow ax^2+bx+c=a\Ttyuukakko{x^2+\bunsuu{b}{a}x+\bunsuu{c}{a}}\]%
+
+        係数比較法より，両辺同次の係数を比較して，%
+\[\alpha+\beta=-\bunsuu{b}{a}\数式カンマスペース\alpha\beta=\bunsuu{c}{a}\]%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係A}\AND\equal{#2}{i}}%
+      {$ax^{3}+bx^2+cx+d=0\Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$として，$\alpha+\beta+\gamma=-\bunsuu{b}{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係A}\AND\equal{#2}{b}}%
+      {%
+        $ax^{3}+bx^2+cx+d=0\Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$として，%
+\[\alpha+\beta+\gamma=-\bunsuu{b}{a}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係B}\AND\equal{#2}{i}}%
+      {$ax^{3}+bx^2+cx+d=0\Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$として，$\alpha\beta+\beta\gamma+\gamma\alpha=\bunsuu{c}{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係B}\AND\equal{#2}{b}}%
+      {%
+        $ax^{3}+bx^2+cx+d=0\Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$として，%
+\[\alpha\beta+\beta\gamma+\gamma\alpha=\bunsuu{c}{a}\]
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係C}\AND\equal{#2}{i}}%
+      {$ax^{3}+bx^2+cx+d=0\Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$として，$\alpha\beta\gamma=-\bunsuu{d}{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係C}\AND\equal{#2}{b}}%
+      {%
+        $ax^{3}+bx^2+cx+d=0\Ttyuukakko{a\neq0}$の解を$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$として，%
+\[\alpha\beta\gamma=-\bunsuu{d}{a}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{三次方程式の解と係数の関係の証明}}%
+      {%
+        \証明開始%
+        \vspace{-2.5\zw}%
+\[ax^{3}+bx^2+cx+d=a\Ttyuukakko{x-\alpha}\Ttyuukakko{x-\beta}\Ttyuukakko{x-\gamma}=a\Tdaikakko{x^3-\Ttyuukakko{\alpha+\beta+\gamma}x^2+\Ttyuukakko{\alpha\beta+\beta\gamma+\gamma\alpha}x-\alpha\beta\gamma}\]%
+\[\Leftrightarrow ax^{3}+bx^2+cx+d=a\Ttyuukakko{x^3+\bunsuu{b}{a}x^2+\bunsuu{c}{a}x+\bunsuu{d}{a}}\]%
+
+        係数比較法より，両辺同次の係数を比較して，%
+        \[\alpha+\beta+\gamma=-\bunsuu{b}{a}\数式カンマスペース\alpha\beta+\beta\gamma+\gamma\alpha=\bunsuu{c}{a}\数式カンマスペース\alpha\beta\gamma=-\bunsuu{d}{a}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\剰余定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定理A}\AND\equal{#2}{i}}%
+      {整式 $P\Ttyuukakko{x}$を$x-k$で割った余りは$P\Ttyuukakko{k}$}{\relax}%
+    \ifthenelse{\equal{#1}{定理A}\AND\equal{#2}{b}}%
+      {%
+        整式 $P\Ttyuukakko{x}$を$x-k$で割った余りは%
+\[P\Ttyuukakko{k}\]%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定理B}\AND\equal{#2}{i}}%
+      {整式$P\Ttyuukakko{x}$を$ax-b$で割った余りは$P\Ttyuukakko{\bunsuu{b}{a}}$}{\relax}%
+    \ifthenelse{\equal{#1}{定理B}\AND\equal{#2}{b}}%
+      {%
+        整式$P\Ttyuukakko{x}$を$ax-b$で割った余りは%
+\[P\Ttyuukakko{\bunsuu{b}{a}}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        $P\Ttyuukakko{x}$を$\Ttyuukakko{x-k}$で割った商を$Q\Ttyuukakko{x}$あまりを$R$として，%
+\[P\Ttyuukakko{x}=\Ttyuukakko{x-k}Q\Ttyuukakko{x}+R\]%
+
+        $x=k$のとき，%
+\[P\Ttyuukakko{k}=R\]%
+
+        よって，余りは%
+\[P\Ttyuukakko{k}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\因数定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定理}\AND\equal{#2}{i}}% 
+      {%
+        整式$P\Ttyuukakko{x}$が$x-k$を因数に持つ$\Leftrightarrow P\Ttyuukakko{k}=0$%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定理}\AND\equal{#2}{b}}% 
+      {%
+        整式$P\Ttyuukakko{x}$が$x-k$を因数に持つ%
+\[\Leftrightarrow P\Ttyuukakko{k}=0\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        剰余の定理より，$x-k$で割った余りが$0$なので，%
+\[P\Ttyuukakko{k}=0\]%
+
+        剰余の定理より，$P\Ttyuukakko{k}=0$ということは$P\Ttyuukakko{x}$を$x-k$で割った余りが$0$ということなので，$P\Ttyuukakko{x}$は$x-k$を因数に持つ。%
+        \証明終了%   
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\点の座標}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{二点間の距離}\AND\equal{#2}{i}}%
+      {$\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$間の距離は，$\根号{\Ttyuukakko{x_{2}-x_{1}}^2-\Ttyuukakko{y_{2}-y_{1}}^2}$}{\relax}%
+    \ifthenelse{\equal{#1}{二点間の距離}\AND\equal{#2}{b}}%
+      {%
+        $\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$間の距離は，%
+\[\根号{\Ttyuukakko{x_{2}-x_{1}}^2-\Ttyuukakko{y_{2}-y_{1}}^2}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{内分点の座標}\AND\equal{#2}{i}}%
+      {$\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$を$m:n$に内分する点の座標は，$\Ttyuukakko{\bunsuu{nx_{1}+mx_{2}}{n+m}\数式カンマスペース\bunsuu{ny_{1}+my_{2}}{n+m}}$}{\relax}%
+    \ifthenelse{\equal{#1}{内分点の座標}\AND\equal{#2}{b}}%
+      {% 
+        $\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$を$m:n$に内分する点の座標は，%
+\[\Ttyuukakko{\bunsuu{nx_{1}+mx_{2}}{n+m}\数式カンマスペース\bunsuu{ny_{1}+my_{2}}{n+m}}\]%
+
+      }%
+      {\relax}%   
+    \ifthenelse{\equal{#1}{内分点の座標の証明}}%
+      {%
+        \証明開始%
+        $m:n$に内分する点の座標を$\text{P}\Ttyuukakko{x\数式カンマスペース y}$として，%
+\[m:n=x-x_{1}:x_{2}-x\]%
+\[\Leftrightarrow\Ttyuukakko{\bunsuu{nx_{1}+mx_{2}}{n+m}\数式カンマスペース\bunsuu{ny_{1}+my_{2}}{n+m}}\]%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{外分点の座標}\AND\equal{#2}{i}}%
+      {$\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$を$m:n$に外分する点の座標は，$\Ttyuukakko{\bunsuu{-nx_{1}+mx_{2}}{m-n}\数式カンマスペース  \bunsuu{-ny_{1}+my_{2}}{m-n}}$}{\relax}%
+    \ifthenelse{\equal{#1}{外分点の座標}\AND\equal{#2}{b}}%
+      {%
+        $\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$を$m:n$に外分する点の座標は，%
+\[\Ttyuukakko{\bunsuu{-nx_{1}+mx_{2}}{m-n}\数式カンマスペース  \bunsuu{-ny_{1}+my_{2}}{m-n}}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{外分点の座標の証明}}%
+      {%
+        \証明開始%
+        \vspace{-1\zw}%
+        \begin{enumerate}%
+          \item $m>n$のとき%
+
+                $n:m$に外分する点の座標を$\text{P}\Ttyuukakko{x\数式カンマスペース y}$として，%
+\[m:n=x-x_{1}:x-x_{2}\]%
+\[\Leftrightarrow\Ttyuukakko{\bunsuu{-nx_{1}+mx_{2}}{m-n}\数式カンマスペース  \bunsuu{-ny_{1}+my_{2}}{m-n}}\]%
+
+          \item $m<n$のとき%
+
+                $n:m$に外分する点の座標を$\text{P}\Ttyuukakko{x\数式カンマスペース y}$として，%
+                \[m:n=x-x_{2}:x-x_{1}\]%
+                \[\Leftrightarrow\Ttyuukakko{\bunsuu{-nx_{1}+mx_{2}}{m-n}\数式カンマスペース  \bunsuu{-ny_{1}+my_{2}}{m-n}}\]%
+
+         \end{enumerate}%
+        よって$m\数式カンマスペース n$の大小によらず%
+         \[\Ttyuukakko{\bunsuu{-nx_{1}+mx_{2}}{m-n}\数式カンマスペース  \bunsuu{-ny_{1}+my_{2}}{m-n}}\]%
+
+        となる。%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{中点の座標}\AND\equal{#2}{i}}%
+      {$\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$の中点は，$\Ttyuukakko{\bunsuu{x_{1}+x_{2}}{2}\数式カンマスペース\bunsuu{y_{1}+y_{2}}{2}}$}{\relax}%
+    \ifthenelse{\equal{#1}{中点の座標}\AND\equal{#2}{b}}%
+      {%
+        $\text{A}\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース \text{B}\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$として，線分$\text{AB}$の中点は，%
+\[\Ttyuukakko{\bunsuu{x_{1}+x_{2}}{2}\数式カンマスペース\bunsuu{y_{1}+y_{2}}{2}}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{中点の座標の証明}}%
+      {%
+        \証明開始%
+        内分点の公式において$m=n$のとき，%
+\[\Ttyuukakko{\bunsuu{x_{1}+x_{2}}{2}\数式カンマスペース\bunsuu{y_{1}+y_{2}}{2}}\]%
+        \証明終了%
+      }%
+      {\relax}%   
+    \ifthenelse{\equal{#1}{重心の座標}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース B\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}\数式カンマスペース C\Ttyuukakko{x_{3}\数式カンマスペース y_{3}}$として，$\triangle{\text{ABC}}$の重心の座標は，$\Ttyuukakko{\bunsuu{x_{1}+x_{2}+x_{3}}{3}\数式カンマスペース\bunsuu{y_{1}+y_{2}+y_{3}}{3}}$}{\relax}%
+    \ifthenelse{\equal{#1}{重心の座標}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース B\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}\数式カンマスペース C\Ttyuukakko{x_{3}\数式カンマスペース y_{3}}$として，$\triangle{\text{ABC}}$の重心の座標は，%
+\[\Ttyuukakko{\bunsuu{x_{1}+x_{2}+x_{3}}{3}\数式カンマスペース\bunsuu{y_{1}+y_{2}+y_{3}}{3}}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{重心の座標の証明}}%
+      {%
+        \証明開始%
+        $A$と$B$の中点$M$の座標は$\Ttyuukakko{\bunsuu{x_{1}+x_{2}}{2}\数式カンマスペース\bunsuu{y_{1}+y_{2}}{2}}$%
+
+        重心は$CM$を$2:1$に内分するので，重心の座標は内分点の公式より，%
+\[\Ttyuukakko{\bunsuu{x_{1}+x_{2}+x_{3}}{3}\数式カンマスペース\bunsuu{y_{1}+y_{2}+y_{3}}{3}}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\直線の方程式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$ax+by+c=0$}{\relax}%
+     \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[ax+by+c=0\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {点$\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}$を通り傾きが$m$の直線は，$y-y_{1}=m\Ttyuukakko{x-x_{1}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        点$\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}$を通り傾きが$m$の直線は，%
+\[y-y_{1}=m\Ttyuukakko{x-x_{1}}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {異なる二点$\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$を通る直線$\Ttyuukakko{x_{1}\neq x_{2}}$は，$y-y_{1}=\bunsuu{y_{2}-y_{1}}{x_{2}-x_{1}}\Ttyuukakko{x-x_{1}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        異なる二点$\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}\数式カンマスペース\Ttyuukakko{x_{2}\数式カンマスペース y_{2}}$を通る直線，$\Ttyuukakko{x_{1}\neq x_{2}}$は，%
+\[y-y_{1}=\bunsuu{y_{2}-y_{1}}{x_{2}-x_{1}}\Ttyuukakko{x-x_{1}}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式Bの証明}}%
+      {%
+        \証明開始%
+        傾き$m$なので，$y=mx+a$と置ける（\,$a$は切片）。%
+
+        ここで，$\Ttyuukakko{x_{1}\数式カンマスペース x_{2}}$を通るので，$y_{1}=mx_{1}+a$となり，連立することで%
+\[y-y_{1}=m\Ttyuukakko{x-x_{1}}\]%
+
+        を得る。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\二直線の関係}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {二直線$y=m_{1}x+n_{1}\数式カンマスペース y=m_{2}x+n_{2}$が平行$\Leftrightarrow m_{1}=m_{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        二直線$y=m_{1}x+n_{1}\数式カンマスペース y=m_{2}x+n_{2}$が平行%
+\[\Leftrightarrow m_{1}=m_{2}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {二直線$y=m_{1}x+n_{1}\数式カンマスペース y=m_{2}x+n_{2}$が垂直$\Leftrightarrow m_{1}m_{2}=-1$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        二直線$y=m_{1}x+n_{1}\数式カンマスペース y=m_{2}x+n_{2}$が垂直%
+\[\Leftrightarrow m_{1}m_{2}=-1\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式Bの証明}}%
+      {%
+        \証明開始%
+        $y=mx_{1}$上に点A$\Ttyuukakko{1\数式カンマスペース m_{1}}$\数式カンマスペース $y=mx_{2}$上にB$\Ttyuukakko{-m_{1}\数式カンマスペース 1}$をとる。%
+
+        H$\Ttyuukakko{1\数式カンマスペース 0}$\数式カンマスペース I$\Ttyuukakko{0\数式カンマスペース 1}$として，$\bigtriangleup{OAH}$と$\bigtriangleup{OBI}$は合同。よって，%
+\[m_{1}m_{2}=-1\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\点と直線の距離}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {%
+        点$\Ttyuukakko{x_{1}\数式カンマスペース y_{2}}$と直線$ax+bx+c=0$の距離は，$\bunsuu{\Tzettaiti{ax_{1}+by_{2}+c}}{\根号{a^2+b^2}}$%
+      }{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        点$\Ttyuukakko{x_{1}\数式カンマスペース y_{2}}$と直線$ax+bx+c=0$の距離は，%
+\[\bunsuu{\Tzettaiti{ax_{1}+by_{2}+c}}{\根号{a^2+b^2}}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        全体を$x$軸方向に$-x_{1}$\数式カンマスペース $y$軸方向に$-y_{1}$平行移動するとき，直線$l$は$a\Ttyuukakko{x+x_{1}}+b\Ttyuukakko{y+y_{1}}+c=0$となる。%
+
+        また，直線$l$に原点Oからおろした垂線との交点をHとする。ここでOH間の距離を$d$と置くと，%
+        \vspace{-1\zw}%
+        \begin{enumerate}%
+          \item $a\neq0$のとき%
+
+                直線$l$の垂線の傾きは$b$の値によらず，$y=\bunsuu{b}{a}$となる。%
+
+                よって，Hの座標は二式を連立することで得られ，%
+                \[\Ttyuukakko{\bunsuu{-a\Ttyuukakko{ax_{1}+by_{1}+c}}{a^2+b^2}\数式カンマスペース\bunsuu{-b\Ttyuukakko{ax_{1}+by_{1}+c}}{a^2+b^2}}\]%
+
+                \begin{align*}%
+                  \Leftrightarrow d&=\根号{\Tdaikakko{\Ttyuukakko{\bunsuu{-a\Ttyuukakko{ax_{1}+by_{1}+c}}{a^2+b^2}}^2+\Tdaikakko{\bunsuu{-b\Ttyuukakko{ax_{1}+by_{1}+c}}{a^2+b^2}}}^2}&\\%
+                  &=\bunsuu{\Tzettaiti{ax_{1}+by_{2}+c}}{\根号{a^2+b^2}} %
+                \end{align*}%
+          \item $a=0$のとき%
+
+                直線$l$は$y=-\bunsuu{by_{1}+c}{b}$となるので，%
+                \begin{align*}%
+                  d&=\Tzettaiti{-\bunsuu{by_{1}+c}{b}}&\\%
+                  &=\bunsuu{\Tzettaiti{by_{1}+c}}{\Tzettaiti{b}}&\\%
+                \end{align*}%
+        これは，$\bunsuu{\Tzettaiti{ax_{1}+by_{2}+c}}{\根号{a^2+b^2}}$に$a=0$を代入したものである。
+        \end{enumerate}%
+        よって，いずれの場合も%
+\[\bunsuu{\Tzettaiti{ax_{1}+by_{2}+c}}{\根号{a^2+b^2}}\]%
+
+        を得る。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\円の方程式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {中心$\Ttyuukakko{a\数式カンマスペース b}$で半径$r$の円は，$\Ttyuukakko{x-a}^2+\Ttyuukakko{y-b}^2=r^2$と表す（通る$3$点がわかっている問題では，$x^2+y^2+Ax+By+C=0\Ttyuukakko{A^2+B^2-4C>0}$と置くこともある）。}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        中心$\Ttyuukakko{a\数式カンマスペース b}$で半径$r$の円は，%
+\[\Ttyuukakko{x-a}^2+\Ttyuukakko{y-b}^2=r^2\]%
+
+        また，円は%
+\[x^2+y^2+Ax+By+C=0\Ttyuukakko{A^2+B^2-4C>0}\]%
+
+        とも表せられる。%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        円の中心をO\数式カンマスペース 円周上の任意の点を$\text{P}\Ttyuukakko{x\数式カンマスペース y}$として，三平方の定理より%
+\[\Ttyuukakko{x-a}^2+\Ttyuukakko{y-b}^2=r^2\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\円と直線}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {円$x^2+y^2=r^2$上の点 $\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}$における接線の方程式は，$xx_{1}+yy_{1}=r^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        円$x^2+y^2=r^2$上の点 $\Ttyuukakko{x_{1}\数式カンマスペース y_{1}}$における接線の方程式は，%
+\[xx_{1}+yy_{1}=r^2\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \vspace{-1\zw}%
+        \begin{enumerate}%
+          \item $x_{0}\neq0\数式カンマスペース y_{0}\neq0$のとき%
+
+                $A\Ttyuukakko{x_{0}\数式カンマスペース y_{0}}$と置いて，OAの傾きは$\bunsuu{y_{0}}{x_{0}}$となる。接線の傾きはこれに垂直なので，$-\bunsuu{x_{0}}{y_{0}}$また接線は点$\Ttyuukakko{x_{0}\数式カンマスペース y_{0}}$を通るので%
+                \[y=-\bunsuu{x_{0}}{y_{0}}\Ttyuukakko{x-x_{0}}+y_{0}\]%
+ 
+                より，$\Ttyuukakko{x_{0}\数式カンマスペース y_{0}}$が$x^2+y^2=r^2$上に存在することに留意して，$x_{0}x+y_{0}y=r^2$となる。%
+
+          \item $x_{0}\neq0$のとき%
+
+                $y_{0}=\pm r$より接線は$y=\pm r\text{\ （複号同順）}$%
+
+          \item $y_{0}=0$のとき%
+
+                $x_{0}=\pm r$より接線は$x=\pm r\text{\ （複号同順）}$%
+        \end{enumerate}%
+        よって，接線の方程式は%
+\[xx_{1}+yy_{1}=r^2\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の相互関係}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin^2 \theta+\cos^2 \theta=1$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin^2 \theta+\cos^2 \theta=1\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\tan\theta =\bunsuu{\sin\theta}{\cos\theta}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\tan\theta =\bunsuu{\sin\theta}{\cos\theta}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$1+\tan^2 \theta=\bunsuu{1}{\cos^2 \theta}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[1+\tan^2 \theta=\bunsuu{1}{\cos^2 \theta}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(1.05,1.4);%
+          \draw[dashed](0.75,1)--(0,1);%
+          \draw(0,0)node[below right]{O};%
+          \draw(0.75,0)node[below]{$x$};%
+          \draw(0,1)node[left]{$y$};%
+          \draw(0.8,1)node[right]{P$\Ttyuukakko{x,y}$};%
+          \draw(0,0)circle[radius=1.25];%
+          \draw(0,-1.25)node[below left]{$-r$};%
+          \draw(-1.25,0)node[below left]{$-r$};%
+          \draw(0,1.25)node[above left]{$r$};%
+          \draw(1.25,0)node[below right]{$r$};%
+          \draw[->,>=stealth,semithick](-1.5,0)--(1.5,0)node[right]{$x$};%
+          \draw[->,>=stealth,semithick](0,-1.5)--(0,1.5)node[above]{$y$};%
+          \draw[dashed](0,0)coordinate(O)-- (0.75,0)coordinate(Q)-- (0.75,1)coordinate(P);% 
+          \draw pic["$\theta$",draw=black,->,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=Q--O--P};%
+        \end{tikzpicture}%
+        \空行% 
+        図において，$\sin\theta=\bunsuu{y}{r}\数式カンマスペース\quad\cos\theta=\bunsuu{x}{r}$より%
+\[\sin^2\theta+\cos^2\theta=\bunsuu{y^2+x^2}{r^2}\]%
+
+        ここで，三平方の定理より$x^2+y^2=r^2$なので%
+
+        $\sin^2\theta+\cos^2\theta=\bunsuu{r^2}{r^2}=1$%
+        \空行%
+        $\sin\theta=\bunsuu{y}{r}\数式カンマスペース\quad\cos\theta=\bunsuu{x}{r}\quad\tan\theta=\bunsuu{y}{x}$より%
+ 
+        $\bunsuu{\sin\theta}{\cos\theta}=\bunsuu{y}{x}=\tan\theta$%
+        \空行%
+        $\sin^2\theta+\cos^2\theta=1$の両辺を$\cos^2\theta$で割ることで，%
+        \[\bunsuu{\sin^2\theta}{\cos^2\theta}+1=\bunsuu{1}{\cos^2\theta}\]%
+
+        ここで，$\bunsuu{\sin\theta}{\cos\theta}=\tan\theta$なので%
+
+        $\tan^2\theta+1=\bunsuu{1}{\cos^2\theta}$%
+        \証明終了%
+      }%
+      {\relax}% 
+  }%
+
+
+\NewDocumentCommand{\三角関数の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {$\sin\Ttyuukakko{-\theta}=-\sin\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {\[\sin\Ttyuukakko{-\theta}=-\sin\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {$\cos\Ttyuukakko{-\theta}=\cos\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {\[\cos\Ttyuukakko{-\theta}=\cos\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {$\tan\Ttyuukakko{-\theta}=-\tan\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {\[\tan\Ttyuukakko{-\theta}=-\tan\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{i}}%
+      {$\sin\Ttyuukakko{\theta+\pi}=-\sin\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{b}}%
+      {\[\sin\Ttyuukakko{\theta+\pi}=-\sin\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質E}\AND\equal{#2}{i}}%
+      {$\cos\Ttyuukakko{\theta+\pi}=-\cos\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質E}\AND\equal{#2}{b}}%
+      {\[\cos\Ttyuukakko{\theta+\pi}=-\cos\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質F}\AND\equal{#2}{i}}%
+      {$\tan\Ttyuukakko{\theta+\pi}=\tan\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質F}\AND\equal{#2}{b}}%
+      {\[\tan\Ttyuukakko{\theta+\pi}=\tan\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質G}\AND\equal{#2}{i}}%
+      {$\sin\Ttyuukakko{\pi-\theta}=\sin\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質G}\AND\equal{#2}{b}}%
+      {\[\sin\Ttyuukakko{\pi-\theta}=\sin\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質H}\AND\equal{#2}{i}}%
+      {$\cos\Ttyuukakko{\pi-\theta}=-\cos\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質H}\AND\equal{#2}{b}}%
+      {\[\cos\Ttyuukakko{\pi-\theta}=-\cos\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質I}\AND\equal{#2}{i}}%
+      {$\tan\Ttyuukakko{\pi-\theta}=-\tan\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質I}\AND\equal{#2}{b}}%
+      {\[\tan\Ttyuukakko{\pi-\theta}=-\tan\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質J}\AND\equal{#2}{i}}%
+      {$\sin\Ttyuukakko{\bunsuu{\pi}{2}-\theta}=\cos\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質J}\AND\equal{#2}{b}}%
+      {\[\sin\Ttyuukakko{\bunsuu{\pi}{2}-\theta}=\cos\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質K}\AND\equal{#2}{i}}%
+      {$\cos\Ttyuukakko{\bunsuu{\pi}{2}-\theta}=\sin\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質K}\AND\equal{#2}{b}}%
+      {\[\cos\Ttyuukakko{\bunsuu{\pi}{2}-\theta}=\sin\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質L}\AND\equal{#2}{i}}%
+      {$\tan\Ttyuukakko{\bunsuu{\pi}{2}-\theta}=\bunsuu{1}{\tan\theta}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質L}\AND\equal{#2}{b}}%
+      {\[\tan\Ttyuukakko{\bunsuu{\pi}{2}-\theta}=\bunsuu{1}{\tan\theta}\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質M}\AND\equal{#2}{i}}%
+      {$\sin\Ttyuukakko{\theta+\bunsuu{\pi}{2}}=\cos\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質M}\AND\equal{#2}{b}}%
+      {\[\sin\Ttyuukakko{\theta+\bunsuu{\pi}{2}}=\cos\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質N}\AND\equal{#2}{i}}%
+      {$\cos\Ttyuukakko{\theta+\bunsuu{\pi}{2}}=-\sin\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{性質N}\AND\equal{#2}{b}}%
+      {\[\cos\Ttyuukakko{\theta+\bunsuu{\pi}{2}}=-\sin\theta\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質O}\AND\equal{#2}{i}}%
+      {$\tan\Ttyuukakko{\theta+\bunsuu{\pi}{2}}=-\bunsuu{1}{\tan\theta}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質O}\AND\equal{#2}{b}}%
+      {\[\tan\Ttyuukakko{\theta+\bunsuu{\pi}{2}}=-\bunsuu{1}{\tan\theta}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の加法定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin\Ttyuukakko{\alpha\pm\beta}=\sin\alpha \cos\beta\pm \cos\alpha \sin\beta\text{\ （複号同順）}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin\Ttyuukakko{\alpha\pm\beta}=\sin\alpha \cos\beta\pm \cos\alpha \sin\beta\text{\ （複号同順）}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\cos\Ttyuukakko{\alpha\pm\beta}=\cos\alpha \cos\beta\mp \sin\alpha \sin\beta\text{\ （複号同順）}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\cos\Ttyuukakko{\alpha\pm\beta}=\cos\alpha \cos\beta\mp \sin\alpha \sin\beta\]\text{\ （複号同順）}}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\tan\Ttyuukakko{\alpha\pm\beta}=\bunsuu{\tan\alpha \pm \tan\beta}{1\mp \tan\alpha \tan\beta}\text{\ （複号同順）}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\tan\Ttyuukakko{\alpha\pm\beta}=\bunsuu{\tan\alpha \pm \tan\beta}{1\mp \tan\alpha \tan\beta}\text{\ （複号同順）}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        \begin{tikzpicture}%
+          \draw(0,0)--(0.75,1);%
+          \draw(0,0)node[below right]{O};%
+          \draw(0.8,1)node[right]{P$\Ttyuukakko{\cos\alpha,\sin\alpha}$};%
+          \draw(0,0)circle[radius=1.25];%
+          \draw(0,-1.25)node[below left]{$-1$};%
+          \draw(-1.25,0)node[below left]{$-1$};%
+          \draw(0,1.25)node[above left]{$1$};%
+          \draw(1.25,0)node[below right]{$1$};%
+          \draw[->,>=stealth,semithick](-1.5,0)--(1.5,0)node[right]{$x$};%
+          \draw[->,>=stealth,semithick](0,-1.5)--(0,1.5)node[above]{$y$};%
+          \draw(-1,0.75)node[left]{Q$\Ttyuukakko{\cos\beta,\sin\beta}$};%
+          \draw(-1,0.75)coordinate(Q);%
+          \draw(-1,0.75)--(0.75,1);%
+          \draw(-1,0.75)--(0,0);%
+          \draw(0,0)coordinate(O)-- (0.75,0)coordinate(R)-- (0.75,1)coordinate(P);%
+          \draw pic["$\alpha$",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.5cm] {angle=R--O--P};%
+          \draw pic["$\beta$",draw=black,-,thin,angle eccentricity=1.4,angle radius=0.4cm] {angle=R--O--Q};%
+        \end{tikzpicture}%
+        \空行%
+        図において，三角関数の性質より$\cos\Ttyuukakko{\beta-\alpha}=\cos\Ttyuukakko{\alpha-\beta}$なので，$\triangle{\text{QOP}}$について余弦定理より%
+\[\text{QP}^2=1^2+1^2-2\cdot1\cdot1\cdot\cos\Ttyuukakko{\alpha-\beta}\]%
+
+        また，QP間の距離について三平方の定理を用いて%
+\[\text{QP}^2=\Ttyuukakko{\cos\beta-\cos\alpha}^2+\Ttyuukakko{\sin\alpha-\sin\beta}^2\]%
+\[\Leftrightarrow 2-2\cos\Ttyuukakko{\alpha-\beta}=\Ttyuukakko{\cos\beta-\cos\alpha}^2+\Ttyuukakko{\sin\alpha-\sin\beta}^2\]%
+
+        両辺整理して，%
+\[\cos\Ttyuukakko{\alpha-\beta}=\cos\alpha\cos\beta+\sin\alpha\sin\beta\]%
+
+        を得る。%
+
+        また，$\sin-\theta=-\sin\theta$より，%
+\[\cos\Ttyuukakko{\alpha+\beta}=\cos\alpha\cos\beta-\sin\alpha\sin\beta\]%
+
+        \空行%
+\[\cos\Ttyuukakko{\alpha-\beta}=\cos\alpha\cos\beta+\sin\alpha\sin\beta\]%
+
+        において，$\alpha$を$\bunsuu{\pi}{2}-\alpha$にすることで，%
+\[\sin\Ttyuukakko{\alpha+\beta}=\sin\alpha \cos\beta+ \cos\alpha \sin\beta\]%
+
+        ここで，$\beta$を$-\beta$にすることで，%
+\[\sin\Ttyuukakko{\alpha-\beta}=\sin\alpha \cos\beta-\cos\alpha \sin\beta\]%
+
+        \空行%
+        $\tan\theta=\bunsuu{\sin\theta}{\cos\theta}$より，%
+\[\tan\Ttyuukakko{\alpha\pm\beta}=\bunsuu{\sin\alpha \cos\beta\pm \cos\alpha \sin\beta}{\cos\alpha \cos\beta\mp \sin\alpha \sin\beta}\text{\ （複号同順）}\]%
+
+        両辺を$\cos\alpha\cos\beta$でわることで，%
+\[\tan\Ttyuukakko{\alpha\pm\beta}=\bunsuu{\tan\alpha \pm \tan\beta}{1\mp \tan\alpha \tan\beta}\text{\ （複号同順）}\]%
+
+        を得る。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の二倍角の公式}{ m O{i} }%%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin2\alpha=2\sin\alpha\cos\beta$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin2\alpha=2\sin\alpha\cos\beta\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\cos2\alpha=\cos^{2}\alpha-\sin^{2}\alpha$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\cos2\alpha=\cos^{2}\alpha-\sin^{2}\alpha\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\cos2\alpha=2\cos^{2}\alpha-1$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\cos2\alpha=2\cos^{2}\alpha-1\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\cos2\alpha=1-2\sin^{2}\alpha$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\cos2\alpha=1-2\sin^{2}\alpha\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$\tan2\alpha=\bunsuu{2\tan\alpha}{1-\tan^{2}\alpha}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {\[\tan2\alpha=\bunsuu{2\tan\alpha}{1-\tan^{2}\alpha}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        三角関数の加法定理%
+        \phrasesmath[c]%
+          {%
+            $\sin\Ttyuukakko{\alpha+\beta}=\sin\alpha \cos\beta+\cos\alpha \sin\beta$\\%
+            $\cos\Ttyuukakko{\alpha+\beta}=\cos\alpha \cos\beta-\sin\alpha \sin\beta$\\%
+            $\tan\Ttyuukakko{\alpha+\beta}=\bunsuu{\tan\alpha+\tan\beta}{1-\tan\alpha \tan\beta}$%
+          }%
+        において，$\alpha=\beta=\theta$として，%
+
+        \hspace{3\zw}\phrasesmath[c]%
+          {%
+            $\sin2\theta=2\sin\theta\cos\theta$\\%
+            $\cos2\theta=\cos^{2}\theta-\sin^{2}\theta$\\%
+            $\tan2\theta=\bunsuu{2\tan\theta}{1-\tan^{2}\theta}$%
+          }%
+        を得る。%
+
+        また，$\cos2\theta=\cos^{2}\theta-\sin^{2}\theta$において，三角関数の相互関係$\sin^2\theta+\cos^2\theta=1$を用いて，%
+\[\cos2\theta=2\cos^{2}\theta-1\]%
+\[\Leftrightarrow\cos2\theta=1-2\sin^{2}\theta\]%
+
+        を得る。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の三倍角の公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin3\alpha=-4\sin^{3}\alpha+3\sin\alpha$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin3\alpha=-4\sin^{3}\alpha+3\sin\alpha\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\cos3\alpha=4\cos^{3}\alpha-3\cos\alpha$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\cos3\alpha=4\cos^{3}\alpha-3\cos\alpha\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        三角関数の加法定理%
+\[\sin\Ttyuukakko{\alpha+\beta}=\sin\alpha \cos\beta+ \cos\alpha \sin\beta\]%
+        \[\cos\Ttyuukakko{\alpha+\beta}=\cos\alpha \cos\beta- \sin\alpha \sin\beta\]%
+
+        において，$\alpha=\theta\数式カンマスペース\beta=2\theta$のとき，%
+\[\sin3\theta=\sin\theta \cos2\theta+ \cos\theta \sin2\theta\]%
+        \[\cos3\theta=\cos\theta\cos2\theta-\sin\theta\sin2\theta\]%
+
+        二倍角の公式と三角関数の相互関係より，%
+        \begin{align*}%
+        \sin3\theta&=\sin\theta\Ttyuukakko{1-2\sin^{2}\theta}+2\sin\theta\cos^2\theta&\\%
+        &=\sin\theta-2\sin^{3}\theta+2\sin\theta\Ttyuukakko{1-\sin^2\theta}&\\%
+        &=-4\sin^{3}\theta+3\sin\theta&\\%
+        \cos3\theta&=\cos\theta\Ttyuukakko{2\cos^2\theta-1}-2\sin^2\theta\cos\theta&\\%
+        &=2\cos^{3}\theta-\cos\theta-2\Ttyuukakko{1-\cos^2\theta}\cos\theta &\\
+        &=4\cos^{3}\theta-3\cos\theta%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の積和公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin\alpha\cos\beta=\bunsuu{\sin\Ttyuukakko{\alpha+\beta}+\sin\Ttyuukakko{\alpha-\beta}}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin\alpha\cos\beta=\bunsuu{\sin\Ttyuukakko{\alpha+\beta}+\sin\Ttyuukakko{\alpha-\beta}}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\cos\alpha\cos\beta=\bunsuu{\cos\Ttyuukakko{\alpha+\beta}+\cos\Ttyuukakko{\alpha-\beta}}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\cos\alpha\cos\beta=\bunsuu{\cos\Ttyuukakko{\alpha+\beta}+\cos\Ttyuukakko{\alpha-\beta}}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\sin\alpha\sin\beta=\bunsuu{\cos\Ttyuukakko{\alpha+\beta}-\cos\Ttyuukakko{\alpha-\beta}}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\sin\alpha\sin\beta=\bunsuu{\cos\Ttyuukakko{\alpha+\beta}-\cos\Ttyuukakko{\alpha-\beta}}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        三角関数の加法定理%
+        \begin{align*}
+          \sin\Ttyuukakko{\alpha+\beta}=\sin\alpha\cos\beta+\cos\alpha\sin\beta\shikimaru{1}\\%
+          \sin\Ttyuukakko{\alpha-\beta}=\sin\alpha\cos\beta-\cos\alpha\sin\beta\shikimaru{2}\\%
+          \cos\Ttyuukakko{\alpha+\beta}=\cos\alpha\cos\beta-\sin\alpha\sin\beta\shikimaru{3}\\%
+          \cos\Ttyuukakko{\alpha-\beta}=\cos\alpha\cos\beta+\sin\alpha\sin\beta\shikimaru{4}%
+        \end{align*}
+        より，$\text{\ajMaru{1}}+\text{\ajMaru{2}}$から%
+\[\sin\alpha\cos\beta=\bunsuu{1}{2}\Tdaikakko{\sin\Ttyuukakko{\alpha+\beta}+\sin\Ttyuukakko{\alpha-\beta}}\]%
+
+        \半空行%
+        $\text{\ajMaru{3}}+\text{\ajMaru{4}}$から%
+\[\cos\alpha\cos\beta=\bunsuu{1}{2}\Tdaikakko{\cos\Ttyuukakko{\alpha+\beta}+\cos\Ttyuukakko{\alpha-\beta}}\]%
+
+        \半空行%
+        $\text{\ajMaru{4}}-\text{\ajMaru{3}}$から%
+\[\sin\alpha\sin\beta=\bunsuu{1}{2}\Tdaikakko{\cos\Ttyuukakko{\alpha-\beta}-\cos\Ttyuukakko{\alpha+\beta}}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の和積公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\sin{A}+\sin{B}=2 \sin\bunsuu{A+B}{2}\cos\bunsuu{A-B}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\sin{A}+\sin{B}=2 \sin\bunsuu{A+B}{2}\cos\bunsuu{A-B}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\sin{A}-\sin{B}=2 \cos\bunsuu{A+B}{2}\sin\bunsuu{A-B}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\sin{A}-\sin{B}=2 \cos\bunsuu{A+B}{2}\sin\bunsuu{A-B}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\cos{A}+\cos{B}=2 \cos\bunsuu{A+B}{2}\cos\bunsuu{A-B}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\cos{A}+\cos{B}=2 \cos\bunsuu{A+B}{2}\cos\bunsuu{A-B}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\cos{A}-\cos{B}=-2 \sin\bunsuu{A+B}{2}\sin\bunsuu{A-B}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\cos{A}-\cos{B}=-2 \sin\bunsuu{A+B}{2}\sin\bunsuu{A-B}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        三角関数の積和の公式%
+\[\sin\alpha\cos\beta=\bunsuu{1}{2}\Tdaikakko{\sin\Ttyuukakko{\alpha+\beta}+\sin\Ttyuukakko{\alpha-\beta}}\]%
+        \[\cos\alpha\cos\beta=\bunsuu{1}{2}\Tdaikakko{\cos\Ttyuukakko{\alpha+\beta}+\cos\Ttyuukakko{\alpha-\beta}}\]%
+        \[\sin\alpha\sin\beta=\bunsuu{1}{2}\Tdaikakko{\cos\Ttyuukakko{\alpha-\beta}-\cos\Ttyuukakko{\alpha+\beta}}\]%
+
+        において，$\alpha+\beta=A\数式カンマスペース\alpha-\beta=B$と置くことで，$\alpha=\bunsuu{A+B}{2}\数式カンマスペース\beta=\bunsuu{A-B}{2}$となるので，%
+\[\sin{A}+\sin{B}=2 \sin\bunsuu{A+B}{2}\cos\bunsuu{A-B}{2}\]%
+        \[\sin{A}-\sin{B}=2 \cos\bunsuu{A+B}{2}\sin\bunsuu{A-B}{2}\]%
+        \[\cos{A}+\cos{B}=2 \cos\bunsuu{A+B}{2}\cos\bunsuu{A-B}{2}\]%
+        \[\cos{A}-\cos{B}=-2 \sin\bunsuu{A+B}{2}\sin\bunsuu{A-B}{2}\]%
+        \証明終了%
+        となる。%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\三角関数の合成}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {%
+        $%
+          a\sin\theta+b\cos\theta=\根号{a^2+b^2}\sin\Ttyuukakko{\theta+\alpha}\ %
+            \Ttyuukakko%
+              {%
+                \text%
+                  {%
+                    ただし，%
+                    $%
+                      \sin\alpha=\bunsuu{b}{\根号{a^2+b^2}}\数式カンマスペース\cos\alpha=\bunsuu{a}{\根号{a^2+b^2}}%
+                    $%
+                  }%
+              }%
+        $%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+\[a\sin\theta+b\cos\theta=\根号{a^2+b^2}\sin\Ttyuukakko{\theta+\alpha}\text{\ $\Ttyuukakko{\text{ただし，$\sin\alpha=\bunsuu{b}{\根号{a^2+b^2}}\数式カンマスペース\cos\alpha=\bunsuu{a}{\根号{a^2+b^2}}$}}$}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        三角関数の加法定理%
+
+        $\sin\Ttyuukakko{\alpha+\beta}=\sin\alpha \cos\beta+ \cos\alpha \sin\beta$について，%
+\[\bunsuu{a}{\根号{a^2+b^2}}=\cos\alpha\数式カンマスペース\bunsuu{b}{\根号{a^2+b^2}}=\sin\alpha\]%
+
+        とすることで，%
+        \[a\sin\theta+b\cos\theta=\根号{a^2+b^2}\sin\Ttyuukakko{\theta+\alpha}\]%
+
+        となる。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+        
+
+\NewDocumentCommand{\有理数の指数}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$a>0$また$m\数式カンマスペース n$が正の整数，$r$が正の有理数のとき，$a^{\frac{m}{n}}=\sqrt[n]{a^{m}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $a>0$また$m\数式カンマスペース n$が正の整数，$r$が正の有理数のとき，%  \[a^{\frac{m}{n}}=\sqrt[n]{a^{m}}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$a>0$また$n$が正の整数のとき，$a^{\frac{1}{n}}=\根号[n]{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $a>0$また$n$が正の整数のとき，%
+\[a^{\frac{1}{n}}=\根号[n]{a}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$a>0$，$r$が正の有理数のとき，$a^{-r}=\bunsuu{1}{a^{r}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        $a>0$，$r$が正の有理数のとき，%
+\[a^{-r}=\bunsuu{1}{a^{r}}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\指数法則}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$a>0$また，$r\数式カンマスペース s$は有理数のとき，$a^{r}a^{s}=a^{r+s}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $a>0$また，$r\数式カンマスペース s$は有理数のとき，%
+\[a^{r}a^{s}=a^{r+s}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$a>0$また，$r\数式カンマスペース s$は有理数のとき，$\Ttyuukakko{a^{r}}^{s}=a^{rs}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $a>0$また，$r\数式カンマスペース s$は有理数のとき，%
+\[\Ttyuukakko{a^{r}}^{s}=a^{rs}\]%
+ 
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース b>0$また，$r$は有理数のとき，$\Ttyuukakko{ab}^{r}=a^{r}b^{r}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース b>0$また，$r$は有理数のとき，%
+\[\Ttyuukakko{ab}^{r}=a^{r}b^{r}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$a>0$また，$r\数式カンマスペース s$は有理数のとき，$\bunsuu{a^{r}}{a^{s}}=a^{r-s}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {%
+        $a>0$また，$r\数式カンマスペース s$は有理数のとき，%
+\[\bunsuu{a^{r}}{a^{s}}=a^{r-s}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース b>0$また，$r$は有理数のとき，$\Ttyuukakko{\bunsuu{a}{b}}^{r}=\bunsuu{a^{r}}{b^{r}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース b>0$また，$r$は有理数のとき，%
+\[\Ttyuukakko{\bunsuu{a}{b}}^{r}=\bunsuu{a^{r}}{b^{r}}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\対数の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {%
+        $a>0\数式カンマスペース b>0$で，$r\数式カンマスペース s$は有理数とすると，%
+        \phrasesmath{$a^{p}=M$ならば，$\log_{a}M$\\$\log_{a}M \log_{a}M$ならば，$a^{p}=M$}%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース b>0$で，$r\数式カンマスペース s$は有理数とすると，%
+\[a^{p}=M\Rightarrow\log_{a}M\数式カンマスペース\log_{a}M\Rightarrow a^{p}=M\]%
+
+      }%
+      {\relax}% 
+  }%
+
+
+\NewDocumentCommand{\対数の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース a\neq1$とするとき，$\log_{a}a=1$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース a\neq1$とするとき，%
+\[\log_{a}a=1\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース a\neq1$とするとき，$\log_{a}1=0$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース a\neq1$とするとき，%
+\[\log_{a}1=0\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース a\neq1$とするとき，$\log_{a}\bunsuu{1}{a}=-1$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース a\neq1$とするとき，%
+\[\log_{a}\bunsuu{1}{a}=-1\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース a\neq1\数式カンマスペース M>0\数式カンマスペース N>0$とするとき，$\log_{a}MN=\log_{a}M+\log_{a}N$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース a\neq1\数式カンマスペース M>0\数式カンマスペース N>0$とするとき，%
+\[\log_{a}MN=\log_{a}M+\log_{a}N\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース a\neq1\数式カンマスペース M>0\数式カンマスペース N>0$とするとき，$\log_{a}\bunsuu{M}{N}=\log_{a}M-\log_{a}N$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース a\neq1\数式カンマスペース M>0\数式カンマスペース N>0$とするとき，%
+\[\log_{a}\bunsuu{M}{N}=\log_{a}M-\log_{a}N\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式F}\AND\equal{#2}{i}}%
+      {$a>0\数式カンマスペース a\neq1\数式カンマスペース M>0\数式カンマスペース N>0$とするとき，$\log_{a}M^{k}=k\log_{a}M$}{\relax}%
+    \ifthenelse{\equal{#1}{公式F}\AND\equal{#2}{b}}%
+      {%
+        $a>0\数式カンマスペース a\neq1\数式カンマスペース M>0\数式カンマスペース N>0$とするとき，%
+\[\log_{a}M^{k}=k\log_{a}M\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        $p=\log_{a}M\数式カンマスペース q=\log_{a}N$として，$MN=a^{p}a^{q}$から，指数法則より%
+\[MN=a^{p+q}\]%
+
+        また，対数の定義より%
+\[\log_{a}MN=p+q\]%
+\[\Leftrightarrow\log_{a}MN=\log_{a}M+\log_{a}N\]%
+
+        \空行%
+        $p=\log_{a}M\数式カンマスペース q=\log_{a}N$として，%
+\[\bunsuu{M}{N}=\bunsuu{a^{p}}{a^{q}}\]%
+
+        指数法則より%
+\[\bunsuu{M}{N}=a^{p-q}\]%
+
+        ここで，対数の定義より%
+\[\log_{a}\bunsuu{M}{N}=p-q\]%
+\[\Leftrightarrow\log_{a}\bunsuu{M}{N}=\log_{a}M-\log_{a}N\]%
+
+        \空行%
+        $p=\log_{a}M$として，$a^{p}=M$より両辺$k$乗して%
+\[a^{pk}=M^{k}\]%
+
+        対数を取ると%
+\[pk=\log_{a}M^{k}\]%
+
+        $p=\log_{a}M$より，%
+\[\log_{a}M^{k}=k\log_{a}M\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\底の変換公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$a\数式カンマスペース b\数式カンマスペース c$は正の実数で，$a\neq1\数式カンマスペース b\neq1\数式カンマスペース c\neq1$のとき，$\log_{a}b=\bunsuu{\log_{c}b}{\log_{c}a}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $a\数式カンマスペース b\数式カンマスペース c$は正の実数で，$a\neq1\数式カンマスペース b\neq1\数式カンマスペース c\neq1$のとき，%
+\[\log_{a}b=\bunsuu{\log_{c}b}{\log_{c}a}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        対数の定義より$a^{\log_{a}b}=b$が成立。%
+
+        底が$c$の対数を取ると，%
+\[\log_{c}a^{\log_{a}b}=\log_{c}b\]%
+
+        対数の性質より，%
+\[\log_{a}b\log_{c}a=\log_{c}b\]%
+
+        よって，%
+\[\log_{a}b=\bunsuu{\log_{c}b}{\log_{c}a}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%     
+
+
+\NewDocumentCommand{\導関数の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$f'\Ttyuukakko{x}=\displaystyle\lim_{h \to 0}\bunsuu{f\Ttyuukakko{x+h}-f\Ttyuukakko{x}}{h}$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {\[f'\Ttyuukakko{x}=\displaystyle\lim_{h \to 0}\bunsuu{f\Ttyuukakko{x+h}-f\Ttyuukakko{x}}{h}\]}{\relax}%
+  }% 
+
+
+\NewDocumentCommand{\べき乗関数と定数関数の導関数}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{x^{n}}'=nx^{n-1}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{x^{n}}'=nx^{n-1}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{c}'=0$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{c}'=0\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        導関数の定義より，%
+\[\Ttyuukakko{x^{n}}'=\displaystyle\lim_{h \to 0}\bunsuu{\Ttyuukakko{x+h}^{n}-x^{n}}{h}\]%
+
+        二項定理より，%
+
+        \begin{align*}%
+          \Ttyuukakko{x^{n}}'&=\displaystyle\lim_{h \to 0} \bunsuu{\Ttyuukakko{x+h}^{n}-x^{n}}{h}&\\%
+          &=\displaystyle\lim_{h \to 0}\bunsuu{{}_{n}\text{C}_{0} x^{n}+{}_{n}\text{C}_{1} x^{n-1}h+{}_{n}\text{C}_{2}x^{n-2}h^2+\cdots\cdot{}_{n}\text{C}_{n-1} xh^{n-1}+{}_{n}\text{C}_{n} h^{n}-x^{n}}{h}&\\%
+          &=\displaystyle\lim_{h \to 0}\Ttyuukakko{{}_{n}\text{C}_{1} x^{n-1}+{}_{n}\text{C}_{2}x^{n-2}h+\cdots+{}_{n}\text{C}_{n-1} xh^{n-2}+{}_{n}\text{C}_{n} h^{n-1}}&\\%
+          &=\displaystyle\lim_{h \to 0}\Tdaikakko{{}_{n}\text{C}_{1} x^{n-1}+\Ttyuukakko{{}_{n}\text{C}_{2}x^{n-2}+\cdots\cdot{}_{n}\text{C}_{n-1} xh^{n-3}+{}_{n}\text{C}_{n} h^{n-2}}h}&\\%
+          &={}_{n}\text{C}_{1} x^{n-1}&\\%  
+          &=nx^{n-1}%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\導関数の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {${kf\Ttyuukakko{x}}'=kf'\Ttyuukakko{x}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[{kf\Ttyuukakko{x}}'=kf'\Ttyuukakko{x}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {${f\Ttyuukakko{x}\pm g\Ttyuukakko{x}}'=f'\Ttyuukakko{x}\pm g'\Ttyuukakko{x}$}{\relax}%  
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[{f\Ttyuukakko{x}\pm g\Ttyuukakko{x}}'=f'\Ttyuukakko{x}\pm g'\Ttyuukakko{x}\]}{\relax}%  
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {${kf\Ttyuukakko{x}+lg\Ttyuukakko{x}}'=kf'\Ttyuukakko{x}+lg'\Ttyuukakko{x}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[{kf\Ttyuukakko{x}+lg\Ttyuukakko{x}}'=kf'\Ttyuukakko{x}+lg'\Ttyuukakko{x}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\接線の方程式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {曲線$y=f\Ttyuukakko{x}$上の点$\Ttyuukakko{a\数式カンマスペース f\Ttyuukakko{a}}$における曲線の接線の方程式は，$y-f\Ttyuukakko{a}=f'\Ttyuukakko{x}\Ttyuukakko{x-a}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        曲線$y=f\Ttyuukakko{x}$上の点$\Ttyuukakko{a\数式カンマスペース f\Ttyuukakko{a}}$における曲線の接線の方程式は，%
+\[y-f\Ttyuukakko{a}=f'\Ttyuukakko{x}\Ttyuukakko{x-a}\]%
+
+      }%
+      {\relax}% 
+  }%
+
+
+\NewDocumentCommand{\不定積分の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$F'\Ttyuukakko{x}=f\Ttyuukakko{x}$のとき，$\displaystyle\int_{}^{}f\Ttyuukakko{x}dx=F\Ttyuukakko{x}+C\text{（$C$は積分定数）}$}{\relax}% 
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        $F'\Ttyuukakko{x}=f\Ttyuukakko{x}$のとき，%
+\[\int_{}^{}f\Ttyuukakko{x}dx=F\Ttyuukakko{x}+C\text{\ （\,$C$は積分定数）}\]%
+
+      }%
+      {\relax}%   
+  }%
+
+
+%\NewDocumentCommand{\べき乗関数の不定積分}{ m O{i} }%
+  %{%
+    %\ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      %{$\displaystyle\int_{}^{}x^{n}dx=\bunsuu{1}{n+1}x^{n+1}+C\text{\ （\,$C$は積分定数）}$}{\relax}% 
+    %\ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      %{%
+        %\[\int_{}^{}x^{n}dx=\bunsuu{1}{n+1}x^{n+1}+C\text{\ （\,$C$は積分定数）}\]%
+
+      %}%
+      %{\relax}%
+  %}%
+
+
+\NewDocumentCommand{\不定積分の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{}^{}kf\Ttyuukakko{x}dx=k\displaystyle\int_{}^{}f\Ttyuukakko{x}dx$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\int_{}^{}kf\Ttyuukakko{x}dx=k\int_{}^{}f\Ttyuukakko{x}dx\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{}^{}{f\Ttyuukakko{x}\pm g\Ttyuukakko{x}}dx=\displaystyle\int_{}^{}f\Ttyuukakko{x}dx\pm\displaystyle\int_{}^{}g\Ttyuukakko{x}dx\text{\ （複号同順）}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\int_{}^{}{f\Ttyuukakko{x}\pm g\Ttyuukakko{x}}dx=\int_{}^{}f\Ttyuukakko{x}dx\pm\int_{}^{}g\Ttyuukakko{x}dx\text{\ （複号同順）}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{}^{}{kf\Ttyuukakko{x}+lg\Ttyuukakko{x}}dx=k\displaystyle\int_{}^{}f\Ttyuukakko{x}dx+l\displaystyle\int_{}^{}g\Ttyuukakko{x}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\int_{}^{}{kf\Ttyuukakko{x}+lg\Ttyuukakko{x}}dx=k\int_{}^{}f\Ttyuukakko{x}dx+l\int_{}^{}g\Ttyuukakko{x}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\定積分の定義}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {曲線$y=f\Ttyuukakko{x}$と$x$軸（区間は$a$から$b$）に囲まれた部分の面積$S$について，$F'\Ttyuukakko{x}=f\Ttyuukakko{x}$のとき，$S=\int_{b}^{a} f\Ttyuukakko{x}dx=[F\Ttyuukakko{x}]^{b}_{a}=F\Ttyuukakko{b}-F\Ttyuukakko{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        曲線$y=f\Ttyuukakko{x}$と$x$軸（区間は$a$から$b$）に囲まれた部分の面積$S$について，$F'\Ttyuukakko{x}=f\Ttyuukakko{x}$のとき，%
+\[S=\int_{b}^{a} f\Ttyuukakko{x}dx=[F\Ttyuukakko{x}]^{b}_{a}=F\Ttyuukakko{b}-F\Ttyuukakko{a}\]%
+
+      }%
+      {\relax}%   
+  }%    
+
+
+\NewDocumentCommand{\定積分の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{b}^{a} kf\Ttyuukakko{x}dx=k\int_{b}^{a} f\Ttyuukakko{x}dx$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\int_{b}^{a} kf\Ttyuukakko{x}dx=k\int_{b}^{a} f\Ttyuukakko{x}dx\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{b}^{a}{f\Ttyuukakko{x}\pm g\Ttyuukakko{x}}dx=\int_{b}^{a} f\Ttyuukakko{x}dx\pm\int_{b}^{a} g\Ttyuukakko{x}dx$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\int_{b}^{a}{f\Ttyuukakko{x}\pm g\Ttyuukakko{x}}dx=\int_{b}^{a} f\Ttyuukakko{x}dx\pm\int_{b}^{a} g\Ttyuukakko{x}dx\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{a}^{a} f\Ttyuukakko{x}dx=0$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\int_{a}^{a} f\Ttyuukakko{x}dx=0\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{b}^{a} f\Ttyuukakko{x}dx=-\int_{a}^{b} f\Ttyuukakko{x}dx$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\int_{b}^{a} f\Ttyuukakko{x}dx=-\int_{a}^{b} f\Ttyuukakko{x}dx\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{b}^{a} f\Ttyuukakko{x}dx=\int_{a}^{c} f\Ttyuukakko{x}dx+\int_{c}^{b} f\Ttyuukakko{x}dx$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {\[\int_{b}^{a} f\Ttyuukakko{x}dx=\int_{a}^{c} f\Ttyuukakko{x}dx+\int_{c}^{b} f\Ttyuukakko{x}dx\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\ベクトルの演算}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$k\数式カンマスペース l$が実数のとき，$\ベクトル{a}+\ベクトル{b}=\ベクトル{b}+\ベクトル{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $k\数式カンマスペース l$が実数のとき%
+\[\ベクトル{a}+\ベクトル{b}=\ベクトル{b}+\ベクトル{a}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$k\数式カンマスペース l$が実数のとき，$\Ttyuukakko{\ベクトル{a}+\ベクトル{b}}+\ベクトル{c}=\ベクトル{a}+\Ttyuukakko{\ベクトル{b}+\ベクトル{c}}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $k\数式カンマスペース l$が実数のとき%
+\[\Ttyuukakko{\ベクトル{a}+\ベクトル{b}}+\ベクトル{c}=\ベクトル{a}+\Ttyuukakko{\ベクトル{b}+\ベクトル{c}}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}+\Ttyuukakko{a\ベクトル{a}}=\ベクトル{0}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\ベクトル{a}+\Ttyuukakko{a\ベクトル{a}}=\ベクトル{0}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}+\ベクトル{0}=\ベクトル{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\ベクトル{a}+\ベクトル{0}=\ベクトル{a}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}-\ベクトル{b}=\ベクトル{a}+\Ttyuukakko{-\ベクトル{b}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {\[\ベクトル{a}-\ベクトル{b}=\ベクトル{a}+\Ttyuukakko{-\ベクトル{b}}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式F}\AND\equal{#2}{i}}%
+      {$k\数式カンマスペース l$が実数のとき，$k\Ttyuukakko{l\ベクトル{a}}=l\Ttyuukakko{k\ベクトル{b}}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式F}\AND\equal{#2}{b}}%
+      {%
+        $k\数式カンマスペース l$が実数のとき%
+\[k\Ttyuukakko{l\ベクトル{a}}=l\Ttyuukakko{k\ベクトル{b}}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式G}\AND\equal{#2}{i}}%
+      {$k\数式カンマスペース l$が実数のとき，$\Ttyuukakko{k+l}\ベクトル{a}=k\ベクトル{a}+l\ベクトル{a}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式G}\AND\equal{#2}{b}}%
+      {%
+        $k\数式カンマスペース l$が実数のとき%
+\[\Ttyuukakko{k+l}\ベクトル{a}=k\ベクトル{a}+l\ベクトル{a}\]%
+
+      }%
+      {\relax}%   
+    \ifthenelse{\equal{#1}{公式H}\AND\equal{#2}{i}}%
+      {$k$が実数のとき，$k\Ttyuukakko{\ベクトル{a}+\ベクトル{b}}=k\ベクトル{a}+k\ベクトル{b}$}{\relax}%   
+    \ifthenelse{\equal{#1}{公式H}\AND\equal{#2}{b}}%
+      {%
+        $k$が実数のとき%
+\[k\Ttyuukakko{\ベクトル{a}+\ベクトル{b}}=k\ベクトル{a}+k\ベクトル{b}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{公式I}\AND\equal{#2}{i}}%
+      {$\vvtext{AB}+\vvtext{BC}=\vvtext{AC}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式I}\AND\equal{#2}{b}}%
+      {\[\vvtext{AB}+\vvtext{BC}=\vvtext{AC}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式J}\AND\equal{#2}{i}}%
+      {$\vvtext{OA}-\vvtext{OB}=\vvtext{BA}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式J}\AND\equal{#2}{b}}%
+      {\[\vvtext{OA}-\vvtext{OB}=\vvtext{BA}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式K}\AND\equal{#2}{i}}%
+      {$\vvtext{AA}=\ベクトル{0}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式K}\AND\equal{#2}{b}}%
+      {\[\vvtext{AA}=\ベクトル{0}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式L}\AND\equal{#2}{i}}%
+      {$\vvtext{BA}=\vvtext{AB}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式L}\AND\equal{#2}{b}}%
+      {\[\vvtext{BA}=\vvtext{AB}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\平面ベクトルの分解}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}\neq0\数式カンマスペース\ベクトル{b}\neq0$で，$\ベクトル{a}$と$\ベクトル{b}$が平行でないとき，任意の$\ベクトル{p}$はただ一通りに，$\ベクトル{p}=s\ベクトル{a}+t\ベクトル{b}$の形に表せられる。}{\relax}%  
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $\ベクトル{a}\neq0\数式カンマスペース\ベクトル{b}\neq0$で，$\ベクトル{a}$と$\ベクトル{b}$が平行でないとき，任意の$\ベクトル{p}$はただ一通りに，%
+\[\ベクトル{p}=s\ベクトル{a}+t\ベクトル{b}\]%
+
+        の形に表せられる。%
+      }%
+      {\relax}%    
+  }%
+
+
+\NewDocumentCommand{\平面ベクトルの成分}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース\ベクトル{b}=\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，$\ベクトル{a}=\ベクトル{b}\Leftrightarrow a_{1}=b_{1}\数式カンマスペース a_{2}=b_{2}$}{\relax}%  
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース\ベクトル{b}=\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，%
+\[\ベクトル{a}=\ベクトル{b}\Leftrightarrow a_{1}=b_{1}\数式カンマスペース a_{2}=b_{2}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース\ベクトル{b}=\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，$a_{1}=b_{1}\数式カンマスペース a_{2}=b_{2}\Leftrightarrow\ベクトル{a}=\ベクトル{b}$}{\relax}%  
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース\ベクトル{b}=\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，%
+\[a_{1}=b_{1}\数式カンマスペース a_{2}=b_{2}\Leftrightarrow\ベクトル{a}=\ベクトル{b}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}$とすると，$\Tzettaiti{\ベクトル{a}}=\根号{a_{1}^2+a_{2}^2}$}{\relax}%  
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        $\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}$とすると，%
+\[\Tzettaiti{\ベクトル{a}}=\根号{a_{1}^2+a_{2}^2}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {%
+        $k\数式カンマスペース l$を実数，$\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース\ベクトル{b}=\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$として，%
+
+        \hfill{$k\ベクトル{a}+l\ベクトル{b}=k\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}+l\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}=\Ttyuukakko{ka_{1}+lb_{1}\数式カンマスペース ka_{2}+lb_{2}}$}%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {%
+        $k\数式カンマスペース l$を実数，$\ベクトル{a}=\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース\ベクトル{b}=\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$として，%
+\[k\ベクトル{a}+l\ベクトル{b}=k\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}+l\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}=\Ttyuukakko{ka_{1}+lb_{1}\数式カンマスペース ka_{2}+lb_{2}}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\ベクトルの成分と大きさ}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース B\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，$\vvtext{AB}=\Ttyuukakko{b_{1}-a_{1}\数式カンマスペース b_{2}-a_{2}}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース B\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，%
+\[\vvtext{AB}=\Ttyuukakko{b_{1}-a_{1}\数式カンマスペース b_{2}-a_{2}}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース B\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，$\Tzettaiti{\vvtext{AB}}=\根号{\Ttyuukakko{b_{1}-a_{1}}^2+\Ttyuukakko{b_{2}-a_{2}}^2}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{a_{1}\数式カンマスペース a_{2}}\数式カンマスペース B\Ttyuukakko{b_{1}\数式カンマスペース b_{2}}$とすると，%
+\[\Tzettaiti{\vvtext{AB}}=\根号{\Ttyuukakko{b_{1}-a_{1}}^2+\Ttyuukakko{b_{2}-a_{2}}^2}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        三平方の定理より，%
+\[\Tzettaiti{\vvtext{AB}}=\根号{\Ttyuukakko{b_{1}-a_{1}}^2+\Ttyuukakko{b_{2}-a_{2}}^2}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\平面ベクトルの内積}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {ベクトルの内積は，$\ベクトル{a} \cdot\ベクトル{b}=|\ベクトル{a}||\ベクトル{b}|\cos\theta \Ttyuukakko{0^{\circ} \leqq \theta \leqq 180^{\circ}}\text{\ （ただし，$\theta$は$\ベクトル{a}$と$\ベクトル{b}$のなす角）}$}{\relax}%   
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        ベクトルの内積は，%
+\[\ベクトル{a} \cdot\ベクトル{b}=|\ベクトル{a}||\ベクトル{b}|\cos\theta \Ttyuukakko{0^{\circ} \leqq \theta \leqq 180^{\circ}}\text{\ （ただし，$\theta$は$\ベクトル{a}$と$\ベクトル{b}$のなす角）}\]%
+
+      }%
+      {\relax}%  
+   }%     
+
+
+\NewDocumentCommand{\内積の性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$\ベクトル{a} \cdot\ベクトル{b}=\ベクトル{b} \cdot\ベクトル{a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {\[\ベクトル{a} \cdot\ベクトル{b}=\ベクトル{b} \cdot\ベクトル{a}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\ベクトル{a}+\ベクトル{b}} \cdot\ベクトル{c}=\ベクトル{a} \cdot\ベクトル{c}+\ベクトル{b} \cdot\ベクトル{c}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\ベクトル{a}+\ベクトル{b}} \cdot\ベクトル{c}=\ベクトル{a} \cdot\ベクトル{c}+\ベクトル{b} \cdot\ベクトル{c}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\ベクトル{c} \cdot\Ttyuukakko{\ベクトル{b}+\ベクトル{c}}=\ベクトル{a} \cdot\ベクトル{c}+\ベクトル{b} \cdot\ベクトル{c}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\ベクトル{c} \cdot\Ttyuukakko{\ベクトル{b}+\ベクトル{c}}=\ベクトル{a} \cdot\ベクトル{c}+\ベクトル{b} \cdot\ベクトル{c}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$k$が実数のとき，$\Ttyuukakko{k\ベクトル{a}} \cdot\ベクトル{b}=\ベクトル{a} \cdot\Ttyuukakko{k\ベクトル{b}}=k\Ttyuukakko{\ベクトル{a} \cdot\ベクトル{b}}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {%
+        $k$が実数のとき，%
+\[\Ttyuukakko{k\ベクトル{a}} \cdot\ベクトル{b}=\ベクトル{a} \cdot\Ttyuukakko{k\ベクトル{b}}=k\Ttyuukakko{\ベクトル{a} \cdot\ベクトル{b}}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$\ベクトル{a} \cdot\ベクトル{a}=\Tzettaiti{\ベクトル{a}}^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {\[\ベクトル{a} \cdot\ベクトル{a}=\Tzettaiti{\ベクトル{a}}^2\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式F}\AND\equal{#2}{i}}%
+      {$\Tzettaiti{\ベクトル{a}}=\根号{\ベクトル{a} \cdot\ベクトル{a}}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式F}\AND\equal{#2}{b}}%
+      {\[\Tzettaiti{\ベクトル{a}}=\根号{\ベクトル{a} \cdot\ベクトル{a}}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\平面ベクトルの平行条件}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{条件}\AND\equal{#2}{i}}%
+      {%
+        $\ベクトル{a}\neq\ベクトル{0}\数式カンマスペース\ベクトル{b}\neq\ベクトル{0}\数式カンマスペース k\実数入り$として，%
+        $\ベクトル{a}\平行\ベクトル{b}\Leftrightarrow\ベクトル{b}=k\ベクトル{a}$%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{条件}\AND\equal{#2}{b}}%
+      {%
+        $\ベクトル{a}\neq\ベクトル{0}\数式カンマスペース\ベクトル{b}\neq\ベクトル{0}\数式カンマスペース k\実数入り$として，%
+\[\ベクトル{a}\平行\ベクトル{b}\Leftrightarrow\ベクトル{b}=k\ベクトル{a}\]%
+
+      }%
+      {\relax}% 
+  }%
+
+
+\NewDocumentCommand{\平面ベクトルの垂直条件}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{条件}\AND\equal{#2}{i}}%
+      {%
+        $\ベクトル{a}\neq\ベクトル{0}\数式カンマスペース\ベクトル{b}\neq\ベクトル{0}\数式カンマスペース k\実数入り$とすると，%
+        $\ベクトル{a}\perp\ベクトル{b}\Leftrightarrow\ベクトル{a} \cdot\ベクトル{b}=0$%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{条件}\AND\equal{#2}{b}}%
+      {%
+        $\ベクトル{a}\neq\ベクトル{0}\数式カンマスペース\ベクトル{b}\neq\ベクトル{0}\数式カンマスペース k\実数入り$とすると，%
+\[\ベクトル{a}\perp\ベクトル{b}\Leftrightarrow\ベクトル{a} \cdot\ベクトル{b}=0\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\位置ベクトル}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$とすると，線分$\text{AB}$を$m:n$に内分する点は，$\bunsuu{n\ベクトル{a}+m\ベクトル{b}}{m+n}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$とすると，線分$\text{AB}$を$m:n$に内分する点は，%
+\[\bunsuu{n\ベクトル{a}+m\ベクトル{b}}{m+n}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{内分点の位置ベクトルの証明}}%
+      {%
+        \証明開始%
+        $P\Ttyuukakko{\ベクトル{p}}$が$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$を$m:n$に内分するとき，%
+        \begin{align*}%  
+          \ベクトル{p}&=\ベクトル{a}+\bunsuu{m}{m+n}\Ttyuukakko{\ベクトル{b}-\ベクトル{a}}&\\%
+          &=\bunsuu{n\ベクトル{a}+m\ベクトル{b}}{m+n}&\\%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$とすると，線分$\text{AB}$を$m:n$に外分する点は，$\bunsuu{-n\ベクトル{a}+m\ベクトル{b}}{m-n}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$とすると，線分$\text{AB}$を$m:n$に外分する点は，%
+\[\bunsuu{-n\ベクトル{a}+m\ベクトル{b}}{m-n}\]%
+
+      }%
+      {\relax}%    
+    \ifthenelse{\equal{#1}{外分点の位置ベクトルの証明}}%
+      {%
+        \証明開始%
+        $m:n$に外分ということは$m:\Ttyuukakko{-n}$に内分ということなので，$\bunsuu{-n\ベクトル{a}+m\ベクトル{b}}{m-n}$%
+        \証明終了%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$とすると，線分$\text{AB}$の中点は，$\bunsuu{\ベクトル{a}+\ベクトル{b}}{2}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$とすると，線分$\text{AB}$の中点は，%
+\[\bunsuu{\ベクトル{a}+\ベクトル{b}}{2}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}\数式カンマスペース C\Ttyuukakko{\ベクトル{c}}$とすると，$\triangle{\text{ABC}}$の重心は，$\bunsuu{\ベクトル{a}+\ベクトル{b}+\ベクトル{c}}{3}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {%
+        $A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}\数式カンマスペース C\Ttyuukakko{\ベクトル{c}}$とすると，$\triangle{\text{ABC}}$の重心は，%
+\[\bunsuu{\ベクトル{a}+\ベクトル{b}+\ベクトル{c}}{3}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\ベクトル方程式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$s\数式カンマスペース t$を実数とする。点$A\Ttyuukakko{\ベクトル{a}}$をとおり，$\ベクトル{d}$に平行な直線は，$\ベクトル{p}=\ベクトル{a}+t\ベクトル{b}$}{\relax}% 
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $s\数式カンマスペース t$を実数とする。点$A\Ttyuukakko{\ベクトル{a}}$をとおり，$\ベクトル{d}$に平行な直線は，%
+\[\ベクトル{p}=\ベクトル{a}+t\ベクトル{b}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {%
+        $s\数式カンマスペース t$を実数とする。二点$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$を通る直線は，%
+
+        \hfill{$\ベクトル{p}=\Ttyuukakko{1-t}\ベクトル{a}+t\ベクトル{b}\数式カンマスペース\ベクトル{p}=a\ベクトル{a}+t\ベクトル{b}\text{\ （ただし，$s+t=1$）}$}%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {%
+        $s\数式カンマスペース t$を実数とする。二点$A\Ttyuukakko{\ベクトル{a}}\数式カンマスペース B\Ttyuukakko{\ベクトル{b}}$を通る直線は，%
+\[\ベクトル{p}=\Ttyuukakko{1-t}\ベクトル{a}+t\ベクトル{b}\数式カンマスペース\ベクトル{p}=a\ベクトル{a}+t\ベクトル{b}\text{\ （ただし，$s+t=1$）}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {点$A\Ttyuukakko{\ベクトル{a}}$を通り，$\ベクトル{n}$に垂直な直線$\ベクトル{p}$について，$\ベクトル{n}\cdot\Ttyuukakko{\ベクトル{p}-\ベクトル{a}}=0$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {%
+        点$A\Ttyuukakko{\ベクトル{a}}$を通り，$\ベクトル{n}$に垂直な直線$\ベクトル{p}$について，%
+\[\ベクトル{n}\cdot\Ttyuukakko{\ベクトル{p}-\ベクトル{a}}=0\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {中心$C\Ttyuukakko{\ベクトル{c}}$，半径$r$の円は，$\Tzettaiti{\ベクトル{p}-\ベクトル{c}}=r\数式カンマスペース\Ttyuukakko{\ベクトル{p}-\ベクトル{c}}\cdot\Ttyuukakko{\ベクトル{p}-\ベクトル{c}}=r^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {%
+        中心$C\Ttyuukakko{\ベクトル{c}}$，半径$r$の円は，%
+\[\Tzettaiti{\ベクトル{p}-\ベクトル{c}}=r\]%
+        \[\Ttyuukakko{\ベクトル{p}-\ベクトル{c}}\cdot\Ttyuukakko{\ベクトル{p}-\ベクトル{c}}=r^2\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\等差数列}{ m O{i} }%
+ {%
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{i}}%
+      {初項$a_{1}$，公差$d$のとき，$a_{n}=a_{1}+\Ttyuukakko{n-1}d$}{\relax}% 
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{b}}%
+      {%
+        初項$a_{1}$，公差$d$のとき，%
+\[a_{n}=a_{1}+\Ttyuukakko{n-1}d\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{総和}\AND\equal{#2}{i}}%
+      {$S_{n}=\bunsuu{n\Ttyuukakko{a_{1}+a_{n}}}{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{総和}\AND\equal{#2}{b}}%
+      {\[S_{n}=\bunsuu{n\Ttyuukakko{a_{1}+a_{n}}}{2}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+\[S_{n}=a_{1}+\Ttyuukakko{a_{1}+d}+\Ttyuukakko{a_{1}+2d}+\cdots+\Tdaikakko{a_{1}+\Ttyuukakko{n-1}d}\]%
+        \[S_{n}=\Tdaikakko{a_{1}+\Ttyuukakko{n-1}d}+\cdots+a_{1}+\Ttyuukakko{a_{1}+d}+\Ttyuukakko{a_{1}+2d}\]%
+   
+        連立して，$2S=\Ttyuukakko{a_{1}+a_{n}}n$より，%
+
+        $S_{n}=\bunsuu{n\Ttyuukakko{a_{1}+a_{n}}}{2}$%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\等比数列}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{i}}%
+      {$a_{n}=ar^{n-1}$}{\relax}%
+     \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{b}}%
+      {\[a_{n}=ar^{n-1}\]}{\relax}%
+    \ifthenelse{\equal{#1}{総和}\AND\equal{#2}{i}}%
+      {%
+        $r\neq1$のとき，$S_{n}=\bunsuu{a_{1}\Ttyuukakko{1-r^{n}}}{1-r}$もしくは，$\bunsuu{a_{1}\Ttyuukakko{r^{n}-1}}{r-1}$%
+
+        $r=1$のとき，$S_{n}=na_{1}$%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{総和}\AND\equal{#2}{b}}%
+      {%
+        $r\neq1$のとき，%
+\[S_{n}=\bunsuu{a_{1}\Ttyuukakko{1-r^{n}}}{1-r}\]%
+
+        もしくは，%
+\[S_{n}=\bunsuu{a_{1}\Ttyuukakko{r^{n}-1}}{r-1}\]%
+
+        $r=1$のとき，%
+\[S_{n}=na_{1}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+\[S_{n}=a_{1}+ra_{1}+r^2a_{1}+\cdots+r^{n-1}a_{1}\]%
+        \[S_{n}r=ra_{1}+r^2a_{2}+r^{3}a_{1}+\cdots+r^{n}\]%
+
+        連立することで，$S\Ttyuukakko{1-r}=a_{1}-r^{n}a_{1}$となる。%
+
+        よって，%
+\[S=\bunsuu{a_{1}\Ttyuukakko{1-r^{n}}}{1-r}\]%
+
+        また，$\bunsuu{-1}{-1}$をかけることで，%
+\[S=\bunsuu{a_{1}\Ttyuukakko{r^{n}-1}}{r-1}\]%
+
+        以上より，%
+\[S=\bunsuu{a_{1}\Ttyuukakko{1-r^{n}}}{1-r}=\bunsuu{a_{1}\Ttyuukakko{r^{n}-1}}{r-1}\]%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\シグマの公式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{i}}%
+      {$c$は$k$に無関係なとき，$\displaystyle\sum_{k=1}^{n} c=nc$}{\relax}%
+    \ifthenelse{\equal{#1}{公式A}\AND\equal{#2}{b}}%
+      {%
+        $c$は$k$に無関係なとき，%
+\[\displaystyle\sum_{k=1}^{n} c=nc\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{i}}%
+      {$\displaystyle\sum_{k=1}^{n} k=\bunsuu{1}{2}n\Ttyuukakko{n+1}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式B}\AND\equal{#2}{b}}%
+      {\[\displaystyle\sum_{k=1}^{n} k=\bunsuu{1}{2}n\Ttyuukakko{n+1}\]}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{i}}%
+      {$\displaystyle\sum_{k=1}^{n} k^2=\bunsuu{1}{6}n\Ttyuukakko{n+1}\Ttyuukakko{2n+1}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式C}\AND\equal{#2}{b}}%
+      {\[\displaystyle\sum_{k=1}^{n} k^2=\bunsuu{1}{6}n\Ttyuukakko{n+1}\Ttyuukakko{2n+1}\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{i}}%
+      {$\displaystyle\sum_{k=1}^{n} k^{3}=\Tdaikakko{\bunsuu{1}{2}n\Ttyuukakko{n+1}}^2$}{\relax}%
+    \ifthenelse{\equal{#1}{公式D}\AND\equal{#2}{b}}%
+      {\[\displaystyle\sum_{k=1}^{n} k^{3}=\Tdaikakko{\bunsuu{1}{2}n\Ttyuukakko{n+1}}^2\]}{\relax}% 
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{i}}%
+      {$\displaystyle\sum_{k=1}^{n} r^{k-1}=\bunsuu{\Ttyuukakko{1-r^{n}}}{1-r}=\bunsuu{r^{n}-1}{r-1}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式E}\AND\equal{#2}{b}}%
+      {\[\displaystyle\sum_{k=1}^{n} r^{k-1}=\bunsuu{\Ttyuukakko{1-r^{n}}}{1-r}=\bunsuu{r^{n}-1}{r-1}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        $\Ttyuukakko{k+1}^{3}=k^{3}+3k^2+3k+1$を用いる。%
+
+        $\Ttyuukakko{k+1}^{3}-k^{3}=3k^2+3k+1$の$k$に$1$から$n$までの自然数を代入したものを足したものは，%
+\[\Ttyuukakko{n+1}^{3}-1=3\displaystyle\sum_{k=1}^{n} k^2+3\displaystyle\sum_{k=1}^{n} k=\bunsuu{1}{2}n\Ttyuukakko{n+1}+n\]%
+\[\Leftrightarrow\displaystyle\sum_{k=1}^{n} k^2=\bunsuu{1}{6}n\Ttyuukakko{n+1}\Ttyuukakko{2n+1}\]
+        となる。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\シグマの性質}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{性質}\AND\equal{#2}{i}}%
+      {$p\数式カンマスペース q$が$k$に無関係な定数のとき，$\displaystyle\sum_{k=1}^{n}\Ttyuukakko{pa_{k}+qb_{k}}=p\displaystyle\sum_{k=1}^{n}a_{k}+q\displaystyle\sum_{k=1}^{n}a_{k}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質}\AND\equal{#2}{b}}%
+      {%
+        $p\数式カンマスペース q$が$k$に無関係な定数のとき，%
+\[\displaystyle\sum_{k=1}^{n}\Ttyuukakko{pa_{k}+qb_{k}}=p\displaystyle\sum_{k=1}^{n}a_{k}+q\displaystyle\sum_{k=1}^{n}a_{k}\]%
+
+      }%
+      {\relax}%
+  }%  
+
+\NewDocumentCommand{\階差数列}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{i}}%
+      {数列${a_{n}}$の階差数列を${b_{n}}$とすると，$2\leqq n$のとき，$a_{n}=a_{1}+\displaystyle\sum_{k=1}^{n-1}b_{k}$}{\relax}% 
+    \ifthenelse{\equal{#1}{一般項}\AND\equal{#2}{b}}%
+      {%
+        数列${a_{n}}$の階差数列を${b_{n}}$とすると，$2\leqq n$のとき，%
+\[a_{n}=a_{1}+\displaystyle\sum_{k=1}^{n-1}b_{k}\]%
+
+      }%
+      {\relax}% 
+  }%
+
+
+\NewDocumentCommand{\漸化式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{等差型}\AND\equal{#2}{i}}%
+      {$a_{n+1}=a_{n}+d$のとき，$a_{n}=a_{1}+\Ttyuukakko{n-1}d$}{\relax}% 
+    \ifthenelse{\equal{#1}{等差型}\AND\equal{#2}{b}}%
+      {%
+        $a_{n+1}=a_{n}+d$のとき，%
+\[a_{n}=a_{1}+\Ttyuukakko{n-1}d\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{等比型}\AND\equal{#2}{i}}%
+      {$a_{n+1}=ra_{n}$のとき，$a_{n}=a_{1}r^{n-1}$}{\relax}%
+    \ifthenelse{\equal{#1}{等比型}\AND\equal{#2}{b}}%
+      {%
+        $a_{n+1}=ra_{n}$のとき，%
+\[a_{n}=a_{1}r^{n-1}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{階差型}\AND\equal{#2}{i}}%
+      {$a_{n+1}-a_{n}=f\Ttyuukakko{n}$のとき，$a_{1}+\displaystyle\sum_{k=1}^{n-1}f\Ttyuukakko{k}$（ただし，$n\geqq 2$）}{\relax}% 
+    \ifthenelse{\equal{#1}{階差型}\AND\equal{#2}{b}}%
+      {%
+        $a_{n+1}-a_{n}=f\Ttyuukakko{n}$のとき，%
+\[a_{1}+\displaystyle\sum_{k=1}^{n-1}f\Ttyuukakko{k}\text{\ （ただし，$n\geqq 2$）}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{特性方程式}\AND\equal{#2}{i}}%
+      {$a_{n+1}=pa_{n}+q \Ttyuukakko{p\neq0\数式カンマスペース q\neq0}$のとき，$a_{n+1}-c=p\Ttyuukakko{a_{n}-c}$と変形して等差型に（ただし，$c=pc+q$を満たす）。}{\relax}%  
+    \ifthenelse{\equal{#1}{特性方程式}\AND\equal{#2}{b}}%
+      {%
+        $a_{n+1}=pa_{n}+q \Ttyuukakko{p\neq0\数式カンマスペース q\neq0}$のとき，%
+\[a_{n+1}-c=p\Ttyuukakko{a_{n}-c}\]%
+
+        と変形して等差型に（ただし，$c=pc+q$を満たす）。%
+      }%
+      {\relax}%     
+  }%
+
+
+\newcommand{\数学的帰納法}{自然数$n$に関する命題$P$が全ての自然数$n$について成立することを証明するには，$n=1$のときに$P$が成立することと，$n=k$のときに$P$が成立するという仮定のもと，$n=k+1$が成立することを証明する。}%
+
+
+%%%%%%%%%%%%%%%%%%%%ここから数\UTF{2162}%%%%%%%%%%%%%%%%%%%%
+\NewDocumentCommand{\共役複素数}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$\alpha=a+bi$のとき，共役な複素数$\共役{\alpha}$は$a-bi$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        $\alpha=a+bi$のとき，共役な複素数$\共役{\alpha}$は%
+\[a-bi\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {$z$が実数かつ，$\共役{z}=z$ならば，$z$が実数。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {$z$が実数かつ，$\共役{z}=z$ならば，$z$が実数。}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {$z$が純虚数ならば，$\共役{z}=-z\数式カンマスペース z\neq0$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        $z$が純虚数ならば，%
+\[\共役{z}=-z\数式カンマスペース z\neq0\]%
+
+      }%
+      {\relax}%   
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {$\共役{z}=-z\数式カンマスペース z\neq0$ならば，$z$が純虚数。 }{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+\[\共役{z}=-z\数式カンマスペース z\neq0\]%
+
+        ならば，$z$が純虚数。 %
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{i}}%
+      {$\共役{\alpha+\beta}=\共役{\alpha}+\共役{\beta}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{b}}%
+      {\[\共役{\alpha+\beta}=\共役{\alpha}+\共役{\beta}\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質E}\AND\equal{#2}{i}}%
+      {$\共役{\alpha-\beta}=\共役{\alpha}-\共役{\beta}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質E}\AND\equal{#2}{b}}%
+      {\[\共役{\alpha-\beta}=\共役{\alpha}-\共役{\beta}\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質F}\AND\equal{#2}{i}}%
+      {$\共役{\alpha\beta}=\共役{\alpha}\共役{\beta}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質F}\AND\equal{#2}{b}}%
+      {\[\共役{\alpha\beta}=\共役{\alpha}\共役{\beta}\]}{\relax}%  
+    \ifthenelse{\equal{#1}{性質G}\AND\equal{#2}{i}}%
+      {$\共役{\Ttyuukakko{\bunsuu{\alpha}{\beta}}}=\bunsuu{\共役{\alpha}}{\共役{\beta}}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質G}\AND\equal{#2}{b}}%
+      {\[\共役{\Ttyuukakko{\bunsuu{\alpha}{\beta}}}=\bunsuu{\共役{\alpha}}{\共役{\beta}}\]}{\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        $\alpha=a+bi\数式カンマスペース\beta=c+di$\quad($a\数式カンマスペース b c\数式カンマスペース d$は実数かつ$a\neq0\数式カンマスペース c\neq0$)として，%
+        \begin{align*}%
+          \共役{\alpha+\beta}&=\共役{\Ttyuukakko{a+c}+\Ttyuukakko{b+d}i}&\\%
+          &=\Ttyuukakko{a+c}-\Ttyuukakko{b+d}i&\\%
+          &=\Ttyuukakko{a-ci}+\Ttyuukakko{b-di}&\\%
+          &=\共役{\alpha}+\共役{\beta}%
+        \end{align*}%   
+        \begin{align*}%
+          \共役{\alpha\beta}&=\共役{\Ttyuukakko{a+bi}\Ttyuukakko{c+di}}&\\%
+          &=\共役{\Ttyuukakko{ac-bd}+\Ttyuukakko{ad+bc}i}&\\
+          &=\Ttyuukakko{ac-bd}-\Ttyuukakko{ad+bc}i&\\%
+          &=\Ttyuukakko{a-bi}\Ttyuukakko{c-di}&\\%
+          &=\共役{\alpha}\共役{\beta}%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\複素数の絶対値}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {複素数$z=a+bi$に対して，$\Tzettaiti{z}=\Tzettaiti{a+bi}=\根号{a^2+b^2}$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        複素数$z=a+bi$に対して，%
+\[\Tzettaiti{z}=\Tzettaiti{a+bi}=\根号{a^2+b^2}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {$\Tzettaiti{z}=\Tzettaiti{\共役{z}}=\Tzettaiti{-z}$}{\relax}%
+     \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {\[\Tzettaiti{z}=\Tzettaiti{\共役{z}}=\Tzettaiti{-z}\]}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {$z\共役{z}=\Tzettaiti{z^2}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {\[z\共役{z}=\Tzettaiti{z^2}\]}{\relax}%
+  }%
+
+
+\NewDocumentCommand{\極形式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+     {複素数$\alpha=a+bi$について，$\alpha=r\Ttyuukakko{\cos\theta+i\sin\theta}\text{\ （ただし$z>0$）}$また，$r=\Tzettaiti{\alpha}=\根号{a^2+b^2}\数式カンマスペース\cos\theta=\bunsuu{a}{r}\数式カンマスペース\sin\theta=\bunsuu{b}{r}$を極形式という。}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+     {%
+       複素数$\alpha=a+bi$について，%
+       \[\alpha=r\Ttyuukakko{\cos\theta+i\sin\theta}\text{\ （ただし$z>0$）}\]%
+
+       また，$r=\Tzettaiti{\alpha}=\根号{a^2+b^2}\数式カンマスペース\cos\theta=\bunsuu{a}{r}\数式カンマスペース\sin\theta=\bunsuu{b}{r}$を極形式という。%
+     }%
+     {\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+
+        $\alpha\beta=r_{1}r_{2}\Tdaikakko{\cos\Ttyuukakko{\theta_{1}+\theta_{2}}+i\sin\Ttyuukakko{\theta_{1}+\theta_{2}}}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+\[\alpha\beta=r_{1}r_{2}\Tdaikakko{\cos\Ttyuukakko{\theta_{1}+\theta_{2}}+i\sin\Ttyuukakko{\theta_{1}+\theta_{2}}}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+
+        $\bunsuu{\alpha}{\beta}=\bunsuu{r_{1}}{r_{2}}\Tdaikakko{\cos\Ttyuukakko{\theta_{1}+\theta_{2}}+i\sin\Ttyuukakko{\theta_{1}+\theta_{2}}}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+\[\bunsuu{\alpha}{\beta}=\bunsuu{r_{1}}{r_{2}}\Tdaikakko{\cos\Ttyuukakko{\theta_{1}+\theta_{2}}+i\sin\Ttyuukakko{\theta_{1}+\theta_{2}}}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\偏角}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {%
+        複素数$\alpha=a+bi$について，$\alpha=r\Ttyuukakko{\cos\theta+i\sin\theta}$\par
+        ただし$z>0$のとき$\theta$を偏角といい，$\text{aug}\alpha$で表す。%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        複素数$\alpha=a+bi$について，%
+\[\alpha=r\Ttyuukakko{\cos\theta+i\sin\theta}\]%
+
+        ただし$z>0$のとき$\theta$を偏角といい，%
+\[\text{aug}\alpha\]%
+
+        で表す。%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，$\theta_{1}=\text{arg}\alpha$また，$\text{arg}\alpha=\theta_{1}+2n\pi$ ($n$は整数)}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+\[\theta_{1}=\theta_{1}+2n\pi=\text{arg}\alpha\]%
+
+        ($n$は整数)%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，$\text{arg}z_{1}z_{2}=\text{arg}z_{1}+\text{arg}z_{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+\[\text{arg}z_{1}z_{2}=\text{arg}z_{1}+\text{arg}z_{2}\]%
+
+      }%
+      {\relax}%  
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {$\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，$\text{arg}\bunsuu{z_{1}}{z_{2}}=\text{arg}z_{1}-\text{arg}z_{2}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+        $\alpha\数式カンマスペース\beta\数式カンマスペース\gamma$を複素数とする。$\alpha=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\beta=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}$のとき，%
+\[\text{arg}\bunsuu{z_{1}}{z_{2}}=\text{arg}z_{1}-\text{arg}z_{2}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\ドモアブルの定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$n$が整数のとき，$\Ttyuukakko{\cos\theta+i\sin\theta}^{n}=\cos n\theta+i\sin n\theta$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        $n$が整数のとき，%
+\[\Ttyuukakko{\cos\theta+i\sin\theta}^{n}=\cos n\theta+i\sin n\theta\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{証明}}%
+      {%
+        \証明開始%
+        複素数%
+\[\alpha_{1}=r_{1}\Ttyuukakko{\cos\theta_{1}+i\sin\theta_{1}}\数式カンマスペース\alpha_{2}=r_{2}\Ttyuukakko{\cos\theta_{2}+i\sin\theta_{2}}\ldots\alpha_{n}=r_{n}\Ttyuukakko{\cos\theta_{n}+i\sin\theta_{n}}\]
+        に対して，$\alpha_{1}\alpha_{2}\cdots\alpha_{n}$を考えると，三角関数の積和の公式から%
+      \[\alpha_{1}\alpha_{2}\cdots\alpha_{n}=r_{1}r_{2}\cdots r_{n}\Tdaikakko{\cos\Ttyuukakko{\theta_{1}+\theta_{2}+\cdots+\theta_{n}}+i\sin\Ttyuukakko{\theta_{1}+\theta_{2}+\cdots+\theta_{n}}}\]%
+
+        となる。ここで，$\alpha_{1}=\alpha_{2}=\cdots=\alpha_{n}$のとき，%  \[\alpha^{n}=r^{n}\Ttyuukakko{\cos\theta+i\sin\theta}^{n}=r^{n}\Ttyuukakko{\cos n\theta+i\sin n\theta}\]%
+\[\Leftrightarrow\Ttyuukakko{\cos\theta+i\sin\theta}^{n}=\cos n\theta+i\sin n\theta\]%
+
+        を得る。%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\放物線}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {定点$F$ (焦点)と$F$を通らない直線$l$ (準線)があるとき，焦点と準線からの距離の和が一定な点の軌跡。}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {定点$F$ (焦点)と$F$を通らない直線$l$ (準線)があるとき，焦点と準線からの距離の和が一定な点の軌跡。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {放物線は$y^2=4px$と表せられる。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        放物線は%
+\[y^2=4px\]%
+
+        と表せられる。%
+      }%
+      {\relax}%
+     \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {放物線の焦点は$F\Ttyuukakko{p\数式カンマスペース 0}$}{\relax}%
+     \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        放物線の焦点は%
+\[F\Ttyuukakko{p\数式カンマスペース 0}\]%
+
+      }%
+      {\relax}%
+     \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {放物線の準線は$x=-p$}{\relax}%
+     \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+        放物線の準線は%
+\[x=-p\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\楕円}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {二つの焦点$F$と$F'$からの距離の和が一定な点の軌跡。}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {二つの焦点$F$と$F'$からの距離の和が一定な点の軌跡。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {楕円は$\bunsuu{x^2}{a^2}+\bunsuu{y^2}{b^2}=1$と表せられる。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        楕円は%
+\[\bunsuu{x^2}{a^2}+\bunsuu{y^2}{b^2}=1\]%
+
+        と表せられる。%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {楕円の焦点は$F\Ttyuukakko{\根号{a^2-b^2}\数式カンマスペース 0}$と，$F'\Ttyuukakko{\根号{a^2-b^2}\数式カンマスペース 0}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        楕円の焦点は%
+\[F\Ttyuukakko{\根号{a^2-b^2}\数式カンマスペース 0} F'\Ttyuukakko{\根号{a^2-b^2}\数式カンマスペース 0}\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {楕円の二つの焦点からの距離の和は$2a$である。}{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+        楕円の二つの焦点からの距離の和は%
+\[2a\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\双曲線}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {二つの焦点$F$と$F'$からの距離の差が$0$でなく一定な点の軌跡。}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {二つの焦点$F$と$F'$からの距離の差が$0$でなく一定な点の軌跡。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{i}}%
+      {双曲線は$\bunsuu{x^2}{a^2}-\bunsuu{y^2}{b^2}=1$と表せられる。}{\relax}%
+    \ifthenelse{\equal{#1}{性質A}\AND\equal{#2}{b}}%
+      {%
+        双曲線は%
+\[\bunsuu{x^2}{a^2}-\bunsuu{y^2}{b^2}=1\]%
+
+        と表せられる。%
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{i}}%
+      {双曲線の焦点は$F\Ttyuukakko{\根号{a^2+b^2}\数式カンマスペース 0}$と，$F'\Ttyuukakko{\根号{a^2+b^2}\数式カンマスペース 0}$}{\relax}%
+    \ifthenelse{\equal{#1}{性質B}\AND\equal{#2}{b}}%
+      {%
+        双曲線の焦点は%
+\[F\Ttyuukakko{\根号{a^2+b^2}\数式カンマスペース 0} F'\Ttyuukakko{\根号{a^2+b^2}\数式カンマスペース 0}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{i}}%
+      {双曲線の二つの焦点からの距離の差は$2a$ }{\relax}%
+    \ifthenelse{\equal{#1}{性質C}\AND\equal{#2}{b}}%
+      {%
+        双曲線の二つの焦点からの距離の差は%
+\[2a\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{i}}%
+      {双曲線の漸近線は$\bunsuu{x}{a}-\bunsuu{y}{b}=0\数式カンマスペース\bunsuu{x}{a}+\bunsuu{y}{b}=0$}{\relax}%
+    \ifthenelse{\equal{#1}{性質D}\AND\equal{#2}{b}}%
+      {%
+        双曲線の漸近線は%
+\[\bunsuu{x}{a}-\bunsuu{y}{b}=0\数式カンマスペース\bunsuu{x}{a}+\bunsuu{y}{b}=0\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\連続な関数}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {定義域の$x$の値$a$に関して，$\displaystyle\lim_{x \to a}f\Ttyuukakko{x}=f\Ttyuukakko{a}$のとき，$f\Ttyuukakko{x}$は$x=a$で連続。}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        定義域の$x$の値$a$に関して，%
+\[\displaystyle\lim_{x \to a}f\Ttyuukakko{x}=f\Ttyuukakko{a}\]%
+
+        のとき，$f\Ttyuukakko{x}$は$x=a$で連続。%
+      }%
+      {\relax}%
+  }%
+        
+
+\NewDocumentCommand{\中間値の定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {閉区間$[a\数式カンマスペース b]$で連続な関数$f\Ttyuukakko{x}$について，$f\Ttyuukakko{a}\neq f\Ttyuukakko{b}$のとき，$f\Ttyuukakko{a}$と$f\Ttyuukakko{b}$の間の任意の実数$k$について，$f\Ttyuukakko{c}=k$となる$c$が少なからず一つ存在する。}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        閉区間$[a\数式カンマスペース b]$で連続な関数$f\Ttyuukakko{x}$について，$f\Ttyuukakko{a}\neq f\Ttyuukakko{b}$のとき，$f\Ttyuukakko{a}$と$f\Ttyuukakko{b}$の間の任意の実数$k$について，%
+\[f\Ttyuukakko{c}=k\]%
+
+        となる$c$が少なからず一つ存在する。%
+      }%
+      {\relax}%
+  }%
+        
+
+\NewDocumentCommand{\平均値の定理}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {関数$f\Ttyuukakko{x}$が閉区間$[a\数式カンマスペース b]$で連続，開区間$\Ttyuukakko{a\数式カンマスペース b}$で微分可能ならば，$\bunsuu{f\Ttyuukakko{b}-f\Ttyuukakko{a}}{b-a}=f'\Ttyuukakko{c} \Ttyuukakko{a<c<b}$を満たす$c$が存在する。}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        関数$f\Ttyuukakko{x}$が閉区間$[a\数式カンマスペース b]$で連続，開区間$\Ttyuukakko{a\数式カンマスペース b}$で微分可能ならば，%
+\[\bunsuu{f\Ttyuukakko{b}-f\Ttyuukakko{a}}{b-a}=f'\Ttyuukakko{c} \Ttyuukakko{a<c<b}\]%
+
+        を満たす$c$が存在する。%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\微分}{ m O{i} }%
+  {%
+     \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$f'\Ttyuukakko{x}=\displaystyle\lim_{h \to 0}\bunsuu{f\Ttyuukakko{x+h}-f\Ttyuukakko{x}}{h}$}{\relax}%
+     \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {\[f'\Ttyuukakko{x}=\displaystyle\lim_{h \to 0}\bunsuu{f\Ttyuukakko{x+h}-f\Ttyuukakko{x}}{h}\]}{\relax}%
+     \ifthenelse{\equal{#1}{積の微分公式}\AND\equal{#2}{i}}%
+      {$\Tdaikakko{f\Ttyuukakko{x}g\Ttyuukakko{x}}'=f'\Ttyuukakko{x}g\Ttyuukakko{x}+f\Ttyuukakko{x}g'\Ttyuukakko{x}$}{\relax}%
+     \ifthenelse{\equal{#1}{積の微分公式}\AND\equal{#2}{b}}%
+      {\[\Tdaikakko{f\Ttyuukakko{x}g\Ttyuukakko{x}}'=f'\Ttyuukakko{x}g\Ttyuukakko{x}+f\Ttyuukakko{x}g'\Ttyuukakko{x}\]}{\relax}%
+     \ifthenelse{\equal{#1}{商の微分公式}\AND\equal{#2}{i}}%
+      {$\Tdaikakko{\bunsuu{f\Ttyuukakko{x}}{g\Ttyuukakko{x}}}'=\bunsuu{f'\Ttyuukakko{x}g\Ttyuukakko{x}-f\Ttyuukakko{x}g'\Ttyuukakko{x}}{\Tdaikakko{g\Ttyuukakko{x}}^2}$}{\relax}%
+     \ifthenelse{\equal{#1}{商の微分公式}\AND\equal{#2}{b}}%
+      {\[\Tdaikakko{\bunsuu{f\Ttyuukakko{x}}{g\Ttyuukakko{x}}}'=\bunsuu{f'\Ttyuukakko{x}g\Ttyuukakko{x}-f\Ttyuukakko{x}g'\Ttyuukakko{x}}{\Tdaikakko{g\Ttyuukakko{x}}^2}\]}{\relax}%
+     \ifthenelse{\equal{#1}{合成関数の微分}\AND\equal{#2}{i}}%
+      {$\Tdaikakko{f\Ttyuukakko{g\Ttyuukakko{x}}}'=f'\Ttyuukakko{g\Ttyuukakko{x}}g'\Ttyuukakko{x}$}{\relax}%
+     \ifthenelse{\equal{#1}{合成関数の微分}\AND\equal{#2}{b}}%
+      {\[\Tdaikakko{f\Ttyuukakko{g\Ttyuukakko{x}}}'=f'\Ttyuukakko{g\Ttyuukakko{x}}g'\Ttyuukakko{x}\]}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式A}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{c}'=0$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式A}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{c}'=0\]}{\relax}%  
+     \ifthenelse{\equal{#1}{初等関数の微分公式B}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{x^{\alpha}}'=\alpha x^{\alpha-1}$ ($\alpha$は実数)}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式B}\AND\equal{#2}{b}}%
+      {%
+\[\Ttyuukakko{x^{\alpha}}'=\alpha x^{\alpha-1}\]%
+
+        $\alpha$は実数%
+      }%
+      {\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式C}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\sin x}'=\cos x$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式C}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\sin x}'=\cos x\]}{\relax}%     
+     \ifthenelse{\equal{#1}{初等関数の微分公式D}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\cos x}'=-\sin x$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式D}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\cos x}'=-\sin x\]}{\relax}%    
+     \ifthenelse{\equal{#1}{初等関数の微分公式E}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\tan x}'=\bunsuu{1}{\cos^2x}$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式E}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\tan x}'=\bunsuu{1}{\cos^2x}\]}{\relax}% 
+     \ifthenelse{\equal{#1}{初等関数の微分公式F}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\log\Tzettaiti{x}}'=\bunsuu{1}{x}$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式F}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\log\Tzettaiti{x}}'=\bunsuu{1}{x}\]}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式G}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{\log_{a}\Tzettaiti{x}}'=\bunsuu{1}{x\log a}$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式G}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{\log_{a}\Tzettaiti{x}}'=\bunsuu{1}{x\log a}\]}{\relax}% 
+     \ifthenelse{\equal{#1}{初等関数の微分公式H}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{e^{x}}'=e^{x}$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式H}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{e^{x}}'=e^{x}\]}{\relax}% 
+     \ifthenelse{\equal{#1}{初等関数の微分公式I}\AND\equal{#2}{i}}%
+      {$\Ttyuukakko{a^{x}}'=a^{x}\log a$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の微分公式I}\AND\equal{#2}{b}}%
+      {\[\Ttyuukakko{a^{x}}'=a^{x}\log a\]}{\relax}%
+    \ifthenelse{\equal{#1}{三角関数の微分公式の証明}}%
+      {%
+        \証明開始%
+        \begin{align*}%
+          \Ttyuukakko{\sin x}'&=\displaystyle\lim_{h \to 0} \bunsuu{\sin\Ttyuukakko{x+h}-\sin x}{h}&\\%
+          &=\displaystyle\lim_{h \to 0} \bunsuu{\sin x\cos h+\cos x\sin x-\sin x}{h}&\\%
+          &=\displaystyle\lim_{h \to 0} \Ttyuukakko{\cos x\bunsuu{\sin h}{h}-\sin x\bunsuu{1-\cos x}{h}\bunsuu{1+\cos h}{1+\cos h}}&\\%
+          &=\displaystyle\lim_{h \to 0} \Ttyuukakko{\cos x\bunsuu{\sin h}{h}-\sin x\bunsuu{1}{1+\cos h}\bunsuu{\sin^2h}{h^2}h}&\\%
+          &=\cos x\cdot1-\sin x\cdot\bunsuu{1}{2}1^2\cdot0&\\%
+          &=\cos x&\\%
+          \Ttyuukakko{\cos x}'&=\Tdaikakko{\sin\Ttyuukakko{\bunsuu{\pi}{2}-x}}'&\\%
+          &=\cos\Ttyuukakko{\bunsuu{\pi}{2}-x}\cdot\Ttyuukakko{-1}&\\%
+          &=-\sin x%
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{対数関数の微分公式の証明}}%
+      {%
+        \証明開始%
+        \begin{align*}%
+          \Ttyuukakko{\log x}'&=\displaystyle\lim_{h \to 0} \bunsuu{\log\Ttyuukakko{x+h}-\log x}{h}&\\%
+          &=\displaystyle\lim_{h \to 0} \bunsuu{\log\Ttyuukakko{1+\bunsuu{x}{h}}}{h}&\\%
+        \end{align*}%
+        ここで$\bunsuu{h}{x}=t$とおくと，$h=tx$となり$\displaystyle\lim_{h \to 0} t=0$なので，%
+        \begin{align*}%
+          \Ttyuukakko{\log x}'&=\displaystyle\lim_{h \to 0} \bunsuu{\log\Ttyuukakko{1+t}}{xt}&\\%
+          &=\displaystyle\lim_{h \to 0} \Tdaikakko{\bunsuu{\log\Ttyuukakko{1+t}}{t}\cdot\bunsuu{1}{x}}&\\%
+          &=\displaystyle\lim_{h \to 0} \log\Ttyuukakko{1+t}^{\frac{1}{t}}\cdot\bunsuu{1}{x}&\\%
+          &=\log e\cdot\bunsuu{1}{x}&\\%
+          &=\bunsuu{1}{x} 
+        \end{align*}%
+        $f\Ttyuukakko{x}=e^{x}$とおく。%
+
+        \begin{align*}%
+          \Ttyuukakko{e^{x}}'&=\displaystyle\lim_{h \to 0} \bunsuu{e^{x+h}-e^{x}}{h}&\\%
+          &=e^{x}\displaystyle\lim_{h \to 0} \bunsuu{e^{h}-1}{h}%
+        \end{align*}%
+        ここで$\Ttyuukakko{\log x}'=\bunsuu{1}{x}$より，$y=\log x$の$x=1$においての接線の傾きは$1$であり，$y=\log x$と$y=e^{x}$は$y=x$において対称であるので$y=e^{x}$の$x=0$においての接線の傾きも$1$なので，%
+        \[f'\Ttyuukakko{0}\displaystyle\lim_{h \to 0} \bunsuu{e^{h}-1}{h}=1\]%
+
+        よって，%
+        \begin{align*}%
+          \Ttyuukakko{e^{x}}'&=e^{x}\displaystyle\lim_{h \to 0} \bunsuu{e^{h}-1}{h}&\\%
+          &=e^{x}\cdot1&\\%
+          &=e^{x}
+        \end{align*}%
+        \証明終了%
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\法線の方程式}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {曲線$f\Ttyuukakko{x}$上の点$A\Ttyuukakko{a\数式カンマスペース f\Ttyuukakko{a}}$における法線の方程式は，$y-f\Ttyuukakko{a}=-\bunsuu{1}{f'\Ttyuukakko{a}}\Ttyuukakko{x-a}$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {% 
+        曲線$f\Ttyuukakko{x}$上の点$A\Ttyuukakko{a\数式カンマスペース f\Ttyuukakko{a}}$における法線の方程式は，%
+\[y-f\Ttyuukakko{a}=-\bunsuu{1}{f'\Ttyuukakko{a}}\Ttyuukakko{x-a}\]%
+
+      }%
+      {\relax}%
+  }%
+        
+
+\NewDocumentCommand{\不定積分}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {$F'\Ttyuukakko{x}=f\Ttyuukakko{x}$とすると，$\displaystyle\int_{}^{}f\Ttyuukakko{x}dx=F\Ttyuukakko{x}+C\text{\ （\,$C$は積分定数）}$}{\relax}%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        $F'\Ttyuukakko{x}=f\Ttyuukakko{x}$とすると，%
+\[\displaystyle\int_{}^{}f\Ttyuukakko{x}dx=F\Ttyuukakko{x}+C\text{\ （\,$C$は積分定数）}\]%
+
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{置換積分}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{}^{}f\Ttyuukakko{x}dx=\displaystyle\int_{}^{}f\Ttyuukakko{g\Ttyuukakko{t}}g'\Ttyuukakko{t}dt$ ($x=g\Ttyuukakko{t}$に置換)}{\relax}%
+    \ifthenelse{\equal{#1}{置換積分}\AND\equal{#2}{b}}%
+      {%
+\[\displaystyle\int_{}^{}f\Ttyuukakko{x}dx=\displaystyle\int_{}^{}f\Ttyuukakko{g\Ttyuukakko{t}}g'\Ttyuukakko{t}dt\]%
+
+        ($x=g\Ttyuukakko{t}$に置換)%
+      }%
+      {\relax}%
+    \ifthenelse{\equal{#1}{部分積分}\AND\equal{#2}{i}}%
+      {$\displaystyle\int_{}^{}f\Ttyuukakko{x}g'\Ttyuukakko{x}dx=f\Ttyuukakko{x}g\Ttyuukakko{x}-\displaystyle\int_{}^{}f'\Ttyuukakko{x}g\Ttyuukakko{x}$}{\relax}%
+    \ifthenelse{\equal{#1}{部分積分}\AND\equal{#2}{b}}%
+      {\[\displaystyle\int_{}^{}f\Ttyuukakko{x}g'\Ttyuukakko{x}dx=f\Ttyuukakko{x}g\Ttyuukakko{x}-\displaystyle\int_{}^{}f'\Ttyuukakko{x}g\Ttyuukakko{x}\]}{\relax}%
+    \ifthenelse{\equal{#1}{初等関数の積分公式A}\AND\equal{#2}{i}}%
+      {$C$は積分定数とする。$\displaystyle\int_{}^{}x^{\alpha}dx=\bunsuu{1}{\alpha+1}x^{\alpha+1}+C$}{\relax}%
+    \ifthenelse{\equal{#1}{初等関数の積分公式A}\AND\equal{#2}{b}}%
+      {%
+        $C$は積分定数とする。%
+\[\displaystyle\int_{}^{}x^{\alpha}dx=\bunsuu{1}{\alpha+1}x^{\alpha+1}+C\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{初等関数の積分公式B}\AND\equal{#2}{i}}%
+      {$C$は積分定数とする。$\displaystyle\int_{}^{}\bunsuu{1}{x}dx=\log\Tzettaiti{x}+C$}{\relax}%
+    \ifthenelse{\equal{#1}{初等関数の積分公式B}\AND\equal{#2}{b}}%
+      {%
+        $C$は積分定数とする。%
+\[\displaystyle\int_{}^{}\bunsuu{1}{x}dx=\log\Tzettaiti{x}+C\]%
+
+      }%
+      {\relax}% 
+    \ifthenelse{\equal{#1}{初等関数の積分公式C}\AND\equal{#2}{i}}%
+      {$C$は積分定数とする。$\displaystyle\int_{}^{}\sin xdx=-\cos x+C$}{\relax}%
+    \ifthenelse{\equal{#1}{初等関数の積分公式C}\AND\equal{#2}{b}}%
+      {%
+        $C$は積分定数とする。%
+\[\displaystyle\int_{}^{}\sin xdx=-\cos x+C\]%
+
+      }%
+      {\relax}%
+     \ifthenelse{\equal{#1}{初等関数の積分公式D}\AND\equal{#2}{i}}%
+      {$C$は積分定数とする。$\displaystyle\int_{}^{}\cos xdx=\sin x+C$}{\relax}%
+     \ifthenelse{\equal{#1}{初等関数の積分公式D}\AND\equal{#2}{b}}%
+      {%
+        $C$は積分定数とする。%
+\[\displaystyle\int_{}^{}\cos xdx=\sin x+C\]%
+
+      }%
+      {\relax}%
+      \ifthenelse{\equal{#1}{初等関数の積分公式E}\AND\equal{#2}{i}}%
+      {$C$は積分定数とする。$\displaystyle\int_{}^{}e^{x}dx=e^{x}+C$}{\relax}%
+      \ifthenelse{\equal{#1}{初等関数の積分公式E}\AND\equal{#2}{b}}%
+      {%
+        $C$は積分定数とする。%
+\[\displaystyle\int_{}^{}e^{x}dx=e^{x}+C\]%
+
+      }%
+      {\relax}% 
+      \ifthenelse{\equal{#1}{初等関数の積分公式F}\AND\equal{#2}{i}}%
+      {$C$は積分定数とする。$\displaystyle\int_{}^{}a^{x}dx=\bunsuu{a^{x}}{\log a}+C$}{\relax}%
+      \ifthenelse{\equal{#1}{初等関数の積分公式F}\AND\equal{#2}{b}}%
+      {%
+        $C$は積分定数とする。%
+\[\displaystyle\int_{}^{}a^{x}dx=\bunsuu{a^{x}}{\log a}+C\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\定積分}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{i}}%
+      {曲線$y=f\Ttyuukakko{x}$と$x$軸(間は$a$から$b$)に囲まれた部分の面積$S$について，$F'\Ttyuukakko{x}=f\Ttyuukakko{x}$のとき，$S=\displaystyle\int_{b}^{a} f\Ttyuukakko{x}dx=[F\Ttyuukakko{x}]^{b}_{a}=F\Ttyuukakko{b}-F\Ttyuukakko{a}$}{\relax}%   
+
+    \ifthenelse{\equal{#1}{定義}\AND\equal{#2}{b}}%
+      {%
+        曲線$y=f\Ttyuukakko{x}$と$x$軸(間は$a$から$b$)に囲まれた部分の面積$S$について，$F'\Ttyuukakko{x}=f\Ttyuukakko{x}$のとき，%
+\[S=\displaystyle\int_{b}^{a} f\Ttyuukakko{x}dx=[F\Ttyuukakko{x}]^{b}_{a}=F\Ttyuukakko{b}-F\Ttyuukakko{a}\]%
+
+      }%
+      {\relax}%
+  }%
+
+
+\NewDocumentCommand{\区分求積法}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {$\displaystyle\lim_{n \to \infty} \sum_{k=0}^{n-1}f\Ttyuukakko{x_{k}}\mathit{\Delta}x=\displaystyle\lim_{n \to \infty} \sum_{k=1}^{n}f\Ttyuukakko{x_{k}}\mathit{\Delta}x$ここで，$\mathit{\Delta}x=\bunsuu{b-a}{n}\数式カンマスペース x_{k}=a+k\mathit{\Delta}x$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+\[\displaystyle\lim_{n \to \infty} \sum_{k=0}^{n-1}f\Ttyuukakko{x_{k}}\mathit{\Delta}x=\displaystyle\lim_{n \to \infty} \sum_{k=1}^{n}f\Ttyuukakko{x_{k}}\mathit{\Delta}x\]%
+
+        ここで，%
+\[\mathit{\Delta}x=\bunsuu{b-a}{n}\数式カンマスペース x_{k}=a+k\mathit{\Delta}x\]%
+
+      }%
+      {\relax}%
+  }%
+        
+
+\NewDocumentCommand{\体積の積分}{ m O{i} }%
+  {%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{i}}%
+      {曲線$y=f\Ttyuukakko{x}$と$x$軸の間の部分($a\leqq x\leqq b$)を$x$軸の周りに一回転させてできる回転体の体積は，$V=\pi\displaystyle\int_{a}^{b} \Tdaikakko{f\Ttyuukakko{x}}^2dx$}{\relax}%
+    \ifthenelse{\equal{#1}{公式}\AND\equal{#2}{b}}%
+      {%
+        曲線$y=f\Ttyuukakko{x}$と$x$軸の間の部分($a\leqq x\leqq b$)を$x$軸の周りに一回転させてできる回転体の体積は，%
+\[V=\pi\displaystyle\int_{a}^{b} \Tdaikakko{f\Ttyuukakko{x}}^2dx\]%
+
+      }%
+      {\relax}%
+  }%

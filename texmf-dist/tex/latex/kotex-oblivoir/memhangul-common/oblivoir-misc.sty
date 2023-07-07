@@ -1,0 +1,123 @@
+%% file oblivoir-misc.sty
+%% part of oblivoir class
+%%
+%% (c) 2022 Kangsoo Kim 
+%%
+%% 2022-03-01, 03-06
+%% 2022-04-07, bugfix
+%%
+\ProvidesPackage{oblivoir-misc}[2022/04/07 version0.3]
+
+\RequirePackage{etoolbox}
+
+%%% tikz pagenode
+%%% see http://www.ktug.org/xe/index.php?mid=KTUG_QnA_board&document_srl=253542
+
+\AtEndPreamble{%
+\@ifpackageloaded{pgf}{%
+    \newcommand\setpagenode{%
+        \expandafter\def\csname pgf@sh@ns@current page\endcsname{rectangle}%
+        \strictpagecheck%
+        \checkoddpage%
+        \ifoddpage%
+            \expandafter\def\csname pgf@sh@np@current page\endcsname{%
+              \def\southwest{\pgfpoint{\stockwidth-\paperwidth-\trimedge}%
+                                      {\stockheight-\trimtop-\paperheight}}%
+              \def\northeast{\pgfpoint{\stockwidth-\trimedge}{\stockheight-\trimtop}}%
+            }%
+        \else
+            \expandafter\def\csname pgf@sh@np@current page\endcsname{%
+              \def\southwest{\pgfpoint{\trimedge}{\stockheight-\trimtop-\paperheight}}%
+              \def\northeast{\pgfpoint{\trimedge+\paperwidth}{\stockheight-\trimtop}}%
+            }%
+        \fi
+        \expandafter\def\csname pgf@sh@nt@current page\endcsname{{1}{0}{0}{1}{0pt}{0pt}}%
+        \expandafter\def\csname pgf@sh@pi@current page\endcsname{pgfpageorigin}}
+    
+    \pgfkeys{/tikz/overlay/.add code={}{\setpagenode}}
+  }{}
+}
+
+%%% \texthl
+%%% from oblivoir-patch2.sty, 2021
+%%% \texthl command
+%%% highlighs text in XeTeX
+%%%	 * now, in mathmode it doesn't work.
+%%%. * now, lualatex is not supported.
+%%% 
+%%% \obhlcolor, \obhlheight, \obhlraisedim can be redefined by user.
+\ExplSyntaxOn
+\bool_new:N \g_ulemloaded_bool
+\bool_new:N \g_xcolorloaded_bool
+\dim_new:N \obhlraisedim
+\dim_new:N \obhlheight
+\AtEndPreamble{
+	\@ifpackageloaded{color}
+		{ \bool_set_true:N \g_xcolorloaded_bool }
+		{ 
+		  \@ifpackageloaded{xcolor}
+			{ \bool_set_true:N \g_xcolorloaded_bool }	
+			{ \bool_set_false:N \g_xcolorloaded_bool }
+		}
+	\@ifpackageloaded{ulem}
+		{ \bool_set_true:N \g_ulemloaded_bool }
+		{ \bool_set_false:N \g_ulemloaded_bool 
+		  \let\UL@protected\protected
+		}
+  \sys_if_engine_luatex:TF {
+    \cs_if_exist:NF \obhlcolor { \def\obhlcolor{yellow!80} }
+    \dim_set:Nn \obhlraisedim { -.1\baselineskip }
+    \dim_set:Nn \obhlheight { 1.01em }
+    \NewDocumentCommand\texthl{}{
+      \bool_if:NTF \g_ulemloaded_bool
+      {
+      	\msg_error:nn { texthl } { Do~not~use~ulem~with~luatexko. }
+	  }
+	  {
+	    \hbox_set:Nn \l_tmpa_box { \color{\obhlcolor}\rule{1pt}{\obhlheight} }
+    	\markoverwith{ 
+	  	  \box_move_up:nn { \obhlraisedim } { \box_use:N \l_tmpa_box }
+	    }
+      }
+    }
+  }{
+%  \sys_if_engine_xetex:TF {
+        \bool_if:nTF 
+        {
+        	\g_ulemloaded_bool
+        	&&
+        	\g_xcolorloaded_bool
+        }
+        {
+        	\cs_if_exist:NF \obhlcolor
+        	{
+        		\def\obhlcolor{yellow!80}
+        	}
+        	\dim_set:Nn \obhlraisedim { -.1\baselineskip }
+        	\dim_set:Nn \obhlheight { 1.01em }
+            \UL@protected\def \texthl 
+            {
+                \bgroup
+                \hbox_set:Nn \l_tmpa_box {\color{\obhlcolor}\rule{1pt}{\obhlheight}}
+                \box_set_ht:Nn \l_tmpa_box { \c_zero_dim }
+                \box_set_dp:Nn \l_tmpa_box { \c_zero_dim }
+                \markoverwith{%
+                	\kern-.1pt
+                	\box_move_up:nn { \obhlraisedim } { \box_use:N \l_tmpa_box }
+                }\ULon
+            }
+        }
+        {
+        	\def\texthl {
+        		\msg_error:nn { texthl } { ulem~and~(x)color~required.}
+        	}
+        }
+%	}
+%	{
+%		\msg_error:nn { texthl } { pdftex~not~supported }
+%	}
+  }
+}
+\ExplSyntaxOff
+
+\endinput

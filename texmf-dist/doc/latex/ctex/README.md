@@ -30,7 +30,7 @@ Issues and pull requests are welcome.
 Copyright and Licence
 ---------------------
 
-    Copyright (C) 2003--2021
+    Copyright (C) 2003--2022
     CTEX.ORG and any individual authors listed elsewhere in this file.
     ----------------------------------------------------------------------
 

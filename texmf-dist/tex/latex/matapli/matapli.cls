@@ -3,7 +3,7 @@
 %%
 %% -----------------------------------------------------------------------------
 %% MATAPLI --- SMAI class for the French SMAI journal "MATAPLI",
-%% version 1.0.0
+%% version 1.2.0
 %%
 %% E-mail: chupin@ceremade.dauphine.fr
 %% Released under the LaTeX Project Public License v1.3c or later
@@ -17,8 +17,8 @@
 % on lance la syntax LaTeX3
 \ExplSyntaxOn
 \ProvidesExplClass{matapli}
-{2021/03/22}
-{1.1}
+{2022/03/11}
+{1.2}
 {SMAI class for the French jornal MATAPLI}
 
 % classe de base
@@ -471,6 +471,8 @@ unicode]{hyperref}
 % pour générer la liste des auteurs et généré le cas échéant (s'il y a
 % une minibio) des encarts avec la description des auteur·e·s.
 \NewDocumentCommand\printauthors { o } {
+  % on veut aligner les encart pour les auteurs et autrices en bas de page.
+  ~\vfill
   \tl_clear:N \l__matapli_auteurs_name_tl
   \seq_clear:N \l__matapli_names_seq
   \cs_generate_variant:Nn \regex_split:nnN {nVN}
@@ -544,14 +546,16 @@ unicode]{hyperref}
 
             \tl_if_empty:NTF{\l__matapli_auteur_email_tl}{}{\textbf{Email~:}~\url{\tl_item:Nn \g__matapli_auteurs_email_list_tl {##1}}\par}
             \tl_set:Nx \l__matapli_auteur_webpage_tl {\tl_item:Nn \g__matapli_auteurs_webpage_list_tl {##1}}
-            \tl_if_empty:NTF{\l__matapli_auteur_webpage_tl}{}{\textbf{Site web~:}~\url{\tl_item:Nn \g__matapli_auteurs_webpage_list_tl {##1}}}
+            \tl_if_empty:NTF{\l__matapli_auteur_webpage_tl}{}{\textbf{Site~web~:}~\url{\tl_item:Nn \g__matapli_auteurs_webpage_list_tl {##1}}}
 
 
           \end{tabularx}
         }
       \end{matapli@auteur}
     }
+
   } % fin boucle auteurs
+  \clearpage % on change de page avant
   \iow_now:Nn \g_auxfile_iow {\end{matapliauteurtitre}}
 \iow_close:N \g_auxfile_iow
 \tl_clear:N \g__matapli_auteurs_first_last_names_list_tl
@@ -597,7 +601,6 @@ unicode]{hyperref}
 
 % environnement interne de formattage de la présentation des auteur·e·s
 \newenvironment{matapli@auteur}[1]{%
-  ~\vfill
   \setlength{\logowidth}{17pt}
   \tcbset{%
     arc=0pt,outer arc=0pt,colback=gray!10!white,colframe=gray!80!white,
@@ -607,7 +610,7 @@ unicode]{hyperref}
   \begin{tcolorbox}[title={\large\bfseries #1}]%
     \small
   }%
-  {\end{tcolorbox}\medskip\clearpage}
+  {\end{tcolorbox}\medskip}
 
 
 

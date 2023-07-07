@@ -1,4 +1,4 @@
-# $Id: Makefile 935 2021-07-23 17:48:15Z jimhefferon $
+# $Id: Makefile 1142 2023-01-11 16:09:29Z karl $
 # Public domain.  Originally written 2006, Karl Berry.
 # Makefile for latexrefman.
 
@@ -29,7 +29,13 @@ texi2info = $(makeinfo) --no-split
 texi2txt = $(makeinfo) --plaintext --no-split
 texi2xml = $(makeinfo) --xml
 #
-htmlopts = --html --css-include=latex2e.css $(t2html_top) $(t2html_home) -c WORDS_IN_PAGE=10000
+htmlopts = --html $(html_css) $(t2html_top) $(t2html_home) $(html_pagewords)
+#
+html_css = --css-include=latex2e.css
+#
+# Nodes must be larger than this to get navigation panel at bottom of
+# page; default is 300.
+html_pagewords = -c WORDS_IN_PAGE=10000
 #
 # Go somewhere useful from Top:
 t2html_top = -c TOP_NODE_UP_URL=https://tug.org/texinfohtml/
@@ -46,7 +52,7 @@ t2html_home = -c PRE_BODY_CLOSE="<hr/><div class='referenceinfo'>\
 #
 %.dbk: %.texi
 	$(texi2docbook) -o $@ $<
-%.html: %.texi %.css
+%.html: %.texi latex2e.css
 	$(texi2html) $<
 %.info: %.texi
 	$(texi2info) $<
@@ -106,7 +112,7 @@ dist: en es
 	rm -f $(distzip)
 	zip -q $(distzip) \
 $(addprefix $(distname)/, $(txt_files) \
-                      latex2e.texi common.texi $(en_mi_output) latex2e.pdf) \
+latex2e.texi common.texi $(en_mi_output) latex2e.pdf) \
 $(addprefix $(distname)/spanish/,  $(es_mi_output) latex2e-es.pdf) \
 $(addprefix $(distname)/latex2e-figures/,  $(figure_files)) \
 $(addprefix $(distname)/graphics/,  README $(figure_source_files))
@@ -120,8 +126,11 @@ easyurls: htmlsplit dist
         && rm -rf testdist && mkdir -p testdist \
         && cp ../latex2e-help-texinfo-tree.zip testdist \
         && rm -rf latex2e && unzip -q testdist/latex2e-help-texinfo-tree \
-        && ./easyurls.py --directory latex2e --action softlink --lower_case --rewrite_index --debug \
+        && $(easyurls_python) ./easyurls.py $(easyurls_opt) \
         && zip -rq ../latex2e-help-texinfo-tree-easyurls.zip latex2e
+
+easyurls_python = python3.6 # depends on bs4 (beautifulsoup4)
+easyurls_opt = --directory latex2e --action softlink --lower_case --rewrite_index --debug
 
 # To update web site, after basic build is ok (check-dw, spelling, etc.),
 # first undo temporary build results:
@@ -133,17 +142,32 @@ easyurls: htmlsplit dist
 #   make
 #   make htmlsplit
 #   make dist
-#   make commitready
-#   svn commit  # to commit regenerated files   
+#   make easyurls     # depends htmlsplit and dist
+#   make commitready  # many files will have status ! 
+#   svn commit        # to commit regenerated files   
 # then:
-#   svn update  # to restore easy url stubs
-#   
+#   svn update     # restore easy url stubs
+#   make svrsplit  # restore generated split html
+#
+# If uploading to CTAN:
+#   (update NEWS, write announcement)
+#   upload latex2e-help-texinfo.zip
+#
+# Clean up:
+#   rm -rf src/testdist src/latex2e
+#   rm -rf latex2e-help-texinfo   
+#   rm latex2e-help-texinfo-tree{,-easyurls}.zip   
+#   rm latex2e-help-texinfo.zip   
+
+# In Texinfo 7.0, the default output directory changed to foo_html.
+# Change it back.
+html_split_opts = $(htmlopts) -o latex2e
 
 # Get many small .html files.
 htmlsplit: en
 	rm -rf $(htmlsplit)
 	mkdir $(htmlsplit) && cd $(htmlsplit) && ln -s ../* .	
-	cd $(htmlsplit) && $(makeinfo) $(htmlopts) latex2e.texi
+	cd $(htmlsplit) && $(makeinfo) $(html_split_opts) latex2e.texi
 	cd $(htmlsplit)/latex2e && ln -s ../../latex2e-figures .
 
 # Right before a commit, delete html files that are gone and add new ones.

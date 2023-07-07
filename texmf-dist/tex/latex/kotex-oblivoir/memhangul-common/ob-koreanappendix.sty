@@ -13,6 +13,9 @@
 %% oblivoir sub-style. part of oblivoir
 %% \appendix (부록)
 %%
+%%
+\newcommand*\clearforappendix{\clearpage}
+
 \gdef\set@appendix@chapter{%
   \renewcommand\thesection{\Alph{APPsection}}%
   \renewcommand\thesubsection{\thesection.\arabic{APPsubsection}}
@@ -25,6 +28,7 @@
   \renewcommand\thefigure{\Alph{APPsection}.\arabic{figure}}%
   \renewcommand\thetable{\Alph{APPsection}.\arabic{table}}%
   \renewcommand\theequation{\Alph{APPsection}.\arabic{equation}}%
+  \if@chapter\renewcommand*{\thechapter}{\Roman{APPchapter}}\fi
   \set@appendix@chapsec
 }
 
@@ -36,6 +40,7 @@
 }
 
 \renewcommand{\appendix}{\par
+  \if@chapter\clearforappendix\fi
   \set@appendix@chapter
   \anappendixtrue
 %  \chapterstyle{appendixdefault}%

@@ -1,6 +1,6 @@
 % Manual of the schulmathematik bundle
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \documentclass{scrartcl}
 \usepackage[babelshorthands]{polyglossia}
 \usepackage{longtable}
@@ -9,6 +9,7 @@
 \usepackage{chemmacros}
 \usepackage{tasks}
 \usepackage{beamerarticle}
+\usepackage{unicode-math}
 
 \makeatletter
 \let\example\@undefined
@@ -177,8 +178,6 @@
 
 \ExplSyntaxOff
 
-\chemsetup{modules=isotopes}
-
 \definecolor{drot}{rgb}{0.7,0,0}
 \definecolor{braun}{rgb}{0.5,0.1,0.1}
 \definecolor{dorange}{rgb}{0.9,0.35,0}
@@ -199,7 +198,7 @@
     ehr
   }
 
-\NewDocumentCommand \AutorEMailDomain {}
+\NewDocumentCommand \AutorEMailDomain { }
   {
     abgol
   }
@@ -333,6 +332,18 @@
 
 \ExplSyntaxOff
 
+\newcommand\LsgBeschreibungA{Innerhalb dieser Umgebung kann die Lösung einer
+  Aufgabe oder Teilaufgabe eingegeben werden. Sie erscheint nur in der
+  Musterlösung (d.\,h. bei Verwendung der Klassenoption \Option{Musterloesung}).
+  \par
+  Die Befehle \Befehl{begin\{Lsg\}} und \Befehl{end\{Lsg\}} müssen jeweils in
+  einer eigenen Zeile stehen und dürfen nicht eingerückt werden. Dies ist eine
+  Restriktion des Pakets \Paket{comment}.}
+
+\newcommand\LsgBeschreibungB{Falls die Lösung mit einer eingerückten Formel
+  beginnt, sollte die Sternvariante benutzt werden, um einen zu großen vertikalen
+  Abstand zwischen Aufgabe und Lösung zu vermeiden.}
+
 \begin{document}
 
 \begin{center}
@@ -348,7 +359,7 @@ Schulmathematik
 
 \medskip
 \large
-Version 1.1
+Version 1.3
 
 \medskip
 \normalsize
@@ -358,12 +369,18 @@ Version 1.1
 \large
 \textit{Paketautor}
 
-\medskip
-\AutorVorname\ \AutorNachname
-
-\normalsize
 \smallskip
+\AutorVorname\ \AutorNachname\\
+\normalsize
 \texttt{\AutorNachname*@\AutorEMailDomain.de}
+
+\bigskip
+\large
+\textit{Fehlermeldungen}
+
+\smallskip
+\normalsize
+\url{https://codeberg.org/wehr/schulmathematik/issues}
 \end{center}
 
 \medskip
@@ -403,9 +420,11 @@ Für \Paket{pgfplots} werden einige Voreinstellungen vorgenommen:
 \item \verb:compat=newest:, um unter Verzicht auf Abwärtskompatibilität die neueste Variante des Pakets zu verwenden
 \item \verb:axis lines=middle:, um durch den Ursprung verlaufende Koordinatenachsen anstelle eines Kastens um das ganze Koordinatensystem zu verwenden
 \item \verb:label style={font=\small}:, um die Beschriftung der Koordinatenachsen in leicht verkleinerter Schrift anzuzeigen
-\item \verb:ticklabel style={font=\footnotesize,/pgf/number format/use comma}:, um die Skalen der Koordinatenachsen mit Zahlen in kleiner Schrift unter Verwendung eines Dezimalkommas anstelle eines Dezimalpunkts zu beschriften
+\item \verb:ticklabel style={font=\footnotesize,/pgf/number format/use comma,:\\
+\verb:/pgf/number format/fixed}:, um die Skalen der Koordinatenachsen mit Zahlen in kleiner Schrift unter Verwendung eines Dezimalkommas anstelle eines Dezimalpunkts und möglichst ohne wissenschaftliche Zahlschreibweise zu beschriften
 \item \verb:tick style={thick}:, um deutlich sichtbare Skalenstriche zu erhalten
-\item \verb:every axis plot/.append style={semithick,scaled ticks=false}:, um Funktionsgraphen etwas dicker darzustellen und alle Skalenstriche -- ohne eine Zehnerpotenz auszulagern -- mit der vollständigen Zahl zu beschriften
+\item \verb:scaled ticks=false:, um alle Skalenstriche -- ohne eine Zehnerpotenz auszulagern -- mit der vollständigen Zahl zu beschriften
+\item \verb:every axis plot/.append style={semithick}:, um Funktionsgraphen etwas dicker darzustellen
 \end{itemize}
 \Paketbeschreibung{shapes.misc}
 Diese TikZ-Bibliothek wird zur Definition des Knotentyps \Knotentyp{Kreuz} (s.\,u.) benötigt.
@@ -473,7 +492,7 @@ Befehl zur Darstellung einer Funktionstermvariable eines grafikfähigen Taschenr
   \GTRY{1}[x^2-4]
 \end{sidebyside}
 \Knotentypbeschreibung{Kreuz}
-Hierbei handelt es sich um einen TikZ-Knotentyp, der der Markierung von Punkten im Koordinatensystem dient. Voreingestellt ist eine Größe von \texttt{5pt} ($\approx\SI{1,8}{mm}$). Eine andere Größe kann mit Hilfe der TikZ-Option \texttt{minimum size} eingestellt werden.
+Hierbei handelt es sich um einen TikZ-Knotentyp, der der Markierung von Punkten im Koordinatensystem dient. Voreingestellt ist eine Größe von \texttt{5pt} ($\approx\qty{1,8}{mm}$). Eine andere Größe kann mit Hilfe der TikZ-Option \texttt{minimum size} eingestellt werden.
 \begin{example}
   \begin{Kosy}[xmin=0,xmax=5.3,ymin=0,ymax=4.3,x=1cm,y=1cm]
   \node[Kreuz,label=above right:$A$] at (2,1) {};
@@ -489,13 +508,14 @@ Das Paket \Paket{schulma-physik} wird von den Dokumentenklassen \Klasse{schulma-
 
 \subsubsection*{Geladene Pakete und Bibliotheken}
 \begin{Liste}
-\Paketbeschreibung{siunitx}[mit der Option \Option{locale=DE}]\label{siunitx}%
-Das Paket erlaubt eine typographisch korrekte Darstellung physikalischer Größen und Einheiten. Die Option \Option{locale=DE} stellt sicher, dass ein Dezimalkomma anstelle eines Dezimalpunkts und in der wissenschaftlichen Schreibweise ein Multiplikationspunkt anstelle eines Kreuzes verwendet wird.
+\Paketbeschreibung{siunitx}[mit den Optionen \Option{locale=DE} und \Option{uncertainty-mode=separate}]\label{siunitx}%
+Das Paket erlaubt eine typographisch korrekte Darstellung physikalischer Größen und Einheiten. Die Option \Option{locale=DE} stellt sicher, dass ein Dezimalkomma anstelle eines Dezimalpunkts und in der wissenschaftlichen Schreibweise ein Multiplikationspunkt anstelle eines Kreuzes verwendet wird. Die Option \Option{uncertainty-mode=separate} sorgt für eine Ausgabe von Messungenauigkeiten in Plus-Minus-Schreibweise.
 
 Details zur Syntax und weitere Einstellungsmöglichkeiten sind der \Paket{siunitx}-Anleitung zu entnehmen.
 \begin{sidebyside}
-  \SI{37,5}{N}\\
-  \SI{7,25e6}{\m\per\s}
+  \qty{37,5}{\N}\\
+  \qty{7,25e6}{\m\per\s}\\
+  \qty{6,34(53)e-34}{\J\s}
 \end{sidebyside}
 \Paketbeschreibung{tikz}
 Mit Hilfe dieses Pakets kann eine Vielfalt graphischer Darstellungen angefertigt werden.
@@ -503,26 +523,37 @@ Mit Hilfe dieses Pakets kann eine Vielfalt graphischer Darstellungen angefertigt
 Diese TikZ-Bibliothek ermöglicht die Darstellung von Schaltbildern.
 \end{Liste}
 
+\newpage
 \subsubsection*{Befehle}
 \begin{Liste}
+\Befehlsbeschreibung{Messschieber}[\marg{Messwert}]
+Gibt die Skala eines Messschiebers (auch Schieblehre genannt) mit dem angegebenen \meta{Messwert} aus. Der Messwert ist mit Dezimalpunkt in Zentimetern ohne die Einheit anzugeben.
+\begin{example}
+  \Messschieber{4.73}
+\end{example}
+\Befehlsbeschreibung{Messschraube}[\marg{Messwert}]
+Gibt die Skala einer Messschraube (auch Mikrometerschraube genannt) mit dem angegebenen \meta{Messwert} aus. Der Messwert ist mit Dezimalpunkt in Millimetern ohne die Einheit anzugeben.
+\begin{sidebyside}
+  \Messschraube{6.18}
+\end{sidebyside}
 \Befehlsbeschreibung{Massstab}[\marg{Zahl 1}\marg{Einheit 1}\marg{Zahl 2}\marg{Einheit 2}]
 Dient zur Definition eines Maßstabs. Für Zahlenwerte und Einheiten gilt die Syntax des \Paket{siunitx}-Pakets.
 \begin{sidebyside}
   \Massstab{1}{cm}{5}{N}
 \end{sidebyside}
-\Befehlsbeschreibung{tSI}[\marg{Zahl}\marg{Einheit}]
-Einheiten in Bruchschreibweise werden in eingerückten Formeln (\emph{displaystyle}) mit dem \verb:\SI:-Befehl aus dem Paket \Paket{siunitx} zu groß dargestellt. Der \Befehl{tSI}-Befehl stellt Einheiten immer als kleinen Bruch wie in nicht eingerückten Formeln (\emph{textstyle}) dar.
+\Befehlsbeschreibung{tqty}[\marg{Zahl}\marg{Einheit}]
+Einheiten in Bruchschreibweise werden in eingerückten Formeln (\emph{displaystyle}) mit dem \verb:\qty:-Befehl aus dem Paket \Paket{siunitx} zu groß dargestellt. Der \Befehl{tqty}-Befehl stellt Einheiten immer als kleinen Bruch wie in nicht eingerückten Formeln (\emph{textstyle}) dar.
 \begin{example}
-  \[v=\frac{s}{t}=\SI[per-mode=fraction]{25}{\m\per\s}\]
-  \[v=\frac{s}{t}=\tSI{25}{\m\per\s}\]
+  \[v=\frac{s}{t}=\qty[per-mode=fraction]{25}{\m\per\s}\]
+  \[v=\frac{s}{t}=\tqty{25}{\m\per\s}\]
 \end{example}
-\Befehlsbeschreibung{tsi}[\marg{Einheit}]
-Stellt eine Einheit in Bruchschreibweise als kleinen Bruch dar. Basiert auf dem \verb:\si:-Befehl aus dem Paket \Paket{siunitx}.
+\Befehlsbeschreibung{tunit}[\marg{Einheit}]
+Stellt eine Einheit in Bruchschreibweise als kleinen Bruch dar. Basiert auf dem \verb:\unit:-Befehl aus dem Paket \Paket{siunitx}.
 \begin{sidebyside}
-  \tsi{\N\per\cm}
+  \tunit{\N\per\cm}
 \end{sidebyside}
 \Befehlsbeschreibung{Beschl}[\marg{Zahl}]
-Gibt eine Beschleunigung mit der Einheit \si[per-mode=symbol]{\m\per\square\s} in Bruchschreibweise aus.
+Gibt eine Beschleunigung mit der Einheit \unit[per-mode=symbol]{\m\per\square\s} in Bruchschreibweise aus.
 \begin{sidebyside}
   \Beschl{4,2}
 \end{sidebyside}
@@ -552,7 +583,7 @@ Gibt die auf drei gültige Stellen gerundete elektrische Feldkonstante aus.
   \EFK
 \end{sidebyside}
 \Befehlsbeschreibung{MFK}[\sarg]
-Gibt den exakten Wert der magnetischen Feldkonstante aus. Die Sternvariante gibt den auf drei gültige Stellen gerundeten Wert aus.
+Gibt den (fast) exakten Wert\footnote{Nach der Neudefinition der SI-Basiseinheiten von 2019 ist der Wert der magnetischen Feldkonstanten experimentell zu bestimmen und $\mu_0=\MFK$ gilt nicht mehr exakt.} der magnetischen Feldkonstante aus. Die Sternvariante gibt den auf drei gültige Stellen gerundeten Wert aus.
 \begin{sidebyside}
   \MFK\\
   \MFK*
@@ -610,11 +641,10 @@ Messgerät & \Schaltbeispiel{messgeraet} & \texttt{messgeraet}\textsuperscript{\
 \end{example}
 
 \subsubsection*{Nuklide}
-Zur Darstellung von Nukliden empfiehlt es sich, dass Paket \Paket{chemmacros} mit dem Modul \Paket{isotopes} zu laden.
+Zur Darstellung von Nukliden empfiehlt es sich, das Paket \Paket{chemmacros} zu laden.
 Da die Nuklidschreibweise eher selten benötigt wird, wird dieses Paket nicht automatisch geladen.
 \begin{example}[code-only]
   \usepackage{chemmacros}
-  \chemsetup{modules=isotopes}
 \end{example}
 \begin{sidebyside}
   \isotope{Ra}
@@ -623,9 +653,19 @@ Da die Nuklidschreibweise eher selten benötigt wird, wird dieses Paket nicht au
 
 \section{Dokumentenklassen}
 \subsection{Arbeitsblätter mit der Klasse \Klasse{schulma-ab}}
-Die Dokumentenklasse für Arbeitsblatter basiert auf der KOMA-Script-Klasse \Klasse{scrartcl}. Diese wird mit der Option \Option{DIV=14} geladen, d.\,h. der linke und rechte Rand sind je \SI{2,25}{cm} breit.
+Die Dokumentenklasse für Arbeitsblatter basiert auf der KOMA-Script-Klasse \Klasse{scrartcl}. Diese wird mit der Option \Option{DIV=14} geladen, d.\,h. der linke und rechte Rand sind im Hochformat A\,4 je \qty{2,25}{cm} breit.
 
-Für Arbeitsblätter in A\,5 (Querformat) steht die Klassenoption \Option{A5quer} zur Verfügung. In diesem Fall wird \Option{DIV=11} gewählt, was horizontalen Rändern von ca. \SI{2,9}{cm} entspricht.
+\subsubsection*{Klassenoptionen}
+\begin{Liste}
+\Optionsbeschreibung{A4quer}
+Stellt das Querformat für die Seite ein. Die horizontalen Seitenränder sind in diesem Fall ca. \qty{3,2}{cm} groß.
+\Optionsbeschreibung{A5}
+Stellt die Papiergröße A\,5 im Hochformat ein. In diesem Fall wird die KOMA-Option \Option{DIV=11} gewählt, was horizontalen Rändern von ca. \qty{2,0}{cm} entspricht.
+\Optionsbeschreibung{A5quer}
+Stellt die Papiergröße A\,5 im Querformat ein. In diesem Fall wird die KOMA-Option \Option{DIV=11} gewählt, was horizontalen Rändern von ca. \qty{2,9}{cm} entspricht.
+\Optionsbeschreibung{Musterloesung}
+Gibt die Musterlösung der Aufgabe aus, die innerhalb der Umgebung \Umgebung{Lsg} (s.\,u.) eingegeben wurde.
+\end{Liste}
 
 \subsubsection*{Geladene Pakete}
 \begin{Liste}
@@ -650,8 +690,9 @@ Dieses Paket erlaubt es, die vertikale Ausrichtung von Abbildungen zu beeinfluss
 Ermöglicht die Anzeige von Päckchenaufgaben.
 Die folgenden Voreinstellungen werden vorgenommen:
 \begin{itemize}
-\item \verb:before-skip=4.5pt plus2pt minus1pt:
+\item \verb:before-skip=9pt plus4pt minus2pt:
 \item \verb:after-skip=4.5pt plus2pt minus1pt:
+\item \verb:after-item-skip=9pt plus4pt minus2pt:
 \item \verb:label-align=right:
 \item \verb:item-indent=2.2em:
 \item \verb:label-offset=0.5em:
@@ -745,6 +786,14 @@ Setzt eine Lücke mit der angegeben Breite innerhalb eines Lückentexts. Für L�
 \begin{example}
   Der Atomkern besteht aus \Luecke{3,5cm} und \Luecke{3,5cm}.
 \end{example}
+\Umgebungsbeschreibung{Lsg}[\sarg]
+\LsgBeschreibungA
+
+\LsgBeschreibungB
+\Befehlsbeschreibung{NurAufgabe}[\marg{Teil der Aufgabe}]
+Der \meta{Teil der Aufgabe}, der Argument dieses Befehls ist, erscheint nicht in der Musterlösung. Dies ist nützlich für ergänzende Bearbeitungshinweise, die in der Musterlösung nicht benötigt werden, sowie für Abbildungen, die in der Musterlösung anders dargestellt werden sollen. Außerdem kann bei Bedarf der gesamte Aufgabentext mit Hilfe dieses Befehls für die Musterlösung ausgeblendet werden.
+\Befehlsbeschreibung{NurLoesung}[\marg{Teil der Aufgabe}]
+Der \meta{Teil der Aufgabe}, der Argument dieses Befehls ist, erscheint nur in der Musterlösung. Im Gegensatz zur Umgebung \Umgebung{Lsg} beginnt dieser Befehl keinen neuen Absatz.
 \end{Liste}
 
 \subsubsection*{Zähler}
@@ -869,7 +918,7 @@ Erzeugt eine Bildschirmpräsentation mit der Musterlösung der Klausur, die inne
 \subsubsection*{Geladene Pakete}
 \begin{Liste}
 \Paketbeschreibung{geometry}[mit den Optionen \Option{hmargin=2.5cm} und \Option{top=2.7cm}]
-Paket zur Einstellung der Seitenränder. Der linke und rechte Rand werden auf \SI{2,5}{cm} festgelegt. Der obere Rand wird auf \SI{2,7}{cm} vergrößert, damit er Platz für das Namensfeld bietet.
+Paket zur Einstellung der Seitenränder. Der linke und rechte Rand werden auf \qty{2,5}{cm} festgelegt. Der obere Rand wird auf \qty{2,7}{cm} vergrößert, damit er Platz für das Namensfeld bietet.
 
 Bei Verwendung der Klassenoption \Option{A5quer} wird zusätzlich die Option \Option{bottom=3cm} gesetzt, um genügend Platz für die Seitenzahl zu schaffen.
 \Paketbeschreibung{scrlayer-scrpage}
@@ -904,22 +953,22 @@ Legt das Datum der Besprechung der Musterlösung fest, das bei Verwendung der Kl
 \end{Liste}
 \subsubsection*{Befehle und Umgebungen im Dokumentenkörper}
 \begin{Liste}
-\Befehlsbeschreibung{Aufgabe}[\sarg\oarg{Thema}\darg{Punktzahl}]
+\Befehlsbeschreibung{Aufgabe}[\sarg\oarg{Thema}\oarg{Bearbeitungszeit}\darg{Punktzahl}]
 Mit diesem Befehl wird eine neue Aufgabe der Klausur eröffnet. Er sollte der erste Befehl nach \verb:\begin{document}: sein. Die Sternvariante setzt keinen Punkt nach der Aufgabennummer.
 
-Das erste optionale Argument (in eckigen Klammern) gibt das Thema der Aufgabe an und erscheint nur in der Musterlösung. Das zweite optionale Argument (in runden Klammern) gibt die in der Aufgabe erreichbare Punktzahl an; diese erscheint nur in der Klausur.
+Das erste optionale Argument (in eckigen Klammern) gibt das Thema der Aufgabe an und erscheint nur auf dem Terminal und in der Musterlösung. Das zweite optionale Argument (in eckigen Klammern) gibt die avisierte Bearbeitungszeit an und erscheint nur auf dem Terminal. Das dritte optionale Argument (in runden Klammern) gibt die in der Aufgabe erreichbare Punktzahl an; diese erscheint nur auf dem Terminal und in der Klausur.
+
+Am Ende der Klausur werden die Anzahl der Aufgaben, die Summe der Bearbeitungszeiten und die Summe der erreichbaren Punkte auf das Terminal geschrieben.
 
 Für den Satz von Unteraufgaben empfiehlt sich die Umgebung \Umgebung{Teilaufgaben}.
 \Umgebungsbeschreibung{Teilaufgaben}
 Umgebung, mit der mit Kleinbuchstaben nummerierte Teilaufgaben innerhalb einer Aufgabe gesetzt werden können. Jede Teilaufgabe wird mit dem Befehl \verb:\item: eingeleitet. Der Abstand der Aufgaben wird durch die Länge \Laenge{Teilaufgabenabstand} festgelegt. Die Nummerierung erfolgt mit Hilfe des Zählers \Zaehler{Teilaufgabe}.
 \Umgebungsbeschreibung{Lsg}[\sarg]
-Innerhalb dieser Umgebung kann die Lösung einer Aufgabe oder Teilaufgabe eingegeben werden. Sie erscheint nur in der Musterlösung (d.\,h. bei Verwendung der Klassenoption \Option{Musterloesung}).
-
-Die Befehle \Befehl{begin\{Lsg\}} und \Befehl{end\{Lsg\}} müssen jeweils in einer eigenen Zeile stehen und dürfen nicht eingerückt werden. Dies ist eine Restriktion des Pakets \Paket{comment}.
+\LsgBeschreibungA
 
 Die Lösung wird in einer anderen Farbe angezeigt als die Aufgabe. Die verwendeten Farben hängen vom gewählten \Klasse{beamer}-Thema ab, das mit dem Befehl \Befehl{usetheme} eingestellt werden kann (siehe \Klasse{beamer}-Anleitung). In der Voreinstellung wird der Aufgabentext blau und der Lösungstext schwarz ausgegeben.
 
-Falls die Lösung mit einer eingerückten Formel beginnt, sollte die Sternvariante benutzt werden, um einen zu großen vertikalen Abstand zwischen Aufgabe und Lösung zu vermeiden.
+\LsgBeschreibungB
 \Befehlsbeschreibung{FarbeAufgabe}
 Dient zur manuellen Umschaltung auf die Textfarbe der Aufgabe.
 \Befehlsbeschreibung{FarbeLoesung}
@@ -1028,7 +1077,7 @@ Dient zur Verwendung des Namens des Prüf"|lings im Dativ innerhalb des Gutachte
 \subsection{Mündliche Abiturprüfungen mit der Klasse \Klasse{schulma-mdlprf}}
 Die Klasse für mündliche Abiturprüfungen ermöglicht die Erstellung von Aufgabenblättern mit Erwartungshorizonten für mündliche Abiturprüfungen. Prüfungen für mehrere Prüf"|linge können aus demselben Dokument erzeugt werden.
 
-Die Klasse \Klasse{schulma-mdlprf} basiert auf der Dokumentenklasse \Klasse{scrartcl}. Diese wird mit der Option \Option{DIV=14} geladen, d.\,h. der linke und rechte Rand sind je \SI{2,25}{cm} breit.
+Die Klasse \Klasse{schulma-mdlprf} basiert auf der Dokumentenklasse \Klasse{scrartcl}. Diese wird mit der Option \Option{DIV=14} geladen, d.\,h. der linke und rechte Rand sind je \qty{2,25}{cm} breit.
 \subsubsection*{Klassenoptionen}
 \begin{Liste}
 \Optionsbeschreibung{AT}
@@ -1083,7 +1132,7 @@ Gibt eine einzelne Prüfung mit Erwartungshorizont aus. Das erste Argument gibt 
 \addsec{Versionsprotokoll}
 \begin{description}
 \item[1.0] 16. Februar 2020
-\item[1.1] \today
+\item[1.1] 13. März 2021
 \begin{itemize}
 \item \textbf{\Paket{schulma}:} neuer Befehl \Befehl{GTRY}
 \item \textbf{\Paket{schulma-physik}:} neue Befehle \Befehl{EFK} und \Befehl{MFK}
@@ -1094,6 +1143,28 @@ Gibt eine einzelne Prüfung mit Erwartungshorizont aus. Das erste Argument gibt 
 Der Klausurtitel und der Klausurteiltitel werden jetzt auch in der Musterlösung berücksichtigt.
 \item \textbf{\Klasse{schulma-gutachten}:} Korrektur der Fehlermeldung bei fehlendem \Befehl{Ort}-Befehl; Fehlerbehebung bei der KOMA-Option \Option{DIV}
 \item \textbf{\Klasse{schulma-mdlprf}:} Fehlerbehebung bei der KOMA-Option \Option{DIV}
+\end{itemize}
+\item[1.2] 18. Dezember 2021
+\begin{itemize}
+\item \textbf{\Paket{schulma}:} Unterdrückung der wissenschaftlichen Zahlschreibweise bei der Skalenbeschriftung von \Paket{pgfplots}-Graphen durch die Option \texttt{ticklabel style=""\{/pgf/number format/fixed\}}; Korrektur der (bisher unwirksamen) \Paket{pgfplots}-Option \verb:scaled ticks=false:
+
+Bei Verwendung des \Paket{euler}-Pakets werden die Basis der e-Funktion mit dem Befehl \Befehl{ehoch} und das Differentialzeichen d mit dem Befehl \Befehl{diff} wie Variablen aus der Euler-Schrift gesetzt, da diese Schrift grundsätzlich aufrecht ist.
+\item \textbf{\Paket{schulma-physik}:} neue Befehle \Befehl{Messschieber} und \Befehl{Messschraube}
+
+Das Paket wurde an die Version 3 des \Paket{siunitx}-Pakets angepasst, in welchem die Befehle \verb:\SI: und \verb:\si: durch \verb:\qty: und \verb:\unit: ersetzt wurden. Dementsprechend wurden die Befehle \Befehl{tSI} und \Befehl{tsi} in \Befehl{tqty} und \Befehl{tunit} umbenannt. Die alten Befehle bleiben vorerst erhalten.
+\item \textbf{\Klasse{schulma-ab}:} neue Klassenoptionen \Option{A4quer} und \Option{A5}; Unterstützung von Musterlösungen mit Hilfe der Klassenoption \Option{Musterloesung}, der Umgebung \Umgebung{Lsg} sowie der Befehle \Befehl{NurAufgabe} und \Befehl{NurLoesung} wie in der Klasse \Klasse{schulma-klausur}
+\item \textbf{\Klasse{schulma-klausur}:} veränderte Paketladereihenfolge, um die Option \Option{intlimits} des Pakets \Paket{mathtools} wirksam zu machen
+
+Bei Verwendung der Klassenoption \Option{A5quer} wird jetzt auch tatsächlich das Querformat eingestellt.
+
+Für die Musterlösung wird bei Verwendung der Umgebung \Umgebung{Teilaufgaben} innerhalb der Umgebung \Umgebung{Lsg} nur noch die Aufgabenmarke in Aufgabenfarbe angezeigt, der folgende Text dagegen in Lösungsfarbe.
+\item \textbf{\Klasse{schulma-gutachten}:} Anpassung an die Version 3 des \Paket{siunitx}-Pakets
+\end{itemize}
+\item[1.3] \today
+\begin{itemize}
+\item \textbf{\Paket{schulma-physik}:} globale Einstellung der \Paket{siunitx}-Option \Option{uncertainty-mode=""separate}; Verwendung eines aufrechten $\symup{\pi}$ in der Ausgabe des Befehls \Befehl{MFK}, wenn das Paket \Paket{unicode-math} geladen ist; Aktualisierung des Hinweises zur Nuklidschreibweise mit dem Paket \Paket{chemmacros}
+\item \textbf{\Klasse{schulma-ab}:} Anpassung der vertikalen Abstände innerhalb der \verb:tasks:"=Umgebung an die Umgebung \Umgebung{Teilaufgaben}
+\item \textbf{\Klasse{schulma-klausur}:} Anpassung der vertikalen Abstände innerhalb der \verb:tasks:-Umgebung an die Umgebung \Umgebung{Teilaufgaben}; neues optionales Argument des Befehls \Befehl{Aufgabe} für die Bearbeitungszeit; Ausgabe von Informationen zu den Aufgaben auf dem Terminal
 \end{itemize}
 \end{description}
 

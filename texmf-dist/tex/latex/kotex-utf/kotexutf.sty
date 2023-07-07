@@ -1,6 +1,7 @@
 %% File `kotexutf.sty`
 %%
-%% Copyright (C) 2012-2013 Dohyun Kim <nomos at ktug org>
+%% Copyright (C) 2012-2022 Dohyun Kim <nomos at ktug org>
+%% Copyright (C) 2015-2022 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -10,9 +11,9 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2006/05/20 or later.
 %%
-\NeedsTeXFormat{LaTeX2e}
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
 \ProvidesPackage{kotexutf}
-  [2015/07/18 v2.1.1 typesetting UTF-8 Korean documents]
+  [2022/06/22 v3.0.0 typesetting UTF-8 Korean documents]
 
 \newif\if@nonfrench
 \newif\if@hangul
@@ -33,6 +34,13 @@
 \RequirePackage[utf8]{inputenc}
 
 \input kotexutf-core
+
+% care about fancyvrb's VerbatimOut env
+\def\kotex@make@utfviii@other{%
+  \count@"80 \loop \catcode\count@=12 \ifnum\count@<"BF \advance\count@\@ne \repeat
+  \count@"C2 \loop \catcode\count@=12 \ifnum\count@<"F4 \advance\count@\@ne \repeat
+}
+\AddToHook{env/VerbatimOut/begin}{\kotex@make@utfviii@other}
 
 % modified from lucenc.def
 \DeclareFontEncoding{LUC}{}{}
@@ -103,14 +111,10 @@
   \def\dhucs@temp@hanjafont {#2}%
 }
 
-\protected\edef\normalfont{%
-  \unexpanded{%
-    \let\dhucs@temp@hangulfont\dhucs@undefined
-    \let\dhucs@temp@hanjafont \dhucs@undefined
-  }%
-  \unexpanded\expandafter{\normalfont}%
+\AddToHook{normalfont}{%
+  \let\dhucs@temp@hangulfont\dhucs@undefined
+  \let\dhucs@temp@hanjafont \dhucs@undefined
 }
-\let\reset@font\normalfont
 
 %% now print out \unihangulchar
 \newcommand*\unihangulchar@@@{%
@@ -511,9 +515,9 @@
 \unless\ifdefined\pdfstringdefPreHook
   \let\pdfstringdefPreHook\@empty\fi
 \g@addto@macro\pdfstringdefPreHook{%
-  \unihangul@unprotect@range{C2}{DF}{two}%
-  \unihangul@unprotect@range{E0}{EF}{three}%
-  \unihangul@unprotect@range{F0}{F4}{four}%
+%  \unihangul@unprotect@range{C2}{DF}{two}%
+%  \unihangul@unprotect@range{E0}{EF}{three}%
+%  \unihangul@unprotect@range{F0}{F4}{four}%
   \let\unihangulchar\HyPsd@unichar
   \let\makejosa\@secondoftwo
   \let\dotemph\@firstofone

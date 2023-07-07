@@ -1,10 +1,8 @@
 % schulmathematik bundle: document class schulma-mdlprf
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-mdlprf}{2021-03-13}{1.1}{Dokumentenklasse fuer muendliche Abiturpruefungen}
-
-\RequirePackage {xparse}
+\ProvidesExplClass{schulma-mdlprf}{2022-08-12}{1.3}{Dokumentenklasse fuer muendliche Abiturpruefungen}
 
 \bool_new:N \g_schulma_mdlprf_oesterreich_bool
 \bool_new:N \g_schulma_mdlprf_pruefer_weiblich_bool

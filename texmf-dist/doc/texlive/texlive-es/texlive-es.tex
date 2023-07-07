@@ -1,21 +1,21 @@
 
 \documentclass{article}
 
-\usepackage[spanish]{babel}
+%\usepackage[spanish]{babel}
 \let\tldocenglish=1 
 \usepackage{tex-live}
 %\usepackage[T1]{fontenc}
-%\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \begin{document}
 
 \title{%
-{\huge \textit{La Guía de \TeX\ Live---2021}}}
+{\huge \textit{La Guía de \TeX\ Live---2022}}}
 
 \author{Karl Berry, editor \\[3mm]
         \url{https://tug.org/texlive/}}
 
-\date{Marzo del 2021}
+\date{Marzo del 2022}
 
 \maketitle
 
@@ -60,11 +60,14 @@ a \GNU/Linux, \MacOSX, y Cygwin. El código original puede ser
 compilado en todas las plataformas para las cuales no se han proveído
 los binarios.
 
-En cuanto a Windows: Windows 7 y versiones más recientes
-son también respaldadas. Windows Vista puede aún funcionar en la mayoría de los casos, pero en cuanto a Windows \acro{XP} y versiones anteriores a este, \TL{} ya no funcionará más. No hay
-ejecutables especiales de 64-bit para Windows, pero los ejecutables de
-32-bit deben funcionar sin problema alguno, en los sistemas de
-64-bit. Pero no obstante vea el enlace en \url{https://tug.org/texlive/windows.html} para las opciones en cómo añádir los binarios de 64-bit.
+En cuanto a Windows: Windows 7 y versiones más recientes son también
+respaldadas. Windows Vista \emph{puede aún funcionar en la mayoría de
+los casos}, pero en cuanto a Windows \acro{XP} y versiones anteriores
+a este, \TL{} ya no funcionará más. No hay ejecutables especiales de
+64-bit para Windows, pero los ejecutables de 32-bit deben funcionar
+sin problema alguno, en los sistemas de 64-bit. Pero no obstante
+vea el enlace en \url{https://tug.org/texlive/windows.html} para las
+opciones en cómo añádir los binarios de 64-bit.
 
 Vea la sección~\ref{sec:tl-coll-dists} para soluciones alternativas,
 tanto para Windows como para \MacOSX.
@@ -78,7 +81,7 @@ pequeño, y descarga todo sin mayores problemas.
 
 El instalador del \DVD{} te permite instalar a un disco local. No se
 puede ejecutar directamente \TL{} desde la \TK{} \DVD{} (o la
-imagen \code{.iso}), pero puedes preparar una instalación, e.g,
+imagen \code{.iso}), pero \emph{puedes} preparar una instalación, e.g,
 mediante el uso de un disco portátil de \USB{} (vea la
 sección~\ref{sec:portable-tl}). La instalación se detalla más tarde en
 las secciones (\p.\pageref{sec:install}), pero aquí hay un breve
@@ -86,16 +89,17 @@ sumario:
 
 \begin{itemize*}
 
-\item El script de la instalación es nombrado \filename{intall-tl}. El mismo
-	puede operar en el modo gráfico o ``modo gui'' una vez dada la opción
-		\code{-gui} (estándar en Windows y Macs), o un modo de texto
-		mediante \code{-gui=text} (estándar en todos los otros sistemas
-		operativos). 
+\item En Unix, el script de la instalación es nombrado
+\filename{intall-tl}.
+	El mismo puede operar en el modo gráfico o ``modo gui'' una
+	vez dada la opción \code{-gui} (estándar en Windows y \MacOSX
+	más antiguos), o un modo de texto mediante \code{-gui=text}
+	(estándar en todos los otros sistemas operativos).
 
 \item Otro de los programas que se instala, es el `\TL\ Manager', nombrado
 	\prog{tlmgr}. Que al igual que el instalador, puede usarse con el mode
-		\GUI{} o mediante el modo de texto. Puedes usarlo para instalar
-		y desinstalar paquetes, y para realizar varias configuraciones.
+	\GUI{} o mediante el modo de texto. Puedes usarlo para instalar
+	y desinstalar paquetes, y para realizar varias configuraciones.
 
 \end{itemize*}
 
@@ -149,17 +153,19 @@ cual las usamos:
 	web \url{https://tug.org/begin.html} te ofrece en Inglés una
 	introducción con el sistema.
 
-\item [\TeX{} FAQ] El \TeX{} FAQ es un compendio de preguntas y
-respuestas, también en Inglés, desde las más básicas, hasta las más
-arcanas. Y está incluido en \TL{} en
-\OnCD{texmf-dist/doc/generic/FAQ-en/}, y está disponible en el
-Internet a través de la página en \url{https://www.tex.ac.uk.faq}. Por
-favor, vaya allí primero.  \item [\TeX{} Catalogue] Si estás
+\item [\TeX{} FAQ] El \TeX{} FAQ es un compendio de respuestas a
+todas las preguntas, también en inglés, desde las más básicas,
+hasta las más arcanas y está disponible en el Internet a través de
+la página en \url{https://texfaq.org}. Por favor, vaya allí primero.
+
+\item [\CTAN{}] Si estás
 	interesado en un específico paquete para un proyecto, fuente,
 	programa, etc., el Catálogo de \TeX{} sería el primer lugar
 	donde encontrarías esta información. Es una colección inmensa
-	de todo lo relacionado con \TeX{}. Vea por ejemplo
-	\url{https://ctan.org/pkg/catalogue/}.
+	de todo lo relacionado con \TeX{}.
+	Los ingresos en el catálogo también te indican si hay un paquete
+	disponible parra \TL{} o para MiK\TeX. Vea por ejemplo
+	\url{https://ctan.org}.
 
 \item [\TeX{} Recursos en el web] La página en el web
 	\url{https://tug.org/interest.html} tiene muchos enlaces
@@ -169,15 +175,15 @@ favor, vaya allí primero.  \item [\TeX{} Catalogue] Si estás
 
 \item [Archivos de ayuda] Los principales foros de ayuda incluyen la comunidad
 	de \LaTeX{} en \url{https://latex-community.org} el sitio de p\&r
-		\url{https://tex.stackexchange.com}, el newsgroup Usenet en
-		\url{news:comp.text.tex}, la lista de correo
-		\email{texhax@tug.org}, Otros archivos tienen preguntas y
-		respuestas.  como
-		\url{https://groups.google.com/groupcomp.text.tex/topics}, al
-		igual que \url{https://tug.org/mail-archives/texhax}. Estos
-		últimos dos enlaces ofrecen un placentero mecanismo de búsqueda
-		con lo que quieras averiguar.  También una búsqueda rápida en
-		el web, \url{https://google.com} no está de más.
+	\url{https://tex.stackexchange.com}, el newsgroup Usenet en
+	\url{news:comp.text.tex}, la lista de correo
+	\email{texhax@tug.org}, Otros archivos tienen preguntas y
+	respuestas.  como
+	\url{https://groups.google.com/groupcomp.text.tex/topics}, al
+	igual que \url{https://tug.org/mail-archives/texhax}. Estos
+	últimos dos enlaces ofrecen un placentero mecanismo de búsqueda
+	con lo que quieras averiguar.  También una búsqueda rápida en
+	el web, \url{https://google.com} no está de más.
 
 \item [Preguntar] Si no puedes encontrar una respuesta, siempre puedes
 	escribir a \dirname{comp.text.tex} a través de Google o el
@@ -316,12 +322,11 @@ la sección \ref{sec:local-personal-macros}
 de esto.
 
 \begin{ttdescription}
-\item [TEXMFDIST] El árbol que contiene casi todos los
-	archivos de la distribución original--ficheros de configuración, scripts, paquetes, fuentes, etc. (La excepción aquí, son los ejecutables por-plataforma, los cuales están guardados en un directorio pariente \code{bin/}.)
+\item [TEXMFDIST] El árbol que contiene casi todos los archivos de la distribución original--ficheros de configuración, scripts, paquetes, fuentes, etc. (La excepción aquí, son los ejecutables por-plataforma, los cuales están guardados en un directorio pariente \code{bin/}.)
 \item [TEXMFSYSVAR] El árbol (nivel global) usado por \verb+texconfig-sys+, \verb+updmap-sys+, y \verb+fmtutil-sys+, y también usado por \verb+tlmgr+, para almacenar todo los datos del cache, que hayan sido causados por ficheros formateados, o de ficheros esquematizados, con mapas reasignados y regenerados.
 \item [TEXMFSYSCONFIG] El árbol a nivel de sitio global, que es usado por las utilidades \verb+texmfconfig-sys+, \verb+updmap-sys+, y \verb+fmtutil-sys+ para guardar datos de configuración que hayan sido modificados.
 \item [TEXMFLOCAL] El árbol el cual es usado por administradores para instalaciones globales, o la adicional instalación de macros actualizados, fuentes, etc.
-\item [TEXMFHOME] El árbol el cual es usado por usuarios para sus propias instalaciones de adicionales fuentes, macros actualizados, etc. La expansión de esta variable, se ajusta dinámicamente para cada usuario, en sus propios directorios.
+\item [TEXMFHOME] El árbol el cual es usado por usuarios para sus propias instalaciones de adicionales fuentes, macros actualizados, etc. Para cada usuario, esta variable apunta hacia sus propios directorios.
 \item [TEXMFCONFIG] El árbol (personal) usado por las utilidades \verb+texconfig+, \verb+updmap-sys-, y también \verb+fmtutil-sys+, para guardar datos de configuración que hayan sido modificados.  
 \item [TEXMFVAR] El árbol (personal) usado por \verb+texconfig+, \verb+updmap-user y \verb+fmtutil+user+ para guardar todo los datos que hayan sido generados tanto por el cache de ficheros regenerados y mapas reasignados, como también de ficheros formateados.
 \item [TEXMFCACHE] El árbol o árboles usado por \ConTeXt\ Mk\acro{IV} y Lua\LaTeX\ para almacenar los datos del cache; estándar es \code{TEXMFSYSVAR}, o (si esto no se permite escribirlo), \code{TEXMFVAR}.
@@ -333,8 +338,8 @@ El diseño estándar, o predeterminado, es el siguiente:
 	\item[raíz del sistema] puede abarcar múltiples versiones de \TL{}. 
 	(\texttt{/usr/local/texlive} estándar en Unix):
   \begin{ttdescription}
-    \item[2020] Una versión anterior.
-    \item[2021] La versión actual
+    \item[2021] Una versión anterior.
+    \item[2022] La versión actual
     \begin{ttdescription}
       \item [bin] ~
       \begin{ttdescription}
@@ -352,9 +357,8 @@ El diseño estándar, o predeterminado, es el siguiente:
   \item[directorio de casa del usuario] (\texttt{\$HOME} o el
       \texttt{\%USERPROFILE\%})
     \begin{ttdescription}
-      \item[.texlive2019] Datos privados generados de configuración para la versión anterior.
-      \item[.texlive2020] Datos privados generados de configuración para la versión anterior.
-      \item[.texlive2021] Datos privados generados de configuración para la versión actual.
+      \item[.texlive2021] Datos privados generados de configuración para la versión anterior.
+      \item[.texlive2022] Datos privados generados de configuración para la versión actual.
       \begin{ttdescription}
         \item [texmf-var\ \ \ ] \envname{TEXMFVAR}, \envname{TEXMFCACHE}
         \item [texmf-config]    \envname{TEXMFCONFIG}
@@ -434,17 +438,17 @@ Aquí aparecen otros programas comúnmente usados en \TL{}:
 
 \item [bibtex, bibtex8] respaldo de bibliografía.
 
-\item [makeindex, xindy] respaldo de índices.
+\item [makeindex, upmendex, xindex, xindy] respaldo de índices.
 
 \item [dvips] conversor \dvi{} a \PS{}.
+
+\item [dvipdfmx] conversor \dvi{} a \acro{PDF}, una alternativa a pdf\TeX\ (que ya se mencionó).
 
 \item [xdvi] \dvi{} presentador preliminar para el Sistema de X Window.
 
 \item [dvilj] \dvi{} drive para la familia de HP LaserJet. 
 
 \item [dviconcat, dviselect] cortar, copiar y pegar páginas de ficheros de \dvi{}.
-
-\item [dvipdfmx] conversor \dvi{} a \acro{PDF}, una alternativa a pdf\TeX\ (que ya se mencionó).
 
 \item [psselect, psnup, \ldots] Utilidades de \PS{}.
 
@@ -453,7 +457,7 @@ Aquí aparecen otros programas comúnmente usados en \TL{}:
 \item [context, mtxrun] procesador de Con\TeX{}t y \acro{PDF}.
 
 \item [htlatex, \ldots] Conversor \cmdname{tex4ht}: \AllTeX{} a \acro{HTML} (y
-\acro{XML}).
+\acro{XML} y DocX y más).
 
 \end{cmddescription}
 
@@ -474,18 +478,18 @@ otros métodos para conseguir el programa.
 
 \begin{description}
 	\item [Instalador de net] Descargue de \CTAN{}, bajo
-		\dirname{systems/texlive/tlnet}; página de web en
-		\url{https://mirror.ctan.org/systems/texlive/tlnet}
-		automáticamente lo dirigirá hacia el repositorio
-		actualizado, más cercano. Usted puede  descargar
-		\filename{install-tl.zip}, el cual puede ser usado
-		bajo cualquier plataforma basada en Unix, o Windows, o
-		como otra alternativa, puede hacerlo con
-		\filename{install-unx.tar.gz} para Unix, que es mucho
-		más pequeño. Después que lo hayas descomprimido, de
-		su estado original, \filename{install-tl} y
-		\filename{install-tl.bat} se encontrarán en el
-		subdirectorio \dirname{install-tl}.
+	\dirname{systems/texlive/tlnet}; página de web en
+	\url{https://mirror.ctan.org/systems/texlive/tlnet}
+	automáticamente lo dirigirá hacia el repositorio
+	actualizado, más cercano. Usted puede  descargar
+	\filename{install-tl.zip}, el cual puede ser usado
+	bajo cualquier plataforma basada en Unix, o Windows, o
+	como otra alternativa, puede hacerlo con
+	\filename{install-unx.tar.gz} para Unix, que es mucho
+	más pequeño. Después que lo hayas descomprimido, de
+	su estado original, \filename{install-tl} y
+	\filename{install-tl.bat} se encontrarán en el
+	subdirectorio \dirname{install-tl}.
 
 \item [Colección de \TeX{} en \DVD:] vaya al subdirectorio del \DVD en
 	\dirname{texlive}. En Windows, el instalador normalmente
@@ -496,24 +500,34 @@ otros métodos para conseguir el programa.
 	conseguir, comprándolo separado de \url{https://tug.org/store},
 	o puedes grabar tu propia copia de la imagen \ISO\ que se
 	provee. Después de instalarlo de tu \DVD\, o de la imagen
-	\ISO\, si deseas continuar con las actualizaciones del
-	Internet, por favor vea \ref{sec:dvd-install-net-updates}.
+	\ISO\, descargada de \CTAN{}.
+	Puedes también montar la imagen \ISO\ directamente en la mayoría
+	de los sistemas. Después de instalarlo con el \DVD\ o la imagen \ISO,
+	si deseas continuar con las actualizaciones en el Internet,
+	por favor vea \ref{sec:dvd-install-net-updates}.
 
 \end{description}
 
 \begin{figure}[tb]
-\tlpng{nsis_installer}{.6\linewidth}
-\caption{Primera fase del instalador de Windows \code{.exe} }\label{fig:nsis}
+\def\figdesc{Primera fase del instalador de Windows \code{.exe} }
+\tlpng{nsis_installer}{.6\linewidth}{\figdesc}
+\caption{\figdesc. Presionando el botón de Instalar te dará la
+ventana como aparece en la figura ~\ref{fig:basic-w32} }\label{fig:nsis}
 \end{figure}
 
 El instalador como tal realiza lo mismo, sin importar el método que
-se utilice. La diferencia más visible entre ellos, es que con el
+se utilice. La diferencia más notable entre los dos, es que con el
 instalador del Net, usted termina con todos los paquetes que están
 disponibles, mientras que con el \DVD\ o con la imagen de
 \ISO, estos no proveen las actualizaciones más recientes de
 ellos.
 
-Si necesitas realizar las descargas a través de proxies, utilice el fichero \filename{~/.wgetrc} o las variables del entorno del sistema con las preferencias parar Wget (\url{https://www.gnu.org/software/wget/manual/html_node/Proxies.html}), o el equivalente de cualquier otro programa de descarga. Esto no aplica si se instala de un \DVD o the una imagen de \ISO.
+Si necesitas realizar las descargas a través de proxies,
+utilice el fichero \filename{~/.wgetrc} o las variables
+del entorno del sistema con las preferencias parar Wget
+(\url{https://www.gnu.org/software/wget/manual/html_node/Proxies.html}),
+o el equivalente de cualquier otro programa de descarga. Esto no
+aplica si se instala de un \DVD o the una imagen de \ISO.
 
 \noindent
 Las siguientes secciones explican el comienzo del instalador con más
@@ -547,8 +561,8 @@ esto, puedes ejecutar:
 	> \Ucom{perl install-tl -gui}
 \end{alltt}
 
-En cuanto al antiguo instalador mago \code{wizard} y las opciones
-\code{perltk}/\code{expert} están aún disponibles. Pero actualmente hace la misma función que \code{-gui}.
+En cuanto al antiguo instalador mago \code{-wizard} y las opciones
+\code{-perltk}/\code{-expert} están aún disponibles. Pero actualmente hace la misma función que \code{-gui}.
 
 Para un listado completo de las varias opciones:
 \begin{alltt}
@@ -626,7 +640,7 @@ Para un listado completo de las varias opciones disponibles:
 \begin{figure}[tb]
 \begin{boxedverbatim}
 
-Installing TeX Live 2021 from: ...
+Installing TeX Live 2022 from: ...
 Platform: x86_64-linux => 'GNU/Linux on x86_64'
 Distribution: inst (compressed)
 Directory for temporary files: /tmp
@@ -638,11 +652,11 @@ Directory for temporary files: /tmp
  <S> set installation scheme: scheme-full
 
  <C> customizing installation collections
-     40 collections out of 41, disk space required: 7172 MB
+     40 collections out of 41, disk space required: 7239 MB
 
  <D> directories:
    TEXDIR (the main TeX directory):
-     /usr/local/texlive/2021
+     /usr/local/texlive/2022
    ...
 
  <O> options:
@@ -833,8 +847,8 @@ nivel donde estos se encuentren, en la estructura del sistema.
 
 El diseño estándar está descrito en la sección~\ref{sec:texmftrees},
 \p.\pageref{sec:texmftrees}. La localización estándar de
-\dirname{TEXDIR} es \dirname{/usr/local/texlive/2021} en los sistemas
-Unix y |%SystemDrive%\texlive\2021| en Windows.  Acomodándolo de esta manera,
+\dirname{TEXDIR} es \dirname{/usr/local/texlive/2022} en los sistemas
+Unix y |%SystemDrive%\texlive\2022| en Windows.  Acomodándolo de esta manera,
 usted tendrá instalaciones paralelas de \TL. Una para cada versión, y puede
 cambiar entre ambas, simplemente cambiando la ruta de búsqueda. 
 
@@ -855,7 +869,7 @@ Los directorios de instalación pueden ser también modificados, ajustando las p
 Una alternativa razonable es un directorio local, o el
 directorio de la casa (home directory), especialmente si
 usted es el único usuario. Use `|~|' para indicar esto, como
-por ejemplo `|~/texlive/2021|'.
+por ejemplo `|~/texlive/2022|'.
 
 Recomendamos incluir el año del calendario, en el nombre del susodicho
 directorio. De esa manera, puede tener varias versiones de \TL{}
@@ -972,36 +986,45 @@ Opciones específicas en Windows, como se muestra en la interfaz avanzada \GUI{}
 \begin{description}
 \item[adjust searchpath] Esto asegura que todos los programas verán el directorio binario de \TL{} en la ruta de búsqueda. 
 
-\item[add menu shortcuts] Si está configurado, habrá un submenú \TL{} en el Start menu. Hay también una tercera opción `Launcher entry` al lado de `TeX Live menu` y `No shortcuts`. Esta opción está descrita en la sección 
-\ref{sec:sharedinstall}.
+\item[add menu shortcuts] Si está configurado, habrá un submenú \TL{} en el Start menu. Hay también una tercera opción `Launcher entry` al lado d,
+ tales como \prog{tlshell} `un \GUI{} de TeX Live menu` un
+\prog{dviout} ;, item[File associations] Las opciones aquí son `Only new', solamente nuevas asociaciones, (que crea las asociaciones de los archhivos, pero no sobrescriben las ya existentes), `All' (todas las asociaciones) y `None' (ninguna
+asociaotras funciones de documenación.
 
-\item[File associations] Las opciones aquí son `Only new', solamente nuevas asociaciones, (que crea las asociaciones de los archhivos, pero no sobrescriben las ya existentes), `All' (todas las asociaciones) y `None' (ninguna asociación).
 
-\item[install \TeX{}works front end]
 \end{description}
 
-Cuando todas las preferencias personalizadas y configuraciones, hayan
-sido especificadas, usted puede ingresar la `I', para comenzar el
+Cuando todas otros ingresos personalizadas y configuraciones, hayan
+sido especificadas, usted puede ingresar la `I', par comenzar el
 proceso de instalación.  Cuando esto finalice, vaya a la
+
 sección~\ref{sec:postinstall} para leer qué más se necesitaría hacer. 
 
 \subsection{Opciones con la Línea de Comando install-tl}
 \label{sec:cmdline}
 
+
 Ingrese 
 \begin{alltt}
+
 	> \Ucom{install-tl -help}
 \end{alltt}
 para una lista de opciones de la línea de comandos. Así sea |-| o |--|
 pueden ser usados para los nombres de las opciones. Los
 siguientes opciones, son los más comunes:
 
+\ 
+
 \begin{ttdescription}
 \item[-gui] Si es posible, use el instalador del \GUI{}. Esto requiere
-		el módulo de Tcl/Tk versión 8.5 o más reciente.  Este es el
-		caso en \MacOSX\ y con \TL{} que se distribuye en Windows.  Las
-		opciones de legado \texttt{-gui=perltk} y \texttt{-gui=wizard}
-		están aún disponibles pero actualmente invocan la misma interfaz \GUI{} y si por alguna razón Tcl/Tk no está disponible, la instalación entonces continúa, en el modo de texto. 
+	el módulo de Tcl/Tk versión 8.5 o más reciente.  Esto fue
+	disstribuido con \MacOSX, hasta Monterey; después de eso, necesitarás
+	instalar Tcl/Tk por tu cuenta, si no escoges el instalador de
+	Mac\TeX{}. TCl/Tk está distribuido con \TL{} en Windows. 
+	Las opciones de legado \texttt{-gui=perltk} y \texttt{-gui=wizard}
+	están aún disponibles pero actualmente invocan la misma interfaz \GUI{}
+	y si por alguna razón Tcl/Tk no está disponible, la instalación entonces
+	continuaría, en el modo de texto. 
 
 \item[-no-gui] Obligue el instalador de texto, incluso bajo Windows. 
 
@@ -1103,18 +1126,18 @@ cualquier otro archivo), especificado por \filename{.profile} y las
 líneas que consiguientemente se añadirían, serían:
 
 \begin{sverbatim}
-PATH=/usr/local/texlive/2021/bin/i386-linux:$PATH; export PATH
-MANPATH=/usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH; export MANPATH
-INFOPATH=/usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH; export INFOPATH
+PATH=/usr/local/texlive/2022/bin/i386-linux:$PATH; export PATH
+MANPATH=/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH; export MANPATH
+INFOPATH=/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH; export INFOPATH
 \end{sverbatim}
 
 Para csh o tcsh, el archivo para editar es típicamente
 \filename{$HOME/.cshrc}, y las líneas que se tuviesen que añadir, serían:
 
 \begin{sverbatim}
-setenv PATH /usr/local/texlive/2021/bin/i386-linux:$PATH
-setenv MANPATH /usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH ; export MANPATH
-setenv INFOPATH /usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH ; export INFOPATH
+setenv PATH /usr/local/texlive/2022/bin/i386-linux:$PATH
+setenv MANPATH /usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH ; export MANPATH
+setenv INFOPATH /usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH ; export INFOPATH
 \end{sverbatim}
 
 Si ya tienes los ajustes necesarios en los archivos ``dot'',
@@ -1134,8 +1157,8 @@ Nuestras dos recomendaciones son:
 \filename{/etc/manpath.config} y, si está presente, añade líneas como:
 
 \begin{sverbatim}
-MANPATH_MAP /usr/local/texlive/2021/bin/i386-linux \
-            /usr/local/texlive/2021/texmf-dist/doc/man
+MANPATH_MAP /usr/local/texlive/2022/bin/i386-linux \
+            /usr/local/texlive/2022/texmf-dist/doc/man
 \end{sverbatim}
 
 Y 2)~verifica un archivo \filename{/etc/environment}, el cual puede
@@ -1193,9 +1216,9 @@ durante la instalación inicial o después), el archivo
 necesario para la configuración es creado en:
 \filename{TEXMFSYSVAR/fonts/conf/texlive-fontconfig.conf}. 
 
-Para configurar y fijar las fuentes de \TL{} para el uso
-global del sistema (asumiendo que usted tenga privilegios),
-es de la siguiente manera: 
+Para configurar y fijar las fuentes de \TL{} que tomarán efecto para
+el uso global del sistema (asumiendo que usted tenga privilegios),
+es de la siguiente manera:
 \begin{enumerate*} 
 	\item Copia el archivo \filename{texlive-fontconfig.conf} a
 \dirname{/etc/fonts/conf.d/09-texlive.conf}.  \item Ejecuta
@@ -1276,8 +1299,8 @@ el paquete debe ser puesto en \dirname{TEXMFLOCAL/tex/latex} o
 
 \dirname{TEXMFLOCAL} requiere una base de datos actualizada, o los
 archivos no se encontrarán. Puedes actualizarla con el comando
-\cmdname{mktexlsr} o usa el botón `Reinit file database' en el
-tabulador de la configuración del \GUI\ \TeX\ Live Manager. 
+\cmdname{mktexlsr} o usa el botón `Update filename database' en el
+tabulador `Actions' de la configuración del \GUI\ \TeX\ Live Manager. 
 
 Por norma o estándar, como se muestra, cada una de estas variables está
 definida en un sólo directorio. Esto no es
@@ -1303,7 +1326,7 @@ incluidas en \TL, así que échale un vistazo si deseas, para asegurarte que la 
 Si necesitas instalar tus propias fuentes, vea
 \url{https://tug.org/fonts/fontinstall.html} que con nuestro mejor esfuerzo tratamos en describir el procedimiento.
   
-También puedes considerar en utilizar \XeTeX\ o Lua\TeX\ (vea detalladamente la sección~\ref{sec:tex-extensions}), el cual te permite el uso de fuentes del sistema sin instalación alguna de \TeX\. Pero que sirva de advertencia/precaución, que al usar las fuentes del sistema, tus documentos serán instantáneamente inutilizables para todos aquellos que esten en diferentes entornos de sistemas. 
+También puedes considerar en utilizar \XeTeX\ o Lua\TeX\ (vea detalladamente la sección~\ref{sec:tex-extensions}), el cual te permite el uso de fuentes del sistema sin instalación alguna de \TeX\. Pero que sirva de advertencia/precaución, que al usar las fuentes del sistema, tus documentos serán inutilizables para todos aquellos que esten en diferentes entornos de sistemas. 
    
 \subsubsection{Evaluando la instalación}
 \label{sec:test-install}
@@ -1710,12 +1733,12 @@ running post install action for xetex
 install: xetex-def
 ...
 running mktexlsr
-mktexlsr: Updating /usr/local/texlive/2021/texmf-dist/ls-R...
+mktexlsr: Updating /usr/local/texlive/2022/texmf-dist/ls-R...
 ...
 running fmtutil-sys --missing
 ...
 Transcript written on xelatex.log.
-fmtutil: /usr/local/texlive/2021/texmf-var/web2c/xetex/xelatex.fmt installed.
+fmtutil: /usr/local/texlive/20222022texmf-var/web2c/xetex/xelatex.fmt installed.
 \end{fverbatim}
 
 Como puedes ver, \prog{tlmgr} instala dependencias, y se ocupa de
@@ -1754,28 +1777,40 @@ Bajo Windows, el instalador hace varias cosas extra:
 \begin{description}
 \item[Menús y acceso rápido.] Un nuevo submenú del menú de Start es
 	instalado, el cual contiene funciones para algunas programas
-	del \GUI{} (\prog{tlmgr}, \prog{texdoctk}, el PS\_View
-	(\prog{psv}) pre-visualizador de PostScript) y alguna
-	documentación.
-\item [Associación de archivos.] Si está activado, le permitirán a
-	programas como \prog{TeXworks}, \prog{Dviout}, y
+	del \GUI{}, tales como \prog{tlshell} (un \GUI{} de \prog{tlmgr}, un
+	\prog{dviout} ;, y otros ingresos de documenación.
+
+\item[Associación de archivos.] Si está activado, le permitirán a
+	programas como \prog{TeXworks}, \prog{Dviout}, 
 	en convertirse en el programa estándar para sus
 	respectivos tipos de archivos, o tener una función de doble
 	clic en el menú de `Open with', para esos tipos de archivos.
+	Sin embargo, aquellas asociaciones de los archivos que han sido
+	`User Choice' o electas por el usuario, y que solamente pueden
+	especificarse de una manera interactiva, pueden obstruir o interferir.
+
+\item[Respaldo para Postscript] Para los archivos de Postscript, un
+ 	tipo de fichero previsualizador PSVIewer hace la conversión del
+	Postscript a un fichero temporal PDF, el cual es después mostrado por el
+	estándar visualizador de PDF. Varios formatos bitmapped tienen un
+	ingreso \cmdname{bitmap2eps} en el menú de clic-derecha del `Open with'
+	para convertirlo a EPS, permitiendo entonces que \cmdname{sam2p}
+	o \cmdname{bmeps} realicen el verdadero trabajo.
+
 \item[Conversor de bitmap a eps.] Varios formatos de bitmap tienen una
 	función \cmdname{bitmap2eps} en sus `Open with' del menú accedido
 	mediante el doble clic. Bitmap2eps es un programa simple el
 	cual permite que \cmdname{sam2p} o \cmdname{bmeps} hagan el
-	trabajo. 
+	trabajo.
+
 \item[Ajuste automático de acceso a la ruta.] No requiere
 	procedimientos manuales de configuración.
+
 \item[Desinstalador.] El instalador crea una función debajo de
-	`Añadir/Remover Programas' (`Add/Remove
-		Programs') para \TL. El tabulador `uninstall' del \GUI\ de
-	\TeX\ Live Manager, se encarga de esto. Para la
-	instalación con un usuario solamente, el instalador
-	también crea un ingreso de desinstalación, que se
-	encuentra bajo el menú de Start o Comienzo. 
+	`Añadir/Remover Programas' (instalación de administración
+	(`Add/Remove Programs') o bajo el menú de  \TL{} cuando es una
+	instalación para un solo usuario. 
+
 \item[Write-protect] Para una instalación con privilegios
 	administrativos, los directorios de \TL\ son
 	write-protected, o protegidos-contra-escritura,
@@ -1790,15 +1825,13 @@ son comúnmente encontrados en ordenador de Windows. Por lo tanto \TL{} provee l
 piezas perdidas:
 
 \begin{description} 
-\item[Perl y Ghostscript] Por la importancia de Perl
-			y Ghostscript, \TL{} incluye copias
-			`escondidas', de estos programas. Hay programas
-			de \TL{} que necesitan saber donde encontrarlos,
-			pero no engañan su presencia, a través de
-			variables del sistema, o las preferencias del
-			registro. En sí, no son instalaciones a mayor
-			escala, y no deben interferir con instalaciones
-			de Perl o Ghostscript. 
+\item[Perl, Tcl/Tk y Ghostscript] Por la importancia de Perl
+	y Ghostscript, y también porque el instalador-
+	y el \GUI{} de tlshell están escritas en Tcl/Tk, \TL{} incluye
+	copias `escondidas', de estos programas. Hay programas de \TL{} 			que necesitan saber donde encontrarlos, pero no engañan su presencia, a través
+	de variables del sistema, o las preferencias del registro. En sí, no son
+	instalaciones a mayor escala, y no deben interferir con instalaciones de
+	Perl, Tcl/Tk o Ghostscript.
 
 \item[dviout.] También está instalado \prog{dviout}, un visualizador de
 	\acro{DVI}. Al comienzo, cuando pre-visualices archivos con
@@ -1817,16 +1850,14 @@ piezas perdidas:
 	comando de Unix, son instalados también con los binarios
 	de \TL{}. Estos incluye \cmdname{gzip}, \cmdname{unzip},
 	y las utilidades de del conjunto de \cmdname{xpdf}
-	(\cmdname{pdfinfo}, \cmdname{pdffonts}, \ldots).  El
-	visualizador \cmdname{xpdf} no está disponible para
-	Windows.  Una alternativa es el visualizador Sumatra
-	PDF, disponible de \url{https://sumatrapdfreader.org/} 	
+	(\cmdname{pdfinfo}, \cmdname{pdffonts}, \ldots).
 
 \item[fc-list, fc-cache, \ldots] Las herramientas de la librería de
 	fontconfig, le permite a \XeTeX{} a manipular fuentes del
 	sistema en Windows. Usted puede usar \prog{fc-list} para
 	determinar los nombres de las fuentes que pasan con el
-	extendido comando \cs{font}. Y si es necesario, ejecute		\prog{fc-cache} primero para actualizar la información
+	extendido comando \cs{font}. Y si es necesario, ejecute
+	\prog{fc-cache} primero para actualizar la información
 	de la fuente.
 \end{description}
 
@@ -1854,7 +1885,7 @@ subdirectorio del directorio de Windows.
 
 En algunos casos, la información puede ser obtenida a través de variables
 del sistema, pero otras informaciones, como la localización de accesos
-directos, es necesario consultar el registro. También la fijación
+directos, es necesario consultar el registro. También la configuración
 permanente de variables del sistema, requieren acceso al registro.
 
 \subsection{Permisos en Windows}
@@ -2011,8 +2042,9 @@ nombre y la ruta, para todos estos archivos bajo la raíz.
 Vamos a describir el mecanismo de la ruta de búsqueda genérica
 de la librería de \KPS{}.
 
-Le llamamos una ruta de búsqueda a un guión- o semi guión\hyph de una
-lista separada de \emph{elementos de ruta}, que son
+Le llamamos una ruta de búsqueda a dos puntos (\samp{:})
+- o punto y coma (\samp{;}) de un
+listado\hyph separador de \emph{elementos de ruta}, que son
 básicamente nombres de directorios. Una ruta de búsqueda puede
 provenir (de una combinación) de muchos orígenes. Para
 encontrar un archivo \samp{mi-archivo} alrededor de una ruta
@@ -2027,31 +2059,13 @@ separadores de los nombres de archivos, que difieren de dos puntos
 (\samp{:}) y barra oblicua (\samp{/}). 
 
 Para revisar un elemento particular de ruta \var{p}, \KPS{}
-primero revisa si una base de datos prefabricada (vea
-``Base de datos de nombres de archivos'' Filename data\-base) en la
-página~\ref{sec:filename-database} aplica a \var{p}, i.e., si
-la base de datos se encuentra en un directorio que es un
-prefijo de \var{p}. Si esto es así, la especificación de la
-ruta tiene que corresponder, con los contenidos de la base de
-datos. 
-
-Si la base de datos no existe, o no aplica a este elemento de
-ruta, o no corresponde con ningún archivo, el sistema de
-archivos es escaneado (si esto no ha sido prohibido por alguna
-especificación que comience con \samp{!!}\ y si el archivo que
-está siendo buscado, ya existe). \KPS{} construye la
-lista de directorios que corresponde con este elemento de la
-ruta, y luego revisa en cada uno de estos elementos, por el
-archivo que se está buscando. 
-
-El ``archivo tiene que existir'' es una condición que viene a
-relucir con los archivos \samp{.vf} y los archivos de ingreso
-que son leídos por el comando \cs{openin} de \TeX{}. Estos
-archivos quizás no existan (e.g., \file{cmr10.vf}), y por lo
-lo tanto, sería un error, en escanear el disco para
-encontrarlos. Por tal motivo, si usted comete el error en no
-actualizar \file{ls-R} cuando instala un archivo nuevo
-\samp{.vf}, este archivo nunca será encontrado. 
+primero revisa si una base de datos prefabricada (vea ``Base
+de datos de nombres de archivos'' Filename data\-base en la
+página~\ref{sec:filename-database}) aplica a \var{p}, i.e., si por
+ejemplo la base de datos se encuentra dentro de un directorio que
+es un prefijo de \var{p}. Si esto es así, la especificación de la
+ruta tiene que corresponder, coincidir, con los contenidos de la base
+de datos.
 
 Aunque el elemento más simple y más común es el nombre de un
 directorio, \KPS{} respalda características adicionales, en las
@@ -2064,7 +2078,7 @@ especificaciones, en nombre o nombres básicos de directorios.
 Esto es descrito en las siguientes secciones en el mismo
 orden que esto se lleva a cabo. 
 
-Note que si el nombre de archivo que se está buscando, es un
+Note que si el nombre del archivo que se está buscando, es un
 relativo absoluto, o implícitamente, i.e., comienza con
 \samp{/} o \samp{./} o \samp{../}, \KPS{} simplemente revisa
 si este archivo existe. 
@@ -2120,13 +2134,14 @@ de búsqueda que se utiliza para buscar estos archivos, es nombrada
 cualquier otra) variable que sobrescriba los directorios del sistema. 
 
 En vez de esto, una instalación normal resulta en un archivo
-\file{.../2021/texmf.cnf}. Si tienes que hacer modificaciones o
+\file{.../2022/texmf.cnf}. Si tienes que hacer modificaciones o
 cambios a las configuraciones estándares (algo normalmente
-innecesario), este es el lugar para ponerlos. El principal archivo de
-configuración está en el archivo
-\file{.../2021/texmf-dist/web2c/texmf.cnf}.  Usted no debe editar este
-último archivo, debido a que los cambios serán perdidos, tan pronto
-como la versión de la distribución sea actualizada. 
+innecesario), este es el lugar para ponerlos.
+
+El principal archivo de configuración está en el archivo
+\file{.../2022/texmf-dist/web2c/texmf.cnf}.  Usted no debería editar
+este último archivo, debido a que los cambios serán perdidos,
+tan pronto como la versión de la distribución sea actualizada.
 
 Como una nota adjunta, si lo que se desea es añadir un directorio personal a una ruta de búsqueda, especificando entonces una variable del entorno del sistema es un método razonable:
 \begin{verbatim}
@@ -2613,7 +2628,7 @@ depuración, o debugging:
                      \item[\texttt{32}] Búsqueda de archivos.  
                      \item[\texttt{64}] Valores de las variables.  
  \end{ttdescription}
- Un valor de \texttt{-1} fijará todas las opciones
+ Un valor de \texttt{-1} configurará todas las opciones
  anteriores; en práctica, esto es usualmente lo más
  conveniente. 
 
@@ -2877,7 +2892,7 @@ Asymptote, que trabaje con \TL.  \item Peter Breitenlohner y el equipo \eTeX\
 	por la fundación estable del futuro de \TeX, y Peter específicamente
 	por la ayuda estelar por la utilización de \GNU\ autotools a través de \TL.  
 
-\item	Jin-Hwan Cho y todo el equipo de DVIPDFM$x$, por su excelentes drivers
+\item	Jin-Hwan Cho y todo el equipo de DVIPDFM$x$, por su excelente driver
 	y respuestas con problemas de configuración. 
 
 \item Thomas Esser, quien sin su contribución, el maravilloso paquete \teTeX{}
@@ -2998,7 +3013,7 @@ DVIPDFM$x$.
 
 \item Graham Williams, el creador del Catálogo de \TeX.
 
-\item Joseph Wright, por su extenso trabajo en que la funncionlidad primitiva esté disponible a través de todos los motores.
+\item Joseph Wright, por su extenso trabajo en que la funcionalidad primitiva esté disponible a través de todos los motores.
 
 \item Hironobu Yamashita, por muchísimo trabajo en en p\TeX\ y respaldo relacionado con el mismo.
  
@@ -3455,14 +3470,13 @@ planes para el futuro.
 pdf\TeX{} (\url{https://tug.org/applications/pdftex}).
 
 El archivo de \TeX\ \filename{.fmt} (formato de alta-velocidad), y
-otras archivos similares para MetaPost y \MF\ están ahora
-almacenados en los subdirectorios de \dirname{texmf/web2c},
-en vez del directorio mismo (aunque el directorio esté
-siendo buscado, por el hecho que algún \filename{.fmt}'s) exista en el
-sistema. Los subdirectorios son nombrados por el
-`motor' en uso, tal como \filename{tex} o \filename{pdftex}
-o \filename{xetex}. Este cambio debe ser invisible en uso
-normal. 
+otras archivos similares para MetaPost y \MF\ están ahora almacenados
+en los subdirectorios de \dirname{texmf/web2c}, en vez del directorio
+mismo (aunque se esté buscando en el directorio, por el hecho de
+existentes \filename{.fmt}'s) en el sistema. Los subdirectorios
+son nombrados por el `motor' en uso, tal como \filename{tex} o
+\filename{pdftex} o \filename{xetex}. Este cambio debe ser invisible
+en uso normal.
 
 El programa de \texttt{tex} (básico) no lee ya más, las primeras
 líneas \texttt{\%\&} para determinar el formato que ejecutar; esto es
@@ -3672,12 +3686,12 @@ la instalación mediante la ejecución de
 |tlmgr conf texmf shell escape 0|.
 
 Y aún otro cambio fue en \BibTeX\ y Makeindex, que ahora rehúsan
-producir los archivos en un directorio arbitrario (como el
-mismo \TeX), como valor estándar. Esto es así, porque ahora
-su uso puede ser activado, mediante el restricto \cs{write18}.
-Para cambiar esto, la variable del entorno del sistema
-\envname{TEXMFOUTPUT} puede ser fijada, o la configuración
-|openout_any| modificada. 
+producir los archivos en un directorio arbitrario (como el mismo
+\TeX), como valor estándar. Esto es así, porque ahora su uso puede
+ser activado, mediante el restricto \cs{write18}.  Para cambiar esto,
+la variable del entorno del sistema \envname{TEXMFOUTPUT} puede ser
+configurada, o los ajustes a la configuración de |openout_any|
+pueden ser modificados.
 
 \XeTeX\ ahora respalda el ajuste de margen de un bloque de
 texto, de la misma manera que pdf\TeX. (La expansión de la
@@ -3753,15 +3767,13 @@ restaurados, (pero sin otras variantes \cmdname{ini*}).
 en la red. La sección sobre múltiples repositorios en los
 resultados que provee \code{tlmgr help} tiene más de estos.
 
-El parámetro \cs{XeTeXdashbreakstate} está fijado a 1 como
-estándar, para ambos \code{xetex} y \code{xelatex}. Esto permite
-saltos de líneas, después de guiones cortos y largos,
-lo cual siempre ha sido el funcionamiento de \TeX\
-básico,
-\LaTeX, Lua\TeX, etc. Aquellos documentos existentes de \XeTeX\
-los cuales deben retener la compatibilidad perfecta de saltos 
-de líneas, necesitarán configurar \cs{XeTeXdashbreakstate} a-0
-explícitamente. 
+El parámetro \cs{XeTeXdashbreakstate} está configurado a 1 como
+valor estándar, para ambos \code{xetex} y \code{xelatex}. Esto
+permite saltos de líneas, después de guiones cortos y largos,
+lo cual siempre ha sido el funcionamiento de \TeX\ básico, \LaTeX,
+Lua\TeX, etc. Aquellos documentos existentes de \XeTeX\ los cuales
+deben retener la compatibilidad perfecta de saltos de líneas,
+necesitarán configurar \cs{XeTeXdashbreakstate} a-0 explícitamente.
 
 Los archivos de salida, que son generados por \code{pdftex} y
 \code{dvips}, pueden exceder ahora, hasta 2gb. 
@@ -3806,7 +3818,7 @@ externo, entre muchas cosas más (vea el sitio en el Internet).
 
 \XeTeX\ (también vea sus páginas para más):
 \begin{itemize}
-	\item La librería HarfBuzz es usada para la
+	\item La librería HarfBuzz es utilizada para la
 		organización de las fuentes, en vez de ICU. (ICU
 		es aún usada para el respaldo de codificación de
 		archivos de ingreso, bi-dirección, y el opcional
@@ -3912,7 +3924,7 @@ removido, debido a que \TeX4ht (específicamente
 \code{tex4ht.env}) ahora utiliza Ghostscript
 directamente.  
 
-La colección \pkgname{langcjk} para el soporte de
+La colección \pkgname{langcjk} para el respaldo de
 idiomas chino, japonés, y coreano, ha sido dividida en
 colecciones individuales, con tamaños más moderados. 
 
@@ -4330,10 +4342,8 @@ no están en Mac\TeX\ porque los mismos no están notariados,  pero esto se pued
 \item \texttt{catalogue-date} información no está más propagada desde el Catálogo de \TeX, debido a que esto no estaba relacionado con las actualizaciones de los paquetes. 
 \end{itemize*}
 
-% 
-\htmlanchor{news}
-\subsection{Presente: 2021}
-\label{sec:tlcurrent}
+%
+\subsubsection{2021}
 
 General: \begin{itemize}
 \item Los cambios por parte de Donald Knuth para la afinación de \TeX\ de 2021 y Metafont están incorporados.
@@ -4388,7 +4398,12 @@ Dvips: \begin{itemize*}
 \item Respaldo de nueva función de fuente virtual que retroceda a la definición de fuentes japonesas.
 \end{itemize*}
 
-Mac\TeX{}: Mac\TeX{} y su nuevo archivo de binario \texttt{universal-darwin} ahora requiere macOS 10.14 o más reciente (Mojave, Catalina, y Big~Sur); el archivo |x86_64-darwin| de binario, no está más presente. El directorio binario |x86_64-darwinlegacy|, disponible solamente con la instalación \texttt{install-tl} de Unix, respalda 10.6 y versiones más recientes.
+Mac\TeX{}: Mac\TeX{} y su nuevo archivo de binario
+\texttt{universal-darwin} ahora requiere macOS 10.14 o más
+reciente (Mojave, Catalina, y Big~Sur); el directorio del binario
+|x86_64-darwin|, no está más presente. El directorio del binario
+|x86_64-darwinlegacy|, disponible solamente con la instalación
+\texttt{install-tl} de Unix, respalda 10.6 y versiones más recientes.
 
 Este es un importante año para Macintosh porque Apple presentó máquinas con arquitectura ARM en Noviembre y venderán y respaldarán ambos ARM e INTEL por muchos años. Todos los programas en \texttt{universal-darwin} tienen código ejecutable tanto para ARM como para INTEL. Ambos binarios son compilados del mismo código fuente.
 
@@ -4400,6 +4415,123 @@ Los programas adicionales GhostScript, LaTeXiT, \TeX{} Live Utility, y TeXShop s
 \item \texttt{tlmgr info} reporta nuevos campos de datos \texttt{lcat-*} y \texttt{rcat-*} para el Catálogo local vs. remoto.
 \item completo historial de log de sub-órdenes, sub-comandos, trasladados a un nuevo archivo log \texttt{texmf-var/web2c/tlmgr-commands.log}.
 \end{itemize*}
+
+%
+
+\htmlanchor{news}
+\subsection{Presente: 2022}
+\label{sec:tlcurrent}
+
+General: \begin{itemize}
+\item Nuevo motor \code{hitex}, el cual produce su propio formato HINT,
+diseñado especificamente para la lectura de documentos en aparatos
+móviles. Visualizadores HINT para GNU/LINUX, Windows, y Android están
+disponibles por separados de \TL.
+
+\item \code{tangle}, \code{weave}: respaldo opcional con tercer
+argumento para especificar archivo en la salida.
+
+\item El programa de Knuth's \code{twill} para hacer mini-índices para
+los programas originales \texttt{WEB} están ahora incluidos.
+
+\end{itemize}
+
+Extensiones para todos los motores (excepto en el original \TeX{},
+Aleph, y hi\TeX{}):
+\begin{itemize}
+\item Nuevo primitivo \cs{showstream} para redirigir la salida
+\cs{show} a un fichero.
+\item Nuevos primitivos \cs{partokenname} y \cs{partokencontext} que
+permiten sobrescribir el nombre de la ficha \cs{par} que se emite en las
+líneas blancas, el final de las vboxes, etc.
+\end{itemize}
+
+ep\TeX{}, eup\TeX{}: \begin{itemize*}\raggedright
+\item Nuevos primitivos: \cs{lastnodefont}, \cs{suppresslongerror},
+\cs{suppressoutererror}, \cs{suppressmathparerror}.
+\item  extensión pdf\TeX{} \cs{vadjust pre} está ahora disponible.
+\end{itemize*}
+
+Lua\TeX{}: \begin{itemize*}
+\item Respalda destinos restructurados de PDF 2.0.
+\item PNG /Smask para  PDF 2.0.
+\item Interfaz de fuente variable para \code{luahbtex}.
+\item Diferentes estilos radicales son estándar en mathdefaultsmode.
+\item La opción de bloquear creación discrecional seleccionada.
+\item Mejorías con la implementación de fuentes TrueType.
+\item Una distribución más eficiente de \cs{fontdimen}.
+\item Ignorar párrafos con solamente un nodo \code{par} seguido por
+nodos de sincronización direccional. 
+\end{itemize*}
+
+MetaPost: Reparación de errores para expansión infinita de macros. 
+
+pdf\TeX{}: \begin{itemize*}\raggedright
+\item Respaldo de destinos estructurales de pdf 2.0.
+\item Para fuentes con separación, utilice explícitamente \cs{fontdimen}
+si se especifica.. 
+\item Siempre comience una advertencia al comienzo de una línea.
+\item Para caracteres con autointerletraje (\cs{pdfappendkern} y
+\cs{pdfprependkern}), aún realiza protuberancia; de igual manera,
+autointerletraje para ambos guiones implícitos y explícitos.
+\end{itemize*}
+
+p\TeX{}\ et al.: \begin{itemize*}
+\item Actualización importante de p\TeX{} a 4.0.0 para mejor respaldo
+del actual \LaTeX{}.
+\item Nuevos primitivos \cs{ptexlineendmode} y \cs{toucs}.
+\item \cs{ucs} (previamente disponible en uptex, euptex) ahora está
+también disponible en p\TeX\ y ep\TeX.
+\item La distinción de caracteres de 8-bit y caracteres japoneses como fue
+debatido en un artículo de TUGboat por Hironori Kitagawa
+(\url{https://tug.org/TUGboat/tb41-3/tb129kitagawa-char.pdf}).
+\end{itemize*}
+
+Xe\TeX{}: Nuevo encapsulador de scripts \texttt{xetex-unsafe} y
+\texttt{xelatex-unsafe} para invocaciones más simples que requieren
+ambos \XeTeX{} y operadores de transparencia PSTricks, el cual es
+inherentemente inseguro (siempre y a menos que la reimplementación en
+Ghostscript suceda). Para seguridad, utilice Lua\AllTeX{}.
+
+Dvipdfmx: \begin{itemize*}
+\item Respaldo para PSTricks sin que requiera \texttt{-dNOSAFER},
+excepto para transparencia.
+\item La opción \texttt{-r} para configurar la resolución en
+las fuentes de bitmap, funciona nuevamente.
+\end{itemize*}
+
+Dvips: Debido a los valores predeterminados, no intentes en ajustar los
+medios automáticos para la rotación de tamaños de papel; la nueva opción
+ \texttt{--landscaperotate} lo reactiva. 
+
+\code{upmendex}: Respaldo Experimental para los scripts arábigos y
+scripts hebreos; mejoría en la clasificación de caracteres y respaldo
+de lenguaje. .
+
+Kpathsea: La primera ruta que se produce de \texttt{kpsewhich -all} es
+ahora la misma que una búsqueda (non-all) regular.
+
+\code{tlmgr} e infraestructura: \begin{itemize*}
+\item La utilización de https para \code{mirror.ctan.org} por valor
+estándar..
+\item La utilización de  \code{TEXMFROOT} en lugar de \code{SELFAUTOPARENT}
+para que se faciliten las reasignaciones. 
+\item \code{install-tl}: si la descarga o la instalación falla para un
+paquete determinado, automáticamente continúe y reintente después
+(una vez).
+\end{itemize*}
+
+Mac\TeX{}: Mac\TeX{} y el directorio de su binario \texttt{universal-darwin}
+requiere  macOS 10.14 o más reciente  (Mojave, Catalina, Big~Sur, Monterey).
+El directorio del binario |x86_64-darwinlegacy|, está disponible
+solamente con la orden de Unix \texttt{install-tl}, respalda 10.6 (Snow~Leopard)
+y más recientes.
+
+Platformas: No hay modificaciones en el respaldo de plataforma para
+este año (2022). Sin embargo, para el lanzamiento del próximo año
+(2023), estamos planificando en traspasar los binarios Windows de 32-bit a
+64-bit. Desafortunadamente, no podemos respaldar factiblemente ambos
+simultáneamente.
    
 \subsection{Futuro}
 

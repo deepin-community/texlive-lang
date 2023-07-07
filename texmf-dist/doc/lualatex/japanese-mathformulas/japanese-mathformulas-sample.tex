@@ -1,0 +1,275 @@
+\documentclass[landscape,b4paper,twocolumn,fleqn]{ltjsarticle}
+
+\usepackage{iwona}%
+\usepackage{bookmark,xurl}
+\usepackage{mathformula,ascolorbox,enumerate,environ,tcolorbox,color}%
+\usepackage[hiragino-pron,deluxe,expert,bold]{luatexja-preset}%
+\usepackage[usetype1]{uline--}
+\usepackage[margin=15mm]{geometry}
+\makeatletter
+\newenvironment{kakkoenu}{\begin{enumerate}[\protect\expandafter\ajKakko 1]}{\end{enumerate}}
+\newenvironment{maruenu}{\begin{enumerate}[\protect\expandafter\ajMaru 1]}{\end{enumerate}}
+
+\def\breaklines#1{%
+\@tempcnta=0\relax
+\loop
+\ifnum\@tempcnta<#1\relax
+~\\
+\advance\@tempcnta by 1\relax
+\repeat
+}
+
+\newsavebox{\measure@tikzpicture}
+\NewEnviron{scaletikzpicturetowidth}[1]{%
+  \def\tikz@width{#1}%
+  \def\tikzscale{1}\begin{lrbox}{\measure@tikzpicture}%
+  \BODY
+  \end{lrbox}%
+  \pgfmathparse{#1/\wd\measure@tikzpicture}%
+  \edef\tikzscale{\pgfmathresult}%
+  \BODY
+}
+\NewDocumentCommand\circlestitle{ O{black} m }%
+  {%
+    \noindent%
+    \begin{scaletikzpicturetowidth}{\linewidth}%
+      \begin{tikzpicture}[scale=\tikzscale]%
+        \fill[#1!10!white](0,0)circle(.8);% section名の左の円1
+        \fill[#1!20!white](-1,1)circle(.5);% section名の左の円2
+        \fill[#1!30!white](-.8,2)circle(.35);% section名の左の円3
+        \fill[#1!40!white](-.5,2.8)circle(.15);% section名の左の円4
+        \fill[#1!10!white](7.5,.3)circle(.6);% section名の右の円1
+        \fill[#1!20!white](8.8,.9)circle(.45);% section名の右の円2
+        \fill[#1!30!white](10,1.28)circle(.3);% section名の右の円3
+        \fill[#1!40!white](11.1,1.4)circle(.25);% section名の右の円4
+        \fill[#1!50!white](12.15,1.38)circle(.225);% section名の右の円5
+        \fill[#1!50!white](12.8,.8)circle(.2125);% section名の右の円6
+        \fill[#1!50!white](12.5,0)circle(.15);% section名の右の円7
+        \draw(0,.2)node[right]{\Huge\textmg{\uline[width=.5pt]{4. \uline[-4.5pt,width=.5pt]{#2\<}}\uline[-4.5pt,width=.5pt]{\null\quad\quad}}};% section名
+        \draw(-.5,1.2)node[right]{\Large\textcolor{#1!50!white}{Chapter}};% Chapterの文字
+      \end{tikzpicture}%
+    \end{scaletikzpicturetowidth}%
+  }%
+
+\newcommand{\@sankoufudda}[2][]{%
+\def\@temphoge{#1}%
+\noindent\hspace{-1\zw}\makebox[2\zw]{\leaders\hrule height4.2pt depth-3.4pt\hfill\kern0pt}\textgt{【#2】}\ifx\@temphoge\@empty\else#1~\fi\leaders\hrule height4.2pt depth-3.4pt\hfill\kern0pt\hspace{-1\zw}\nopagebreak\par}
+\newcommand{\@sankoufutta}{\par\nopagebreak\noindent\hspace{-1\zw}\leaders\hrule height4.2pt depth-3.4pt\hfill\kern0pt\hspace{-1\zw}~%
+}
+\newenvironment{sankoubox}{\vspace{.5\zw}\@sankoufudda[{}]{参考}}{\@sankoufutta\vspace{.5\zw}}
+
+\DeclareTColorBox{colorkeybox}{ O{gray} D<>{!} }%
+  {%
+    enhanced,%
+    before skip=2mm,after skip=3mm,%
+    fontupper=\gtfamily,%
+    boxrule=0.4pt,%
+    left=5mm,right=2mm,top=1mm,bottom=1mm,%
+    colback=white,%
+    colframe=gray!20!#1,%
+    sharp corners,%
+    rounded corners=southeast,%
+    arc is angular,%
+    arc=3mm,%
+    underlay=%
+      {%
+        \path[fill=tcbcolback!80!#1]%
+        ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++%
+(0.1,-0.2);\path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm]%
+        ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++%
+        (0.1,-0.2);\path[fill=gray!20!#1,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries #2} ([xshift=4mm]interior.north west);%
+      },%
+    drop fuzzy shadow,%
+    before upper={\hspace{1\zw}}%
+  }%
+
+\newcommand{\coloraftertext}[2]%
+  {%
+    \tcbox%
+      [%
+        #1%
+        on line,%
+        boxsep=0pt,boxrule=0pt,%
+        top=0mm,bottom=0mm,%
+        tcbox width=forced left,%
+        width=\linewidth-\the\@組カラーボックス@length%
+      ]%
+      {#2\relax\strut}%
+  }%
+\newlength{\@組カラーボックス@length}%
+\NewDocumentEnvironment{組カラーボックス}{ m m O{black} O{lightgray!55!white} }%
+  {%
+    \settowidth{\@組カラーボックス@length}{\hspace{.9999em}\gtfamily #1}
+    \begin{tcolorbox}%
+      [%
+        enhanced,%
+        colback=#3,%
+        colframe=black,%
+        left=0mm,right=0mm,top=0mm,bottom=0mm,%
+        boxsep=0mm,%
+        arc=0.2em,%
+        sharp corners=south,%
+        after skip=0mm%
+      ]%
+        \textcolor{white}{\gtfamily\,\,\,#1\,\,\,}%
+        \coloraftertext{colback=#3!30!white,arc=0.2em,sharp corners=south,}{\hspace{-2mm}\gtfamily\textcolor{black}{#2}}%
+    \end{tcolorbox}%
+    \nopagebreak\vspace{-2pt}\nopagebreak%
+    \begin{tcolorbox}%
+      [%
+        enhanced,%
+        breakable,%
+        colback=#4,%
+        colbacktitle=#3!90!white,%
+        colframe=#3!90!white,%
+        sharp corners=north,%
+        before skip=0mm,%
+        before upper={\hspace{1\zw}}%
+      ]%
+  }%
+  { \end{tcolorbox}}%
+
+\newcommand{\subcolorindexbox}[1]%
+  {%
+    \begin{tikzpicture}[scale=0.02\zw]%
+      \draw (0,0) circle [radius=2];%
+      \draw (0,0) circle [radius=1.5];%
+      \draw (0,0)--(0,3);%
+      \draw (0,0)--(0,-3);%
+      \draw (0,0)--(3,0);%
+      \draw (0,0)--(-3,0);%
+      \draw (0.5,0.5)--(0,3);%
+      \draw (0.5,0.5)--(3,0);%
+      \draw (0.5,-0.5)--(0,-3);%
+      \draw (0.5,-0.5)--(3,0);%
+      \draw (-0.5,0.5)--(0,3);%
+      \draw (-0.5,0.5)--(-3,0);%
+      \draw (-0.5,-0.5)--(0,-3);%
+      \draw (-0.5,-0.5)--(-3,0);%
+      \draw (0,0)--(1,1);%
+      \draw (0,0)--(1,-1);%
+      \draw (0,0)--(-1,1);%
+      \draw (0,0)--(-1,-1);%
+      \draw (1,1)--(0.4545,0.7272);%
+      \draw (1,1)--(0.7272,0.4545);%
+      \draw (1,-1)--(0.7272,-0.4545);%
+      \draw (1,-1)--(0.4545,-0.7272);%
+      \draw (-1,1)--(-0.4545,0.7272);%
+      \draw (-1,1)--(-0.7272,0.4545);%
+      \draw (-1,-1)--(-0.4545,-0.7272);%
+      \draw (-1,-1)--(-0.7272,-0.4545);%
+
+      \fill[#1] (0,0) circle [radius=2];%
+      \fill[white] (0,0) circle [radius=1.5];%
+
+      \fill[#1] (0,0)--(0.5,0.5)--(3,0);%
+      \draw[#1!50!white][very thin] (0.5,0.5)--(3,0);%
+      \fill[#1] (0.5,0.5)--(0.4545,0.7272)--(1,1);%
+      \draw[#1!50!white][very thin] (1,1)--(0.7272,0.4545);%
+      \draw[#1!50!white][very thin] (0.5,0.5)--(0,3);%
+      \draw[#1!50!white][very thin] (0,0)--(0,3);%
+      \draw[#1!50!white][very thin] (0,0)--(3,0);%
+      \fill[white] (0,3)--(0,0)--(0.5,0.5);%
+
+      \fill[#1] (0,3)--(-0.5,0.5)--(0,0);%
+      \draw[#1!50!white][very thin] (-1,1)--(-0.4545,0.7272);%
+      \fill[#1] (-1,1)--(-0.5,0.5)--(-0.7272,0.4545);%
+      \draw[#1!50!white][very thin] (0,3)--(-0.5,0.5);%
+      \fill[white] (-3,0)--(0,0)--(-0.5,0.5);%
+      \draw[#1!50!white][very thin] (-0.5,0.5)--(-3,0);%
+
+      \fill[#1] (-3,0)--(0,0)--(-0.5,-0.5);%
+      \draw[#1!50!white][very thin] (-3,0)--(-0.5,-0.5);%
+      \draw[#1!50!white][very thin] (0,0)--(-1,-1);%
+      \draw[#1!50!white][very thin] (-1,-1)--(-0.4545,-0.7272);%
+      \draw[#1!50!white][very thin] (-1,-1)--(-0.7272,-0.4545);%
+      \fill[#1] (-1,-1)--(-0.5,-0.5)--(-0.4545,-0.7272);%
+      \fill[white] (0,-3)--(0,0)--(-0.4545,-0.7272);%
+      \draw[#1!50!white][very thin] (-0.5,-0.5)--(0,-3);%
+
+      \fill[#1] (0,-3)--(0,0)--(0.5,-0.5);%
+      \draw[#1!50!white][very thin] (0,-3)--(0.5,-0.5);%
+      \draw[#1!50!white][very thin] (0,0)--(1,-1);%
+      \draw[#1!50!white][very thin] (1,-1)--(0.7272,-0.4545);%
+      \draw[#1!50!white][very thin] (1,-1)--(0.4545,-0.7272);%
+      \fill[#1] (1,-1)--(0.5,-0.5)--(0.7272,-0.4545);%
+      \fill[white] (3,0)--(0,0)--(0.5,-0.5);%
+      \draw[#1!50!white][very thin] (0.5,-0.5)--(3,0);%
+    \end{tikzpicture}%
+  }%
+\newlength{\colorindexboxlength}%
+\NewDocumentEnvironment{colorindexbox}{ O{black} }%
+  {%
+    \begin{tcolorbox}%
+      [%
+        skin=enhancedmiddle jigsaw,%
+        breakable,%
+        sidebyside,%
+        lefthand width=\colorindexboxlength+5mm,%
+        colback=white,%
+        colframe=white,%
+        opacityback=0,%
+        opacityframe=0,%
+        before upper={\hspace{1\zw}}%
+      ]%
+    \settowidth{\colorindexboxlength}{\subcolorindexbox{#1}}%
+    \subcolorindexbox{#1}%
+    \tcblower%
+  }%
+  {\end{tcolorbox}}%
+\makeatother
+
+\begin{document}%
+
+\circlestitle{相加平均と相乗平均の関係}
+
+\ascboxB{\textgt{相加平均と相乗平均の関係 基礎編}}
+
+\noindent
+\begin{ascolorbox9}{相加平均と相乗平均の関係}
+\相加相乗平均{公式}[b]
+\相加相乗平均{証明}
+\end{ascolorbox9}
+
+\begin{組カラーボックス}{前期第16回\quad 例題21}{相加平均・相乗平均の関係\ajKakko1}
+次の値を求めよ。
+\begin{kakkoenu}
+\item $x>-1$のとき，$2x+\bunsuu1{x+1}$の最小値
+\item $x>0$のとき，$\left(x+\bunsuu1x\right)\left(x+\bunsuu4x\right)$の最小値
+\end{kakkoenu}
+\end{組カラーボックス}
+
+\begin{ascolorbox3}{\textcolor{white}{解答欄解答欄解答欄}}
+\breaklines{15}
+\hfill{（目標時間：5分）}
+\end{ascolorbox3}
+
+\begin{colorkeybox}
+「$>0$」と「相加平均と相乗平均の関係」の記述は忘れずに！
+\end{colorkeybox}
+
+\begin{sankoubox}
+どんな最大・最小問題においても，有名不等式は第一選択肢に挙げたいところです。しかし，ただ適応するだけではなく，一工夫必要なものもたくさんあります。それをそれぞれ見ていきましょう。
+
+\begin{maruenu}
+\item そのまま適用すると$2\sqrt{\bunsuu{2x}{x+1}}$となり，なにもうまくいきません。そこで分母が$x+1$であることに注目し，それと相殺できるように$2x$の部分を$2x+2-2$とするとうまくいくでしょう。
+\item 普通に掛け算をした後に適用する分には問題ありませんが，$\left(x+\bunsuu1x\right),\,\left(x+\bunsuu4x\right)$それぞれについて個別に適用し（$2\times4$としてしまうこと），それをかけてしまうと大問題です。なぜならそれぞれにおいて等号が成立する条件が違うからです。（前者は$x=1$,\,後者は4$x=2$）そのため，相加平均・相乗平均の関係は最後にまとめて用いること，そして用いた直後は必ず等号成立条件を確認することを心がけてください。
+\end{maruenu}
+\end{sankoubox}
+
+\begin{colorindexbox}
+以前に証明した
+\[x^3+y^3+z^3-3xyz\leqq0\]
+が分かれば，相加相乗平均を3文字に拡張した関係式の証明もできるので，宿題が終わってなお余力のある人は試してみよう！
+\end{colorindexbox}
+
+\begin{sankoubox}
+\url{https://mmsankosho.com/3kousoukasoujounoshoumeinoyarikata/}
+\end{sankoubox}
+
+\mbox{\UTF{27A1}}\ignorespaces\quad 将来的には$n$個に拡張した証明もやります。\vspace{.5\zw}
+
+\vfill{\hfill{（問題集\ p.35〜p.38）}}
+
+
+\end{document}

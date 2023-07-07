@@ -50,5 +50,5 @@ Changes
 See the included manual frenchb.pdf, section "Change History".
 
 ---
-Copyright 1996--2021 Daniel Flipo
+Copyright 1996--2023 Daniel Flipo
 E-mail: daniel (dot) flipo (at) free (dot) fr

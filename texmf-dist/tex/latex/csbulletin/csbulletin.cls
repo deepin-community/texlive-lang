@@ -1,4 +1,4 @@
-\ProvidesClass{csbulletin}[2020/01/10 CSTUG Bulletin class]
+\ProvidesClass{csbulletin}[2022/12/12 CSTUG Bulletin class]
 \ClassInfo{csbulletin}{$Id$}
 
 % Switch
@@ -79,7 +79,7 @@
 
 \ifpdf
 \IfFileExists{microtype.sty}{\RequirePackage
-   [protrusion=true,expansion=true,stretch=8,shrink=24,step=4]{microtype}}{}
+   [protrusion=true,expansion=true,stretch=8,shrink=24,step=4,nopatch=item]{microtype}}{}
 \fi
 
 \IfFileExists{array.sty}{\RequirePackage{array}}{}
@@ -310,7 +310,7 @@
 \headheight \z@
 \headsep \z@
 \textwidth 27cc
-\evensidemargin 16mm
+\evensidemargin 13mm
 \textheight 41\baselineskip
 \advance\textheight \topskip
 \topmargin 13mm

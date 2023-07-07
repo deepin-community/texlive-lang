@@ -17,7 +17,7 @@
 %%% 편, 장 섹션 타이틀 재설정
 %%% 절의 섹션 타이틀은 수정하지 않음.
 %%
-\ProvidesPackage{memhangul-common}[2021/03/03]
+\ProvidesPackage{memhangul-common}[2022/11/04]
 
 \let\@CHAPAPP\@chapapp
 \def\refreshprepostchapters{%
@@ -155,9 +155,15 @@
 
 %% CHAPTER
 %%%%%%%%%%%
-\renewcommand{\@m@mchapter}[1][\@empty]{%
-  \def\ch@pt@c{#1}% capture first optional arg
-  \@dblarg{\@chapter}}
+%%\renewcommand{\@m@mchapter}[1][\@empty]{%
+%%  \def\ch@pt@c{#1}% capture first optional arg
+%%  \@dblarg{\@chapter}}
+%\renewcommand{\@m@mchapter}[1][]{%
+%  \def\ch@pt@c{#1}% capture first optional arg
+%  \@ifnextchar[{\@chapter}{\@chapter[]}%
+%}
+%\def\m@m@empty{\@empty}
+
 %%\def\m@m@empty{\@empty} 
 
 %%%%\def\@chapter[#1]#2{%
@@ -241,36 +247,111 @@
 %% \chapter[toc][hdr]{title}
 %% \chapter[toc]{hdr/title}
 %% \chapter{toc/hdr/title}
+%%%%\def\@chapter[#1]#2{%
+%%%%  \m@mpn@new@chaptrue%
+%%%%  \m@mpn@new@schapfalse%
+%%%%  \def\f@rbdy{#2}%
+%%%%%  \ifx\ch@pt@c\@empty % no optional args
+%%%%%    \def\f@rtoc{#2}%
+%%%%%    \def\f@rhdr{#2}%
+%%%%%    \PrerenderUnicode{#2}%
+%%%%%  \else                  % at least one opt arg
+%%%%%    \let\f@rtoc\ch@pt@c
+%%%%%    \ifx\@empty#1\@empty
+%%%%%      \let\f@rhdr\ch@pt@c
+%%%%%      \PrerenderUnicode{#1#2}%
+%%%%%    \else
+%%%%%      \def\f@rhdr{#1}%
+%%%%%      \PrerenderUnicode{#1}%
+%%%%%    \fi
+%%%%%  \fi
+%%%%  \ifx\ch@pt@c\m@m@empty % no optional args
+%%%%    \def\f@rtoc{#1}%
+%%%%    \def\f@rhdr{#1}%
+%%%%%    \PrerenderUnicode{#1}%
+%%%%  \else                  % at least one opt arg
+%%%%    \def\f@rtoc{\ch@pt@c}%
+%%%%    \nametest{#1}{#2}%
+%%%%    \ifsamename          % one opt arg
+%%%%      \def\f@rhdr{\ch@pt@c}%
+%%%%%      \PrerenderUnicode{#1#2}%
+%%%%    \else                % two opt args
+%%%%      \def\f@rhdr{#1}%
+%%%%%      \PrerenderUnicode{#1}%
+%%%%    \fi
+%%%%  \fi 
+%%%%  \m@m@Andfalse
+%%%%  \ifnum \c@secnumdepth >\m@ne
+%%%%    \if@mainmatter
+%%%%      \m@m@Andtrue
+%%%%    \fi
+%%%%  \fi
+%%%%  \ifm@m@And
+%%%%   \ifanappendix
+%%%%    \refstepcounter{APPchapter}%
+%%%%   \else
+%%%%    \refstepcounter{chapter}%
+%%%%   \fi
+%%%%  \fi
+%%%%  \chaptermark{\f@rhdr}
+%%%%  \ifartopt
+%%%%    \@makechapterhead{#2}%
+%%%%    \@afterheading
+%%%%  \else
+%%%%    \insertchapterspace
+%%%%    \if@twocolumn
+%%%%      \@topnewpage[\@makechapterhead{#2}]%
+%%%%    \else
+%%%%      \@makechapterhead{#2}%
+%%%%    \fi
+%%%%    \@afterheading
+%%%%  \fi
+%%%%  \ifm@m@And
+%%%%    \ifanappendix
+%%%%      \addcontentsline{toc}{appendix}{%
+%%%%%       \protect\chapternumberline{\thechapter}\f@rtoc}%
+%%%%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \else
+%%%%      \addcontentsline{toc}{chapter}{%
+%%%%%        \protect\chapternumberline{\thechapter}\f@rtoc}%
+%%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%%%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \fi
+%%%%  \else
+%%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
+%%%%    \ifanappendix
+%%%%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \else
+%%%%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \fi
+%%%%  \fi
+%%%%  \mempostaddchaptertotochook%
+%%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%%%%%% for chapter
+%%%%  \ifanappendix
+%%%%     \protected@edef\@currentlabel{\thechapter}%
+%%%%  \fi
+%%%%  \memendofchapterhook%
+%%%%}
+
 \def\@chapter[#1]#2{%
   \m@mpn@new@chaptrue%
   \m@mpn@new@schapfalse%
   \def\f@rbdy{#2}%
-%  \ifx\ch@pt@c\@empty % no optional args
-%    \def\f@rtoc{#2}%
-%    \def\f@rhdr{#2}%
-%    \PrerenderUnicode{#2}%
-%  \else                  % at least one opt arg
-%    \let\f@rtoc\ch@pt@c
-%    \ifx\@empty#1\@empty
-%      \let\f@rhdr\ch@pt@c
-%      \PrerenderUnicode{#1#2}%
-%    \else
-%      \def\f@rhdr{#1}%
-%      \PrerenderUnicode{#1}%
-%    \fi
-%  \fi
-  \ifx\ch@pt@c\m@m@empty % no optional args
-    \def\f@rtoc{#1}%
-    \def\f@rhdr{#1}%
+  \ifx\ch@pt@c\@empty % no optional args
+    \def\f@rtoc{#2}%
+    \def\f@rhdr{#2}%
   \else                  % at least one opt arg
-    \def\f@rtoc{\ch@pt@c}%
-    \nametest{#1}{#2}%
-    \ifsamename          % one opt arg
-      \def\f@rhdr{\ch@pt@c}%
-    \else                % two opt args
+    \let\f@rtoc\ch@pt@c
+    \ifx\@empty#1\@empty
+      \let\f@rhdr\ch@pt@c
+    \else
       \def\f@rhdr{#1}%
     \fi
-  \fi 
+  \fi
   \m@m@Andfalse
   \ifnum \c@secnumdepth >\m@ne
     \if@mainmatter
@@ -297,18 +378,16 @@
     \fi
     \@afterheading
   \fi
+  \@nameuse{chapter@f@rtoc@before@write@hook}%
+  \mempreaddchaptertotochook%
   \ifm@m@And
     \ifanappendix
       \addcontentsline{toc}{appendix}{%
-%       \protect\chapternumberline{\thechapter}\f@rtoc}%
        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
        \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
     \else
       \addcontentsline{toc}{chapter}{%
-%        \protect\chapternumberline{\thechapter}\f@rtoc}%
         \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
        \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
     \fi
   \else
@@ -321,81 +400,11 @@
   \fi
   \mempostaddchaptertotochook%
   \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
-%%% for chapter
   \ifanappendix
      \protected@edef\@currentlabel{\thechapter}%
   \fi
   \memendofchapterhook%
 }
-
-%%%\def\@chapter[#1]#2{%
-%%%  \m@mpn@new@chaptrue%
-%%%  \m@mpn@new@schapfalse%
-%%%  \def\f@rbdy{#2}%
-%%%  \ifx\ch@pt@c\@empty % no optional args
-%%%    \def\f@rtoc{#2}%
-%%%    \def\f@rhdr{#2}%
-%%%  \else                  % at least one opt arg
-%%%    \let\f@rtoc\ch@pt@c
-%%%    \ifx\@empty#1\@empty
-%%%      \let\f@rhdr\ch@pt@c
-%%%    \else
-%%%      \def\f@rhdr{#1}%
-%%%    \fi
-%%%  \fi
-%%%  \m@m@Andfalse
-%%%  \ifnum \c@secnumdepth >\m@ne
-%%%    \if@mainmatter
-%%%      \m@m@Andtrue
-%%%    \fi
-%%%  \fi
-%%%  \ifm@m@And
-%%%   \ifanappendix
-%%%    \refstepcounter{APPchapter}%
-%%%   \else
-%%%    \refstepcounter{chapter}%
-%%%   \fi
-%%%  \fi
-%%%  \chaptermark{\f@rhdr}
-%%%  \ifartopt
-%%%    \@makechapterhead{#2}%
-%%%    \@afterheading
-%%%  \else
-%%%    \insertchapterspace
-%%%    \if@twocolumn
-%%%      \@topnewpage[\@makechapterhead{#2}]%
-%%%    \else
-%%%      \@makechapterhead{#2}%
-%%%    \fi
-%%%    \@afterheading
-%%%  \fi
-%%%  \@nameuse{chapter@f@rtoc@before@write@hook}%
-%%%  \mempreaddchaptertotochook%
-%%%  \ifm@m@And
-%%%    \ifanappendix
-%%%      \addcontentsline{toc}{appendix}{%
-%%%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
-%%%    \else
-%%%      \addcontentsline{toc}{chapter}{%
-%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%%%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
-%%%    \fi
-%%%  \else
-%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
-%%%    \ifanappendix
-%%%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
-%%%    \else
-%%%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
-%%%    \fi
-%%%  \fi
-%%%  \mempostaddchaptertotochook%
-%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
-%%%  \ifanappendix
-%%%     \protected@edef\@currentlabel{\thechapter}%
-%%%  \fi
-%%%  \memendofchapterhook%
-%%%}
 
 %\def\@makechapterhead#1{%
 %  \chapterheadstart%  \vspace*{50\p@}%
@@ -723,21 +732,21 @@
 \ExplSyntaxOff
 
 
-\AtBeginDocument{
+\AtBeginDocument{%
   \@ifpackageloaded{hyperref}{%
     \pdfstringdefDisableCommands{%
-         \def\cnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
-	  \def\@@cnm#1{<#1>}
-	  \def\snm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
-	  \def\ccnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
-	  \def\bnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
-	  \def\oblivoirdblquote#1{\ifx#1*\expandafter\@@obquote\else "#1"\fi}
-	  \def\@@obquote#1{"#1"}
-	  \def\oblivoirquote#1{\ifx#1*\expandafter\@@obsquote\else '#1'\fi}
-	  \def\@@obsquote#1{'#1'}
-	  \def\cntrdots{…}
+         \def\cnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}%
+	  \def\@@cnm#1{<#1>}%
+	  \def\snm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}%
+	  \def\ccnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}%
+	  \def\bnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}%
+	  \def\oblivoirdblquote#1{\ifx#1*\expandafter\@@obquote\else "#1"\fi}%
+	  \def\@@obquote#1{"#1"}%
+	  \def\oblivoirquote#1{\ifx#1*\expandafter\@@obsquote\else '#1'\fi}%
+	  \def\@@obsquote#1{'#1'}%
+	  \def\cntrdots{…}%
     }%
-  }{}
+  }{}%
 } 
 
 %%%% 따옴표
@@ -833,10 +842,12 @@
 %% vertical distance of math display
 \if@mathdisp
 \addtodef{\normalsize}{}{%
-	\abovedisplayskip 6\p@ \@plus2\p@ \@minus1\p@
-    \abovedisplayshortskip .5\p@ \@plus2\p@ \@minus1\p@
-    \belowdisplayshortskip 6\p@ \@plus2\p@ \@minus1\p@
-    \belowdisplayskip \abovedisplayskip}
+    \abovedisplayskip 6\p@ \@plus2\p@ \@minus4\p@
+    \abovedisplayshortskip 1\p@ \@plus2\p@ %\@minus1\p@
+    \belowdisplayskip 6\p@ \@plus2\p@ \@minus4\p@
+    \belowdisplayshortskip 7\p@ \@plus2\p@ %\@minus1\p@
+%    \belowdisplayskip \abovedisplayskip
+}
 \fi
 
 %% arabic frontmatter numbering
@@ -1026,6 +1037,7 @@
 
 %% for Appendix
 \makechapterstyle{appendixdefault}{%
+  \renewcommand*{\chaptername}{\appendixname}
   \renewcommand{\chapnamefont}{\normalfont\huge\bfseries}
   \renewcommand{\chapnumfont}{\normalfont\huge\bfseries}
   \renewcommand{\chaptitlefont}{\normalfont\Huge\bfseries}
@@ -1036,6 +1048,7 @@
   \setlength{\beforechapskip}{50pt}
   \setlength{\midchapskip}{20pt}
   \setlength{\afterchapskip}{40pt}
+  \renewcommand*{\hchaptertitlehead}{\chaptername~\thechapter}
 }
 
 \makechapterstyle{section}{%
@@ -1152,94 +1165,94 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% appendix %%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\set@appendix@chapsec{%
-   %%% SECTION in APPENDIX
-   \renewcommand{\section}{%
-   \sechook\memucsinterwordhook%
-   \@startsection{section}{1}%  level 1
-      {\secindent}%            heading indent
-      {\beforesecskip}%        skip before the heading
-      {\aftersecskip}%         skip after the heading
-      {\normalfont\secheadstyle}} % font 
- \def\M@sect##1##2##3##4##5##6[##7][##8]##9{%
-  \ifheadnameref\M@gettitle{##8}\else\M@gettitle{##7}\fi
-  \ifnum ##2>\c@secnumdepth
-    \let\@svsec\@empty
-  \else
-    \refstepcounter{APP##1}%
-    \protected@edef\@svsec{\@seccntformat{##1}\relax}%
-  \fi
-  \@tempskipa ##5\relax
-  \ifdim \@tempskipa>\z@
-    \begingroup
-      ##6{%
-      \@hangfrom{\hskip ##3\relax\@svsec}%
-        \interlinepenalty \@M ##9\@@par}%
-    \endgroup
-    \csname ##1mark\endcsname{##8}%
-    \addcontentsline{toc}{##1}{%
-      \ifnum ##2>\c@secnumdepth \else
-        \protect\numberline{\noexpand\protect\csname the##1\endcsname}%
-      \fi
-      ##7}%
-  \else
-    \def\@svsechd{%
-      ##6{\hskip ##3\relax
-     \@svsec ##9}%
-     \csname ##1mark\endcsname{##8}%
-     \addcontentsline{toc}{##1}{%
-       \ifnum ##2>\c@secnumdepth \else
-        \protect\numberline{\csname the##1\endcsname}%
-       \fi
-       ##7}}%
-  \fi
-  \@xsect{##5}}%
-}
-
-\def\restorechapsec{%
-   %%% SECTION in APPENDIX
-   \renewcommand{\section}{%
-   \sechook\memucsinterwordhook%
-   \@startsection{section}{1}%  level 1
-      {\secindent}%            heading indent
-      {\beforesecskip}%        skip before the heading
-      {\aftersecskip}%         skip after the heading
-      {\normalfont\secheadstyle}} % font 
- \def\M@sect##1##2##3##4##5##6[##7][##8]##9{%
-  \ifheadnameref\M@gettitle{##8}\else\M@gettitle{##7}\fi
-  \ifnum ##2>\c@secnumdepth
-    \let\@svsec\@empty
-  \else
-    \refstepcounter{##1}%
-    \protected@edef\@svsec{\@seccntformat{##1}\relax}%
-  \fi
-  \@tempskipa ##5\relax
-  \ifdim \@tempskipa>\z@
-    \begingroup
-      ##6{%
-      \@hangfrom{\hskip ##3\relax\@svsec}%
-        \interlinepenalty \@M ##9\@@par}%
-    \endgroup
-    \csname ##1mark\endcsname{##8}%
-    \addcontentsline{toc}{##1}{%
-      \ifnum ##2>\c@secnumdepth \else
-        \protect\numberline{\noexpand\protect\csname the##1\endcsname}%
-      \fi
-      ##7}%
-  \else
-    \def\@svsechd{%
-      ##6{\hskip ##3\relax
-     \@svsec ##9}%
-     \csname ##1mark\endcsname{##8}%
-     \addcontentsline{toc}{##1}{%
-       \ifnum ##2>\c@secnumdepth \else
-        \protect\numberline{\csname the##1\endcsname}%
-       \fi
-       ##7}}%
-  \fi
-  \@xsect{##5}}
-}
+%%% moved to ob-[no]koreanappendix.sty
+%\def\set@appendix@chapsec{%
+%   %%% SECTION in APPENDIX
+%   \renewcommand{\section}{%
+%   \sechook\memucsinterwordhook%
+%   \@startsection{section}{1}%  level 1
+%      {\secindent}%            heading indent
+%      {\beforesecskip}%        skip before the heading
+%      {\aftersecskip}%         skip after the heading
+%      {\normalfont\secheadstyle}} % font 
+% \def\M@sect##1##2##3##4##5##6[##7][##8]##9{%
+%  \ifheadnameref\M@gettitle{##8}\else\M@gettitle{##7}\fi
+%  \ifnum ##2>\c@secnumdepth
+%    \let\@svsec\@empty
+%  \else
+%    \refstepcounter{APP##1}%
+%    \protected@edef\@svsec{\@seccntformat{##1}\relax}%
+%  \fi
+%  \@tempskipa ##5\relax
+%  \ifdim \@tempskipa>\z@
+%    \begingroup
+%      ##6{%
+%      \@hangfrom{\hskip ##3\relax\@svsec}%
+%        \interlinepenalty \@M ##9\@@par}%
+%    \endgroup
+%    \csname ##1mark\endcsname{##8}%
+%    \addcontentsline{toc}{##1}{%
+%      \ifnum ##2>\c@secnumdepth \else
+%        \protect\numberline{\noexpand\protect\csname the##1\endcsname}%
+%      \fi
+%      ##7}%
+%  \else
+%    \def\@svsechd{%
+%      ##6{\hskip ##3\relax
+%     \@svsec ##9}%
+%     \csname ##1mark\endcsname{##8}%
+%     \addcontentsline{toc}{##1}{%
+%       \ifnum ##2>\c@secnumdepth \else
+%        \protect\numberline{\csname the##1\endcsname}%
+%       \fi
+%       ##7}}%
+%  \fi
+%  \@xsect{##5}}%
+%}
+%
+%\def\restorechapsec{%
+%   %%% SECTION in APPENDIX
+%   \renewcommand{\section}{%
+%   \sechook\memucsinterwordhook%
+%   \@startsection{section}{1}%  level 1
+%      {\secindent}%            heading indent
+%      {\beforesecskip}%        skip before the heading
+%      {\aftersecskip}%         skip after the heading
+%      {\normalfont\secheadstyle}} % font 
+% \def\M@sect##1##2##3##4##5##6[##7][##8]##9{%
+%  \ifheadnameref\M@gettitle{##8}\else\M@gettitle{##7}\fi
+%  \ifnum ##2>\c@secnumdepth
+%    \let\@svsec\@empty
+%  \else
+%    \refstepcounter{##1}%
+%    \protected@edef\@svsec{\@seccntformat{##1}\relax}%
+%  \fi
+%  \@tempskipa ##5\relax
+%  \ifdim \@tempskipa>\z@
+%    \begingroup
+%      ##6{%
+%      \@hangfrom{\hskip ##3\relax\@svsec}%
+%        \interlinepenalty \@M ##9\@@par}%
+%    \endgroup
+%    \csname ##1mark\endcsname{##8}%
+%    \addcontentsline{toc}{##1}{%
+%      \ifnum ##2>\c@secnumdepth \else
+%        \protect\numberline{\noexpand\protect\csname the##1\endcsname}%
+%      \fi
+%      ##7}%
+%  \else
+%    \def\@svsechd{%
+%      ##6{\hskip ##3\relax
+%     \@svsec ##9}%
+%     \csname ##1mark\endcsname{##8}%
+%     \addcontentsline{toc}{##1}{%
+%       \ifnum ##2>\c@secnumdepth \else
+%        \protect\numberline{\csname the##1\endcsname}%
+%       \fi
+%       ##7}}%
+%  \fi
+%  \@xsect{##5}}
+%}
 
 \renewcommand{\appendix}{\par
 %  \setcounter{chapter}{0}%

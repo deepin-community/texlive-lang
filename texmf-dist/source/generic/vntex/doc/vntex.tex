@@ -22,9 +22,6 @@
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage[utf8]{inputenc}
 \usepackage[T1,T2A,T5]{fontenc}
-%\usepackage[T1]{fontenc}
-%\usepackage[T2A]{fontenc}
-%\usepackage[T5]{fontenc}
 \usepackage[russian,vietnamese]{babel}
 \usepackage{charter}
 \usepackage{textcomp}
@@ -126,15 +123,13 @@
 \def\marginnote#1{\leavevmode\llap{\headcolor{\textit{\smash{\parbox[t]{2.5cm}{\raggedleft #1}~~}}}}}
 
 
-
-
 \def\mailto#1{$\langle$\href{mailto:#1}{\texttt{\hrefcolor{#1}}}$\rangle$}
 
 
-\def\URL#1{{\fontfamily{cmvtt}\selectfont{\xbibcolor{http://#1}}}}
+\def\URL#1{{\fontfamily{cmvtt}\selectfont{\xbibcolor{https://#1}}}}
 
 \def\indenturl{\leavevmode\texttt{\phantom{xx}}}
-\def\http#1{\ifvmode\leavevmode\texttt{\phantom{xx}}\fi\href{http://#1}{\URL{#1}}}
+\def\http#1{\ifvmode\leavevmode\texttt{\phantom{xx}}\fi\href{https://#1}{\URL{#1}}}
 \def\ftp#1{\ifvmode\leavevmode\texttt{\phantom{xx}}\fi\href{ftp://#1}{\URL{#1}}}
 
 \def\path#1{\texttt{#1}}
@@ -156,20 +151,11 @@
 
 \def\xbibfileprint#1{\hspace{\fill}\ifx\printversion\undefined\href{http://#1}{[\bibcolor{print~version}]}\fi} 
 
-%%%\reversemarginpar
-
-% \makeatletter
-% \let\docpath\@namedef
-% %\InputIfFileExists{vntexdoc-conf.tex}{}{}
-
-% \makeatletter
-% \let\docpath\@nameuse
-% \makeatother
-
-%%% Verbatim
 
 \newenvironment{code}{\codecolor}{}
 \newenvironment{verbcode}{\codecolor\begin{verbatim}}{\end{verbatim}}
+%%%%\end{verbatim}
+
 \def\code{\ifvmode~~~\fi\codecolor} %%% \setbox0 \wd0
 
 \CustomVerbatimEnvironment{Code}{Verbatim}
@@ -244,7 +230,7 @@ The primary site of Vn\TeX\ is {\normalsize\http{vntex.sf.net}}.
 The current maintainers of Vn\TeX\ are:
 \begin{itemize}
 \item Hàn Thế Thành \mailto{HanTheThanh@gmail.com}
-\item Reinhard Kotucha \mailto{Reinhard.Kotucha@web.de}
+\item Reinhard Kotucha \mailto{Reinhard.Kotucha@gmx.de}
 \item Werner Lemberg \mailto{WL@gnu.org}
 \end{itemize}
 
@@ -253,9 +239,9 @@ Vn\TeX\ and typesetting Vietnamese.  To subscribe to the list, visit:
 
 \http{lists.sourceforge.net/lists/listinfo/vntex-users}
 
-There is also a Wiki:
+%%%There is also a Wiki:
 
-\http{vntex.info}
+%%%\http{vntex.info}
 
 \section{Related Documents}
 The following files are part of the Vn\TeX\
@@ -263,8 +249,7 @@ distribution\ifx\printversion\undefined\footnote{The print versions
   should be used with monochrome printers. A print version of this
   file is \href{vntex-print.pdf}{\bibcolor{here}}.}\fi
 \begin{itemize}
-%\href{}{\bibcolor{here}}}
-%%%%\item \href{file:vntex-man.pdf}{VnTeX Manual}
+
 \item \bibfile{Hàn Thế Thành}{vntex-man.pdf}{Hỗ trợ tiếng Việt cho \TeX}
   \ifx\printversion\undefined\bibfileprint{vntex-man-print.pdf}\fi
 \item \bibfile{Hàn Thế Thành} {vn-min.pdf}{Minimal steps to typeset
@@ -274,45 +259,24 @@ distribution\ifx\printversion\undefined\footnote{The print versions
 \end{itemize}
 The following files are not part of Vn\TeX\ but might be part of the
 \TeX\ distribution you are using. 
-% \begin{itemize}
-% \item \ifundefined{vntexdoc-amsldoc-vi}
-%   {\xbibfile{The American Mathematical Society}{\CTANbase/amslatex/vietnamese/amsldoc-vi.pdf}
-%     {Hướng dẫn sử dụng gói \pkg{amsmath}}.}
-%   {\bibfile{The American Mathematical Society}{\docpath{vntexdoc-amsldoc-vi}}{Hướng dẫn sử dụng gói
-%       \pkg{amsmath}}}
-%   Translated by Huỳnh Kỳ Anh.
-%   \ifundefined{vntexdoc-amsldoc-vi}
-%   {\xbibfileprint{\CTANbase/amslatex/vietnamese/amsldoc-print-vi.pdf}}
-%   {\bibfileprint{\docpath{vntexdoc-amsldoc-print-vi}}}
-% \item \ifundefined{vntexdoc-lshort-vi}
-%   {\xbibfile{H.~Partl, E.~Schlegl, I.~Hyna, T.~Oetiker}
-%     {\CTANbase/lshort/vietnamese/lshort-vi.pdf}{Một tài liệu ngắn gọn
-%       giới thiệu về \LaTeXe}.}
-%   {\bibfile{H.~Partl, E.~Schlegl, I.~Hyna, T.~Oetiker}
-%     {\docpath{vnzexdoc-lshort-vi}} {Một tài liệu ngắn gọn
-%       giới thiệu về \LaTeXe}.} 
-%   Translated by Nguyễn Tân Khoa.
-
-% \item \bibfile{Wolfgang May, Andreas
-%     Schlechte}{\texmfdocvi/ntheorem-vn/ntheorem-doc-vn.pdf} {Mở rộng
-%     môi trường định lý}. Translated by Huỳnh Kỳ Anh.
-%\end{itemize}
 
 \begin{itemize}
-\item \textit{The American Mathematical Society}, Hướng dẫn sử dụng gói
+\item \textit{American Mathematical Society}, Hướng dẫn sử dụng gói
       \pkg{amsmath},\\ 
       \http{\CTANbase/amslatex/vietnamese/amsldoc-vi.pdf}\\
       \http{\CTANbase/amslatex/vietnamese/amsldoc-print-vi.pdf}
 
 \item \textit{H.~Partl, E.~Schlegl, I.~Hyna, T.~Oetiker}, Một tài
-      liệu ngắn gọn giới thiệu về \LaTeXe, Translated by Nguyễn Tân Khoa.\\
+      liệu ngắn gọn giới thiệu về \LaTeXe, Translated by Nguyễn Tân
+      Khoa.\\\label{lshort-vi}
       \http{\CTANbase/lshort/vietnamese/lshort-vi.pdf}
 
 \item \textit{Wolfgang May, Andreas Schlechte}, Mở rộng
-      môi trường định lý. Translated by Huỳnh Kỳ Anh.\\
+      môi trường định lý. Translated by Huỳnh Kỳ Anh.
       \http{\CTANbase/translations/vn/ntheorem-doc-vn.pdf}
 \end{itemize}
 
+\newpage
 
 \section{Typesetting Vietnamese}
 
@@ -381,7 +345,7 @@ Editors which are supposed to work on all operating systems are
 \xbibfilenoauthor{www.xm1math.net/texmaker}{\pkg{\TeX{}Maker}}, and 
 \xbibfilenoauthor{tug.org/texworks}{\pkg{\TeX{}works}}.
 On Windows there are some alternatives, like 
-\xbibfilenoauthor{projectory.de/texshell}{\pkg{\TeX{}shell}}, 
+%\xbibfilenoauthor{projectory.de/texshell}{\pkg{\TeX{}shell}}, 
 \xbibfilenoauthor{www.winedt.com}{\pkg{WinEDT}}, and
 \xbibfilenoauthor{www.texniccenter.org}{\pkg{\TeX{}nicCenter}}.
 \xbibfilenoauthor{www.texniccenter.org}{\pkg{\TeX{}nicCenter}}
@@ -402,7 +366,7 @@ and Context. \LaTeX\ is the most popular one and there are many books
 available about it.
 
 \subsection{Typesetting with \LaTeX}
-
+%%%%%
 The idea of \LaTeX\ is to treat content and layout separately.  If you
 never used \LaTeX\ before, please read {\xbibfilenoauthor
   {\CTANbase/lshort/vietnamese/lshort-vi.pdf}{Một tài liệu ngắn gọn

@@ -6,7 +6,7 @@
 %%
 %% fduthesis.dtx
 %% 
-%%     Copyright (C) 2017--2020 by Xiangdong Zeng <xdzeng96@gmail.com>
+%%     Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
 %% 
 %%     This work may be distributed and/or modified under the
 %%     conditions of the LaTeX Project Public License, either
@@ -25,7 +25,6 @@
 %%     This work consists of the files fduthesis.dtx,
 %%                                     fduthesis-doc.dtx,
 %%                                     fduthesis-logo.dtx,
-%%                                     fduthesis-template.tex,
 %%               and the derived files fduthesis.ins,
 %%                                     fduthesis.cls,
 %%                                     fduthesis-en.cls,
@@ -59,7 +58,7 @@
   \textbf{The \textsf{fduthesis} Class \\
     \LaTeX{} Thesis Template for Fudan University}}}
 \author{Xiangdong Zeng}
-\date{2020/08/30\quad v0.7e%
+\date{2022/09/04\quad v0.8%
   \thanks{\url{https://github.com/stone-zeng/fduthesis}.}}
 
 \begin{document}
@@ -135,11 +134,6 @@ divided into the following three types:
     you can use them in both Chinese and English templates.
 \end{itemize}
 
-If you want to read the implementation part, please turn to the
-Chinese version. Any issues or feature requests can be submitted
-in the \href{https://github.com/stone-zeng/fduthesis/issues}%
-{GitHub repository}.
-
 \section{Installation}
 
 \subsection{Obtaining \cls{fduthesis}}
@@ -169,49 +163,32 @@ manually, the recommended way is to use the TDS ZIP file:
     local TDS directory of \TeX{} distribution.
   \item Run \bashcmd{mktexlsr} to update the ls-R database.
 \end{itemize}
-Although not recommended, you may generate the whole template
-from source code as well:
+\subsubsection{Development version}
+
+On CTAN, only the stable version of \cls{fduthesis} is provided, where new features and
+bug fixes may not be included in time. To use the latest development version on GitHub,
+you can use the install script:
 \begin{itemize}
-  \item Open the project's \href{https://github.com/stone-zeng/fduthesis}%
-    {homepage}, click ``Clone or download'' and choose
-    ``Download ZIP'' to download \file{fduthesis-master.zip}.
-    If you have git program on your computer, you can also
-    clone the repository directly:
-    \begin{shellexample}[gobble=5,alsoletter={.},%
-        morekeywords={git,clone}]
+  \item Open the project's \href{https://github.com/stone-zeng/fduthesis}{homepage}, click
+    ``Code'' button and choose ``Download ZIP'' to download \file{fduthesis-main.zip}.
+    If you have git program on your computer, you can also clone the repository directly:
+    \begin{shellexample}[gobble=5,alsoletter={.},morekeywords={git,clone}]
       git clone https://github.com/stone-zeng/fduthesis.git
     \end{shellexample}
-  \item Extract files, and get into the \file{source} directory.
-    Run the following command to generate all the components:
-    \begin{shellexample}[gobble=5,morekeywords={xetex}]
-      xetex fduthesis.dtx
-    \end{shellexample}
-  \item Copy the generated document classes (\file{.cls}),
-    packages (\file{.sty}) and configuration files (\file{.def})
-    into \path{texmf-local/tex/latex/fduthesis/} under the local
-    TDS tree of \TeX{} distribution. Then run \bashcmd{mktexlsr}
-    to update the ls-R database.
-  \item When writing your thesis with \cls{fduthesis}, you need
-    to copy the file \file{fudan-name.pdf} (can be found in the
-    \file{testfiles/support} directory of the Git repository) to
-    your working directory, to make sure that the logo in the
-    cover can be displayed correctly.
+  \item Run \file{install-win.bat} (on Windows) or \file{install-linux.sh} (on Linux),
+    then all the necessary files will be found in the \file{thesis} folder.
 \end{itemize}
 
-\subsubsection{\cls{fduthesis} on the fly}
+\subsubsection{Overleaf}
 
-If you don't want to install \cls{fduthesis} but need to use it
-at once, you can try the installation scripts. Download the
-repository from GitHub, run \file{install-win.bat} (on Windows)
-or \file{install-linux.sh} (on Linux), then all the necessary
-files will be found in the \file{thesis} folder.
+\cls{fduthesis} also provides the \href{https://www.overleaf.com/latex/templates/fduthesis-latex-thesis-template-for-fudan-university/svtdhhstkmkt}{Overleaf version}.
+You can follow the link and login to edit directly on the web.
 
 \subsection{Composition of the template}
 
-There are several parts in \cls{fduthesis}, including kernel
-template classes, configuration files, affiliated packages and
-user's guides. More details are listed in table~%
-\ref{tab:fduthesis-components}.
+There are several parts in \cls{fduthesis}, including kernel template
+classes, configuration files, affiliated packages and user's guides.
+More details are listed in table~\ref{tab:fduthesis-components}.
 
 \begin{table}[ht]
   \caption{The main components of \cls{fduthesis}}
@@ -219,24 +196,22 @@ user's guides. More details are listed in table~%
   \centering
   \begin{tabular}{lp{24em}}
     \toprule
-    \textbf{Files} & \textbf{Descriptions} \\
+      \textbf{Files} & \textbf{Descriptions} \\
     \midrule
-    \file{fduthesis.cls}          & Document class for Chinese thesis. \\
-    \file{fduthesis-en.cls}       & Document class for English thesis.\\
-    \file{fduthesis.def}          & Configuration parameters file
-      for \cls{fduthesis}. Please do \emph{not} modify it. \\
-    \file{fdudoc.cls}             & Document class for user guides. \\
-    \file{fdulogo.sty}            & Fudan University's visual identity. \\
-    \file{fudan-emblem.pdf}       & University emblem. \\
-    \file{fudan-emblem-new.pdf}   & University emblem (revised version). \\
-    \file{fudan-name.pdf}         & Figure of university name. \\
-    \file{README.md}              & The brief introduction. \\
-    \file{fduthesis.pdf}          & User's guide in Chinese. \\
-    \file{fduthesis-en.pdf}       & User's guide in English (this
-      document). \\
-    \file{fduthesis-code.pdf}     & Code implementation. \\
-    \file{fduthesis-template.tex} & An empty thesis template, and you can
-      write your thesis based on it. \\
+      \file{fduthesis.cls}          & Document class for Chinese thesis. \\
+      \file{fduthesis-en.cls}       & Document class for English thesis.\\
+      \file{fduthesis.def}          & Configuration parameters file
+        for \cls{fduthesis}. Please do \emph{not} modify it. \\
+      \file{fdudoc.cls}             & Document class for user guides. \\
+      \file{fdulogo.sty}            & Fudan University's visual identity. \\
+      \file{fudan-emblem.pdf}       & University emblem. \\
+      \file{fudan-emblem-new.pdf}   & University emblem (revised version). \\
+      \file{fudan-name.pdf}         & Figure of university name. \\
+      \file{README.md}              & The brief introduction. \\
+      \file{fduthesis.pdf}          & User's guide in Chinese. \\
+      \file{fduthesis-en.pdf}       & User's guide in English (this
+        document). \\
+      \file{fduthesis-code.pdf}     & Code implementation. \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -246,8 +221,8 @@ user's guides. More details are listed in table~%
 \subsection{Getting started}
 
 Here is a minimal \TeX{} file for \cls{fduthesis}:
-\begin{latexexample}[gobble=1,deletetexcs={\documentclass},%
-    moretexcs={\chapter},morekeywords={\documentclass},%
+\begin{latexexample}[gobble=1,deletetexcs={\documentclass},
+    moretexcs={\chapter},morekeywords={\documentclass},
     emph={[2]document}]
   % thesis.tex
   \documentclass{fduthesis}
@@ -258,13 +233,13 @@ Here is a minimal \TeX{} file for \cls{fduthesis}:
   \end{document}
 \end{latexexample}
 
-Compile this file under the instructions in subsection~%
-\ref{subsec:compilation}, you will get a 5-page article.
+Compile this file under the instructions in
+subsection~\ref{subsec:compilation}, you will get a 5-page article.
 Of course, most of it will be blank, as you may predicate.
 
 The English version can be used in the same way:
-\begin{latexexample}[gobble=1,deletetexcs={\documentclass},%
-    moretexcs={\chapter},morekeywords={\documentclass},%
+\begin{latexexample}[gobble=1,deletetexcs={\documentclass},
+    moretexcs={\chapter},morekeywords={\documentclass},
     emph={[2]document}]
   % thesis-en.tex
   \documentclass{fduthesis-en}
@@ -312,7 +287,7 @@ or
 
 You can specify some \emph{template options} when loading
 \cls{fduthesis}:
-\begin{latexexample}[gobble=1,deletetexcs={\documentclass},%
+\begin{latexexample}[gobble=1,deletetexcs={\documentclass},
     morekeywords={\documentclass}]
   \documentclass(*\oarg{options}*){fduthesis}
   \documentclass(*\oarg{options}*){fduthesis-en}
@@ -396,9 +371,9 @@ You may notice the following changes when using \opt{draft}:
   can be given via the general command \cs{fdusetup}.
 \end{function}
 
-The argument of \cs{fdusetup} is a set of comma-separated option
-list. The options usually have the form of \kvopt{\meta{key}}%
-{\meta{value}} and in some cases \meta{value} can be omitted.
+The argument of \cs{fdusetup} is a set of comma-separated option list.
+The options usually have the form of \kvopt{\meta{key}}{\meta{value}}
+and in some cases \meta{value} can be omitted.
 For the same option, the values given later will override the
 the previous ones. Default values are indicated in
 \textbf{boldface} in the following descriptions.
@@ -414,7 +389,7 @@ can be abbreviated to \opt{\meta{option}} for boolean type.
 Some options, such as \opt{style} and \opt{info}, may have
 sub-options. They can be set by the following two equivalent
 methods:
-\begin{latexexample}[gobble=1,morekeywords={\fdusetup},%
+\begin{latexexample}[gobble=1,morekeywords={\fdusetup},
     emph={[1]style,cjk-font,font-size,info,title,title*,author,author*,department}]
   \fdusetup{
     style = {cjk-font = adobe, font-size = -4},
@@ -428,7 +403,7 @@ methods:
   }
 \end{latexexample}
 or
-\begin{latexexample}[gobble=1,morekeywords={\fdusetup},%
+\begin{latexexample}[gobble=1,morekeywords={\fdusetup},
     emph={[1]style,cjk-font,font-size,info,title,title*,author,author*,department}]
   \fdusetup{
     style/cjk-font  = adobe,
@@ -468,7 +443,7 @@ Note that you may \emph{not} put spaces around ``|/|''.
   \centering
   \begin{tabular}{ccccc}
     \toprule
-      & \strong{Roman} & \strong{Sans-serif} & \strong{Monospaced} & \strong{Math} \\
+      & \textbf{Roman} & \textbf{Sans-serif} & \textbf{Monospaced} & \textbf{Math} \\
     \midrule
       |garamond|        & EB Garamond         & Libertinus Sans & LM Mono\tnote{a} & Garamond Math   \\
       |libertinus|      & Libertinus Serif    & Libertinus Sans & LM Mono          & Libertinus Math \\
@@ -500,7 +475,7 @@ Note that you may \emph{not} put spaces around ``|/|''.
   \centering
   \begin{tabular}{cccc}
     \toprule
-      & \strong{Roman (song)} & \strong{Sans-serif (hei)} & \strong{Monospaced (fang)} \\
+      & \textbf{Roman (song)} & \textbf{Sans-serif (hei)} & \textbf{Monospaced (fang)} \\
     \midrule
       |adobe|     & Adobe Song Std      & Adobe Heiti Std    & Adobe Fangsong Std \\
       |fandol|    & FandolSong          & FandolHei          & FandolFang         \\
@@ -555,9 +530,9 @@ will be helpful:
 \begin{function}{style/footnote-style}
   \begin{fdusyntax}[gobble=4,emph={[1]footnote-style}]
     footnote-style = (*<plain|\\
-      XXXX\mbox{}~~~~~~~~~~~~~~~~~libertinus|libertinus*|libertinus-sans|\\
-      XXXX\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
-      XXXX\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
+      ....\mbox{}~~~~~~~~~~~~~~~~~libertinus|libertinus*|libertinus-sans|\\
+      ....\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
+      ....\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
   \end{fdusyntax}
   Set the style of footnote numbers. Note that western fonts
   will affect its default value (see table~\ref{tab:footnote-font}),
@@ -573,11 +548,11 @@ will be helpful:
   \centering
   \begin{tabular}{ccccc}
     \toprule
-    \textbf{Western fonts settings} &
-      |libertinus| & |lm|     & |palatino| & |times| \\
+      \textbf{Western fonts settings} &
+        |libertinus| & |lm|     & |palatino| & |times| \\
     \midrule
-    \textbf{Default value of footnote number style} &
-      |libertinus| & |pifont| & |pifont|   & |xits|  \\
+      \textbf{Default value of footnote number style} &
+        |libertinus| & |pifont| & |pifont|   & |xits|  \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -592,10 +567,9 @@ will be helpful:
   the final document.
 \end{function}
 
-\begin{function}[added=2017-08-13,updated=2017-12-08]{style/hyperlink-color}
+\begin{function}[added=2017-08-13,updated=2021-12-27]{style/hyperlink-color}
   \begin{fdusyntax}[gobble=4,emph={[1]hyperlink-color}]
-    hyperlink-color = (*<(default)|classic|elegant|fantasy|material|\\
-      XXXX\mbox{}~~~~~~~~~~~~~~~~~~business|science|summer|autumn|graylevel|prl>*)
+    hyperlink-color = (*<(default)|classic|material|graylevel|prl>*)
   \end{fdusyntax}
   Set the color of hyperlinks. It is invalid if
   \kvopt{hyperlink}{none}. The related colors can be found
@@ -604,6 +578,7 @@ will be helpful:
 
 \begin{table}[ht]
 \centering
+\small
 \newcommand\linkcolorexam[3]{%
   {\small Fig.~\textcolor[HTML]{#1}{1-2}，
     Eq.~(\textcolor[HTML]{#1}{3.4})} &
@@ -615,32 +590,19 @@ will be helpful:
 \label{tab:hyperlink-color}
 \begin{tabular}{c*{3}{>{\hspace{0.2cm}}c<{\hspace{0.2cm}}}}
   \toprule
-  \textsf{Options} & \textsf{Cross references} & \textsf{URL} & \textsf{Citation} \\
+    \textbf{Options} & \textbf{Cross references} & \textbf{URL} & \textbf{Citation} \\
   \midrule
-  \opt{default}            & \linkcolorexam{990000}{0000B2}{007F00} \\
-  \opt{classic}            & \linkcolorexam{FF0000}{0000FF}{00FF00} \\
-  \opt{elegant}\tnote{a}   & \linkcolorexam{961212}{C31818}{9B764F} \\
-  \opt{fantasy}\tnote{b}   & \linkcolorexam{FF4A19}{FF3F94}{934BA1} \\
-  \opt{material}\tnote{c}  & \linkcolorexam{E91E63}{009688}{4CAF50} \\
-  \opt{business}\tnote{d}  & \linkcolorexam{D14542}{295497}{1F6E43} \\
-  \opt{science}\tnote{e}   & \linkcolorexam{CA0619}{389F9D}{FF8920} \\
-  \opt{summer}\tnote{f}    & \linkcolorexam{00AFAF}{5F5FAF}{5F8700} \\
-  \opt{autumn}\tnote{f}    & \linkcolorexam{D70000}{D75F00}{AF8700} \\
-  \opt{graylevel}\tnote{c} & \linkcolorexam{616161}{616161}{616161} \\
-  \opt{prl}\tnote{g}       & \linkcolorexam{2D3092}{2D3092}{2D3092} \\
+    \opt{default}            & \linkcolorexam{990000}{0000B2}{007F00} \\
+    \opt{classic}            & \linkcolorexam{FF0000}{0000FF}{00FF00} \\
+    \opt{material}\tnote{a}  & \linkcolorexam{E91E63}{009688}{4CAF50} \\
+    \opt{graylevel}\tnote{a} & \linkcolorexam{616161}{616161}{616161} \\
+    \opt{prl}\tnote{b}       & \linkcolorexam{2D3092}{2D3092}{2D3092} \\
   \bottomrule
 \end{tabular}
 \begin{tablenotes}
-  \item[a] From \href{https://tex.stackexchange.com/}%
-    {\TeX{} - \LaTeX{} Stack Exchange}.
-  \item[b] Adobe CC.
-  \item[c] Material Design color palette
+  \item[a] Material Design color palette
     (See \url{https://material.io/guidelines/style/color.html}).
-  \item[d] Microsoft Office 2016.
-  \item[e] From \href{https://www.wolfram.com/}{Wolfram Research website}.
-  \item[f] Solarized color palette
-    (See \url{http://ethanschoonover.com/solarized}).
-  \item[g] \textit{Physical Review Letter} magazine.
+  \item[b] \textit{Physical Review Letter} magazine.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -655,8 +617,7 @@ will be helpful:
   if you choose \opt{biblatex}.
 \end{function}
 
-\begin{function}[added=2017-10-28,updated=2018-01-25]%
-    {style/bib-style}
+\begin{function}[added=2017-10-28,updated=2018-01-25]{style/bib-style}
   \begin{fdusyntax}[gobble=4,emph={[1]bib-style}]
     bib-style = (*<author-year|(numerical)|\meta{other style}>*)
   \end{fdusyntax}
@@ -718,9 +679,17 @@ will be helpful:
   subsubsection~\ref{subsubsec:information}.
 \end{function}
 
+\begin{function}[added=2021-09-21]{style/declaration-page}
+  \begin{fdusyntax}[gobble=4,emph={[1]declaration-page}]
+    declaration-page = (*\marg{file}*)
+  \end{fdusyntax}
+  Insert the scanned declaration page PDF file. If empty (default),
+  then the pre-defined declaration page will be inserted.
+\end{function}
+
 \begin{function}{\makecoveri,\makecoverii,\makecoveriii}
   For generating thesis cover, list of instructors and
-  declaration page manually. These commands cannot ensure
+  declaration page manually. These commands cannot guarantee
   the correct page numbers, hence you should always use the
   auto-generated thesis cover unless necessary.
 \end{function}
@@ -750,7 +719,7 @@ will be helpful:
     title  = (*\marg{title in Chinese}*)
     title* = (*\marg{title in English}*)
   \end{fdusyntax}
-  Title of your thesis. The line width is about \SI{30}{em} by
+  Title of your thesis. The line width is about \qty{30}{em} by
   default, but you may break it with |\\| manually.
 \end{function}
 
@@ -857,6 +826,15 @@ serial number.
   Chinese Library Classification (CLC).
 \end{function}
 
+\begin{function}[added=2021-09-16]{info/jel}
+  \begin{fdusyntax}[gobble=4,emph={[1]jel}]
+    jel = (*\marg{classification codes}*)
+  \end{fdusyntax}
+  \textit{Journal of Economic Literature} (JEL) Classification
+  Code. It's only mandatory for some departments. When specified,
+  CLC code in the English abstract will be replaced by it.
+\end{function}
+
 \subsection{Writing your thesis}
 
 \subsubsection{Front matter}
@@ -901,7 +879,7 @@ main matter.
 \end{function}
 
 At the end of abstract (both Chinese and English, if available),
-keywords list and CLC number will be shown. They can be
+keywords list and CLC or JEL code will be shown. They can be
 specified via command \cs{fdusetup} and you may refer to
 subsubsection~\ref{subsubsec:information} for more details.
 
@@ -918,7 +896,7 @@ subsubsection~\ref{subsubsec:information} for more details.
   The optional argument \meta{column format} is the same as
   in a standard \LaTeX{} table. The default value is
   ``|lp{7.5cm}|'', which means auto-width for the first column
-  and fix-width (\SI{7.5}{cm}) for the second; both columns will
+  and fix-width (\qty{7.5}{cm}) for the second; both columns will
   be left-aligned.
 \end{function}
 
@@ -934,15 +912,129 @@ idea to split the source file into several parts. The page
 numbers in main matter are shown in arabic numerals.
 
 \begin{function}[updated=2018-01-15]{\footnote}
-  \begin{fdusyntax}[gobble=4,deletetexcs={\footnote},%
-      morekeywords={\footnote}]
+  \begin{fdusyntax}[gobble=4,deletetexcs={\footnote},morekeywords={\footnote}]
     \footnote(*\marg{text}*)
   \end{fdusyntax}
   Insert a footnote. The style of footnote numbers can be set
-  with option \opt{style/foot\-note\-style}. See subsubsection~%
-  \ref{subsubsec:style-and-format} for more details.
+  with option \opt{style/foot\-note\-style}. See
+  subsubsection~\ref{subsubsec:style-and-format} for more details.
 \end{function}
 
+\begin{function}{\caption}
+  \begin{fdusyntax}[gobble=4,deletetexcs={\caption},morekeywords={\caption}]
+    \caption(*\marg{caption}*)
+    \caption(*\oarg{short caption}\marg{long caption}*)
+  \end{fdusyntax}
+  Insert the caption of figure or table. The optional argument
+  \meta{short caption} will be shown in the list of figures/tables.
+  In \meta{long caption}, you can write descriptions for several
+  paragraphs, but \meta{short caption} and the single
+  \meta{caption} will not allow multi-paragraph text (i.e.\
+  text containing \tn{par}) inside.
+\end{function}
+
+By convention, caption of a table is usually put \emph{before}
+the table itself, while for figure it's the opposite.
+In addition, command \tn{caption} must be put inside float
+environments (e.g.\ \env{table} and \env{figure}).
+
+\paragraph{Citations}
+\begin{function}{\cite}
+  \begin{fdusyntax}[gobble=4,deletetexcs={\cite},morekeywords={\cite}]
+    \cite(*\marg{bib key}*)
+    \cite(*\oarg{page number}\marg{bib key}*)
+  \end{fdusyntax}
+  Insert citations. The optional argument \meta{page number} can be
+  used to indicate the page number of the citation. The citation style
+  varies among different bibliography styles. More commands are also
+  provided to mark the citations, which can be found in
+  table~\ref{tab:citation-numerical} (numerical style) and
+  \ref{tab:citation-author-year} (author-year style).
+\end{function}
+
+\NewDocumentCommand\verbcite{O{cite}om}{^^A
+  \IfNoValueTF{#2}{^^A
+    \texttt{\textbackslash#1\{#3\}}^^A
+  }{^^A
+    \texttt{\textbackslash#1[#2]\{#3\}}^^A
+  }}
+\begin{table}[ht]
+  \caption{Citations in numerical style} \label{tab:citation-numerical}
+  \centering
+  \small
+  \def\C#1{\textcolor{MaterialGreen}{#1}}
+  \begin{tabularx}{\textwidth}{cCll}
+    \toprule
+      \textbf{Styles} &
+      \textbf{Results} &
+      \textbf{\kvopt{bib-backend}{bibtex}} &
+      \textbf{\kvopt{bib-backend}{biblatex}} \\
+    \midrule
+    Single &
+      Text\textsuperscript{[\C1]} &
+      \verbcite{texbook} &
+      Same as left \\
+    Multiple &
+      Text\textsuperscript{[\C1--\C2]} &
+      \verbcite{texbook,companion} &
+      Same as left \\
+    With page &
+      Text\textsuperscript{[\C1]126--137} &
+      \verbcite[cite][126--137]{texbook} &
+      Same as left \\
+    With author &
+      Knuth\textsuperscript{[\C1]} states &
+      \verbcite[citet]{texbook} &
+      \verbcite[authornumcite]{texbook} \\
+    With page and author &
+      Knuth\textsuperscript{[\C1]42} states &
+      \verbcite[citet][42]{texbook} &
+      \verbcite[authornumcite][42]{texbook} \\
+    No superscript &
+      Text [\C1] &
+      \verbcite[parencite]{texbook} &
+      Same as left \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{table}[ht]
+  \caption{Citations in author-year style} \label{tab:citation-author-year}
+  \centering
+  \small
+  \def\C#1{\textcolor{MaterialGreen}{#1}}
+  \begin{tabularx}{\textwidth}{cCll}
+    \toprule
+      \textbf{Styles} &
+      \textbf{Results} &
+      \textbf{\kvopt{bib-backend}{bibtex}} &
+      \textbf{\kvopt{bib-backend}{biblatex}} \\
+    \midrule
+    Single &
+      (\C{Knuth}, \C{1986}) &
+      \verbcite[citep]{texbook} &
+      \verbcite{texbook} \\
+    Multiple &
+      (\C{Knuth}, \C{1986}; \C{Mittelbach et al.}, \C{2004}) &
+      \verbcite[citep]{texbook,companion} &
+      \verbcite{texbook,companion} \\
+    With page &
+      (\C{Knuth}, \C{1986})\textsuperscript{126--137} &
+      \verbcite[citep][126--137]{texbook} &
+      \verbcite[cite][126--137]{texbook} \\
+    With author &
+      \C{Knuth} (\C{1986}) &
+      \verbcite[citet]{texbook} &
+      Same as left \\
+    With page and author &
+      \C{Knuth} (\C{1986})\textsuperscript{42} &
+      \verbcite[citet][42]{texbook} &
+      Same as left \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\paragraph{Theorem-like environments}
 \begin{function}{axiom,corollary,definition,example,lemma,
   proof,theorem}
   \begin{fdusyntax}[gobble=4,emph={[2]proof}]
@@ -1036,24 +1128,6 @@ are described below. Note that you don't need to type in the
   This option is invalid for \cs{newtheorem*}.
 \end{function}
 
-\begin{function}{\caption}
-  \begin{fdusyntax}[gobble=4,deletetexcs={\caption},morekeywords={\caption}]
-    \caption(*\marg{caption}*)
-    \caption(*\oarg{short caption}\marg{long caption}*)
-  \end{fdusyntax}
-  Insert the caption of figure or table. The optional argument
-  \meta{short caption} will be shown in the list of figures/tables.
-  In \meta{long caption}, you can write descriptions for several
-  paragraphs, but \meta{short caption} and the single
-  \meta{caption} will not allow multi-paragraph text (i.e.\
-  text containing \tn{par}) inside.
-\end{function}
-
-By convention, caption of a table is usually put \emph{before}
-the table itself, while for figure it's the opposite.
-In addition, command \tn{caption} must be put inside float
-environments (e.g.\ \env{table} and \env{figure}).
-
 \subsubsection{Back matter}
 
 \begin{function}{\backmatter}
@@ -1068,13 +1142,12 @@ Back matter contains bibliography, declaration page, etc.
   \end{fdusyntax}
   Print the bibliography. When \kvopt{bib-backend}{bibtex}, then
   \meta{options} is invalid and this command is equivalent to
-  \tn{bibliography} \texttt{\marg{bib files}}, where
-  \meta{bib files} should be specified with option
-  \opt{style/bib-resource} (see subsubsection~%
-  \ref{subsubsec:style-and-format}). When \kvopt{bib-backend}%
-  {bibtex}, then \tn{printbibliography} is provided by
-  \pkg{biblatex} and the available options can be found in its
-  documentation.
+  \tn{bibliography} \texttt{\marg{bib files}}, where \meta{bib files}
+  should be specified with option \opt{style/bib-resource} (see
+  subsubsection~\ref{subsubsec:style-and-format}). When
+  \kvopt{bib-backend}{bibtex}, then \tn{printbibliography} is
+  provided by \pkg{biblatex} and the available options can be
+  found in its documentation.
 \end{function}
 
 \section{Packages dependencies}
@@ -1085,9 +1158,8 @@ different packages dependency. Details are as follows:
   \item In any case, \cls{fduthesis} will load the following
     packages \emph{explicitly}:
     \begin{itemize}
-      \item \pkg{expl3}, \pkg{xparse}, \pkg{xtemplate} and
-        \pkg{l3keys2e}, belong to \pkg{l3kernel} and
-        \pkg{l3packages} bundles
+      \item \pkg{xtemplate} and \pkg{l3keys2e}, belong to
+        \pkg{l3packages} bundle
       \item \cls{ctexbook}, belongs to \CTeX{} bundle
       \item \pkg{amsmath}, belongs to \AmSLaTeX{} bundle
       \item \pkg{unicode-math}

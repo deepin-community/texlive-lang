@@ -7,7 +7,7 @@
 %% fduthesis.dtx  (with options: `doc')
 %% fduthesis-doc.dtx  (with options: `doc')
 %% 
-%%     Copyright (C) 2017--2020 by Xiangdong Zeng <xdzeng96@gmail.com>
+%%     Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
 %% 
 %%     This work may be distributed and/or modified under the
 %%     conditions of the LaTeX Project Public License, either
@@ -26,7 +26,6 @@
 %%     This work consists of the files fduthesis.dtx,
 %%                                     fduthesis-doc.dtx,
 %%                                     fduthesis-logo.dtx,
-%%                                     fduthesis-template.tex,
 %%               and the derived files fduthesis.ins,
 %%                                     fduthesis.cls,
 %%                                     fduthesis-en.cls,
@@ -44,18 +43,17 @@
 %%                                     fduthesis-code.pdf,
 %%                                 and README.md.
 %% 
-\NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3}
-\GetIdInfo $Id: fduthesis.dtx 0.7e 2020-08-30 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\GetIdInfo $Id: fduthesis.dtx 0.8 2022-09-04 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
   {Documentation class for fduthesis}
 \ProvidesExplClass{fdudoc}
   {\ExplFileDate}{\ExplFileVersion}{\ExplFileDescription}
 \ExplSyntaxOff
 \@namedef{ver@thumbpdf.sty}{9999/99/99}
-\PassOptionsToPackage{log-declarations = false}{xparse}
 \LoadClass[a4paper, full]{l3doc}
-\RequirePackage[UTF8, heading, sub3section, fontset = none]{ctex}
-\RequirePackage{%
+\RequirePackage[heading, sub3section, fontset=none]{ctex}
+\RequirePackage[sort&compress]{gbt7714}
+\RequirePackage{
   caption,
   geometry,
   graphicx,
@@ -677,6 +675,9 @@
   { (environment) } { ~ 环境 }
 \ctex_patch_cmd:Nnn \HDorg@SpecialEnvIndex
   { environments: } { 环境： }
+\ctex_patch_cmd:Nnn \NAT@citexnum
+  { - \NAT@penalty }
+  { \textendash \NAT@penalty }
 \cs_set_eq:NN \list \__codedoc_oldlist:nn
 \__fdudoc_patch_cmd:Nnn \__codedoc_function_descr_start:w
   { \noindent }
@@ -840,9 +841,9 @@
   \section{\indexname}%
   \textit{意大利体的数字表示对应索引项出现的页码；
     带下划线的数字表示定义对应索引项的代码行号；
-    其他则表示使用对应索引项的代码行号．}}
+    其他则表示使用对应索引项的代码行号。}}
 \def\IndexLayout{%
-  \newgeometry{%
+  \newgeometry{
     left   = 0.85 in,
     right  = 0.85 in,
     top    = 1.25 in,
@@ -853,77 +854,82 @@
 \def\indexname{代码索引}
 \GlossaryPrologue{\section{\glossaryname}}
 \def\glossaryname{修订记录}
-\setmainfont{LibertinusSerif}[%
+\bibliographystyle{gbt7714-numerical}
+\setmainfont{LibertinusSerif}[
   Extension      = .otf,
   UprightFont    = *-Regular,
   BoldFont       = *-Bold,
   ItalicFont     = *-Italic,
   BoldItalicFont = *-BoldItalic,
   Scale          = 1.1]
-\setsansfont{IBMPlexSansCondensed}[%
+\setsansfont{IBMPlexSansCondensed}[
   Extension      = .otf,
   UprightFont    = *-Regular,
   BoldFont       = *-Bold,
   ItalicFont     = *-Italic,
   BoldItalicFont = *-BoldItalic]
-\setmonofont{Iosevka Slab}[%
+\setmonofont{Iosevka Slab}[
   UprightFont    = * Light,
   BoldFont       = * Semibold,
+  ItalicFont     = * Light Oblique,
+  BoldItalicFont = * Semibold Oblique,
   Scale          = MatchLowercase]
 \setmathfont{LibertinusMath-Regular.otf}
-\setCJKmainfont{Source Han Serif SC}[%
+\setCJKmainfont{Source Han Serif SC}[
   ItalicFont     = FZKai-Z03,
-  RawFeature     = +fwid]
-\setCJKsansfont{Source Han Sans SC}[%
+  CharacterWidth = Full]
+\setCJKsansfont{Source Han Sans SC}[
   ItalicFont     = *,
-  RawFeature     = +fwid]
-\setCJKmonofont{Source Han Sans SC}[%
+  CharacterWidth = Full]
+\setCJKmonofont{Source Han Sans SC}[
   UprightFont    = * Normal,
   BoldFont       = * Bold,
   AutoFakeSlant  = 0.1763,  % = tan(10 deg)
   Scale          = 0.8903,
-  RawFeature     = +fwid]
-\ctexset{%
+  CharacterWidth = Full]
+\ctexset{
   section/name        = {第,节},
   section/format+     = \raggedright,
   paragraph/runin     = false,
   paragraph/numbering = false,
   punct               = kaiming}
+\xeCJKsetwidth{·}{0.5em}
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{3}
 \pagestyle{plain}
-\sisetup{%
-  number-math-rm       = \ensuremath,
-  inter-unit-product   = \ensuremath{{}\cdot{}},
-  group-digits         = true,
-  group-minimum-digits = 4,
-  group-separator      = \text{~},
-  range-phrase         = \symbol{"FF5E},
-  separate-uncertainty = true}
-\hypersetup{%
+\sisetup{
+  inter-unit-product = \ensuremath{{}\cdot{}},
+  range-phrase       = {--},
+  uncertainty-mode   = separate}
+\hypersetup{
   bookmarksdepth    = 4,
   bookmarksnumbered = true,
   colorlinks        = true,
   citecolor         = MaterialGreen,
   linkcolor         = MaterialPink,
   urlcolor          = MaterialIndigo}
-\captionsetup{labelsep = quad, labelfont+ = bf}
+\captionsetup{labelsep=quad, font+=bf}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
 \setlist{noitemsep, topsep=\smallskipamount}
 \setlist[1]{labelindent=\parindent}
 \setlist[enumerate]{leftmargin=*}
 \setlist[itemize]{leftmargin=*}
 \newlist{optdesc}{description}{3}
-\setlist[optdesc]{%
-  font=\mdseries\small\ttfamily, align=right,
-  listparindent=\parindent,
-  labelsep=\marginparsep, labelindent=-\marginparsep,
-  leftmargin=*}
+\setlist[optdesc]{
+  font          = \mdseries\small\ttfamily,
+  align         = right,
+  listparindent = \parindent,
+  labelsep      = \marginparsep,
+  labelindent   = -\marginparsep,
+  leftmargin    = *}
 \renewlist{tablenotes}{description}{1}
-\setlist[tablenotes]{%
-  format=\normalfont\tnote@item, align=right,
-  listparindent=\parindent, labelindent=\tabcolsep,
-  leftmargin=*, rightmargin=\tabcolsep,
-  after=\@noparlisttrue}
+\setlist[tablenotes]{
+  format      = \normalfont\itshape\tnote@item,
+  labelwidth  = 0.5em,
+  itemindent  = 0pt,
+  rightmargin = \tabcolsep,
+  leftmargin  = \the\dimexpr\tabcolsep+1em\relax,
+  after       = \@noparlisttrue}
 \AtBeginEnvironment{tablenotes}{%
   \setlength\parindent{2\ccwd}%
   \normalfont\footnotesize}
@@ -933,7 +939,7 @@
 \newcounter{tpt@id}
 \def\tnote@item#1{%
   \Hy@raisedlink{\hyper@anchor{\curr@tpt@id-#1}}#1}
-\def\TPTtagStyle#1{\hyperlink{\curr@tpt@id-#1}{#1}}
+\def\TPTtagStyle#1{\textit{\hyperlink{\curr@tpt@id-#1}{#1}}}
 \def\UrlAlphabet{%
   \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
   \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
@@ -957,8 +963,8 @@
 \RecordChanges
 \newcommand*\exptarget{\Hy@raisedlink{\hypertarget{expstar}{}}}
 \newcommand*\rexptarget{\Hy@raisedlink{\hypertarget{rexpstar}{}}}
-\newcommand*\expstar{\hyperlink{expstar}{$\symbol{"263B}$}}
-\newcommand*\rexpstar{\hyperlink{rexpstar}{$\symbol{"263A}$}}
+\newcommand*\expstar{\hyperlink{expstar}{$^^^^263b$}}
+\newcommand*\rexpstar{\hyperlink{rexpstar}{$^^^^263a$}}
 \ExplSyntaxOn
 \cs_set_eq:NN \__codedoc_typeset_exp:  \expstar
 \cs_set_eq:NN \__codedoc_typeset_rexp: \rexpstar
@@ -979,8 +985,7 @@
 \def\TTF{\defaultval{true}\orbar false}
 \def\TFF{true\orbar\defaultval{false}}
 \DeclareDocumentEnvironment{arguments}{}
-  {\enumerate[%
-    label={\texttt{\#\arabic*:~}}, labelsep=0pt, nolistsep]}%
+  {\enumerate[label={\texttt{\#\arabic*:~}}, labelsep=0pt, nolistsep]}
   {\endenumerate}
 \def\TeX{\hologo{TeX}}
 \def\LaTeX{\hologo{LaTeX}}
@@ -995,61 +1000,55 @@
 \def\TeXLive{\TeX\ Live}
 \def\MiKTeX{\hologo{MiKTeX}}
 \def\BibTeX{\hologo{BibTeX}}
-\def\BibTeX{\hologo{BibTeX}}
 \def\biber{\hologo{biber}}
 \def\TikZ{Ti\emph{k}Z}
 \renewcommand*\env[1]{\textbf{\texttt{#1}}}
 \newcommand*\bashcmd[1]{\texttt{#1}}
-\newcommand*\scite[1]{\textsuperscript{\cite{#1}}}
-\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
+\lst@CCPutMacro\lst@ProcessOther{"2D}{\lst@ttfamily{-{}}{-{}}}
 \@empty\z@\@empty
-\lstdefinestyle{style@base}
-  {
-    basewidth       = 0.5 em,
-    gobble          = 3,
-    lineskip        = 2 pt,
-    frame           = l,
-    framerule       = 1 pt,
-    framesep        = 0 pt,
-    escapeinside    = {(*}{*)},
-    basicstyle      = \small\ttfamily\color{MaterialGrey900},
-    keywordstyle    = \bfseries\color{MaterialIndigo},
-    commentstyle    = \itshape\color{MaterialGrey600},
-    stringstyle     = \color{MaterialRed},
-    backgroundcolor = \color{MaterialGrey50}
-  }
-\lstdefinestyle{style@shell}
-  {
-    style      = style@base,
-    rulecolor  = \color{MaterialPink},
-    language   = bash,
-    alsoletter = {-},
-    emphstyle  = \color{MaterialGreen800}
-  }
-\lstdefinestyle{style@latex}
-  {
-    style      = style@base,
-    rulecolor  = \color{MaterialIndigo},
-    language   = [LaTeX]TeX,
-    alsoletter = {*, -},
-    texcsstyle = *\color{MaterialDeepOrange},
-    emphstyle  = [1]\color{MaterialGreen800},
-    emphstyle  = [2]\color{MaterialTeal}
-  }
-\lstdefinestyle{style@syntax}
-  {
-    basewidth     = 0.5 em,
-    gobble        = 6,
-    escapeinside  = {(*}{*)},
-    language      = [LaTeX]TeX,
-    alsoletter    = {*, -},
-    basicstyle    = \footnotesize\ttfamily\color{MaterialGrey900},
-    keywordstyle  = \bfseries\color{MaterialIndigo},
-    commentstyle  = \itshape\color{MaterialGrey600},
-    texcsstyle    = *\color{MaterialDeepOrange},
-    emphstyle     = [1]\color{MaterialGreen800},
-    emphstyle     = [2]\color{MaterialTeal}
-  }
+\lstdefinestyle{style@base}{
+  basewidth       = 0.5 em,
+  gobble          = 3,
+  lineskip        = 2 pt,
+  frame           = l,
+  framerule       = 1 pt,
+  framesep        = 0 pt,
+  escapeinside    = {(*}{*)},
+  basicstyle      = \small\ttfamily\color{MaterialGrey900},
+  keywordstyle    = \bfseries\color{MaterialIndigo},
+  commentstyle    = \itshape\color{MaterialGrey600},
+  stringstyle     = \color{MaterialRed},
+  backgroundcolor = \color{MaterialGrey50}
+}
+\lstdefinestyle{style@shell}{
+  style      = style@base,
+  rulecolor  = \color{MaterialPink},
+  language   = bash,
+  alsoletter = {-},
+  emphstyle  = \color{MaterialGreen800}
+}
+\lstdefinestyle{style@latex}{
+  style      = style@base,
+  rulecolor  = \color{MaterialIndigo},
+  language   = [LaTeX]TeX,
+  alsoletter = {*, -},
+  texcsstyle = *\color{MaterialDeepOrange},
+  emphstyle  = [1]\color{MaterialGreen800},
+  emphstyle  = [2]\color{MaterialTeal}
+}
+\lstdefinestyle{style@syntax}{
+  basewidth     = 0.5 em,
+  gobble        = 6,
+  escapeinside  = {(*}{*)},
+  language      = [LaTeX]TeX,
+  alsoletter    = {*, -},
+  basicstyle    = \footnotesize\ttfamily\color{MaterialGrey900},
+  keywordstyle  = \bfseries\color{MaterialIndigo},
+  commentstyle  = \itshape\color{MaterialGrey600},
+  texcsstyle    = *\color{MaterialDeepOrange},
+  emphstyle     = [1]\color{MaterialGreen800},
+  emphstyle     = [2]\color{MaterialTeal}
+}
 \lstnewenvironment{shellexample}[1][]{%
   \lstset{style=style@shell, #1}}{}
 \lstnewenvironment{latexexample}[1][]{%

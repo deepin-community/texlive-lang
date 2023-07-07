@@ -6,7 +6,7 @@
 %%
 %% ctex.dtx  (with options: `class,beamer')
 %% 
-%%     Copyright (C) 2003--2021
+%%     Copyright (C) 2003--2022
 %%     CTEX.ORG and any individual authors listed in the documentation.
 %% ---------------------------------------------------------------------
 %% 
@@ -27,11 +27,14 @@
 \NeedsTeXFormat{LaTeX2e}
 \input{ctexbackend.cfg}
 \RequirePackage{expl3}
-\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
   {Chinese adapter for class beamer (CTEX)}
 \ProvidesExplClass{ctexbeamer}
-  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
-\RequirePackage { xparse , l3keys2e }
+  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
+\cs_if_exist:NF \NewDocumentCommand
+  { \RequirePackage { xparse } }
+\prop_gput:Nnn \g_msg_module_type_prop { ctex } { Class }
+\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexbeamer }
 \msg_new:nnnn { ctex } { l3-too-old }
   { Support~package~`#1'~too~old. }
   {
@@ -39,10 +42,8 @@
     `l3kernel'~and~`l3packages'\\\\
     using~your~TeX~package~manager~or~from~CTAN.
   }
-\@ifpackagelater { expl3 } { 2020/07/17 } { }
+\@ifpackagelater { expl3 } { 2021/02/10 } { }
   { \msg_error:nnn { ctex } { l3-too-old } { expl3 } }
-\@ifpackagelater { l3keys2e } { 2015/12/20 } { }
-  { \msg_error:nnn { ctex } { l3-too-old } { l3keys2e } }
 \str_const:Nx \c__ctex_engine_str
   { \cs_if_exist:NTF \ngostype { aptex } { \c_sys_engine_str } }
 \msg_new:nnnn { ctex } { engine-not-supported }
@@ -118,6 +119,14 @@
 \cs_new_eq:NN \ctex_if_autoindent_touched:F \use:n
 \cs_new_eq:NN \ctex_zhmap_case:nnn \use_ii:nnn
 \cs_new_protected:Npn \ctex_at_end:n { \AtEndOfClass }
+\cs_new_protected:Npn \ctex_load_std_class:n #1
+  {
+    \tl_const:Nn \c__ctex_class_tl {#1}
+    \exp_args:No \PassOptionsToClass
+      { \g__ctex_std_options_clist }
+      {#1}
+    \LoadClass {#1}
+  }
 \clist_new:N \g__ctex_std_options_clist
 \msg_new:nnn { ctex } { invalid-option }
   { Option~`\l_keys_key_tl'~is~invalid~in~current~mode. }
@@ -237,7 +246,7 @@
     space .choices:nn =
       { true , auto , false }
       {
-        \exp_args:Nx \ctex_at_end:n
+        \exp_args:Ne \ctex_at_end:n
           { \ctex_set:n { space = \l_keys_choice_tl } }
       } ,
     space  .default:n = { true } ,
@@ -311,7 +320,12 @@
       { \clist_gput_right:No \g__ctex_std_options_clist { \CurrentOption } }
   }
 \ctex_file_input:n { ctexopts.cfg }
-\ProcessKeysOptions { ctex / option }
+\cs_if_exist:NTF \ProcessKeyOptions
+  { \ProcessKeyOptions [ ctex / option ] }
+  {
+    \RequirePackage { l3keys2e }
+    \ProcessKeysOptions { ctex / option }
+  }
 \msg_new:nnn { ctex } { pdftex-utf8 }
   { UTF8~will~be~used~as~the~default~encoding. }
 \tl_if_empty:NT \g__ctex_encoding_tl
@@ -325,9 +339,7 @@
     { 0 } { \clist_gput_right:Nn \g__ctex_std_options_clist { 10pt } }
     { 1 } { \clist_gput_right:Nn \g__ctex_std_options_clist { 12pt } }
   }
-\tl_const:Nn \c__ctex_class_tl { beamer }
-\PassOptionsToClass { \g__ctex_std_options_clist } { beamer }
-\LoadClass { beamer }
+\ctex_load_std_class:n { beamer }
 \@ifpackageloaded { hyperref }
   {
     \cs_new_protected:Npn \ctex_hypersetup:n #1
@@ -501,7 +513,9 @@
       { \parindent is~set~to~0pt. }
     \dim_zero:N \parindent
   }
-\PassOptionsToPackage { encoding = \g__ctex_encoding_tl } { zhnumber }
+\exp_args:Ne \PassOptionsToPackage
+  { encoding = \g__ctex_encoding_tl }
+  { zhnumber }
 \RequirePackage { zhnumber }
 \cs_new:Npn \chinese { \zhnum_counter:n }
 \cs_new_eq:NN \@chinese \@zhnum
@@ -597,11 +611,11 @@
   }
 \cs_new_protected:Npn \__ctex_def_heading_keys:n #1
   {
-    \tl_put_right:Nx \l__ctex_tmp_tl
+    \exp_args:NNe \tl_put_right:Nn \l__ctex_tmp_tl
       {
-        #1                  .meta:nn = { ctex / #1 } { ####1 } ,
+        #1                  .meta:nn = { ctex / #1 } { ##1 } ,
         #1 / name            .code:n =
-          { \ctex_assign_heading_name:nn {#1} { ####1 } } ,
+          { \ctex_assign_heading_name:nn {#1} { ##1 } } ,
         #1 / number        .tl_set:N = \exp_not:c { CTEX@the#1 } ,
         #1 / beforeskip    .tl_set:N = \exp_not:c { CTEX@#1@beforeskip } ,
         #1 / afterskip     .tl_set:N = \exp_not:c { CTEX@#1@afterskip} ,
@@ -626,9 +640,9 @@
   {
     #1 / #2   .tl_set:N = \exp_not:c { CTEX@#1@#2 } ,
     #1 / #2 +   .code:n =
-      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ####1 } } ,
+      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ##1 } } ,
     #1 / #2 ~ + .code:n =
-      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ####1 } }
+      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ##1 } }
   }
 \NewDocumentCommand \ctex_assign_heading_name:nn
   { m > { \SplitArgument { 1 } { , } } +m }
@@ -811,7 +825,7 @@
 \seq_new:N \c__ctex_font_size_seq
 \cs_new_protected:Npn \__ctex_save_font_size:nn #1#2
   {
-    \use:x
+    \use:e
       {
         \prop_gput:Nnn \exp_not:N \c__ctex_font_size_prop {#1}
           {
@@ -952,7 +966,7 @@
           {
             \file_if_exist:nF { ctex-fontset- \g__ctex_fontset_tl .def }
               {
-                \use:x
+                \use:e
                   {
                     \ctex_detect_platform:
                     \msg_error:nnxx { ctex } { fontset-not-found }

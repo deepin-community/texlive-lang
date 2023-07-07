@@ -7,7 +7,9 @@
 %% bidi.dtx  (with options: `table,latex-xetex-bidi.def')
 %% 
 %%   __________________________________________________
-%%   Copyright (c) 2007--2020  Vafa Khalighi
+%%   Vafa Khalighi
+%% 
+%%   Copyright (c) 2007--2023  Vafa Khalighi
 %%   Copyright (c) 2018--2020 bidi-tex GitHub Organization
 %% 
 %%   It may be distributed and/or modified under the LaTeX Project Public License,
@@ -18,7 +20,7 @@
 %%   by Vafa Khalighi.
 %% 
 %% 
-%% \CheckSum{50426}
+%% \CheckSum{58794}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,7 +37,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
-\ProvidesFile{latex-xetex-bidi.def}[2019/03/03 v1.3.7 bidi adaptations  for `latex.ltx' for XeTeX engine]
+\ProvidesFile{latex-xetex-bidi.def}[2022/07/04 v1.4.9 bidi adaptations  for `latex.ltx' for XeTeX engine]
 \newcommand{\TeXXeTOn}{\TeXXeTstate\@ne}
 \newcommand{\TeXXeTOff}{\TeXXeTstate\z@}
 \TeXXeTOn
@@ -87,7 +89,7 @@
  }\vbox}
 \newcommand*{\bidi@leftskip}{\if@RTL\rightskip\else\leftskip\fi}
 \newcommand*{\bidi@rightskip}{\if@RTL\leftskip\else\rightskip\fi}
-\def\LTR{\par\@RTLfalse\@RTL@footnotefalse\@RTLtabfalse\hsize\linewidth\parshape\z@}
+\def\LTR{\par\@RTLfalse\@RTL@footnotefalse\@RTLtabfalse\hsize\linewidth\parshape\z@\bidi@beamer@ragged}
 \def\endLTR{\par}
 \newenvironment{LTR*}{\LTR
   \everypar{%
@@ -97,7 +99,7 @@
     \fi}%
   }%
 }{\endLTR\@endpetrue}
-\def\RTL{\par\@RTLtrue\@RTL@footnotetrue\@RTLtabtrue\hsize\linewidth\parshape\z@}
+\def\RTL{\par\@RTLtrue\@RTL@footnotetrue\@RTLtabtrue\hsize\linewidth\parshape\z@\bidi@beamer@ragged}
 \def\endRTL{\par}
 \newenvironment{RTL*}{\RTL
   \everypar{%
@@ -107,8 +109,8 @@
     \fi}%
   }%
 }{\endRTL\@endpetrue}
-\def\setRTL{\@RTLtrue\@RTL@footnotetrue\@RTLtabtrue}
-\def\setLTR{\@RTLfalse\@RTL@footnotefalse\@RTLtabfalse}
+\def\setRTL{\@RTLtrue\@RTL@footnotetrue\@RTLtabtrue\bidi@beamer@ragged}
+\def\setLTR{\@RTLfalse\@RTL@footnotefalse\@RTLtabfalse\bidi@beamer@ragged}
 \let\unsetRTL=\setLTR
 \let\unsetLTR=\setRTL
 \let\LR=\LRE
@@ -256,7 +258,7 @@
     \if@pboxsw \m@th$\fi
   \@end@tempboxa}
 \newenvironment{LTRitems}
-                 {\par\@RTLfalse\@RTLtabfalse
+                 {\par\@RTLfalse\@RTLtabfalse\bidi@beamer@ragged
                   \if@bidi@list@minipage@parbox
                   \parshape \@ne \dimexpr(\@totalleftmargin-\leftmargin) \linewidth
                   \else \if@hboxRconstruct\if@bidi@list@minipage@parbox@not@nob
@@ -265,7 +267,7 @@
                   \else \parshape \@ne \dimexpr(\@totalleftmargin+\leftmargin) \linewidth\fi\fi
                   \ignorespaces}{\vskip\z@}
 \newenvironment{RTLitems}
-                 {\par\@RTLtrue\@RTLtabtrue
+                 {\par\@RTLtrue\@RTLtabtrue\bidi@beamer@ragged
                   \if@bidi@list@minipage@parbox
                   \parshape \@ne \dimexpr(\@totalleftmargin+\leftmargin) \linewidth
                   \else \if@hboxRconstruct\if@bidi@list@minipage@parbox@not@nob
@@ -274,7 +276,7 @@
                   \else \parshape \@ne \dimexpr(\@totalleftmargin-\leftmargin) \linewidth\fi\fi
                   \ignorespaces}{\vskip\z@}
 \newenvironment{LTRbibitems}
-                 {\par\@RTLfalse\@RTLtabfalse
+                 {\par\@RTLfalse\@RTLtabfalse\bidi@beamer@ragged
                   \if@bidi@list@minipage@parbox
                   \parshape \@ne \dimexpr(\@totalleftmargin-\leftmargin) \linewidth
                   \else \if@hboxRconstruct\if@bidi@list@minipage@parbox@not@nob
@@ -283,7 +285,7 @@
                   \else \parshape \@ne \dimexpr(\@totalleftmargin+\leftmargin) \linewidth\fi\fi
                   \ignorespaces}{\vskip\z@}
 \newenvironment{RTLbibitems}
-                 {\par\@RTLtrue\@RTLtabtrue
+                 {\par\@RTLtrue\@RTLtabtrue\bidi@beamer@ragged
                   \if@bidi@list@minipage@parbox
                   \parshape \@ne \dimexpr(\@totalleftmargin+\leftmargin) \linewidth
                   \else \if@hboxRconstruct\if@bidi@list@minipage@parbox@not@nob
@@ -849,8 +851,8 @@ $\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
 \@ifclassloaded{artikel2}{\input{artikel2-xetex-bidi.def}}{}
 \@ifclassloaded{artikel3}{\input{artikel3-xetex-bidi.def}}{}
 \@ifclassloaded{amsart}{\input{amsart-xetex-bidi.def}}{}
+\@ifclassloaded{beamer}{\input{beamer-xetex-bidi.def}}{}
 \@ifclassloaded{letter}{\input{letter-xetex-bidi.def}}{}
-\@ifclassloaded{scrlettr}{\input{scrlettr-xetex-bidi.def}}{}
 \@ifclassloaded{extletter}{\input{extletter-xetex-bidi.def}}{}
 \@ifclassloaded{memoir}{\input{memoir-xetex-bidi.def}}{}
 \@ifclassloaded{refrep}{\input{refrep-xetex-bidi.def}}{}
@@ -878,6 +880,7 @@ $\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
   \input{mathtools-xetex-bidi.def}%
   }{}
 \@ifpackageloaded{crop}{\RequirePackage{graphicx}}{}
+\@ifpackageloaded{lscape}{\RequirePackage{graphicx}}{}
 \@ifpackageloaded{sidecap}{\RequirePackage{ragged2e}}{}
 \@ifpackageloaded{floatrow}{\RequirePackage{color}}{}
 \@ifpackageloaded{algorithm2e}{\input{algorithm2e-xetex-bidi.def}}{}
@@ -911,7 +914,9 @@ $\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
 \@ifpackageloaded{ntheorem}{\input{ntheorem-xetex-bidi.def}}{}
 \@ifpackageloaded{tabularx}{\input{tabularx-xetex-bidi.def}}{}
 \@ifpackageloaded{longtable}{\input{longtable-xetex-bidi.def}}{}
+\@ifpackageloaded{lscape}{\input{lscape-xetex-bidi.def}}{}
 \@ifpackageloaded{hyperref}{\input{hyperref-xetex-bidi.def}}{}
+\@ifpackageloaded{footnotebackref}{\input{footnotebackref-xetex-bidi.def}}{}
 \@ifpackageloaded{ntheorem-hyper}{\input{ntheorem-hyper-xetex-bidi.def}}{}
 \@ifpackageloaded{fancybox}{\input{fancybox-xetex-bidi.def}}{}
 \@ifpackageloaded{fancyhdr}{\input{fancyhdr-xetex-bidi.def}}{}
@@ -926,6 +931,7 @@ $\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
 \@ifpackageloaded{framed}{\input{framed-xetex-bidi.def}}{}
 \@ifpackageloaded{overpic}{\input{overpic-xetex-bidi.def}}{}
 \@ifpackageloaded{pdfbase}{\input{pdfbase-xetex-bidi.def}}{}
+\@ifpackageloaded{pdflscape}{\input{pdflscape-xetex-bidi.def}}{}
 \@ifpackageloaded{pdfpages}{\input{pdfpages-xetex-bidi.def}}{}
 \@ifpackageloaded{lettrine}{\input{lettrine-xetex-bidi.def}}{}
 \@ifpackageloaded{lineno}{\input{lineno-xetex-bidi.def}}{}
@@ -969,7 +975,9 @@ $\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
 \@ifpackageloaded{multienum}{\input{multienum-xetex-bidi.def}}{}
 \@ifpackageloaded{natbib}{\input{natbib-xetex-bidi.def}}{}
 \@ifpackageloaded{newfloat}{\input{newfloat-xetex-bidi.def}}{}
+\@ifpackageloaded{nicematrix}{\input{nicematrix-xetex-bidi.def}}{}
 \@ifpackageloaded{minitoc}{\input{minitoc-xetex-bidi.def}}{}
+\@ifpackageloaded{pgfsys}{\input{pgfsys.code-xetex-bidi.def}}{}
 \@ifpackageloaded{picinpar}{\input{picinpar-xetex-bidi.def}}{}
 \@ifpackageloaded{quotchap}{\input{quotchap-xetex-bidi.def}}{}
 \@ifpackageloaded{ragged2e}{\input{ragged2e-xetex-bidi.def}}{}
@@ -982,6 +990,36 @@ $\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
 \@ifpackageloaded{tocloft}{\@ifclassloaded{memoir}{}{\input{tocloft-xetex-bidi.def}}}{}
 \@ifdefinitionfileloaded{tc-xetex}{\input{tc-xetex-bidi.def}}{}
 \@ifpackageloaded{todonotes}{\input{todonotes-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbaseauxtemplates}{\input{beamerbaseauxtemplates-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbaseboxes}{\input{beamerbaseboxes-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbasecolor}{\input{beamerbasecolor-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbasecompatibility}{\input{beamerbasecompatibility-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbaseframecomponents}{\input{beamerbaseframecomponents-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbaseframesize}{\input{beamerbaseframesize-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbaselocalstructure}{\input{beamerbaselocalstructure-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbasemisc}{\input{beamerbasemisc-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbasenavigation}{\input{beamerbasenavigation-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerbaseoverlay}{\input{beamerbaseoverlay-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthemedefault}{\input{beamerinnerthemedefault-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthemecircles}{\input{beamerinnerthemecircles-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthemefocus}{\input{beamerinnerthemefocus-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthemeinmargin}{\input{beamerinnerthemeinmargin-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthememetropolis}{\input{beamerinnerthememetropolis-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthemerectangles}{\input{beamerinnerthemerectangles-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerinnerthemerounded}{\input{beamerinnerthemerounded-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemedefault}{\input{beamerouterthemedefault-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemefocus}{\input{beamerouterthemefocus-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemeinfolines}{\input{beamerouterthemeinfolines-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthememetropolis}{\input{beamerouterthememetropolis-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthememiniframes}{\input{beamerouterthememiniframes-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemesidebar}{\input{beamerouterthemesidebar-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemesplit}{\input{beamerouterthemesplit-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemeshadow}{\input{beamerouterthemeshadow-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemesmoothbars}{\input{beamerouterthemesmoothbars-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemesmoothtree}{\input{beamerouterthemesmoothtree-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerouterthemetree}{\input{beamerouterthemetree-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerthemeHannover}{\input{beamerthemeHannover-xetex-bidi.def}}{}
+\@ifpackageloaded{beamerthemeSingapore}{\input{beamerthemeSingapore-xetex-bidi.def}}{}
 \endinput
 %%
 %% End of file `latex-xetex-bidi.def'.

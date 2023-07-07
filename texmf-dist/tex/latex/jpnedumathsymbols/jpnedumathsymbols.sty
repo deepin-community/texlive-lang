@@ -1,0 +1,651 @@
+%%
+%% jpnedumathsymbols.sty
+%% for making handouts in Japanese Education
+%%
+%% Copyright (C) 2022 Yukoh KUSAKABE (screen-name)
+%%   https://www.metaphysica.info/
+%%   https://twitter.com/metaphysicainfo
+%%
+%% This package released under
+%% [the MIT license](https://ctan.org/license/mit).
+%%
+%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jpnedumathsymbols}[2022/07/10 v1.1]
+%
+%% [nofrac]
+\newif\if@jpnedu@symbol@nofrac
+\@jpnedu@symbol@nofracfalse
+\DeclareOption{nofrac}{\@jpnedu@symbol@nofractrue}%
+%
+%% [nosqrt]
+\newif\if@jpnedu@symbol@nosqrt
+\@jpnedu@symbol@nosqrtfalse
+\DeclareOption{nosqrt}{\@jpnedu@symbol@nosqrttrue}%
+%
+%% [nolim]
+\newif\if@jpnedu@symbol@nolim
+\@jpnedu@symbol@nolimfalse
+\DeclareOption{nolim}{\@jpnedu@symbol@nolimtrue}%
+%
+%% [novec]
+\newif\if@jpnedu@symbol@novec
+\@jpnedu@symbol@novecfalse
+\DeclareOption{novec}{\@jpnedu@symbol@novectrue}%
+%
+%% [nopointroman]
+\newif\if@jpnedu@symbol@nopointroman
+\@jpnedu@symbol@nopointromanfalse
+\DeclareOption{nopointroman}{\@jpnedu@symbol@nopointromantrue}%
+%
+%% [curriculum][nocurriculum]
+\newif\if@jpnedu@symbol@nocurriculum
+\@jpnedu@symbol@nocurriculumtrue
+\DeclareOption{nocurriculum}{\@jpnedu@symbol@nocurriculumtrue}%
+\DeclareOption{curriculum}{\@jpnedu@symbol@nocurriculumfalse}%
+%
+%% [mathbb]
+\newif\if@jpnedu@symbol@mathbb
+\@jpnedu@symbol@mathbbfalse
+\DeclareOption{mathbb}{\@jpnedu@symbol@mathbbtrue}
+%
+%% [setcolon]
+\newif\if@jpnedu@symbol@setcolon
+\@jpnedu@symbol@setcolonfalse
+\DeclareOption{setcolon}{\@jpnedu@symbol@setcolontrue}
+%
+%% [rvecbracket]
+\newif\if@jpnedu@symbol@rvecbracket%
+\@jpnedu@symbol@rvecbracketfalse
+\DeclareOption{rvecbracket}{\@jpnedu@symbol@rvecbrackettrue}
+
+%% [cvecbracket]
+\newif\if@jpnedu@symbol@cvecbracket%
+\@jpnedu@symbol@cvecbracketfalse
+\DeclareOption{cvecbracket}{\@jpnedu@symbol@cvecbrackettrue}
+
+%% [innerproductbracket]
+\newif\if@jpnedu@symbol@innerproductbracket%
+\@jpnedu@symbol@innerproductbracketfalse
+\DeclareOption{innerproductbracket}{\@jpnedu@symbol@innerproductbrackettrue}
+%
+%% [lua]
+\newif\if@jpnedu@symbol@lua
+\@jpnedu@symbol@luafalse
+\DeclareOption{lua}{\@jpnedu@symbol@luatrue}%
+%
+\ExecuteOptions{}
+\ProcessOptions\relax
+%
+% for \begin{bmatrix}
+%     \begin{cmatrix}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+%
+% for \NewDocumentEnvironment
+\RequirePackage{xparse}
+%
+% for \begin{empheq}
+\RequirePackage{empheq}
+%
+%%%
+%% FRAC
+%%%
+%
+\if@jpnedu@symbol@nofrac
+\else
+%
+%% \originalfrac
+\let\originalfrac\frac
+%
+%% \frac
+\renewcommand{\frac}[2]{\mathchoice%
+{{\displaystyle\originalfrac{\raisebox{-0.42ex}{$\,#1\,$}}{\raisebox{0.1ex}{$\,#2\,$}}}}%
+{{\displaystyle\originalfrac{\raisebox{-0.42ex}{$\,#1\,$}}{\raisebox{0.1ex}{$\,#2\,$}}}}%
+{\originalfrac{#1}{#2}}%
+{\originalfrac{#1}{#2}}%
+}%
+%
+\fi
+%
+%%%
+%% SQRT
+%%%
+%
+\if@jpnedu@symbol@nosqrt
+\else
+%
+%% \originalsqrt
+\let\originalsqrt\sqrt
+%
+%% \sqrt
+\renewcommand{\sqrt}[2][\phantom{1}]{\mathchoice%
+{\!\originalsqrt[\leftroot{-1}\uproot{0}#1]{\vphantom{(}#2\hspace{1pt}}}%
+{\!\originalsqrt[\leftroot{-1}\uproot{0}#1]{\vphantom{(}#2\hspace{1pt}}}%
+{\originalsqrt[#1]{#2}}%
+{\originalsqrt[#1]{#2}}}
+%
+\fi
+%
+%%%
+%% LIM
+%%%
+%
+\if@jpnedu@symbol@nolim
+\else
+%
+%% \originallim
+\let\originallim\lim
+%
+%% \lim
+\renewcommand{\lim}{\originallim\limits}
+%
+\fi
+%
+%%%
+%% VEC
+%%%
+%
+\if@jpnedu@symbol@novec
+\else
+%
+%% \originalvec
+\let\originalvec\vec
+%
+%% \vec
+\DeclareRobustCommand{\vec}[1]%
+{\hspace{-1pt}\overrightarrow{\hspace{1pt}\vphantom{T}#1\hspace{1pt}}\hspace{-1pt}}
+%{\overrightarrow{\hspace{1pt}\vphantom{T}#1\hspace{1pt}}}
+%
+\fi
+%
+%%%
+%% POINTROMAN
+%%%
+%
+\if@jpnedu@symbol@nopointroman
+\else
+%
+%% \angstrom
+\let\angstrom\AA
+%
+%% \capitaleszett
+\let\capitaleszett\SS
+%
+%% \AA -- \ZZ
+\DeclareRobustCommand\AA{\mathrm{A}}
+\DeclareRobustCommand\BB{\mathrm{B}}
+\DeclareRobustCommand\CC{\mathrm{C}}
+\DeclareRobustCommand\DD{\mathrm{D}}
+\DeclareRobustCommand\EE{\mathrm{E}}
+\DeclareRobustCommand\FF{\mathrm{F}}
+\DeclareRobustCommand\GG{\mathrm{G}}
+\DeclareRobustCommand\HH{\mathrm{H}}
+\DeclareRobustCommand\II{\mathrm{I}}
+\DeclareRobustCommand\JJ{\mathrm{J}}
+\DeclareRobustCommand\KK{\mathrm{K}}
+\DeclareRobustCommand\LL{\mathrm{L}}
+\DeclareRobustCommand\MM{\mathrm{M}}
+\DeclareRobustCommand\NN{\mathrm{N}}
+\DeclareRobustCommand\OO{\mathrm{O}}
+\DeclareRobustCommand\PP{\mathrm{P}}
+\DeclareRobustCommand\QQ{\mathrm{Q}}
+\DeclareRobustCommand\RR{\mathrm{R}}
+\DeclareRobustCommand\SS{\mathrm{S}}
+\DeclareRobustCommand\TT{\mathrm{T}}
+\DeclareRobustCommand\UU{\mathrm{U}}
+\DeclareRobustCommand\VV{\mathrm{V}}
+\DeclareRobustCommand\WW{\mathrm{W}}
+\DeclareRobustCommand\XX{\mathrm{X}}
+\DeclareRobustCommand\YY{\mathrm{Y}}
+\DeclareRobustCommand\ZZ{\mathrm{Z}}
+%
+\fi
+%
+%%%
+%% CURRICULUM
+%%%
+%
+\if@jpnedu@symbol@nocurriculum
+\else
+%
+% for \ajroman
+\if@jpnedu@symbol@lua
+\RequirePackage{luatexja-otf}
+\else
+\RequirePackage{otf}
+\fi
+%
+%% \mathI \mathA \mathIA etc.
+\DeclareRobustCommand{\currI}{\ajRoman{1}}
+\DeclareRobustCommand{\currII}{\ajRoman{2}}
+\DeclareRobustCommand{\currIII}{\ajRoman{3}}
+\DeclareRobustCommand{\currA}{Ａ}
+\DeclareRobustCommand{\currB}{Ｂ}
+\DeclareRobustCommand{\currC}{Ｃ}
+\DeclareRobustCommand{\currD}{Ｄ}
+\DeclareRobustCommand{\currE}{Ｅ}
+\DeclareRobustCommand{\currF}{Ｆ}
+\DeclareRobustCommand{\currG}{Ｇ}
+\DeclareRobustCommand{\currH}{Ｈ}
+\DeclareRobustCommand{\currI}{Ｉ}
+\DeclareRobustCommand{\currJ}{Ｊ}
+\DeclareRobustCommand{\currK}{Ｋ}
+\DeclareRobustCommand{\currL}{Ｌ}
+\DeclareRobustCommand{\currM}{Ｍ}
+\DeclareRobustCommand{\currN}{Ｎ}
+\DeclareRobustCommand{\currO}{Ｏ}
+\DeclareRobustCommand{\currP}{Ｐ}
+\DeclareRobustCommand{\currQ}{Ｑ}
+\DeclareRobustCommand{\currR}{Ｒ}
+\DeclareRobustCommand{\currS}{Ｓ}
+\DeclareRobustCommand{\currT}{Ｔ}
+\DeclareRobustCommand{\currU}{Ｕ}
+\DeclareRobustCommand{\currV}{Ｖ}
+\DeclareRobustCommand{\currW}{Ｗ}
+\DeclareRobustCommand{\currX}{Ｘ}
+\DeclareRobustCommand{\currY}{Ｙ}
+\DeclareRobustCommand{\currZ}{Ｚ}
+\DeclareRobustCommand{\curra}{ａ}
+\DeclareRobustCommand{\currb}{ｂ}
+\DeclareRobustCommand{\currc}{ｃ}
+\DeclareRobustCommand{\currd}{ｄ}
+\DeclareRobustCommand{\curre}{ｅ}
+\DeclareRobustCommand{\currf}{ｆ}
+\DeclareRobustCommand{\currg}{ｇ}
+\DeclareRobustCommand{\currh}{ｈ}
+\DeclareRobustCommand{\curri}{ｉ}
+\DeclareRobustCommand{\currj}{ｊ}
+\DeclareRobustCommand{\currk}{ｋ}
+\DeclareRobustCommand{\currl}{ｌ}
+\DeclareRobustCommand{\currm}{ｍ}
+\DeclareRobustCommand{\currn}{ｎ}
+\DeclareRobustCommand{\curro}{ｏ}
+\DeclareRobustCommand{\currp}{ｐ}
+\DeclareRobustCommand{\currq}{ｑ}
+\DeclareRobustCommand{\currr}{ｒ}
+\DeclareRobustCommand{\currs}{ｓ}
+\DeclareRobustCommand{\currt}{ｔ}
+\DeclareRobustCommand{\curru}{ｕ}
+\DeclareRobustCommand{\currv}{ｖ}
+\DeclareRobustCommand{\currw}{ｗ}
+\DeclareRobustCommand{\currx}{ｘ}
+\DeclareRobustCommand{\curry}{ｙ}
+\DeclareRobustCommand{\currz}{ｚ}
+\DeclareRobustCommand{\curralpha}{α}
+\DeclareRobustCommand{\currbeta}{β}
+\DeclareRobustCommand{\currgamma}{γ}
+\DeclareRobustCommand{\currdelta}{δ}
+\DeclareRobustCommand{\currepsilon}{ε}
+\DeclareRobustCommand{\currzeta}{ζ}
+\DeclareRobustCommand{\curreta}{η}
+\DeclareRobustCommand{\currtheta}{θ}
+\DeclareRobustCommand{\curriota}{ι}
+\DeclareRobustCommand{\currkappa}{κ}
+\DeclareRobustCommand{\currlambda}{λ}
+\DeclareRobustCommand{\currmu}{μ}
+\DeclareRobustCommand{\currnu}{ν}
+\DeclareRobustCommand{\currxi}{ξ}
+\DeclareRobustCommand{\curromicron}{ο}
+\DeclareRobustCommand{\currpai}{π}
+\DeclareRobustCommand{\currrho}{ρ}
+\DeclareRobustCommand{\currsigma}{σ}
+\DeclareRobustCommand{\currtau}{τ}
+\DeclareRobustCommand{\currupsilon}{υ}
+\DeclareRobustCommand{\currphi}{φ}
+\DeclareRobustCommand{\currchi}{χ}
+\DeclareRobustCommand{\currpsi}{ψ}
+\DeclareRobustCommand{\curromega}{ω}
+\DeclareRobustCommand{\currIA}{\@ifstar{\@jpnedu@symbol@currIA@star}{\@jpnedu@symbol@currIA@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@currIA@star}{\ajRoman{1}＋Ａ}
+\DeclareRobustCommand{\@jpnedu@symbol@currIA@nostar}{\ajRoman{1}Ａ}
+\DeclareRobustCommand{\currIIB}{\@ifstar{\@jpnedu@symbol@currIIB@star}{\@jpnedu@symbol@currIIB@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@currIIB@star}{\ajRoman{2}＋Ｂ}
+\DeclareRobustCommand{\@jpnedu@symbol@currIIB@nostar}{\ajRoman{2}Ｂ}
+\DeclareRobustCommand{\currIIBC}{\@ifstar{\@jpnedu@symbol@currIIBC@star}{\@jpnedu@symbol@currIIBC@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@currIIBC@star}{\ajRoman{2}＋Ｂ＋Ｃ}
+\DeclareRobustCommand{\@jpnedu@symbol@currIIBC@nostar}{\ajRoman{2}ＢＣ}
+\DeclareRobustCommand{\currIIIC}{\@ifstar{\@jpnedu@symbol@currIIIC@star}{\@jpnedu@symbol@currIIIC@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@currIIIC@star}{\ajRoman{3}＋Ｃ}
+\DeclareRobustCommand{\@jpnedu@symbol@currIIIC@nostar}{\ajRoman{3}Ｃ}
+\fi
+%
+%% \phantomheight
+\DeclareRobustCommand{\phantomheight}[1][\frac{1}{2}]{\vphantom{\raisebox{4pt}{\ensuremath{#1}}}\vphantom{\raisebox{-3pt}{\ensuremath{#1}}}}
+%
+%% \comma
+\DeclareRobustCommand{\comma}{\@ifstar{\@jpnedu@symbol@comma@star}{\@jpnedu@symbol@comma@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@comma@nostar}{,\,}
+\DeclareRobustCommand{\@jpnedu@symbol@comma@star}{\,,\,}
+%% \period
+\DeclareRobustCommand{\period}{\@ifstar{\@jpnedu@symbol@period@star}{\@jpnedu@symbol@period@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@period@nostar}{\text{。}\quad}
+\DeclareRobustCommand{\@jpnedu@symbol@period@star}{\,\text{。}\quad}
+%
+%% \pair{}{}           \pair*{}{}
+%% \triplet{}{}{}      \triplet*{}{}
+%% \quadruplet{}{}{}{} \quadruplet*{}{}{}
+\DeclareRobustCommand{\pair}
+{\@ifstar{\@jpnedu@symbol@pair@star}{\@jpnedu@symbol@pair@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@pair@star}[2]{(#1,\,#2)}
+\DeclareRobustCommand{\@jpnedu@symbol@pair@nostar}[2]{\left(#1,\,#2\right)}
+\DeclareRobustCommand{\triplet}
+{\@ifstar{\@jpnedu@symbol@triplet@star}{\@jpnedu@symbol@triplet@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@triplet@star}[3]{(#1,\,#2,\,#3)}
+\DeclareRobustCommand{\@jpnedu@symbol@triplet@nostar}[3]{\left(#1,\,#2,\,#3\right)}
+\DeclareRobustCommand{\quadruplet}
+{\@ifstar{\@jpnedu@symbol@quadruplet@star}{\@jpnedu@symbol@quadruplet@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@quadruplet@star}[4]{(#1,\,#2,\,#3,\,#4)}
+\DeclareRobustCommand{\@jpnedu@symbol@quadruplet@nostar}[4]{\left(#1,\,#2,\,#3,\,#4\right)}
+%
+%% \intersection
+%% \union
+\DeclareRobustCommand{\intersection}{\cap}
+\DeclareRobustCommand{\union}{\cup}
+%
+%% \complement{}
+\let\originalcmpl\cmpl
+\DeclareRobustCommand{\complement}[1]{\overline{\vphantom{T}#1}}
+\let\cmpl\complement
+%
+%% \tand
+%% \tor
+\DeclareRobustCommand{\tand}{\ensuremath{\mathbin{\text{かつ}}}}
+\DeclareRobustCommand{\tor}{\ensuremath{\mathbin{\text{または}}}}
+%% \eand
+%% \eor
+\DeclareRobustCommand{\eand}{\ensuremath{\mathbin{\text{and}}}}
+\DeclareRobustCommand{\eor}{\ensuremath{\mathbin{\text{or}}}}
+%
+%% \lto
+%% \lfrom
+%% \iff
+%% \plto
+%% \plfrom
+%% \piff
+\let\originaliff\iff
+\DeclareRobustCommand{\lto}{\ensuremath{\mathrel{\Longrightarrow}}}
+\DeclareRobustCommand{\lfrom}{\ensuremath{\mathrel{\Longleftarrow}}}
+\DeclareRobustCommand{\iff}{\ensuremath{\mathrel{\Longleftrightarrow}}}
+\DeclareRobustCommand{\plto}{\ensuremath{\mathrel{\phantom{\Longrightarrow}}}}
+\DeclareRobustCommand{\plfrom}{\ensuremath{\mathrel{\phantom{\Longlrftarrow}}}}
+\DeclareRobustCommand{\piff}{\ensuremath{\mathrel{\phantom{\Longleftrightarrow}}}}
+%
+%% \peq
+\DeclareRobustCommand{\peq}{\mathrel{\phantom{=}}}
+%
+%% \set{}{}
+%% ([setcolon])
+\if@jpnedu@symbol@setcolon
+\DeclareRobustCommand{\set}[2]{\left\{\,#1\;;\;#2\,\right\}}
+\else
+\DeclareRobustCommand{\set}[2]{\left\{\,#1\;\middle|\;#2\,\right\}}
+\fi
+%
+%% \N \NZ \NP \Z \Q \R \C
+%% ([mathbb])
+\if@jpnedu@symbol@mathbb
+\DeclareRobustCommand{\N}{\ensuremath{\mathbb{N}}}
+\DeclareRobustCommand{\NZ}{\ensuremath{\mathbb{N}_{0}}}
+\DeclareRobustCommand{\NP}{\ensuremath{\mathbb{N}_{+}}}
+\DeclareRobustCommand{\Z}{\ensuremath{\mathbb{Z}}}
+\DeclareRobustCommand{\Q}{\ensuremath{\mathbb{Q}}}
+\DeclareRobustCommand{\R}{\ensuremath{\mathbb{R}}}
+\DeclareRobustCommand{\C}{\ensuremath{\mathbb{C}}}
+\else
+\DeclareRobustCommand{\N}{\ensuremath{\mathbf{N}}}
+\DeclareRobustCommand{\NZ}{\ensuremath{\mathbf{N}_{0}}}
+\DeclareRobustCommand{\NP}{\ensuremath{\mathbf{N}_{+}}}
+\DeclareRobustCommand{\Z}{\ensuremath{\mathbf{Z}}}
+\DeclareRobustCommand{\Q}{\ensuremath{\mathbf{Q}}}
+\DeclareRobustCommand{\R}{\ensuremath{\mathbf{R}}}
+\DeclareRobustCommand{\C}{\ensuremath{\mathbf{C}}}
+\fi
+%
+%% \inverse{<function>}
+\DeclareRobustCommand{\inverse}[1]{#1^{-1}}
+%
+%% \abs{} \abs*{}
+\let\originalabs\abs
+\DeclareRobustCommand{\abs}
+{\@ifstar{\@jpnedu@symbol@abs@star}{\@jpnedu@symbol@abs@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@abs@star}[1]{\lvert#1\rvert}
+\DeclareRobustCommand{\@jpnedu@symbol@abs@nostar}[1]{\left\lvert#1\right\rvert}
+%
+%% \begin{cases}
+\DeclareDocumentEnvironment{ecases}{O{align*} m b}%
+{\vspace{0.25\baselineskip}\begin{empheq}[left={#2=\empheqlbrace\,}]{#1}{#3}\end{empheq}}%
+{\par\vspace{0.25\baselineskip}\noindent}
+%
+%% \begin{simul}{<style>}
+\DeclareDocumentEnvironment{simul}{O{gather*} b}%
+{\vspace{0.25\baselineskip}\begin{empheq}[left=\empheqlbrace\,]{#1}{#2}\end{empheq}}%
+{\par\vspace{0.25\baselineskip}\noindent}
+%
+%% \begin{signchart}{<columns>}
+\newenvironment{signchart}[1]%
+{\vspace{0.25\baselineskip}\begin{equation*}\begin{array}{c|*#1{c}}\hline}%
+{\\\hline\end{array}\end{equation*}\par\vspace{0.25\baselineskip}\noindent}
+%
+%% \neconcave
+%% \seconcave
+%% \seconvex
+%% \neconvex
+\DeclareRobustCommand{\neconcave}
+{\@ifstar{\@jpnedu@symbol@neconcave@star}{\@jpnedu@symbol@neconcave@nostar}}
+\DeclareRobustCommand{\seconcave}
+{\@ifstar{\@jpnedu@symbol@seconcave@star}{\@jpnedu@symbol@seconcave@nostar}}
+\DeclareRobustCommand{\seconvex}
+{\@ifstar{\@jpnedu@symbol@seconvex@star}{\@jpnedu@symbol@seconvex@nostar}}
+\DeclareRobustCommand{\neconvex}
+{\@ifstar{\@jpnedu@symbol@neconvex@star}{\@jpnedu@symbol@neconvex@nostar}}
+%
+\DeclareRobustCommand{\@jpnedu@symbol@seconvex@star}{{\begin{picture}(10,10)%
+\put(10,10){\oval(20,20)[lb]}\put(11,-0.25){\vector(4,-1){0}}\end{picture}}}
+\DeclareRobustCommand{\@jpnedu@symbol@neconcave@star}{{\begin{picture}(10,10)%
+\put(10,0){\oval(20,20)[lt]}\put(11,10.25){\vector(4,1){0}}\end{picture}}}
+\DeclareRobustCommand{\@jpnedu@symbol@neconvex@star}{{\begin{picture}(10,10)%
+\put(0,10){\oval(20,20)[rb]}\put(10.25,11){\vector(1,4){0}}\end{picture}}}
+\DeclareRobustCommand{\@jpnedu@symbol@seconcave@star}{{\begin{picture}(10,10)%
+\put(0,0){\oval(20,20)[rt]}\put(10.25,-1){\vector(1,-4){0}}\end{picture}}}
+%
+\DeclareRobustCommand{\@jpnedu@symbol@seconvex@nostar}{\raisebox{-0.25em}{\begin{picture}(10,10)%
+\put(10,10){\oval(20,20)[lb]}\put(11,-0.25){\vector(4,-1){0}}\end{picture}}}
+\DeclareRobustCommand{\@jpnedu@symbol@neconcave@nostar}{\raisebox{-0.25em}{\begin{picture}(10,10)%
+\put(10,0){\oval(20,20)[lt]}\put(11,10.25){\vector(4,1){0}}\end{picture}}}
+\DeclareRobustCommand{\@jpnedu@symbol@neconvex@nostar}{\raisebox{-0.25em}{\begin{picture}(10,10)%
+\put(0,10){\oval(20,20)[rb]}\put(10.25,11){\vector(1,4){0}}\end{picture}}}
+\DeclareRobustCommand{\@jpnedu@symbol@seconcave@nostar}{\raisebox{-0.25em}{\begin{picture}(10,10)%
+\put(0,0){\oval(20,20)[rt]}\put(10.25,-1){\vector(1,-4){0}}\end{picture}}}
+%
+%% \dint
+\DeclareRobustCommand{\dint}{\displaystyle\int}
+%
+%% \dr \ds \dt \du \dx \dy \dz \dtheta
+\DeclareRobustCommand{\dr}{\,dr}
+\DeclareRobustCommand{\ds}{\,ds}
+\DeclareRobustCommand{\dt}{\,dt}
+\DeclareRobustCommand{\du}{\,du}
+\DeclareRobustCommand{\dx}{\,dx}
+\DeclareRobustCommand{\dy}{\,dy}
+\DeclareRobustCommand{\dz}{\,dz}
+\DeclareRobustCommand{\dtheta}{\,d\theta}
+%
+%% \const
+\DeclareRobustCommand{\const}{\mathrm{const.}}
+%
+%% \defint{<from>}{<to>}{<function>}
+\DeclareRobustCommand{\defint}[3]{\left[\vphantom{\frac{1}{2}}#3\right]_{#1}^{#2}}
+%
+%% \transformvariable{<variable1>}{<from1>}{<to1>}{variable2}{<from2>}{<to2>}
+\DeclareRobustCommand{\transformvariable}[6]{\begin{tabular}{c|ccc}
+$#1$&$#2$&$\to$&$#3$\\\hline
+$#4$&$#5$&$\to$&$#6$
+\end{tabular}}
+%
+%% \rvec{}{}
+%% \rvec*{}{}{}
+%% ([rvecbracket])
+\if@jpnedu@symbol@rvecbracket%
+\DeclareRobustCommand{\rvec}
+{\@ifstar{\@jpnedu@symbol@rvec@star}{\@jpnedu@symbol@rvec@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@rvec@star}[3]{\left[#1,\,#2,\,#3\right]}
+\DeclareRobustCommand{\@jpnedu@symbol@rvec@nostar}[2]{\left[#1,\,#2\right]}
+\else%
+\DeclareRobustCommand{\rvec}
+{\@ifstar{\@jpnedu@symbol@rvec@star}{\@jpnedu@symbol@rvec@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@rvec@star}[3]{\left(#1,\,#2,\,#3\right)}
+\DeclareRobustCommand{\@jpnedu@symbol@rvec@nostar}[2]{\left(#1,\,#2\right)}
+\fi%
+%
+%% \cvec{}{}
+%% \cvec*{}{}{}
+%% ([cvecbracket])
+\if@jpnedu@symbol@cvecbracket%
+\DeclareRobustCommand{\cvec}
+{\@ifstar{\@jpnedu@symbol@cvec@star}{\@jpnedu@symbol@cvec@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@cvec@star}[3]{\begin{bmatrix}\,#1\,\\\,#2\,\\\,#3\,\end{bmatrix}}
+\DeclareRobustCommand{\@jpnedu@symbol@cvec@nostar}[2]{\begin{bmatrix}\,#1\,\\\,#2\,\end{bmatrix}}
+\else%
+\DeclareRobustCommand{\cvec}
+{\@ifstar{\@jpnedu@symbol@cvec@star}{\@jpnedu@symbol@cvec@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@cvec@star}[3]{\begin{pmatrix}\,#1\,\\\,#2\,\\\,#3\,\end{pmatrix}}
+\DeclareRobustCommand{\@jpnedu@symbol@cvec@nostar}[2]{\begin{pmatrix}\,#1\,\\\,#2\,\end{pmatrix}}
+\fi%
+%
+%% \innerproduct{}{} \inp{}{}
+\let\originalinp\inp
+\if@jpnedu@symbol@innerproductbracket
+\DeclareRobustCommand{\innerproduct}
+{\@ifstar{\@jpnedu@symbol@innerproduct@star}{\@jpnedu@symbol@innerproduct@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@innerproduct@star}[2]{\langle #1\relax,#2\rangle}
+\DeclareRobustCommand{\@jpnedu@symbol@innerproduct@nostar}[2]{\left\langle #1\relax,#2\right\rangle}
+\else%
+\DeclareRobustCommand{\innerproduct}
+{\@ifstar{\@jpnedu@symbol@innerproduct@star}{\@jpnedu@symbol@innerproduct@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@innerproduct@star}[2]{#1\cdot #2\relax}
+\DeclareRobustCommand{\@jpnedu@symbol@innerproduct@nostar}[2]{#1\cdot #2\relax}
+\fi%
+\let\inp\innerproduct
+%
+%% \sequence{} \seq{}
+\let\originalseq\seq
+\DeclareRobustCommand{\sequence}[1]{\ensuremath{\left\{#1\right\}}}
+\let\seq\sequence
+%
+%% \sum*
+\let\originalsum\sum
+\DeclareRobustCommand{\sum}
+{\@ifstar{\@jpnedu@symbol@sum@star}{\@jpnedu@symbol@sum@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@sum@star}{\textstyle\sum}
+\DeclareRobustCommand{\@jpnedu@symbol@sum@nostar}{\originalsum}
+%
+%% \GCD
+%% \LCM
+\DeclareRobustCommand{\GCD}{\mathop{\mathrm{GCD}}\nolimits}
+\DeclareRobustCommand{\LCM}{\mathop{\mathrm{LCM}}\nolimits}
+%
+%% \degree
+\let\originaldegree\degree
+\DeclareRobustCommand{\degree}{^{\circ}}
+%
+%% \arc{}
+% http://www.artsci.kyushu-u.ac.jp/~ssaito/jpn/tex/tips/misc.html#arc
+\let\originalarc\arc
+\DeclareRobustCommand{\arc}[1]{%
+\settowidth{\dimen0}{\ensuremath{#1}}%
+\divide\dimen0 by 2%
+\overset{\rotatebox{-90}{\ensuremath{\left(\rule{0pt}{\dimen0}\right.\!}}}{#1}%
+}
+%
+%% \parallel
+% https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/8814.html
+\let\originalparallel\parallel
+\DeclareRobustCommand{\parallel}{%
+\mathrel{\raise.3ex\hbox{\scalebox{.7}{%
+\rotatebox[origin=c]{-7}{/}\kern-.35em\rotatebox[origin=c]{-7}{/}}}}}%
+\DeclareRobustCommand{\notparallel}
+{\mathrel{\raise.3ex\hbox{\scalebox{.7}{%
+\ooalign{\rotatebox[origin=c]{-7}{/}\kern-.35em\rotatebox[origin=c]{-7}{/}\crcr%
+\hfil\raisebox{.0ex}{$\backslash$}\hfil}}}}}%
+%
+%% \similar
+\let\originalsimilar\similar
+\DeclareRobustCommand{\similar}[1][1.3]{\mathrel{\lower.2ex\hbox{\scalebox{#1}{∽}}}}
+%
+%% \permutation{}{}
+%% \combination{}{}
+%% \repeatedpermutation{}{}
+%% \homogeneous{}{} \repeatedcombination{}{}
+\DeclareRobustCommand{\permutation}[2]{\ensuremath{{}_{#1}\mathrm{P}_{#2}}}
+\DeclareRobustCommand{\combination}[2]{\ensuremath{{}_{#1}\mathrm{C}_{#2}}}
+\DeclareRobustCommand{\repeatedpermutation}[2]{\ensuremath{{}_{#1}\mathrm{\Pi}_{#2}}}
+\DeclareRobustCommand{\homogeneous}[2]{\ensuremath{{}_{#1}\mathrm{H}_{#2}}}
+\let\repeatedcombination\homogeneous
+%
+%% \expectedvalue{}
+%% ([mathbb])
+\if@jpnedu@symbol@mathbb
+\DeclareRobustCommand{\expectedvalue}[1]{\mathbb{E}\left(#1\right)}
+\else
+\DeclareRobustCommand{\expectedvalue}[1]{\mathbf{E}\left(#1\right)}
+\fi
+%
+%% \Re
+%% \Im
+\let\originalRe\Re
+\let\originalIm\Im
+\DeclareRobustCommand{\Re}{\mathrm{Re}\,}
+\DeclareRobustCommand{\Im}{\mathrm{Im}\,}
+%
+%% \conjugate{}
+%% \conj{}
+\let\originalconjugate\conjugate
+\let\originalconj\conj
+\DeclareRobustCommand{\conjugate}[1]{\overline{\mathstrut #1}}
+\let\conj\conjugate
+%
+%% \parentext{<text>}
+%% \squaretext{<text>}
+%% \whitesquaretext{<text>}
+\DeclareRobustCommand{\parentext}[1]{\text{（#1）}}
+\DeclareRobustCommand{\squaretext}[1]{\text{「#1」}}
+\DeclareRobustCommand{\whitesquaretext}[1]{\text{『#1』}}
+%
+%% \ltext{<text>}
+%% \lltext{<text>}
+\DeclareRobustCommand{\ltext}{\squaretext}
+\DeclareRobustCommand{\lltext}{\whitesquaretext}
+\DeclareRobustCommand{\ltextbegin}{\text{「}}
+\DeclareRobustCommand{\lltextbegin}{\text{『}}
+\DeclareRobustCommand{\ltextend}{\text{」}}
+\DeclareRobustCommand{\lltextend}{\text{』}}
+%
+%% \nomination{}
+\DeclareRobustCommand{\nomination}{\parentext}
+%
+%% \condition
+\DeclareRobustCommand{\condition}{\@ifstar{\@jpnedu@symbol@condition@star}{\@jpnedu@symbol@condition@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@condition@star}[1]{\quad\parentext{#1}}
+\DeclareRobustCommand{\@jpnedu@symbol@condition@nostar}[1]{\parentext{#1}}
+%
+%% \explanation{}
+\DeclareRobustCommand{\explanation}{\@ifstar{\@jpnedu@symbol@explanation@star}{\@jpnedu@symbol@explanation@nostar}}
+\DeclareRobustCommand{\@jpnedu@symbol@explanation@nostar}[1]{\parentext{\raisebox{1.5pt}{$\because$\ }#1}}
+\DeclareRobustCommand{\@jpnedu@symbol@explanation@star}[1]{\parentext{#1}}
+%
+%% \quantify
+\DeclareRobustCommand{\quantify}[1]{\text{#1}\ }
+%
+%% \equationunit
+\DeclareRobustCommand{\equationunit}[1]{\parentext{#1}}
+%
+%% \texttherefore
+%% \textbecause
+\DeclareRobustCommand{\texttherefore}{\raisebox{1.5pt}{$\therefore$}}
+\DeclareRobustCommand{\textbecause}{\raisebox{1.5pt}{$\because$}}
+%
+%% \QED
+\DeclareRobustCommand{\QED}{■}
+%
+%% EOF

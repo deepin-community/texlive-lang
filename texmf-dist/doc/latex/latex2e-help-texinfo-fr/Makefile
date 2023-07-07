@@ -1,3 +1,4 @@
+#! /usr/bin/env make -f
 # $Id: Makefile 466 2015-10-27 11:31:20Z jhefferon $
 # Public domain.  Originally written 2006, Karl Berry.
 # Makefile for latexrefman.
@@ -21,10 +22,13 @@ xref_suffixes := $(xref_suffixes) $(addsuffix s,$(xref_suffixes))
 xref_suffixes := aux log toc $(xref_suffixes)
 tex_suffixes = dvi pdf
 makeinfo_suffixes = dbk html info txt xml
-suffixes=$(tex_suffixes) $(makeinfo_suffixes) tree
+phony_suffixes:=tree
+suffixes=$(tex_suffixes) $(makeinfo_suffixes) $(phony_suffixes)
 en_longname:=english
 es_longname:=spanish
 fr_longname:=french
+en_aspell_opt:=
+fr_aspell_opt:=-d fr --encoding=UTF-8
 
 #
 # Go somewhere useful from Top.
@@ -57,11 +61,12 @@ tree_output+= $$($(1)_tree_output)
 .PHONY: $(1)tree
 $(1)tree: $$($(1)_tree_output)
 
-$$($(1)_manual).html: $$($(1)_manual).texi
+$$($(1)_manual).html: $$($(1)_manual).texi common.texi
 	$(makeinfo) --html --no-split $$($(1)_texi2html_top) $$<
 
-latex2e-help-texinfo-tree/$$($(1)_manual)/index.html: $$($(1)_manual).texi
+latex2e-help-texinfo-tree/$$($(1)_manual)/index.html $$($(1)_manual).tree: $$($(1)_manual).texi common.texi
 	$(makeinfo) --html $$($(1)_texi2html_top) $$< -o $$(dir $$@)
+	touch $$($(1)_manual).tree
 
 endef
 $(foreach lang,$(languages), $(eval $(call lang_template,$(lang))))
@@ -70,19 +75,19 @@ $(foreach lang,$(languages), $(eval $(call lang_template,$(lang))))
 all_suffixes = dvi pdf $(makeinfo_suffixes) tree
 all_manuals:=$(foreach lang,$(languages),$($(lang)_manual)) 
 
-$(addsuffix .pdf,$(all_manuals)):%.pdf: %.texi
+$(addsuffix .pdf,$(all_manuals)):%.pdf: %.texi common.texi
 	$(texi2pdf) $<
-$(addsuffix .dvi,$(all_manuals)):%.dvi: %.texi
+$(addsuffix .dvi,$(all_manuals)):%.dvi: %.texi common.texi
 	$(texi2dvi) $<
 #
-$(addsuffix .dbk,$(all_manuals)):%.dbk: %.texi
+$(addsuffix .dbk,$(all_manuals)):%.dbk: %.texi common.texi
 	$(texi2docbook) -o $@ $<
 
-$(addsuffix .info,$(all_manuals)):%.info: %.texi
+$(addsuffix .info,$(all_manuals)):%.info: %.texi common.texi
 	$(texi2info) $<
-$(addsuffix .txt,$(all_manuals)):%.txt: %.texi
+$(addsuffix .txt,$(all_manuals)):%.txt: %.texi common.texi
 	$(texi2txt) -o $@ $<
-$(addsuffix .xml,$(all_manuals)):%.xml: %.texi
+$(addsuffix .xml,$(all_manuals)):%.xml: %.texi common.texi
 	$(texi2xml) $<
 
 
@@ -107,7 +112,7 @@ $(foreach lang,$(languages), $(eval $(call lang_template,$(lang))))
 # Build per language.
 define lang_template
 .PHONY: $(1)
-$(1): license-check-$(1) $($(1)_output)
+$(1): license-check-$(1) $($(1)_output) |  updated-date-$(1) 
 endef
 $(foreach lang,$(languages), $(eval $(call lang_template,$(lang))))
 
@@ -188,8 +193,7 @@ updated-date-$(1):
 		mv temp.texi $($(1)_manual).texi; \
 	fi
 
-updated-$(1): updated-date-$(1)
-	$$(MAKE) $(1)
+updated-$(1): updated-date-$(1) $(1)
 endef
 $(foreach lang,$(languages), $(eval $(call lang_template,$(lang))))
 
@@ -273,7 +277,7 @@ endef
 # Distribution per language.
 define lang_template
 .PHONY: dist-$(1)
-dist-$(1): $(1) updated-$(1)
+dist-$(1): updated-$(1)
 	@uncommited=`svn status $$(call dist_output,$(1)) $$(call txt_files,$(1))`; \
 	echo -n "$$$$uncommited"; \
 	if [ -n "$$$$uncommited" -a -z "$(DIST_FORCE)" ]; \
@@ -328,8 +332,8 @@ spell: $(addprefix spell-,$(languages))
 define lang_template
 .PHONY: spell-$(1)
 spell-$(1):
-	sed -e 's/\\[a-zA-Z]*//g' $($(1)_manual).texi \
-	| aspell list --mode=texinfo --add-extra-dicts=`pwd`/aspell.$(1).pws \
+	./src/spell_filter.pl $($(1)_manual).texi \
+	| aspell  $($(1)_aspell_opt) list --mode=texinfo --add-extra-dicts=`pwd`/aspell.$(1).pws \
         | sort -f -u
 endef
 $(foreach lang,$(languages), $(eval $(call lang_template,$(lang))))
@@ -384,7 +388,10 @@ endif
 # and svn diff the source files.
 .PHONY: svr svd
 svr:
-	svn revert $(addprefix $(manual)*., $(all_suffixes))
+	svn revert $(addprefix $(manual)*., $(filter-out $(phony_suffixes),$(all_suffixes)))
+	$(foreach lang,$(languages),find latex2e-help-texinfo-tree/$($(lang)_manual) -iname \*.html -print0 \
+		| xargs -0 svn revert;)
+	rm -f $(addprefix $(manual)*.,$(phony_suffixes))
 svd:
 	svn diff $(foreach lang,$(languages),$(call txt_files,$(lang))) $(patsubst %,aspell.%.pws,$(languages)) *.texi
 
@@ -410,7 +417,7 @@ endef
 $(eval $(foreach LANG,$(other_languages),$(call _1,$(LANG))))
 
 define AWK_NODE_LIST
-/^ *@node/ { gsub(/^ *@node +| *,.*$$$$/,""); print; }
+/^ *@node/ { gsub(/^ *@node +| *,.*$$$$| *$$$$/,""); print; }
 endef
 
 define _1
@@ -447,6 +454,7 @@ help:
 	@echo "Target L to make all format for language L $(call make_list,$(languages))"
 	@echo "Target LF to make format F for language L $(call make_list,$(foreach L,$(languages),$(foreach F,$(suffixes),$(L)$(F))))"
 	@echo "Target compare-nodes-L to compare node list of language L to node list of $(default_language), for L $(call make_list,$(other_languages))"
+	@echo "Target spell-L to spell check language L, for L $(call make_list,$(languages))"
 
 # Local Variables:
 # coding: utf-8

@@ -44,7 +44,7 @@
 %<*driver>
 \ProvidesFile{ltjsclasses.dtx}
 %</driver>
-  [2020/12/23 ltjsclasses ]
+  [2022/09/12 ltjsclasses ]
 %<*driver>
 \IfFileExists{luatex85.sty}{\RequirePackage{luatex85}}{}
 \documentclass[disablejfam]{ltjsarticle}
@@ -808,13 +808,15 @@
   \begingroup\catcode`\%=12\relax
   \directlua{
     local getdimen, mpt=tex.getdimen, tex.getdimen('jsc@mpt')/65536
+    local floor, cnt_dimen_at = math.floor, luatexbase.registernumber 'dimen@'
+    local print_scaled, sprint = luatexja.print_scaled, tex.sprint
     local t = lua.get_functions_table()
     t[\the\ltjs@@magnify@font@calc] = function()
-      tex.sprint(-2,math.floor(0.5+mpt*getdimen('dimen@')))
+      sprint(-2,floor(0.5+mpt*getdimen(cnt_dimen_at)))
     end
     function luatexja.ltjs_unmagnify_fsize(a)
-      local s = luatexja.print_scaled(math.floor(0.5+a/mpt*65536))
-      tex.sprint(-2, (s:match('%.0$')) and s:sub(1,-3) or s )
+      local s = print_scaled(floor(0.5+a/mpt*65536))
+      sprint(-2, (s:match('%.0$')) and s:sub(1,-3) or s )
     end
   }
   \endgroup
@@ -892,10 +894,13 @@
 % [2017-01-11] トンボオプションが指定されているとき「だけ」|\stockwidth|，
 % |\stockheight|を定義するようにしました。
 %
+% [2022-09-12 LTJ] \LaTeXe カーネルに|\stockwidth|、|\stockheight|が追加されるようですので、
+% クラスファイル側では未定義のときのみこれらの長さ変数を定義します。h20y6mさん、ありがとうございます。
+%
 %    \begin{macrocode}
 \iftombow
-  \newlength{\stockwidth}
-  \newlength{\stockheight}
+  \ifdefined\stockwidth\else\newlength{\stockwidth}\fi
+  \ifdefined\stockheight\else\newlength{\stockheight}\fi
   \setlength{\stockwidth}{\paperwidth}
   \setlength{\stockheight}{\paperheight}
   \advance \stockwidth 2in
@@ -975,15 +980,16 @@
 % [2018-09-23 LTJ] |\Cjascale|の設定を前倒ししたことに伴い，実際の再定義は
 % \texttt{mingoth}, \texttt{ptexjis}のときしか必要なくなりました。
 %
+% [2022-04-11 LTJ] kern featureを無効にするのを忘れていました．
 %    \begin{macrocode}
 \expandafter\let\csname JY3/mc/m/n/10\endcsname\relax
 \ifmingoth
-  \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:jfm=min}{}
-  \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:jfm=min}{}
+  \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:-kern;jfm=min}{}
+  \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:-kern;jfm=min}{}
 \else
   \ifptexjis
-    \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:jfm=jis}{}
-    \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:jfm=jis}{}
+    \DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [\Cjascale] \ltj@stdmcfont:-kern;jfm=jis}{}
+    \DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [\Cjascale] \ltj@stdgtfont:-kern;jfm=jis}{}
   \fi
 \fi
 %    \end{macrocode}
@@ -5141,6 +5147,7 @@
     \splittopskip\footnotesep
     \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
     \hsize\columnwidth \@parboxrestore
+    \def\@currentcounter{footnote}%
     \protected@edef\@currentlabel{%
        \csname p@footnote\endcsname\@thefnmark
     }%
@@ -5162,12 +5169,13 @@
 % |\@makefnmark| は脚注の番号を出力する命令です。
 % ここでは脚注が左端から一定距離に来るようにしてあります。
 %
+%
 %    \begin{macrocode}
 \newcommand\@makefntext[1]{%
   \advance\leftskip 3\zw
   \parindent 1\zw
   \noindent
-  \llap{\@makefnmark\hskip0.3\zw}#1}
+  \hb@xt@\z@{\hss\@makefnmark\hskip0.3\zw}#1}
 %    \end{macrocode}
 % \end{macro}
 %

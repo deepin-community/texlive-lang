@@ -21,7 +21,7 @@ SH = sh
 
 # programs
 PYLIT = pylit         # text <-> source converter for literal programming
-RST2HTML = rst2html5  # text -> HTML converter, see docutils.sf.net
+RST2HTML = rst2html5 --stylesheet=minimal.css,responsive.css # text -> HTML converter, see docutils.sf.net
 RUBBER = rubber -f --pdf -m hyperref # wrapper around `latex`, run until references resolved
 LATEX = pdflatex -interaction batchmode
 

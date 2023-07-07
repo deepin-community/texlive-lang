@@ -1,6 +1,6 @@
 %Format: PDF
 
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,11pt,french]{article}
 
 \addtolength{\textwidth}{10mm}
 \addtolength{\oddsidemargin}{-5mm}
@@ -13,11 +13,9 @@
 %\usepackage[FlechesPS]{tabvar}
 %\usepackage[FlechesMP]{tabvar}
 
-\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[frenchb]{babel}
-
 \usepackage{lmodern}
+\usepackage{babel}
 
 \newcommand*{\file}[1]{\texttt{#1}}
 \newcommand*{\env}[1]{\texttt{#1}}
@@ -30,16 +28,16 @@
   \Large\bfseries Exemples de tableaux de variations avec \file{tabvar}
 \end{center}
 
-Un exemple simple : 
+Un exemple simple :
 $\displaystyle f(x)=\frac{x^3+2}{2x} \qquad f'(x)=\frac{x^3-1}{x^2}$.
 
 \[\begin{tabvar}{|C|CCCCCCCCC|} \hline
- x    &-\infty &   &-\sqrt[3]{2} &   & 0       &   & 1  &    &+\infty      
+ x    &-\infty &   &-\sqrt[3]{2} &   & 0       &   & 1  &    &+\infty
 \\ \hline
-f'(x) &        & - &             & - & \dbarre & - & 0  & +  & 
+f'(x) &        & - &             & - & \dbarre & - & 0  & +  &
 \\ \hline
-\niveau{3}{3}f(x)  
-      &+\infty                       &\decroit 
+\niveau{3}{3}f(x)
+      &+\infty                       &\decroit
       &0                             &\decroit
       &\discont{-\infty}{<}{+\infty} &\decroit
       &\frac{3}{2}                   &\croit
@@ -50,12 +48,12 @@ f'(x) &        & - &             & - & \dbarre & - & 0  & +  &
 Le codage du tableau est le suivant :
 \begin{verbatim}
 \[\begin{tabvar}{|C|CCCCCCCCC|} \hline
- x    &-\infty &  &-\sqrt[3]{2} &  &0       &  & 1 &  &+\infty      
+ x    &-\infty &  &-\sqrt[3]{2} &  &0       &  & 1 &  &+\infty
 \\ \hline
-f'(x) &        &- &             &- &\dbarre &- & 0 &+ & 
+f'(x) &        &- &             &- &\dbarre &- & 0 &+ &
 \\ \hline
-\niveau{3}{3}f(x)  
-      &+\infty                       &\decroit 
+\niveau{3}{3}f(x)
+      &+\infty                       &\decroit
       &0                             &\decroit
       &\discont{-\infty}{<}{+\infty} &\decroit
       &\frac{3}{2}                   &\croit
@@ -78,12 +76,12 @@ la commande \verb|\TVcenter|%
 
 Voici le résultat obtenu avec ces deux modifications :
 \[\begin{tabvar}{|C|CCCCCCCCC|} \hline
- x    &-\infty &  &-\sqrt[3]{2} &  &0       &  & 1 &  &+\infty      
+ x    &-\infty &  &-\sqrt[3]{2} &  &0       &  & 1 &  &+\infty
 \\ \hline
-f'(x) &        &- &             &- &\dbarre &- & 0 &+ & 
+f'(x) &        &- &             &- &\dbarre &- & 0 &+ &
 \\ \hline
 \niveau{3}{3}\TVcenter{f(x)}
-      &+\infty             &\decroit 
+      &+\infty             &\decroit
       &0                                &\decroit
       &\discont[1]{-\infty}{<}{+\infty} &\decroit
       &\frac{3}{2}                      &\croit
@@ -104,10 +102,10 @@ grâce à la commande \verb|\barre{}|%
 \[\begin{tabvar}{|C|CCCCLCRCCCC|} \hline
  x    &-\infty & &-\sqrt[3]{2} & & &0       & & &1         & &+\infty
 \\ \hline
-f'(x) &        &-& \barre{}    &-& &\dbarre & &-&\barre{0} &+& 
+f'(x) &        &-& \barre{}    &-& &\dbarre & &-&\barre{0} &+&
 \\ \hline
-\niveau{3}{3}\TVcenter{f(x)} 
-      &+\infty                                 &\decroit 
+\niveau{3}{3}\TVcenter{f(x)}
+      &+\infty                                 &\decroit
       &\barre{0}                               &\decroit
       &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
       &\barre{\frac{3}{2}}                     &\croit
@@ -120,10 +118,10 @@ Le codage est le suivant :
 \[\begin{tabvar}{|C|CCCCLCRCCCC|} \hline
  x   &-\infty& &-\sqrt[3]{2} & & &0       & & &1         & &+\infty
 \\ \hline
-f'(x)&       &-& \barre{}    &-& &\dbarre & &-&\barre{0} &+& 
+f'(x)&       &-& \barre{}    &-& &\dbarre & &-&\barre{0} &+&
 \\ \hline
-\niveau{3}{3}\TVcenter{f(x)} 
-      &+\infty                                 &\decroit 
+\niveau{3}{3}\TVcenter{f(x)}
+      &+\infty                                 &\decroit
       &\barre{0}                               &\decroit
       &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
       &\barre{\frac{3}{2}}                     &\croit
@@ -141,25 +139,25 @@ $\displaystyle x(t)= t + \frac{1}{t}\qquad y(t) = t + \frac{1}{2t^2}$.
 
 \[
 \begin{tabvar}{|C|CCRCCCCCC|} \hline
- t    &-\infty &   &-1  &   & 0       &   & 1  &   &+\infty      
+ t    &-\infty &   &-1  &   & 0       &   & 1  &   &+\infty
 \\ \hline
-x'(t) &        &+  & 0  & - & \dbarre & - & 0  & + & 
+x'(t) &        &+  & 0  & - & \dbarre & - & 0  & + &
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                          &\croit 
-                &-2                               &\decroit 
-                &\discont[1]{-\infty}{<}{+\infty} &\decroit 
+\TVcenter{x(t)} &-\infty                          &\croit
+                &-2                               &\decroit
+                &\discont[1]{-\infty}{<}{+\infty} &\decroit
                 &2                                &\croit
                 &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty        &\croit 
+\TVcenter{y(t)} &-\infty        &\croit
                 &-\frac{1}{2}   &\croit
                 &+\infty        &\decroit
                 &\frac{3}{2}    &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+  &2   & + & \dbarre & - & 0  &+   &             
+y'(t) &        &+  &2   & + & \dbarre & - & 0  &+   &
 \\ \hline
 \end{tabvar}
 \]
@@ -167,25 +165,25 @@ y'(t) &        &+  &2   & + & \dbarre & - & 0  &+   &
 Le codage est le suivant :
 \begin{verbatim}
 \[\begin{tabvar}{|C|CCRCCCCCC|} \hline
- t    &-\infty &   &-1  &   & 0       &   & 1  &   &+\infty      
+ t    &-\infty &   &-1  &   & 0       &   & 1  &   &+\infty
 \\ \hline
-x'(t) &        &+  & 0  & - & \dbarre & - & 0  & + & 
+x'(t) &        &+  & 0  & - & \dbarre & - & 0  & + &
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                          &\croit 
-                &-2                               &\decroit 
-                &\discont[1]{-\infty}{<}{+\infty} &\decroit 
+\TVcenter{x(t)} &-\infty                          &\croit
+                &-2                               &\decroit
+                &\discont[1]{-\infty}{<}{+\infty} &\decroit
                 &2                                &\croit
                 &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty        &\croit 
+\TVcenter{y(t)} &-\infty        &\croit
                 &-\frac{1}{2}   &\croit
                 &+\infty        &\decroit
                 &\frac{3}{2}    &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+  &2   & + & \dbarre & - & 0  &+   &             
+y'(t) &        &+  &2   & + & \dbarre & - & 0  &+   &
 \\ \hline
 \end{tabvar}
 \]
@@ -197,23 +195,23 @@ Le même tableau de variations en présentation \og traditionnelle \fg.
 \[\begin{tabvar}{|C|CCCCRCLCCCC|} \hline
  t   &-\infty & &-1       & & &0       & & & 1        & &+\infty
 \\ \hline
-x'(t)&        &+&\barre{0}&-& &\dbarre & &-&\barre{0} &+& 
+x'(t)&        &+&\barre{0}&-& &\dbarre & &-&\barre{0} &+&
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                            &\croit 
-           &\barre{-2}                              &\decroit 
-           &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+\TVcenter{x(t)} &-\infty                            &\croit
+           &\barre{-2}                              &\decroit
+           &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
            &\barre{2}                               &\croit
            &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty                   &\croit 
+\TVcenter{y(t)} &-\infty                   &\croit
                 &-\frac{1}{2}              &\croit
                 &+\infty &\dbarre &+\infty &\decroit
                 &\barre{\frac{3}{2}}       &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &             
+y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \end{tabvar}\]
 
@@ -222,17 +220,17 @@ Le codage est le suivant :
 \[\begin{tabvar}{|C|CCCCRCLCCCC|} \hline
  t   &-\infty & &-1       & & &0       & & & 1        & &+\infty
 \\ \hline
-x'(t)&        &+&\barre{0}&-& &\dbarre & &-&\barre{0} &+& 
+x'(t)&        &+&\barre{0}&-& &\dbarre & &-&\barre{0} &+&
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                            &\croit 
-           &\barre{-2}                              &\decroit 
-           &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+\TVcenter{x(t)} &-\infty                            &\croit
+           &\barre{-2}                              &\decroit
+           &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
            &\barre{2}                               &\croit
            &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty                   &\croit 
+\TVcenter{y(t)} &-\infty                   &\croit
                 &-\frac{1}{2}              &\croit
                 &+\infty &\dbarre &+\infty &\decroit
                 &\barre{\frac{3}{2}}       &\croit
@@ -256,7 +254,7 @@ lieu de \verb|\frac| pour coder les fractions $\frac{1}{2}$ et $\frac{1}{4}$
 aboutit au tableau de gauche.
 
 \vspace{-.5\baselineskip}
-\[\begin{tabvar}{|C|LCCCR|} 
+\[\begin{tabvar}{|C|LCCCR|}
 \hline
 x                            &0            &       &\dfrac{1}{2} &         & 1
 \\ \hline
@@ -266,7 +264,7 @@ f'(x)                        &1\phantom{-} & +     & 0           & -       &-1
 \\ \hline
 \end{tabvar}
 \quad
-\begin{tabvar}{|C|LCCCR|} 
+\begin{tabvar}{|C|LCCCR|}
 \hline
 x                            &0 &       &\TVstretch{\dfrac{1}{2}} &         & 1
 \\ \hline
@@ -281,7 +279,7 @@ Le codage du tableau de gauche est le suivant :
 \vspace{-.2\baselineskip}
 {\footnotesize
 \begin{verbatim}
-\begin{tabvar}{|C|CCCCR|} 
+\begin{tabvar}{|C|CCCCR|}
 \hline
 x                            &0            &       &\dfrac{1}{2} &         & 1
 \\ \hline
@@ -296,11 +294,11 @@ f'(x)                        &1\phantom{-} & +     & 0           & -       &-1
 \vspace{-.3\baselineskip}
 Le tableau de droite est obtenu grâce à la commande \verb|\TVstretch|%
 \footnote{Cette commande n'est disponible que depuis la version 1.7
-  (décembre~2012) de \file{tabvar}.} ; 
+  (décembre~2012) de \file{tabvar}.} ;
 il suffit de remplacer \verb|\dfrac{1}{2}| et \verb|\dfrac{1}{4}|
 par \verb|\TVstretch{\dfrac{1}{2}}| et \verb|\TVstretch{\dfrac{1}{4}}| ce qui
 ajoute un petit espace vertical (\verb|2pt| soit 0,6mm environ) au-dessus et
-au-dessous de ces fractions. 
+au-dessous de ces fractions.
 
 La commande \verb|\TVstretch| peut aussi s’utiliser avec un argument
 optionnel qui ajoute de l’espace uniquement au-dessus ou au-dessous selon son
@@ -308,7 +306,7 @@ signe. Le codage\par
 \vspace{-.3\baselineskip}
 {\footnotesize
 \begin{verbatim}
-\begin{tabvar}{|C|R C C C C|} 
+\begin{tabvar}{|C|R C C C C|}
 \hline
 x    &0 &      &\TVstretch[-4pt]{\frac{1}{2}} &        & 1
 \\ \hline
@@ -324,7 +322,7 @@ f'(x)&-1 & -    & 0                    & +      &1
 \vspace{-.3\baselineskip}
 produit le tableau de droite, le tableau de gauche est obtenu avec le même
 codage mais sans recours à la commande \verb|\TVstretch|.
-\[\begin{tabvar}{|C|R C C C C|} 
+\[\begin{tabvar}{|C|R C C C C|}
 \hline
 x    &0  &      &\frac{1}{2} &        & 1
 \\ \hline
@@ -334,7 +332,7 @@ f'(x)&-1 & -    & 0                    & +      &1
 \\ \hline
 \end{tabvar}
 \quad
-\begin{tabvar}{|C|R C C C C|} 
+\begin{tabvar}{|C|R C C C C|}
 \hline
 x    &0  &      &\TVstretch[-4pt]{\frac{1}{2}} &        & 1
 \\ \hline
@@ -349,7 +347,7 @@ f'(x)&-1 & -    & 0                    & +      &1
 \newpage
 Il est possible de choisir entre quatre types de flèches grâce aux commandes
 \verb+\FlechesPS1+ (flèches « à moustaches » obtenues par défaut) \dots{}
-\verb+\FlechesPS4+.  
+\verb+\FlechesPS4+.
 Voici le même tableau avec des flèches assorties à la police Fourier
 (\verb+\FlechesPS2+) :
 
@@ -358,23 +356,23 @@ Voici le même tableau avec des flèches assorties à la police Fourier
  t    &-\infty &  &-1        &  & &0       & &  & 1        &  &+\infty
 \\ \hline
 x'(t) &        &+ &\barre{0}
-                             &- & &\dbarre & &- &\barre{0} &+ & 
+                             &- & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                                 &\croit 
-                &\barre{-2}                              &\decroit 
-                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+\TVcenter{x(t)} &-\infty                                 &\croit
+                &\barre{-2}                              &\decroit
+                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
                 &\barre{2}                               &\croit
                 &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty                         &\croit 
+\TVcenter{y(t)} &-\infty                         &\croit
                 &-\frac{1}{2}              &\croit
                 &+\infty &\dbarre &+\infty &\decroit
                 &\barre{\frac{3}{2}}       &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &             
+y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \end{tabvar}\]
 
@@ -383,23 +381,23 @@ Une autre variante (\verb+\FlechesPS3+) \FlechesPS3 :
  t    &-\infty &  &-1        &  & &0       & &  & 1        &  &+\infty
 \\ \hline
 x'(t) &        &+ &\barre{0}
-                             &- & &\dbarre & &- &\barre{0} &+ & 
+                             &- & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                                 &\croit 
-                &\barre{-2}                              &\decroit 
-                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+\TVcenter{x(t)} &-\infty                                 &\croit
+                &\barre{-2}                              &\decroit
+                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
                 &\barre{2}                               &\croit
                 &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty                         &\croit 
+\TVcenter{y(t)} &-\infty                         &\croit
                 &-\frac{1}{2}              &\croit
                 &+\infty &\dbarre &+\infty &\decroit
                 &\barre{\frac{3}{2}}       &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &             
+y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \end{tabvar}\]
 
@@ -408,27 +406,27 @@ et une dernière (\verb+\FlechesPS4+) \FlechesPS4 :
  t    &-\infty &  &-1        &  & &0       & &  & 1        &  &+\infty
 \\ \hline
 x'(t) &        &+ &\barre{0}
-                             &- & &\dbarre & &- &\barre{0} &+ & 
+                             &- & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                                 &\croit 
-                &\barre{-2}                              &\decroit 
-                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+\TVcenter{x(t)} &-\infty                                 &\croit
+                &\barre{-2}                              &\decroit
+                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
                 &\barre{2}                               &\croit
                 &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty                         &\croit 
+\TVcenter{y(t)} &-\infty                         &\croit
                 &-\frac{1}{2}              &\croit
                 &+\infty &\dbarre &+\infty &\decroit
                 &\barre{\frac{3}{2}}       &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &             
+y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \end{tabvar}\]
 
-\newpage 
+\newpage
 
 Enfin il est possible d'élargir les colonnes contenant des flèches grâce à la
 commande \verb|\TVarrowscolstretch| ou d'ajouter de l'espace entre les
@@ -443,23 +441,23 @@ colonnes avec \verb|\TVarraycolsep|, voici le même tableau composé avec
  t    &-\infty &  &-1        &  & &0       & &  & 1        &  &+\infty
 \\ \hline
 x'(t) &        &+ &\barre{0}
-                             &- & &\dbarre & &- &\barre{0} &+ & 
+                             &- & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \niveau{1}{3}
-\TVcenter{x(t)} &-\infty                                 &\croit 
-                &\barre{-2}                              &\decroit 
-                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+\TVcenter{x(t)} &-\infty                                 &\croit
+                &\barre{-2}                              &\decroit
+                &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
                 &\barre{2}                               &\croit
                 &+\infty
 \\ \hline
 \niveau{1}{3}
-\TVcenter{y(t)} &-\infty                         &\croit 
+\TVcenter{y(t)} &-\infty                         &\croit
                 &-\frac{1}{2}              &\croit
                 &+\infty &\dbarre &+\infty &\decroit
                 &\barre{\frac{3}{2}}       &\croit
                 &+\infty
 \\ \hline
-y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &             
+y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &
 \\ \hline
 \end{tabvar}\]
 }
@@ -473,7 +471,7 @@ ascendante, l'utilisation des flèches PostScript est de loin préférable (les
 flèches MetaPost sont des \emph{dessins}, leur couleur ne change pas avec la
 couleur du texte contrairement aux flèches PostScript qui sont des
 \emph{caractères}).
-Les flèches MetaPost sont obtenues avec 
+Les flèches MetaPost sont obtenues avec
 \verb|\usepackage[FlechesMP]{tabvar}|
 ou la commande \verb|\FlechesMPtrue| placée dans le préambule ou dans le
 fichier \file{tabvar.cfg}.
@@ -498,31 +496,31 @@ fichier \file{tabvar.cfg}.
    t    &-\infty &  &-1        &  & &0       & &  & 1        &  &+\infty
   \\ \hline
   x'(t) &        &+ &\barre{0}
-                               &- & &\dbarre & &- &\barre{0} &+ & 
+                               &- & &\dbarre & &- &\barre{0} &+ &
   \\ \hline
   \niveau{1}{3}
-  \TVcenter{x(t)} &-\infty                                 &\croit 
-                  &\barre{-2}                              &\decroit 
-                  &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit 
+  \TVcenter{x(t)} &-\infty                                 &\croit
+                  &\barre{-2}                              &\decroit
+                  &-\infty  &\dbarre &\niveau{3}{3}+\infty &\decroit
                   &\barre{2}                               &\croit
                   &+\infty
   \\ \hline
   \niveau{1}{3}
-  \TVcenter{y(t)} &-\infty                         &\croit 
+  \TVcenter{y(t)} &-\infty                         &\croit
                   &-\frac{1}{2}              &\croit
                   &+\infty &\dbarre &+\infty &\decroit
                   &\barre{\frac{3}{2}}       &\croit
                   &+\infty
   \\ \hline
-  y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &             
+  y'(t) &        &+ &2         &+ & &\dbarre & &- &\barre{0} &+ &
   \\ \hline
   \end{tabvar}\]
 \endgroup
 
-\newpage 
+\newpage
 \FlechesPS2
 Un exemple de fonction non définie partout :
-$\displaystyle f(x) = \sqrt{\frac{x-1}{x+1}}$. 
+$\displaystyle f(x) = \sqrt{\frac{x-1}{x+1}}$.
 
 \[\begin{tabvar}{|C|CCRULCC|} \hline
  x     &-\infty &  &-1 &\hspace*{15mm} & 1      &  &+\infty
@@ -530,7 +528,7 @@ $\displaystyle f(x) = \sqrt{\frac{x-1}{x+1}}$.
  f'(x) &        &+ &   &               &+\infty &+ &
 \\ \hline
 \niveau{1}{2}
-\TVcenter{f(x)}&1     &\croit &+\infty   &               
+\TVcenter{f(x)}&1     &\croit &+\infty   &
           &\niveau{1}{2}0 &\croit & 1
 \\ \hline
 \end{tabvar}\]
@@ -546,7 +544,7 @@ Le codage est le suivant :
  f'(x) &        &+ &   &               &+\infty &+ &
 \\ \hline
 \niveau{1}{2}
-\TVcenter{f(x)}&1     &\croit &+\infty   &               
+\TVcenter{f(x)}&1     &\croit &+\infty   &
           &\niveau{1}{2}0 &\croit & 1
 \\ \hline
 \end{tabvar}\]
@@ -557,11 +555,11 @@ Le codage est le suivant :
 La largeur de la colonne grisée est fixée à~15mm par le \verb|\hspace*{15mm}|
 placé dans une ligne quelconque du tableau. Certains visualiseurs
 (Xdvi par exemple) n'affichent pas correctement les couleurs ;
-en cas de doute, vérifier sur une sortie PostScript ou PDF. 
+en cas de doute, vérifier sur une sortie PostScript ou PDF.
 
 Noter l'emploi d'une seconde commande \verb|\niveau{1}{2}| pour positionner
 la valeur de~$f$ au point~1 (sans celle-ci, cette valeur serait placée
-au niveau de la valeur précédente, ici~$+\infty$. 
+au niveau de la valeur précédente, ici~$+\infty$.
 
 Si on prolongeait la définition de $f$ en posant $f(x)=0$ sur $[-1,1]$
 on aurait le tableau suivant :
@@ -573,7 +571,7 @@ on aurait le tableau suivant :
  f'(x) &        &+ &  &\dbarre & 0 &+\infty &+ &
 \\ \hline
 \niveau{1}{2}
-\TVcenter{f(x)}  &1        &\croit &+\infty &\niveau{1}{2}0 
+\TVcenter{f(x)}  &1        &\croit &+\infty &\niveau{1}{2}0
                                    &\constante &0 &\croit & 1
 \\ \hline
 \end{tabvar}\]
@@ -589,7 +587,7 @@ Le codage est le suivant :
  f'(x) &        &+ &  &\dbarre & 0 &+\infty &+ &
 \\ \hline
 \niveau{1}{2}
-\TVcenter{f(x)}  &1        &\croit &+\infty &\niveau{1}{2}0 
+\TVcenter{f(x)}  &1        &\croit &+\infty &\niveau{1}{2}0
                                    &\constante &0 &\croit & 1
 \\ \hline
 \end{tabvar}\]
@@ -597,8 +595,8 @@ Le codage est le suivant :
 }
 \end{document}
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t
 %%% coding: utf-8
-%%% End: 
+%%% End:

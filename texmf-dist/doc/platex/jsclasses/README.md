@@ -37,7 +37,7 @@ distributed separately.
 
 ## Release Date
 
-2021-07-01
+2022-09-13
 
 Haruhiko Okumura,
 Japanese TeX Development Community

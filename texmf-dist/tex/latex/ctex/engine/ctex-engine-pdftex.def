@@ -6,7 +6,7 @@
 %%
 %% ctex.dtx  (with options: `pdftex')
 %% 
-%%     Copyright (C) 2003--2021
+%%     Copyright (C) 2003--2022
 %%     CTEX.ORG and any individual authors listed in the documentation.
 %% ---------------------------------------------------------------------
 %% 
@@ -24,10 +24,10 @@
 %% 
 %% ---------------------------------------------------------------------
 %% 
-\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
   {(pdf)LaTeX adapter (CTEX)}
 \ProvidesExplFile{ctex-engine-pdftex.def}
-  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
+  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
 \cs_new_protected:Npn \ctex_set_zhmap:n
   { \tl_gput_right:Nx \g__ctex_zhmap_tl }
 \cs_new_protected:Npn \ctex_use_zhmap:
@@ -62,8 +62,8 @@
           { \tl_gput_right:cn { #1 + #2 } { \ctex_add_cmap:n {#1} } }
       }
   }
-\cs_generate_variant:Nn \ctex_family_cmap:nn { x }
-\cs_new_eq:NN \CTEX@Family@CMap \ctex_family_cmap:xn
+\cs_generate_variant:Nn \ctex_family_cmap:nn { ee }
+\cs_new_eq:NN \CTEX@Family@CMap \ctex_family_cmap:ee
 \cs_new_protected:Npn \ctex_add_cmap:n #1
   {
     \cs_if_free:NF \CJK@plane
@@ -81,51 +81,73 @@
     \exp_args:Ne \file_get_full_name:nNTF
       { \str_lowercase:n {#2} .cmap } \l__ctex_cmap_file_tl
       {
-        \tex_immediate:D \tex_pdfobj:D stream ~ file { \l__ctex_cmap_file_tl }
+        \pdf_object_unnamed_write:nx
+          { fstream }
+          { { } { \l__ctex_cmap_file_tl } }
         \cs_new_protected:Npx #1
           {
             \pdfnobuiltintounicode \tex_font:D
             \tex_pdffontattr:D \tex_font:D
-              { /ToUnicode ~ \int_value:w \tex_pdflastobj:D \c_space_tl 0 ~ R }
+              { /ToUnicode ~ \pdf_object_ref_last: }
           }
       }
       { \cs_new_eq:NN #1 \prg_do_nothing: }
   }
 \tl_new:N \l__ctex_cmap_file_tl
-\group_begin:
-\char_set_catcode_other:N \#
-\sys_if_output_pdf:TF
+\sys_if_output_pdf:T
   {
-    \group_end:
-    \ctex_appto_cmd:NnnTF \DeclareFontFamily { \ExplSyntaxOff }
-      { \CTEX@Family@CMap {#1} {#2} }
+    \exp_args:Nno \use:n
+      { \cs_gset_protected:Npn \DeclareFontFamily #1#2#3 }
       {
-        \ctex_at_end_package:nn { cmap }
-          {
-            \cs_gset_eq:NN \ctex_add_cmap:n \use_none:n
-            \cs_gset_eq:NN \CTEX@Family@CMap \use_none:nn
-          }
+        \DeclareFontFamily {#1} {#2} {#3}
+        \CTEX@Family@CMap  {#1} {#2}
       }
-      { \ctex_patch_failure:N \DeclareFontFamily }
+    \ctex_at_end_package:nn { cmap }
+      {
+        \cs_gset_eq:NN \ctex_add_cmap:n \use_none:n
+        \cs_gset_eq:NN \CTEX@Family@CMap \use_none:nn
+      }
   }
-  { \group_end: }
-\if_bool:N \g__ctex_zhmCJK_bool
-  \PassOptionsToPackage { encoding = \g__ctex_encoding_tl } { zhmCJK }
-  \RequirePackage { zhmCJK }
-\else:
-  \str_if_eq:onTF { \g__ctex_encoding_tl } { GBK }
-    { \RequirePackage { CJK } }
-    { \RequirePackage { CJKutf8 } }
-  \RequirePackage { CJKpunct , CJKspace }
-  \cs_new_protected:Npn \ctex_load_zhmap:nnnn #1#2#3#4
-    {
-      \tl_set:Nn \CJKrmdefault {#1}
-      \tl_set:Nn \CJKsfdefault {#2}
-      \tl_set:Nn \CJKttdefault {#3}
-      \ctex_set_zhmap:n { \ctex_file_input:n { ctex-zhmap- #4 .tex } }
-    }
-  \@onlypreamble \ctex_load_zhmap:nnnn
-\fi:
+\bool_if:NTF \g__ctex_zhmCJK_bool
+  {
+    \exp_args:Ne \PassOptionsToPackage
+      { encoding = \g__ctex_encoding_tl }
+      { zhmCJK }
+    \RequirePackage { zhmCJK }
+  }
+  {
+    \str_if_eq:onTF { \g__ctex_encoding_tl } { GBK }
+      { \RequirePackage { CJK } }
+      { \RequirePackage { CJKutf8 } }
+    \RequirePackage { CJKpunct , CJKspace }
+    \cs_new_protected:Npn \ctex_load_zhmap:nnnn #1#2#3#4
+      {
+        \tl_set:Nn \CJKrmdefault {#1}
+        \tl_set:Nn \CJKsfdefault {#2}
+        \tl_set:Nn \CJKttdefault {#3}
+        \ctex_set_zhmap:n { \ctex_file_input:n { ctex-zhmap- #4 .tex } }
+      }
+    \@onlypreamble \ctex_load_zhmap:nnnn
+  }
+\cs_new_protected:Npn \ctex_undeclare_unicode_character:n #1
+  { \cs_set_eq:cN { u8 : \ctex_utfviii_char:n {#1} } \tex_undefined:D }
+\cs_new:Npn \ctex_utfviii_char:n #1
+  {
+    \exp_last_unbraced:Ne \__ctex_utfviii_char_aux:nnnn
+      { \char_to_utfviii_bytes:n {#1} }
+  }
+\cs_new:Npn \__ctex_utfviii_char_aux:nnnn #1#2#3#4
+  {
+    \char_generate:nn {#1} { 12 }
+    \tl_if_empty:nF {#2} { \char_generate:nn {#2} { 12 } }
+    \tl_if_empty:nF {#3} { \char_generate:nn {#3} { 12 } }
+    \tl_if_empty:nF {#4} { \char_generate:nn {#4} { 12 } }
+  }
+\CJKaddEncHook { UTF8 }
+  {
+    \ctex_undeclare_unicode_character:n { "3008 }
+    \ctex_undeclare_unicode_character:n { "3009 }
+  }
 \cs_new_protected:Npn \ctex_CJK_input:n #1
   {
     \ctex_push_file:
@@ -166,24 +188,180 @@
   }
 \AtBeginDocument
   {
-    \str_if_eq:eeF { \l__ctex_punct_tl } { quanjiao }
-      { \punctstyle { \l__ctex_punct_tl } }
+    \use:e
+      {
+        \str_if_eq:nnF { \l__ctex_punct_tl } { quanjiao }
+          { \exp_not:N \punctstyle { \l__ctex_punct_tl } }
+      }
   }
 \ctex_at_end_preamble:n { \ctex_update_default_family: }
-\reverse_if:N \if_bool:N \g__ctex_zhmCJK_bool
-  \str_if_eq:onF { \g__ctex_encoding_tl } { UTF8 }
-    {
-      \CJK@makeActive
-      \CJK@loadBinding { standard }
-    }
-  \exp_args:Nx \ctex_at_end_preamble:n
-    {
-      \exp_not:N \CJK@envStart
-        { } { \g__ctex_encoding_tl } { \exp_not:N \CJKfamilydefault }
-      \exp_not:N \CJKtilde
-    }
-\fi:
+\bool_if:NF \g__ctex_zhmCJK_bool
+  {
+    \str_if_eq:onTF { \g__ctex_encoding_tl } { UTF8 }
+      { \CJK@loadBinding { UTF8 } }
+      { \CJK@loadBinding { standard } }
+    \exp_args:Ne \ctex_at_end_preamble:n
+      {
+        \exp_not:N \CJK@envStart
+          { } { \g__ctex_encoding_tl } { \exp_not:N \CJKfamilydefault }
+        \exp_not:N \CJKtilde
+      }
+  }
 \cs_new_eq:NN \ctex_auto_ignorespaces: \CJK@@ignorespaces
+\cs_new:Npn \__ctex_char:N #1
+  { \exp_args:Ne \CTEX@char@n { \int_value:w `#1 } }
+\cs_new:Npn \__ctex_char:NN #1#2
+  {
+    \token_if_eq_meaning:NNTF #2 \protect
+      { \__ctex_char_aux:NN #1 }
+      { \__ctex_char_aux:NN #1#2 }
+  }
+\cs_new:Npn \__ctex_char_aux:NN #1#2
+  {
+    \exp_last_unbraced:Ne \CTEX@char@nn
+      {
+        { \int_value:w `#1 }
+        { \int_value:w `#2 }
+      }
+  }
+\cs_new:Npn \__ctex_char:NNN #1#2#3
+  {
+    \token_if_eq_meaning:NNTF #2 \protect
+      { \__ctex_char_auxi:NNNN #1#3 }
+      { \__ctex_char_auxii:NNN #1#2#3 }
+  }
+\cs_new:Npn \__ctex_char_auxi:NNN #1#2#3#4
+  { \__ctex_char_auxii:NNN #1#2#4 }
+\cs_new:Npn \__ctex_char_auxii:NNN #1#2#3
+  {
+    \exp_last_unbraced:Ne \CTEX@char@nnn
+      {
+        { \int_value:w `#1 }
+        { \int_value:w `#2 }
+        { \int_value:w `#3 }
+      }
+  }
+\cs_new:Npn \__ctex_char:NNNN #1#2#3#4
+  {
+    \token_if_eq_meaning:NNTF #2 \protect
+      { \__ctex_char_auxi:NNNNN #1#3 }
+      { \__ctex_char_auxii:NNNN #1#2#3#4 }
+  }
+\cs_new:Npn \__ctex_char_auxi:NNNNN #1#2#3#4#5
+  { \__ctex_char_auxii:NNNN #1#2#3#5 }
+\cs_new:Npn \__ctex_char_auxii:NNNN #1#2#3#4
+  {
+    \exp_last_unbraced:Ne \CTEX@char@nnnn
+      {
+        { \int_value:w `#1 }
+        { \int_value:w `#2 }
+        { \int_value:w `#3 }
+        { \int_value:w `#4 }
+      }
+  }
+\cs_gset_eq:NN \CJK@X    \__ctex_char:N
+\cs_gset_eq:NN \CJK@XX   \__ctex_char:NN
+\cs_gset_eq:NN \CJK@XXX  \__ctex_char:NNN
+\cs_gset_eq:NN \CJK@XXXX \__ctex_char:NNNN
+\str_if_eq:onF { \g__ctex_encoding_tl } { GBK }
+  {
+    \exp_args:Nne \use:n
+      { \cs_gset:Npn \__ctex_char_aux:NN #1#2 }
+      {
+        \exp_not:N \cs_if_exist_use:cF
+          { u8: \exp_not:N \tl_to_str:n { #1#2 } }
+          { \exp_not:o { \__ctex_char_aux:NN {#1} {#2} } }
+      }
+    \exp_args:Nne \use:n
+      { \cs_gset:Npn \__ctex_char_auxii:NNN #1#2#3 }
+      {
+        \exp_not:N \cs_if_exist_use:cF
+          { u8: \exp_not:N \tl_to_str:n { #1#2#3 } }
+          { \exp_not:o { \__ctex_char_auxii:NNN {#1} {#2} {#3} } }
+      }
+  }
+\group_begin:
+\char_set_catcode_active:n { "7F }
+\cs_new:Npn \__ctex_char_preproc:w #1 ^^7f #2 ^^7f
+  { \exp_args:No \CTEX@char@nn { \int_value:w `#1 } {#2} }
+\cs_gset_eq:NN \mule@arg \__ctex_char_preproc:w
+\group_end:
+\exp_args:Ne \ctex_at_end:n
+  {
+    \char_set_catcode:nn
+      { \int_value:w "7F }
+      { \char_value_catcode:n { "7F } }
+  }
+\cs_new_protected:Npn \CTEX@char@n #1
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 }
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nn #1#2
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 } {#2}
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nnn  #1#2#3
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 } {#2} {#3}
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nnnn #1#2#3#4
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 } {#2} {#3} {#4}
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nn@n   #1 { \CTEX@char@nn   #1 }
+\cs_new_protected:Npn \CTEX@char@nnn@n  #1 { \CTEX@char@nnn  #1 }
+\cs_new_protected:Npn \CTEX@char@nnnn@n #1 { \CTEX@char@nnnn #1 }
+\cs_new:Npn \__ctex_char_wrap:nn #1#2
+  { \CTEX@char@nn@n   { {#1} {#2} } }
+\cs_new:Npn \__ctex_char_wrap:nnn #1#2#3
+  { \CTEX@char@nnn@n  { {#1} {#2} {#3} } }
+\cs_new:Npn \__ctex_char_wrap:nnnn #1#2#3#4
+  { \CTEX@char@nnnn@n { {#1} {#2} {#3} {#4} } }
+\tl_put_right:Nn \l_text_case_exclude_arg_tl
+  {
+    \CTEX@char@n
+    \CTEX@char@nn@n
+    \CTEX@char@nnn@n
+    \CTEX@char@nnnn@n
+  }
+\text_declare_expand_equivalent:Nn \CTEX@char@nn   { \__ctex_char_wrap:nn }
+\text_declare_expand_equivalent:Nn \CTEX@char@nnn  { \__ctex_char_wrap:nnn }
+\text_declare_expand_equivalent:Nn \CTEX@char@nnnn { \__ctex_char_wrap:nnnn }
+\cs_new:Npn \__ctex_char_raw:n #1
+  { \char_generate:nn {#1} { 12 } }
+\cs_new:Npn \__ctex_char_raw:nn #1#2
+  {
+    \char_generate:nn {#1} { 12 }
+    \char_generate:nn {#2} { 12 }
+  }
+\cs_new:Npn \__ctex_char_raw:nnn #1#2#3
+  {
+    \char_generate:nn {#1} { 12 }
+    \char_generate:nn {#2} { 12 }
+    \char_generate:nn {#3} { 12 }
+  }
+\cs_new:Npn \__ctex_char_raw:nnnn #1#2#3#4
+  {
+    \char_generate:nn {#1} { 12 }
+    \char_generate:nn {#2} { 12 }
+    \char_generate:nn {#3} { 12 }
+    \char_generate:nn {#4} { 12 }
+  }
+\cs_new:Npn \__ctex_char_raw_nn:n   #1 { \use:e { \__ctex_char_raw:nn   #1 } }
+\cs_new:Npn \__ctex_char_raw_nnn:n  #1 { \use:e { \__ctex_char_raw:nnn  #1 } }
+\cs_new:Npn \__ctex_char_raw_nnnn:n #1 { \use:e { \__ctex_char_raw:nnnn #1 } }
+\text_declare_purify_equivalent:Nn \CTEX@char@n      { \__ctex_char_raw:n }
+\text_declare_purify_equivalent:Nn \CTEX@char@nn@n   { \__ctex_char_raw_nn:n }
+\text_declare_purify_equivalent:Nn \CTEX@char@nnn@n  { \__ctex_char_raw_nnn:n }
+\text_declare_purify_equivalent:Nn \CTEX@char@nnnn@n { \__ctex_char_raw_nnnn:n }
 \cs_new_protected:Npn \ctex_ignorespaces_case:N #1
   {
     \cs_set_protected:Npn \ctex_set_ignorespaces:
@@ -367,42 +545,45 @@
       { \exp_not:o { \CTEX@selectfont@hook #1 } }
   }
 \cs_new_eq:NN \CTEX@selectfont@hook \prg_do_nothing:
-\if_bool:N \c__ctex_everysel_loaded_bool
-  \if_cs_exist:N \@EverySelectfont@Init
-    \group_begin:
-      \cs_set:Npn \__ctex_tmp:N #1
-        {
-          \tl_set:Nn \l__ctex_tmp_tl {#1}
-          \cs_new_eq:NN \CTEX@selectfont@save #1
-          \cs_new_protected:Npn \__ctex_restore_selectfont:
-            {
-              \cs_if_free:NF \scr@new@selectfont
-                {
-                  \cs_if_free:NF \par@update
-                    { \tl_put_right:Nn #1 { \par@update } }
-                  \cs_set_eq:NN \scr@selectfont \CTEX@selectfont@save
-                  \cs_set_eq:NN \scr@new@selectfont #1
-                }
-              \tl_put_left:Nn \@EverySelectfont@Init
-                { \cs_set_eq:NN #1 \CTEX@selectfont@save }
-              \cs_undefine:N \__ctex_restore_selectfont:
-            }
-        }
-      \ctex_parse_name:NN \__ctex_tmp:N \selectfont
-    \exp_last_unbraced:NNo \group_end:
-    \ctex_patch_cmd_once:NnnnTF { \l__ctex_tmp_tl }
-      { \ExplSyntaxOff }
-      { \size@update }
-      { \CTEX@selectfont@hook \size@update }
-      { \__ctex_restore_selectfont: }
-      { \ctex_patch_failure:N \selectfont }
-  \fi:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \EverySelectfont }
-\else:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \ctex_gadd_ltxhook:nn { selectfont } }
-\fi:
+\bool_if:NTF \c__ctex_everysel_loaded_bool
+  {
+    \cs_if_free:NF \@EverySelectfont@Init
+      {
+        \group_begin:
+        \cs_set:Npn \__ctex_tmp:N #1
+          {
+            \tl_set:Nn \l__ctex_tmp_tl {#1}
+            \cs_new_eq:NN \CTEX@selectfont@save #1
+            \cs_new_protected:Npn \__ctex_restore_selectfont:
+              {
+                \cs_if_free:NF \scr@new@selectfont
+                  {
+                    \cs_if_free:NF \par@update
+                      { \tl_put_right:Nn #1 { \par@update } }
+                    \cs_set_eq:NN \scr@selectfont \CTEX@selectfont@save
+                    \cs_set_eq:NN \scr@new@selectfont #1
+                  }
+                \tl_put_left:Nn \@EverySelectfont@Init
+                  { \cs_set_eq:NN #1 \CTEX@selectfont@save }
+                \cs_undefine:N \__ctex_restore_selectfont:
+              }
+          }
+        \ctex_parse_name:NN \__ctex_tmp:N \selectfont
+      \exp_last_unbraced:NNo \group_end:
+      \ctex_patch_cmd_once:NnnnTF { \l__ctex_tmp_tl }
+        { \ExplSyntaxOff }
+        { \size@update }
+        { \CTEX@selectfont@hook \size@update }
+        { \__ctex_restore_selectfont: }
+        { \ctex_patch_failure:N \selectfont }
+      }
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \EverySelectfont }
+  }
+  {
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \ctex_gadd_ltxhook:nn { selectfont } }
+  }
 \ctex_gadd_selectfont_hook:n
   { \cs_if_exist:NF \CJK@plane { \CTEX@selectfont@hook } }
 \ctex_define:n

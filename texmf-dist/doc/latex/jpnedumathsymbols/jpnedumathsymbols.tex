@@ -1,0 +1,998 @@
+\documentclass[%
+fleqn,%
+paper=a4paper,%
+fontsize=10pt,%
+open_bracket_pos=zenkakunibu_nibu,%
+hanging_punctuation,%
+]%
+{jlreq}
+\jlreqsetup{%
+itemization_beforeafter_space=0pt,%
+itemization_itemsep=0pt%
+}
+\makeatletter
+\RequirePackage{luatexja}
+\RequirePackage{luatexja-otf}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath}
+%%%%
+%\RequirePackage{amssymb,amsfonts}
+%%%%
+\DeclareRobustCommand{\metaphysicaicon}{\raisebox{-4.0pt}{\includegraphics[width=16pt]{metaphysicaicon.pdf}}}
+\RequirePackage[normalem]{ulem}
+\RequirePackage[explicit]{titlesec}
+\titleformat{\section}[hang]{}{}{0pt}{\uuline{\raisebox{1pt}{\textsf{\thesection\quad #1}}}}[\vspace{0.35\baselineskip}]
+\renewcommand{\thesection}{\S\,\arabic{section}}
+\let\originalsection\section
+\DeclareRobustCommand{\section}{\@ifstar{\@metaphysica@section@star}{\@metaphysica@section@nostar}}
+\DeclareRobustCommand{\@metaphysica@section@star}[1]{\vspace{0.5\baselineskip}\originalsection{#1}\vspace*{-\baselineskip}}
+\DeclareRobustCommand{\@metaphysica@section@nostar}[1]{\vspace{0.5\baselineskip}\originalsection{#1}}
+\RequirePackage[%
+truedimen,%
+margin=30truemm,
+includehead%
+]{geometry}
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\DeclareRobustCommand{\headertitle}[2][\metaphysicaicon]{%
+\rhead[#2]{#1{}\quad\thepage{}/{}\pageref{LastPage}}%
+\lhead[\thepage{}/{}\pageref{LastPage}\quad{}#1]{#2}%
+\cfoot{}%
+}
+\RequirePackage{setspace}
+\setstretch{1.155}
+\DeclareRobustCommand{\linespace}{\@ifstar{\vspace{\baselineskip}}{\vspace{0.25\baselineskip}}}
+\DeclareRobustCommand{\linesmash}{\@ifstar{\vspace{-\baselineskip}}{\vspace{-0.25\baselineskip}}}
+\AtBeginDocument{%
+\abovedisplayskip     =0.125\abovedisplayskip
+\abovedisplayshortskip=0.125\abovedisplayshortskip
+\belowdisplayskip     =0.125\belowdisplayskip
+\belowdisplayshortskip=0.125\belowdisplayshortskip}
+\setlength{\jot}{0pt}%
+\setlength{\mathindent}{2\zw}%
+\renewcommand{\floatpagefraction}{0.75}
+\allowdisplaybreaks[2]
+\RequirePackage[no-math]{fontspec}
+\RequirePackage[no-math,deluxe,haranoaji]{luatexja-preset}
+\RequirePackage{multicolpar}
+\RequirePackage[style=iso]{datetime2}
+\RequirePackage[unicode]{hyperref}
+\RequirePackage{xparse}
+\RequirePackage{dashbox}
+\newcounter{psuedosectioncounter}
+\setcounter{psuedosectioncounter}{1}
+\newcounter{psuedocontentscounter}
+\setcounter{psuedocontentscounter}{1}
+\DeclareRobustCommand{\psuedosection}[3]{%
+\hypertarget{#1}{\mbox{}}\begin{multicolpar}{2}%
+\noindent\uuline{{\raisebox{1pt}{\textsf{\S\ \thepsuedosectioncounter\quad #2}}}}
+
+\noindent\uuline{{\raisebox{1pt}{\textsf{\S\ \thepsuedosectioncounter\quad #3}}}}
+\end{multicolpar}%
+\stepcounter{psuedosectioncounter}%
+\vspace{\baselineskip}%
+}
+\DeclareRobustCommand{\psuedocontents}[3]{%
+\begin{multicolpar}{2}%
+\noindent{\textsf{\hyperlink{#1}{\S\ \thepsuedocontentscounter\quad #2}}}
+
+\noindent{\textsf{\hyperlink{#1}{\S\ \thepsuedocontentscounter\quad #3}}}\end{multicolpar}%
+\stepcounter{psuedocontentscounter}%
+}
+\newenvironment{translateing}%
+{\begin{multicolpar}{2}}
+{\end{multicolpar}\vspace{\baselineskip}}
+\DeclareRobustCommand{\maketitletranslating}%
+{\maketitle\thispagestyle{fancy}
+\vspace{\baselineskip}\begin{multicolpar}{2}
+\textsf{English}
+
+\noindent
+\textsf{日本語 (Japanese)}
+\end{multicolpar}\vspace{\baselineskip}}
+\NewDocumentCommand\macroexplanation{v}{%
+\noindent\hspace*{\fill}{\texttt{#1}}\hspace*{\fill}\linespace%
+}
+\NewDocumentEnvironment{macroexample}{O{0.625} +b}{%
+\noindent\hspace*{\fill}\dbox{\parbox{#1\textwidth}{%
+#2%
+}}\hspace*{\fill}}%
+{\vspace{\baselineskip}}
+\NewDocumentEnvironment{macroexample*}{O{0.625} m +b}{%
+\noindent\hspace*{\fill}\dbox{\parbox{#1\textwidth}{%
+\vspace{-0.5\baselineskip}\begin{#2}%
+#3
+\end{#2}%
+}}\hspace*{\fill}}
+{\vspace{\baselineskip}}
+\let\code\texttt
+\setlength{\fboxsep}{1em}
+\setstretch{1.05}
+\DeclareRobustCommand{\commandtojskip}{\hspace{2.40554pt plus 1.49994pt minus 0.59998pt}}
+\RequirePackage{listings, jlisting}
+\lstset{
+  language=[LaTeX]TeX,
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\small\itshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame=single,
+  breaklines=true,
+  columns=[l]{fullflexible},
+  stepnumber=1,
+  xrightmargin=0.1709\textwidth,
+  xleftmargin=0.1709\textwidth,
+  lineskip=-0.5ex
+}
+\RequirePackage{bxtexlogo}
+\RequirePackage[lua,curriculum]{jpnedumathsymbols}
+\RequirePackage{shortvrb}
+\MakeShortVerb{\|}
+\makeatother
+%
+\hypersetup{%
+bookmarksnumbered=true,%
+colorlinks=true,%
+linkcolor=blue,%
+urlcolor=blue,%
+setpagesize=false,%
+pdftitle={The jpnedumathsymbols package},%
+pdfauthor={Yukoh KUSAKABE},%
+pdfsubject={The jpnedumathsymbols package},%
+pdfkeywords={TeX LaTeX representation symbol Japanese education}}
+\title{The \code{jpnedumathsymbols} package:\\[0.25\baselineskip]
+mathematical equation representation in Japanese education}
+\author{Yukoh KUSAKABE}
+\date{\today}
+\headertitle[Yukoh KUSAKABE\quad\metaphysicaicon]{The \code{jpnedumathsymbols} package}
+\makeatletter
+\DeclareRobustCommand{\asterreftext}[1]{{\textsf{［*\ref*{#1}］}}}
+\DeclareRobustCommand{\asterrefsuperscript}[1]{\@textsuperscript{\scriptsize\!\!\textsf{［*\ref*{#1}］}}}
+\makeatother
+\begin{document}
+\maketitletranslating
+
+\begin{translateing}
+Mathematical equation representation in Japanese education differs somewhat from the standard LaTeX writing style. This package introduces mathematical equation representation in Japanese education.
+
+日本の教育における数式表現には，LaTeX の標準である書きかたとはやや異なる部分があります。このパッケージでは，日本の教育における数式表現を導入します。
+\end{translateing}
+
+\psuedocontents{Requirements}{System Requirements}{前提条件}
+
+\psuedocontents{Installation}{Installation}{インストール}
+
+\psuedocontents{Loading}{Loading}{読み込み}
+
+\psuedocontents{Usage}{Usage}{使用方法}
+
+\psuedocontents{moreinfo}{For More Information}{問い合わせ・詳しくは}
+
+\psuedosection{Requirements}{System Requirements}{前提条件}
+
+\begin{translateing}
+\textbullet\ \LaTeXe\ format\\
+\textbullet\ \code{amsmath} package\\
+\textbullet\ \code{amssymb} package\\
+\textbullet\ \code{empheq} package\\
+\textbullet\ \code{xparse} package\\
+\textbullet\ \scalebox{0.9}[1]{\pTeX/\upTeX\ engine and \code{japanese-otf} package}\\\hfill(when \code{[curriculum]} is loaded)\\
+\textbullet\ \LuaTeX\ engine \code{luatexja-otf} package\\\hfill\scalebox{0.9}[1]{(when \code{[lua]} and \code{[curriculum]} are loaded)}
+
+\noindent
+\textbullet\ \LaTeXe フォーマット\\
+\textbullet\ \code{amsmath} パッケージ\\
+\textbullet\ \code{amssymb} パッケージ\\
+\textbullet\ \code{empheq} パッケージ\\
+\textbullet\ \code{xparse} パッケージ\\
+\textbullet\ \scalebox{0.95}[1]{\pTeX/\upTeX と\code{japanese-otf} パッケージ}\\\hfill （\code{[curriculum]}使用時）\\
+\textbullet\ \LuaTeX と\code{luatexja-otf} パッケージ\\\hfill\scalebox{0.95}[1]{（\code{[lua]}かつ\code{[curriculum]}使用時）}
+\end{translateing}
+
+\newpage
+\psuedosection{Installation}{Installation}{インストール}
+
+\begin{translateing}
+If not available, move jpnedumathsymbols.sty file to\\\code{\$TEXMF/tex/latex/jpnedumathsymbols}.
+
+直ちに使えなければ，\\jpnedumathsymbols.styを\\\code{\$TEXMF/tex/latex/jpnedumathsymbols}\\%（\TeX が見つけられる場所）
+に置いてください。
+\end{translateing}
+
+\psuedosection{Loading}{Loading}{読み込み}
+
+\begin{translateing}
+To use this package, load .sty file with |\usepackage{jpnedumathsymbols}| command in preamble.
+
+このパッケージを使用するには，プリアンブルに\commandtojskip|\usepackage{jpnedumathsymbols}| と書いてください。
+
+Several options are available and will be presented in the usage guide. 
+The reason is that they generally just switch the output of the same instruction.
+One exception is the |[lua]| option.
+This should be specified if you are using \LuaLaTeX\ when using the |[curriculum]| option.
+The reason for this specification is to allow for flexibility in future enhancements.
+
+いくつかのオプションがありますが，使用方法を説明する中で紹介します。
+おおむね，同じ命令での出力を切り替えるだけだからです。
+例外として|[lua]|オプションがあります。
+これは，|[curriculum]|オプションを使うときに\LuaLaTeX を使っているのであれば指定してください。
+このような仕様にしているのは，将来的な機能拡張において柔軟性を保てるようにするためです。
+\end{translateing}
+
+\psuedosection{Usage}{Usage}{使用方法}
+
+\macroexplanation{\frac \sqrt \lim \vec}
+
+\begin{translateing}
+When the package is loaded, the symbols for fractions, root signs, limits, and vectors are automatically changed.
+If you do not need that, please specify the options, |[nofrac]|, |[nosqrt]|, |[nolim]|, and |[novec]|.
+The original symbol is saved with the name |original| (|\originalfrac|, |\originalsqrt|, |\originallim| and |\originalvec|).
+
+パッケージを読み込むと自動的に分数・根号・極限・ベクトルの記号が（教科書風に）変更されます。
+変更されたくないときはオプション|[nofrac]| |[nosqrt]| |[nolim]| |[novec]|を指定してください。
+もとの記号は|original|をつけた名前で保存されています（|\originalfrac| |\originalsqrt| |\originallim| |\originalvec|）。
+\end{translateing}
+
+\newpage
+\begin{lstlisting}
+$\frac{1}{2}+2^{\frac{1}{2}}+\lim_{x\to0}x$
+\begin{gather*}
+\frac{1}{2}+2^{\frac{1}{2}}+\sqrt[3]{2}+\lim_{x\to0}x\\
+\vec{a}+\vec{b}+\vec{\AA\BB}
+\end{gather*}
+$\originalfrac{1}{2}+2^{\originalfrac{1}{2}}+\originallim_{x\to0}x$
+\begin{gather*}
+\originalfrac{1}{2}+2^{\originalfrac{1}{2}}+\originalsqrt[3]{2}+\originallim_{x\to0}x\\
+\originalvec{a}+\originalvec{b}+\originalvec{\AA\BB}
+\end{gather*}
+\end{lstlisting}
+
+\begin{macroexample}
+$\frac{1}{2}+2^{\frac{1}{2}}+\lim_{x\to0}x$
+\begin{gather*}
+\frac{1}{2}+2^{\frac{1}{2}}+\sqrt[3]{2}+\lim_{x\to0}x\\
+\vec{a}+\vec{b}+\vec{\AA\BB}
+\end{gather*}
+$\originalfrac{1}{2}+2^{\originalfrac{1}{2}}+\originallim_{x\to0}x$
+\begin{gather*}
+\originalfrac{1}{2}+2^{\originalfrac{1}{2}}+\originalsqrt[3]{2}+\originallim_{x\to0}x\\
+\originalvec{a}+\originalvec{b}+\originalvec{\AA\BB}
+\end{gather*}
+\end{macroexample}
+
+\begin{translateing}
+Fractions are also larger in inline equations.
+On the other hand, exponents, for example, have shorter horizontal bars.
+The limit subscripts are always directly below.
+
+分数はインライン数式でも大きくなります。
+一方，指数などでは横棒が短くなります。
+極限の添字も常に真下になります。
+\end{translateing}
+
+\macroexplanation{Roman Typeface Meaning Point}
+
+\begin{translateing}
+It is customary to use the Roman font to denote points.
+To make typing easier, the same letter can be typed twice in succession to form a roman letter.
+For example, |\AA| will form the Roman letter A.
+Any conflicts with the original command are renamed (original |\AA| is |\angstrom|, original |\SS| is |\capitaleszett|).
+If you do not need that, please specify the option |[nopointroman]|.
+
+点を表すためにローマン体を用いる慣例があります。
+入力を楽にするために，同じ文字を2つ続けて打つとローマン体になります。
+たとえば，|\AA|でローマン体のAになります。
+元の命令と重なるものは名前を付け替えています（元の\commandtojskip|\AA|は\commandtojskip|\angstrom|，元の\commandtojskip|\SS|は\commandtojskip|\capitaleszett|です）。
+不要なときはオプション|[nopointroman]|を指定してください。
+\end{translateing}
+
+\newpage
+\begin{lstlisting}
+\begin{gather*}
+ABC\\
+\AA\BB\CC
+\end{gather*}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{gather*}
+ABC\\
+\AA\BB\CC
+\end{gather*}
+\end{macroexample}
+
+\macroexplanation{Letters for Curriculum}
+
+\begin{translateing}
+For this feature only, the |[curriculum]| option must be loaded when used; for \LuaTeX, the |[lua]| option is also required.
+
+この機能のみほかの設計と異なり，使用するときに|[curriculum]|オプションを読み込んでください。\LuaTeX の場合はさらに|[lua]| オプションも必要です。
+
+Sometimes it is more convenient for characters used in the curriculum to be full-width characters. They are in the form |\curr??|.
+
+カリキュラムで使われる文字は全角文字であるほうが便利なことがあります。それらは\commandtojskip|\curr??|\commandtojskip という形の命令になっています。
+
+\noindent
+\textbullet\ Full-width Roman numeral \\\hfill|\currI|, |\currII|, |\currIII|\\
+\textbullet\ Full-width capital letters \\\hfill|\currA| -- |\currZ|\\
+\textbullet\ Full-width lowercase letters \\\hfill|\curra| -- |\currz|\\
+\textbullet\ Full-width lowercase Greek letters \\\hfill|\curralpha| -- |\curromega|\\
+\textbullet\ Concurrent courses of study \\\hfill|\currIA|, |\currIIB|, |\currIIBC|, |\currIIIC|\\
+\textbullet\ Concurrent courses of study with "+" \\\hfill\scalebox{0.9}[1]{\code{\textbackslash currIA*}, \code{\textbackslash currIIB*}, \code{\textbackslash currIIBC*}, \code{\textbackslash currIIIC*}}
+
+\noindent
+\textbullet\ 全角ローマ数字 \\\hfill|\currI|, |\currII|, |\currIII|\\
+\textbullet\ 全角英字大文字 \\\hfill|\currA| -- |\currZ|\\
+\textbullet\ 全角英字小文字 \\\hfill|\curra| -- |\currz|\\
+\textbullet\ 全角ギリシア文字小文字 \\\hfill|\curralpha| -- |\curromega|\\
+\textbullet\ 並行カリキュラムのセット \\\hfill|\currIA|, |\currIIB|, |\currIIBC|, |\currIIIC|\\
+\textbullet\ 並行カリキュラムのセット（＋つき） \\\hfill\scalebox{0.9}[1]{\code{\textbackslash currIA*}, \code{\textbackslash currIIB*}, \code{\textbackslash currIIBC*}, \code{\textbackslash currIIIC*}}
+\end{translateing}
+
+\noindent\hspace*{\fill}\fbox{\parbox{0.625\textwidth}{%
+\ttfamily
+数学\code{\textbackslash currIA} と数学\code{\textbackslash currIIBC} 。数学\code{\textbackslash currIIIC*}。%
+}}\hspace*{\fill}%
+{\vspace{0.25\baselineskip}}
+
+\begin{macroexample}
+数学\currIA と数学\currIIBC 。数学\currIIIC*。
+\end{macroexample}
+
+\newpage
+\macroexplanation{\phantomheight[<letter>]}
+
+\begin{translateing}
+Places a post to enclose the box.
+If no optional argument is taken, |\frac{1}{2}| is entered.
+
+枠で囲うための支柱を立てます。
+オプション引数を取らなければ\commandtojskip|\frac{1}{2}|\commandtojskip が入ります。
+\end{translateing}
+
+\begin{lstlisting}
+\begin{tabular}{ccc}\hline
+$f(x)$&$1$&$2$\\\hline
+\end{tabular}\quad
+\begin{tabular}{ccc}\hline
+\phantomheight$f(x)$&$1$&$2$\\\hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{tabular}{ccc}\hline
+$f(x)$&$1$&$2$\\\hline
+\end{tabular}\quad
+\begin{tabular}{ccc}\hline
+\phantomheight$f(x)$&$1$&$2$\\\hline
+\end{tabular}
+\end{macroexample}
+
+\hspace*{\fill}\textsf{%
+%\macroexplanation{
+Miscellaneous mathematical equation-related symbols\qquad 雑多な数式関係記号たち%
+}\hspace*{\fill}
+
+\linespace
+\begin{translateing}
+It is easier to see the examples than to explain them one by one, so we will list them.
+
+逐一説明するよりも例を見ていただくほうが分かりやすいので列挙します。
+\end{translateing}
+
+\begin{lstlisting}
+\[A\comma B\comma C\period D\qquad
+A\comma* B\comma* C\period* D\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[A\comma B\comma C\period D\qquad
+A\comma* B\comma* C\period* D\]
+\end{macroexample}
+
+\begin{lstlisting}
+\begin{gather*}
+\pair{1}{\frac{1}{2}}
+\triplet{1}{\frac{1}{2}}{3}
+\quadruplet{1}{\frac{1}{2}}{3}{4}\\
+\pair*{1}{\frac{1}{2}}
+\triplet*{1}{\frac{1}{2}}{3}
+\quadruplet*{1}{\frac{1}{2}}{3}{4}
+\end{gather*}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{gather*}
+\pair{1}{\frac{1}{2}}
+\triplet{1}{\frac{1}{2}}{3}
+\quadruplet{1}{\frac{1}{2}}{3}{4}\\
+\pair*{1}{\frac{1}{2}}
+\triplet*{1}{\frac{1}{2}}{3}
+\quadruplet*{1}{\frac{1}{2}}{3}{4}
+\end{gather*}
+\end{macroexample}
+
+\newpage
+\hspace*{0.14\textwidth}|\intersection| is a synonym for |\cap|.\\
+\indent\hspace*{0.14\textwidth}|\union| is a synonym for |\cup|. 
+\begin{lstlisting}
+\[A\intersection B\qquad A\union B\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[A\intersection B\qquad A\union B\]
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\cmpl| is a synonym for |\complement|.
+\begin{lstlisting}
+\[\complement{a}+\complement{b} = \cmpl{a}+\cmpl{b}\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[\complement{a}+\complement{b} = \cmpl{a}+\cmpl{b}\]
+\end{macroexample}
+
+\hspace*{0.14\textwidth}They are named after text-and/or, english-and/or.
+\begin{lstlisting}
+\[(A\tand B)\tor C\qquad (A\eand B)\eor C\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[(A\tand B)\tor C\qquad (A\eand B)\eor C\]
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\lto| and |\lfrom| are named after |\land| and |\lor|.
+\begin{lstlisting}
+\[A\lto B\qquad C\lfrom D\qquad E\iff G\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[A\lto B\qquad C\lfrom D\qquad E\iff G\]
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\plto| and |\plfrom| are the same as in the example below:\\
+\indent\hspace*{0.14\textwidth}(The ``p'' is named after ``phantom''.)
+\begin{lstlisting}
+\begin{align*}
+&\peq A\\
+&=B
+\end{align*}
+\begin{align*}
+&\piff A\\
+&\iff B
+\end{align*}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{align*}
+&\peq A\\
+&=B
+\end{align*}
+\begin{align*}
+&\piff A\\
+&\iff B
+\end{align*}
+\end{macroexample}
+
+\newpage
+\begin{lstlisting}
+\[\set{x}{x\geqq\frac{1}{2}}\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash
+\[\set{x}{x\geqq\frac{1}{2}}\]
+\end{macroexample}
+
+\linesmash\linesmash
+\indent\hspace*{0.14\textwidth}When |[setcolon]| is loaded:\\
+\begin{macroexample}
+\linesmash
+\DeclareRobustCommand{\set}[2]{\left\{\,#1\;;\;#2\,\right\}}
+\[\set{x}{x\geqq\frac{1}{2}}\]
+\end{macroexample}
+
+\begin{lstlisting}
+\[\N\NZ\NP\Z\Q\R\C\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[\N\NZ\NP\Z\Q\R\C\]
+\end{macroexample}
+
+\linesmash\linesmash
+\indent\hspace*{0.14\textwidth}When |[mathbb]| is loaded:\\
+\begin{macroexample}
+\linesmash\linesmash
+\DeclareRobustCommand{\N}{\ensuremath{\mathbb{N}}}
+\DeclareRobustCommand{\NZ}{\ensuremath{\mathbb{N}_{0}}}
+\DeclareRobustCommand{\NP}{\ensuremath{\mathbb{N}_{+}}}
+\DeclareRobustCommand{\Z}{\ensuremath{\mathbb{Z}}}
+\DeclareRobustCommand{\Q}{\ensuremath{\mathbb{Q}}}
+\DeclareRobustCommand{\R}{\ensuremath{\mathbb{R}}}
+\DeclareRobustCommand{\C}{\ensuremath{\mathbb{C}}}
+\DeclareRobustCommand{\set}[2]{\left\{\,#1\;;\;#2\,\right\}}
+\[\N\NZ\NP\Z\Q\R\C\]
+\end{macroexample}
+
+\begin{lstlisting}
+\[\inverse{f}(x)\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[\inverse{f}(x)\]
+\end{macroexample}
+
+\begin{lstlisting}
+\[\abs{\frac{1}{2}}\qquad\abs*{\frac{1}{2}}\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash
+\[\abs{\frac{1}{2}}\qquad\abs*{\frac{1}{2}}\]
+\end{macroexample}
+
+\newpage
+\indent\hspace*{0.14\textwidth}The default of optional argument is |align*|:
+\begin{lstlisting}
+\begin{ecases}{f(x)}
+x&\condition{$x\geqq0$}\\
+-x&\condition{$x<0$}
+\end{ecases}
+\begin{ecases}[gather]{f(x)}
+x\ \condition{$x\geqq0$}\\
+-x\ \condition{$x<0$}
+\end{ecases}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{ecases}{f(x)}
+x&\condition{$x\geqq0$}\\
+-x&\condition{$x<0$}
+\end{ecases}\linesmash
+\begin{ecases}[gather]{f(x)}
+x\ \condition{$x\geqq0$}\\
+-x\ \condition{$x<0$}
+\end{ecases}
+\end{macroexample}
+
+\indent\hspace*{0.14\textwidth}The default of optional argument is |gather*|:
+\begin{lstlisting}
+\begin{simul}
+2x+2y=0\\
+x-y=0
+\end{simul}
+\begin{simul}[align]
+2x+2y&=0\\
+x-y&=0
+\end{simul}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{simul}
+2x+2y=0\\
+x-y=0
+\end{simul}\linesmash
+\begin{simul}[align]
+2x+2y&=0\\
+x-y&=0
+\end{simul}
+\end{macroexample}
+
+\newpage
+\hspace*{0.14\textwidth}The internal environment is an |array| environment:
+\begin{lstlisting}
+\begin{signchart}{3}
+x&1&\cdots&2\\\hline
+f(x)&0&\neconcave&1
+\end{signchart}
+\begin{signchart}{5}
+x&1&\cdots&2&\cdots&3\\\hline
+f(x)&0&\neconcave&1&\neconvex&2
+\end{signchart}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{signchart}{3}
+x&1&\cdots&2\\\hline
+f(x)&0&\nearrow&1
+\end{signchart}
+\begin{signchart}{5}
+x&1&\cdots&2&\cdots&3\\\hline
+f(x)&0&\neconcave&1&\neconvex&2
+\end{signchart}
+\end{macroexample}
+
+\begin{lstlisting}
+\underline{%
+\neconcave\ \seconcave\ \seconvex\ \neconvex
+\quad
+\neconcave*\ \seconcave*\ \seconvex*\ \neconvex*}
+\end{lstlisting}
+
+\begin{macroexample}
+\underline{%
+\neconcave\ \seconcave\ \seconvex\ \neconvex
+\quad
+\neconcave*\ \seconcave*\ \seconvex*\ \neconvex*}
+\end{macroexample}
+
+\linespace
+\begin{lstlisting}
+$\dint_{a}^{b}f(x)\dx+\int_{a}^{b}f(x)\dx$\\
+${\dint_{a}^{b}f(x)\dx}+\int_{a}^{b}f(x)\dx$
+\end{lstlisting}
+
+\begin{macroexample}
+$\dint_{a}^{b}f(x)\dx+\int_{a}^{b}f(x)\dx$\\
+${\dint_{a}^{b}f(x)\dx}+\int_{a}^{b}f(x)\dx$
+\end{macroexample}
+
+\begin{lstlisting}
+$f(x)dx+f(x)\dx$, $\dr\ds\dt\du\dx\dy\dz\dtheta$,
+$\dint\dtheta=\theta+\const$
+\end{lstlisting}
+
+\begin{macroexample}
+$f(x)dx+f(x)\dx$, $\dr\ds\dt\du\dx\dy\dz\dtheta$,
+$\dint\dtheta=\theta+\const$
+\end{macroexample}
+
+\newpage
+\begin{lstlisting}
+$\defint{0}{1}{x}
++\defint{0}{1}{\left(\frac{x}{2}\right)^{\frac{1}{2}}}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\defint{0}{1}{x}
++\defint{0}{1}{\left(\frac{x}{2}\right)^{\frac{1}{2}}}$
+\end{macroexample}
+
+\begin{lstlisting}
+\transformvariable{x}{1}{2}{t}{0}{1}
+\end{lstlisting}
+
+\begin{macroexample}
+\transformvariable{x}{1}{2}{t}{0}{1}
+\end{macroexample}
+
+\begin{lstlisting}
+$\rvec{1}{2}$, $\rvec*{1}{2}{3}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\rvec{1}{2}$, $\rvec*{1}{2}{3}$
+\end{macroexample}
+
+\linesmash\linesmash
+\indent\hspace*{0.14\textwidth}When |[rvecbracket]| is loaded:\\
+\begin{macroexample}
+$\left[1,\,2\right]$, $\left[1,\,2,\,3\right]$
+\end{macroexample}
+
+\begin{lstlisting}
+$\cvec{1}{2}$, $\cvec*{1}{2}{3}$ 
+\end{lstlisting}
+
+\begin{macroexample}
+$\cvec{1}{2}$, $\cvec*{1}{2}{3}$ 
+\end{macroexample}
+
+\linesmash\linesmash
+\indent\hspace*{0.14\textwidth}When |[cvecbracket]| is loaded:\\
+\begin{macroexample}
+$\begin{bmatrix}\,1\,\\\,2\,\end{bmatrix}$, $\begin{bmatrix}\,1\,\\\,2\,\\\,3\,\end{bmatrix}$
+\end{macroexample}
+
+\newpage
+\hspace*{0.14\textwidth}|\inp| is a synonym for |\innerproduct|.
+\begin{lstlisting}
+$\innerproduct{\vec{a}}{\frac{\vec{b}}{2}}
+=\inp{\vec{a}}{\frac{\vec{b}}{2}}$,
+$\innerproduct*{\vec{a}}{\frac{\vec{b}}{2}}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\innerproduct{\vec{a}}{\frac{\vec{b}}{2}}
+=\inp{\vec{a}}{\frac{\vec{b}}{2}}$,
+$\innerproduct*{\vec{a}}{\frac{\vec{b}}{2}}$
+\end{macroexample}
+
+\linesmash\linesmash
+\indent\hspace*{0.14\textwidth}When |[innerproductbracket]| is loaded:\\
+\begin{macroexample}
+$\left\langle \vec{a}\relax,\frac{\vec{b}}{2}\right\rangle
+=\left\langle \vec{a}\relax,\frac{\vec{b}}{2}\right\rangle$,
+$\langle \vec{a}\relax,\frac{\vec{b}}{2}\rangle$
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\seq| is a synonym for |\sequence|.
+\begin{lstlisting}
+$\sequence{a_{n}}=\seq{a_{n}}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\sequence{a_{n}}=\seq{a_{n}}$
+\end{macroexample}
+
+\begin{lstlisting}
+\[\sum*_{k=1}^{n}\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[\sum*_{k=1}^{n}\]
+\end{macroexample}
+
+\begin{lstlisting}
+$\GCD\pair{1}{2}$, $\LCM\pair{1}{2}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\GCD\pair{1}{2}$, $\LCM\pair{1}{2}$
+\end{macroexample}
+
+\begin{lstlisting}
+$30\degree$
+\end{lstlisting}
+
+\begin{macroexample}
+$30\degree$
+\end{macroexample}
+
+\hspace*{0.14\textwidth}This code is by \href{http://www.artsci.kyushu-u.ac.jp/~ssaito/jpn/tex/tips/misc.html#arc}{Prof. Shingo SAITO}.
+\begin{lstlisting}
+$\arc{\AA\BB}$, $\arc{\AA\BB\CC\DD}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\arc{\AA\BB}$, $\arc{\AA\BB\CC\DD}$
+\end{macroexample}
+
+\newpage
+\hspace*{0.14\textwidth}This code is by \href{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/8814.html}{Mr./Ms. Ohishi}.
+\begin{lstlisting}
+$l\parallel m$, $l\notparallel n$, $l\originalparallel m$
+\end{lstlisting}
+
+\begin{macroexample}
+$l\parallel m$, $l\notparallel n$, $l\originalparallel m$
+\end{macroexample}
+
+\indent\hspace*{0.14\textwidth}The default of optional argument is |1.3|:
+\begin{lstlisting}
+$\triangle\AA\BB\CC\similar\triangle\AA\BB\CC$,
+$\triangle\AA\BB\CC[1.1]\similar\triangle\AA\BB\CC$
+\end{lstlisting}
+
+\begin{macroexample}
+$\triangle\AA\BB\CC\similar\triangle\AA\BB\CC$,
+$\triangle\AA\BB\CC\similar[1.1]\triangle\AA\BB\CC$
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\homogeneous| is a synonym for |\repeatedcombination|.
+\begin{lstlisting}
+$\permutation{n}{r}+
+\combination{n}{r}+
+\repeatedpermutation{n}{r}+
+\repeatedcombination{n}{r}$
+$\homogeneous{n}{r}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\permutation{n}{r}+
+\combination{n}{r}+
+\repeatedpermutation{n}{r}+
+\repeatedcombination{n}{r}$
+$\homogeneous{n}{r}$
+\end{macroexample}
+
+\begin{lstlisting}
+$\expectedvalue{P}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\expectedvalue{P}$
+\end{macroexample}
+
+\linesmash\linesmash
+\indent\hspace*{0.14\textwidth}When |[mathbb]| is loaded:\\
+\begin{macroexample}
+$\mathbb{E}\left(P\right)$
+\end{macroexample}
+
+\begin{lstlisting}
+$\Re z+\Im z+\originalRe z+\originalIm z$
+\end{lstlisting}
+
+\begin{macroexample}
+$\Re z+\Im z+\originalRe z+\originalIm z$
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\conj| is a synonym for |\conjugate|.
+\begin{lstlisting}
+$\conjugate{a}+\conjugate{b}=\conj{a}+\conj{b}$
+\end{lstlisting}
+
+\begin{macroexample}
+$\conjugate{a}+\conjugate{b}=\conj{a}+\conj{b}$
+\end{macroexample}
+
+\newpage
+\begin{lstlisting}
+a\parentext{a}\squaretext{a}\whitesquaretext{a}\\
+$a\parentext{a}\squaretext{a}\whitesquaretext{a}$
+\end{lstlisting}
+
+\begin{macroexample}
+a\parentext{a}\squaretext{a}\whitesquaretext{a}\\
+$a\parentext{a}\squaretext{a}\whitesquaretext{a}$
+\end{macroexample}
+
+\hspace*{0.14\textwidth}|\ltext| and |\lltext| are named after |\land| and |\lor|.
+\begin{lstlisting}
+$a\iff\ltext{a}\iff\lltext{a}$
+\end{lstlisting}
+
+\begin{macroexample}
+$a\iff\ltext{a}\iff\lltext{a}$
+\end{macroexample}
+
+\begin{lstlisting}
+\begin{align*}
+A
+&=\ltextbegin\text{a long long long long long long}\\
+&\phantom{=\ltextbegin}\text{long long text}\ltextend\\
+&=\lltextbegin\text{a long long long long long long}\\
+&\phantom{=\lltextbegin}\text{long long text}\lltextend
+\end{align*}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{align*}
+A
+&=\ltextbegin\text{a long long long long long long}\\
+&\phantom{=\ltextbegin}\text{long long text}\ltextend\\
+&=\lltextbegin\text{a long long long long long long}\\
+&\phantom{=\lltextbegin}\text{long long text}\lltextend
+\end{align*}
+\end{macroexample}
+
+\begin{lstlisting}
+$a=\nomination{a}$
+\end{lstlisting}
+
+\begin{macroexample}
+$a=\nomination{a}$
+\end{macroexample}
+
+\newpage
+\begin{lstlisting}
+\[f(x)=
+\begin{dcases}
+x&\condition{$x\geqq0$}\\
+-x&\condition{$x<0$}
+\end{dcases}
+\]
+\begin{ecases}{f(x)}
+x&\condition*{$x\geqq0$}\\
+-x&\condition*{$x<0$}
+\end{ecases}
+\end{lstlisting}
+
+\begin{macroexample}
+\[f(x)=
+\begin{dcases}
+x&\condition{$x\geqq0$}\\
+-x&\condition{$x<0$}
+\end{dcases}
+\]
+\begin{ecases}{f(x)}
+x&\condition*{$x\geqq0$}\\
+-x&\condition*{$x<0$}
+\end{ecases}
+\end{macroexample}
+
+\begin{lstlisting}
+\[A=B\quad\explanation{$A=B$}\]
+\begin{align*}
+A
+&=B&\explanation{$A=B$}\\
+&=C&\explanation*{$B=C$}
+\end{align*}
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[A=B\quad\explanation{$A=B$}\]
+\begin{align*}
+A
+&=B&\explanation{$A=B$}\\
+&=C&\explanation*{$B=C$}
+\end{align*}
+\end{macroexample}
+
+\begin{lstlisting}
+\[\quantify{For any real number $x$,}x=1.\]
+\end{lstlisting}
+
+\begin{macroexample}
+\linesmash\linesmash
+\[\quantify{For any real number $x$,}x=1.\]
+\end{macroexample}
+
+\begin{lstlisting}
+$a=1\equationunit{kgw}$
+\end{lstlisting}
+
+\begin{macroexample}
+$a=1\equationunit{kgw}$
+\end{macroexample}
+
+\begin{lstlisting}
+a \texttherefore\ b \textbecause\ c,
+a $\therefore$ b $\because$ c
+\end{lstlisting}
+
+\begin{macroexample}
+a \texttherefore\ b \textbecause\ c,
+a $\therefore$ b $\because$ c
+\end{macroexample}
+
+\begin{lstlisting}
+a \texttherefore\ b \textbecause\ c,
+a $\therefore$ b $\because$ c
+\end{lstlisting}
+
+\begin{macroexample}
+a \texttherefore\ b \textbecause\ c,
+a $\therefore$ b $\because$ c
+\end{macroexample}
+
+\begin{lstlisting}
+It follows that the number of primes is infinite.\QED
+\end{lstlisting}
+
+\begin{macroexample}
+It follows that the number of primes is infinite.\QED
+\end{macroexample}
+
+\begin{translateing}
+|\arc| is by \href{http://www.artsci.kyushu-u.ac.jp/~ssaito/jpn/tex/tips/misc.html#arc}{Prof. Shingo SAITO}.
+I would like to thank him.
+
+|\arc|は\href{http://www.artsci.kyushu-u.ac.jp/~ssaito/jpn/tex/tips/misc.html#arc}{斎藤新悟氏}によるものです。お礼申しあげます。
+
+|\parallel| is by \href{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/8814.html}{Mr./Ms. Ohishi}.
+I would like to thank him/her.
+
+|\parallel|は\href{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/8814.html}{大石氏}によるものです。お礼申しあげます。
+
+This package is inspired by \href{http://emath.s40.xrea.com/}{emath package by Kazuhiro Okuma (a.k.a. tDB)}.
+I would like to thank him.
+
+このパッケージは，\href{http://emath.s40.xrea.com/}{大熊一弘(tDB)氏によるemath}の影響を受けています。お礼申しあげます。
+\end{translateing}
+
+\psuedosection{moreinfo}{For More Information}{問い合わせ・詳しくは}
+
+\noindent\hspace*{\fill}\begin{tabular}{rl}
+\multicolumn{2}{l}{The jpnedumathsymbols package:}%&
+\\%
+\multicolumn{2}{r}{\hspace{8\zw}\url{https://www.metaphysica.info/technote/package_jpnedumathsymbols/}}\\
+Yukoh KUSAKABE:&\url{https://www.metaphysica.info/}\\
+&\url{https://twitter.com/metaphysicainfo}\\
+&(screen-name, 日下部幽考 in Japanese)
+\end{tabular}\hspace*{\fill}
+\end{document}

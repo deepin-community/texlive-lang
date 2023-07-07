@@ -124,6 +124,20 @@ vardef milieu(expr AA,BB)=
   $
 enddef;
 
+vardef CentreCercleC(expr a, b ,c) =
+  save o; pair o;
+  o - .5[a,b] = whatever * (b-a) rotated 90;
+  o - .5[b,c] = whatever * (c-b) rotated 90;
+  o
+enddef;
+
+vardef Orthocentre(expr a, b, c) =
+  save h; pair h;
+  h - a = whatever * (c-b) rotated 90;
+  h - b = whatever * (a-c) rotated 90;
+  h
+enddef;
+
 vardef CentreCercleI(expr aa,bb,cc)=
   save $,a,c;
   pair $;
@@ -560,7 +574,7 @@ vardef demidroite(expr AA,BB)=
   save Dem;
   path Dem;
   if typetrace="mainlevee":
-    Dem=segment(AA,BB)..(_tfig/abs(AA-BB))[AA,BB]{dir(angle(BB-AA)+10)}
+    Dem=segment(AA,BB)..(_tfig/abs(AA-BB))[AA,BB]
   elseif typetrace="3D":
     Dem=Projette(AA)--(_tfig/abs(Projette(AA)-Projette(BB)))[Projette(AA),Projette(BB)]
   else:
@@ -653,6 +667,30 @@ vardef chemin(text t)=
   $
 enddef;
 
+vardef Triangleqcq(text t)=
+  save PfCTqc;
+  pair pointchoisi[];
+  pointchoisi1:=iso(coinbg,1/4[coinbg,coinbd],iso(coinbg,iso(coinhg,coinhd)),iso(coinhg,coinbg));
+  pointchoisi2:=iso(coinbd,3/4[coinbg,coinbd],iso(coinbd,iso(coinhg,coinhd)),iso(coinhd,coinbd));
+  test:=uniformdeviate(1);
+  choix:=43+uniformdeviate(4);
+  ecart:=abs(45-choix);
+  relation:=60-(ecart/2)+uniformdeviate(ecart);
+  if test<0.5 :
+    pointchoisi3:=droite(pointchoisi1,rotation(pointchoisi2,pointchoisi1,choix)) intersectionpoint droite(pointchoisi2,rotation(pointchoisi1,pointchoisi2,-relation));
+  else :
+    pointchoisi3:=droite(pointchoisi2,rotation(pointchoisi1,pointchoisi2,-choix)) intersectionpoint droite(pointchoisi1,rotation(pointchoisi2,pointchoisi1,relation));
+  fi
+  j:=1;
+  for p_=t:
+    p_=pointchoisi[j];
+    j:=j+1;
+  endfor;
+  path PfCTqc;
+  PfCTqc=polygone(pointchoisi1,pointchoisi2,pointchoisi3);
+  PfCTqc
+enddef;
+
 %------------------------------------------------
 %Sucres
 %------------------------------------------------
@@ -660,7 +698,7 @@ vardef hachurage(expr chemin, angle, ecart, trace)=
   save $;
   picture $;
   path support;
-  support=((u*(-37,0))--(u*(37,0))) rotated angle;
+  support=((u*(-50,0))--(u*(50,0))) rotated angle;
   if trace=1:
     drawoptions(dashed evenly);
   elseif trace=2:
@@ -676,6 +714,33 @@ vardef hachurage(expr chemin, angle, ecart, trace)=
     endfor;
     );
   clip $ to chemin;
+  drawoptions();
+  $
+enddef;
+
+vardef Hachurage(expr Chemin, Angle, Ecart, Trace)=
+  %Avec écart constant quel que soit l'angle d'inclinaison.
+  save $;
+  picture $;
+  if Trace=0:
+    drawoptions();
+  elseif Trace=1:
+    drawoptions(dashed evenly);
+  elseif Trace=2:
+    drawoptions(dashed dashpattern(on12bp off6bp on3bp off6bp));
+  elseif Trace=3:
+    drawoptions(dashed withdots);
+  fi;
+  path support;
+  support=(u*(-50,0)--u*(50,0)) rotated Angle;
+  $ = image(
+      for j=-200 upto 200:
+      if (support shifted (Ecart*j*u*(cosd(90-Angle),-sind(90-Angle)))) intersectiontimes Chemin<>(-1,-1):
+	draw support shifted (Ecart*j*u*(cosd(90-Angle),-sind(90-Angle)));%));%(cosd(Angle),sind(Angle)));
+      fi
+    endfor;
+    );
+  clip $ to Chemin;
   drawoptions();
   $
 enddef;
@@ -745,6 +810,28 @@ vardef cotationmil(expr aa,bb,ecart,decalage,cote)= %Christophe
     );
   cot
 enddef;
+
+vardef cotationarc(expr aaa,bbb,decal,ecart,sens,texte)=%pour le texte sens=1 ou -1
+   save ty;
+   picture ty;
+   pair mnp,ctr;
+   mnp=iso(aaa,bbb)+decal*unitvector(rotation(bbb,iso(aaa,bbb),90)-iso(aaa,bbb));
+   ctr=CentreCercleC(aaa,bbb,mnp);
+   path cts[];
+   cts0=arccercle(bbb,aaa,ctr);
+   cts1=arccercle(bbb,cts0 intersectionpoint perpendiculaire(aaa,bbb,iso(aaa,bbb)),ctr);
+   cts2=arccercle(cts0 intersectionpoint perpendiculaire(aaa,bbb,iso(aaa,bbb)),aaa,ctr);
+   ty=image(
+     trace subpath(0,arctime(arclength cts1*(1-(ecart/10))) of cts1) of cts1 dashed evenly;
+     trace subpath(0,arctime(arclength cts2*(1-(ecart/10))) of reverse(cts2)) of reverse(cts2) dashed evenly;
+     if sens=1:
+       label(texte rotated (angle(bbb-aaa)),mnp);
+     else:
+       label(texte rotated (angle(bbb-aaa)+180),mnp);
+     fi;
+     );
+   ty
+ enddef;
 
 %%%%%%%%%%
 %francisation
@@ -1209,6 +1296,242 @@ vardef Tetraedrer(text t)=
     endfor;
     );
   tetrar
+enddef;
+
+%Outils
+numeric echelleequerre;
+echelleequerre=2;
+vardef equerre(expr dte,drte,perpe,sens)=
+  save picequerre;
+  picture picequerre;
+  pair ww,t[];
+  path intermede;
+  pair perpen,ptt,pttt;
+  perpen:=projection(perpe,dte,drte);
+  %if sens=1 :
+    ptt:=longueurequerre*(drte-dte) rotated 90 shifted perpen;
+  %else :
+%    ptt:=longueurequerre*(drte-dte) rotated (-90) shifted perpen;
+  %fi;
+  ww=unitvector(drte-dte);
+  intermede=ptt--(10[ptt,(perpen rotatedabout(ptt,if sens=1: 30 else:-30 fi))]);
+  pttt=intermede intersectionpoint (10[dte,drte]--10[drte,dte]);
+  picequerre=image(
+    draw perpen--ptt--pttt--cycle;
+    draw codeperp(ptt,perpen,pttt,5);
+    );
+  picequerre
+enddef;
+
+  vardef regle(expr depart,arrivee,rr)=
+  save picregle;
+  picture picregle,grad[],gradu[],final;
+  pair t[];
+  path reduit;
+  t1000=depart shifted (5*unitvector(depart-arrivee));
+  t1003=arrivee shifted (20*unitvector(arrivee-depart));
+  t1004=(unitvector(arrivee-depart) rotated (-90)) shifted t1000;
+  t1001=t1000 shifted (50*(t1004-t1000));
+  t1002=t1001 shifted (t1003-t1000);
+  reduit=t1000--t1001--t1002..(t1002 shifted(5*unitvector(t1001-t1002)+1/4(t1003-t1002)))..(t1002 shifted(5*unitvector(t1002-t1001)+2/4(t1003-t1002)))..(t1002 shifted(5*unitvector(t1001-t1002)+3/4(t1003-t1002)))..t1003--cycle;
+  gradu1=image(
+    for k=0 upto 59:
+      for j=1 upto 4:
+	t[5*k+j]=depart shifted (1mm*(5*k+j)*unitvector(arrivee-depart));
+	t[400+5*k+j]=t[5*k+j] shifted (2*(t1004-t1000));
+	draw t[5*k+j]--t[400+5*k+j];
+      endfor;
+    endfor
+    );
+  gradu2=image(
+    for k=0 upto 29:
+      t[5*(2*k+1)]=depart shifted (1mm*5*(2*k+1)*unitvector(arrivee-depart));
+      t[400+5*(2*k+1)]=t[5*(2*k+1)] shifted (5*(t1004-t1000));
+      draw t[5*(2*k+1)]--t[400+5*(2*k+1)];
+    endfor
+    );
+  gradu3=image(
+    for k=0 upto 30:
+      t[10*k]=depart shifted(1mm*10*k*unitvector(arrivee-depart));
+      t[400+10*k]=t[10*k] shifted (10*(t1004-t1000));
+      draw t[10*k]--t[400+10*k];
+    endfor
+    );
+  for j=0 upto 30:
+    grad[j]=image(
+	label.bot(TEX(""&decimal(j)&""),t[400+10*j]);
+      %affixe[j](t[400+10*j])s;
+      currentpicture:=currentpicture rotatedabout(t[400+10*j],90+angle(t[400+10*j]-t[10*j]));
+      );
+  endfor
+  final=image(
+    for k=0 upto 30:
+      draw grad[k];
+    endfor
+    for k=1 upto 3:
+      draw gradu[k];
+    endfor
+    clip currentpicture to reduit;
+    draw reduit;
+    );
+  if rr=-1:
+    picregle=image(
+      draw final rotatedabout(1/2[depart,arrivee],180);
+      );
+  else:
+    picregle=image(
+      draw final;
+      );
+  fi
+  picregle
+enddef;
+
+vardef crayon(expr depart,arrive,ptplace,nbechelle)=
+  save piccray;
+  picture piccray,crayolat;
+  pair w[];
+  w0=(0,0);
+  w1=(1,2)*u/2;
+  w2=(-1,2)*u/2;
+  w3=(0,2)*u/2;
+  w4=(0,7)*u/2;
+  path ccc,ccd;
+  ccc=cercles(w0,abs(w3-w2));
+  ccd=ccc yscaled 0.25 shifted w3;
+  crayolat=image(
+    draw subpath((length ccd)/2,length ccd) of ccd;
+    draw ccd shifted (w4-w3);
+    draw w2--w0--w1;
+    draw w1--((1,7)*u/2);
+    draw w2--((-1,7)*u/2);
+    );
+  crayolat:=crayolat scaled nbechelle;
+  piccray=(crayolat rotated(angle(arrive-depart)-30)) shifted ptplace;
+  piccray
+enddef;
+
+boolean Simple;
+Simple=false;
+
+vardef rapporteur(expr centre,segment,rr)=
+  save raps;
+  picture raps;
+  raps=image(
+  Simple:=true;
+  trace rapporteurdouble(centre,segment,rr);
+    Simple:=false;
+    );
+  raps
+enddef;
+
+vardef rapporteurdouble(expr centre,segment,rr)=
+  save rap,cc,cd,v,w,t,ww,vv;
+  picture rap;
+  path cc,cd;
+  pair a[],b[],v,w,t,ww,vv,rap[],rapp[];
+  cc=cercle(centre,0.75*abs(centre-segment));
+  t=cc intersectionpoint (centre--segment);
+  w=t-2*unitvector(segment-centre);v=symetrie(w,t);
+  ww=t-5*unitvector(segment-centre);vv=symetrie(ww,t);
+  a0=(ww-centre) shifted centre;
+  b0=(vv-centre) shifted centre;
+  for i=0 upto 35 :
+    for j=1 upto 4 :
+      a[5*i+j]=(w-centre) rotated (rr*(5*i+j)) shifted centre;
+      b[5*i+j]=(v-centre) rotated (rr*(5*i+j)) shifted centre;
+    endfor;
+    a[5*(i+1)]=(ww-centre) rotated (rr*(5*(i+1))) shifted centre;
+    b[5*(i+1)]=(vv-centre) rotated (rr*(5*(i+1))) shifted centre;
+  endfor
+  picture nomb[],nombre[];
+  if rr=1:
+    for j=0 upto 18:
+      nombre[10*j]=image(
+	  label.bot(TEX("\fontsize{4}{4}\selectfont"&decimal(10*j)&""),a[10*j]);
+	currentpicture:=currentpicture rotatedabout(a[10*j],angle(a[10*j]-centre)-90);
+	);
+    endfor
+    for j=0 upto 18:
+      nombre[10*j+1]=image(
+      % affixe.[180-10*j](b[10*j])n;
+      label.top(TEX("\fontsize{4}{4}\selectfont"&decimal(180-10*j)&""),b[10*j]);
+	currentpicture:=currentpicture rotatedabout(b[10*j],angle(b[10*j]-centre)-90);
+	);
+    endfor
+  else:
+    for j=0 upto 18:
+      nombre[10*j]=image(
+	  label.bot(TEX("\fontsize{4}{4}\selectfont"&decimal(180-10*j)&""),a[10*j]);
+	currentpicture:=currentpicture rotatedabout(a[10*j],angle(a[10*j]-centre)-90);
+	);
+    endfor
+    for j=18 downto 0:
+      nombre[10*j+1]=image(
+      % affixe.[10*j](b[10*j])n;
+	  label.top(TEX("\fontsize{4}{4}\selectfont"&decimal(10*j)&""),b[10*j]);
+	currentpicture:=currentpicture rotatedabout(b[10*j],angle(b[10*j]-centre)-90);
+	);
+    endfor
+  fi
+  rap=image(
+      for i=0 upto 18 :
+      draw nombre[10*i+1];
+      if Simple=false:
+	draw nombre[10*i];
+      fi;
+    endfor;
+    path cerc;
+    cerc=subpath((angle(segment-centre)*(length cc))/360,((length cc)/2)+(angle(segment-centre)*(length cc))/360) of cc;
+    if rr=-1:
+      draw cerc reflectedabout(segment,centre);
+    else:
+      draw cerc;
+    fi
+    draw a0--b0 withpen pencircle scaled 1.25bp;
+    for i=0 upto 35 :
+      for j=1 upto 4 :
+	draw a[5*i+j]--b[5*i+j];
+      endfor;
+    endfor;
+    for i=1 step 2 until 35:
+      draw a[5*i]--b[5*i];
+    endfor;
+    for i=1 upto 18:
+      draw a[10*i]--b[10i] withpen pencircle scaled 1.25;
+    endfor;
+    draw a0--a180;
+    path cent;
+    cent=cercle(centre,0.05*u);
+    fill cent withcolor if unknown fillrap: 0.9white else: fillrap fi;
+    );
+  rap
+enddef;
+
+vardef compas(expr centre,extre,n)=
+  save piccompas;
+  picture piccompas;
+  pair r,s,t,a,b,c,d,e,f;
+  if (abs(centre-extre)<10*u):
+    r=((extre-1/2[centre,extre]) rotated (n*90)) shifted (1/2[centre,extre]);
+  else:
+    r=0.25[1/2[centre,extre],((extre-1/2[centre,extre]) rotated (n*90)) shifted (1/2[centre,extre])];
+  fi
+  s=(1+50/abs(centre-extre))[1/2[centre,extre],r];
+  t=10*unitvector(extre-centre) rotated (n*90);
+  a=centre shifted t;
+  b=s shifted (5*unitvector(centre-extre)+10*unitvector(s-r));
+  c=b shifted (30*unitvector(s-r));
+  d=c reflectedabout(r,s);
+  e=b reflectedabout(r,s);
+  f=a reflectedabout(r,s);
+  path comp;
+  comp=a--b--c--d--e--f--s--a--cycle;
+  piccompas=image(
+    fill comp withcolor black;
+    draw centre--a withpen pencircle scaled 1.5bp;
+    draw f--extre withpen pencircle scaled 1.5bp withcolor 0.25[red,blue];
+    );
+  piccompas
 enddef;
 
 endinput;

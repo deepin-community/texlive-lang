@@ -76,17 +76,12 @@ There is also \texttt{extrafootnotefeatures} option that allows footnotes to be 
 \Lcs{twocolumnfootnotes}\quad\Lcs{threecolumnfootnotes}\quad\Lcs{fourcolumnfootnotes}\\
 \Lcs{fivecolumnfootnotes}\quad\Lcs{sixcolumnfootnotes}\quad\Lcs{sevencolumnfootnotes}\\
 \Lcs{eightcolumnfootnotes}\quad\Lcs{ninecolumnfootnotes}\quad\Lcs{tencolumnfootnotes}\\
-\Lcs{RTLcolumnfootnotes}\quad\Lcs{LTRcolumnfootnotes}\\
-\Lcs{paragraphfootnotes}\\
-\Lcs{setLTRparagraphfootnotes}\quad\Lcs{setRTLparagraphfootnotes}
+\Lcs{paragraphfootnotes}
 \end{BDef}
 \begin{itemize}
 \item \Lcs{normalfootnotes} typesets footnotes in Standard \LaTeX{} format.
 \item \Lcs{twocolumnfootnotes} to \Lcs{tencolumnfootnotes}, typeset footnotes in two-columns to ten-columns, respectively.
-\item \Lcs{RTLcolumnfootnotes} typesets footnotes columns RTL (first column on the RHS and each next column to the left of the previous column) and \Lcs{LTRcolumnfootnotes} typesets footnotes columns LTR (first column on the LHS and each next column to the right of the previous column).  \Lcs{LTRcolumnfootnotes} is active by default.
 \item \Lcs{paragraphfootnotes} typesets footnotes in paragraph format.
-\item \Lcs{setLTRparagraphfootnotes} makes footnotes run from left to right. This comand is active by default.
-\item \Lcs{setRTLparagraphfootnotes} makes footnotes run from right to left.
 \end{itemize}
  Please note that when using \texttt{extrafootnotefeatures} option, the footnote rule will be as wide as the text width and \Lcs{autofootnoterule}, \Lcs{rightfootnoterule}, \Lcs{leftfootnoterule}, and \Lcs{textwidthfootnoterule} commands have no effects.
 
@@ -102,7 +97,7 @@ There is also \texttt{extrafootnotefeatures} option that allows footnotes to be 
 \item With any of the commands in the first row, you can typeset LTR paragraphs.
 \item With any of the commands in the second row, you can typeset RTL paragraphs.
 \end{itemize}
-\begin{lstlisting}[morekeywords={newfontfamily,Parsifont}]
+\begin{lstlisting}
 \documentclass{article}
 \usepackage{bidi}
 \begin{document}
@@ -221,7 +216,7 @@ Also please note that in \texttt{twocolumn} documents, the width of the \Lcs{foo
 \Lcs{text}\Largb{\Larga{main}}
 \end{BDef}
 \Lcs{RTLcases} is defined in bidi for typesetting RTL cases. \Lcs{text} is defined in \textsf{amsmath} package, so this means that you need to load \textsf{amsmath} package too.
-\begin{lstlisting}[morekeywords={RTLcases,text}]
+\begin{lstlisting}
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{bidi}
@@ -242,7 +237,7 @@ Also please note that in \texttt{twocolumn} documents, the width of the \Lcs{foo
 \Lcs{SepMark}\Largb{\Larga{mark}}\quad\Lcs{@SepMark}
 \end{BDef}
 Generally in Standard \LaTeX, dot is used for separation between section numbers, equation numbers any anything else which needs to be seperated. You can use \Lcs{SepMark} to use any other mark as the seperation mark instead a dot.
-\begin{lstlisting}[morekeywords={SepMark,subsection,subsubsection}]
+\begin{lstlisting}
 \documentclass{article}
 \usepackage{bidi}
 \SepMark{-}
@@ -255,7 +250,7 @@ Generally in Standard \LaTeX, dot is used for separation between section numbers
 
 If you decide to change the numbering of chapters, sections, subsections, equations, figures and \ldots, you should either load \textsf{amsmath} package and use \Lcs{numberwithin} macro to do this or do the ordinary way, but instead dot write \Lcs{@SepMark}. Using dot instead \Lcs{@SepMark} will certainly make trouble.
 
-\begin{lstlisting}[morekeywords={theequation,thesection,SepMark}]
+\begin{lstlisting}
 \documentclass{article}
 \usepackage{bidi}
 \SepMark{-}

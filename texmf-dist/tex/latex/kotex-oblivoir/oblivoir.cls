@@ -1,6 +1,6 @@
 %% File `oblivoir.cls`
 %%
-%% (C) Copyright 2006-2021 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2022 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -10,7 +10,7 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2006/05/20 or later.
 %%
-\ProvidesClass{oblivoir}[2021/03/15 v3.0.1]
+\ProvidesClass{oblivoir}[2022/04/11 v3.1.5.1]
 
 \RequirePackage{xkeyval}
 \RequirePackage{xparse}
@@ -64,3 +64,7 @@
 \fi
 
 \endinput
+
+%%% Recent Changes:
+%%% v3.1.5: 2022-04-11, xob-font \setmainhangulfont problem 
+%%%

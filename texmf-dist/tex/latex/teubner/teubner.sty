@@ -5,7 +5,7 @@
 %% The original source files were:
 %%
 %% teubner.dtx  (with options: `package')
-%% Copyright 2001--2021 Claudio Beccari All rights reserved.
+%% Copyright 2001--2022 Claudio Beccari All rights reserved.
 %% 
 %%  This system is distributed in the hope that it will be useful,
 %%  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,7 +18,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2020-01-01]
 \ProvidesPackage{teubner}[%
-2021/02/08 v.5.4
+2022/10/03 v.5.7.3
 Extensions for Greek philology]
 \RequirePackage{iftex}
 \let\ifPDF\ifPDFTeX
@@ -41,7 +41,7 @@ Type X <return> to exit.}%
 \DeclareOption{NoGlyphNames}{\GlyphNamesfalse}
 \DeclareOption{GlyphNames}{\GlyphNamestrue}
 \ProcessOptions*
-\def\GRencoding@name{LGR}
+\def\GRenc@name{LGR}
 \ifonesizetypeone
    \RequirePackage[10pt]{type1ec}[2002/09/07]
 \fi
@@ -59,8 +59,10 @@ Type X <return> to exit.}%
 \fi
 \DeclareFontShape{U}{mtr}{m}{it}{<->ssub*mtr/m/n}{}%
 \DeclareFontShape{U}{mtr}{b}{it}{<->ssub*mtr/m/n}{}%
-\DeclareFontShape{U}{mtr}{b}{n}{<->ssub*mtr/m/n}{}%
-\newcommand*\metricsfont{\fontencoding{U}\fontfamily{mtr}\upshape}
+\DeclareFontShape{U}{mtr}{bx}{n}{<->ssub*mtr/m/n}{}%
+\DeclareRobustCommand*\metricsfont{%
+  \fontencoding{U}\fontfamily{mtr}\normalshape}
+\DeclareTextFontCommand{\textmtr}{\metricsfont}
 \RequirePackage{exscale}
 \ifx\languageattribute\undefined
  \def\GreekName{polutonikogreek}%
@@ -119,7 +121,8 @@ Type X <return> to exit.}%
     }%
     \global\Lipsianfalse\fi
   \closeout15}%
-  }}
+  }%
+}
 
 \def\ifCMLM#1#2#3!{\edef\f@milyprefix{#1#2}%
    \ifthenelse{\(\equal{\f@milyprefix}{cm}\OR\equal{\f@milyprefix}{lm}\)}%
@@ -129,20 +132,30 @@ Type X <return> to exit.}%
 \expandafter\ifCMLM#1!\else\substitutefontfamily{LGR}{#1}{#2}\fi}
 
 \AtBeginDocument{%
+\input{ot1cmr.fd}
+\DeclareFontShape{OT1}{cmr}{m}{li}{<->ssub* cmr/m/it}{}
 \@ifpackageloaded{pxfonts}{\typeout{Palatino fonts loaded}%
-\Lipsiantrue\ifFamily{pxr}{cmr}\Lipsianfalse
-\ifFamily{pxss}{cmss}\ifFamily{pxtt}{cmtt}}{\relax}}
-
-\AtBeginDocument{%
+\Lipsiantrue\ifFamily{pxr}{cmr}
+\input{ot1pxr.fd}\input{t1pxr.fd}\input{ts1pxr.fd}%
+\DeclareFontShape{OT1}{pxr}{b}{li}{<->ssub* pxr/b/it}{}%
+\DeclareFontShape{T1}{pxr}{b}{li}{<->ssub* pxr/b/it}{}%
+\DeclareFontShape{TS1}{pxr}{m}{li}{<->ssub* pxr/m/it}{}%
+\Lipsianfalse
+\ifFamily{pxss}{cmss}\ifFamily{pxtt}{cmtt}}{\relax}
 \@ifpackageloaded{txfonts}{\typeout{Times fonts loaded}%
-\RequirePackage{teubnertx}}{}}
+\RequirePackage{teubnertx}%
+\input{ot1txr.fd}\input{t1txr.fd}\input{ts1txr.fd}%
+\DeclareFontShape{OT1}{txr}{b}{li}{<->ssub* txr/b/it}{}%
+\DeclareFontShape{T1}{txr}{b}{li}{<->ssub* txr/b/it}{}%
+\DeclareFontShape{TS1}{txr}{m}{li}{<->ssub* txr/m/it}{}%
+}{}}
 
 \AtBeginDocument{%
     \edef\previouslanguage{\languagename}%
     \edef\previousencoding{\f@encoding}}
 \DeclareRobustCommand{\lishape}{%
 \not@math@alphabet\lishape\relax
-\ifthenelse{\equal{\f@encoding}{\GRencoding@name}}{%
+\ifthenelse{\equal{\f@encoding}{\GRenc@name}}{%
 \ifboldLipsian
 \ifthenelse{\equal{\f@series}{m}}%
 {\fontseries{b}\fontshape{li}\rmfamily}%
@@ -168,6 +181,22 @@ Type X <return> to exit.}%
     \let\~\accperispomeni\let~\accperispomeni
     \fontencoding{LGR}\rmfamily#1}}
 
+\AtBeginDocument{%
+  \ProvideDocumentEnvironment{GRD}{m}{}{}
+  \ProvideDocumentEnvironment{GRL}{m}{}{}
+
+\RenewDocumentEnvironment{GRL}{o}{\begin{otherlanguage*}{greek}%
+\@ifclassloaded{memoir}{\def\bfseries{\fontseries{bx}\selectfont}}{\relax}%
+\@ifclassloaded{scrbook}{\def\bfseries{\fontseries{bx}\selectfont}}{\relax}%
+\IfValueTF{#1}{\fontseries{#1}}{}%
+  \fontshape{li}\selectfont}{\end{otherlanguage*}}%
+
+\RenewDocumentEnvironment{GRD}{o}{\begin{otherlanguage*}{greek}%
+\@ifclassloaded{memoir}{\def\bfseries{\fontseries{bx}\selectfont}}{\relax}%
+\@ifclassloaded{scrbook}{\def\bfseries{\fontseries{bx}\selectfont}}{\relax}%
+\IfValueTF{#1}{\fontseries{#1}}{}%
+  \fontshape{up}\selectfont}{\end{otherlanguage*}}%
+}
 \DeclareRobustCommand\textlatin[1]{\edef\externalencoding{\f@encoding}{%
   \def\itdefault{it}\def\@tempA{li}\ifx\@tempA\f@shape\def\f@shape{it}\fi
   \expandafter\select@language\expandafter{\previouslanguage}%
@@ -177,12 +206,12 @@ Type X <return> to exit.}%
   \expandafter\fontencoding\expandafter{\externalencoding}\rmfamily}
 
 \DeclareRobustCommand\uishape{%
-\ifthenelse{\equal{\f@encoding}{\GRencoding@name}}%
+\ifthenelse{\equal{\f@encoding}{\GRenc@name}}%
 {\fontshape{ui}\selectfont}{\relax}}
 \DeclareTextFontCommand{\textui}{\uishape}
 
 \DeclareRobustCommand\rsshape{%
-\ifthenelse{\equal{\f@encoding}{\GRencoding@name}}%
+\ifthenelse{\equal{\f@encoding}{\GRenc@name}}%
 {\fontshape{rs}\selectfont}{\relax}}
 \DeclareTextFontCommand{\textrs}{\rsshape}
 
@@ -225,26 +254,26 @@ Type X <return> to exit.}%
 
 \DeclareRobustCommand{\cap@}[1]{\leavevmode
 {\edef\slant@{\strip@pt\fontdimen1\font}%
-\setbox\tw@\hbox{\fontencoding{\GRencoding@name}\selectfont
+\setbox\tw@\hbox{\fontencoding{\GRenc@name}\selectfont
     \char1}\dimen@-.5\wd\tw@
 \setbox\z@\hbox{#1}%
 \advance\dimen@ .5\wd\z@
 \@tempdima\ht\z@\advance\@tempdima.55ex\relax
 \advance\dimen@\slant@\@tempdima
-\ifx\cf@encoding\GRencoding@name\else
+\ifx\cf@encoding\GRenc@name\else
 \ifx#1k\advance\dimen@-.3\wd\tw@\fi\fi
 \raise\@tempdima\hbox to\z@{\kern\dimen@\box\tw@\relax\hss}\box\z@}}
 
 \let\mcap\cap
-\DeclareTextCommand{\tcap}{\GRencoding@name}{\cap@}
+\DeclareTextCommand{\tcap}{\GRenc@name}{\cap@}
 \DeclareTextCommand{\tcap}{OT1}{\cap@}
 \DeclareTextCommand{\tcap}{T1}{\cap@}
 \DeclareRobustCommand*\cap{\textormath{\tcap}{\mcap}}
 \newcommand*\cap@cedilla[1]{\leavevmode
-{\setbox4\hbox{\fontencoding{\GRencoding@name}\selectfont\char1}%
+{\setbox4\hbox{\fontencoding{\GRenc@name}\selectfont\char1}%
 \dimen@-.5\wd4
 \setbox\z@\hbox{#1}%
-\ifx\cf@encoding\GRencoding@name
+\ifx\cf@encoding\GRenc@name
    \ifx#1i\advance\dimen@ .65\wd\z@\else\advance\dimen@ .5\wd\z@\fi
 \else
    \ifx#1i\advance\dimen@ .55\wd\z@\else\advance\dimen@ .5\wd\z@\fi
@@ -256,7 +285,7 @@ Type X <return> to exit.}%
 \edef\slant@{\strip@pt\fontdimen1\font}%
 \dimen@-.5\wd4\ifdim\slant@\p@>\z@\advance\dimen@-.04ex\fi
 \setbox\z@\hbox{#1}%
-\ifx\cf@encoding\GRencoding@name
+\ifx\cf@encoding\GRenc@name
     \advance\dimen@ .45\wd\z@
     \ifx#1h\advance\dimen@-.13\wd\z@\fi
     \ifx#1a\advance\dimen@-.07\wd\z@\fi
@@ -276,7 +305,7 @@ Type X <return> to exit.}%
 {\setbox4\hbox{\metricsfont\char27}%
 \dimen@-.5\wd4
 \setbox\tw@\hbox{i}\setbox\z@\hbox{#1}%
-\ifx\cf@encoding\GRencoding@name
+\ifx\cf@encoding\GRenc@name
     \advance\dimen@ .5\wd\z@
     \ifx#1h\advance\dimen@-.13\wd\z@\fi
 \else
@@ -287,10 +316,10 @@ Type X <return> to exit.}%
 \hbox to\z@{\kern\dimen@\box4\hss}\unhbox\z@}}
 
 \newcommand*\tie@cedilla[1]{\leavevmode
-{\setbox4\hbox{\fontencoding{\GRencoding@name}\selectfont\char20}%
+{\setbox4\hbox{\fontencoding{\GRenc@name}\selectfont\char20}%
 \dimen@-.5\wd4
 \setbox\tw@\hbox{i}\setbox\z@\hbox{#1}%
-\ifx\cf@encoding\GRencoding@name
+\ifx\cf@encoding\GRenc@name
     \advance\dimen@.5\wd\z@
     \ifx#1h\advance\dimen@-.1\wd\z@\fi
     \ifx#1u\advance\dimen@.15\wd\z@\fi
@@ -309,86 +338,86 @@ Type X <return> to exit.}%
 \let\accdieresi\"
 \let\accbreve\u
 \let\accmacron\=
-\DeclareTextCommand{\G}{\GRencoding@name}[1]{\lift@accent{96}{#1}}
-\DeclareTextCommand{\A}{\GRencoding@name}[1]{\lift@accent{39}{#1}}
-\DeclareTextCommand{\C}{\GRencoding@name}[1]{\lift@accent{126}{#1}}
-\DeclareTextCommand{\D}{\GRencoding@name}[1]{\lift@accent{34\textcompwordmark}{#1}}
-\DeclareTextCommand{\B}{\GRencoding@name}[1]{\lift@accent{30}{#1}}
-\DeclareTextCommand{\M}{\GRencoding@name}[1]{\lift@accent{31}{#1}}
+\DeclareTextCommand{\G}{\GRenc@name}[1]{\lift@accent{96}{#1}}
+\DeclareTextCommand{\A}{\GRenc@name}[1]{\lift@accent{39}{#1}}
+\DeclareTextCommand{\C}{\GRenc@name}[1]{\lift@accent{126}{#1}}
+\DeclareTextCommand{\D}{\GRenc@name}[1]{\lift@accent{34\textcompwordmark}{#1}}
+\DeclareTextCommand{\B}{\GRenc@name}[1]{\lift@accent{30}{#1}}
+\DeclareTextCommand{\M}{\GRenc@name}[1]{\lift@accent{31}{#1}}
 \addto\extrasgreek{\shorthandoff{~}\let\~\accperispomeni
 \let\"\accdialytika\let\'\acctonos\let\`\accvaria}
 \addto\noextrasgreek{\shorthandon{~}\let\~\acccircon
 \let\"\accdieresi\let\'\accacuto\let\`\accgrave}
 
-\DeclareTextCommand{\U}{\GRencoding@name}[1]{\lift@accent{151}{#1}}
-\DeclareTextCommand{\r}{\GRencoding@name}[1]{\lift@accent{60}{#1}}
-\DeclareTextCommand{\s}{\GRencoding@name}[1]{\lift@accent{62}{#1}}
-\DeclareTextCommand{\Ad}{\GRencoding@name}[1]{\lift@accent{35}{#1}}
-\DeclareTextCommand{\Gd}{\GRencoding@name}[1]{\lift@accent{36}{#1}}
-\DeclareTextCommand{\Cd}{\GRencoding@name}[1]{\lift@accent{32}{#1}}
-\DeclareTextCommand{\Ar}{\GRencoding@name}[1]{\lift@accent{86}{#1}}
-\DeclareTextCommand{\Gr}{\GRencoding@name}[1]{\lift@accent{67}{#1}}
-\DeclareTextCommand{\Cr}{\GRencoding@name}[1]{\lift@accent{64}{#1}}
-\DeclareTextCommand{\As}{\GRencoding@name}[1]{\lift@accent{94}{#1}}
-\DeclareTextCommand{\Gs}{\GRencoding@name}[1]{\lift@accent{95}{#1}}
-\DeclareTextCommand{\Cs}{\GRencoding@name}[1]{\lift@accent{92}{#1}}
-\DeclareTextCommand{\c}{\GRencoding@name}[1]{\cap@cedilla{#1}}
-\DeclareTextCommand{\semiv}{\GRencoding@name}[1]{\cap@cedilla{#1}}
+\DeclareTextCommand{\U}{\GRenc@name}[1]{\lift@accent{151}{#1}}
+\DeclareTextCommand{\r}{\GRenc@name}[1]{\lift@accent{60}{#1}}
+\DeclareTextCommand{\s}{\GRenc@name}[1]{\lift@accent{62}{#1}}
+\DeclareTextCommand{\Ad}{\GRenc@name}[1]{\lift@accent{35}{#1}}
+\DeclareTextCommand{\Gd}{\GRenc@name}[1]{\lift@accent{36}{#1}}
+\DeclareTextCommand{\Cd}{\GRenc@name}[1]{\lift@accent{32}{#1}}
+\DeclareTextCommand{\Ar}{\GRenc@name}[1]{\lift@accent{86}{#1}}
+\DeclareTextCommand{\Gr}{\GRenc@name}[1]{\lift@accent{67}{#1}}
+\DeclareTextCommand{\Cr}{\GRenc@name}[1]{\lift@accent{64}{#1}}
+\DeclareTextCommand{\As}{\GRenc@name}[1]{\lift@accent{94}{#1}}
+\DeclareTextCommand{\Gs}{\GRenc@name}[1]{\lift@accent{95}{#1}}
+\DeclareTextCommand{\Cs}{\GRenc@name}[1]{\lift@accent{92}{#1}}
+\DeclareTextCommand{\c}{\GRenc@name}[1]{\cap@cedilla{#1}}
+\DeclareTextCommand{\semiv}{\GRenc@name}[1]{\cap@cedilla{#1}}
 \DeclareTextCommand{\semiv}{OT1}[1]{\cap@cedilla{#1}}
 \DeclareTextCommand{\semiv}{T1}[1]{\cap@cedilla{#1}}
-\DeclareTextCommand{\ring}{\GRencoding@name}[1]{\ring@cedilla{#1}}
+\DeclareTextCommand{\ring}{\GRenc@name}[1]{\ring@cedilla{#1}}
 \DeclareTextCommand{\ring}{OT1}[1]{\ring@cedilla{#1}}
 \DeclareTextCommand{\ring}{T1}[1]{\ring@cedilla{#1}}
-\DeclareTextCommand{\Dot}{\GRencoding@name}[1]{\dot@cedilla{#1}}
+\DeclareTextCommand{\Dot}{\GRenc@name}[1]{\dot@cedilla{#1}}
 \DeclareTextCommand{\Dot}{OT1}[1]{\dot@cedilla{#1}}
 \DeclareTextCommand{\Dot}{T1}[1]{\dot@cedilla{#1}}
-\DeclareTextCommand{\ut}{\GRencoding@name}[1]{\tie@cedilla{#1}}
+\DeclareTextCommand{\ut}{\GRenc@name}[1]{\tie@cedilla{#1}}
 \DeclareTextCommand{\ut}{OT1}[1]{\tie@cedilla{#1}}
 \DeclareTextCommand{\ut}{T1}[1]{\tie@cedilla{#1}}
-\DeclareTextCommand{\Ab}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Ab}{\GRenc@name}[1]%
     {\LIFT@accent{39}{-.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Gb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Gb}{\GRenc@name}[1]%
     {\LIFT@accent{96}{-.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Arb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Arb}{\GRenc@name}[1]%
     {\LIFT@accent{86}{-.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Grb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Grb}{\GRenc@name}[1]%
     {\LIFT@accent{67}{-.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Asb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Asb}{\GRenc@name}[1]%
     {\LIFT@accent{94}{-.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Gsb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Gsb}{\GRenc@name}[1]%
     {\LIFT@accent{95}{-.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Am}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Am}{\GRenc@name}[1]%
     {\Lift@accent{39}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Gm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Gm}{\GRenc@name}[1]%
     {\Lift@accent{96}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Cm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Cm}{\GRenc@name}[1]%
     {\Lift@accent{126}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Arm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Arm}{\GRenc@name}[1]%
     {\Lift@accent{86}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Grm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Grm}{\GRenc@name}[1]%
     {\Lift@accent{67}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Crm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Crm}{\GRenc@name}[1]%
     {\Lift@accent{64}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Asm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Asm}{\GRenc@name}[1]%
     {\Lift@accent{94}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Gsm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Gsm}{\GRenc@name}[1]%
     {\Lift@accent{95}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Csm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Csm}{\GRenc@name}[1]%
     {\Lift@accent{92}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Sm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Sm}{\GRenc@name}[1]%
     {\Lift@accent{62}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Rm}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Rm}{\GRenc@name}[1]%
     {\Lift@accent{60}{\lift@accent{31}{#1}}}
-\DeclareTextCommand{\Sb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Sb}{\GRenc@name}[1]%
     {\LIFT@accent{62}{-0.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\Rb}{\GRencoding@name}[1]%
+\DeclareTextCommand{\Rb}{\GRenc@name}[1]%
     {\LIFT@accent{60}{-0.15ex}{\lift@accent{30}{#1}}}
-\DeclareTextCommand{\bd}{\GRencoding@name}[1]%
+\DeclareTextCommand{\bd}{\GRenc@name}[1]%
     {\LIFT@accent{30}{-.1ex}{\lift@accent{34v}{#1}}}
-\DeclareTextCommand{\iS}{\GRencoding@name}[1]
+\DeclareTextCommand{\iS}{\GRenc@name}[1]
    {\ooalign{#1\crcr\hidewidth\char124\hidewidth}}
 
-\DeclareTextCommand{\d}{\GRencoding@name}[1]%
+\DeclareTextCommand{\d}{\GRenc@name}[1]%
    {\leavevmode\bgroup\o@lign{\relax#1\crcr
     \hidewidth\sh@ft{10}.\hidewidth}\egroup}
 
@@ -396,7 +425,7 @@ Type X <return> to exit.}%
 {\setbox4\hbox{\raise-.33ex\hbox{\metricsfont\char14}}%
 \dimen@-.5\wd4
 \setbox\tw@\hbox{i}\setbox\z@\hbox{#1}%
-\ifx\cf@encoding\GRencoding@name
+\ifx\cf@encoding\GRenc@name
     \advance\dimen@ .5\wd\z@
     \setbox\tw@\hbox{h}\ifdim\wd\z@=\wd\tw@\advance\dimen@-.13\wd\z@\fi
 \else
@@ -410,7 +439,7 @@ Type X <return> to exit.}%
 {\setbox4\hbox{\raise-1.7ex\hbox{\GEcq}}%
 \dimen@-.5\wd4
 \setbox\tw@\hbox{i}\setbox\z@\hbox{#1}%
-\ifx\cf@encoding\GRencoding@name
+\ifx\cf@encoding\GRenc@name
     \advance\dimen@ .5\wd\z@
     \setbox\tw@\hbox{h}\ifdim\wd\z@=\wd\tw@\advance\dimen@-.13\wd\z@\fi
 \else
@@ -421,15 +450,15 @@ Type X <return> to exit.}%
 \hbox to\z@{\kern\dimen@\box4\hss}\unhbox\z@}}
 
 \DeclareRobustCommand{\tenaspir}[1]{#1\/%
-    {\fontencoding{\GRencoding@name}\selectfont<v}}
+    {\fontencoding{\GRenc@name}\selectfont<v}}
 \DeclareRobustCommand{\palat}[1]{#1{%
-    \expandafter\fontencoding\expandafter{\GRencoding@name}\selectfont
+    \expandafter\fontencoding\expandafter{\GRenc@name}\selectfont
     \anwtonos}}
 
-\DeclareTextCommand{\Ud}{\GRencoding@name}[1]{\d{\u{#1}}}
-\DeclareTextCommand{\md}{\GRencoding@name}[1]{\d{\={#1}}}
-\DeclareTextCommand{\UO}{\GRencoding@name}[1]{\Open{\u{#1}}}
-\DeclareTextCommand{\mO}{\GRencoding@name}[1]{\Open{\={#1}}}
+\DeclareTextCommand{\Ud}{\GRenc@name}[1]{\d{\u{#1}}}
+\DeclareTextCommand{\md}{\GRenc@name}[1]{\d{\={#1}}}
+\DeclareTextCommand{\UO}{\GRenc@name}[1]{\Open{\u{#1}}}
+\DeclareTextCommand{\mO}{\GRenc@name}[1]{\Open{\={#1}}}
 
 \DeclareTextCommand{\Ud}{T1}[1]{\d{\u{#1}}}
 \DeclareTextCommand{\md}{T1}[1]{\d{\={#1}}}
@@ -451,205 +480,205 @@ Type X <return> to exit.}%
 \let\Euro\texteuro
 \let\permill\textperthousand
 \let\schwa\textschwa
-\DeclareTextCommand{\textdollar}{\GRencoding@name}%
+\DeclareTextCommand{\textdollar}{\GRenc@name}%
     {{\fontencoding{T1}\selectfont\char36}}
-\DeclareTextCommand{\textsection}{\GRencoding@name}%
+\DeclareTextCommand{\textsection}{\GRenc@name}%
     {{\fontencoding{T1}\selectfont\char159}}
-\DeclareTextCommand{\textsterling}{\GRencoding@name}%
+\DeclareTextCommand{\textsterling}{\GRenc@name}%
     {{\fontencoding{T1}\selectfont\char191}}
-\DeclareTextCommand{\textunderscore}{\GRencoding@name}%
+\DeclareTextCommand{\textunderscore}{\GRenc@name}%
     {{\fontencoding{T1}\selectfont\char95}}
-\DeclareTextCommand{\textvisiblespace}{\GRencoding@name}%
+\DeclareTextCommand{\textvisiblespace}{\GRenc@name}%
     {{\fontencoding{T1}\selectfont\char32}}
 
 \ifGlyphNames
-\DeclareTextSymbol{\ag}{\GRencoding@name}{128}
-\DeclareTextSymbol{\ar}{\GRencoding@name}{129}
-\DeclareTextComposite{\r}{\GRencoding@name}{a}{129}
-\DeclareTextSymbol{\as}{\GRencoding@name}{130}
-\DeclareTextComposite{\s}{\GRencoding@name}{a}{130}
-\DeclareTextSymbol{\aa}{\GRencoding@name}{136}
-\DeclareTextSymbol{\ac}{\GRencoding@name}{144}
-\DeclareTextSymbol{\ai}{\GRencoding@name}{248}
-\DeclareTextSymbol{\aai}{\GRencoding@name}{140}
-\DeclareTextSymbol{\aci}{\GRencoding@name}{148}
-\DeclareTextSymbol{\agi}{\GRencoding@name}{132}
-\DeclareTextSymbol{\ara}{\GRencoding@name}{137}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{a}{137}
-\DeclareTextSymbol{\arc}{\GRencoding@name}{145}
-\DeclareTextComposite{\Cr}{\GRencoding@name}{a}{145}
-\DeclareTextSymbol{\arg}{\GRencoding@name}{131}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{a}{131}
-\DeclareTextSymbol{\ari}{\GRencoding@name}{133}
-\DeclareTextSymbol{\asa}{\GRencoding@name}{138}
-\DeclareTextComposite{\As}{\GRencoding@name}{a}{138}
-\DeclareTextSymbol{\asc}{\GRencoding@name}{146}
-\DeclareTextComposite{\Cs}{\GRencoding@name}{a}{146}
-\DeclareTextSymbol{\asg}{\GRencoding@name}{139}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{a}{139}
-\DeclareTextSymbol{\asi}{\GRencoding@name}{134}
-\DeclareTextSymbol{\argi}{\GRencoding@name}{135}
-\DeclareTextSymbol{\arai}{\GRencoding@name}{141}
-\DeclareTextSymbol{\arci}{\GRencoding@name}{149}
-\DeclareTextSymbol{\asai}{\GRencoding@name}{142}
-\DeclareTextSymbol{\asgi}{\GRencoding@name}{143}
-\DeclareTextSymbol{\asci}{\GRencoding@name}{150}
-\DeclareTextSymbol{\hg}{\GRencoding@name}{152}
-\DeclareTextSymbol{\hr}{\GRencoding@name}{153}
-\DeclareTextComposite{\r}{\GRencoding@name}{h}{153}
-\DeclareTextSymbol{\hs}{\GRencoding@name}{154}
-\DeclareTextComposite{\s}{\GRencoding@name}{h}{154}
-\DeclareTextSymbol{\hrg}{\GRencoding@name}{163}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{h}{163}
-\DeclareTextSymbol{\hgi}{\GRencoding@name}{156}
-\DeclareTextSymbol{\hri}{\GRencoding@name}{157}
-\DeclareTextSymbol{\hsi}{\GRencoding@name}{158}
-\DeclareTextSymbol{\hrgi}{\GRencoding@name}{167}
-\DeclareTextSymbol{\ha}{\GRencoding@name}{160}
-\DeclareTextSymbol{\hra}{\GRencoding@name}{161}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{h}{161}
-\DeclareTextSymbol{\hsa}{\GRencoding@name}{162}
-\DeclareTextComposite{\As}{\GRencoding@name}{h}{162}
-\DeclareTextSymbol{\hsg}{\GRencoding@name}{171}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{h}{171}
-\DeclareTextSymbol{\hai}{\GRencoding@name}{164}
-\DeclareTextSymbol{\hrai}{\GRencoding@name}{165}
-\DeclareTextSymbol{\hsai}{\GRencoding@name}{166}
-\DeclareTextSymbol{\hsgi}{\GRencoding@name}{175}
-\DeclareTextSymbol{\hc}{\GRencoding@name}{168}
-\DeclareTextSymbol{\hrc}{\GRencoding@name}{169}
-\DeclareTextComposite{\Cr}{\GRencoding@name}{h}{169}
-\DeclareTextSymbol{\hsc}{\GRencoding@name}{170}
-\DeclareTextComposite{\Cs}{\GRencoding@name}{h}{170}
-\DeclareTextSymbol{\hci}{\GRencoding@name}{172}
-\DeclareTextSymbol{\hrci}{\GRencoding@name}{173}
-\DeclareTextSymbol{\hsci}{\GRencoding@name}{174}
-\DeclareTextSymbol{\hi}{\GRencoding@name}{249}
-\DeclareTextSymbol{\wg}{\GRencoding@name}{176}
-\DeclareTextSymbol{\wr}{\GRencoding@name}{177}
-\DeclareTextComposite{\r}{\GRencoding@name}{w}{177}
-\DeclareTextSymbol{\ws}{\GRencoding@name}{178}
-\DeclareTextComposite{\s}{\GRencoding@name}{w}{178}
-\DeclareTextSymbol{\wrg}{\GRencoding@name}{179}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{w}{179}
-\DeclareTextSymbol{\wgi}{\GRencoding@name}{180}
-\DeclareTextSymbol{\wri}{\GRencoding@name}{181}
-\DeclareTextSymbol{\wsi}{\GRencoding@name}{182}
-\DeclareTextSymbol{\wrgi}{\GRencoding@name}{183}
-\DeclareTextSymbol{\wa}{\GRencoding@name}{184}
-\DeclareTextSymbol{\wra}{\GRencoding@name}{185}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{w}{185}
-\DeclareTextSymbol{\wsa}{\GRencoding@name}{186}
-\DeclareTextComposite{\As}{\GRencoding@name}{w}{186}
-\DeclareTextSymbol{\wsg}{\GRencoding@name}{187}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{w}{187}
-\DeclareTextSymbol{\wai}{\GRencoding@name}{188}
-\DeclareTextSymbol{\wrai}{\GRencoding@name}{189}
-\DeclareTextSymbol{\wsai}{\GRencoding@name}{190}
-\DeclareTextSymbol{\wsgi}{\GRencoding@name}{191}
-\DeclareTextSymbol{\wc}{\GRencoding@name}{192}
-\DeclareTextSymbol{\wrc}{\GRencoding@name}{193}
-\DeclareTextComposite{\Cr}{\GRencoding@name}{w}{193}
-\DeclareTextSymbol{\wsc}{\GRencoding@name}{194}
-\DeclareTextComposite{\Cs}{\GRencoding@name}{w}{194}
-\DeclareTextSymbol{\wci}{\GRencoding@name}{196}
-\DeclareTextSymbol{\wrci}{\GRencoding@name}{197}
-\DeclareTextSymbol{\wsci}{\GRencoding@name}{198}
-\DeclareTextSymbol{\wi}{\GRencoding@name}{250}
-\DeclareTextSymbol{\ig}{\GRencoding@name}{200}
-\DeclareTextSymbol{\ir}{\GRencoding@name}{201}
-\DeclareTextComposite{\r}{\GRencoding@name}{i}{201}
-\DeclareTextSymbol{\is}{\GRencoding@name}{202}
-\DeclareTextComposite{\s}{\GRencoding@name}{i}{202}
-\DeclareTextSymbol{\irg}{\GRencoding@name}{203}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{i}{203}
-\DeclareTextSymbol{\ia}{\GRencoding@name}{208}
-\DeclareTextSymbol{\ira}{\GRencoding@name}{209}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{i}{209}
-\DeclareTextSymbol{\isa}{\GRencoding@name}{210}
-\DeclareTextComposite{\As}{\GRencoding@name}{i}{210}
-\DeclareTextSymbol{\isg}{\GRencoding@name}{211}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{i}{211}
-\DeclareTextSymbol{\ic}{\GRencoding@name}{216}
-\DeclareTextSymbol{\irc}{\GRencoding@name}{217}
-\DeclareTextComposite{\Cr}{\GRencoding@name}{i}{217}
-\DeclareTextSymbol{\isc}{\GRencoding@name}{218}
-\DeclareTextComposite{\Cs}{\GRencoding@name}{i}{218}
-\DeclareTextSymbol{\id}{\GRencoding@name}{240}
-\DeclareTextSymbol{\idg}{\GRencoding@name}{241}
-\DeclareTextComposite{\Gd}{\GRencoding@name}{i}{241}
-\DeclareTextSymbol{\ida}{\GRencoding@name}{242}
-\DeclareTextComposite{\Ad}{\GRencoding@name}{i}{242}
-\DeclareTextSymbol{\idc}{\GRencoding@name}{243}
-\DeclareTextComposite{\Cd}{\GRencoding@name}{i}{243}
-\DeclareTextSymbol{\ug}{\GRencoding@name}{204}
-\DeclareTextSymbol{\ur}{\GRencoding@name}{205}
-\DeclareTextComposite{\r}{\GRencoding@name}{u}{205}
-\DeclareTextSymbol{\us}{\GRencoding@name}{206}
-\DeclareTextComposite{\s}{\GRencoding@name}{u}{206}
-\DeclareTextSymbol{\urg}{\GRencoding@name}{207}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{u}{207}
-\DeclareTextSymbol{\ua}{\GRencoding@name}{212}
-\DeclareTextSymbol{\ura}{\GRencoding@name}{213}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{u}{213}
-\DeclareTextSymbol{\usa}{\GRencoding@name}{214}
-\DeclareTextComposite{\As}{\GRencoding@name}{u}{214}
-\DeclareTextSymbol{\usg}{\GRencoding@name}{215}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{u}{215}
-\DeclareTextSymbol{\uc}{\GRencoding@name}{220}
-\DeclareTextSymbol{\urc}{\GRencoding@name}{221}
-\DeclareTextComposite{\Cr}{\GRencoding@name}{u}{221}
-\DeclareTextSymbol{\usc}{\GRencoding@name}{222}
-\DeclareTextComposite{\Cs}{\GRencoding@name}{u}{222}
-\DeclareTextSymbol{\ud}{\GRencoding@name}{244}
-\DeclareTextSymbol{\udg}{\GRencoding@name}{245}
-\DeclareTextComposite{\Gd}{\GRencoding@name}{u}{245}
-\DeclareTextSymbol{\uda}{\GRencoding@name}{246}
-\DeclareTextComposite{\Ad}{\GRencoding@name}{u}{246}
-\DeclareTextSymbol{\udc}{\GRencoding@name}{247}
-\DeclareTextComposite{\Cd}{\GRencoding@name}{u}{247}
-\DeclareTextSymbol{\eg}{\GRencoding@name}{224}
-\DeclareTextSymbol{\er}{\GRencoding@name}{225}
-\DeclareTextComposite{\r}{\GRencoding@name}{e}{225}
-\DeclareTextSymbol{\es}{\GRencoding@name}{226}
-\DeclareTextComposite{\s}{\GRencoding@name}{e}{226}
-\DeclareTextSymbol{\erg}{\GRencoding@name}{227}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{e}{227}
-\DeclareTextSymbol{\ea}{\GRencoding@name}{232}
-\DeclareTextSymbol{\era}{\GRencoding@name}{233}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{e}{233}
-\DeclareTextSymbol{\esa}{\GRencoding@name}{234}
-\DeclareTextComposite{\As}{\GRencoding@name}{e}{234}
-\DeclareTextSymbol{\esg}{\GRencoding@name}{235}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{e}{235}
-\DeclareTextSymbol{\oR}{\GRencoding@name}{229}
-\DeclareTextComposite{\r}{\GRencoding@name}{o}{229}
-\DeclareTextSymbol{\oG}{\GRencoding@name}{228}
-\DeclareTextSymbol{\os}{\GRencoding@name}{230}
-\DeclareTextComposite{\s}{\GRencoding@name}{o}{230}
-\DeclareTextSymbol{\org}{\GRencoding@name}{231}
-\DeclareTextComposite{\Gr}{\GRencoding@name}{o}{231}
-\DeclareTextSymbol{\oa}{\GRencoding@name}{236}
-\DeclareTextSymbol{\ora}{\GRencoding@name}{237}
-\DeclareTextComposite{\Ar}{\GRencoding@name}{o}{237}
-\DeclareTextSymbol{\osa}{\GRencoding@name}{238}
-\DeclareTextComposite{\As}{\GRencoding@name}{o}{238}
-\DeclareTextSymbol{\osg}{\GRencoding@name}{239}
-\DeclareTextComposite{\Gs}{\GRencoding@name}{o}{239}
-\DeclareTextSymbol{\rr}{\GRencoding@name}{251}
-\DeclareTextComposite{\r}{\GRencoding@name}{r}{251}
-\DeclareTextSymbol{\rs}{\GRencoding@name}{252}
-\DeclareTextComposite{\s}{\GRencoding@name}{r}{252}
-\DeclareTextSymbol{\Id}{\GRencoding@name}{219}
-\DeclareTextSymbol{\Ud}{\GRencoding@name}{223}
-\DeclareTextComposite{\"}{\GRencoding@name}{U}{223}
+\DeclareTextSymbol{\ag}{\GRenc@name}{128}
+\DeclareTextSymbol{\ar}{\GRenc@name}{129}
+\DeclareTextComposite{\r}{\GRenc@name}{a}{129}
+\DeclareTextSymbol{\as}{\GRenc@name}{130}
+\DeclareTextComposite{\s}{\GRenc@name}{a}{130}
+\DeclareTextSymbol{\aa}{\GRenc@name}{136}
+\DeclareTextSymbol{\ac}{\GRenc@name}{144}
+\DeclareTextSymbol{\ai}{\GRenc@name}{248}
+\DeclareTextSymbol{\aai}{\GRenc@name}{140}
+\DeclareTextSymbol{\aci}{\GRenc@name}{148}
+\DeclareTextSymbol{\agi}{\GRenc@name}{132}
+\DeclareTextSymbol{\ara}{\GRenc@name}{137}
+\DeclareTextComposite{\Ar}{\GRenc@name}{a}{137}
+\DeclareTextSymbol{\arc}{\GRenc@name}{145}
+\DeclareTextComposite{\Cr}{\GRenc@name}{a}{145}
+\DeclareTextSymbol{\arg}{\GRenc@name}{131}
+\DeclareTextComposite{\Gr}{\GRenc@name}{a}{131}
+\DeclareTextSymbol{\ari}{\GRenc@name}{133}
+\DeclareTextSymbol{\asa}{\GRenc@name}{138}
+\DeclareTextComposite{\As}{\GRenc@name}{a}{138}
+\DeclareTextSymbol{\asc}{\GRenc@name}{146}
+\DeclareTextComposite{\Cs}{\GRenc@name}{a}{146}
+\DeclareTextSymbol{\asg}{\GRenc@name}{139}
+\DeclareTextComposite{\Gs}{\GRenc@name}{a}{139}
+\DeclareTextSymbol{\asi}{\GRenc@name}{134}
+\DeclareTextSymbol{\argi}{\GRenc@name}{135}
+\DeclareTextSymbol{\arai}{\GRenc@name}{141}
+\DeclareTextSymbol{\arci}{\GRenc@name}{149}
+\DeclareTextSymbol{\asai}{\GRenc@name}{142}
+\DeclareTextSymbol{\asgi}{\GRenc@name}{143}
+\DeclareTextSymbol{\asci}{\GRenc@name}{150}
+\DeclareTextSymbol{\hg}{\GRenc@name}{152}
+\DeclareTextSymbol{\hr}{\GRenc@name}{153}
+\DeclareTextComposite{\r}{\GRenc@name}{h}{153}
+\DeclareTextSymbol{\hs}{\GRenc@name}{154}
+\DeclareTextComposite{\s}{\GRenc@name}{h}{154}
+\DeclareTextSymbol{\hrg}{\GRenc@name}{163}
+\DeclareTextComposite{\Gr}{\GRenc@name}{h}{163}
+\DeclareTextSymbol{\hgi}{\GRenc@name}{156}
+\DeclareTextSymbol{\hri}{\GRenc@name}{157}
+\DeclareTextSymbol{\hsi}{\GRenc@name}{158}
+\DeclareTextSymbol{\hrgi}{\GRenc@name}{167}
+\DeclareTextSymbol{\ha}{\GRenc@name}{160}
+\DeclareTextSymbol{\hra}{\GRenc@name}{161}
+\DeclareTextComposite{\Ar}{\GRenc@name}{h}{161}
+\DeclareTextSymbol{\hsa}{\GRenc@name}{162}
+\DeclareTextComposite{\As}{\GRenc@name}{h}{162}
+\DeclareTextSymbol{\hsg}{\GRenc@name}{171}
+\DeclareTextComposite{\Gs}{\GRenc@name}{h}{171}
+\DeclareTextSymbol{\hai}{\GRenc@name}{164}
+\DeclareTextSymbol{\hrai}{\GRenc@name}{165}
+\DeclareTextSymbol{\hsai}{\GRenc@name}{166}
+\DeclareTextSymbol{\hsgi}{\GRenc@name}{175}
+\DeclareTextSymbol{\hc}{\GRenc@name}{168}
+\DeclareTextSymbol{\hrc}{\GRenc@name}{169}
+\DeclareTextComposite{\Cr}{\GRenc@name}{h}{169}
+\DeclareTextSymbol{\hsc}{\GRenc@name}{170}
+\DeclareTextComposite{\Cs}{\GRenc@name}{h}{170}
+\DeclareTextSymbol{\hci}{\GRenc@name}{172}
+\DeclareTextSymbol{\hrci}{\GRenc@name}{173}
+\DeclareTextSymbol{\hsci}{\GRenc@name}{174}
+\DeclareTextSymbol{\hi}{\GRenc@name}{249}
+\DeclareTextSymbol{\wg}{\GRenc@name}{176}
+\DeclareTextSymbol{\wr}{\GRenc@name}{177}
+\DeclareTextComposite{\r}{\GRenc@name}{w}{177}
+\DeclareTextSymbol{\ws}{\GRenc@name}{178}
+\DeclareTextComposite{\s}{\GRenc@name}{w}{178}
+\DeclareTextSymbol{\wrg}{\GRenc@name}{179}
+\DeclareTextComposite{\Gr}{\GRenc@name}{w}{179}
+\DeclareTextSymbol{\wgi}{\GRenc@name}{180}
+\DeclareTextSymbol{\wri}{\GRenc@name}{181}
+\DeclareTextSymbol{\wsi}{\GRenc@name}{182}
+\DeclareTextSymbol{\wrgi}{\GRenc@name}{183}
+\DeclareTextSymbol{\wa}{\GRenc@name}{184}
+\DeclareTextSymbol{\wra}{\GRenc@name}{185}
+\DeclareTextComposite{\Ar}{\GRenc@name}{w}{185}
+\DeclareTextSymbol{\wsa}{\GRenc@name}{186}
+\DeclareTextComposite{\As}{\GRenc@name}{w}{186}
+\DeclareTextSymbol{\wsg}{\GRenc@name}{187}
+\DeclareTextComposite{\Gs}{\GRenc@name}{w}{187}
+\DeclareTextSymbol{\wai}{\GRenc@name}{188}
+\DeclareTextSymbol{\wrai}{\GRenc@name}{189}
+\DeclareTextSymbol{\wsai}{\GRenc@name}{190}
+\DeclareTextSymbol{\wsgi}{\GRenc@name}{191}
+\DeclareTextSymbol{\wc}{\GRenc@name}{192}
+\DeclareTextSymbol{\wrc}{\GRenc@name}{193}
+\DeclareTextComposite{\Cr}{\GRenc@name}{w}{193}
+\DeclareTextSymbol{\wsc}{\GRenc@name}{194}
+\DeclareTextComposite{\Cs}{\GRenc@name}{w}{194}
+\DeclareTextSymbol{\wci}{\GRenc@name}{196}
+\DeclareTextSymbol{\wrci}{\GRenc@name}{197}
+\DeclareTextSymbol{\wsci}{\GRenc@name}{198}
+\DeclareTextSymbol{\wi}{\GRenc@name}{250}
+\DeclareTextSymbol{\ig}{\GRenc@name}{200}
+\DeclareTextSymbol{\ir}{\GRenc@name}{201}
+\DeclareTextComposite{\r}{\GRenc@name}{i}{201}
+\DeclareTextSymbol{\is}{\GRenc@name}{202}
+\DeclareTextComposite{\s}{\GRenc@name}{i}{202}
+\DeclareTextSymbol{\irg}{\GRenc@name}{203}
+\DeclareTextComposite{\Gr}{\GRenc@name}{i}{203}
+\DeclareTextSymbol{\ia}{\GRenc@name}{208}
+\DeclareTextSymbol{\ira}{\GRenc@name}{209}
+\DeclareTextComposite{\Ar}{\GRenc@name}{i}{209}
+\DeclareTextSymbol{\isa}{\GRenc@name}{210}
+\DeclareTextComposite{\As}{\GRenc@name}{i}{210}
+\DeclareTextSymbol{\isg}{\GRenc@name}{211}
+\DeclareTextComposite{\Gs}{\GRenc@name}{i}{211}
+\DeclareTextSymbol{\ic}{\GRenc@name}{216}
+\DeclareTextSymbol{\irc}{\GRenc@name}{217}
+\DeclareTextComposite{\Cr}{\GRenc@name}{i}{217}
+\DeclareTextSymbol{\isc}{\GRenc@name}{218}
+\DeclareTextComposite{\Cs}{\GRenc@name}{i}{218}
+\DeclareTextSymbol{\id}{\GRenc@name}{240}
+\DeclareTextSymbol{\idg}{\GRenc@name}{241}
+\DeclareTextComposite{\Gd}{\GRenc@name}{i}{241}
+\DeclareTextSymbol{\ida}{\GRenc@name}{242}
+\DeclareTextComposite{\Ad}{\GRenc@name}{i}{242}
+\DeclareTextSymbol{\idc}{\GRenc@name}{243}
+\DeclareTextComposite{\Cd}{\GRenc@name}{i}{243}
+\DeclareTextSymbol{\ug}{\GRenc@name}{204}
+\DeclareTextSymbol{\ur}{\GRenc@name}{205}
+\DeclareTextComposite{\r}{\GRenc@name}{u}{205}
+\DeclareTextSymbol{\us}{\GRenc@name}{206}
+\DeclareTextComposite{\s}{\GRenc@name}{u}{206}
+\DeclareTextSymbol{\urg}{\GRenc@name}{207}
+\DeclareTextComposite{\Gr}{\GRenc@name}{u}{207}
+\DeclareTextSymbol{\ua}{\GRenc@name}{212}
+\DeclareTextSymbol{\ura}{\GRenc@name}{213}
+\DeclareTextComposite{\Ar}{\GRenc@name}{u}{213}
+\DeclareTextSymbol{\usa}{\GRenc@name}{214}
+\DeclareTextComposite{\As}{\GRenc@name}{u}{214}
+\DeclareTextSymbol{\usg}{\GRenc@name}{215}
+\DeclareTextComposite{\Gs}{\GRenc@name}{u}{215}
+\DeclareTextSymbol{\uc}{\GRenc@name}{220}
+\DeclareTextSymbol{\urc}{\GRenc@name}{221}
+\DeclareTextComposite{\Cr}{\GRenc@name}{u}{221}
+\DeclareTextSymbol{\usc}{\GRenc@name}{222}
+\DeclareTextComposite{\Cs}{\GRenc@name}{u}{222}
+\DeclareTextSymbol{\ud}{\GRenc@name}{244}
+\DeclareTextSymbol{\udg}{\GRenc@name}{245}
+\DeclareTextComposite{\Gd}{\GRenc@name}{u}{245}
+\DeclareTextSymbol{\uda}{\GRenc@name}{246}
+\DeclareTextComposite{\Ad}{\GRenc@name}{u}{246}
+\DeclareTextSymbol{\udc}{\GRenc@name}{247}
+\DeclareTextComposite{\Cd}{\GRenc@name}{u}{247}
+\DeclareTextSymbol{\eg}{\GRenc@name}{224}
+\DeclareTextSymbol{\er}{\GRenc@name}{225}
+\DeclareTextComposite{\r}{\GRenc@name}{e}{225}
+\DeclareTextSymbol{\es}{\GRenc@name}{226}
+\DeclareTextComposite{\s}{\GRenc@name}{e}{226}
+\DeclareTextSymbol{\erg}{\GRenc@name}{227}
+\DeclareTextComposite{\Gr}{\GRenc@name}{e}{227}
+\DeclareTextSymbol{\ea}{\GRenc@name}{232}
+\DeclareTextSymbol{\era}{\GRenc@name}{233}
+\DeclareTextComposite{\Ar}{\GRenc@name}{e}{233}
+\DeclareTextSymbol{\esa}{\GRenc@name}{234}
+\DeclareTextComposite{\As}{\GRenc@name}{e}{234}
+\DeclareTextSymbol{\esg}{\GRenc@name}{235}
+\DeclareTextComposite{\Gs}{\GRenc@name}{e}{235}
+\DeclareTextSymbol{\oR}{\GRenc@name}{229}
+\DeclareTextComposite{\r}{\GRenc@name}{o}{229}
+\DeclareTextSymbol{\oG}{\GRenc@name}{228}
+\DeclareTextSymbol{\os}{\GRenc@name}{230}
+\DeclareTextComposite{\s}{\GRenc@name}{o}{230}
+\DeclareTextSymbol{\org}{\GRenc@name}{231}
+\DeclareTextComposite{\Gr}{\GRenc@name}{o}{231}
+\DeclareTextSymbol{\oa}{\GRenc@name}{236}
+\DeclareTextSymbol{\ora}{\GRenc@name}{237}
+\DeclareTextComposite{\Ar}{\GRenc@name}{o}{237}
+\DeclareTextSymbol{\osa}{\GRenc@name}{238}
+\DeclareTextComposite{\As}{\GRenc@name}{o}{238}
+\DeclareTextSymbol{\osg}{\GRenc@name}{239}
+\DeclareTextComposite{\Gs}{\GRenc@name}{o}{239}
+\DeclareTextSymbol{\rr}{\GRenc@name}{251}
+\DeclareTextComposite{\r}{\GRenc@name}{r}{251}
+\DeclareTextSymbol{\rs}{\GRenc@name}{252}
+\DeclareTextComposite{\s}{\GRenc@name}{r}{252}
+\DeclareTextSymbol{\Id}{\GRenc@name}{219}
+\DeclareTextSymbol{\Ud}{\GRenc@name}{223}
+\DeclareTextComposite{\"}{\GRenc@name}{U}{223}
 \fi
 
-\DeclareTextCommand{\h}{\GRencoding@name}%
+\DeclareTextCommand{\h}{\GRenc@name}%
     {{\fontencoding{OT1}\selectfont h}}
-\DeclareTextCommand{\q}{\GRencoding@name}%
+\DeclareTextCommand{\q}{\GRenc@name}%
     {{\fontencoding{OT1}\selectfont q}}
-\DeclareTextCommand{\yod}{\GRencoding@name}%
+\DeclareTextCommand{\yod}{\GRenc@name}%
     {{\fontencoding{OT1}\selectfont j}}%
 \let\iod\yod
 
@@ -659,7 +688,7 @@ Type X <return> to exit.}%
 \DeclareRobustCommand{\fHigh}%
     {{\setbox\z@\hbox{\f}\dimen@\dp\z@\raisebox{\dimen@}{\f}}}
 
-\DeclareRobustCommand\qmark{\hskip.16ex{\fontencoding{OT1}\upshape(?)}}
+\DeclareRobustCommand\qmark{\hskip.16ex{\fontencoding{OT1}\normalshape(?)}}
 \DeclareRobustCommand\lpar{{\metricsfont(}}
 \DeclareRobustCommand\rpar{{\metricsfont)}}
 \DeclareRobustCommand\frapar[1]{\lpar#1\rpar}
@@ -705,10 +734,15 @@ Type X <return> to exit.}%
 \DeclareRobustCommand\mqi[1]{\posthinspace\lmqi\negthinspace
     {#1\/}\rmqi}\let\mezzeq\mqi
 \DeclareRobustCommand\mqs[1]{\lmqs{#1\/}\rmqs}
-\DeclareRobustCommand{\Ladd}[1]{{\metricsfont<}{\!\!#1\/}%
-    {\metricsfont>}}%                           litterae certe addendae
-\DeclareRobustCommand{\LLadd}[1]{{\metricsfont<\kern-.3ex<}
-    {\!\!#1\/}{\metricsfont>\kern-.3ex>}}%     litterae certe addendae
+\DeclareRobustCommand{\Ladd}[1]{%
+  \textmtr{<}{\!\!#1\/}\textmtr{>}}%               litterae certe addendae
+\providecommand\LLadd{}
+\DeclareRobustCommand\LLaddKern[2]%
+  {\ifdim\fontdimen1\font=\z@\kern#1\else\kern#2\fi}
+\RenewDocumentCommand{\LLadd}{O{0pt} m O{0pt}}{%   litterae certe addendae
+  \textmtr{<\kern-0.3ex<}{\LLaddKern{-0.1ex}{-0.3ex}%
+  \kern-#1\relax#2\/\LLaddKern{\z@}{0.1ex}\kern-#3}\textmtr{>\kern-0.3ex>}%
+}%
 \DeclareRobustCommand{\ladd}[1]{{\metricsfont\kern.15ex[\negthinspace}%
     {#1\/}{\metricsfont]\kern-.15ex}}%          litterae addendae
 \DeclareRobustCommand{\lladd}[1]{{\metricsfont\kern.15ex[\kern-.3ex[%
@@ -718,9 +752,9 @@ Type X <return> to exit.}%
     {\mbox{$\{\kern-.20ex$#1\kern.16ex$\}$}}%   litterae delendae
 \let\ldel\lesp
 
-\DeclareTextCommand{\itopenquotes}{\GRencoding@name}%
+\DeclareTextCommand{\itopenquotes}{\GRenc@name}%
     {{\fontencoding{OT1}\selectfont\char92}}%
-\DeclareTextCommand{\itclosedquotes}{\GRencoding@name}%
+\DeclareTextCommand{\itclosedquotes}{\GRenc@name}%
     {{\fontencoding{OT1}\selectfont\char34}}%
 \let\itoq\itopenquotes
 \let\itcq\itclosedquotes
@@ -739,13 +773,13 @@ Type X <return> to exit.}%
 
 \DeclareRobustCommand\LitNil{\textbullet}
 \let\litnil\LitNil
-\DeclareTextCommand{\sva}{\GRencoding@name}{%
+\DeclareTextCommand{\sva}{\GRenc@name}{%
 \rotatebox[origin=c]{180}{\def\@tempA{li}%
 \fontencoding{OT1}\ifx\f@shape\@tempA\fontshape{it}\fi\selectfont e}}
 \DeclareTextCommand\sva{OT1}{{\expandafter\fontencoding
-    \expandafter{\GRencoding@name}\selectfont\sva}}
+    \expandafter{\GRenc@name}\selectfont\sva}}
 \DeclareTextCommand\sva{T1}{{\expandafter\fontencoding
-    \expandafter{\GRencoding@name}\selectfont\sva}}
+    \expandafter{\GRenc@name}\selectfont\sva}}
 \let\shva\sva\let\shwa\sva
 
 \DeclareRobustCommand\skewstack[2]{{%
@@ -860,9 +894,9 @@ Type X <return> to exit.}%
 \let\positio\apex
 \DeclareRobustCommand*{\Int}{\ensuremath{\int}}
 \let\m@thst@r\star
-\DeclareRobustCommand*{\star}{\textormath{{{\upshape *}}}{\m@thst@r}}
-\DeclareRobustCommand*{\dstar}{{\upshape **}}
-\DeclareRobustCommand*{\tstar}{{\upshape ***}}
+\DeclareRobustCommand*{\star}{\textormath{{{\normalshape *}}}{\m@thst@r}}
+\DeclareRobustCommand*{\dstar}{{\normalshape **}}
+\DeclareRobustCommand*{\tstar}{{\normalshape ***}}
 \DeclareRobustCommand*{\responsio}{{\boldmath\ensuremath{\sim}}}
 
 \DeclareRobustCommand{\thorn}{{\fontencoding{T1}\selectfont\th}}
@@ -925,7 +959,7 @@ Type X <return> to exit.}%
 \newcommand\kclick{\leavevmode{%
     \edef\slant@{\strip@pt\fontdimen1\font}%
     \setbox\z@\hbox{k}%
-    \setbox\tw@\hbox{\fontencoding\GRencoding@name\selectfont\s{v}}%
+    \setbox\tw@\hbox{\fontencoding\GRenc@name\selectfont\s{v}}%
     \dimen@\wd\z@
     \ifdim\slant@\p@=\z@
         \advance\dimen@-.1\wd\z@\else\advance\dimen@\wd\tw@
@@ -1089,7 +1123,7 @@ Type X <return> to exit.}%
 \DeclareRobustCommand\coronainv{{\metricsfont\char21}}
 \DeclareRobustCommand\catal{{\metricsfont g}}
 \DeclareRobustCommand\ipercatal{{\metricsfont h}}
-\DeclareRobustCommand\hiatus{\textsuperscript{\upshape H}}
+\DeclareRobustCommand\hiatus{\textsuperscript{\normalshape H}}
 \DeclareRobustCommand\Hiatus{\makebox[\z@]{\hiatus}}
 \DeclareRobustCommand\X{{\metricsfont X}}
 \let\anceps\X
@@ -1173,10 +1207,10 @@ $\displaystyle\left.%
 {\greeknumeral{\the\day}\space\gr@c@month\space\greeknumeral{\the\year}}%
 \egroup}
 
-\DeclareTextSymbol{\Vmiria}{\GRencoding@name}{5}
-\DeclareTextSymbol{\Vkilo}{\GRencoding@name}{4}
-\DeclareTextSymbol{\Vetto}{\GRencoding@name}{3}
-\DeclareTextSymbol{\Vdeka}{\GRencoding@name}{2}
+\DeclareTextSymbol{\Vmiria}{\GRenc@name}{5}
+\DeclareTextSymbol{\Vkilo}{\GRenc@name}{4}
+\DeclareTextSymbol{\Vetto}{\GRenc@name}{3}
+\DeclareTextSymbol{\Vdeka}{\GRenc@name}{2}
 \newcommand*\attic@ill@value[1]{\PackageWarning{teubner}{%
 Illegal value (\number#1) for \string\ActicNumeral\space}}
 \DeclareRobustCommand*\AtticNumeral[1]{%

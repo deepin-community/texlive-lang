@@ -6,7 +6,7 @@
 %%
 %% ctex.dtx  (with options: `style,ctexsize')
 %% 
-%%     Copyright (C) 2003--2021
+%%     Copyright (C) 2003--2022
 %%     CTEX.ORG and any individual authors listed in the documentation.
 %% ---------------------------------------------------------------------
 %% 
@@ -26,11 +26,13 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
-\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
   {Chinese font size definition (CTEX)}
 \ProvidesExplPackage{ctexsize}
-  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
-\RequirePackage { xparse , l3keys2e }
+  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
+\cs_if_exist:NF \NewDocumentCommand
+  { \RequirePackage { xparse } }
+\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexsize }
 \RequirePackage { fix-cm }
 \cs_new_protected:Npn \ctex_define_option:n
   { \keys_define:nn { ctex / option } }
@@ -60,7 +62,12 @@
   }
 \exp_args:No \ctex_define_option:n { \l__ctex_tmp_tl }
 \tl_clear:N \l__ctex_tmp_tl
-\ProcessKeysOptions { ctex / option }
+\cs_if_exist:NTF \ProcessKeyOptions
+  { \ProcessKeyOptions [ ctex / option ] }
+  {
+    \RequirePackage { l3keys2e }
+    \ProcessKeysOptions { ctex / option }
+  }
 \NewDocumentCommand \zihao { m }
   { \exp_args:Nx \ctex_zihao:n {#1} \tex_ignorespaces:D }
 \cs_new_protected:Npn \ctex_zihao:n #1
@@ -80,7 +87,7 @@
 \seq_new:N \c__ctex_font_size_seq
 \cs_new_protected:Npn \__ctex_save_font_size:nn #1#2
   {
-    \use:x
+    \use:e
       {
         \prop_gput:Nnn \exp_not:N \c__ctex_font_size_prop {#1}
           {

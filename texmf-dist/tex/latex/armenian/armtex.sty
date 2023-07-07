@@ -2,12 +2,12 @@
 %%
 %% This is the `armtex.sty' file (LaTeX package for writing in Armenian).
 %%
-%% This file is a part of the ArmTeX project [2014/04/09 v3.0-beta3]
+%% This file is a part of the ArmTeX project [2022/08/14 v3.0-beta4]
 %%
 %% ArmTeX is a system for writing in Armenian with plain TeX and/or LaTeX(2e).
 %%
-%% Copyright 1997 - 2013:
-%%   Serguei Dachian (Serguei.Dachian_AT_math.univ-bpclermont.fr),
+%% Copyright 1997 - 2022:
+%%   Serguei Dachian (Serguei.Dachian_AT_univ-lille.fr),
 %%   Arnak Dalalyan  (arnak.dalalyan_AT_ensae.fr),
 %%   Vardan Akopian  (vakopian_AT_yahoo.com).
 %%
@@ -23,7 +23,7 @@
 %% ArmTeX has the LPPL maintenance status `author-maintained'.
 %%
 %% For more details, installation instructions and the complete list of files
-%% see the provided `readme.txt' file.
+%% see the provided `README' file.
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -38,7 +38,7 @@
 %%
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{armtex}
-  [2014/04/09 v3.0-beta3 armtex.sty (LaTeX package for writing in Armenian)]
+  [2022/08/14 v3.0-beta4 armtex.sty (LaTeX package for writing in Armenian)]
 \RequirePackage{kvoptions}
 
 
@@ -208,15 +208,18 @@
   \armayb\armew}}
 %
 % False argument gobbles ":", and so we can use "\armsep" instead.
+%
 \def\ArmTeX@Armenclname#1{\Armken\armini\armtso\armsep}
 %
 % False argument gobbles ":", and so we can use "\armsep" instead.
+%
 \def\ArmTeX@Armccname#1{\Armken\armre\armken\armnu\armo\armre\armini\armnu
   \armayb\armken\armat\armsep}
 %
 % The \headtoname is empty: the typesetter should use the dative (trakan
 % holov) of the recipient's name.
 % False argument gobbles "{}" (or "\ ") and we ignore the following spaces.
+%
 \def\ArmTeX@Armheadtoname#1{\ignorespaces}
 \def\ArmTeX@Armproofname{\Armayb\armpe\armayb\armtso\armvo\armvyun\armhi
   \armtso}% for AMS-\LaTeX
@@ -419,7 +422,8 @@
 }
 
 
-%% Encoding/font MATH selection user macros.
+%% Encoding/font MATH selection user macros (note that only transliterated
+%% input is supported).
 %%
 \DeclareMathAlphabet{\mathartm}{OT6}{cmr}{m}{n}
 \SetMathAlphabet{\mathartm}{bold}{OT6}{cmr}{bx}{n}
@@ -427,6 +431,138 @@
 \DeclareMathAlphabet{\mathartmit}{OT6}{cmr}{m}{it}
 \SetMathAlphabet{\mathartmit}{bold}{OT6}{cmr}{bx}{it}
 \DeclareMathAlphabet{\mathartmbfit}{OT6}{cmr}{bx}{it}
+%
+% The commands "\armprime" and "\armprimeoff" allow to handle the input of
+% letters whose transliteration contains the "apostrophe" character by
+% deactivating/reactivating it from producing the derivative ("^{\prime}").
+%
+\DeclareRobustCommand{\armprime}{\mathcode`\'="7127\relax}
+\DeclareRobustCommand{\armprimeoff}{\mathcode`\'="8000\relax}
+%
+% The commands "\mtArmayb" - "\mtArmfe" (including both "\mtArmvyun" and
+% "\mtArmvovyun") and "\mtarmayb" - "\mtarmfe" (including both "\mtarmvyun"
+% and "\mtarmvovyun", as well as "\mtarmew") provide an alternative way to
+% produce Armenian letters in math mode.  If the "current math font" name
+% starts with "artm" or "arss" (for example, inside of a "\mathartmbfit"
+% command), the letter is typeset using this font; otherwise a default
+% Armenian math command is invoked.  This default command is initially set to
+% "\mathartm", but can be changed using the command "\mathardefault" like, for
+% example, "\mathardefault{\mathartmbf}".
+%
+\DeclareRobustCommand{\mathardefault}[1]{\let\ArmTeX@DefaultMathArm#1}
+\mathardefault{\mathartm}
+%
+\newif\ifArmTeX@MathArm
+%
+\def\ArmTeX@CheckMathArmFont#1#2#3#4#5\relax{%
+  \expandafter\ifx\string a#1%
+    \expandafter\ifx\string r#2%
+      \expandafter\ifx\string t#3%
+        \expandafter\ifx\string m#4\ArmTeX@MathArmtrue\fi\fi\fi\fi
+  \expandafter\ifx\string a#1%
+    \expandafter\ifx\string r#2%
+      \expandafter\ifx\string s#3%
+        \expandafter\ifx\string s#4\ArmTeX@MathArmtrue\fi\fi\fi\fi}
+%
+\providecommand{\ArmTeX@MathArmLetterDef}[2]{%
+  \DeclareRobustCommand{#1}{%
+    \ifmmode{%
+      \ArmTeX@MathArmfalse
+      \ifnum\mathgroup=-1\else\expandafter\ArmTeX@CheckMathArmFont
+        \fontname\textfont\mathgroup\relax\relax\relax\relax\relax\fi
+      \ifArmTeX@MathArm\mathchar"70#2\else
+        \ArmTeX@DefaultMathArm{\mathchar"70#2}\fi}%
+    \else
+      \PackageError{ArmTeX}
+        {The command \protect #1 is available only in math mode}
+        {You have used the command \protect #1 in text mode.\MessageBreak
+         But it can only be used in math mode.}%
+    \fi}}
+%
+% Upper-case letters.
+%
+\ArmTeX@MathArmLetterDef{\mtArmayb}{41}
+\ArmTeX@MathArmLetterDef{\mtArmben}{42}
+\ArmTeX@MathArmLetterDef{\mtArmgim}{47}
+\ArmTeX@MathArmLetterDef{\mtArmda}{44}
+\ArmTeX@MathArmLetterDef{\mtArmyech}{45}
+\ArmTeX@MathArmLetterDef{\mtArmza}{5A}
+\ArmTeX@MathArmLetterDef{\mtArme}{06}
+\ArmTeX@MathArmLetterDef{\mtArmat}{07}
+\ArmTeX@MathArmLetterDef{\mtArmto}{08}
+\ArmTeX@MathArmLetterDef{\mtArmzhe}{09}
+\ArmTeX@MathArmLetterDef{\mtArmini}{49}
+\ArmTeX@MathArmLetterDef{\mtArmlyun}{4C}
+\ArmTeX@MathArmLetterDef{\mtArmkhe}{58}
+\ArmTeX@MathArmLetterDef{\mtArmtsa}{0D}
+\ArmTeX@MathArmLetterDef{\mtArmken}{4B}
+\ArmTeX@MathArmLetterDef{\mtArmho}{48}
+\ArmTeX@MathArmLetterDef{\mtArmdza}{03}
+\ArmTeX@MathArmLetterDef{\mtArmghat}{04}
+\ArmTeX@MathArmLetterDef{\mtArmtche}{05}
+\ArmTeX@MathArmLetterDef{\mtArmmen}{4D}
+\ArmTeX@MathArmLetterDef{\mtArmhi}{59}
+\ArmTeX@MathArmLetterDef{\mtArmnu}{4E}
+\ArmTeX@MathArmLetterDef{\mtArmsha}{0A}
+\ArmTeX@MathArmLetterDef{\mtArmvo}{4F}
+\ArmTeX@MathArmLetterDef{\mtArmcha}{0B}
+\ArmTeX@MathArmLetterDef{\mtArmpe}{50}
+\ArmTeX@MathArmLetterDef{\mtArmje}{4A}
+\ArmTeX@MathArmLetterDef{\mtArmra}{0C}
+\ArmTeX@MathArmLetterDef{\mtArmse}{53}
+\ArmTeX@MathArmLetterDef{\mtArmvev}{56}
+\ArmTeX@MathArmLetterDef{\mtArmtyun}{54}
+\ArmTeX@MathArmLetterDef{\mtArmre}{52}
+\ArmTeX@MathArmLetterDef{\mtArmtso}{43}
+\ArmTeX@MathArmLetterDef{\mtArmvyun}{57}
+\ArmTeX@MathArmLetterDef{\mtArmvovyun}{55}
+\ArmTeX@MathArmLetterDef{\mtArmpyur}{0E}
+\ArmTeX@MathArmLetterDef{\mtArmke}{51}
+\ArmTeX@MathArmLetterDef{\mtArmo}{0F}
+\ArmTeX@MathArmLetterDef{\mtArmfe}{46}
+%
+% Lower-case letters.
+%
+\ArmTeX@MathArmLetterDef{\mtarmayb}{61}
+\ArmTeX@MathArmLetterDef{\mtarmben}{62}
+\ArmTeX@MathArmLetterDef{\mtarmgim}{67}
+\ArmTeX@MathArmLetterDef{\mtarmda}{64}
+\ArmTeX@MathArmLetterDef{\mtarmyech}{65}
+\ArmTeX@MathArmLetterDef{\mtarmza}{7A}
+\ArmTeX@MathArmLetterDef{\mtarme}{16}
+\ArmTeX@MathArmLetterDef{\mtarmat}{17}
+\ArmTeX@MathArmLetterDef{\mtarmto}{18}
+\ArmTeX@MathArmLetterDef{\mtarmzhe}{19}
+\ArmTeX@MathArmLetterDef{\mtarmini}{69}
+\ArmTeX@MathArmLetterDef{\mtarmlyun}{6C}
+\ArmTeX@MathArmLetterDef{\mtarmkhe}{78}
+\ArmTeX@MathArmLetterDef{\mtarmtsa}{1D}
+\ArmTeX@MathArmLetterDef{\mtarmken}{6B}
+\ArmTeX@MathArmLetterDef{\mtarmho}{68}
+\ArmTeX@MathArmLetterDef{\mtarmdza}{13}
+\ArmTeX@MathArmLetterDef{\mtarmghat}{14}
+\ArmTeX@MathArmLetterDef{\mtarmtche}{15}
+\ArmTeX@MathArmLetterDef{\mtarmmen}{6D}
+\ArmTeX@MathArmLetterDef{\mtarmhi}{79}
+\ArmTeX@MathArmLetterDef{\mtarmnu}{6E}
+\ArmTeX@MathArmLetterDef{\mtarmsha}{1A}
+\ArmTeX@MathArmLetterDef{\mtarmvo}{6F}
+\ArmTeX@MathArmLetterDef{\mtarmcha}{1B}
+\ArmTeX@MathArmLetterDef{\mtarmpe}{70}
+\ArmTeX@MathArmLetterDef{\mtarmje}{6A}
+\ArmTeX@MathArmLetterDef{\mtarmra}{1C}
+\ArmTeX@MathArmLetterDef{\mtarmse}{73}
+\ArmTeX@MathArmLetterDef{\mtarmvev}{76}
+\ArmTeX@MathArmLetterDef{\mtarmtyun}{74}
+\ArmTeX@MathArmLetterDef{\mtarmre}{72}
+\ArmTeX@MathArmLetterDef{\mtarmtso}{63}
+\ArmTeX@MathArmLetterDef{\mtarmvyun}{77}
+\ArmTeX@MathArmLetterDef{\mtarmvovyun}{75}
+\ArmTeX@MathArmLetterDef{\mtarmpyur}{1E}
+\ArmTeX@MathArmLetterDef{\mtarmke}{71}
+\ArmTeX@MathArmLetterDef{\mtarmew}{20}
+\ArmTeX@MathArmLetterDef{\mtarmo}{1F}
+\ArmTeX@MathArmLetterDef{\mtarmfe}{66}
 
 
 %% Encoding/font TEXT selection orthogonal user macros.
@@ -456,7 +592,7 @@
 
 %% Encoding/font TEXT selection NON-orthogonal commands
 %%
-
+%
 % Old-style armenian commands used in plain version.
 %
 \providecommand{\ArmTeX@OldArmFontDef}[3]{%
@@ -484,7 +620,7 @@
   {\ArmTeX@MathError{\artmbfsl}}
 \ArmTeX@OldArmFontDef{\arssbfsl}{\fontfamily{cmss}\fontshape{sl}\fontseries{bx}}
   {\ArmTeX@MathError{\arssbfsl}}
-
+%
 % Old-style NON-armenian commands (probably redefining, if
 % already defined in class).
 %
@@ -525,7 +661,7 @@
   \Armat\or
   \Armto\fi
 }
-
+%
 \def\armnu@tens{\ifcase\armnu@cta\or
   \Armzhe\or
   \Armini\or
@@ -537,7 +673,7 @@
   \Armdza\or
   \Armghat\fi
 }
-
+%
 \def\armnu@hundreds{\ifcase\armnu@cta\or
   \Armtche\or
   \Armmen\or
@@ -549,7 +685,7 @@
   \Armpe\or
   \Armje\fi
 }
-
+%
 \def\armnu@thousands{\ifcase\armnu@cta\or
   \Armra\or
   \Armse\or
@@ -561,7 +697,7 @@
   \Armpyur\or
   \Armke\fi
 }
-
+%
 \def\armnumeral@base#1{%
   \armnu@cta = #1
   \armnu@ctb = #1
@@ -582,9 +718,9 @@
   \armnu@cta=\armnu@ctb
   \armnu@units
 }
-
+%
 \def\armnumeral@aux{\afterassignment\armnumeral@loop\armnu@gobcha}
-
+%
 \def\armnumeral@loop{%
   \let\armnu@next=\armnumeral@aux
   \ifx\armnu@cha\armnu@nil
@@ -618,7 +754,7 @@
   \fi
   \armnu@next
 }
-
+%
 \def\armnumeral@auxbis#1{%
   \ifnum\armnumeralcount = 0
     \hbox{\vphantom{\Armho}\armnumeral@base{#1}\vphantom{\Armnu}}%
@@ -627,7 +763,7 @@
     \hbox{$\overline{\hbox{\armnumeral@auxbis{#1}}}\m@th$}%
   \fi
 }
-
+%
 \def\armnumeral@loopbis#1#2#3#4#5\armnu@nil{%
   \armnumeralcount=\armnu@ctc
   \ifnum\armnu@ctc > 0
@@ -638,7 +774,7 @@
     \armnumeral@auxbis{#1#2#3#4}%
   \fi
 }
-
+%
 \def\armnumeral#1{\edef\armnu@tmpa{#1}\armnumeralcount = 0
   \let\armnu@tmpb = 0\relax
   \expandafter\armnumeral@aux\armnu@tmpa\armnu@nil
@@ -661,11 +797,11 @@
     \expandafter\armnumeral@loopbis\armnu@tmpa\armnu@nil
   \fi
 }
-
+%
 % Armenian to Arabic macro (\unarmnumeral).
 %
 \def\armnu@setchb#1{\edef\armnu@tmpb{#1}\expandafter\armnu@gobchb\armnu@tmpb}
-
+%
 \def\armnu@chaval{%
   \armnu@setchb{\Armayb}\ifx\armnu@cha\armnu@chb
   \armnu@cta = 0\armnu@ctb = 1
@@ -781,9 +917,9 @@
   \fi\fi\fi\fi\fi\fi\fi\fi\fi
   \fi\fi\fi\fi\fi\fi\fi\fi\fi
 }
-
+%
 \def\unarmnumeral@aux{\afterassignment\unarmnumeral@loop\armnu@gobcha}
-
+%
 \def\unarmnumeral@loop{%
   \ifx\armnu@cha\armnu@nil
     \let\armnu@next=\relax
@@ -805,14 +941,14 @@
   \fi
   \armnu@next
 }
-
+%
 \def\unarmnumeral@star*#1{\edef\armnu@tmpa{#1}\armnumeralcount = 0
   \armnu@ctc = 4\armnu@cta = 0\armnu@ctb = 0
   \expandafter\unarmnumeral@aux\armnu@tmpa\armnu@nil
 }
-
+%
 \def\unarmnumeral@nonstar#1{\unarmnumeral@star*{#1}\the\armnumeralcount}
-
+%
 \let\Arm@optionalstar=*\relax
 \def\unarmnumeral@auxbis{%
    \ifx\Arm@nextchar\Arm@optionalstar
@@ -821,9 +957,9 @@
      \expandafter\unarmnumeral@nonstar
    \fi
 }
-
+%
 \def\unarmnumeral{\futurelet\Arm@nextchar\unarmnumeral@auxbis}
-
+%
 % LaTeX specific macros (\armnumber and \unarmnumber).
 %
 \def\armnumber#1{\expandafter\@armnumber\csname c@#1\endcsname}
@@ -839,7 +975,7 @@
 \expandafter\ifx\csname pdfglyphtounicode\endcsname\relax\else
 \expandafter\ifx\csname pdfgentounicode\endcsname\relax\else
 \pdfgentounicode=1
-
+%
 % Upper-case letters.
 %
 \pdfglyphtounicode{Armayb}{0531}
@@ -881,7 +1017,7 @@
 \pdfglyphtounicode{Armke}{0554}
 \pdfglyphtounicode{Armo}{0555}
 \pdfglyphtounicode{Armfe}{0556}
-
+%
 % Lower-case letters.
 %
 \pdfglyphtounicode{armayb}{0561}
@@ -937,7 +1073,7 @@
 \pdfglyphtounicode{armabbrev}{055F}
 \pdfglyphtounicode{armnum}{0559}
 \pdfglyphtounicode{armdram}{058F}
-
+%
 % Other glyphs not placed in accordance with ASCII.
 %
 \pdfglyphtounicode{quotedblleft}{201C}
@@ -949,7 +1085,7 @@
 \pdfglyphtounicode{emdash}{2014}
 \pdfglyphtounicode{exclam}{0021}
 \pdfglyphtounicode{question}{003F}
-
+%
 % Treating the glyph armeternity (not present in unicode) as space.
 %
 \pdfglyphtounicode{armeternity}{0020}

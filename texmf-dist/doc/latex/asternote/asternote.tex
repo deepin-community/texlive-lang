@@ -1,0 +1,427 @@
+\documentclass[%
+fleqn,%
+paper=a4paper,%
+fontsize=10pt,%
+open_bracket_pos=zenkakunibu_nibu,%
+hanging_punctuation,%
+]%
+{jlreq}
+\jlreqsetup{%
+itemization_beforeafter_space=0pt,%
+itemization_itemsep=0pt%
+}
+\makeatletter
+\RequirePackage{luatexja}
+\RequirePackage{luatexja-otf}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath}
+\DeclareRobustCommand{\metaphysicaicon}{\raisebox{-4.0pt}{\includegraphics[width=16pt]{metaphysicaicon.pdf}}}
+\RequirePackage[normalem]{ulem}
+\RequirePackage[explicit]{titlesec}
+\titleformat{\section}[hang]{}{}{0pt}{\uuline{\raisebox{1pt}{\textsf{\thesection\quad #1}}}}[\vspace{0.35\baselineskip}]
+\renewcommand{\thesection}{\S\,\arabic{section}}
+\let\originalsection\section
+\DeclareRobustCommand{\section}{\@ifstar{\@metaphysica@section@star}{\@metaphysica@section@nostar}}
+\DeclareRobustCommand{\@metaphysica@section@star}[1]{\vspace{0.5\baselineskip}\originalsection{#1}\vspace*{-\baselineskip}}
+\DeclareRobustCommand{\@metaphysica@section@nostar}[1]{\vspace{0.5\baselineskip}\originalsection{#1}}
+\RequirePackage[%
+truedimen,%
+margin=30truemm,
+includehead%
+]{geometry}
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\DeclareRobustCommand{\headertitle}[2][\metaphysicaicon]{%
+\rhead[#2]{#1{}\quad\thepage{}/{}\pageref{LastPage}}%
+\lhead[\thepage{}/{}\pageref{LastPage}\quad{}#1]{#2}%
+\cfoot{}%
+}
+\RequirePackage{setspace}
+\setstretch{1.155}
+\DeclareRobustCommand{\linespace}{\@ifstar{\vspace{\baselineskip}}{\vspace{0.25\baselineskip}}}
+\DeclareRobustCommand{\linesmash}{\@ifstar{\vspace{-\baselineskip}}{\vspace{-0.25\baselineskip}}}
+\AtBeginDocument{%
+\abovedisplayskip     =0.125\abovedisplayskip
+\abovedisplayshortskip=0.125\abovedisplayshortskip
+\belowdisplayskip     =0.125\belowdisplayskip
+\belowdisplayshortskip=0.125\belowdisplayshortskip}
+\setlength{\jot}{0pt}%
+\setlength{\mathindent}{2\zw}%
+\renewcommand{\floatpagefraction}{0.75}
+\allowdisplaybreaks[2]
+\RequirePackage[no-math]{fontspec}
+\RequirePackage[no-math,deluxe,haranoaji]{luatexja-preset}
+\RequirePackage{multicolpar}
+\RequirePackage[style=iso]{datetime2}
+\RequirePackage[unicode]{hyperref}
+\RequirePackage{xparse}
+\RequirePackage{dashbox}
+\newcounter{psuedosectioncounter}
+\setcounter{psuedosectioncounter}{1}
+\newcounter{psuedocontentscounter}
+\setcounter{psuedocontentscounter}{1}
+\DeclareRobustCommand{\psuedosection}[3]{%
+\hypertarget{#1}{\mbox{}}\begin{multicolpar}{2}%
+\noindent\uuline{{\raisebox{1pt}{\textsf{\S\ \thepsuedosectioncounter\quad #2}}}}
+
+\noindent\uuline{{\raisebox{1pt}{\textsf{\S\ \thepsuedosectioncounter\quad #3}}}}
+\end{multicolpar}%
+\stepcounter{psuedosectioncounter}%
+\vspace{\baselineskip}%
+}
+\DeclareRobustCommand{\psuedocontents}[3]{%
+\begin{multicolpar}{2}%
+\noindent{\textsf{\hyperlink{#1}{\S\ \thepsuedocontentscounter\quad #2}}}
+
+\noindent{\textsf{\hyperlink{#1}{\S\ \thepsuedocontentscounter\quad #3}}}\end{multicolpar}%
+\stepcounter{psuedocontentscounter}%
+}
+\newenvironment{translateing}%
+{\begin{multicolpar}{2}}
+{\end{multicolpar}\vspace{\baselineskip}}
+\DeclareRobustCommand{\maketitletranslating}%
+{\maketitle\thispagestyle{fancy}
+\vspace{\baselineskip}\begin{multicolpar}{2}
+\textsf{English}
+
+\noindent
+\textsf{日本語 (Japanese)}
+\end{multicolpar}\vspace{\baselineskip}}
+\NewDocumentCommand\macroexplanation{v}{%
+\centering{\texttt{#1}}\linespace%
+}
+\NewDocumentEnvironment{macroexample}{O{0.625} +b}{%
+\dbox{\parbox{#1\textwidth}{%
+#2%
+}}}%
+{\vspace{\baselineskip}}
+\NewDocumentEnvironment{macroexample*}{O{0.625} m +b}{%
+\dbox{\parbox{#1\textwidth}{%
+\vspace{-0.5\baselineskip}\begin{#2}%
+#3
+\end{#2}%
+}}}
+{\vspace{\baselineskip}}
+\let\code\texttt
+\setlength{\fboxsep}{1em}
+\setstretch{1.05}
+\DeclareRobustCommand{\commandtojskip}{\hspace{2.40554pt plus 1.49994pt minus 0.59998pt}}
+\RequirePackage{listings, jlisting}
+\lstset{
+  language=[LaTeX]TeX,
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\small\itshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame=single,
+  breaklines=true,
+  columns=[l]{fullflexible},
+  stepnumber=1,
+  xrightmargin=0.1709\textwidth,
+  xleftmargin=0.1709\textwidth,
+  lineskip=-0.5ex
+}
+\RequirePackage{bxtexlogo}
+\RequirePackage{shortvrb}
+\MakeShortVerb{\|}
+\RequirePackage[luajapanese]{asternote}
+\makeatother
+%
+\hypersetup{%
+bookmarksnumbered=true,%
+colorlinks=true,%
+linkcolor=blue,%
+urlcolor=blue,%
+setpagesize=false,%
+pdftitle={The asternote package},%
+pdfauthor={Yukoh KUSAKABE},%
+pdfsubject={The asternote package},%
+pdfkeywords={TeX LaTeX footnote endnote annotation}}
+\title{The \code{asternote} package:\\[0.25\baselineskip]
+annotation symbols enclosed\\[0.25\baselineskip]in square brackets and marked with an asterisk}
+\author{Yukoh KUSAKABE}
+\date{\today}
+\headertitle[Yukoh KUSAKABE\quad\metaphysicaicon]{The \code{asternote} package}
+\makeatletter
+\DeclareRobustCommand{\asterreftext}[1]{{\textsf{［*\ref*{#1}］}}}
+\DeclareRobustCommand{\asterrefsuperscript}[1]{\@textsuperscript{\scriptsize\!\!\textsf{［*\ref*{#1}］}}}
+\makeatother
+\begin{document}
+\maketitletranslating
+
+\begin{translateing}
+This package can output annotation symbols enclosed in square brackets and marked with an asterisk.
+
+このパッケージは，角括弧囲い・アスタリスク付きの注釈記号を出力することができます。
+\end{translateing}
+
+\psuedocontents{Requirements}{System Requirements}{前提条件}
+
+\psuedocontents{Installation}{Installation}{インストール}
+
+\psuedocontents{Loading}{Loading}{読み込み}
+
+\psuedocontents{Usage}{Usage}{使用方法}
+
+\psuedocontents{moreinfo}{For More Information}{問い合わせ・詳しくは}
+
+\psuedosection{Requirements}{System Requirements}{前提条件}
+
+\begin{translateing}
+\textbullet\ \LaTeXe\ format\\
+\textbullet\ \pTeX/\upTeX\ engine (\code{[japanese]} only)\\
+\textbullet\ \LuaTeX\ engine (\code{[luajapanese]} only)\\
+\textbullet\ \code{luatexja} package (\code{[luajapanese]} only)
+
+\noindent
+\textbullet\ \LaTeXe フォーマット\\
+\textbullet\ \scalebox{0.95}[1]{\pTeX/\upTeX エンジン（\code{[japanese]}使用時）}\\
+\textbullet\ \LuaTeX エンジン（\code{[luajapanese]}使用時）\\
+\textbullet\ \scalebox{0.9}[1]{\code{luatexja} パッケージ（\code{[luajapanese]}使用時）}
+
+Since the unit |zw| is used when the \code{[japanese]} loaded, it can be used only in the \pTeX/\upTeX\ series.
+Since the unit |\zw| is used when the \code{[luajapanese]} loaded, it can be used only in the \LuaTeX\ series and \LuaTeX-ja.
+
+\code{[japanese]}を読み込むと単位|zw|を用いますので，\pTeX/\upTeX 系列でのみ使用できます。
+\code{[luajapanese]}を読み込むと単位\commandtojskip|\zw|を用いますので，\LuaTeX 系列でのみ使用できます。
+\end{translateing}
+
+\newpage
+\psuedosection{Installation}{Installation}{インストール}
+
+\begin{translateing}
+If not available, move asternote.sty file to\\\code{\$TEXMF/tex/latex/asternote}.
+
+直ちに使えなければ，asternote.sty を\\\code{\$TEXMF/tex/latex/asternote}\\%（\TeX が見つけられる場所）
+に置いてください。
+\end{translateing}
+
+\psuedosection{Loading}{Loading}{読み込み}
+
+\begin{translateing}
+To use this package, load .sty file with |\usepackage{asternote}| command in preamble.
+
+このパッケージを使用するには，プリアンブルに\commandtojskip|\usepackage{asternote}| と書いてください。
+%\end{translateing}
+
+%\begin{translateing}
+There are two options:\\
+\textbullet\ |[japanese]| changes square brackets to full-width and makes superscript annotation symbols two full characters wide on \pLaTeX, which is an engine for Japanese.\\
+\textbullet\ |[luajapanese]| changes square brackets to full-width and makes superscript annotation symbols two full characters wide on \LuaLaTeX\ (and Japanese environment required).
+
+2つのオプションがあります。\\
+\textbullet\ |[japanese]|は角括弧を全角幅に変え，さらに上付きの注釈記号を全角2文字の幅にします（\pLaTeX 用）。\\
+\textbullet\ |[luajapanese]|は角括弧を全角幅に変え，さらに上付きの注釈記号を全角2文字の幅にします（\LuaLaTeX 用）。
+\end{translateing}
+
+\psuedosection{Usage}{Usage}{使用方法}
+
+\macroexplanation{\setasternotenoindent}
+\quad
+\macroexplanation{\setasternoteindent}
+
+\begin{translateing}
+Determines whether or not the annotation symbol is indented at the beginning of a paragraph (to use as itemization). The default is |\setasternotenoindent|.
+Whether parentheses are considered half-width or full-width is different between text and superscript when the \code{[japanese]} or \code{[luajapanese]} options loaded.
+
+注釈記号に対して，段落初めの字下げをする否かを決めます（箇条書き風に使う場合など）。
+既定は\commandtojskip|\setasternotenoindent|です。
+\code{[japanese]}または\code{[luajapanese]}オプションを読み込んでいるときは，textとsuperscriptで括弧を半角とみなすか全角とみなすかが異なります。
+\end{translateing}
+
+\newpage
+\macroexplanation{\setasternotetext}
+\quad
+\macroexplanation{\setasternotesuperscript}
+
+\begin{translateing}
+Decide whether the annotation symbols are written in the same size as the body text or in superscript.
+The default is |\setasternotesuperscript|.
+
+注釈記号に対して，本文と同じ大きさで書かれるか上付き文字で書かれるかを決めます。
+既定は\commandtojskip|\setasternotesuperscript|です。
+\end{translateing}
+
+\macroexplanation{\setasterreftext}
+\quad
+\macroexplanation{\setasterrefsuperscript}
+
+\begin{translateing}
+Decide whether the annotation reference are written in the same size as the body text or in superscript.
+The default is |\setasterreftext|.
+
+注釈参照に対して，本文と同じ大きさで書かれるか上付き文字で書かれるかを決めます。
+既定は\commandtojskip|\setasterreftext|です。
+\end{translateing}
+
+\macroexplanation{\setasternumbertext}
+\quad
+\macroexplanation{\setasternumbersuperscript}
+
+\begin{translateing}
+Determines whether the manual annotation symbols are written in the same size as the body text or in superscript.
+The default is |\setasternumbertext|.
+
+手動の注釈記号に対して，本文と同じ大きさで書かれるか上付き文字で書かれるかを決めます。
+既定は\commandtojskip|\setasternumbertext|です。
+\end{translateing}
+
+\macroexplanation{\asternotereset}
+
+\begin{translateing}
+Reset the annotation symbol number to 1.
+
+注釈記号の番号を1に戻します。
+\end{translateing}
+
+\macroexplanation{\asternote{<label>}}
+\quad
+\macroexplanation{\asternotetext{<label>}}
+\quad
+\macroexplanation{\asternotesuperscript{<label>}}
+
+\begin{translateing}
+Put an annotation symbol.
+You can manually choose to write the annotation in the same size as the body text or in superscript.
+
+注釈記号を置きます。
+本文と同じ大きさで書くこと，上付き文字で書くことを手動で指定することができます。
+\end{translateing}
+
+\begin{lstlisting}
+A \asternote{A}, 
+B \asternotetext{B} and 
+C \asternotesuperscript{C}.
+\end{lstlisting}
+
+No options loaded:\\
+\makeatletter
+\begin{macroexample}
+A \@textsuperscript{\scriptsize\textsf{[*{1}]}}, 
+B {\textsf{[*{2}]}} and 
+C \@textsuperscript{\scriptsize\textsf{[*{3}]}}.
+\end{macroexample}
+\makeatother
+
+\linesmash
+\code{[japanese]} or \code{[luajapanese]} options loaded:\\
+\begin{macroexample}
+あ\asternote{A}，
+い\asternotetext{B}そして 
+う\asternotesuperscript{C}。
+\end{macroexample}
+
+\newpage
+\macroexplanation{\asterref{<label>}}
+\quad
+\macroexplanation{\asterreftext{<label>}}
+\quad
+\macroexplanation{\asterrefsuperscript{<label>}}
+
+\begin{translateing}
+Put an annotation reference.
+You can manually choose to write the annotation in the same size as the body text or in superscript.
+
+注釈参照を置きます。
+本文と同じ大きさで書くこと，上付き文字で書くことを手動で指定することができます。
+\end{translateing}
+
+\begin{lstlisting}
+\asterref{A} A is a capital of a.\\
+\asterref{B} B is a capital of b.\\
+\asterref{C} C is a capital of c.
+\end{lstlisting}
+
+No options loaded:\\
+\makeatletter
+\begin{macroexample}
+{\textsf{[*{1}]}} A is a capital of a.\\
+{\textsf{[*{2}]}} B is a capital of b.\\
+\@textsuperscript{\scriptsize\textsf{[*{3}]}} C is a capital of c.
+\end{macroexample}
+\makeatother
+
+\linesmash
+\code{[japanese]} or \code{[luajapanese]} options loaded:\\
+\begin{macroexample}
+\asterref{A} あはアのひらがなです。\\
+\asterreftext{B} いはイのひらがなです。\\
+\asterrefsuperscript{C} うはウのひらがなです。
+\end{macroexample}
+
+\linespace
+\macroexplanation{\asternumber{<label>}}
+\ 
+\macroexplanation{\asternumbertext{<label>}}
+\ 
+\macroexplanation{\asternumbersuperscript{<label>}}
+
+\begin{translateing}
+Put a manual annotation symbol.
+You can manually choose to write the annotation in the same size as the body text or in superscript.
+
+手動の注釈記号を置きます。
+本文と同じ大きさで書くこと，上付き文字で書くことを手動で指定することができます。
+\end{translateing}
+
+\begin{lstlisting}
+A \asternumber{1}, 
+B \asternumbertext{2} and 
+C \asternumbersuperscript{9}.
+\end{lstlisting}
+
+No options loaded:\\
+\makeatletter
+\begin{macroexample}
+A {\textsf{[*{1}]}}, 
+B {\textsf{[*{2}]}} and 
+C \@textsuperscript{\scriptsize\textsf{[*{9}]}}.
+\end{macroexample}
+\makeatother
+
+\linesmash
+\code{[japanese]} or \code{[luajapanese]} options loaded:\\
+\begin{macroexample}
+あ\asternumber{1}，
+い\asternumbertext{2}そして 
+う\asternumbersuperscript{9}。
+\end{macroexample}
+
+\begin{translateing}
+Using the commands up to this point, you can create side notes that are automatically numbered.
+For example:
+
+ここまでの命令を使って，自動で番号を振る傍注を作ることができます。たとえば，次のようにします。
+\end{translateing}
+
+At the preamble:
+\begin{lstlisting}
+\newcommand{\annotation}[2]
+{\asternote{#1}\marginpar{\footnotesize\asterref{#1}#2}}
+\end{lstlisting}
+
+In the body of the text:
+\begin{lstlisting}
+A \annotation{A}{A is a capital of a.},
+B \annotation{B}{B is a capital of b.} and
+C \annotation{C}{C is a capital of c.}.
+\end{lstlisting}
+
+\begin{translateing}
+The same idea can be used to create similar commands for footnotes and endnotes.
+
+これと同じ発想で，脚注や後注でも同様の命令を作ることができます。
+\end{translateing}
+
+\psuedosection{moreinfo}{For More Information}{問い合わせ・詳しくは}
+
+\centering\begin{tabular}{rl}
+The asternote package:&\url{https://www.metaphysica.info/technote/package_asternote/}\\
+Yukoh KUSAKABE:&\url{https://www.metaphysica.info/}\\
+&\url{https://twitter.com/metaphysicainfo/}\\
+&(screen-name, 日下部幽考 in Japanese)
+\end{tabular}
+\end{document}

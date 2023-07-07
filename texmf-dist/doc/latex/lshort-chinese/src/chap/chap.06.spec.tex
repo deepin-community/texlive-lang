@@ -36,8 +36,8 @@
 \Arg{widest label} 用以限制参考文献序号的宽度，如 99 意味着不超过两位数字。通常设定为与参考文献的数目一致。
 
 \env{thebibliography} 环境自动生成不带编号的一节（\cls{article} 文档类）或一章（\cls{report} / \cls{book} 文档类）。
-在 \cls{article} 文档类的节标题默认为 ``Reference''{}，而在 \cls{report / book} 文档类
-的章标题默认为 ``Bibliography''{}。用户可通过 \ref{sec:latex-settings} 节给出的方法定制参考文献的标题。
+在 \cls{article} 文档类的节标题默认为“References”，而在 \cls{report} / \cls{book} 文档类
+的章标题默认为“Bibliography”。用户可通过 \ref{sec:latex-settings} 节给出的方法定制参考文献的标题。
 
 以下为一个使用 \env{the\-biblio\-graphy} 排版参考文献的例子：
 \begin{verbatim}
@@ -149,6 +149,10 @@ Partl~\cite{germenTeX} has proposed that \ldots
 [1] A.~Axford, B.~Birkin, C.~Copper, and D.~Dannford, ``Demostration of
   bibliography items,'' \emph{Journal of \TeX perts}, vol.~36, no.~7, pp.
   114--120, Mar 2013.
+
+\medskip
+\textbf{gbt7714-numerical}（GB/T 7714---2015 样式，由 \textsf{gbt7714} 宏包提供）\\{}
+[1] 陈登原. 国史旧闻: 第 1 卷[M]. 北京: 中华书局, 2000: 29.
 \end{trivlist}
 \hrule
 \end{table}
@@ -326,11 +330,11 @@ xelatex demo
   \item[\texttt{trad-alpha}]
   \pkg{biblatex-trad} 样式包，移植自 \hologo{BibTeX} 默认的 \texttt{alpha} 样式。另外还包括 \texttt{trad-abbrv}、\texttt{trad-plain} 和 \texttt{trad-unsrt}。
   \item[\texttt{gb7714-2015}]
-  符合中文文献著录标准 GB/T 7714--2015 的样式，著录按顺序编码排版。另外还包括按作者-年份顺序排版著录的样式 \texttt{gb7714-2015ay}。
+  符合中文文献著录标准 GB/T 7714---2015 的样式，著录按顺序编码排版。另外还包括按作者—年份顺序排版著录的样式 \texttt{gb7714-2015ay}。
   \item[\texttt{caspervector}]
-  以中文文献著录标准 GB/T 7714--2015 为基础的一个样式。
+  以中文文献著录标准 GB/T 7714---2015 为基础的一个样式。
   \item[\texttt{ieee}]
-  兼容 \pkg{IEEEtran} 风格的样式，著录按顺序编码排版。另外还包括按作者-年份顺序排版著录的样式 \texttt{ieee-alphabetic}。
+  兼容 \pkg{IEEEtran} 风格的样式，著录按顺序编码排版。另外还包括按作者—年份顺序排版著录的样式 \texttt{ieee-alphabetic}。
 \end{description}
 
 \section{索引和 makeindex 工具}\label{sec:index}
@@ -548,7 +552,7 @@ PDF 文档格式是现今最流行的电子文档格式，而电子文档最实�
 \subsection{\pkg{hyperref} 宏包}\label{subsec:hyperref}
 
 \pkgindex{hyperref}
-\pkg{hyperref} 宏包涉及到的链接遍布 \LaTeX{} 的每一个角落——目录、引用、脚注、索引、参考文献等等都被封装成超链接。
+\pkg{hyperref} 宏包涉及的链接遍布 \LaTeX{} 的每一个角落——目录、引用、脚注、索引、参考文献等等都被封装成超链接。
 但这也使得它与其它宏包发生冲突的可能性大大增加，虽然宏包已经尽力解决各方面的兼容性，但仍不能面面俱到。
 为减少可能的冲突，习惯上将 \pkg{hyperref} 宏包\textbf{放在其它宏包之后调用}。
 
@@ -562,38 +566,35 @@ PDF 文档格式是现今最流行的电子文档格式，而电子文档最实�
 \cmd{hypersetup}\marg*{\Arg{option1},\Arg{option2}=\marg*{value},\ldots} \\
 \cmd{usepackage}\oarg*{\Arg{option1},\Arg{option2}=\marg*{value},\ldots}\marg*{hyperref}
 \end{command}
-可用的参数见表 \ref{tbl:hyperref-settings}。
+当选项值为 \texttt{true} 时，可以省略“\texttt{=true}”不写。可用的参数见表 \ref{tbl:hyperref-settings}。
 
 \begin{table}[htp]
 \centering
 \caption{\pkg{hyperref} 宏包提供的参数设置}\label{tbl:hyperref-settings}
+\def\TF{\Arg{true\textnormal|false}}
 \begin{tabular}{llp{19.5em}}
  \hline
- \textbf{参数}                & \textbf{默认值}  & \textbf{含义} \\
+ \textbf{参数}                     & \textbf{默认值} & \textbf{含义} \\
  \hline
- \texttt{colorlinks=}\Arg{true\textnormal|false}
-                              & \textit{false}  & 设置为 \textit{true} 为链接文字带颜色，反之加上带颜色的边框 \\
- \texttt{hidelinks}           &                 & 取消链接的颜色和边框 \\
+ \texttt{draft=}\TF                & \textit{false}  & 关闭所有超链接、书签等功能（也可以通过文档类选项指定） \\
+ \texttt{final=}\TF                & \textit{true}   & 开启所有超链接、书签等功能（也可以通过文档类选项指定） \\
+ \hline
+ \texttt{colorlinks=}\TF           & \textit{false}  & 设置为 \textit{true} 为链接文字带颜色，反之加上带颜色的边框 \\
+ \texttt{hidelinks}                &                 & 取消链接的颜色和边框 \\
  \texttt{pdfborder=}\marg*{\Arg{n} \Arg{n} \Arg{n}}
-                              &  0 0 1          & 超链接边框设置，设为 0 0 0 可取消边框 \\
+                                   &  0 0 1          & 超链接边框设置，设为 0 0 0 可取消边框 \\
  \hline
- \texttt{bookmarks=}\Arg{true\textnormal|false}\textsuperscript{\dag}
-                              & \textit{true}   & 是否生成书签 \\
- \texttt{bookmarksopen=}\Arg{true\textnormal|false}
-                              & \textit{false}  & 是否展开书签 \\
- \texttt{bookmarksnumbered=}\Arg{true\textnormal|false}
-                              & \textit{false}  & 书签是否带章节编号 \\
+ \texttt{bookmarks=}\TF\textsuperscript{\dag}
+                                   & \textit{true}   & 是否生成书签 \\
+ \texttt{bookmarksopen=}\TF        & \textit{false}  & 是否展开书签 \\
+ \texttt{bookmarksnumbered=}\TF    & \textit{false}  & 书签是否带章节编号 \\
  \hline
- \texttt{pdftitle=}\Arg{string}
-                              & 空               & 标题 \\
- \texttt{pdfauthor=}\Arg{string}
-                              & 空               & 作者 \\
- \texttt{pdfsubject=}\Arg{string}
-                              & 空               & 主题 \\
- \texttt{pdfkeywords=}\Arg{string}
-                              & 空               & 关键词 \\
+ \texttt{pdftitle=}\Arg{string}    & 空              & 标题 \\
+ \texttt{pdfauthor=}\Arg{string}   & 空              & 作者 \\
+ \texttt{pdfsubject=}\Arg{string}  & 空              & 主题 \\
+ \texttt{pdfkeywords=}\Arg{string} & 空              & 关键词 \\
  \texttt{pdfstartview=}\Arg{Fit\textnormal|FitH\textnormal|FitV}
-                              & \textit{Fit}     & 设置 PDF 页面以适合页面/适合宽度/适合高度等方式显示，默认为适合页面 \\
+                                   & \textit{Fit}    & 设置 PDF 页面以适合页面/适合宽度/适合高度等方式显示，默认为适合页面 \\
  \hline
 \end{tabular}
 \begin{quotation}
@@ -611,7 +612,9 @@ PDF 文档格式是现今最流行的电子文档格式，而电子文档最实�
 \cmd{nolinkurl}\marg{url}
 \end{command}
 
-\cmd{url} 和 \cmd{nolinkurl} 都生成可以点击的 URL，区别是前者有彩色，后者没有。在 \cmd{url} 命令中作为参数的 URL 里，
+\cmd{url} 和 \cmd{nolinkurl} 都像抄录命令 \cmd{verb} 一样输出一个 URL，区别是前者还为 URL 加上了超链接，后者没有。%
+\footnote{注意，一些 PDF 阅读器会为 URL 文本自动加上超链接，这些超链接不是 \LaTeX{} 生成的。}%
+在 \cmd{url} 等命令的参数 \Arg{url} 里，
 \textbf{可直接输入如 \texttt\%、\texttt\& 这样的特殊符号}。
 
 \cmdindex[hyperref]{href}
@@ -621,9 +624,9 @@ PDF 文档格式是现今最流行的电子文档格式，而电子文档最实�
 \end{command}
 
 \begin{example}
-\url{http://wikipedia.org} \\
-\nolinkurl{http://wikipedia.org} \\
-\href{http://wikipedia.org}{Wiki}
+\url{https://wikipedia.org} \\
+\nolinkurl{https://wikipedia.org} \\
+\href{https://wikipedia.org}{Wiki}
 \end{example}
 
 \cmdindex[hyperref]{hyperref}

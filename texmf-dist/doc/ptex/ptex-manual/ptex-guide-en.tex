@@ -53,17 +53,6 @@
 % foreign text -> italic
 \def\Foreign#1{\textit{#1}}
 
-% logos
-\def\eTeXpre{$\varepsilon$-}
-\def\eTeX{\leavevmode\hbox{\eTeXpre\TeX}}
-\def\epTeX{\leavevmode\hbox{\eTeXpre\pTeX}}
-\def\eupTeX{\leavevmode\hbox{\eTeXpre\upTeX}}
-\def\pTeX{p\kern-.10em\TeX}\def\upTeX{u\pTeX}
-\def\pLaTeX{p\LaTeX}\def\upLaTeX{u\pLaTeX}
-\def\pdfTeX{pdf\TeX}
-\def\OMEGA{$\Omega$}
-\def\TL{\TeX\ Live\xspace}
-
 \def\_{\leavevmode\vrule width .45em height -.2ex depth .3ex\relax}
 
 \frenchspacing
@@ -444,16 +433,16 @@ is to load a package \Pkg{mathfam256}\footnote{%
 
 %%% 拡張プリミティブ
 \subsection{Additional primitives and keywords}
-% -- as of r60088
+% -- as of r62095
 % tex -ini: 322 multiletter control sequences
-% ptex -ini: 373 multiletter control sequences (= 322 + p:47 + TL:3 + SyncTeX: 1)
-% uptex -ini: 380 multiletter control sequences (= 373 + up:7)
-% eptex -ini: 386 multiletter control sequences
-% eptex -ini -etex: 480 multiletter control sequences (= 373 + e:66 + ep:41)
-% euptex -ini: 393 multiletter control sequences
-% euptex -ini -etex: 488 multiletter control sequences (= 380 + e:66 + ep:41 + eup:1)
-% etex (pdftex) -ini: 476 multiletter control sequences
-% etex (pdftex) -ini -etex: 545 multiletter control sequences
+% ptex -ini: 374 multiletter control sequences (= 322 + p:48 + TL:3 + SyncTeX: 1)
+% uptex -ini: 381 multiletter control sequences (= 374 + up:7)
+% eptex -ini: 388 multiletter control sequences
+% eptex -ini -etex: 486 multiletter control sequences (= 374 + e:66 + ep:45 + TL:1)
+% euptex -ini: 395 multiletter control sequences
+% euptex -ini -etex: 494 multiletter control sequences (= 381 + e:66 + ep:46 + eup:1 + TL:1)
+% etex (pdftex) -ini: 477 multiletter control sequences
+% etex (pdftex) -ini -etex: 546 multiletter control sequences
 
 Here we provide only complete lists of additional primitives
 of \pTeX\ family in alphabetical order.
@@ -464,6 +453,7 @@ The features of each primitive can be found in Japanese edition.
 % [TODO] 追加されたバージョン情報は正しいか？
 
 \def\New#1{--- New primitive since #1}
+\def\NewKey#1{--- New keyword since #1}
 \def\NewMoved#1#2{--- Imported from #1, since #2}
 
 %%% pTeX のやつ
@@ -499,6 +489,7 @@ The features of each primitive can be found in Japanese edition.
  \csitem[\.{noautoxspacing}]
  \csitem[\.{postbreakpenalty}]
  \csitem[\.{prebreakpenalty}]
+ \csitem[\.{ptexlineendmode} \New{p4.0.0 (\TL2022)}]
  \csitem[\.{ptexminorversion} \New{p3.8.0 (\TL2018)}]
  \csitem[\.{ptexrevision} \New{p3.8.0 (\TL2018)}]
  \csitem[\.{ptexversion} \New{p3.8.0 (\TL2018)}]
@@ -538,6 +529,7 @@ The features of each primitive can be found in Japanese edition.
 
 %%% e-pTeX/e-upTeX の pdfTeX 由来
 %%% e-pTeX/e-upTeX の Omega 由来
+%%% e-pTeX/e-upTeX の XeTeX/LuaTeX 由来
 %%% その他の独自拡張
 \subsubsection{\epTeX\ additions (available in \epTeX, \eupTeX)}
 \begin{simplelist}
@@ -550,6 +542,7 @@ The features of each primitive can be found in Japanese edition.
  \csitem[\.{ifincsname} \New{190709 (\TL2020)}]
  \csitem[\.{ifpdfprimitive} \New{150805 (\TL2016)}]
  \csitem[\.{lastnodechar} \New{141108 (\TL2015)}]
+ \csitem[\.{lastnodefont} \New{220214 (\TL2022)}]
  \csitem[\.{lastnodesubtype} \New{180226 (\TL2018)}]
  \csitem[\.{odelcode}]
  \csitem[\.{odelimiter}]
@@ -579,9 +572,12 @@ The features of each primitive can be found in Japanese edition.
  \csitem[\.{pdfstrcmp}]
  \csitem[\.{pdfuniformdeviate} \New{161114 (\TL2017)}]
  \csitem[\.{readpapersizespecial} \New{180901 (\TL2019)}]
+ \csitem[\.{suppresslongerror} \New{211207 (\TL2022)}]
+ \csitem[\.{suppressmathparerror} \New{211207 (\TL2022)}]
+ \csitem[\.{suppressoutererror} \New{211207 (\TL2022)}]
  \csitem[\.{Uchar} \New{191112 (\TL2020)}]
  \csitem[\.{Ucharcat} \New{191112 (\TL2020)}]
- \csitem[\.{vadjust} \texttt{pre} \New{210701 (\TL2022)}]
+ \csitem[\.{vadjust} \texttt{pre} \NewKey{210701 (\TL2022)}]
  \csitem[\.{vfi}]
  \csitem[\texttt{fi}\index{fi=\texttt{fi}}]
 \end{simplelist}
@@ -606,6 +602,7 @@ Sync\TeX\ extension (available in \pTeX, \upTeX, \epTeX, \eupTeX):
 \begin{simplelist}
  \csitem[\.{partokencontext} \New{\TL2022}]
  \csitem[\.{partokenname} \New{\TL2022}]
+ \csitem[\.{showstream} \New{\TL2022}] % only e-(u)pTeX, not (u)pTeX
  \csitem[\.{tracingstacklevels} \New{\TL2021}]
 \end{simplelist}
 
@@ -1024,6 +1021,7 @@ corresponding to the whole valid Japanese character code range.\label{jfont}
 %%% 縦組は諦めよう
 
 % [TODO] どこに書くか困ったので最後に：内部コードのアレな話
+%%% 和文文字コードは連続でない
 \subsection{Internal kanji encodings}\label{kanji-internal}
 
 The <character code> is a union of the following two:
@@ -1051,6 +1049,8 @@ where
 \]
 Therefore, the overall range of <character code> is \emph{not} continuous.
 
+%%% 和文文字の内部コードとして有効（is_char_kanji が真）かどうかの判定
+%%% → ! Bad character code. エラーを出さないために使える
 To check whether an integer is a valid Japanese character code or not,
 you can use \.{iffontchar} with \epTeX~190709 or later (\TL2020).
 Suppose a count register |\mycount| stores an integer, you can do it as follows:
@@ -1063,6 +1063,24 @@ Here the primitive \.{jfont} is used merely as
 a representative non-empty\footnote{This assumption is always safe after
 one of the standard \pTeX\ formats (e.g. plain \pTeX, \pLaTeX) is loaded.}
 Japanese font containing all valid Japanese character code (see \ref{jfont}).
+
+%%% pTeX がサポートする文字集合は JIS X 0208 のみで，内部コードとして有効な範囲より狭い
+%%% → JIS X 0208 に含まれる文字を表す整数値の判定もできる
+Note that \pTeX\ (not including \upTeX\ with internal Unicode) does not
+support typesetting characters outside JIS~X~0208,
+which is a subset of accepted range of <character code> described above.
+To check if an integer is in the range of JIS~X~0208,
+you can use \.{toucs} with \pTeX~p3.10.0 or later (\TL2022):
+\begin{verbatim}
+  \ifnum\toucs\mycount>0
+    % \mycount is in the range of JIS X 0208
+  \fi
+\end{verbatim}
+The primitive \.{toucs} converts an integer value
+from an internal \Foreign{kanji} code to a Unicode.
+This conversion is based on JIS-Unicode mapping table,\footnote{Defined in
+\code{jisx0208.h} of \code{ptexenc} library.} and returns $-1$
+if no mapping is available for the input integer.
 
 
 \newpage

@@ -155,7 +155,31 @@ This package is distributed under the BSD 2-Clause License. See [LICENSE](LICENS
 * 2021-08-12
     - Removed the direct dependence on `etoolbox` package.
     - Fixed a bug.
-
+* 2021-10-09
+    - Fixed bugs.
+* 2021-11-05
+    - `paper=b*` is regarded as a ISO series.
+    - Removed many codes relating with LaTeX hooks mechanism (because it seems not stable.)
+    - Removed `\RequirePackage{ifthen}`.
+    - Removed `\kcatcode`settings with upLaTeX.
+* 2022-04-05
+    - Added `warichu_opening` and `warichu_closing` to `\jlreqsetup`.
+    - Change a little bit penalties around block heading.
+    - Fixed a bug: `\selectfont` after `\DeclareFontShape` raised an error.
+    - Fixed a bug: `use_reverse_pagination` did not work.
+    - Fixed a bug: A second running head disappeared sometimes.
+    - Rewrote `\DeclarePageStyle`.
+    - Deleted `\@makefntext`, define `\@makefntext` directly.
+    - Fixed other bugs.
+* 2022-04-11
+    - Fixed a bug.
+* 2022-07-13
+    - Fixed a bug: The position of running heads were not correct.
+* 2022-11-28
+    - Fixed a bug: did not register to running head when `\SetBlockHeadingSpaces` is used.
+    - Fixed a bug: wrong papersize for ISO C4.
+    - Added a package `jlreq-complements`
+    - Fixed some other bugs and adjust with some other packages.
 
 --------------
 Noriyuki Abe

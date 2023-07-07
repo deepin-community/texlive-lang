@@ -1,5 +1,3 @@
-%\CheckSum{3732}
-%
 %\iffalse
 %    Tell the LaTeX system who we are and write an entry on the
 %    transcript.
@@ -13,12 +11,12 @@
 %<frenchb>\ProvidesLanguage{frenchb}
 %<lua>--[[
 %<lua>   File `frenchb.lua’ generated from frenchb.dtx
-         [2021/07/20 v3.5m French support from the babel system]
+         [2023/01/02 v3.5p French support from the babel system]
 %<*internal>
 \iffalse
 %</internal>
 %<*lua>
-   Copyright © 2014-2021 Daniel Flipo
+   Copyright © 2014-2022 Daniel Flipo
    <daniel (dot) flipo (at) free (dot) fr>
    License LPPL: see french.ldf.
 --]]
@@ -32,7 +30,7 @@
 %<*dtx|french>
 %%
 %%  Babel package for LaTeX version 2e
-%%  Copyright © 1996-2021
+%%  Copyright © 1996-2022
 %%            by Daniel Flipo <daniel (dot) flipo (at) free (dot) fr>
 %%
 %</dtx|french>
@@ -79,12 +77,12 @@
 \newcommand*\env[1]{\texttt{#1}}
 \newcommand*\exe[1]{\texttt{#1}}
 \newcommand*\fbo[1]{\texttt{\ColorArg #1}}
-\newcommand*\fbsetup[1]{\cs{frenchsetup\{\fbo{#1}\}}}
+\newcommand*\fbsetup[1]{\cs{frenchsetup}\{\fbo{#1}\}}
 \renewcommand\meta[1]{\textit{<#1>}}  % no math mode (see doc.sty)
 \let\Module\meta                      % no math mode (see doc.sty)
 \renewcommand*\descriptionlabel[1]{%
    \hspace{\labelsep}\normalfont \fbo{#1}}
-\let\up\textsuperscript
+\NewCommandCopy{\up}{\textsuperscript}
 \newcommand*{\FRguillspace}{\penalty 10000
                             \hskip.8\fontdimen2\font
                               plus.3\fontdimen3\font
@@ -228,44 +226,36 @@
 %    Some commands are provided by \frenchb{} to make typesetting
 %    easier:
 %    \begin{enumerate}
-%    \item French quotation marks can be entered using the commands
-%          |\og| and |\fg| which work in LaTeX2e and PlainTeX,
-%          their appearance depending on what is available to draw
-%          them; even if you use LaTeX2e \emph{and} |T1|-encoding,
-%          you should refrain from entering them as
-%          |<<~French quotation~>>|: |\og| and |\fg| provide
-%          better horizontal spacing (controlled by |\FBguillspace|).
-%          If French quote characters are available on your keyboard,
-%          you can use them, to get proper spacing in LaTeX2e see
-%          option \fbo{og=«, fg=»} p.~\pageref{option-og-fg}.
+%    \item French quotation marks can be entered using the command
+%      |\frquote{}|: |\frquote{some text}| will output
+%      «~some text~».  Former commands |\og| and |\fg| are kept
+%      for backward compatibility: |\og some text\fg{}| is an
+%      alternative to |\frquote{some text}|.\hlabel{frquote}
 %
-%          |\og| and |\fg| can be used outside French, they typeset
-%          then English quotes `` and ’’.
+%      If French quote characters are available on your keyboard,
+%      you can use them, to get proper spacing in LaTeX2e see
+%      option \fbo{og=«, fg=»} p.~\pageref{option-og-fg}.
 %
-%          A new command |\frquote{}| has been added in version~3.1 to
-%          enter French quotations.  |\frquote{|\textit{texte}|}| is
-%          equivalent to |\og| \textit{texte} |\fg{}| for short
-%          quotations.\hlabel{frquote}
-%          For quotations spreading over more than one paragraph,
-%          |\frquote| will add at the beginning of every paragraph of
-%          the quotation either an opening French guillemet («), or
-%          a closing one (») or nothing depending on option
-%          \fbo{EveryParGuill=open} or \fbo{=close} or \fbo{=none},
-%          see p.~\pageref{everyparguill}.
-%          Command |\NoEveryParQuote| is provided to locally suppress
-%          unwanted guillemets (typically when lists are embedded in
-%          |\frquote{}|), it is meant to be used inside an environment
-%          or a group.
+%      For quotations spreading over more than one paragraph,
+%      |\frquote| will add at the beginning of every paragraph of
+%      the quotation either an opening French guillemet («), or
+%      a closing one (») or nothing depending on option
+%      \fbo{EveryParGuill=open} or \fbo{=close} or \fbo{=none},
+%      see p.~\pageref{everyparguill}.
+%      Command |\NoEveryParQuote| is provided to locally suppress
+%      unwanted guillemets (typically when lists are embedded in
+%      |\frquote{}|), it is meant to be used inside an environment
+%      or a group.
 %
-%          |\frquote| is recommended to enter embedded quotations ``à la
-%          française’’, several variants are provided through options.
-%          \begin{itemize}
-%          \item with all engines: the inner quotation
-%            is surrounded by double quotes (``\textit{texte}’’)
-%            unless option \fbo{InnerGuillSingle=true}, then
-%            a) the inner quotation is printed as
+%      |\frquote| is recommended to enter embedded quotations ``à la
+%      française’’, several variants are provided through options.
+%      \begin{itemize}
+%        \item with all engines: the inner quotation
+%          is surrounded by double quotes (``\textit{texte}’’)
+%          unless option \fbo{InnerGuillSingle=true}, then
+%          a) the inner quotation is printed as
 %            \guilsinglleft\FRguillspace\textit{texte}\FRguillspace
-%            \guilsinglright{} and b) if the inner quotation
+%           \guilsinglright{} and b) if the inner quotation
 %            spreads over more than one paragraph, every paragraph
 %            included in the inner quotation starts with
 %            a \guilsinglleft{} or a \guilsinglright{} or nothing,
@@ -280,12 +270,12 @@
 %            option \fbo{InnerGuillSingle};
 %            the default is \fbo{EveryLineGuill=none} so that
 %            |\frquote{}| behaves as with non-LuaTeX engines.
-%          \end{itemize}
-%          A starred variant |\frquote*| is meant for inner quotations
-%          which end together with the outer one: using |\frquote*| for
-%          the inner quotation will print only one closing quote
-%          character (the outer one) as recommended by the French
-%          `Imprimerie Nationale’.
+%      \end{itemize}
+%      A starred variant |\frquote*| is meant for inner quotations
+%      which end together with the outer one: using |\frquote*| for
+%      the inner quotation will print only one closing quote
+%      character (the outer one) as recommended by the French
+%      `Imprimerie Nationale’.
 %
 %    \item |\frenchdate|\marg{year}\marg{month}\marg{day} helps
 %          typesetting dates in French: |\frenchdate{2001}{01}{01}|
@@ -300,12 +290,12 @@
 %          All these commands take advantage of real superscript
 %          letters when they are available in the current font.
 %
-%    \item Family names should be typeset in small capitals and never
-%          be hyphenated, the macro |\bsc| (boxed small caps) does
-%          this, e.g., |L.~\bsc{Lamport}| will print the same as
-%          |L.~\mbox{\textsc{Lamport}}|.  Note that composed names
-%          (such as Dupont-Durant) may now be hyphenated on explicit
-%          hyphens, this differs from \frenchb~v.~1.x.
+%    \item Command |\bname{}| (boxed name) is provided to typeset
+%          family names: its argument will not be hyphenated except on
+%          explicit hyphens.  |\bsc{}| (boxed small caps) is a variant
+%          that prints its argument in small capitals, it is meant for
+%          bibliographies, signatures, etc.
+%          Usage: |Albert~\bsc{Camus}|.
 %
 %    \item Commands |\primo|, |\secundo|, |\tertio| and |\quarto|
 %          print 1\up{o}, 2\up{o}, 3\up{o}, 4\up{o}.
@@ -328,8 +318,8 @@
 %          ordinary character \emph{when the current language is French}
 %          (no space added);
 %          as a counterpart, if |\DecimalMathComma| is active, an
-%          explicit space has to be added in lists and intervals:
-%          |$[0,\ 1]$|, |$(x,\ y)$|.  |\StandardMathComma| switches
+%          explicit thin space has to be added in lists and intervals:
+%          |$(x,\,y)$|, |$[0,\,1]$|.  |\StandardMathComma| switches
 %          back to the standard behaviour of the comma in French.
 %
 %          The \pkg{icomma} package is an alternative workaround.
@@ -365,7 +355,7 @@
 %  \label{sssec-frenchbsetup}
 %
 %    \vspace{.5\baselineskip}
-%    |\frenchsetup{}| and |\frenchbsetup{}| are synonymous;
+%    |\frenchbsetup{}| and |\frenchsetup{}| are synonymous;
 %    the latter should be preferred as the language name for
 %    French in \babel{} is no longer |frenchb| but |french|.
 %
@@ -591,16 +581,19 @@
 %
 %    \item [og=«, fg=»]; when guillemets characters are available on
 %      the keyboard (through a compose key for instance), it is nice
-%      to use them instead of typing |\og| and |\fg|.  This option
+%      to use them instead of typing |\frquote{}|.  This option
 %      tells \frenchb{} which characters are opening and closing
 %      French guillemets (they depend on the input encoding), then
 %      you can type either \hlabel{option-og-fg}
-%      \texttt{« guillemets »} or \texttt{«guillemets»} (with or
-%      without spaces) to get properly typeset French quotes.
-%      This option works with LuaLaTeX and XeLaTeX; with pdfLaTeX it
-%      requires \file{inputenc} to be loaded with a proper encoding:
-%      8-bits encoding (latin1, latin9, ansinew, applemac,…) or
-%      multi-byte encoding (utf8, utf8x).
+%      \texttt{« guillemets »} or \texttt{«guillemets»}%
+%      \footnote{Or even
+%         \texttt{«\textasciitilde{}guillemets\textasciitilde{}»},
+%         but \emph{only} with LuaLaTeX.}
+%      (with or without spaces) to get properly typeset French quotes.
+%      This option works with LuaLaTeX, XeLaTeX and with pdfLaTeX
+%      (default encoding: utf8); with pdflatex other 8-bits encodings
+%      (latin1, latin9, ansinew, applemac,…) are also supported
+%      when properly declared with \file{inputenc}.
 %
 %    \item [INGuillSpace=true (false)] resets the dimensions of spaces
 %      after opening French quotes and before closing French quotes to
@@ -785,6 +778,7 @@
 %    this kind of mismatch.
 %    \end{itemize}
 %
+%  \newpage
 %  \subsection{Changes}
 %  \label{ssec-changes}
 %
@@ -830,6 +824,9 @@
 %      in \pkg{hyperref}’s bookmarks are now defined using
 %      |\textorpdfstring{}{}|.
 %    \end{itemize}
+%
+%    Version 3.5n introduces a new command |\bname{}| (an alternative to
+%    |\bsc{}|).
 %
 %    \subsubsection*{What’s new in version 3.4?}
 %
@@ -923,9 +920,8 @@
 %    The best way to go is to upgrade to TL2016 or equivalent asap.
 %    Xe(La)TeX and pdf(La)TeX users can safely use \frenchb{} v.~3.2b
 %    and later on older installations too.
-%    \enlargethispage*{.5\baselineskip}
 %
-%    Tne internals of commands |\NoAutoSpacing|, |\ttfamilyFB|,
+%    The internals of commands |\NoAutoSpacing|, |\ttfamilyFB|,
 %    |\rmfamilyFB| and |\sffamilyFB| have been completely redesigned
 %    in version~3.2c, they behave now consistently with all engines.
 %
@@ -1462,8 +1458,8 @@
     \ifFB@luatex@punct
       \edef\bbl@tempa{\detokenize\expandafter{\languagename}}%
       \edef\bbl@tempb{\detokenize{french}}%
-      \ifx\bbl@tempa\bbl@tempb \FB@dialect=0 \relax
-      \else                    \FB@dialect=1 \relax
+      \ifx\bbl@tempa\bbl@tempb \FB@dialect=\z@
+      \else                    \FB@dialect=\@ne
       \fi
 %    \end{macrocode}
 %    When first entering French, we must set the LuaTeX
@@ -1531,18 +1527,13 @@
 %    |\sffamilyFB|. These four commands will now behave the same with
 %    any engine (up to version 3.2b, results were engine dependent).
 %    \begin{macrocode}
-\newcommand*{\FB@spacing@on}{%
-  \ifFB@luatex@punct
-    \FB@spacing=1 \relax
-  \else
-    \FB@spacingtrue
-  \fi}
-\newcommand*{\FB@spacing@off}{%
-  \ifFB@luatex@punct
-    \FB@spacing=0 \relax
-  \else
-    \FB@spacingfalse
-  \fi}
+\ifFB@luatex@punct
+  \newcommand*{\FB@spacing@on}{\FB@spacing=\@ne}
+  \newcommand*{\FB@spacing@off}{\FB@spacing=\z@}
+\else
+  \newcommand*{\FB@spacing@on}{\FB@spacingtrue}
+  \newcommand*{\FB@spacing@off}{\FB@spacingfalse}
+\fi
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1611,11 +1602,11 @@
 %    which parts of the glue table (|.fr| or |.ac|) are taken into
 %    account.
 %    \begin{macrocode}
-  \newattribute\FB@spacing      \FB@spacing=1 \relax
-  \newattribute\FB@addDPspace   \FB@addDPspace=1 \relax
-  \newattribute\FB@addGUILspace \FB@addGUILspace=0 \relax
-  \newattribute\FB@ucsNBSP      \FB@ucsNBSP=0 \relax
-  \newattribute\FB@dialect      \FB@dialect=0 \relax
+  \newattribute\FB@spacing      \FB@spacing=\@ne
+  \newattribute\FB@addDPspace   \FB@addDPspace=\@ne
+  \newattribute\FB@addGUILspace \FB@addGUILspace=\z@
+  \newattribute\FB@ucsNBSP      \FB@ucsNBSP=\z@
+  \newattribute\FB@dialect      \FB@dialect=\z@
   \ifLaTeXe
     \PackageInfo{french.ldf}{No need for active punctuation
                  characters\MessageBreak with this version
@@ -1679,7 +1670,7 @@
 %</french>
 %    \end{macrocode}
 %
-%    \begin{macro}{frenchb.lua}
+%    \begin{environment}{frenchb.lua}
 %    This is \file{frenchb.lua}. It holds Lua code to deal with  `high
 %    punctuation’ and quotes.  This code is based on suggestions from
 %    Paul Isambert.
@@ -2116,8 +2107,11 @@ local function french_punctuation (head)
 %    (i.e. in « \cs{texttt}\{a\} »).}
 %
 % \changes{v3.1g}{2015/06/26}{Flag addgl set to false for
-%   `«’ at the end of an \cs{hbox} or a paragraph or when followed by
-%   a null glue (i.e. springs).}
+%    `«’ at the end of an \cs{hbox} or a paragraph or when followed by
+%    a null glue (i.e. springs).}
+%
+% \changes{v3.5o}{2022/10/11}{Opening guill.: look ahead when next is
+%    a penalty (nobreak space).}
 %
 %    \begin{macrocode}
           elseif SIG then
@@ -2126,13 +2120,30 @@ local function french_punctuation (head)
              if next then
                 next_id = next.id
                 next_subtype = next.subtype
-                if next_id == GLYPH then
-                   next_char = next.char
 %    \end{macrocode}
-%    A |kern0| might hide a |glue|, so look ahead if |next| is a kern
-%    (this occurs with |« \texttt{a} »|):
+%    In case of coding |«~| remove the penalty and the glue:
 %    \begin{macrocode}
-                elseif next_id == KERN then
+                if next_id == PENALTY then
+                   nextnext = next.next
+                   if nextnext and nextnext.id == GLUE then
+                      head = remove_node(head,nextnext,true)
+                      head = remove_node(head,next,true)
+                      next = item.next
+                      if next then
+                         next_id = next.id
+                         next_subtype = next.subtype
+                         if next_id == GLYPH then
+                            next_char = next.char
+                         end
+                     end
+                   end
+                end
+%    \end{macrocode}
+%    A |kern0| might hide a |penalty| and/or |glue|, so look ahead if
+%    |next| is a kern (this occurs with |« \texttt{a} »| and
+%    |«~\texttt{a}~»|):
+%    \begin{macrocode}
+                if next_id == KERN then
                    kern_wd = next.kern
                    if kern_wd == 0 then
                       nextnext = next.next
@@ -2140,17 +2151,32 @@ local function french_punctuation (head)
                          next = nextnext
                          next_id = nextnext.id
                          next_subtype = nextnext.subtype
-                         if next_id == GLYPH then
-                            next_char = nextnext.char
+                         if next_id == PENALTY then
+                            nextnext = next.next
+                            if nextnext and nextnext.id == GLUE then
+                               head = remove_node(head,next,true)
+                               head = remove_node(head,nextnext,true)
+                               next = item.next
+                               if next then
+                                  next_id = next.id
+                                  next_subtype = next.subtype
+                               end
+                            end
                          end
                       end
                    end
+                end
+                if next_id == GLYPH then
+                   next_char = next.char
                 end
              end
              local is_glue = next_id == GLUE
              if is_glue then
                 glue_wd = next.width
              end
+%    \end{macrocode}
+%    The |addgl| flag only depends on |next_char| and |is_glue|:
+%    \begin{macrocode}
              local addgl = (next_char and not FB_guil_null[next_char])
                            or (next and not next_char)
 %    \end{macrocode}
@@ -2193,41 +2219,7 @@ end
 return french_punctuation
 %</lua>
 %    \end{macrocode}
-%    \end{macro}
-%
-%  \begin{macro}{\FB@luatex@punct@french}
-%    As a language tag is part of glyph nodes in LuaTeX, no more
-%    switching has to be done in |\extrasfrench|, setting the dialect
-%    attribute has already be done (see above, p.~\pageref{extrapunct}).
-%    We will just redefine |\shorthandoff| and |\shorthandon| in French
-%    to issue a warning reminding the user that active characters are no
-%    longer used in French with recent LuaTeX engines.
-%
-% \changes{v3.1l}{2016/02/07}{Use \cs{babel@save} to save and restore
-%    \cs{shorthandon} and \cs{shorthandoff}.}
-%
-%    \begin{macrocode}
-%<*french>
-\ifFB@luatex@punct
-  \newcommand*{\FB@luatex@punct@french}{%
-     \babel@save\shorthandon
-     \babel@save\shorthandoff
-     \def\shorthandoff##1{%
-        \ifx\PackageWarning\@undefined
-          \fb@warning{\noexpand\shorthandoff{;:!?} is helpless with
-           LuaTeX,\\ use \noexpand\NoAutoSpacing
-           *inside a group* instead.}%
-        \else
-          \PackageWarning{french.ldf}{\protect\shorthandoff{;:!?}
-            is helpless with LuaTeX,\MessageBreak
-            use \protect\NoAutoSpacing \space *inside a group*
-            instead;\MessageBreak reported}%
-        \fi}%
-     \def\shorthandon##1{}%
-  }
-  \addto\extrasfrench{\FB@luatex@punct@french}
-%    \end{macrocode}
-%  \end{macro}
+%    \end{environment}
 %
 % \changes{v3.0b}{2014/02/13}{frenchb.lua was not found by
 %    Lua function dofile (not kpathsea aware).
@@ -2237,12 +2229,21 @@ return french_punctuation
 %    inserted at the end of the `kerning’ callback (no priority)
 %    instead of `hpack\_filter’ and `pre\_linebreak\_filter’.}
 %
+% \changes{v3.5o}{2022/11/03}{\cs{shorthandon} and \cs{shorthandoff}
+%    are no longer redefined in LuaTeX (it broke \cs{shorthandoff*}).}
+%
+%    As a language tag is part of glyph nodes in LuaTeX, no more
+%    switching has to be done in |\extrasfrench|, setting the dialect
+%    attribute has already be done (see above, p.~\pageref{extrapunct}).
+%
 %    The next  definition will be used to activate Lua punctuation: it
 %    loads \file{frenchb.lua} and adds function |french_punctuation|
 %    to the |kerning| callback; "adding" anything actually disables
 %    the built-in kerning for Type1 fonts (which is now added to
 %    |french_punctuation|).
 %    \begin{macrocode}
+%<*french>
+\ifFB@luatex@punct
   \def\activate@luatexpunct{%
     \directlua{%
       FR_fr = \the\l@french ; FR_ca = \the\l@acadian ;
@@ -2379,8 +2380,7 @@ return french_punctuation
 %  \begin{macro}{\FB@xetex@punct@french}
 %    The following command will be executed when entering French, it
 %    first saves the values to be modified, then fits them to our
-%    needs.  It also redefines |\shorthandoff| and |\shorthandon|
-%    (locally) to avoid error messages with XeTeX-based engines.
+%    needs.
 %
 % \changes{v2.5g}{2011/12/31}{XeTeXcharclass(es) for French quotes will
 %    be set to \cs{FB@guilo} and \cs{FB@guilf} by options
@@ -2406,25 +2406,14 @@ return french_punctuation
 % \changes{v3.2c}{2016/05/14}{Switch \cs{ifFB@spacing} added to all
 %    \cs{XeTeXinterchartoks} commands.}
 %
+%% \changes{v3.5o}{2022/11/03}{\cs{shorthandon} and \cs{shorthandoff}
+%    are no longer redefined (it broke \cs{shorthandoff*}).}
+%
 %    \begin{macrocode}
    \newcommand*{\FB@xetex@punct@french}{%
      \babel@savevariable{\XeTeXinterchartokenstate}%
-     \babel@save{\shorthandon}%
-     \babel@save{\shorthandoff}%
      \bbl@for\FB@char\FB@charlist
           {\FBsavevariable@loop{\XeTeXcharclass}{\FB@char}}%
-     \def\shorthandoff##1{%
-       \ifx\PackageWarning\@undefined
-         \fb@warning{\noexpand\shorthandoff{;:!?} is helpless with
-           XeTeX,\\ use \noexpand\NoAutoSpacing
-           *inside a group* instead.}%
-       \else
-         \PackageWarning{french.ldf}{\protect\shorthandoff{;:!?}
-           is helpless with XeTeX,\MessageBreak
-           use \protect\NoAutoSpacing\space *inside a group*
-           instead;\MessageBreak reported}%
-       \fi}%
-      \def\shorthandon##1{}%
 %    \end{macrocode}
 %    Let’s now set the classes and interactions between classes.
 %    When false, the flag |\ifFB@spacing| switches off any interaction
@@ -2432,7 +2421,7 @@ return french_punctuation
 %    |\NoAutoSpacing|; this flag is also set to false when the current
 %    font is a typewriter font).
 %    \begin{macrocode}
-     \XeTeXinterchartokenstate=1
+     \XeTeXinterchartokenstate=\@ne
      \XeTeXcharclass `\: = \FB@punctthick
      \XeTeXinterchartoks \z@ \FB@punctthick = {%
            \ifFB@spacing\ifhmode\FDP@colonspace\fi\fi}%
@@ -2667,11 +2656,11 @@ return french_punctuation
 %    Set the default now for Plain (done later for LaTeX).
 %    \begin{macrocode}
 \def\autospace@beforeFDP{%
-  \ifFB@luatex@punct\FB@addDPspace=1 \fi
+  \ifFB@luatex@punct \FB@addDPspace=\@ne \fi
   \def\FDP@thinspace{\penalty\@M\FBthinspace}%
   \def\FDP@colonspace{\penalty\@M\FBcolonspace}}
 \def\noautospace@beforeFDP{%
-  \ifFB@luatex@punct\FB@addDPspace=0 \fi
+  \ifFB@luatex@punct \FB@addDPspace=\z@ \fi
   \let\FDP@thinspace\@empty
   \let\FDP@colonspace\@empty}
 \ifLaTeXe
@@ -2849,11 +2838,11 @@ return french_punctuation
 \newif\ifFBucsNBSP
 \ifFB@luatex@punct
   \DeclareRobustCommand*{\@FB@og}{\leavevmode
-          \bgroup\FB@spacing=0 \guillemotleft\egroup
+          \bgroup\FB@spacing=\z@ \guillemotleft\egroup
           \ifFBucsNBSP\FBgspchar\else\FB@guillspace\fi}
   \DeclareRobustCommand*{\@FB@fg}{\ifdim\lastskip>\z@\unskip\fi
           \ifFBucsNBSP\FBgspchar\else\FB@guillspace\fi
-          \bgroup\FB@spacing=0 \guillemotright\egroup}
+          \bgroup\FB@spacing=\z@ \guillemotright\egroup}
 \fi
 %    \end{macrocode}
 %    With XeTeX, |\ifFB@spacing| is set to |false| locally for the
@@ -3057,17 +3046,20 @@ return french_punctuation
 % \changes{v3.5e}{2019/03/23}{reset \cs{FB@addGUILspace} attribute
 %    inside \cs{localleftbox} (LuaTeX).}
 %
+% \changes{v3.5p}{2022/12/04}{\cs{FBeveryline@quote}: no need for
+%    a penalty inside a \cs{localleftbox}.}
+%
 %    \begin{macrocode}
     \ifx\FBeverylineguill\FBguillopen
-      \def\FBeveryline@quote{\FB@addGUILspace=0 \guillemotleft
-                             \FB@guillspace}%
+      \def\FBeveryline@quote{\FB@addGUILspace=\z@
+                             \guillemotleft\FBguillspace}%
       \localleftbox{\FBeveryline@quote}%
       \let\FBeverypar@quote\relax
       \@ogi #1\ifFBcloseguill\@fgi\fi
     \else
       \ifx\FBeverylineguill\FBguillclose
-        \def\FBeveryline@quote{\FB@addGUILspace=0 \guillemotright
-                               \FB@guillspace}%
+        \def\FBeveryline@quote{\FB@addGUILspace=\z@
+                               \guillemotright\FBguillspace}%
         \localleftbox{\FBeveryline@quote}%
         \let\FBeverypar@quote\relax
         \@ogi #1\ifFBcloseguill\@fgi\fi
@@ -3454,15 +3446,14 @@ return french_punctuation
 %  \end{macro}
 %  \end{macro}
 %
+%  \begin{macro}{\bname}
 %  \begin{macro}{\bsc}
-%    As family names should be written in small capitals and never be
-%    hyphenated, we provide a command (its name comes from Boxed Small
-%    Caps) to input them easily.  Note that this command has changed
-%    with version~2 of \frenchb: a |\kern0pt| is used instead of |\hbox|
-%    because |\hbox| would break microtype’s font expansion; as a
-%    (positive?) side effect, composed names (such as Dupont-Durand)
-%    can now be hyphenated on explicit hyphens.
-%    Usage: |Jean~\bsc{Duchemin}|.
+%    These commands are meant to easily enter family names (in small
+%    capitals for the latter) while avoidind hyphenation.
+%    A |\kern0pt| is used instead of |\mbox| because |\mbox| would break
+%    microtype’s font expansion; as a positive side effect, composed
+%    names (such as Dupont-Durand) can now be hyphenated on explicit
+%    hyphens.
 %
 % \changes{v2.0}{2006/11/06}{\cs{hbox} dropped, replaced by
 %    \cs{kern0pt}.}
@@ -3470,16 +3461,23 @@ return french_punctuation
 % \changes{v3.5k}{2020/07/18}{\cs{bsc} now relies on
 %    \cs{texorpdfstring} to be safe in bookmarks.}
 %
+% \changes{v3.5n}{2022/04/01}{Added command \cs{bname} (no small caps).}
+%
 %    \begin{macrocode}
 \ifLaTeXe
+  \DeclareRobustCommand*{\bname}[1]{%
+    \texorpdfstring{\leavevmode\begingroup\kern0pt #1\endgroup}{#1}%
+  }
   \DeclareRobustCommand*{\bsc}[1]{%
     \texorpdfstring{\leavevmode\begingroup\kern0pt \scshape #1\endgroup}%
                    {\textsc{#1}}%
   }
 \else
-  \newcommand*{\bsc}[1]{\leavevmode\begingroup\kern0pt #1\endgroup}
+  \newcommand*{\bname}[1]{\leavevmode\begingroup\kern0pt #1\endgroup}
+  \let\bsc\bname
 \fi
 %    \end{macrocode}
+%  \end{macro}
 %  \end{macro}
 %
 %    Some definitions for special characters.  We won’t define |\tilde|
@@ -3590,6 +3588,10 @@ return french_punctuation
 % \changes{v3.5f}{2019/09/07}{Fixed bug with the acadian language.
 %    Warning added if used with the icomma package.}
 %
+% \changes{v3.5p}{2023/01/02}{\cs{DecimalMathComma} can again be
+%    used in the preamble for a global action.  It now works as
+%    expected inside a group.}
+%
 %    Unfortunately, |\newcount| inside |\if| breaks Plain formats.
 %    \begin{macrocode}
 \newif\ifFB@icomma
@@ -3620,19 +3622,30 @@ return french_punctuation
   \newcommand*{\dec@math@comma}{\mathcode`\,=\dec@mcc}
   \newcommand*{\std@math@comma}{\mathcode`\,=\std@mcc}
 \fi
+\let\dec@m@c\relax
 %    \end{macrocode}
-%    |\DecimalMathComma| operates in French or Acadian independently.
+%    If |\DecimalMathComma| is issued in the document body
+%    (when the current language is French or Acadian) its effect will
+%    survive to a language switch, unless issued inside a group
+%    (see |\dec@m@c|’s expansion).
+%    The \pkg{icomma} inhibits |\DecimalMathComma|.
 %    \begin{macrocode}
+\newif\if@FBpreamble \ifLaTeXe \@FBpreambletrue \fi
+\newif\if@preamble@DecimalMathComma
 \newcommand*{\DecimalMathComma}{%
-  \ifFB@icomma
-    \PackageWarning{french.ldf}{%
-      icomma package loaded, \protect\DecimalMathComma\MessageBreak
-      does nothing.  Reported}%
+  \if@FBpreamble \@preamble@DecimalMathCommatrue
   \else
-    \ifFBfrench
-      \dec@math@comma
-      \expandafter\addto\csname extras\languagename\endcsname
-        {\dec@math@comma}%
+    \ifFB@icomma
+      \PackageWarning{french.ldf}{%
+        icomma package loaded, \protect\DecimalMathComma\MessageBreak
+        does nothing.  Reported}%
+    \else
+      \ifFBfrench
+        \dec@math@comma
+        \let\dec@m@c\dec@math@comma
+        \expandafter\addto\csname extras\languagename\endcsname
+          {\dec@m@c}%
+      \fi
     \fi
   \fi
 }
@@ -3642,19 +3655,45 @@ return french_punctuation
       icomma package loaded, \protect\StandardMathComma\MessageBreak
       does nothing.  Reported}%
   \else
-    \std@math@comma
-    \expandafter\addto\csname extras\languagename\endcsname
-      {\std@math@comma}%
+    \ifFBfrench
+      \std@math@comma
+      \let\dec@m@c\relax
+    \fi
   \fi
 }
+%    \end{macrocode}
+%    Ii issued in the preamble, |\DecimalMathComma| works globally on
+%    all parts of the document that are typeset in a French dialect.
+%    Can be canceled anytime by |\StandardMathComma|.
+%    \begin{macrocode}
 \ifLaTeXe
-  \AtBeginDocument{\@ifpackageloaded{icomma}%
-                      {\FB@icommatrue}%
-                      {\addto\noextrasfrench{\std@math@comma}%
-                       \ifdefined\noextrasacadian
-                         \addto\noextrasacadian{\std@math@comma}%
-                       \fi
-                      }%
+  \AtBeginDocument{%
+    \@FBpreamblefalse
+    \@ifpackageloaded{icomma}%
+       {\FB@icommatrue
+        \if@preamble@DecimalMathComma
+          \PackageWarning{french.ldf}{%
+            icomma package loaded, \protect\DecimalMathComma%
+            \MessageBreak does nothing.  Reported}%
+        \fi
+       }%
+       {\if@preamble@DecimalMathComma
+          \ifFB@mainlanguage@FR \dec@math@comma \fi
+          \let\dec@m@c\dec@math@comma
+          \addto\extrasfrench{\dec@m@c}%
+          \ifdefined\extrasacadian
+            \addto\extrasacadian{\dec@m@c}%
+          \fi
+        \fi
+%    \end{macrocode}
+%    The comma is reset to type |\mathpunct| when leaving French
+%    dialects (only if the icomma package is not loaded).
+%    \begin{macrocode}
+        \addto\noextrasfrench{\std@math@comma}%
+        \ifdefined\noextrasacadian
+           \addto\noextrasacadian{\std@math@comma}%
+        \fi
+       }%
   }
 \else
   \addto\noextrasfrench{\std@math@comma}
@@ -4429,6 +4468,9 @@ return french_punctuation
 %    section~\ref{ssec-loading-order}; a light customisation is
 %    compatible with the \pkg{beamerarticle} package.
 %
+% \changes{v3.5n}{2022/04/18}{\cs{FBGlobalLayoutFrench} no longer set to
+%    false when French is not the main language.}
+%
 %    \begin{macrocode}
 \def\FB@french{french}
 \def\FB@acadian{acadian}
@@ -4461,8 +4503,6 @@ return french_punctuation
     \FBFrenchFootnotestrue
     \FBAutoSpaceFootnotestrue
     \FBCustomiseFigTabCaptionstrue
-  \else
-    \FBGlobalLayoutFrenchfalse
   \fi
 %    \end{macrocode}
 %    \frenchb{} being an option of \babel, it cannot load a package
@@ -4482,7 +4522,7 @@ return french_punctuation
              \csname FBStandardLayout#1\endcsname
            \else
              \PackageWarning{french.ldf}%
-               {Option `StandardlLayout' skipped:\MessageBreak
+               {Option `StandardLayout' skipped:\MessageBreak
                 French is *not* babel's last option.\MessageBreak
                 Reported}%
            \fi
@@ -4494,7 +4534,6 @@ return french_punctuation
              \FBIndentFirstfalse
              \FBFrenchFootnotesfalse
              \FBAutoSpaceFootnotesfalse
-             \FBGlobalLayoutFrenchfalse
            \else
              \FBStandardListSpacingfalse
              \FBStandardItemizeEnvfalse
@@ -4517,7 +4556,7 @@ return french_punctuation
 %    If this key is set to \fbo{true} when French is the main language,
 %    nothing to do: all flags keep their default value.
 %    If this key is set to \fbo{false}, nothing to do either:
-%    |\babel@save| will do the job.
+%    |\babel@save| will do the job at every language’s switch.
 %    \begin{macrocode}
   \define@key{FB}{ReduceListSpacing}[true]%
           {\csname FBReduceListSpacing#1\endcsname
@@ -4678,7 +4717,7 @@ return french_punctuation
   \define@key{FB}{UnicodeNoBreakSpaces}[true]%
           {\ifFB@luatex@punct
              \csname FBucsNBSP#1\endcsname
-             \ifFBucsNBSP \FB@ucsNBSP=1 \fi
+             \ifFBucsNBSP \FB@ucsNBSP=\@ne \fi
            \else
              \FBWarning{Option `UnicodeNoBreakSpaces' skipped:%
                         \MessageBreak this option is for
@@ -4934,6 +4973,14 @@ return french_punctuation
   \def\FB@ufl{\update@frenchlists}
   \ifFB@mainlanguage@FR
     \update@frenchlists
+  \else
+    \ifFBStandardItemizeEnv
+    \else
+      \PackageWarning{french.ldf}%
+        {babel-french will not customize lists' layout\MessageBreak
+         when French is not the main language,\MessageBreak
+         reported}%
+    \fi
   \fi
 %    \end{macrocode}
 %    The layout of footnotes is handled at the |\begin{document}|
@@ -5243,7 +5290,7 @@ return french_punctuation
       \addtolength{\partopsep}{\@tempdima}%
 }
 \def\listFB#1#2{\listORI{#1}{\FB@listVsettings #2}}
-\let\endlistFB\endlist
+\let\endlistFB\endlistORI
 %    \end{macrocode}
 %  \end{macro}
 %  \end{macro}
@@ -5507,7 +5554,7 @@ return french_punctuation
                 \itemindent=\descindentFB
               \else
                 \itemindent=-\leftmargin
-                \ifnum\@listdepth=1
+                \ifnum\@listdepth=\@ne
                   \ifdim\descindentFB=\z@
                     \ifdim\listindentFB>\z@
                       \leftmargini=\listindentFB
@@ -5561,6 +5608,9 @@ return french_punctuation
 %    |\relax|, it will be redefined later `AtBeginDocument’ by
 %    |\FBprocess@options| as |\update@frenchlists|,
 %    see p.~\pageref{FB@ufl}.
+%
+%    Lists’ layout changes at language switches only if
+%    |GlobalLayoutFrench=false|.
 %    \begin{macrocode}
 \def\FB@ufl{\relax}
 \def\bbl@frenchlistlayout{%
@@ -5582,7 +5632,6 @@ return french_punctuation
 %  \label{ssec-indent}
 %
 %  \begin{macro}{\bbl@frenchindent}
-%  \begin{macro}{\bbl@nonfrenchindent}
 %    In French the first paragraph of each section should be indented,
 %    this is another difference with US-English.  This is controlled
 %    by the flag |\if@afterindent|.
@@ -5592,29 +5641,23 @@ return french_punctuation
 %    French which is correct for English but wrong for some languages
 %    like Spanish.  Pointed out by Juan José Torrens.}
 %
-%    We will need to save the value of the flag |\if@afterindent|
-%    `AtBeginDocument’ before eventually changing its value.
+% \changes{v3.5n}{2022/04/18}{\cs{bbl@frenchindent} changed.
+%    \cs{bbl@nonfrenchindent} removed.}
+%
+%    Indentation changes at language switches in only two cases:\\
+%    a) |GlobalLayoutFrench=false|,\\
+%    b) |IndentFirst=true| and French isn’t the main language.
 %
 %    \begin{macrocode}
 \def\bbl@frenchindent{%
-  \ifFBGlobalLayoutFrench
-  \else
-    \babel@save\@afterindentfalse
-  \fi
+  \ifFBGlobalLayoutFrench\else\babel@save\@afterindentfalse\fi
   \ifFBIndentFirst
+    \ifFB@mainlanguage@FR\else\babel@save\@afterindentfalse\fi
     \let\@afterindentfalse\@afterindenttrue
     \@afterindenttrue
   \fi}
-\def\bbl@nonfrenchindent{%
-  \ifFBGlobalLayoutFrench
-    \ifFBIndentFirst
-      \@afterindenttrue
-    \fi
-  \fi}
 \addto\extrasfrench{\bbl@frenchindent}
-\addto\noextrasfrench{\bbl@nonfrenchindent}
 %    \end{macrocode}
-%  \end{macro}
 %  \end{macro}
 %
 %  \subsection{Formatting footnotes}
@@ -6027,29 +6070,7 @@ return french_punctuation
 %    \end{macrocode}
 %
 % \Finale
-% \iffalse
-%<*!lua>
-% \fi
-%%
-%% \CharacterTable
-%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
-%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
-%%   Digits        \0\1\2\3\4\5\6\7\8\9
-%%   Exclamation   \!     Double quote  \"     Hash (number) \#
-%%   Dollar        \$     Percent       \%     Ampersand     \&
-%%   Acute accent  \'     Left paren    \(     Right paren   \)
-%%   Asterisk      \*     Plus          \+     Comma         \,
-%%   Minus         \-     Point         \.     Solidus       \/
-%%   Colon         \:     Semicolon     \;     Less than     \<
-%%   Equals        \=     Greater than  \>     Question mark \?
-%%   Commercial at \@     Left bracket  \[     Backslash     \\
-%%   Right bracket \]     Circumflex    \^     Underscore    \_
-%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
-%%   Right brace   \}     Tilde         \~}
-%%
-% \iffalse
-%</!lua>
-% \fi
+%
 \endinput
 
 %%% Local Variables:

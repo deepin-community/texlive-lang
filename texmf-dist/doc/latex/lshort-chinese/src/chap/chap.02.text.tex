@@ -5,7 +5,7 @@
 文字是排版的基础。本章主要介绍如何在 \LaTeX{} 中输入各种文字符号，包括标点符号、连字符、重音等，以及控制文字断行和断页的方式。
 
 本章简要介绍了在 \LaTeX{} 中排版中文的方法。随着 \LaTeX{} 和底层 \TeX{} 引擎的发展，旧方式（CCT、\pkg{CJK} 等）日渐退出舞台，
-\texttt{xelatex} 和 \texttt{lualatex} 编译命令配合 \cls{ctex} 宏包 / 文档类的方式成为当前的主流中文排版支持方式。
+\texttt{xelatex} 和 \texttt{lualatex} 编译命令配合 \cls{ctex} 宏包/文档类的方式成为当前的主流中文排版支持方式。
 \end{intro}
 
 \section{语言文字和编码}\label{sec:encoding}
@@ -17,14 +17,14 @@
 
 \index{bianma@编码!ASCII}
 计算机的基本存储单位是字节（byte），每个字节为八位（8-bit），范围用十六进制写作 \texttt{0x00}--\texttt{0xFF}。
-ASCII （美国通用信息交换码）使用 \texttt{0x00}--\texttt{0x7F} 对文字编码，也就是 7-bit，覆盖了基本的拉丁字母、数字和符号，以及一些不可打印的控制字符（如换行符、制表符等）。
+ASCII（美国通用信息交换码）使用 \texttt{0x00}--\texttt{0x7F} 对文字编码，也就是 7-bit，覆盖了基本的拉丁字母、数字和符号，以及一些不可打印的控制字符（如换行符、制表符等）。
 
 由于 \TeX{} 最初设计用于排版以英文为主的西文文档，ASCII 编码完全够用，因而早期版本的 \TeX{} 只支持 7-bit 和 ASCII 编码。
 排版扩展拉丁字符必须使用后文所述的各种符号和重音命令，如 M\"obius 必须通过输入 \verb|M\"obius| 得到。
 
 \subsection{扩展编码}\label{subsec:ext-encoding}
 
-在 ASCII 之后，各种语言文字都发展了自己的编码，比如西欧语言的 Latin-1、日本的 Shift-JIS、中国大陆的 GB 2312--80 和 GBK 等。
+在 ASCII 之后，各种语言文字都发展了自己的编码，比如西欧语言的 Latin-1、日本的 Shift-JIS、中国大陆的 GB 2312---80 和 GBK 等。
 它们中的绝大多数都向下兼容 ASCII，因此无论是在哪种编码下，\TeX{} 以及 \LaTeX{} 的命令和符号都能用。
 
 \index{bianma@编码!Latin-1}
@@ -70,7 +70,7 @@ Français Português Español Føroyskt
 \hologo{XeTeX} 和 \hologo{LuaTeX} 除了直接支持 UTF-8 编码外，还支持直接调用 TrueType / OpenType 格式的字体。\pkg{xeCJK} 及 \pkg{luatexja} 宏包则在此基础上封装了对汉字排版细节的处理功能。
 
 \pkgindex{ctex}
-\clsindex{ctexart,ctexbook,ctexrep}
+\clsindex{ctexart,ctexrep,ctexbook}
 \pkg{ctex} 宏包和文档类\footnote{\hologo{CTeX} 还经常用来指一个过时的 \TeX{} 发行版，注意与这里的 \pkg{ctex} 宏包和文档类区分。}%
 进一步封装了 \pkg{CJK}、\pkg{xeCJK}、\pkg{luatexja} 等宏包，使得用户在排版中文时不用再考虑排版引擎等细节。\pkg{ctex} 宏包本身用于配合各种文档类排版中文，而 \pkg{ctex} 文档类对 \LaTeX{} 的标准文档类进行了封装，对一些排版根据中文排版习惯做了调整，包括 \cls{ctexart} / \cls{ctexrep} / \cls{ctexbook}。
 \pkg{ctex} 宏包和文档类能够识别操作系统和 \TeX{} 发行版中安装的中文字体，因此基本无需额外配置即可排版中文文档。下面举一个使用 \pkg{ctex} 文档类排版中文的最简例子：
@@ -163,11 +163,16 @@ It's dif{}f{}icult to f{}ind \ldots
 \index{biaodianfuhao@标点符号!``@\protect\verb+'+ (\textit{后引号} ')}
 \index{biaodianfuhao@标点符号!'@\protect\verb+``+ (\textit{前双引号} ``)}
 \index{biaodianfuhao@标点符号!''@\protect\verb+''+ (\textit{后双引号} '')}
-\LaTeX{} 中单引号 ` ' 分别用 \verb|`| 和 \verb|'| 输入；双引号 `` 和 '' 分别用 \verb|``| 和 \verb|''| 输入
+\LaTeX{} 中单引号 ` 和\ ' 分别用 \verb|`| 和 \verb|'| 输入；双引号 `` 和\ '' 分别用 \verb|``| 和 \verb|''| 输入
 （\verb|"| 可以输入后双引号，但没有直接输入前双引号的字符，习惯上用 \verb|''| 输入以和 \verb|``| 更好地对应）。
 \begin{example}
 ``Please press the `x' key.''
 \end{example}
+
+中文的引号‘~’和“~”与西文的引号实际上是同一组符号%
+\footnote{它们在 Unicode 中共用了同一组码位。有人为了明确区分，会改用中文直角引号「」和『』。}，
+但由于中西文通常用不同的字体显示，它们的具体形状和宽度可能有所不同。在使用 \pkg{ctex} 宏包或文档类
+的情况下，中文引号可以通过输入法直接输入。
 
 \subsubsection{连字号和破折号}
 
@@ -315,7 +320,7 @@ Donald~E. Knuth
 \cmd{clearpage}
 \end{command}
 
-通常情况下两个命令都起到另起一页的作用，区别在于：第一，在双栏排版模式中 \cmd{newpage} 起到另起一栏的作用，\cmd{clearpage} 则能够另起一页；第二，在涉及到浮动体的排版上行为不同。
+通常情况下两个命令都起到另起一页的作用，区别在于：第一，在双栏排版模式中 \cmd{newpage} 起到另起一栏的作用，\cmd{clearpage} 则能够另起一页；第二，在涉及浮动体的排版上行为不同。
 后文的 \ref{sec:float} 节以及 \ref{subsec:columns} 小节会更详细地介绍相关内容。
 
 \cmdindex{linebreak,nolinebreak}
@@ -333,6 +338,7 @@ Donald~E. Knuth
 因为 \cmd{newline} 和 \cmd{newpage} 会在断行/断页位置填充适当的间距，但 \cmd{linebreak} 和 \cmd{pagebreak} 不能，使用
 这些命令强行断行/断页可能会制造出糟糕的排版效果，并导致 \LaTeX{} 报 \texttt{Underfull \cmd{hbox}} 等警告。
 
+% 此处会有 Underfull \hbox 警告
 \begin{example}
 使用 \verb|\newline| 断行的效果
 \newline

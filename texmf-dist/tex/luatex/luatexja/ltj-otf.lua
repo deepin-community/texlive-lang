@@ -21,13 +21,19 @@ local getid = node.direct.getid
 local getfont = node.direct.getfont
 local getchar = node.direct.getchar
 local getsubtype = node.direct.getsubtype
+local getvalue = node.direct.getdata
+local setchar = node.direct.setchar
+local setfont = node.direct.setfont
+local setlang = node.direct.setlang
+local setvalue = node.direct.setdata
+
 local to_node = node.direct.tonode
 local to_direct = node.direct.todirect
 local node_new = node.direct.new
 local node_remove = node.direct.remove
 local node_next = node.direct.getnext
-local node_free = node.direct.free
-local has_attr = node.direct.has_attribute
+local node_free = node.direct.flush_node or node.direct.free
+local get_attr = node.direct.get_attribute
 local set_attr = node.direct.set_attribute
 local unset_attr = node.direct.unset_attribute
 local node_insert_after = node.direct.insert_after
@@ -81,7 +87,7 @@ local function get_ucs_from_rmlgbm(c)
    elseif v<0xF0000 then -- 素直に Unicode にマップ可能
       return v
    else -- privete use area
-      local r, aj = nil, ltjr_cidfont_data["Adobe-Japan1"] 
+      local r, aj = nil, ltjr_cidfont_data["Adobe-Japan1"]
       -- 先に ltj_vert_table を見る
       for i,w in pairs(aj.ltj_vert_table) do
          if w==v then r=i; break end
@@ -116,7 +122,7 @@ end
 local function append_jglyph(char)
    local p = node_new(id_whatsit,sid_user)
    setfield(p, 'user_id', OTF); setfield(p, 'type', 100)
-   setfield(p, 'value', char);  node_write(p)
+   setvalue(p, char);  node_write(p)
 end
 
 local myutf
@@ -162,12 +168,10 @@ local function extract(head)
          if getsubtype(p)==sid_user then
             local puid = getfield(p, 'user_id')
             if puid==OTF then
-               local g = node_new(id_glyph)
-               setfield(g, 'subtype', 0)
-               setfield(g, 'char', getfield(p, 'value'))
-               local v = has_attr(p, attr_curfnt); setfield(g, 'font', v)
-               setfield(g, 'lang', lang_ja)
-               set_attr(g, attr_kblshift, has_attr(p, attr_kblshift))
+               local g = node_new(id_glyph, 0)
+               setfont(g, get_attr(p, attr_curfnt), getvalue(p))
+               setlang(g, lang_ja)
+               set_attr(g, attr_kblshift, get_attr(p, attr_kblshift))
                head = node_insert_after(head, p, g)
                head = node_remove(head, p)
                node_free(p); p = g

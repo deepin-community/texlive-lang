@@ -1,0 +1,161 @@
+% Pour de jolies icônes
+\usepackage{fontawesome5}
+
+% Pour l'index
+\usepackage[imakeidx]{xindex}
+\makeindex
+\indexsetup{level=\title,toclevel=title,firstpagestyle=fancy}
+
+% Commande sans laquelle les numéros de pages de l'index ne seraient pas des
+% hyperliens
+\DeclareHookRule{env/document/begin}{xindex}{before}{hyperref}
+
+% La librairie suivante doit nécessairement être chargée après `imakeidx`
+\tcbuselibrary{%
+  documentation,theorems%
+}
+
+% Nous voulons que la commande \meta, fournie par la librairie `documentation'
+% du package `tcolorbox' affiche son argument en fonte à châsse fixe, en couleur
+% et sans correction d'italique.
+\AddToHook{cmd/meta@font@select/after}{%
+  \ttfamily%
+  \color{brown}%
+  \let\/\relax%
+}
+
+\ExplSyntaxOn
+
+\lstset{style=__letgut_latex_listings_style}
+
+\lstdefinelanguage{extrabash}{%
+  morekeywords={%
+    docker,docker-pdflatex,docker-lualatex
+  },%
+  alsoletter={-},%
+  sensitive%
+}
+
+\tcbset{%
+  doclang/environment~ content=contenu~ de~ l'environnement,%
+  doclang/color=~ (couleur),%
+  doclang/colors=Couleurs,%
+  doclang/environments=Environnements,%
+  doclang/keys=Clés,%
+  doclang/values=Valeurs,%
+  doclang/pageshort=p.,%
+  documentation~ listing~ style=dbtex,%
+  color~ command=__letgut_texcs,%
+  color~ environment=__letgut_environment,%
+  color~ key=__letgut_key,%
+  color~ value=__letgut_value,%
+  doc~ head={interior~ style={fill,color=yellow!20!white}},%
+  % index~ format=pgfchapter,%
+  index~ format=off,%
+  index~ colorize,%
+  index~ annotate=false,%
+  enhanced,%
+  % listing~ style=dbtex,%
+  % every~ box/.style={documentation~ listing~ style=dbtex},%
+  % index~ actual={},%
+  % doc~ left~ indent=-15mm,%
+  % doc~ right~ indent=-15mm+2em
+  keywords~ bold=false
+}%
+
+% Redéfinition de commande pour que les mentions des nouveautés et mises à jour
+% ne dépassent pas dans la marge
+\renewcommand{\tcbdocmarginnote}[2][]{%
+  \marginnote{%
+    \begin{tcolorbox}[enhanced~ jigsaw,size=fbox,boxrule=1pt,leftrule=0pt,rightrule=0pt,
+      arc=0pt,outer~ arc=1pt,boxsep=1pt,top=1pt,bottom=1pt,
+      nobeforeafter,width=\c__letgut_hoffset_dim-\marginparsep,
+      colframe=red!50!white,colback=red!25!yellow!5!white,fontupper=\scriptsize,
+      if~ odd~ page~ or~ oneside={flushright~ upper}{flushleft~ upper},
+      doc@marginnote,#1]#2\end{tcolorbox}}}
+
+\renewcommand*{\tcbdocnew}[1]{
+  \scriptsize\sffamily\textcolor{green!50!black}{\bfseries
+Nouv. :~} #1}
+\renewcommand*{\tcbdocupdated}[1]{\scriptsize\sffamily\textcolor{blue!75!black}{\bfseries
+\textsc{m.-à-j.} :~} #1}
+%
+
+\NewDocumentCommand \valinit { o }
+{
+  % valeurs~ :~
+  init.~
+  {
+    \em
+    \IfNoValueTF {#1}
+    { vide }
+    { #1 }
+  }
+}
+
+\NewDocumentCommand \valdef { o }
+{
+  par~ déf.~
+  {
+    \em
+    \IfNoValueTF {#1}
+    { aucune }
+    {  #1 }
+  }
+}
+
+\NewDocumentCommand{\valinitdef}{ O{} o } {
+  \tl_if_blank:nTF {#1}
+  {
+    \valinit,~ \valdef[#2]
+  }
+  {
+    \valinit[#1],~ \valdef[#2]
+  }
+}
+
+\tcbset{dbtcb/.style={%
+    breakable,
+    fonttitle=\bfseries,
+    enlarge~ top~ by=1mm,
+    separator~ sign~ dash,
+    label~ separator=-,
+    before~ title={%
+      \hypersetup{hidelinks}%
+      \tcbset{%
+        color~ definition=white,
+        color~ hyperlink=white,
+      }%
+    },%
+    keywords~ bold=false,
+  }%
+}%
+
+\AddToHook{begindocument/before}{
+  \newtcbtheorem[list~inside=dbwarninglist,crefname={avertissement}{avertissements}]{dbwarning}{Avertissement}{%
+    colback=red!5!white,
+    colframe=red!75!black,
+    dbtcb
+  }{wa}
+  \newtcbtheorem[list~inside=dbremarklist,crefname={remarque}{remarques}]{dbremark}{Remarque}{%
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    dbtcb
+  }{rq}
+}
+%
+\ExplSyntaxOff
+
+% Nous voulons que les notes marginales soient toujours dans la marge de
+% gauche :
+\makeatletter
+\patchcmd{\@mn@@@marginnote}{\begingroup}{\begingroup\@twosidefalse}{}{\fail}
+\reversemarginpar
+\makeatother
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: luatex
+%%% TeX-master: letgut
+%%% End:

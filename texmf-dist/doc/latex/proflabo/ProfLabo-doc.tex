@@ -1,0 +1,556 @@
+\documentclass[a4paper,12pt,dvipsnames]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}  
+\usepackage{graphicx}
+\usepackage{proflabo}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{accsupp}
+\usepackage{showexpl}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[french]{babel} 
+\usepackage{tabularx}
+\usepackage{tikz,pgf}
+\usepackage[autolanguage,np]{numprint}
+\usepackage{simplekv}
+\usepackage[output-decimal-marker={,}]{siunitx}
+\usepackage{cmbright} %police computer modern bright   
+\usepackage[french]{babel}  
+\usepackage{amsthm}
+\usepackage{amsfonts,amsmath,amssymb,mathrsfs}
+\usepackage{ifthen}
+\usepackage{enumitem}
+
+
+
+
+
+ \lstset{
+  aboveskip=3mm,
+  belowskip=2mm,
+  backgroundcolor=\color{ForestGreen!10},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{red},
+  deletekeywords={...},
+  escapeinside={\%*}{*)},
+  extendedchars=true,
+  framexleftmargin=16pt,
+  framextopmargin=3pt,
+  framexbottommargin=6pt,
+  frame=tb,
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=C,
+  literate=
+  {²}{{\textsuperscript{2}}}1
+  {⁴}{{\textsuperscript{4}}}1
+  {⁶}{{\textsuperscript{6}}}1
+  {⁸}{{\textsuperscript{8}}}1
+  {€}{{\euro{}}}1
+  {é}{{\'e}}1
+  {è}{{\`{e}}}1
+  {ê}{{\^{e}}}1
+  {ë}{{\¨{e}}}1
+  {É}{{\'{E}}}1
+  {Ê}{{\^{E}}}1
+  {û}{{\^{u}}}1
+  {ù}{{\`{u}}}1
+  {â}{{\^{a}}}1
+  {à}{{\`{a}}}1
+  {á}{{\'{a}}}1
+  {ã}{{\~{a}}}1
+  {Á}{{\'{A}}}1
+  {Â}{{\^{A}}}1
+  {Ã}{{\~{A}}}1
+  {ç}{{\c{c}}}1
+  {Ç}{{\c{C}}}1
+  {õ}{{\~{o}}}1
+  {ó}{{\'{o}}}1
+  {ô}{{\^{o}}}1
+  {Õ}{{\~{O}}}1
+  {Ó}{{\'{O}}}1
+  {Ô}{{\^{O}}}1
+  {î}{{\^{i}}}1
+  {Î}{{\^{I}}}1
+  {í}{{\'{i}}}1
+  {Í}{{\~{Í}}}1,
+  morekeywords={*,...},
+  numbers=left,
+  numbersep=10pt,
+  numberstyle=\tiny\color{black},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=1,
+  stringstyle=\color{gray},
+  tabsize=4,
+}
+
+
+\usetikzlibrary{calc,babel}
+\sisetup{per-mode=symbol}
+\setlist[itemize]{label=\textbullet}
+
+
+\titleformat{\chapter}[frame]
+{\normalsize}%
+{\filright\sffamily\Large%
+\enspace  \thechapter\enspace}%
+{8pt}
+{\rule{0pt}{30pt}\sffamily\Huge\bfseries\filcenter}
+
+\pagestyle{fancy}
+\fancyfoot[L]{{\footnotesize  \leftmark}}
+\fancyfoot[C]{Package ProfLabo}
+\fancyfoot[R]{Page \thepage}
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\space#1}{}} 
+
+
+\newcommand*{\noaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
+\newcommand{\crh}{\\ \hline}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+
+
+\newtcolorbox{imp}{
+  colframe=red,colback=red!5!white}
+\newcommand{\important}[1]{%
+\vspace{0.5cm}
+
+\begin{imp} 
+#1 
+\end{imp}
+\vspace{0.5cm}%
+}
+\newcommand{\cadre}[1]{ \begin{enc} #1 \end{enc}}
+\newcommand{\cadrep}[2]{\begin{enctitre}{#1} #2 \end{enctitre}}
+\newtcolorbox{enc}{arc=1ex,  colframe=orange, colback=orange!5!white}
+\newtcolorbox{enctitre}[1]{arc=1ex,  colframe=ForestGreen, colback=ForestGreen!5!white, fonttitle=\bfseries, center title, title=#1}
+
+\lstdefinestyle{Common}
+{   
+    language={[LaTeX]TeX},
+    numbers=none,
+    numbersep=1em,
+    numberstyle=\tiny\noaccsupp,
+    frame=single,
+    framesep=\fboxsep,
+    framerule=\fboxrule,
+    rulecolor=\color{red},
+    xleftmargin= .2\textwidth , 
+    xrightmargin=.2\textwidth ,
+    breaklines=true,
+    breakindent=0pt,
+    tabsize=2,
+    columns=flexible,
+    includerangemarker=false,
+    rangeprefix=//\ ,
+}
+
+\lstdefinestyle{A}
+{
+    style=Common,
+    backgroundcolor=\color{yellow!10},
+    basicstyle=\normalsize\ttfamily,
+    keywordstyle=\color{blue}\bf,
+    identifierstyle=\color{black},
+    stringstyle=\color{red},
+    commentstyle=\color{blue}\bf
+}
+
+
+
+\title{ProfLabo, une aide pour la chimie en Tikz}
+\author{Thomas Mounier \\ thomgo.mounier - at - gmail . com}
+\date{Version 1.0 - 25 avril 2022}
+\renewcommand{\contentsname}{Table des matières}
+\newgeometry{left=2cm,right=2cm,bottom=2cm,top=1cm}
+
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+\vspace{-3cm}
+
+\begin{center}
+\EchelleTube[Echelle=0.4,Couleurs={cyan!85,ForestGreen,YellowOrange,magenta}]{4}
+\end{center}
+\vspace{0.5cm}
+
+\cadre{\textbf{Principales fonctionnalités} : représenter du matériel de laboratoire en chimie :
+\begin{itemize}
+\item Tube à essai simple;
+\item Tube à essai sur porte tube (nombre variable);
+\item Bécher;
+\item Erlenmeyer;
+\item Fiole jaugée;
+\item Montage de dosage avec burette;
+\end{itemize}
+ }
+
+\vspace{1cm}
+
+This package has been created to provide laboratory stuff drawings using TIKZ to help french chemistry teachers. It would be an alternative (but it can't does even 10\% of it !) for pst-labo if you don't want to use pstricks.
+
+\newpage
+\tableofcontents
+
+
+\newpage
+\thispagestyle{fancy}
+\chapter{Pourquoi ce package}
+\thispagestyle{fancy}
+Ce package a été écrit pour répondre à un besoin personnel : dessiner des éléments de verrerie en chimie de manière simplifiée et personnalisée.\\
+Il existe un package très complet pour ce faire : \textbf{\textcolor{YellowOrange}{\href{https://ctan.org/pkg/pst-labo?lang=en}{pst-labo}}} mais qui possède un défaut pour moi : il utilise pstricks.
+\vspace{1cm}
+
+Il nécessite (et charge donc) les packages suivants :
+\begin{itemize}
+\item listofitem;
+\item simplekv (pour le système de clés et d'options);
+\item ifthen (pour les affichages conditionnels des légendes);
+\item tikz (pour le dessin);
+\item pgf (pour quelques calculs).
+\end{itemize}
+
+\important{\textbf{Attention} : pour l'utilisation des couleurs il faut charger les packages adéquats. Le choix est libre à l'utilisateur principalement pour éviter des conflits entre les packages.}
+
+\vspace{1cm}
+
+Pour le moment les fonctions sont basiques et peut être qu'avec du temps, un besoin et une meilleure maîtrise du langage, des ajouts seront fait parmi la liste déjà existante :
+\begin{itemize}
+\item Possibilité d'orienter les tubes/béchers en gardant l'horizontalité du niveau de liquide;
+\item Précision plus fine sur la burette pour les dosages;
+\item Ajout d'options pour dessiner des choses à l'intérieur des récipients (exemple : clous, limaille, bulles ...)
+\end{itemize}
+
+\vspace{1cm}
+
+\textbf{Remerciements} : \textbf{C.Poulain} pour son aide inestimable sur le fonctionnement des commandes "avec clé" (le fonctionnement de ce package s'inspire d'ailleurs de celui de certaines commandes de l'excellent ProfCollege). Merci aussi aux membres du groupe \href{https://www.facebook.com/groups/442377419942175}{Le coin LaTeX des profs} pour avoir subît mes nombreuses demandes d'aide et y avoir répondu. =)
+\chapter{Les commandes disponibles}
+\thispagestyle{fancy}
+\section{Fonctionnement général avec clés}
+
+Les commandes disponibles dans ce package s'utilisent de la manière suivante : 
+
+\vspace{2cm}
+
+\begin{lstlisting}[style=A]
+\NomDeLaCommande[clé1=valeur,clé2=valeur,clé3=valeur...]{}
+\end{lstlisting}
+
+
+
+%Ce fonctionnement permet d'avoir des options par défaut (ce qui veut dire que la plupart des commandes fonctionneront en tapant \lstinline[style=A]{|\NomDeLaCommande.|)} et une grande personnalisation.
+\vspace{0.5cm}
+
+
+Pour chaque commande présentée ci-après, les paramètres par défaut seront présentés dans un tableau. En voici la forme générale :
+
+\begin{center}
+\begin{tabularx}{0.75\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Couleurs & blanc par défaut \crh
+Echelle & valeur entre 0.5 et 1.5 \crh
+Legende & vide (pas de légende) \crh
+Hauteur & valeur numérique représentant un pourcentage \crh
+\end{tabularx}
+\end{center}
+
+Il n'y a pas d'accent dans les clés, ce n'est pas une faute d'orthographe.
+
+\newpage
+\thispagestyle{fancy}
+\section{Tube à essai}
+
+Dessiner un tube à essai avec la syntaxe suivante :
+\vspace{2cm}
+
+\begin{lstlisting}[style=A]
+\TubeAEssai[Couleurs=lime!50,Echelle=0.75,Hauteur=100,Legende=Hydroxyde de sodium en présence d'ions fer]{}
+\end{lstlisting}
+\vspace{2cm}
+
+
+Donnera l'exemple de gauche :
+\begin{center}
+\TubeAEssai[Couleurs=lime!50,Echelle=0.75,Hauteur=135,Legende=Hydroxyde de sodium en présence d'ions fer]{} \hspace{0.5cm} \TubeAEssai[Echelle=0.75,Hauteur=75,Legende=Autre version sans couleur]{}
+\end{center}
+
+Les clés disponibles pour cette commande :
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Couleurs & white \crh
+Echelle & 0.5 \crh
+Legende & {} (pas de légende) \crh
+Hauteur & 29 (valeur en \%) \crh
+\end{tabularx}
+\end{center}
+
+Important : dans cette commande, il n'y a pas d'argument à donner à la fin. (Voir la syntaxe)
+
+\newpage
+
+\section{Porte-tubes avec n tubes}
+
+Dessiner un porte tube à essai composé de $n$ tubes avec la syntaxe suivante :
+\vspace{2cm}
+
+\begin{lstlisting}[style=A]
+\EchelleTube[Echelle=0.5,Couleurs={magenta,magenta!85,magenta!65,magenta!45,magenta!15},Legendes={1,2,3,4,5}]{5}
+\end{lstlisting}
+\vspace{2cm}
+
+Donnera l'exemple suivant :
+
+\begin{center}
+\EchelleTube[Echelle=0.5,Couleurs={magenta,magenta!85,magenta!65,magenta!45,magenta!15},Legendes={1,2,3,4,5}]{5}
+\end{center}
+
+Que l'on pourrait par exemple utiliser pour représenter une échelle de teintes.
+
+
+Les clés disponibles pour cette commande :
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Couleurs & white \crh
+Echelle & 0.5 \crh
+Legendes & {} (pas de légende) \crh
+\end{tabularx}
+\end{center}
+
+\vspace{0.5cm}
+
+\important{\textbf{Attention} : Ici il faut bien préciser le nombre de tube(s) et, en cas d'utilisation de légende ou de couleurs, bien définir autant de couleurs que de tubes sinon pas de compilation.
+
+
+Il faut aussi prendre en compte que selon le nombre de tubes et la largeur de la page, le résultat ne puisse pas être parfait.
+}
+\newpage
+\section{Bécher}
+
+Dessiner un bécher avec la syntaxe suivante :
+\vspace{2cm}
+
+\begin{lstlisting}[style=A]
+\Becher[Couleurs=magenta!88,Echelle=1,Legende=bécher 2 contenant une solution de permanganate]{}
+\end{lstlisting}
+\vspace{2cm}
+
+Donnera le rendu suivant:
+\begin{center}
+\Becher[Couleurs=magenta!88,Echelle=1,Legende=bécher 2 contenant une solution de permanganate]{}
+\end{center}
+
+\vspace{1cm}
+
+Les clés disponibles pour cette commande :
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Couleurs & white \crh
+Echelle & 0.5 \crh
+Legende & {} (pas de légende) \crh
+\end{tabularx}
+\end{center}
+
+\newpage
+\section{Fiole jaugée}
+
+Dessiner une fiole jaugée avec la syntaxe suivante :
+\vspace{2cm}
+
+\begin{lstlisting}[style=A]
+\FioleJaugee[Hauteur=100,Couleurs=cyan!40,Legende=Eau minérale inconnue à doser]{}
+\end{lstlisting}
+\vspace{2cm}
+
+Donnera le rendu suivant:
+\begin{center}
+\FioleJaugee[Hauteur=100,Couleurs=cyan!40,Legende=Eau minérale inconnue à doser]{} \FioleJaugee[Hauteur=20,Couleurs=cyan!40,Legende=Ceci est une fiole vide]{}
+
+\end{center}
+\vspace{2cm}
+
+
+Les clés disponibles pour cette commande :
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Couleurs & white \crh
+Echelle & 1 \crh
+Legende & {} (pas de légende) \crh
+Hauteur & 0 *\crh
+\end{tabularx}
+\end{center}
+
+\important{\textbf{Attention} : Concernant la hauteur il n'y a que 2 valeurs disponibles : 0 (pour vide) et 100 pour remplie jusqu'au trait de jauge. Toute autre valeur donnera une fiole vide.}
+
+\newpage
+\thispagestyle{fancy}
+\section{Erlenmeyer}
+
+Dessiner un erlenmeyer avec les syntaxes suivantes :
+\vspace{2cm}
+
+\begin{lstlisting}[style=A]
+\Erlen[Echelle=1.25,Hauteur=33,Couleurs=cyan,LegendeDessous=Produit A]{}
+\Erlen[Echelle=1.25,Hauteur=100,Legende=Produit B]{}
+\end{lstlisting}
+\vspace{2cm}
+
+Donnera le rendu suivant:
+\begin{center}
+\Erlen[Echelle=1.25,Hauteur=33,Couleurs=cyan,LegendeDessous=Produit A]{}\Erlen[Echelle=1.25,Hauteur=100,Legende=Produit B]{}
+
+\end{center}
+\vspace{2cm}
+
+La légende peut être placée en dessous ou sur le côté avec une flèche. Compte tenu du décalage induit par la légende sous le dessin, il est conseillé de n'utiliser qu'un même type de légende pour un document. Il est possible d'utiliser les deux légendes (différentes) en simultané.
+
+
+Les clés disponibles pour cette commande :
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Couleurs & white \crh
+Echelle & 1.5 \crh
+Legende & {} (pas de légende) \crh
+LegendeDessous & {} (pas de légende) \crh
+Hauteur & 33 *\crh
+\end{tabularx}
+\end{center}
+
+\important{\textbf{Attention} : Concernant la hauteur il n'y a que 3 valeurs disponibles : 0 (pour vide), 33 pour environ un tiers et 100 pour remplir jusqu'en haut. Tout autre valeur donnera un erlenmyer vide.}
+
+
+\newpage
+\thispagestyle{fancy}
+\section{Dosage}
+\thispagestyle{fancy}
+
+La commande dosage propose un schéma légendé d'un montage de dosage. La syntaxe :
+\vspace{1cm}
+
+\begin{lstlisting}[style=A]
+\Dosage[Echelle=1,Titrant=Soude \SI{0.1}{\mol\per\liter},Titre=Solution de vinaigre diluée \\ + Phenolphtaleine \\ + Eau distillée,CouleurTitrant={cyan!25},CouleurTitre={cyan!50}]{}
+\end{lstlisting}
+\vspace{1cm}
+
+Donnera en rendu :
+\begin{center}
+\Dosage[Echelle=1,Titrant=Soude \SI{0.1}{\mol\per\liter},Titre=Solution de vinaigre diluée \\ + Phenolphtaleine \\ + Eau distillée,CouleurTitrant={cyan!25},CouleurTitre={cyan!50}]{}
+\end{center}
+
+Il n'est pas (encore?) possible de modifier la burette pour afficher les graduations ou de personnaliser la hauteur de remplissage dans la burette. Les clés disponibles pour cette commande sont :
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{|C|C|}
+\hline 
+\textbf{Clé} & \textbf{Valeur par défaut} \crh
+Titrant & Titrant \crh
+Titre & Titré \crh
+Echelle & 1 \crh
+CouleurTitrant & white \crh
+CouleurTitre & white \crh
+\end{tabularx}
+\end{center}
+\newpage
+\thispagestyle{fancy}
+\chapter{Exemples}
+\thispagestyle{fancy}
+
+Dans cette partie quelques exemples avec le code associé
+\begin{center}
+
+
+
+\EchelleTube[Echelle=0.5,Couleurs={blue,blue!85,blue!65,blue!45,blue!15}]{5}
+\begin{center}
+Échelle de teinte
+\end{center}
+\begin{lstlisting}[style=A]
+\EchelleTube[Echelle=0.5,Couleurs={blue,blue!85,blue!65,blue!45,blue!15}]{5}
+\end{lstlisting}
+\vspace{1cm}
+
+
+\EchelleTube[Echelle=0.6,Couleurs={cyan!85,ForestGreen,YellowOrange,magenta},Legendes={bleu,vert,orange,magenta}]{4}
+\begin{center}
+Illustration quelconque de jolies couleurs
+\end{center}
+\begin{lstlisting}[style=A]
+\EchelleTube[Echelle=0.6,Couleurs={cyan!85,ForestGreen,YellowOrange,magenta},Legendes={bleu,vert,orange,magenta}]{4}
+\end{lstlisting}
+\vspace{1cm}
+
+\Dosage[Echelle=1.2,Titrant=Oxalate d'ammonium,Titre=Solution de permanganate de potassium,CouleurTitrant={cyan!25},CouleurTitre={magenta!75}]{}
+\begin{lstlisting}[style=A]
+\Dosage[Echelle=1.2,Titrant=Oxalate d'ammonium,Titre=Solution de permanganate de potassium,CouleurTitrant={cyan!25},CouleurTitre={magenta!75}]{}
+\end{lstlisting}
+\vspace{1cm}
+\Becher[Couleurs=cyan!22,Echelle=1,Legende=test bécher 1 avec hydroxyde de sodium]{}\Becher[Couleurs=magenta!88,Echelle=1,Legende=test bécher 2 avec permanganate]{}
+\vspace{1cm}
+
+\begin{lstlisting}[style=A]
+\Becher[Couleurs=cyan!22,Echelle=1,Legende=test bécher 1 avec hydroxyde de sodium]{}\Becher[Couleurs=magenta!88,Echelle=1,Legende=test bécher 2 avec permanganate]{}
+\end{lstlisting}
+\vspace{1cm}
+\begin{center}
+\Becher[Couleurs=lime!75,Echelle=1]{}
+\end{center}
+
+\begin{lstlisting}[style=A]
+\Becher[Couleurs=lime!75,Echelle=1]{}
+\end{lstlisting}
+\vspace{1cm}
+
+%\vspace{2cm}
+\Erlen[Hauteur=33,Couleurs=cyan,LegendeDessous=Sulfate de cuivre hydraté,Legende= Ajout d'eau]
+
+\begin{lstlisting}[style=A]
+\Erlen[Hauteur=33,Couleurs=cyan,LegendeDessous=Sulfate de cuivre hydraté,Legende= Ajout d'eau]
+
+\end{lstlisting}
+
+\FioleJaugee[Hauteur=100,Couleurs=cyan!40,Legende=vinaigre dilué 10 fois préparé au labo]
+
+\begin{lstlisting}[style=A]
+\FioleJaugee[Hauteur=100,Couleurs=cyan!40,Legende=vinaigre dilué 10 fois préparé au labo]
+
+\end{lstlisting}
+    
+\TubeAEssai[Couleurs=lime!50,Echelle=0.8,Hauteur=150,Legende=Hydroxyde de sodium en présence d'ions fer]{}
+\begin{lstlisting}[style=A]
+\TubeAEssai[Couleurs=lime!50,Echelle=0.8,Hauteur=150,Legende=Hydroxyde de sodium en présence d'ions fer]{}
+\end{lstlisting}
+
+
+\chapter{Historique}
+\thispagestyle{fancy}
+
+\begin{itemize}
+
+\item v1.0 : version de base.
+\end{itemize}
+
+
+\end{center}
+\end{document}

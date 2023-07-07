@@ -1,0 +1,1263 @@
+% -*- coding: utf-8; time-stamp-format: "%02d-%02m-%:y at %02H:%02M:%02S %Z" -*-
+% Execute etex on this file to extract package files.
+% See in README for more build instructions.
+%<*dtx>
+\def\dtxtimestamp {Time-stamp: <16-11-2022 at 21:29:30 CET>}
+%%
+%% Package: lgrmath
+%% Greek in math mode via LGR font of one's choice (JFB)
+%% Version: 1.0
+%% License: LPPL 1.3c
+%% Copyright (C) 2022 Jean-François Burnol
+%% Repository: https://github.com/jfbu/lgrmath
+%%
+%</dtx>
+%<*tex>
+\def\lgrmathversion{1.0}
+\def\lgrmathdate{2022/11/16}
+%</tex>
+%<*dtx>
+\iffalse
+%</dtx>
+%<*tex>
+%% This is a generated file. Run latexmk on this file lgrmath.tex then
+%% run dvipdfmx on lgrmath.dvi to produce the documentation lgrmath.pdf,
+%% with the package source code included.
+%%
+%% Customize as desired the class options and the two toggles below.
+%%
+%% See lgrmath.dtx for the copyright and the conditions for distribution
+%% and/or modification of this Work.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{lgrmath.tex}%
+[\lgrmathdate\space v\lgrmathversion\space 
+       driver file for lgrmath documentation (JFB)]%
+\PassOptionsToClass{a4paper,fontsize=11pt}{scrartcl}
+\chardef\Withdvipdfmx \ifdefined\pdfoutput\ifnum\pdfoutput>0 0\else1\fi\else0\fi\relax
+\chardef\NoSourceCode 0 % replace 0<space> by 1<space> for no source code
+\input lgrmath.dtx
+%%% Local Variables:
+%%% mode: latex
+%%% End:
+%</tex>
+%<*dtx>
+\fi
+\chardef\noetex 0
+\ifx\numexpr\undefined\chardef\noetex 1 \fi
+\ifnum\noetex=1 \chardef\extractfiles 0 % extract files, then stop
+\else
+    \ifx\ProvidesFile\undefined
+      \chardef\extractfiles 0 % etex etc.. on lgrmath.dtx
+    \else % latex/pdflatex on lgrmath.tex or on lgrmath.dtx
+      \ifx\Withdvipdfmx\undefined
+        % (lua|xe|pdf)latex run is on lgrmath.dtx, we will extract all files
+        \chardef\extractfiles 1 % 1 = extract all and typeset doc
+        \chardef\Withdvipdfmx
+                \ifdefined\pdfoutput\ifnum\pdfoutput>0 0\else1\fi\else0\fi\relax
+        \chardef\NoSourceCode 1 % 
+        \NeedsTeXFormat{LaTeX2e}%
+        \PassOptionsToClass{a4paper,fontsize=11pt}{scrartcl}%
+      \else % latex run is on lgrmath.tex, 
+        \chardef\extractfiles 2 % no extractions
+      \fi
+    \ProvidesFile{lgrmath.dtx}%
+    [lgrmath source (\lgrmathversion\space of \lgrmathdate) (JFB)]%
+    \fi
+\fi
+\ifnum\extractfiles<2 % extract files
+\def\MessageDeFin{\newlinechar10 \let\Msg\message
+\Msg{^^J}%
+\Msg{********************************************************************^^J}%
+\Msg{*^^J}%
+\Msg{* To finish the installation you have to move the following^^J}%
+\Msg{* file into a directory searched by TeX:^^J}%
+\Msg{*^^J}%
+\Msg{*\space\space\space\space lgrmath.sty^^J}%
+\Msg{*^^J}%
+\Msg{* To produce the documentation with source code included run latexmk^^J}%
+\Msg{* on extracted lgrmath.tex and then dvipdfmx on lgrmath.dvi^^J}%
+\Msg{*^^J}%
+\Msg{* Happy TeXing!^^J}%
+\Msg{*^^J}%
+\Msg{********************************************************************^^J}%
+}%
+\begingroup
+\input docstrip.tex
+\askforoverwritefalse
+\generate{\nopreamble
+  \usepostamble\defaultpostamble
+    \file{lgrmath.tex}{\from{lgrmath.dtx}{tex}}%
+  \usepreamble\defaultpreamble
+    \file{lgrmath.sty}{\from{lgrmath.dtx}{sty}}%
+}
+\endgroup
+\fi % end of file extractions
+\ifnum\extractfiles=0 
+% tex/etex/xetex/etc on lgrmath.dtx, files are now extracted, stop
+  \MessageDeFin\expandafter\end
+\fi
+% no file extractions if latex compilation was on lgrmath.tex
+\ifdefined\MessageDeFin\AtEndDocument{\MessageDeFin}\fi
+\ifnum\Withdvipdfmx>0
+\documentclass [dvipdfmx]{scrartcl}
+\else
+\documentclass {scrartcl}
+\fi
+\tracinglostchars=2
+
+% use doc with v2 because hyperref option clash with hypdoc
+% no time to read documentation now
+\usepackage{doc}[=v2]
+% but the v2 does not define \cs, it got defined in ltxdoc
+\def\cmd#1{\cs{\expandafter\cmd@to@cs\string#1}}
+\def\cmd@to@cs#1#2{\char\number`#2\relax}
+\DeclareRobustCommand\cs[1]{\texttt{\bslash#1}}
+\AtBeginDocument{%
+\pdfstringdefDisableCommands{\def\cs#1{\textbackslash\detokenize{#1}}}%
+}%
+% these are not defined by doc package
+\providecommand\marg[1]{%
+  {\ttfamily\char`\{}\meta{#1}{\ttfamily\char`\}}}
+\providecommand\oarg[1]{%
+  {\ttfamily[}\meta{#1}{\ttfamily]}}
+\providecommand\parg[1]{%
+  {\ttfamily(}\meta{#1}{\ttfamily)}}
+
+\CodelineNumbered
+\AtBeginDocument{\MakeShortVerb\|}
+\ifnum\NoSourceCode=1
+  \OnlyDescription
+\fi
+\usepackage[LGR,T1]{fontenc}
+
+\usepackage{hologo}
+%% \hologoFontSetup{general=\upshape\rmfamily}
+\DeclareRobustCommand*{\pdfLaTeX}{\hologo{pdfLaTeX}}%
+% \DeclareRobustCommand*{\eTeX}{\hologo{eTeX}}%
+% \DeclareRobustCommand*{\LuaTeX}{\hologo{LuaTeX}}%
+% \DeclareRobustCommand*{\LuaLaTeX}{\hologo{LuaLaTeX}}%
+% \DeclareRobustCommand*{\XeTeX}{\hologo{XeTeX}}%
+% \DeclareRobustCommand*{\XeLaTeX}{\hologo{XeLaTeX}}%
+
+\usepackage{geometry}
+\usepackage[english]{babel}
+
+\usepackage{color}
+\definecolor{joli}{RGB}{225,95,0}
+\definecolor{JOLI}{RGB}{225,95,0}
+\definecolor{urlcolor}{RGB}{38,128,192}
+
+\usepackage{colorframed}
+\definecolor{shadecolor}{RGB}{223,219,195}
+
+\usepackage{hyperref}
+\hypersetup{%
+linktoc=all,%
+breaklinks=true,%
+colorlinks=true,%
+linkcolor={red},%
+urlcolor={urlcolor},
+pdfauthor={Jean-François Burnol},%
+pdftitle={The lgrmath package},%
+pdfstartview=FitH,%
+pdfpagemode=UseNone,%
+}
+\usepackage{hypcap}
+\usepackage{bookmark}
+\usepackage{enumerate}
+
+\usepackage{mlmodern}
+\DeclareEncodingSubset{TS1}{mlmtt}{0}% fix \textasciigrave related latex2e#905
+
+% useless with doc.sty
+% \usepackage{upquote}
+% as \verb, verbatim and macrocode do not use \@noligs
+\begingroup
+\catcode`\'\active\catcode`\`\active
+\gdef\MakePrivateLetters{\makeatletter\def`{\textasciigrave}\def'{\textquotesingle}}
+\endgroup
+% https://github.com/latex3/latex2e/issues/953, for the record
+
+\usepackage{xspace}
+
+\newcommand\ctanpkg[1]{\href{https://ctan.org/pkg/#1}{#1}}
+
+% Vendredi 11 novembre 2022 : impossible d'utiliser \hypersetup{urlcolor=joli}
+% dans \section (même sans le \texorpdfstring).
+% même si la macro \lgrmath est déclarée robuste mais avec \protected c'est bon
+% \DeclareRobustCommand\lgrmath{{\hypersetup{urlcolor=joli}lgrmath}}% <-- BAD
+% ceci ok (mais il faudra ajouter \texorpdfstring)
+% \protected\def\lgrmath{{\hypersetup{urlcolor=joli}lgrmath}}%        <-- OK
+% L'erreur est
+%     Argument of \KVS@@CommaComma has an extra }
+% mais je n'ai pas cherché à en savoir plus.  De plus dans le code ci-dessous
+% on avait plutôt un stack overflow dû à boucle infinie.
+
+% le \texorpdfstring ne sert à rien si \protected dans \section
+\protected\def\lgrmath{%
+   {\hypersetup{urlcolor=joli}\bfseries \ctanpkg{lgrmath}}\xspace
+}
+\pdfstringdefDisableCommands{\def\lgrmath{lgrmath\xspace}}
+
+\usepackage{centeredline}
+\usepackage{lgrmath}
+
+\begin{document}\renewcommand\familydefault\sfdefault
+\begin{center}
+ {\Large The \lgrmath package}\\
+ \textsc{Jean-François Burnol}\\
+ \texttt{jfbu (at) free (dot) fr}\\
+\footnotesize
+  This is \lgrmathversion\ (\lgrmathdate) from
+  source file having \dtxtimestamp\\
+  Report issues at \url{https://github.com/jfbu/lgrmath/issues}
+\end{center}
+
+{
+\addtocontents{toc}{\protect\hypersetup{hidelinks}}
+\addtocontents{lot}{\protect\hypersetup{hidelinks}}
+
+\tableofcontents
+
+\listoftables
+}
+
+\section{Description}
+
+The \lgrmath package sets the Greek letters {in math mode} (\textbf{only}) to use glyphs
+from the LGR-encoded font of one's choice.
+
+Thus \lgrmath is for people who want \emph{only} to adjust Greek letters in
+math mode (and easily configure usage of upright or italic/slanted shapes),
+perhaps in the context of having changed Latin letters as well, e.g.\@ from
+using the \ctanpkg{frenchmath}%
+%
+\footnote{Antoine \textsc{Missier}, \emph{Typesetting mathematics according to French rules}, \url{https://ctan.org/pkg/frenchmath}.}
+%
+package which makes uppercase Latin letters in
+math mode render upright, among quite a few other adjustments tailored for
+French mathematical typesetting, or the \ctanpkg{mathastext}%
+%
+\footnote{Verfasser, \emph{Use the text font in math mode}, \url{https://ctan.org/pkg/mathastext}.}
+%
+package.
+Actually \lgrmath is in part inspired from this latter package |LGRgreek|
+option and \cs{MTgreekfont} command.  But \lgrmath currently does not
+incorporate a mechanism for defining and using multiple math versions, each one
+with its own font for Greek letters, as is already provided by
+\ctanpkg{mathastext}.
+
+The package is also related to \ctanpkg{libgreek}%
+%
+\footnote{Verfasser, \emph{Greek letters in math mode from Libertinus or Linux
+    Libertine/Biolinum}, \url{https://ctan.org/pkg/libgreek}.},
+%
+also by the author, and shares most of its codebase, after dropping matters
+related to |libgreek-legacy|, and the |scale| option which can not be
+implemented generically.
+
+The Greek letters all come with \cs{...up} and \cs{...it} named variants, and
+whether ``bare'' control sequences map to the `|up|' or `|it|' ones can be
+configured via package options, even midway in the document via
+\cs{lgrmathsetup}.  Further, the package optionally defines two math
+alphabets \cs{lgrmathup} and \cs{lgrmathit}.  What `|up|' and `|it|'
+actually mean can be configured using the |upshape| and |itshape| keys at
+package loading time.
+
+
+\section{Options of the \lgrmath package}
+
+\begin{table}[htbp]
+\capstart
+\DeleteShortVerb\|% a effet global !
+\let\s\string
+\ttfamily
+\lgrmathsetup{style=fReNcH}% testing lowercasing works
+
+\centering
+
+\begin{tabular}{|lc|lc|lc|lc|}
+\hline
+\s\Alpha&$\Alpha$    &\s\Nu&$\Nu$          &\s\alpha&$\alpha$    &\s\nu&$\nu$\\
+\s\Beta&$\Beta$      &\s\Xi&$\Xi$          &\s\beta&$\beta$      &\s\xi&$\xi$\\
+\s\Gamma&$\Gamma$    &\s\Omicron&$\Omicron$&\s\gamma&$\gamma$    &\s\omicron&$\omicron$\\
+\s\Delta&$\Delta$    &\s\Pi&$\Pi$          &\s\delta&$\delta$    &\s\pi&$\pi$\\
+\s\Epsilon&$\Epsilon$&\s\Rho&$\Rho$        &\s\epsilon&$\epsilon$&\s\rho&$\rho$\\
+\s\Zeta&$\Zeta$      &\s\Sigma&$\Sigma$    &\s\zeta&$\zeta$      &\s\sigma&$\sigma$\\
+\s\Eta&$\Eta$        &\s\Tau&$\Tau$        &\s\eta&$\eta$        &\s\tau&$\tau$\\
+\s\Theta&$\Theta$    &\s\Upsilon&$\Upsilon$&\s\theta&$\theta$    &\s\upsilon&$\upsilon$\\
+\s\Iota&$\Iota$      &\s\Phi&$\Phi$        &\s\iota&$\iota$      &\s\phi&$\phi$\\
+\s\Kappa&$\Kappa$    &\s\Chi&$\Chi$        &\s\kappa&$\kappa$    &\s\chi&$\chi$\\
+\s\Lambda&$\Lambda$  &\s\Psi&$\Psi$        &\s\lambda&$\lambda$  &\s\psi&$\psi$\\
+\s\Mu&$\Mu$          &\s\Omega&$\Omega$    &\s\mu&$\mu$          &\s\omega&$\omega$\\
+\hline
+\end{tabular}
+
+\medskip
+
+\begin{tabular}{lclclc}
+\s\varsigma&$\varsigma$       & \s\digamma&$\digamma$ & \s\varSigma&$\varSigma$ \\
+\s\varvarsigma&$\varvarsigma$ & \s\koppa&$\koppa$     & \s\Sampi&$\Sampi$       \\
+\s\sampi&$\sampi$             &         &             & \s\Digamma&$\Digamma$
+\end{tabular}
+\caption{Greek letters, upright shapes, default family}
+\label{table:upright}
+\MakeShortVerb\|
+\end{table}
+
+\begin{table}[htbp]
+\capstart
+\DeleteShortVerb\|% a effet global !
+\let\s\string
+\ttfamily
+\lgrmathsetup{style=ISO}
+
+\centering
+\begin{tabular}{|lc|lc|lc|lc|}
+\hline
+\s\Alpha&$\Alpha$    &\s\Nu&$\Nu$          &\s\alpha&$\alpha$    &\s\nu&$\nu$\\
+\s\Beta&$\Beta$      &\s\Xi&$\Xi$          &\s\beta&$\beta$      &\s\xi&$\xi$\\
+\s\Gamma&$\Gamma$    &\s\Omicron&$\Omicron$&\s\gamma&$\gamma$    &\s\omicron&$\omicron$\\
+\s\Delta&$\Delta$    &\s\Pi&$\Pi$          &\s\delta&$\delta$    &\s\pi&$\pi$\\
+\s\Epsilon&$\Epsilon$&\s\Rho&$\Rho$        &\s\epsilon&$\epsilon$&\s\rho&$\rho$\\
+\s\Zeta&$\Zeta$      &\s\Sigma&$\Sigma$    &\s\zeta&$\zeta$      &\s\sigma&$\sigma$\\
+\s\Eta&$\Eta$        &\s\Tau&$\Tau$        &\s\eta&$\eta$        &\s\tau&$\tau$\\
+\s\Theta&$\Theta$    &\s\Upsilon&$\Upsilon$&\s\theta&$\theta$    &\s\upsilon&$\upsilon$\\
+\s\Iota&$\Iota$      &\s\Phi&$\Phi$        &\s\iota&$\iota$      &\s\phi&$\phi$\\
+\s\Kappa&$\Kappa$    &\s\Chi&$\Chi$        &\s\kappa&$\kappa$    &\s\chi&$\chi$\\
+\s\Lambda&$\Lambda$  &\s\Psi&$\Psi$        &\s\lambda&$\lambda$  &\s\psi&$\psi$\\
+\s\Mu&$\Mu$          &\s\Omega&$\Omega$    &\s\mu&$\mu$          &\s\omega&$\omega$\\
+\hline
+\end{tabular}
+\medskip
+
+\begin{tabular}{lclclc}
+\s\varsigma&$\varsigma$       & \s\digamma&$\digamma$ & \s\varSigma&$\varSigma$ \\
+\s\varvarsigma&$\varvarsigma$ & \s\koppa&$\koppa$     & \s\Sampi&$\Sampi$       \\
+\s\sampi&$\sampi$             &         &             & \s\Digamma&$\Digamma$
+\end{tabular}
+\caption{Greek letters, italic shapes, default family}
+\label{table:italic}
+\MakeShortVerb\|
+\end{table}
+
+Here are the options recognized by the package:
+\begin{description}
+\item[font=\meta{font\textunderscore name}] This specifies which font (font family in the
+  sens of the \LaTeX{} font selection scheme) to use.  It defaults to |lmr|.
+
+  In \autoref{table:upright} and \autoref{table:italic} we display the
+  glyphs from this default font |lmr| in LGR encoding, available to \LaTeX{}
+  thanks to the
+  support files from the package (in the sense of CTAN or \TeX Live, not of a
+  \LaTeX{} document) \ctanpkg{cbfonts-fd}.%
+%
+  \footnote{Claudio~\textsc{Beccari}, \emph{\LaTeX{} font description files for the CB Greek fonts}, \url{https://ctan.org/pkg/cbfonts-fd}.}
+%
+  It is recommended to user to have a look at its
+  documentation\centeredline{|texdoc cbfonts|}
+  in particular the section on Customizations which mentions alternate shapes
+  (such as |rs|, |ro|, |li|, |iv|, |uv| --- those last two are actually for
+  sans-serif |lmss| ---, and there are also comments relative to the series)
+  and use appropriately the |upshape|, |itshape|, |series| and |boldseries|
+  \lgrmath keys which are documented next.
+
+  The allowable names \meta{font\textunderscore name}'s are those |foo| for
+  which a file |LGRfoo.fd| or |lgrfoo.fd| exists on the system.
+
+  The above remarks about customization apply generally to all fonts, try to
+  see if there is some documentation associated with the font you choose.
+  Ultimate experts will look into the |.fd| files to see (for example) if there
+  is some interface to rescale the fonts by some factor.
+
+  Here is now a list of suitable such font definition files from which you can
+  extract usable font family names.  This has been obtained via exercising the
+  Unix |find| utility in a \TeX Live 2022 installation (possibly only partial).
+  To test a font the package provides \cs{lgrmathgreektable} and
+  \cs{lgrmathgreektableextra} which are documented in the next section.
+
+  \begin{snugshade}
+\catcode`\'\active\catcode`\`\active
+\def\MacroFont{\ttfamily\footnotesize\def'{\textquotesingle}\def`{\textasciigrave}}
+\catcode\string`\`12 \catcode`\' 12
+\begin{verbatim}
+in directory  /usr/local/texlive/2022/texmf-dist/tex/latex we execute
+    find . -name 'LGR*fd'
+and then rearrange somewhat the output to put it in alphabetical order,
+and gain some space horizontally so as to obtain a two-column display
+Naturally in many instances the various -TLF, -OsF, and so on, refer
+to options of digit characters and have no impact on the Greek letters,
+nevertheless I kept all filenames, just pick one, drop LGR and .fd parts.
+
+./alegreya/                                     ./librefranklin/
+    LGRAlegreya-Inf.fd                              LGRLibreFranklin-Sup.fd
+    LGRAlegreya-LF.fd                               LGRLibreFranklin-TLF.fd
+    LGRAlegreya-OsF.fd                          ./linguisticspro/
+    LGRAlegreya-Sup.fd                              LGRLinguisticsPro-LF.fd
+    LGRAlegreya-TLF.fd                              LGRLinguisticsPro-OsF.fd
+    LGRAlegreya-TOsF.fd                         ./nimbus15/
+    LGRAlegreyaSans-Inf.fd                          LGRNimbuSans.fd
+    LGRAlegreyaSans-LF.fd                           LGRNimbusMono.fd
+    LGRAlegreyaSans-OsF.fd                          LGRNimbusMonoN.fd
+    LGRAlegreyaSans-Sup.fd                          LGRNimbusSerif.fd
+    LGRAlegreyaSans-TLF.fd                      ./noto/
+    LGRAlegreyaSans-TOsF.fd                         LGRNotoSans-LF.fd
+./clara/                                            LGRNotoSans-OsF.fd
+    LGRClara-Sup.fd                                 LGRNotoSans-Sup.fd
+    LGRClara-TLF.fd                                 LGRNotoSans-TLF.fd
+    LGRClara-TOsF.fd                                LGRNotoSans-TOsF.fd
+./cochineal/                                        LGRNotoSansMono-Sup.fd
+    LGRCochineal-LF.fd                              LGRNotoSansMono-TLF.fd
+    LGRCochineal-OsF.fd                             LGRNotoSansMono-TOsF.fd
+    LGRCochineal-TLF.fd                             LGRNotoSerif-LF.fd
+    LGRCochineal-TOsF.fd                            LGRNotoSerif-OsF.fd
+./comfortaa/                                        LGRNotoSerif-Sup.fd
+    LGRcomfortaa.fd                                 LGRNotoSerif-TLF.fd
+./dejavu/                                           LGRNotoSerif-TOsF.fd
+    LGRDejaVuSans-TLF.fd                        ./oldstandard/
+    LGRDejaVuSansCondensed-TLF.fd                   LGROldStandard-Sup.fd
+    LGRDejaVuSansMono-TLF.fd                        LGROldStandard-TLF.fd
+    LGRDejaVuSerif-TLF.fd                       ./opensans/
+    LGRDejaVuSerifCondensed-TLF.fd                  LGRopensans-LF.fd
+./domitian/                                         LGRopensans-OsF.fd
+    LGRDomitian-Inf.fd                              LGRopensans-TLF.fd
+    LGRDomitian-Sup.fd                              LGRopensans-TOsF.fd
+    LGRDomitian-TLF.fd                          ./plex/
+    LGRDomitian-TOsF.fd                             LGRIBMPlexSans-Sup.fd
+./droid/                                            LGRIBMPlexSans-TLF.fd
+    LGRdroidsans.fd                             ./roboto/
+    LGRdroidsansmono.fd                             LGRRoboto-LF.fd
+    LGRdroidserif.fd                                LGRRoboto-OsF.fd
+./ebgaramond/                                       LGRRoboto-TLF.fd
+    LGREBGaramond-Inf.fd                            LGRRoboto-TOsF.fd
+    LGREBGaramond-LF.fd                             LGRRobotoMono-TLF.fd
+    LGREBGaramond-OsF.fd                            LGRRobotoSerif-LF.fd
+    LGREBGaramond-Sup.fd                            LGRRobotoSerif-OsF.fd
+    LGREBGaramond-TLF.fd                            LGRRobotoSerif-Sup.fd
+    LGREBGaramond-TOsF.fd                           LGRRobotoSerif-TLF.fd
+    LGREBGaramondInitials-TLF.fd                    LGRRobotoSerif-TOsF.fd
+./fira/                                             LGRRobotoSlab-TLF.fd
+    LGRFiraMono-Sup.fd                          ./sourcesanspro/
+    LGRFiraMono-TLF.fd                              LGRSourceSansPro-Dnom.fd
+    LGRFiraMono-TOsF.fd                             LGRSourceSansPro-Inf.fd
+    LGRFiraSans-LF.fd                               LGRSourceSansPro-LF.fd
+    LGRFiraSans-OsF.fd                              LGRSourceSansPro-Numr.fd
+    LGRFiraSans-Sup.fd                              LGRSourceSansPro-OsF.fd
+    LGRFiraSans-TLF.fd                              LGRSourceSansPro-Sup.fd
+    LGRFiraSans-TOsF.fd                             LGRSourceSansPro-TLF.fd
+./garamond-libre/                                   LGRSourceSansPro-TOsF.fd
+    LGRGaramondLibre-Inf.fd                     ./step/
+    LGRGaramondLibre-LF.fd                          LGRSTEP-Inf.fd
+    LGRGaramondLibre-OsF.fd                         LGRSTEP-Sup.fd
+    LGRGaramondLibre-Sup.fd                         LGRSTEP-TLF.fd
+./gofonts/                                          LGRSTEP-TOsF.fd
+    LGRGo-TLF.fd                                ./stepgreek/
+    LGRGoMono-TLF.fd                                LGRSTEPGreekTest-Sup.fd
+./lato/                                             LGRSTEPGreekTest-TLF.fd
+    LGRlato-LF.fd                                   LGRSTEPGreekTest-TOsF.fd
+    LGRlato-OsF.fd                              ./theanodidot/
+    LGRlato-TLF.fd                                  LGRTheanoDidot-TLF.fd
+    LGRlato-TOsF.fd                                 LGRTheanoDidot-TOsF.fd
+./libertinegc/                                  ./theanomodern/
+    LGRLinuxLibertineT-LF.fd                        LGRTheanoModern-TLF.fd
+    LGRLinuxLibertineT-OsF.fd                       LGRTheanoModern-TOsF.fd
+    LGRLinuxLibertineT-TLF.fd                   ./theanooldstyle/
+    LGRLinuxLibertineT-TOsF.fd                      LGRTheanoOldStyle-TLF.fd
+./libertinus-type1/                                 LGRTheanoOldStyle-TOsF.fd
+    LGRLibertinusSans-LF.fd        LGRLibertinusSerif-TLF.fd
+    LGRLibertinusSans-OsF.fd       LGRLibertinusSerif-TOsF.fd
+    LGRLibertinusSans-Sup.fd       LGRLibertinusSerifDisplay-LF.fd
+    LGRLibertinusSans-TLF.fd       LGRLibertinusSerifDisplay-OsF.fd
+    LGRLibertinusSans-TOsF.fd      LGRLibertinusSerifDisplay-Sup.fd
+    LGRLibertinusSerif-LF.fd       LGRLibertinusSerifDisplay-TLF.fd
+    LGRLibertinusSerif-OsF.fd      LGRLibertinusSerifDisplay-TOsF.fd
+    LGRLibertinusSerif-Sup.fd      LGRLibertinusSerifInitials-TLF.fd
+
+And now for more, with lowercase `lgr' filenames: find . -name 'lgr*fd'
+
+./txfontsb/lgrtxr.fd                     ./cm-lgc/lgrfcm.fd
+./txfontsb/lgrtxrc.fd                    ./cm-lgc/lgrfct.fd
+./txfontsb/lgrtxry.fd                    ./cm-lgc/lgrfcs.fd
+./txfontsb/lgrtxryc.fd                   ./epigrafica/lgrepigrafica.fd
+./gfsbodoni/lgrbodoni.fd                 ./gfssolomos/lgrsolomos.fd
+./lxfonts/lgrllcmtt.fd                   ./tempora/lgrtempora-tlf.fd
+./lxfonts/lgrllcmss.fd                   ./tempora/lgrtempora-tosf.fd
+./kerkis/lgrkfn.fd                       ./gfscomplutum/lgrcomplutum.fd
+./kerkis/lgrmaksf.fd                     ./gfsartemisia/lgrartemisiaeuler.fd
+./kerkis/lgrmak.fd                       ./gfsartemisia/lgrartemisia.fd
+./cbfonts-fd/lgrcmro.fd                  ./gentium-tug/lgrgentiumbook.fd
+./cbfonts-fd/lgrcmss.fd                  ./gentium-tug/lgrgentium.fd
+./cbfonts-fd/lgrlmr.fd                   ./gfsbaskerville/lgrgfsbaskerville.fd
+./cbfonts-fd/lgrlcmtt.fd                 ./miama/lgrfmm.fd
+./cbfonts-fd/lgrlmtt.fd                  ./gfsneohellenic/lgrneohellenic.fd
+./cbfonts-fd/lgrlmss.fd                  ./gfsdidot/lgrudidot.fd
+./cbfonts-fd/lgrlmro.fd                  ./gfsporson/lgrporson.fd
+./cbfonts-fd/lgrlcmss.fd
+./cbfonts-fd/lgrcmtt.fd
+./cbfonts-fd/lgrcmr.fd
+\end{verbatim}
+\end{snugshade}
+\item[upshape=\meta{shape}] Declares the shape to be used by the \cs{...up}
+  Greek letters and the \cs{lgrmathup} math alphabet.  Defaults to `|n|'
+  (without the quotes).
+\item[itshape=\meta{shape}] Declares the shape to be used by the \cs{...it}
+  Greek letters and the \cs{lgrmathit} math alphabet.  Defaults to `|it|'.
+\DeleteShortVerb{\|}
+\item[style=\meta{\upshape\ttfamily ISO|UP|TeX}] specifies the shape style
+  of the Greek letters. \MakeShortVerb{\|}
+
+  |ISO| means `italic' for lowercase
+  and uppercase, |UP| means `upright' for lowercase and uppercase, |TeX|
+  means `italic' for lowercase and `upright' for uppercase.  The lowercase
+  forms |iso|, |up| and |tex| are also accepted (or any mixed case).
+
+  One can also use |French| or |french| as an alias to |UP| or |up|.
+
+  This option will
+  override any |greek| or |Greek| option. The package defaults to |style=TeX|.
+
+  What `upright' and `italic' mean is configured by the |upshape| and
+  |itshape| respective settings.\DeleteShortVerb\|
+\item[greek=\meta{\ttfamily\upshape up|it|...}] Says\MakeShortVerb{\|} whether
+  Greek letters will be `upright' or `italic' i.e.\@ whether they obey the
+  |upshape| or |itshape| setting, i.e.\@ whether \cs{alpha} et al.\@ are
+  \cs{let} to \cs{alphaup} (et al.) or to \cs{alphait} (et
+  al.).\MakeShortVerb{\|}
+
+  So |greek=it| is like |style=ISO|, and |greek=up| is like |style=French|.
+
+  Other
+  shape values, such as `|n|' and `|sl|' or even `|sc|', are accepted.  For
+  more details, see the explanations for |Greek|.  For example |greek=n| is
+  like |style=UP|.
+
+  This option is ignored if |style| is used (order does not matter).
+  \DeleteShortVerb\|
+\item[Greek=\meta{\ttfamily\upshape up|it|...}] Says\MakeShortVerb{\|}
+  whether uppercase Greek
+  letters (and only them) will be `upright' or `italic' i.e.\@ whether they
+  use |upshape| or |itshape|, i.e.\@ whether \cs{Alpha} et al.\@ are \cs{let}
+  to \cs{Alphaup} (et al.) or to \cs{Alphait} (et al.).\MakeShortVerb{\|}
+
+  So to obtain lowercase to be `upright' and uppercase to be `italic', use
+  |greek=up| and then |Greek=it| (|Greek| must appear after |greek| else it will be
+  shadowed by it).
+
+  This option, like the  |greek| option, is ignored if the |style| option is used.
+
+  Other
+  shape values, such as `|n|' and `|sl|', are accepted.  They will then
+  override the |upshape| setting for it to match it.  For example |Greek=sc|
+  will force |upshape| to be |sc|, because the assumed style is the \TeX{} one
+  of italic lowercase and upright uppercase, so setting the shape of uppercase
+  must update the |upshape| value.
+
+\item[series=\meta{series}] This tells which series to use. The default is the
+  value of \cs{seriesdefault} at the time of loading the package.  There is no
+  interface to configure distinct series for the `upright' and `italic'
+  shapes.
+
+\item[boldseries=\meta{series}] This tells which series to use in bold
+  math. Default is \cs{bfdefault} at the time of loading the package.  There
+  is no interface to configure distinct series for the `upright' and `italic'
+  shapes.
+\item[alphabets] Says whether to define \cs{lgrmathup} and \cs{lgrmathit}.
+\end{description}
+
+\section{Commands of the \lgrmath package}
+
+Here are the commands defined by the package:
+\begin{description}
+\item[\cs{lgrmathsetup}\marg{key=value,...}] The only allowed keys are
+  |style|, |greek| and |Greek|.  And for the latter two only the values |up|
+  or |it| should be used (or values matching the |upshape| or |itshape|
+  settings), as it is only possible after package loading time to toggle
+  between `upright' and `italic' depending on whether the letter is uppercase
+  or lowercase, but one can not switch to an altogether different shape as
+  this would require re-declaring the symbol fonts.
+
+  If the |style| key is used, then |greek/Greek| are ignored.  However,
+  one can always naturally reuse later \cs{lgrmathsetup} using only the
+  |greek| and/or |Greek| keys.
+\item[\cs{lgrmathup}] This is a math alphabet.  It is defined only if the
+  package received the |alphabets| option.
+\item[\cs{lgrmathit}] This is a math alphabet.  It is defined only if the
+  package received the |alphabets| option.
+
+\item[\cs{lgrmathgreektable}\marg{family}\marg{series}\marg{shape}] Produces a
+  tabular display of the Greek letters available with this font.  Here is for
+  example using%
+%
+  \centeredline{|\lgrmathgreektable{Alegreya-TLF}{regular}{n}|}
+%
+  \centeredline{\lgrmathgreektable{Alegreya-TLF}{regular}{n}}
+
+  We used |regular|
+  for the \meta{series} mandatory argument after seeing Font Info messages in
+  the |.log| file about the |m| series not being available and being
+  substituted for by |regular|, so we used |regular| to avoid those messages.
+\item[\cs{lgrmathgreektableextra}\marg{family}\marg{series}\marg{shape}] 
+  Produces a tabular with eight additional glyphs.  Here is an example, using
+%
+  \centeredline{|\lgrmathgreektableextra{LibertinusSans-TLF}{m}{n}|}
+%
+  \centeredline{\lgrmathgreektableextra{LibertinusSans-TLF}{m}{n}} Beware that if
+  we had forgotten the |-TLF| suffix, the font would have been substituted in
+  favour of fall-back |lmr| by \LaTeX.  Always check log for font substitutions
+  messages...
+
+  And see also the last remark below.
+\end{description}
+
+Miscellaneous remarks:
+\begin{enumerate}
+\item Even if not receiving the option |alphabets|, the package will declare
+  all Greek letters to be of type \cs{mathalpha}.
+\item The \lgrmath package ignores global class options.  It handles only
+  options originating from the \cs{usepackage} preamble declaration (or some
+  options handed over via \cs{PassOptionsToPackage} or options passed to
+  \cs{lgrmathsetup} in the preamble or body).
+\item The \ctanpkg{libgreek} package defines \cs{mathchar}'s mapping to
+  lowercase Greek letters with diacritics, but for time being it has been
+  decided that \lgrmath would restrict its definitions to the 24+24 base glyphs
+  and the 8 ``extra'' ones for which there are slots in the LGR encoding table.
+\item These 8 ``extra glyphs'' will not always be available, depending on the
+  font.  Here is for example with |Alegreya-TLF|:
+  \centeredline{\lgrmathgreektableextra{Alegreya-TLF}{regular}{n}} Adding
+  |\tracinglostchars=3| will cause \TeX\ to raise an error in case such missing
+  characters are encountered.
+\end{enumerate}
+
+This is the end of the user documentation.  The next section is a code listing
+with some comments for the advanced users.
+
+\StopEventually{\end{document}\endinput}
+
+\cleardoublepage
+%\newgeometry{hmarginratio=3:2}
+\small
+
+\makeatletter
+
+\section{Implementation of the \lgrmath package}
+
+% https://github.com/latex3/latex2e/issues/563
+\AddToHook{env/macrocode/after}{\@nobreakfalse}
+\AddToHook{env/macrocode/begin}{\partopsep0pt\relax}
+
+% The catcode hackery next is to avoid to have the guard be listed
+% in the commented source code... (here <*legacy>)
+% (c) 2012/11/19 Jean-François Burnol ;-)
+
+\def\gardesactifs {\catcode`\<=0 \catcode`\>=11 \catcode`\*=11 \catcode`\/=11 }
+\def\gardesinactifs {\catcode`\<=12 \catcode`\>=12 \catcode`\*=12 \catcode`\/=12 }
+\gardesactifs
+\let</dtx>\relax
+\let<*sty>\gardesinactifs
+
+\MakePercentIgnore
+%</dtx>
+%<*sty>
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lgrmath}
+         [2022/11/16 1.0 Greek in math mode via LGR font of one's choice (JFB)]
+%    \end{macrocode}
+% We will use \ctanpkg{kvoptions} to handle options with |key=value| syntax.
+%    \begin{macrocode}
+\RequirePackage{kvoptions}
+%    \end{macrocode}
+% To minimize the author's task, we keep close to |libgreek.sty| code with minimal
+% adaptations.  In particular I decided to keep the fact that |style| option
+% makes the |Greek| and |greek| options ignored.  But there are some
+% complications originating in the addition of the \cs{lgrmathsetup}, which
+% requires to keep a trace of various things, for example if |style| option is
+% used at package level and then later on using \cs{lgrmathsetup} the user
+% employs the |Greek/greek| options.
+%
+% This package assigns two symbol fonts, one for upright, the other one for
+% italic-like.
+%
+% The |upshape| and |itshape| keys allow to configure what the \cs{...up}
+% and \cs{...it} macros will actually use as shapes.
+%    \begin{macrocode}
+\def\lgrmath@fontfamily{lmr}
+\def\lgrmath@scale{1}
+\def\lgrmath@upshape{n}
+\def\lgrmath@itshape{it}
+\newif\iflgrmath@upper@up\lgrmath@upper@uptrue
+\newif\iflgrmath@lower@up
+\edef\lgrmath@series{\seriesdefault}
+\edef\lgrmath@boldseries{\bfdefault}
+\def\lgrmath@upper@shape{\lgrmath@upshape}
+\def\lgrmath@lower@shape{\lgrmath@itshape}
+\def\lgrmath@style{TeX}
+\newif\iflgrmath@sty
+%    \end{macrocode}
+% We use the \ctanpkg{keyval} interface mostly to not have to rework
+% everything, if at all possible, into the \ctanpkg{kvoptions} declarative
+% interface.  It is a very good thing that the latter package can be used
+% without forcing on the user its own declarative interface...
+%    \begin{macrocode}
+\define@key{lgrmath}{font}[lmr]{\def\lgrmath@fontfamily{#1}}
+\define@key{lgrmath}{upshape}{\edef\lgrmath@upshape{#1}}
+\define@key{lgrmath}{itshape}{\edef\lgrmath@itshape{#1}}
+%    \end{macrocode}
+% Compared to |libgreek 1.1| I decide to use \cs{lowercase} and allow |UP| as
+% alias of |French|.
+%    \begin{macrocode}
+\define@key{lgrmath}{style}{%
+   \edef\lgrmath@style{#1}%
+   \lowercase\expandafter{\expandafter\def\expandafter\lgrmath@style
+               \expandafter{\lgrmath@style}}%
+   \lgrmath@stytrue
+}
+\define@key{lgrmath}{Greek}{\edef\lgrmath@upper@shape{#1}}
+%    \end{macrocode}
+% Attention to not introduce a space token, as this may be used via
+% \cs{lgrmathsetup} in document body.
+%    \begin{macrocode}
+\define@key{lgrmath}{greek}{\edef\lgrmath@lower@shape{#1}%
+                             \edef\lgrmath@upper@shape{#1}}
+\define@key{lgrmath}{series}{\edef\lgrmath@series{#1}}
+\define@key{lgrmath}{boldseries}{\edef\lgrmath@boldseries{#1}}
+%    \end{macrocode}
+% The single Boolean option, a true one as it uses \ctanpkg{kvoptions} interface.
+%    \begin{macrocode}
+\DeclareBoolOption[false]{alphabets}
+%    \end{macrocode}
+% We need some auxiliaries to handle the |style| values.  As mentioned
+% already, some extra stuff is executed for reasons of various scenarii
+% with \cs{lgrmathsetup}.
+%    \begin{macrocode}
+\def\lgrmath@style@iso{%
+    \lgrmath@upper@upfalse
+    \lgrmath@lower@upfalse
+    \let\lgrmath@upper@shape\lgrmath@itshape
+    \let\lgrmath@lower@shape\lgrmath@itshape
+}
+\def\lgrmath@style@french{%
+    \lgrmath@upper@uptrue
+    \lgrmath@lower@uptrue
+    \let\lgrmath@upper@shape\lgrmath@upshape
+    \let\lgrmath@lower@shape\lgrmath@upshape
+}
+\let\lgrmath@style@up\lgrmath@style@french
+\def\lgrmathk@style@tex{%
+    \lgrmath@upper@uptrue
+    \lgrmath@lower@upfalse
+    \let\lgrmath@upper@shape\lgrmath@upshape
+    \let\lgrmath@lower@shape\lgrmath@itshape
+}
+%    \end{macrocode}
+% This always resets the \cs{iflgrmath@sty} to false for \cs{lgrmathsetup}
+% being usable with |greek| and |Greek| keys.
+%    \begin{macrocode}
+\def\lgrmath@process@style{%
+   \lgrmath@styfalse
+   \ifcsname lgrmath@style@\lgrmath@style\endcsname
+     \csname lgrmath@style@\lgrmath@style\endcsname
+   \else
+     \PackageWarning{lgrmath}{Unknown (here, lowercased) style `\lgrmath@style'}%
+   \fi
+}
+%    \end{macrocode}
+% This stuff is a bit involved.
+%    \begin{macrocode}
+\def\lgrmath@process@shapes{%
+   \edef\lgrmath@upper@shape{\lgrmath@upper@shape}%
+   \edef\lgrmath@lower@shape{\lgrmath@lower@shape}%
+   \ifx\lgrmath@upper@shape\lgrmath@upshape
+      \lgrmath@upper@uptrue
+   \else
+      \ifx\lgrmath@upper@shape\lgrmath@itshape
+         \lgrmath@upper@upfalse
+      \else
+   \expandafter\in@\expandafter{\expandafter.\lgrmath@upper@shape,}{.up,}%
+   \ifin@\lgrmath@upper@uptrue
+   \else
+     \expandafter\in@\expandafter{\expandafter.\lgrmath@upper@shape,}{.it,}%
+     \ifin@\lgrmath@upper@upfalse
+     \else
+        \lgrmath@process@upper@lastresort
+   \fi\fi\fi\fi
+   \ifx\lgrmath@lower@shape\lgrmath@itshape
+      \lgrmath@lower@upfalse
+   \else
+      \ifx\lgrmath@lower@shape\lgrmath@upshape
+         \lgrmath@lower@uptrue
+      \else
+   \expandafter\in@\expandafter{\expandafter.\lgrmath@lower@shape,}{.it,}%
+   \ifin@\lgrmath@lower@upfalse
+   \else
+     \expandafter\in@\expandafter{\expandafter.\lgrmath@lower@shape,}{.up,}%
+     \ifin@\lgrmath@lower@uptrue
+     \else
+        \lgrmath@process@lower@lastresort
+   \fi\fi\fi\fi
+}% 
+\def\lgrmath@process@upper@lastresort{%
+    \lgrmath@upper@uptrue
+    \let\lgrmath@upshape\lgrmath@upper@shape
+}
+\def\lgrmath@process@lower@lastresort{%
+    \lgrmath@lower@upfalse
+    \let\lgrmath@itshape\lgrmath@lower@shape
+}
+%    \end{macrocode}
+% The fact that packages may be handed global options is rather dangerous.
+% Fortunately \ctanpkg{kvoptions} has an interface to handle only local options.
+%    \begin{macrocode}
+\ProcessLocalKeyvalOptions*
+%    \end{macrocode}
+% We now do the post-processing regarding the shape configuration after
+% option parsing.  Once this is done we will reconfigure slightly
+% \cs{lgrmath@process@shapes} for usability in the document preamble or body,
+% after the symbol fonts have been declared.  As is well-known the \LaTeX{}
+% interface to math fonts is full of  ``only-preamble'' restrictions.
+%    \begin{macrocode}
+\iflgrmath@sty
+  \lgrmath@process@style
+\else
+  \lgrmath@process@shapes
+\fi
+\def\lgrmath@process@upper@lastresort{%
+    \PackageWarning{lgrmath}{%
+                       Too late for the shape `\lgrmath@upper@shape'\MessageBreak
+                       originating in Greek or greek option. Ignored.\MessageBreak
+                       Use `up' or `it'}%
+}
+\def\lgrmath@process@lower@lastresort{%
+    \PackageWarning{lgrmath}{%
+                       Too late for the shape `\lgrmath@lower@shape'\MessageBreak
+                       originating in greek option. Ignored.\MessageBreak
+                       Use `up' or `it'}%
+}
+\def\lgrmathsetup#1{%
+    \setkeys{lgrmath}{#1}%
+    \iflgrmath@sty\lgrmath@process@style\else\lgrmath@process@shapes\fi
+    \lgrmath@setgreekcs
+}
+%    \end{macrocode}
+% Almost all options must be restricted to the package loading time only.
+%    \begin{macrocode}
+\DisableKeyvalOption{lgrmath}{font}
+\DisableKeyvalOption{lgrmath}{upshape}
+\DisableKeyvalOption{lgrmath}{itshape}
+\DisableKeyvalOption{lgrmath}{series}
+\DisableKeyvalOption{lgrmath}{boldseries}
+\DisableKeyvalOption{lgrmath}{alphabets}
+%    \end{macrocode}
+% Declarations of the two symbol fonts, one for `upright' (or whatever is
+% configured by the |upshape| key), one for `italic' (or whatever is configured
+% by the |itshape| key).  One can not specify distinct series, both
+% `upright' and `italic' use the same font series.  This could be added but I
+% doubt anyone will use the package to start with...
+%
+% The \ctanpkg{libgreek} of |2022/11/11| extracted the |-TLF| postfix from the
+% font family name, to reinsert it here explicitly, the options |serif/sans|
+% deciding whether to use |LibertinusSerif-TLF| or |LibertinusSans-TLF| for
+% reasons now escaping me.  I vaguely remember it was useful at some point
+% during development.  Ah yes, now I remember this separation was for the
+% handling of the |scale| option.  And we haven't one here.
+%    \begin{macrocode}
+\DeclareFontEncoding{LGR}{}{}
+\DeclareSymbolFont{lgrmathup}{LGR}{\lgrmath@fontfamily}
+                                  {\lgrmath@series}
+                                  {\lgrmath@upshape}
+\SetSymbolFont{lgrmathup}{bold}{LGR}{\lgrmath@fontfamily}
+                                    {\lgrmath@boldseries}
+                                    {\lgrmath@upshape}
+\DeclareSymbolFont{lgrmathit}{LGR}{\lgrmath@fontfamily}
+                                  {\lgrmath@series}
+                                  {\lgrmath@itshape}
+\SetSymbolFont{lgrmathit}{bold}{LGR}{\lgrmath@fontfamily}
+                                    {\lgrmath@boldseries}
+                                    {\lgrmath@itshape}
+%    \end{macrocode}
+% As all Greek letters are already available in \cs{...up} and \cs{...it}
+% variants, it is indeed not immediately pressing to have math alphabets, so
+% let's not do it by default.
+%    \begin{macrocode}
+\iflgrmath@alphabets
+   \DeclareSymbolFontAlphabet{\lgrmathup}{lgrmathup}
+   \DeclareSymbolFontAlphabet{\lgrmathit}{lgrmathit}
+\fi
+%    \end{macrocode}
+% Definition of the `|up|' \cs{mathchar}'s.  There are 48 `standard'
+% ones plus 8 extras.^^A and 11 with diacritics for a total of 67 ones.
+%
+% Hesitation whether I should declare with \cs{mathalpha} \emph{only} if
+% |alphabets| is passed to the package.
+%    \begin{macrocode}
+\DeclareMathSymbol{\Alphaup}{\mathalpha}{lgrmathup}{65}
+\DeclareMathSymbol{\Betaup}{\mathalpha}{lgrmathup}{66}
+\DeclareMathSymbol{\Gammaup}{\mathalpha}{lgrmathup}{71}
+\DeclareMathSymbol{\Deltaup}{\mathalpha}{lgrmathup}{68}
+\DeclareMathSymbol{\Epsilonup}{\mathalpha}{lgrmathup}{69}
+\DeclareMathSymbol{\Zetaup}{\mathalpha}{lgrmathup}{90}
+\DeclareMathSymbol{\Etaup}{\mathalpha}{lgrmathup}{72}
+\DeclareMathSymbol{\Thetaup}{\mathalpha}{lgrmathup}{74}
+\DeclareMathSymbol{\Iotaup}{\mathalpha}{lgrmathup}{73}
+\DeclareMathSymbol{\Kappaup}{\mathalpha}{lgrmathup}{75}
+\DeclareMathSymbol{\Lambdaup}{\mathalpha}{lgrmathup}{76}
+\DeclareMathSymbol{\Muup}{\mathalpha}{lgrmathup}{77}
+\DeclareMathSymbol{\Nuup}{\mathalpha}{lgrmathup}{78}
+\DeclareMathSymbol{\Xiup}{\mathalpha}{lgrmathup}{88}
+\DeclareMathSymbol{\Omicronup}{\mathalpha}{lgrmathup}{79}
+\DeclareMathSymbol{\Piup}{\mathalpha}{lgrmathup}{80}
+\DeclareMathSymbol{\Rhoup}{\mathalpha}{lgrmathup}{82}
+\DeclareMathSymbol{\Sigmaup}{\mathalpha}{lgrmathup}{83}
+\DeclareMathSymbol{\Tauup}{\mathalpha}{lgrmathup}{84}
+\DeclareMathSymbol{\Upsilonup}{\mathalpha}{lgrmathup}{85}
+\DeclareMathSymbol{\Phiup}{\mathalpha}{lgrmathup}{70}
+\DeclareMathSymbol{\Chiup}{\mathalpha}{lgrmathup}{81}
+\DeclareMathSymbol{\Psiup}{\mathalpha}{lgrmathup}{89}
+\DeclareMathSymbol{\Omegaup}{\mathalpha}{lgrmathup}{87}
+\DeclareMathSymbol{\alphaup}{\mathalpha}{lgrmathup}{97}
+\DeclareMathSymbol{\betaup}{\mathalpha}{lgrmathup}{98}
+\DeclareMathSymbol{\gammaup}{\mathalpha}{lgrmathup}{103}
+\DeclareMathSymbol{\deltaup}{\mathalpha}{lgrmathup}{100}
+\DeclareMathSymbol{\epsilonup}{\mathalpha}{lgrmathup}{101}
+\DeclareMathSymbol{\zetaup}{\mathalpha}{lgrmathup}{122}
+\DeclareMathSymbol{\etaup}{\mathalpha}{lgrmathup}{104}
+\DeclareMathSymbol{\thetaup}{\mathalpha}{lgrmathup}{106}
+\DeclareMathSymbol{\iotaup}{\mathalpha}{lgrmathup}{105}
+\DeclareMathSymbol{\kappaup}{\mathalpha}{lgrmathup}{107}
+\DeclareMathSymbol{\lambdaup}{\mathalpha}{lgrmathup}{108}
+\DeclareMathSymbol{\muup}{\mathalpha}{lgrmathup}{109}
+\DeclareMathSymbol{\nuup}{\mathalpha}{lgrmathup}{110}
+\DeclareMathSymbol{\xiup}{\mathalpha}{lgrmathup}{120}
+\DeclareMathSymbol{\omicronup}{\mathalpha}{lgrmathup}{111}
+\DeclareMathSymbol{\piup}{\mathalpha}{lgrmathup}{112}
+\DeclareMathSymbol{\rhoup}{\mathalpha}{lgrmathup}{114}
+\DeclareMathSymbol{\sigmaup}{\mathalpha}{lgrmathup}{115}
+\DeclareMathSymbol{\tauup}{\mathalpha}{lgrmathup}{116}
+\DeclareMathSymbol{\upsilonup}{\mathalpha}{lgrmathup}{117}
+\DeclareMathSymbol{\phiup}{\mathalpha}{lgrmathup}{102}
+\DeclareMathSymbol{\chiup}{\mathalpha}{lgrmathup}{113}
+\DeclareMathSymbol{\psiup}{\mathalpha}{lgrmathup}{121}
+\DeclareMathSymbol{\omegaup}{\mathalpha}{lgrmathup}{119}
+%    \end{macrocode}
+% Defintion of the `|it|' \cs{mathchar}'s.
+%    \begin{macrocode}
+\DeclareMathSymbol{\Alphait}{\mathalpha}{lgrmathit}{65}
+\DeclareMathSymbol{\Betait}{\mathalpha}{lgrmathit}{66}
+\DeclareMathSymbol{\Gammait}{\mathalpha}{lgrmathit}{71}
+\DeclareMathSymbol{\Deltait}{\mathalpha}{lgrmathit}{68}
+\DeclareMathSymbol{\Epsilonit}{\mathalpha}{lgrmathit}{69}
+\DeclareMathSymbol{\Zetait}{\mathalpha}{lgrmathit}{90}
+\DeclareMathSymbol{\Etait}{\mathalpha}{lgrmathit}{72}
+\DeclareMathSymbol{\Thetait}{\mathalpha}{lgrmathit}{74}
+\DeclareMathSymbol{\Iotait}{\mathalpha}{lgrmathit}{73}
+\DeclareMathSymbol{\Kappait}{\mathalpha}{lgrmathit}{75}
+\DeclareMathSymbol{\Lambdait}{\mathalpha}{lgrmathit}{76}
+\DeclareMathSymbol{\Muit}{\mathalpha}{lgrmathit}{77}
+\DeclareMathSymbol{\Nuit}{\mathalpha}{lgrmathit}{78}
+\DeclareMathSymbol{\Xiit}{\mathalpha}{lgrmathit}{88}
+\DeclareMathSymbol{\Omicronit}{\mathalpha}{lgrmathit}{79}
+\DeclareMathSymbol{\Piit}{\mathalpha}{lgrmathit}{80}
+\DeclareMathSymbol{\Rhoit}{\mathalpha}{lgrmathit}{82}
+\DeclareMathSymbol{\Sigmait}{\mathalpha}{lgrmathit}{83}
+\DeclareMathSymbol{\Tauit}{\mathalpha}{lgrmathit}{84}
+\DeclareMathSymbol{\Upsilonit}{\mathalpha}{lgrmathit}{85}
+\DeclareMathSymbol{\Phiit}{\mathalpha}{lgrmathit}{70}
+\DeclareMathSymbol{\Chiit}{\mathalpha}{lgrmathit}{81}
+\DeclareMathSymbol{\Psiit}{\mathalpha}{lgrmathit}{89}
+\DeclareMathSymbol{\Omegait}{\mathalpha}{lgrmathit}{87}
+\DeclareMathSymbol{\alphait}{\mathalpha}{lgrmathit}{97}
+\DeclareMathSymbol{\betait}{\mathalpha}{lgrmathit}{98}
+\DeclareMathSymbol{\gammait}{\mathalpha}{lgrmathit}{103}
+\DeclareMathSymbol{\deltait}{\mathalpha}{lgrmathit}{100}
+\DeclareMathSymbol{\epsilonit}{\mathalpha}{lgrmathit}{101}
+\DeclareMathSymbol{\zetait}{\mathalpha}{lgrmathit}{122}
+\DeclareMathSymbol{\etait}{\mathalpha}{lgrmathit}{104}
+\DeclareMathSymbol{\thetait}{\mathalpha}{lgrmathit}{106}
+\DeclareMathSymbol{\iotait}{\mathalpha}{lgrmathit}{105}
+\DeclareMathSymbol{\kappait}{\mathalpha}{lgrmathit}{107}
+\DeclareMathSymbol{\lambdait}{\mathalpha}{lgrmathit}{108}
+\DeclareMathSymbol{\muit}{\mathalpha}{lgrmathit}{109}
+\DeclareMathSymbol{\nuit}{\mathalpha}{lgrmathit}{110}
+\DeclareMathSymbol{\xiit}{\mathalpha}{lgrmathit}{120}
+\DeclareMathSymbol{\omicronit}{\mathalpha}{lgrmathit}{111}
+\DeclareMathSymbol{\piit}{\mathalpha}{lgrmathit}{112}
+\DeclareMathSymbol{\rhoit}{\mathalpha}{lgrmathit}{114}
+\DeclareMathSymbol{\sigmait}{\mathalpha}{lgrmathit}{115}
+\DeclareMathSymbol{\tauit}{\mathalpha}{lgrmathit}{116}
+\DeclareMathSymbol{\upsilonit}{\mathalpha}{lgrmathit}{117}
+\DeclareMathSymbol{\phiit}{\mathalpha}{lgrmathit}{102}
+\DeclareMathSymbol{\chiit}{\mathalpha}{lgrmathit}{113}
+\DeclareMathSymbol{\psiit}{\mathalpha}{lgrmathit}{121}
+\DeclareMathSymbol{\omegait}{\mathalpha}{lgrmathit}{119}
+%    \end{macrocode}
+% Extras: alternate shapes and other glyphs, `upright'.
+%    \begin{macrocode}
+\DeclareMathSymbol{\varsigmaup}{\mathalpha}{lgrmathup}{99}
+\DeclareMathSymbol{\varvarsigmaup}{\mathalpha}{lgrmathup}{6}
+\DeclareMathSymbol{\varSigmaup}{\mathalpha}{lgrmathup}{22}
+\DeclareMathSymbol{\Sampiup}{\mathalpha}{lgrmathup}{23}
+\DeclareMathSymbol{\sampiup}{\mathalpha}{lgrmathup}{27}
+\DeclareMathSymbol{\digammaup}{\mathalpha}{lgrmathup}{147}
+\DeclareMathSymbol{\Digammaup}{\mathalpha}{lgrmathup}{195}
+\DeclareMathSymbol{\koppaup}{\mathalpha}{lgrmathup}{18}
+%    \end{macrocode}
+% Extras: alternate shapes and other glyphs, `italic'.
+%    \begin{macrocode}
+\DeclareMathSymbol{\varsigmait}{\mathalpha}{lgrmathit}{99}
+\DeclareMathSymbol{\varvarsigmait}{\mathalpha}{lgrmathit}{6}
+\DeclareMathSymbol{\varSigmait}{\mathalpha}{lgrmathit}{22}
+\DeclareMathSymbol{\Sampiit}{\mathalpha}{lgrmathit}{23}
+\DeclareMathSymbol{\sampiit}{\mathalpha}{lgrmathit}{27}
+\DeclareMathSymbol{\digammait}{\mathalpha}{lgrmathit}{147}
+\DeclareMathSymbol{\Digammait}{\mathalpha}{lgrmathit}{195}
+\DeclareMathSymbol{\koppait}{\mathalpha}{lgrmathit}{18}
+%    \end{macrocode}
+% Some glyphs with diacritics.  I decided not to keep this
+% in \lgrmath.  Let's wait for extremely improbable feature request, as I won't
+% do the feature request and will probably remain the sole user.  Actually I
+% don't think I will ever use this package as contexts where
+% it could be useful are those where I would use \ctanpkg{mathastext} and its
+% |LGRgreek| option and \cs{MTgreekfont} command...
+% \makeatletter\codeline@indexfalse
+%    \begin{macrocode}
+% \DeclareMathSymbol{\alphatonosup}{\mathalpha}{lgrmathup}{136}
+% \DeclareMathSymbol{\epsilontonosup}{\mathalpha}{lgrmathup}{232}
+% \DeclareMathSymbol{\etatonosup}{\mathalpha}{lgrmathup}{160}
+% \DeclareMathSymbol{\iotatonosup}{\mathalpha}{lgrmathup}{208}
+% \DeclareMathSymbol{\omicrontonosup}{\mathalpha}{lgrmathup}{236}
+% \DeclareMathSymbol{\upsilontonosup}{\mathalpha}{lgrmathup}{212}
+% \DeclareMathSymbol{\omegatonosup}{\mathalpha}{lgrmathup}{184}
+% \DeclareMathSymbol{\upsilondieresistonosup}{\mathalpha}{lgrmathup}{246}
+% \DeclareMathSymbol{\iotadieresisup}{\mathalpha}{lgrmathup}{240}
+% \DeclareMathSymbol{\iotadieresistonosup}{\mathalpha}{lgrmathup}{242}
+% \DeclareMathSymbol{\upsilondieresisup}{\mathalpha}{lgrmathup}{244}
+% \DeclareMathSymbol{\alphatonosit}{\mathalpha}{lgrmathit}{136}
+% \DeclareMathSymbol{\epsilontonosit}{\mathalpha}{lgrmathit}{232}
+% \DeclareMathSymbol{\etatonosit}{\mathalpha}{lgrmathit}{160}
+% \DeclareMathSymbol{\iotatonosit}{\mathalpha}{lgrmathit}{208}
+% \DeclareMathSymbol{\omicrontonosit}{\mathalpha}{lgrmathit}{236}
+% \DeclareMathSymbol{\upsilontonosit}{\mathalpha}{lgrmathit}{212}
+% \DeclareMathSymbol{\omegatonosit}{\mathalpha}{lgrmathit}{184}
+% \DeclareMathSymbol{\upsilondieresistonosit}{\mathalpha}{lgrmathit}{246}
+% \DeclareMathSymbol{\iotadieresisit}{\mathalpha}{lgrmathit}{240}
+% \DeclareMathSymbol{\iotadieresistonosit}{\mathalpha}{lgrmathit}{242}
+% \DeclareMathSymbol{\upsilondieresisit}{\mathalpha}{lgrmathit}{244}
+%    \end{macrocode}
+% \codeline@indextrue
+% Definition of the \cs{mathchar}'s without `|up/it|' postfix. There are 27=24+3
+% uppercase and 29=24+5 lowercase letters, for a total of 56=48+8 glyphs.  Actually,
+% I had done some work with LGR in September 2011.  I kept
+% the file around.  But
+% at no point did I go back to check if I had done exhaustive work in 2011 and
+% whether some other glyphs could be accounted for by LGR (not using
+% ligatures) (I did re-check an
+% old file about the LGR encoding I had from that 2011 work, but did not try
+% to check for updates).  Anyway, it is very doubtful whether it made any
+% sense for \lgrmath to define control sequences for Greek letters with
+% diacritics...
+%    \begin{macrocode}
+\def\lgrmath@setgreekcs{%
+    \iflgrmath@upper@up
+       \let\Alpha\Alphaup
+       \let\Beta\Betaup
+       \let\Gamma\Gammaup
+       \let\Delta\Deltaup
+       \let\Epsilon\Epsilonup
+       \let\Zeta\Zetaup
+       \let\Eta\Etaup
+       \let\Theta\Thetaup
+       \let\Iota\Iotaup
+       \let\Kappa\Kappaup
+       \let\Lambda\Lambdaup
+       \let\Mu\Muup
+       \let\Nu\Nuup
+       \let\Xi\Xiup
+       \let\Omicron\Omicronup
+       \let\Pi\Piup
+       \let\Rho\Rhoup
+       \let\Sigma\Sigmaup
+       \let\Tau\Tauup
+       \let\Upsilon\Upsilonup
+       \let\Phi\Phiup
+       \let\Chi\Chiup
+       \let\Psi\Psiup
+       \let\Omega\Omegaup
+       \let\Sampi\Sampiup
+       \let\Digamma\Digammaup
+       \let\varSigma\varSigmaup
+    \else
+       \let\Alpha\Alphait
+       \let\Beta\Betait
+       \let\Gamma\Gammait
+       \let\Delta\Deltait
+       \let\Epsilon\Epsilonit
+       \let\Zeta\Zetait
+       \let\Eta\Etait
+       \let\Theta\Thetait
+       \let\Iota\Iotait
+       \let\Kappa\Kappait
+       \let\Lambda\Lambdait
+       \let\Mu\Muit
+       \let\Nu\Nuit
+       \let\Xi\Xiit
+       \let\Omicron\Omicronit
+       \let\Pi\Piit
+       \let\Rho\Rhoit
+       \let\Sigma\Sigmait
+       \let\Tau\Tauit
+       \let\Upsilon\Upsilonit
+       \let\Phi\Phiit
+       \let\Chi\Chiit
+       \let\Psi\Psiit
+       \let\Omega\Omegait
+       \let\Sampi\Sampiit
+       \let\Digamma\Digammait
+       \let\varSigma\varSigmait
+    \fi
+    \iflgrmath@lower@up
+       \let\alpha\alphaup
+       \let\beta\betaup
+       \let\gamma\gammaup
+       \let\delta\deltaup
+       \let\epsilon\epsilonup
+       \let\zeta\zetaup
+       \let\eta\etaup
+       \let\theta\thetaup
+       \let\iota\iotaup
+       \let\kappa\kappaup
+       \let\lambda\lambdaup
+       \let\mu\muup
+       \let\nu\nuup
+       \let\xi\xiup
+       \let\omicron\omicronup
+       \let\pi\piup
+       \let\rho\rhoup
+       \let\sigma\sigmaup
+       \let\tau\tauup
+       \let\upsilon\upsilonup
+       \let\phi\phiup
+       \let\chi\chiup
+       \let\psi\psiup
+       \let\omega\omegaup
+       \let\varsigma\varsigmaup
+       \let\varvarsigma\varvarsigmaup
+       \let\sampi\sampiup
+       \let\digamma\digammaup
+       \let\koppa\koppaup
+%    \end{macrocode}
+% The \ctanpkg{doc} |macrocode| makes no provision for being interrupted
+% invisibly, it is very complicated (but possible) to do this (see
+% \centeredline{\url{https://github.com/latex3/latex2e/issues/847}}
+% ), but simplest is to babble something here like this paragraph.
+% \codeline@indexfalse
+%    \begin{macrocode}
+% \let\alphatonos\alphatonosup
+% \let\epsilontonos\epsilontonosup
+% \let\etatonos\etatonosup
+% \let\iotatonos\iotatonosup
+% \let\omicrontonos\omicrontonosup
+% \let\upsilontonos\upsilontonosup
+% \let\omegatonos\omegatonosup
+% \let\upsilondieresistonos\upsilondieresistonosup
+% \let\iotadieresis\iotadieresisup
+% \let\iotadieresistonos\iotadieresistonosup
+% \let\upsilondieresis\upsilondieresisup
+%    \end{macrocode}
+% babble\codeline@indextrue
+%    \begin{macrocode}
+    \else
+       \let\alpha\alphait
+       \let\beta\betait
+       \let\gamma\gammait
+       \let\delta\deltait
+       \let\epsilon\epsilonit
+       \let\zeta\zetait
+       \let\eta\etait
+       \let\theta\thetait
+       \let\iota\iotait
+       \let\kappa\kappait
+       \let\lambda\lambdait
+       \let\mu\muit
+       \let\nu\nuit
+       \let\xi\xiit
+       \let\omicron\omicronit
+       \let\pi\piit
+       \let\rho\rhoit
+       \let\sigma\sigmait
+       \let\tau\tauit
+       \let\upsilon\upsilonit
+       \let\phi\phiit
+       \let\chi\chiit
+       \let\psi\psiit
+       \let\omega\omegait
+       \let\varsigma\varsigmait
+       \let\varvarsigma\varvarsigmait
+       \let\sampi\sampiit
+       \let\digamma\digammait
+       \let\koppa\koppait
+%    \end{macrocode}
+% babble\codeline@indexfalse
+%    \begin{macrocode}
+% \let\alphatonos\alphatonosit
+% \let\epsilontonos\epsilontonosit
+% \let\etatonos\etatonosit
+% \let\iotatonos\iotatonosit
+% \let\omicrontonos\omicrontonosit
+% \let\upsilontonos\upsilontonosit
+% \let\omegatonos\omegatonosit
+% \let\upsilondieresistonos\upsilondieresistonosit
+% \let\iotadieresis\iotadieresisit
+% \let\iotadieresistonos\iotadieresistonosit
+% \let\upsilondieresis\upsilondieresisit
+%    \end{macrocode}
+% babble\codeline@indextrue
+%    \begin{macrocode}
+    \fi
+}%
+\lgrmath@setgreekcs
+%    \end{macrocode}
+% Finally we define \cs{lgrmathgreektable} and \cs{lgrmathgreektableextra}.
+%    \begin{macrocode}
+\def\lgrmathgreektable#1#2#3{%
+\begingroup
+\def\s##1{{\usefont{T1}{mlmtt}{m}{n}\string##1}}%
+\usefont{LGR}{#1}{#2}{#3}%
+\begin{tabular}{|lc|lc|lc|lc|}
+\hline
+\s\Alpha  &A &\s\Nu     &N &\s\alpha  &a &\s\nu     &n \\
+\s\Beta   &B &\s\Xi     &X &\s\beta   &b &\s\xi     &x \\
+\s\Gamma  &G &\s\Omicron&O &\s\gamma  &g &\s\omicron&o \\
+\s\Delta  &D &\s\Pi     &P &\s\delta  &d &\s\pi     &p \\
+\s\Epsilon&E &\s\Rho    &R &\s\epsilon&e &\s\rho    &r \\
+\s\Zeta   &Z &\s\Sigma  &S &\s\zeta   &z &\s\sigma  &s \\
+\s\Eta    &H &\s\Tau    &T &\s\eta    &h &\s\tau    &t \\
+\s\Theta  &J &\s\Upsilon&U &\s\theta  &j &\s\upsilon&u \\
+\s\Iota   &I &\s\Phi    &F &\s\iota   &i &\s\phi    &f \\
+\s\Kappa  &K &\s\Chi    &Q &\s\kappa  &k &\s\chi    &q \\
+\s\Lambda &L &\s\Psi    &Y &\s\lambda &l &\s\psi    &y \\
+\s\Mu     &M &\s\Omega  &W &\s\mu     &m &\s\omega  &w \\
+\hline
+\end{tabular}
+\endgroup
+}%
+\def\lgrmathgreektableextra#1#2#3{%
+\begingroup
+\def\s##1{{\usefont{T1}{mlmtt}{m}{n}\string##1}}%
+\usefont{LGR}{#1}{#2}{#3}%
+\begin{tabular}{lclclc}
+\s\varsigma   &\char99   &\s\digamma&\char147 &\s\varSigma&\char22 \\
+\s\varvarsigma&\char6    &\s\koppa  &\char18  &\s\Sampi   &\char23 \\
+\s\sampi      &\char27   &          &         &\s\Digamma &\char195\relax
+\end{tabular}
+\endgroup
+}%
+%    \end{macrocode}
+% And we have now reached the end of the \lgrmath package code.  The actual
+% |.sty| file will contain an \cs{endinput} added by the DocStrip extraction.
+%\MakePercentComment
+%</sty>
+%<*dtx>
+\Finale
+%%
+%% End of file `lgrmath.dtx'.

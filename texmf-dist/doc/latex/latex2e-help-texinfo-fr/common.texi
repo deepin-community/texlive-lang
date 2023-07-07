@@ -1,4 +1,4 @@
-@c $Id: common.texi 729 2018-11-13 23:22:27Z karl $
+@c $Id: common.texi 1089 2022-08-12 20:30:20Z vincentb1 $
 @c Public domain.
 @set LTXREFMAN_HOME_PAGE https://latexref.xyz
 @set LTXREFMAN_BUGS latexrefman@@tug.org
@@ -14,6 +14,13 @@
 \else\@c
 @end macro
 @end ifnottex
+@macro package {packagename}
+@code{\packagename\}
+@end macro
+@c used to remove something form the spell checker
+@macro identity {x}
+\x\
+@end macro
 
 @tex
 \globaldefs=1
@@ -52,6 +59,9 @@
 \lasymathchardef{2003}{\rhd}
 \lasymathchardef{2002}{\unlhd}
 \lasymathchardef{2004}{\unrhd}
+\font\tenmathbb = msbm10
+% use \hbox to force horizontal mode, as \mathbbN is to be called from Math mode.
+\def\mathbbN{{\hbox{\tenmathbb N}}}
 %
 % must explicitly reset before the (at)end tex, not let the (at)end group
 % reset it; else internal Texinfo variables get messed up.

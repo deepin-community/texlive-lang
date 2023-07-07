@@ -2,7 +2,7 @@
 %
 % This is file `exppl2e.sty', for experimental pLaTeX2e.
 %
-% Copyright (c) 2016-2020 Japanese TeX Development Community
+% Copyright (c) 2016-2022 Japanese TeX Development Community
 %
 % This file is part of the pLaTeX2e system (community edition).
 % -------------------------------------------------------------
@@ -47,7 +47,8 @@
   \RequirePackage[latest]{platexrelease}
 \else
 % case 2: This file pretends to be a document
-  \documentclass{jltxdoc}
+  \RequirePackage{plautopatch}
+  \documentclass[dvipdfmx,a4paper]{jltxdoc}
   \title{Experimental p\LaTeXe}
   \author{Japanese \TeX\ Development Community}
   \begin{document}
@@ -169,7 +170,7 @@
 % もし|\null|の代わりに|\hskip\z@|を挿入すれば、\LaTeX{}と同様に
 % Underfull警告を出すことができます。
 % ただし、|\null|を挿入した場合と異なり、強制改行後の行頭に
-% JFMグル―が入らなくなります。これはむしろ、奥村さんのjsclassesで
+% JFMグルーが入らなくなります。これはむしろ、奥村さんのjsclassesで
 % 行頭を天ツキに直しているのと同じですが、p\LaTeX{}としては挙動が
 % 変化してしまいますので、現時点では|\null|→|\hskip\z@|への変更を
 % 見送っています。
@@ -332,7 +333,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% \section{tabbing環境の行冒頭のJFMグル―}
+% \section{tabbing環境の行冒頭のJFMグルー}
 %
 % 2017/10/28に導入済み。
 %
@@ -350,13 +351,13 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% \subsection{直前のJFM由来スペースの削除【コミュニティ版独自】}
+% \section{直前のJFM由来スペースの削除【コミュニティ版独自】}
 %
 % 2018/03/09に導入済み。
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% \section{tabular環境のセル内のJFMグル―}
+% \section{tabular環境のセル内のJFMグルー}
 %
 % 2018/03/09に導入済み。
 %

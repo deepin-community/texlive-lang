@@ -8,10 +8,10 @@ Note: This README file contains information about LaTeX
 --------------------------------------------------------------------------
 लाटेक्-वर्ग:         आलोक
 लेखक:            निरंजन
-आवृत्ती:            ०.५ (१५ जून, २०२१)
+आवृत्ती:            ०.६ (१६ डिसेंबर, २०२१)
 वर्णन:             आलोक मराठी नियतकालिकाच्या अक्षरजुळणीकरिता लाटेक्-वर्ग.
-संग्राहिका:          https://gitlab.com/aalok/aalok-latex
-अडचणी:           https://gitlab.com/aalok/aalok-latex/-/issues
+संग्राहिका:          https://git.gnu.org.ua/aalok.git/
+अडचणी:           https://puszcza.gnu.org.ua/bugs/?group=aalok
 परवाना:           आज्ञालेखांकरिता आलोक नित्यमुक्त परवाना (आवृत्ती १.०+) आणि ग्नू पब्लिक परवाना
                 (आवृत्ती ३.०+) व केवळ हस्तपुस्तिकेकरिता ग्नू फ्री डॉक्युमेन्टेशन परवाना (१.३+)
                 दुवे:
@@ -20,12 +20,12 @@ Note: This README file contains information about LaTeX
                 https://www.gnu.org/licenses/fdl-1.3.html
 --------------------------------------------------------------------------
 Class:          aalok
-Author:         Niranjan
-Version:        0.5 (15 June, 2021)
+Author:         निरंजन
+Version:        0.6 (16 December, 2021)
 Description:    LaTeX class for typesetting Aalok Marathi
                 Journal.
-Repository:     https://gitlab.com/aalok/aalok-latex
-Bug tracker:    https://gitlab.com/aalok/aalok-latex/-/issues
+                Repository:     https://git.gnu.org.ua/aalok.git/
+Bug tracker:    https://puszcza.gnu.org.ua/bugs/?group=aalok
 License:        `आलोक' copyleft license v1.0+ and GPL v3.0+ for the code.
                 GFDL v1.3+ only for the documentation
                 Links:

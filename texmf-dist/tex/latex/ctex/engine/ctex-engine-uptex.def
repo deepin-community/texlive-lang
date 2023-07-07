@@ -6,7 +6,7 @@
 %%
 %% ctex.dtx  (with options: `uptex')
 %% 
-%%     Copyright (C) 2003--2021
+%%     Copyright (C) 2003--2022
 %%     CTEX.ORG and any individual authors listed in the documentation.
 %% ---------------------------------------------------------------------
 %% 
@@ -24,10 +24,10 @@
 %% 
 %% ---------------------------------------------------------------------
 %% 
-\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
   {upTeX adapter (CTEX)}
 \ProvidesExplFile{ctex-engine-uptex.def}
-  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
+  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
 \cs_new_protected:Npn \ctex_set_zhmap:n
   { \tl_gput_right:Nx \g__ctex_zhmap_tl }
 \cs_new_protected:Npn \ctex_use_zhmap:
@@ -216,45 +216,48 @@
       { \exp_not:o { \CTEX@selectfont@hook #1 } }
   }
 \cs_new_eq:NN \CTEX@selectfont@hook \prg_do_nothing:
-\if_bool:N \c__ctex_everysel_loaded_bool
-  \if_cs_exist:N \@EverySelectfont@Init
-    \group_begin:
-      \cs_set:Npn \__ctex_tmp:N #1
-        {
-          \tl_set:Nn \l__ctex_tmp_tl {#1}
-          \cs_new_eq:NN \CTEX@selectfont@save #1
-          \cs_new_protected:Npn \__ctex_restore_selectfont:
-            {
-              \cs_if_free:NF \scr@new@selectfont
-                {
-                  \cs_if_free:NF \par@update
-                    {
-                      \tl_put_right:Nn \@EverySelectfont@Init
-                        { \tl_put_right:Nn #1 { \par@update } }
-                    }
-                  \cs_set_eq:NN \scr@new@selectfont #1
-                  \cs_set_eq:NN \CTEX@selectfont@save \scr@selectfont
-                }
-              \tl_put_left:Nn \@EverySelectfont@Init
-                { \cs_set_eq:NN #1 \CTEX@selectfont@save }
-              \cs_undefine:N \__ctex_restore_selectfont:
-            }
-        }
-      \ctex_parse_name:NN \__ctex_tmp:N \selectfont
-    \exp_last_unbraced:NNo \group_end:
-    \ctex_patch_cmd_once:NnnnTF { \l__ctex_tmp_tl }
-      { \ExplSyntaxOff }
-      { \size@update }
-      { \CTEX@selectfont@hook \size@update }
-      { \__ctex_restore_selectfont: }
-      { \ctex_patch_failure:N \selectfont }
-  \fi:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \EverySelectfont }
-\else:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \ctex_gadd_ltxhook:nn { selectfont } }
-\fi:
+\bool_if:NTF \c__ctex_everysel_loaded_bool
+  {
+    \cs_if_free:NF \@EverySelectfont@Init
+      {
+        \group_begin:
+        \cs_set:Npn \__ctex_tmp:N #1
+          {
+            \tl_set:Nn \l__ctex_tmp_tl {#1}
+            \cs_new_eq:NN \CTEX@selectfont@save #1
+            \cs_new_protected:Npn \__ctex_restore_selectfont:
+              {
+                \cs_if_free:NF \scr@new@selectfont
+                  {
+                    \cs_if_free:NF \par@update
+                      {
+                        \tl_put_right:Nn \@EverySelectfont@Init
+                          { \tl_put_right:Nn #1 { \par@update } }
+                      }
+                    \cs_set_eq:NN \scr@new@selectfont #1
+                    \cs_set_eq:NN \CTEX@selectfont@save \scr@selectfont
+                  }
+                \tl_put_left:Nn \@EverySelectfont@Init
+                  { \cs_set_eq:NN #1 \CTEX@selectfont@save }
+                \cs_undefine:N \__ctex_restore_selectfont:
+              }
+          }
+        \ctex_parse_name:NN \__ctex_tmp:N \selectfont
+      \exp_last_unbraced:NNo \group_end:
+      \ctex_patch_cmd_once:NnnnTF { \l__ctex_tmp_tl }
+        { \ExplSyntaxOff }
+        { \size@update }
+        { \CTEX@selectfont@hook \size@update }
+        { \__ctex_restore_selectfont: }
+        { \ctex_patch_failure:N \selectfont }
+      }
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \EverySelectfont }
+  }
+  {
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \ctex_gadd_ltxhook:nn { selectfont } }
+  }
 \ctex_gadd_selectfont_hook:n { \CTEX@selectfont@hook }
 \cs_new_protected:Npn \ctex_update_xkanjiskip:
   {

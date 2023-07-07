@@ -1,0 +1,2363 @@
+% Tekijä:   Teemu Likonen <tlikonen@iki.fi>
+% Lisenssi: Creative Commons Nimeä-JaaSamoin 4.0 Kansainvälinen (CC BY-SA 4.0)
+% https://creativecommons.org/licenses/by-sa/4.0/legalcode.fi
+
+\chapter{Merkintäkieli ja perustekniikka}
+
+Latex on merkintäkieli, mikä tarkoittaa, että se sisältää omat tapansa
+dokumentin rakenteen ja sisällön kuvaamiseen. Kaikkea ei kirjoiteta
+lähdedokumenttiin sellaisenaan, vaan täytyy käyttää tiettyjä kielen
+sääntöjen mukaisia merkintätapoja tai komentoja.
+
+Tässä luvussa käsitellään merkintäkielen perusasioita, joita on tarpeen
+ymmärtää ennen kuin voi tehokkaasti toimia Latexin parissa. Kaikkea ei
+tarvitse opetella ulkoa, mutta tähän lukuun on hyvä palata välillä
+kertaamaan perustekniikkaa.
+
+\section{Merkistö}
+
+Latex\-/lähdetiedostoon voi kirjoittaa tekstiä Unicode\-/ merkistöllä ja
+sen \textsc{utf}\=/8\-/ koodauksella, jos kääntäjänä on Unicoden osaava
+ohjelma kuten Lualatex tai Xelatex. Pääasiassa siis merkit kirjoitetaan
+sellaisenaan lähdetiedostoon, mutta on kuitenkin monenlaisia
+poikkeuksia, ja niitä käsitellään tässä alaluvussa.
+
+\subsection{Varatut erikoismerkit}
+
+Muutamalla merkillä on perus Latexissa erikoismerkitys, eikä niitä voi
+käyttää normaalilla tavalla. Merkit ovat seuraavat:
+
+\begin{koodilohkosis}
+% $ ^ _ # & { } ~ \
+\end{koodilohkosis}
+
+\noindent
+Useimmat näistä merkeistä voi suojata erikoismerkitykseltään
+kirjoittamalla niiden eteen kenoviivan (\koodi{\keno}). Tildeä
+(\textasciitilde), sirkumfleksia (\textasciicircum) eikä kenoviivaa
+itseään ei voi suojata pelkän kenoviivan avulla, koska kenoviivan kanssa
+ne muodostavat eräitä muita komentoja. Taulukossa
+\ref{tlk/merkkien-suojaus} on koottuna, kuinka edellä mainitut
+erikoismerkit suojataan eli saadaan ladottua dokumenttiin sellaisenaan.
+
+\leijutlk{
+  \begin{tabular}{cll}
+    \toprule
+    \ots{Merkki} & \multicolumn{2}{l}{\ots{Kirjoittaminen}} \\
+    \midrule
+    \koodi{\%} & \komento{\%} \\
+    \koodi{\$} & \komento{\$} & \komento{textdollar} \\
+    \koodi{\^{}} & \komento{\^{}}\komentoarg{} & \komento{textasciicircum} \\
+    \koodi{\_} & \komento{\_} & \komento{textunderscore} \\
+    \koodi{\#} & \komento{\#} \\
+    \koodi{\&} & \komento{\&} \\
+    \koodi{\{} & \komento{\{} & \komento{textbraceleft} \\
+    \koodi{\}} & \komento{\}} & \komento{textbraceright} \\
+    \koodi{\~{}} & \komento{\~{}}\komentoarg{} & \komento{textasciitilde} \\
+    \koodi{\keno} && \komento{textbackslash} \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Varattujen erikoismerkkien kirjoittaminen}
+  \label{tlk/merkkien-suojaus}
+}
+
+Jotkin paketit määrittelevät muitakin erikoismerkkejä. Esimerkiksi
+kieliasetuksiin (luku \ref{luku/kieliasetukset}) liittyvät
+\paketti{polyglossia}\-/{} ja \paketti{babel}\-/paketit voivat
+määritellä pari lainausmerkillä (\koodi{\textquotedbl}) alkavaa,
+tavutuksen hallintaan liittyvää komentoa tai erikoismerkkiä.
+
+\subsection{Sanaväli}
+\label{luku/sanaväli}
+
+Välilyönti, sarkainmerkki ja yksi rivinvaihto ovat kaikki tavallisia
+sanavälejä Latex\-/dokumentissa, ja näillä kolmella on sama merkitys.
+Esimerkiksi rivin lopussa oleva rivinvaihto tarkoittaa samaa kuin
+sanojen välissä oleva välilyönti. Välilyöntejä ja sarkainmerkkejä voi
+kirjoittaa useita peräkkäin, mutta ne ovat sama asia kuin yksi väli.
+
+\begin{koodilohkosis}
+Nämä      kaikki
+     ovat            vain
+sanoja  peräkkäin  ja               kuuluvat
+    samaan kappaleeseen.
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Nämä kaikki ovat vain sanoja peräkkäin ja kuuluvat samaan
+  kappaleeseen.
+\end{tulossis}
+
+\noindent
+Sanavälien leveys ei ole vakio. Silloin kun tekstipalsta tasataan
+molemmista reunoista -- kuten tämänkin oppaan leipätekstissä \==,
+rivillä olevia sanavälejä venytetään sopivasti, jotta tekstipalstan
+molemmat reunat saadaan tasaiseksi.
+
+Sanavälit eivät kuitenkaan veny loputtomasti, ainakaan
+oletusasetuksilla, koska kovin suuret sanavälit olisivat
+tekstikappaleessa rumia. Jos sanaväleille haluaa antaa
+''hätätilanteissa'' lisää venymisvaraa, täytyy käyttää mittaa
+\mitta{emergencystretch}, jota käsitellään tarkemmin tekstikappaleiden
+yhteydessä luvussa \ref{luku/kappale}. Mittoihin liittyvää tekniikkaa
+käsitellään puolestaan luvussa \ref{luku/mitat}.
+
+Matalatasoinen sanavälejä ja niiden venymistä säätelevä mitta on
+\mitta{spaceskip}, johon voi asettaa haluamansa leveyden ja mahdolliset
+venymisen rajat. Tätä mittaa ei ole suositeltavaa käyttää tavallisen
+tekstin kanssa, mutta se sopii tilanteisiin, joihin tarvitaan hyvin
+poikkeukselliset sanavälit.
+
+\komentoi{setlength}
+\mittai{spaceskip}
+\begin{koodilohkosis}
+\setlength{\spaceskip}{0.8em plus 0.3em minus 0.2em}
+\end{koodilohkosis}
+
+\noindent
+Myös kirjainperheelle voi asettaa oman sanavälikertoimensa fontin
+asetusten \koodi{Word\-Space}\-/valitsimella. Tätä asetusta käsitellään
+fonttien yhteydessä luvussa \ref{luku/fontit-välistys}.
+
+\subsection{Rivinvaihto lähdedokumentissa}
+\label{luku/rivinvaihtomerkit}
+
+Lähdedokumentissa olevat rivinvaihdot tulkitaan vain sanaväleiksi
+eivätkä ne vaihda riviä lopullisessa dokumentissa. Jos ladottuun
+dokumenttiin tarvitaan rivinvaihto, kirjoitetaan lähdedokumenttiin kaksi
+kenoviivaa (\komento{\keno}). Tätä komentoa käsitellään tarkemmin
+tekstikappaleiden yhteydessä luvussa \ref{luku/rivinvaihtokomennot}.
+
+On kuitenkin mahdollista saada myös lähdedokumentin rivinvaihdot
+toteutumaan automaattisesti ladotussa tekstissä. Sellainen tila
+kytketään päälle komennolla \komento{obeycr}; normaaliin tilaan
+palataan taas komennolla \komento{restorecr}. Näistä komennoista voi
+olla hyötyä väliaikaisesti ja erityistilanteissa, mutta pysyväksi koko
+dokumentin tilaksi \komento{obeycr} ei yleensä sovi.
+
+\subsection{Kappaleen vaihtuminen}
+\label{luku/kappaleen-vaihtuminen}
+
+Tyhjä rivi lähdetiedostossa tarkoittaa kappaleen vaihtumista. Rivi on
+tyhjä silloin, kun se ei sisällä mitään muuta kuin rivinvaihdon tai kun
+se sisältää vain välilyöntejä tai sarkainmerkkejä ja lopuksi
+rivinvaihdon. Tyhjiä rivejä voi olla useita peräkkäin, mutta ne
+tarkoittavat samaa kuin yksi tyhjä rivi. Uuden tekstikappaleen voi
+aloittaa myös komennolla \komento{par}.
+
+\begin{koodilohkosis}
+Nämä rivit kuuluvat
+samaan kappaleeseen.
+
+Tässä on toinen tekstikappale.
+Nyt ei oteta kantaa siihen, miten
+rivit ja kappaleet muotoillaan.
+\end{koodilohkosis}
+
+\noindent
+Ladotuissa teksteissä uuden tekstikappaleen alkaminen ilmaistaan usein
+sisennetyllä rivillä, mutta sisennyksiä eikä muitakaan muotoiluja ei
+tehdä tekstieditorissa välien avulla. Kappaleiden muotoiluun on omat
+keinonsa, ja niistä käsitellään luvussa \ref{luku/kappale}.
+
+\subsection{Kommentit ja muistiinpanot}
+
+Latex\-/dokumentissa prosentin merkki (\koodi{\%}) on kommenttimerkki,
+jonka jälkeisen rivinosan kääntäjä jättää huomioimatta. Merkki on
+tarkoitettu kirjoittajan omien kommenttien ja muistiinpanojen
+kirjoittamiseen.
+
+\begin{koodilohkosis}
+% Nyt ei tosin ole
+% mitään kommentoitavaa.
+\end{koodilohkosis}
+
+\noindent
+Kommenttimerkki vaikuttaa kääntäjään myös siten, että se syö kaikki
+välilyönnit ja sarkainmerkit, jotka tulevat kyseisen kommentin jälkeen.
+Tämän vuoksi kommenttimerkin avulla voi yhdistää eri riveillä olevan
+tekstin. Seuraava esimerkki tuottaa ladottuna ehjän sanan \emph{Latex}:
+
+\begin{koodilohkosis}
+La% Nämä rivit
+  t% yhdistyvät.
+    ex
+\end{koodilohkosis}
+
+\begin{tulossis}
+  La% Nämä rivit
+    t% yhdistyvät.
+      ex
+\end{tulossis}
+
+\subsection{Aaltosulkeet}
+\label{luku/aaltosulkeet}
+
+Aaltosulkeet \mbox{\koodi{\{\}}} muodostavat eräänlaisen näkymättömän
+ympäristön, jonka sisällä voi olla väliaikaisesti voimassa erilaiset
+asetukset kuin ulkopuolella. Aaltosulkeiden sisällä suoritetut komennot,
+uusien komentojen määrittelyt (luku \ref{luku/komennot}) tai asetetut
+mittojen arvot (luku \ref{luku/mitat}) ovat voimassa vain kyseisen
+ympäristön sisäpuolella. Seuraavassa esimerkissä aaltosulkeilla rajataan
+kursivointikomennon \komento{itshape} vaikutusaluetta.
+
+\begin{koodilohkosis}
+tavallinen {\itshape kursiivi} tavallinen
+\end{koodilohkosis}
+
+\begin{tulossis}
+  tavallinen {\itshape kursiivi} tavallinen
+\end{tulossis}
+
+\subsection{Sitova välilyönti}
+
+Sitova välilyönti on samanlainen tyhjä merkki kuin tavallinenkin
+välilyönti, mutta rivinvaihtoa ei sallita sen kohdalta. Sitovalla
+välilyönnillä kannattaa estää esimerkiksi pienistä osista koostuvan
+ilmauksen hajoaminen eri riveille (esimerkki: \emph{osa~5}). Latexissa
+sitova välilyönti saadaan joko tildemerkillä (\koodi{\textasciitilde})
+tai nimenomaan siihen tarkoitetulla merkillä, jonka Unicode\-/tunnus on
+\uctunnus{u+00a0 no-break space}.
+
+Nämä kaksi eri merkkiä, tilde ja \uctunnus{u+00a0}, toimivat hieman eri
+tavoin. Molemmat estävät rivinvaihdon, mutta tildemerkki sallii välin
+venymisen samalla tavalla kuin tavallinenkin sanaväli sallii (luku
+\ref{luku/sanaväli}). Sen sijaan merkki \uctunnus{u+00a0} on
+vakiolevyinen eikä siis veny muiden sanavälien tavoin. Merkkiä
+\uctunnus{u+00a0} täytyy käyttää ainakin vuorosanaviivan (\==) ja sitä
+seuraavan sanan välissä, koska se väli ei saa venyä.
+
+\subsection{Ohuke}
+\label{luku/ohuke}
+
+Ohuke on tavallista sanaväliä kapeampi väli, ja se tehdään
+komennolla~\komento{,} (kenoviiva ja pilkku). Ohukkeen leveys Latexissa
+on \murtoluku{1}{6} typografisen neliön leveydestä eli em-mitasta (luku
+\ref{luku/mitat}). Ohuke on tasalevyinen ja sitova, eli se ei veny
+muiden sanavälien tavoin, ja se estää rivinvaihdon. Siksi ohuke sopii
+esimerkiksi pitkien lukujen ja puhelinnumeroiden ryhmittelyyn paremmin
+kun sanaväli.
+
+\komentoi{,}
+\begin{koodilohkosis}
+12\,750\,000
+J.\,R.\,R. Tolkien
+\end{koodilohkosis}
+
+\noindent
+Myös henkilön etunimen alkukirjainten välissä voi käyttää ohuketta, jos
+tavallinen sanaväli vie kirjaimet turhan kauas toisistaan. Sukunimi
+erotetaan kuitenkin aina sanavälillä. Joskus myös päiväyksissä käytetään
+ohuketta järjestysluvun pisteiden jälkeen. Taulukossa \ref{tlk/ohuke}
+vertaillaan sanaväliä, ohuketta ja yhteen kirjoittamista.
+
+\leijutlk{
+  \komentoi{,}
+  \begin{tabular}{lrll}
+    \toprule
+    & \ots{Luku} & \ots{Päiväys} & \ots{Nimi} \\
+    \midrule
+    \otsrivi{Sanaväli} & 12 750 000 & \sout{9. 5. 2020} & J. R. R. Tolkien \\
+    \otsrivi{Ohuke} & 12\,750\,000 & 9.\,5.\,2020 & J.\,R.\,R. Tolkien \\
+    \otsrivi{Yhteen} & 12750000 & 9.5.2020 & \sout{J.R.R. Tolkien} \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Sanavälin, ohukkeen ja yhteen kirjoittamisen vertailu. Suomen
+    kielen vastaiset kirjoitusasut on viivattu yli}
+  \label{tlk/ohuke}
+}
+
+\subsection{Lainausmerkit ja heittomerkki}
+\label{luku/lainausmerkit}
+
+Suomalaisessa näppäinasettelussa \textsc{shift} eli vaihtonäppäin ja 2
+tuottaa yleislainausmerkin eli niin sanotun \textsc{ascii}\-/
+lainausmerkin (\textquotedbl), mutta se ei taida olla minkään kielen
+varsinainen lainausmerkki. On siis syytä käyttää oikeita
+lainausmerkkejä, ja se käy Latexissa varsin helposti.
+
+Eri kielissä lainausmerkkikäytännöt ovat erilaiset. Suomen kielessä
+käytetään ''tällaisia'' lainausmerkkejä ja joskus >>tällaisia>>
+kulmalainausmerkkejä. Jos lainauksen sisään tarvitaan lainaus, täytyy
+sisempi lainaus kirjoittaa 'tällaisten' puolilainausmerkkien avulla.
+Yksittäin käytettynä se on nimeltään heittomerkki. Englannin kielessä
+lainauksen alussa ja lopussa on erilainen merkki, ja ``tässä'' siitä
+esimerkki. Samoin on puolilainausmerkin kohdalla: `näin'.
+
+Latexissa voi käyttää Unicode\-/merkistöä ja lähdedokumenttiin voi
+kirjoittaa suoraan ne lainausmerkit, jotka halutaan ladottavaksi, mutta
+edellä mainituille merkeille on myös omat merkintätapansa.
+Näppäimistöltä kirjoitettava yleisheittomerkki (\koodi{'}) tuottaa
+ladottuna automaattisesti oikean kaarevan heittomerkin ('). Kun
+kirjoittaa kaksi heittomerkkiä peräkkäin (\koodi{''}), on
+lopputuloksena yksi kaareva lainausmerkki (''). Kahdella suurempi kuin
+\=/merkillä (\koodi{>>}) saadaan kulmalainausmerkki~(>>).
+
+\begin{koodilohkosis}
+''Lainaus, jonka 'sisällä' on lainaus.'' \\
+>>Lainaus, jonka 'sisällä' on lainaus.>>
+\end{koodilohkosis}
+
+\begin{tulossis}
+  ''Lainaus, jonka 'sisällä' on lainaus.'' \\
+  >>Lainaus, jonka 'sisällä' on lainaus.>>
+\end{tulossis}
+
+\noindent
+Edellä mainitut riittävät suomen kieleen, mutta englantia ja muita
+kieliä varten tarvitaan myös toisinpäin oleva merkki (``), joka tehdään
+kahdella gravisaksentilla (\koodi{``}). Vastaava puolilainausmerkki (`)
+tehdään yhdellä aksentilla (\koodi{`}). Joissakin kielissä käytetään
+erilaisia kulmalainausmerkkejä lainauksen alussa ja lopussa. Vasemmalle
+osoittava merkki (<<) tehdään kahdella pienempi kuin \=/merkillä
+(\koodi{<<}).
+
+Joskus todella halutaan latoa yleislainausmerkki (\textquotedbl) tai
+yleisheittomerkki (\textquotesingle). Ne saadaan komennoilla
+\komento{textquotedbl} ja \komento{textquotesingle}. Yksittäinen
+gravisaksentti (\`{}) tehdään komennolla \komento{`}\komentoarg{}.
+Lainausmerkkien merkintätapoja ja komentoja on koottu taulukkoon
+\ref{tlk/erikoismerkit-lainaus}
+(s.~\pageref{tlk/erikoismerkit-lainaus}). Toisaalta kielikohtaiset
+asetukset (luku \ref{luku/kieliasetukset}) voivat tuoda mukanaan myös
+kielikohtaisia keinoja lainausmerkkien kirjoittamiseen.
+
+Edellä kuvatut Latexin omat lainausmerkkien merkintätavat (\koodi{''},
+\koodi{>>} ym.) eli niin sanotut Tex\-/ligatuurit voi kytkeä päälle ja
+pois päältä fontin asetuksista eli \paketti{fontspec}\-/ pakettiin
+kuuluvien toimintojen avulla. Fonteissa on yleensä oletuksena päällä
+Tex\-/ligatuurit eli asetus \koodi{Liga\-tures=\katk TeX}, mutta sen saa
+poistettua asetuksella \koodi{Liga\-tures=\katk TeX\-Reset}. Asetusta
+muutetaan kirjainperheen määrittelyn yhteydessä tai väliaikaisesti
+komennolla \komento{addfontfeatures}.
+
+\komentoi{addfontfeatures}
+\begin{koodilohkosis}
+{\addfontfeatures{Ligatures=TeXReset} `` '' >> '}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  {\addfontfeatures{Ligatures=TeXReset} `` '' >> '}
+\end{tulossis}
+
+\noindent
+Tasalevyisessä fontissa Tex\-/ligatuurit eivät ole päällä oletuksena,
+joten yksittäisissä sanoissa tai lyhyissä ilmauksissa voi estää
+Tex\-/ligatuurit esimerkiksi komennolla \komento{texttt}. Samalla
+tietysti fonttikin vaihtuu tasalevyiseksi. Fontteja käsitellään
+tarkemmin luvussa \ref{luku/kirjaintyypit}.
+
+\komentoi{texttt}
+\begin{koodilohkosis}
+\texttt{`` '' >> '}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \texttt{`` '' >> '}
+\end{tulossis}
+
+\noindent
+Paketti \pakettictan{csquotes} sisältää lainausmerkkeihin liittyviä
+komentoja ja kielikohtaista logiikkaa. Paketissa olevan
+\komento{enquote}\-/ komennon avulla voi jättää paketin huoleksi, miten
+aloittava ja lopettava lainausmerkki tai ulommat ja sisemmät
+lainausmerkit kirjoitetaan missäkin kielessä. Kielipaketti
+\paketti{polyglossia} tai \paketti{babel} täytyy olla ladattuna.
+
+\komentoi{usepackage}
+\pakettii{polyglossia}
+\pakettii{csquotes}
+\komentoi{setdefaultlanguage}
+\komentoi{enquote}
+\begin{koodilohkosis}
+\usepackage{polyglossia} \setdefaultlanguage{finnish}
+\usepackage[autostyle=true]{csquotes}
+% ...
+\enquote{Lainauksen \enquote{sisällä} lainaus.}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \enquote{Lainauksen \enquote{sisällä} lainaus.}
+\end{tulossis}
+
+\subsection{Yhdysmerkki, ajatusviiva ja miinusmerkki}
+\label{luku/yhdys-ajatus-miinus}
+
+Yhdyssanan osien välissä käytettävä yhdysmerkki on Latexissa tavallinen
+näppäimistöltä saatava yleisyhdysmerkki (\=/). Merkillä on vaikutusta
+myös sanan tavutukseen, josta on tarkempaa tietoa luvussa
+\ref{luku/tavutus}.
+
+Ajatusviivaa tarvitaan esimerkiksi äärikohtien (27--29,
+Oulu--Rova\-niemi), luetelmien, vuorosanojen ja virkkeen irrallisen
+lisäysten merkitseminen. Suomen kielessä käytetään yleensä vain lyhyttä
+ajatusviivaa \mbox{(--)}, joka tehdään Latexissa kahdella peräkkäisellä
+yhdysmerkillä (\koodi{--}). Pitkä ajatusviiva \mbox{(---)} tehdään
+kolmella yhdysmerkillä (\koodi{---}). Ajatusviivat vaikuttavat sanan
+tavutukseen samoin kuin yhdysmerkki.
+
+\begin{koodilohkosis}
+Oulu--Rovaniemi-yhteys
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Oulu--Rovaniemi-yhteys
+\end{tulossis}
+
+\noindent
+Myös Unicoden ajatusviivamerkit \uctunnus{u+2013 en dash} ja
+\uctunnus{u+2014 em dash} toimivat, mutta tavutuksen kannalta ne ovat
+käyttäytyneet eri tavoin Lualatex\-/\ ja Xelatex\-/ kääntäjillä.
+Yhteensopivuussyistä on parasta tehdä ajatusviivat Latexin omilla
+merkintätavoilla eikä Unicode\-/ merkeillä.
+
+Silloin kun todella täytyy latoa kaksi tai kolme peräkkäistä
+yhdysmerkkiä, voi käyttää tasalevyistä fonttia
+(\komento{texttt}\komentoarg{--}), joka oletuksena kytkee pois Latexin
+ajatusviivatoiminnon. Saman asetuksen saa kyllä mihin tahansa fonttiin,
+kun poistaa fontista niin sanotut Tex\-/ligatuurit asetuksella
+\koodi{Liga\-tures=\katk TeX\-Reset}. Väliaikaisesti asetus tehdään
+seuraavasti:
+
+\komentoi{addfontfeatures}
+\begin{koodilohkosis}
+{\addfontfeatures{Ligatures=TeXReset} -- ---}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  {\addfontfeatures{Ligatures=TeXReset} -- ---}
+\end{tulossis}
+
+\noindent
+Miinusmerkille (−) ei Latexissa ole erityistä merkintätapaa muuten kuin
+matematiikkatilassa (luku \ref{luku/matematiikka}). Tavallisessa
+tekstitilassa lyhyttä ajatusviivaa voi ja saa käyttää myös
+miinusmerkkinä, mutta vielä parempi olisi käyttää varsinaista Unicoden
+miinusmerkkiä \uctunnus{u+2212 minus sign}, koska se on fonteissa
+suunniteltu typografisesti yhteensopivaksi muiden matemaattisten
+merkkien kanssa.
+
+\subsection{Kolme pistettä eli ellipsi}
+
+Ajatuksen katkeamista ja muuta sellaista ilmaisevalle kolmelle pisteelle
+eli ellipsille (\ldots) on oma merkkinsä, ja fontissa se saattaa näyttää
+hieman erilaiselta kuin kolme peräkkäistä pistemerkkiä. Tyypillisesti
+ellipsimerkissä pisteet ovat hieman harvemmassa ja erottuvat toisistaan
+paremmin kuin kolmena erillisenä merkkinä ladotut pisteet. Ellipsi
+tehdään Latexissa komennoilla \komento{dots}, \komento{ldots},
+\komento{textellipsis} tai Unicode\-/merkillä \uctunnus{u+2026
+  horizontal ellipsis}.
+
+\subsection{Ylä- ja alaindeksi}
+\label{luku/ylä-alaindeksit}
+
+Yläindeksit (a\textsuperscript{2}) tehdään komennolla
+\komento{textsuperscript} ja alaindeksit (a\textsubscript{2})
+komennolla \komento{textsubscript}.
+
+\komentoi{textsuperscript}
+\komentoi{textsubscript}
+\begin{koodilohkosis}
+a\textsuperscript{2} a\textsubscript{2}
+\end{koodilohkosis}
+
+\noindent
+Oletusasetuksilla Latex toteuttaa indeksit mekaanisesti pienentämällä
+fonttia ja sijoittamalla pienennetyn tekstin alas peruslinjan tuntumaan
+tai ylös gemenalinjan yläpuolelle.\footnote{Katso typografinen viivasto
+  eli kuva \ref{kuva/kirjainmitat} sivulla \pageref{kuva/kirjainmitat}.}
+Lopputulos ei ole typografisesti välttämättä kovin hyvä, koska fontin
+pienentäminen ohentaa samalla merkkien viivoja ja ohuimmat hiusviivat
+voivat lähes kadota.
+
+\englanti{Open Type} \=/fontit sisältävät usein tuen oikeille ylä- ja
+alaindekseille, jotka fontin suunnittelija on toteuttanut. Niitä
+kannattaa käyttää, koska suunnittelija tuntee oman fonttinsa ja on
+saanut todennäköisesti parempaa jälkeä kuin Latex mekaanisesti.
+\englanti{Open Type} \=/fonttien indeksit on kätevintä ottaa käyttöön
+\pakettictan{realscripts}\-/ paketin avulla.
+
+Paketti \paketti{realscripts} määrittelee uudelleen Latexin ylä- ja
+alaindeksikomennot, niin että ne ensisijaisesti pyrkivät käyttämään
+\englanti{Open Type} \=/fontin ominaisuutta. Jos käytössä oleva fontti
+ei sisällä haluttujen merkkien ylä- tai alaindeksiä,
+\paketti{realscripts}\-/ paketin komennot käyttävät automaattisesti
+Latexin mekaanista keinoa. Paketti määrittelee pari muutakin hyödyllistä
+komentoa, muun muassa tähdelliset versiot edellä mainituista:
+\komento{textsuperscript*} ja \komento{textsubscript*}. Nämä komennot
+toteuttavat aina mekaanisen ylä- tai alaindeksin eli toimivat kuten
+Latexin alkuperäiset komennot.
+
+\leijutlk{
+  \gemenanum
+  \begin{tabular}{lll}
+    \toprule
+    \ots{Komento}
+    & \ots{\englanti{Open Type}}
+    & \ots{Mekaaninen} \\
+    \midrule
+    \komento{textsuperscript}
+    & \Large x\textsuperscript{ab36}
+    & \Large x\textsuperscript*{ab36} \\
+    \midrule
+    \komento{textsubscript}
+    & \Large H\textsubscript{2}SO\textsubscript{4}
+    & \Large H\textsubscript*{2}SO\textsubscript*{4} \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Ylä- ja alaindeksien vertailua. Oikeat Open Type \=/fonttien
+    indeksit saadaan \paketti{realscripts}\-/ paketin avulla. Mekaaninen
+    toteutus perustuu fontin pienentämiseen}
+  \label{tlk/indeksien-vertailu}
+}
+
+Taulukossa \ref{tlk/indeksien-vertailu} vertaillaan oikeita ja
+mekaanisia ylä- ja alaindeksejä. Taulukon esimerkit paljastavat, että
+lopputuloksessa on eroa. Mekaaninen ylä- ja alaindeksitoiminto jättää
+merkit turhan suurikokoisiksi mutta saattaa silti ohentaa merkkien
+viivoja liian paljon. Se ei myöskään ymmärrä poistaa gemenanumeroita
+(3624) käytöstä vaan latoo ne sellaisenaan suunnilleen oikeaan paikkaan.
+
+Ylä- ja alaindeksejä käytettäessä on siis syytä ladata
+\paketti{realscripts}\-/ paketti ja käyttää indeksit hallitsevaa
+\englanti{Open Type} \=/fonttia. Fonttien ominaisuuksia voi tutkia
+käyttöjärjestelmän komentotulkissa komennolla \koodi{otfinfo}. Toisaalta
+fonttiin sisältyviä ylä- ja alaindeksejä voi myös kirjoittaa
+Unicode\-/merkistön avulla sellaisenaan. Lopputulos on sama.
+
+\subsection{Tavutusvihje}
+
+Komento \komento{-} on tavutusvihje, joka neuvoo rivejä latovalle
+algoritmille, että sanan voi katkaista tästä kohdasta rivin lopussa.
+Tavutusvihje voi estää sanan katkaisemisen muista kohdista.
+
+\begin{koodilohkosis}
+tavutus\-algo\-ritmi
+\end{koodilohkosis}
+
+\noindent
+Myös sanassa olevat yhdysmerkit ja ajatusviivat vaikuttavat sanan
+tavuttamiseen. Perusteellisemmin tavutusta ja sen asetuksia käsitellään
+luvussa \ref{luku/tavutus}.
+
+\subsection{Tarkkeet ja erikoismerkit}
+\label{luku/tarkkeet}
+
+Latexissa on useita komentoja tarkkeellisten kirjainten
+(\'a\,\v{s}\,\c{c}\,\~o) kirjoittamiseen sekä muille merkeille, joita ei
+ehkä ihan helposti saa suoraan näppäimistöltä. Komentoja on koottu
+taulukoihin \ref{tlk/tarkkeet}, \ref{tlk/erikoismerkit-lainaus} ja
+\ref{tlk/erikoismerkit-muut}. Taulukon tarkekomennoissa on käytetty
+a\=/kirjainta esimerkkinä, mutta tarke voi liittyä muihinkin kirjaimiin.
+Merkit voi kirjoittaa Latex\-/lähdedokumenttiin myös sellaisenaan, eli
+näiden komentojen käyttö ei ole välttämätöntä.
+
+\leijutlk{
+  \providecommand{\rivi}{}
+  \renewcommand{\rivi}[4][]{#3 & \komento{#2}\komentojatko{#1} & #4}
+  \begin{tabular}{*{2}{cll}}
+    \toprule
+    \multicolumn{2}{l}{\ots{Merkki}}
+    & \ots{Merkitys}
+    & \multicolumn{2}{l}{\ots{Merkki}}
+    & \ots{Merkitys} \\
+    \cmidrule(r){1-3}
+    \cmidrule(l){4-6}
+    \rivi[a]{`}{\`a}{gravis}
+    & \rivi{O}{\O}{poikkiviiva-O} \\
+    \rivi[a]{'}{\'a}{akuutti}
+    & \rivi{o}{\o}{poikkiviiva-o} \\
+    \rivi[a]{\^{}}{\^a}{sirkumfleksi}
+    & \rivi{DJ}{\DJ}{poikkiviiva-D} \\
+    \rivi[a]{\~{}}{\~a}{tilde}
+    & \rivi{dj}{\dj}{poikkiviiva-d} \\
+    \rivi[a]{\textquotedbl}{\"a}{treema}
+    & \rivi{DH}{\DH}{versaali-eth} \\
+    \rivi[ a]{H}{\H a}{kaksoisakuutti}
+    & \rivi{dh}{\dh}{gemena-eth} \\
+    \rivi[ a]{r}{\r a}{yläympyrä}
+    & \rivi{NG}{\NG}{versaali-äng} \\
+    \rivi[ a]{v}{\v a}{hattu}
+    & \rivi{ng}{\ng}{gemena-äng} \\
+    \rivi[ a]{u}{\u a}{lyhyysmerkki}
+    & \rivi{SS}{\SS}{versaali kaksois-s} \\
+    \rivi[a]{=}{\=a}{pituusmerkki}
+    & \rivi{ss}{\ss}{gemena kaksois-s} \\
+    \rivi[ a]{b}{\b a}{alaviiva}
+    & \rivi{TH}{\TH}{versaali thorn} \\
+    \rivi[ a]{c}{\c a}{sedilji}
+    & \rivi{th}{\th}{gemena thorn} \\
+    \rivi[a]{.}{\.a}{yläpiste}
+    & \rivi{i}{\i}{pisteetön i} \\
+    \rivi[ a]{d}{\d a}{alapiste}
+    & \rivi{j}{\j}{pisteetön j} \\
+    \rivi[ a]{k}{\k a}{ogonek}
+    & \rivi{AE}{\AE}{AE-ligatuuri} \\
+    % \rivi{t\{ae\}}{\t{ae}}{sidontakaari}
+    &&& \rivi{ae}{\ae}{ae-ligatuuri} \\
+    \rivi{L}{\L}{poikkiviiva-L}
+    & \rivi{OE}{\OE}{OE-ligatuuri} \\
+    \rivi{l}{\l}{poikkiviiva-l}
+    & \rivi{oe}{\oe}{oe-ligatuuri} \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Komentoja tarkkeellisten ja muiden kirjainten
+    kirjoittamiseen}
+  \label{tlk/tarkkeet}
+}
+
+\leijutlk{
+  \providecommand{\rivi}{}
+  \renewcommand{\rivi}[3]{ #1 & \komento{#2} & #3 \\}
+
+  \begin{tabular}{cll}
+    \toprule
+    \multicolumn{2}{l}{\ots{Merkki ja komennot}}
+    & \ots{Merkitys} \\
+    \midrule
+
+    \textquotedblleft
+    & \komento{textquotedblleft}, \koodi{`{}`}
+    & vasen lainausmerkki \\
+
+    \textquotedblright
+    & \komento{textquotedblright}, \koodi{'{}'}
+    & oikea lainausmerkki \\
+
+    \rivi{\textquotedbl}{textquotedbl}{yleislainausmerkki}
+
+    \textquoteleft
+    & \komento{textquoteleft}, \komento{lq}, \koodi{`}
+    & vasen puolilainausmerkki \\
+
+    \textquoteright
+    & \komento{textquoteright}, \komento{rq}, \koodi{'}
+    & oikea puolilainausmerkki, heittomerkki \\
+
+    \rivi{\textquotesingle}{textquotesingle}
+    {yleispuolilainausmerkki ja -heittomerkki}
+
+    \guillemotleft
+    & \komento{guillemotleft}, \koodi{<{}<}
+    & vasen kulmalainausmerkki \\
+
+    \guillemotright
+    & \komento{guillemotright}, \koodi{>{}>}
+    & oikea kulmalainausmerkki \\
+
+    \rivi{\guilsinglleft}{guilsinglleft}{vasen kulmapuolilainausmerkki}
+    \rivi{\guilsinglright}{guilsinglright}
+    {oikea kulmapuolilainausmerkki}
+    \rivi{\quotedblbase}{quotedblbase}{rivinalinen lainausmerkki}
+    \rivi{\quotesinglbase}{quotesinglbase}{rivinalinen puolilainausmerkki}
+
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Komentoja lainausmerkkien kirjoittamiseen}
+  \label{tlk/erikoismerkit-lainaus}
+}
+
+\leijutlk{
+  \providecommand{\rivi}{}
+  \renewcommand{\rivi}[3]{ #1 & \komento{#2} & #3 \\}
+  \providecommand{\textbigcirclekorvike}{}
+  \renewcommand{\textbigcirclekorvike}{%
+    \begin{tikzpicture}
+      \draw (0,0) circle [radius=.65ex];
+    \end{tikzpicture}}
+
+  \begin{tabular}{cll}
+    \toprule
+    \multicolumn{2}{l}{\ots{Merkki ja komennot}}
+    & \ots{Merkitys} \\
+    \midrule
+
+    \textendash
+    & \komento{textendash}, \koodi{--}
+    & lyhyt ajatusviiva \\
+
+    \textemdash
+    & \komento{textemdash}, \koodi{---}
+    & pitkä ajatusviiva \\
+
+    \textexclamdown
+    & \komento{textexclamdown}, \koodi{!`}
+    & ylösalainen huutomerkki \\
+
+    \textquestiondown
+    & \komento{textquestiondown}, \koodi{?`}
+    & ylösalainen kysymysmerkki \\
+
+    \rivi{\textgreater}{textgreater}{suurempi kuin -merkki}
+    \rivi{\textless}{textless}{pienempi kuin -merkki}
+
+    \textellipsis
+    & \komento{textellipsis}, \komento{ldots}, \komento{dots}
+    & kolme pistettä, ellipsi \\
+
+    \rivi{\texteuro}{texteuro}{euron merkki}
+
+    \textsterling
+    & \komento{textsterling}, \komento{pounds}
+    & punnan merkki \\
+
+    \textdollar
+    & \komento{textdollar}, \komento{\$}
+    & dollarin merkki \\
+
+    \textsection
+    & \komento{textsection}, \komento{S}
+    & pykälän merkki \\
+
+    \textparagraph
+    & \komento{textparagraph}, \komento{P}
+    & kappaleen merkki \\
+
+    \textcopyright
+    & \komento{textcopyright}, \komento{copyright}
+    & tekijänoikeusmerkki \\
+
+    \rivi{\textregistered}{textregistered}{rekisteröity tavaramerkki}
+    \rivi{\texttrademark}{texttrademark}{tavaramerkki}
+
+    \textdagger
+    & \komento{textdagger}, \komento{dag}
+    & risti \\
+
+    \textdaggerdbl
+    & \komento{textdaggerdbl}, \komento{ddag}
+    & kaksoisristi \\
+
+    \textasciicircum
+    & \komento{textasciicircum}, \komento{\^{}}\komentoarg{}
+    & sirkumfleksi \\
+
+    \textasciitilde
+    & \komento{textasciitilde}, \komento{\~{}}\komentoarg{}
+    & tilde \\
+
+    \rivi{\textasteriskcentered}{textasteriskcentered}
+    {rivinkeskinen asteriski, tähti}
+    \rivi{\textbackslash}{textbackslash}{kenoviiva}
+    \rivi{\textbar}{textbar}{pystyviiva}
+    \rivi{\textbardbl}{textbardbl}{kaksoispystyviiva}
+
+    \textbraceleft
+    & \komento{textbraceleft}, \komento{\{}
+    & vasen aaltosulje \\
+
+    \textbraceright
+    & \komento{textbraceright}, \komento{\}}
+    & oikea aaltosulje \\
+
+    \rivi{\textbullet}{textbullet}{luetelmaympyrä}
+    \rivi{\textbigcirclekorvike}{textbigcircle}{suuri ympyrä}
+    \rivi{\textleftarrow}{textleftarrow}{nuoli vasemmalle}
+    \rivi{\textrightarrow}{textrightarrow}{nuoli oikealle}
+    \rivi{\textordfeminine}{textordfeminine}
+    {feminiininen järjestysluvun merkki}
+    \rivi{\textordmasculine}{textordmasculine}
+    {maskuliininen järjestysluvun merkki}
+    \rivi{\textperiodcentered}{textperiodcentered}{rivinkeskinen piste}
+
+    \textunderscore
+    & \komento{textunderscore}, \komento{\_}
+    & alaviiva \\
+
+    \rivi{\textvisiblespace}{textvisiblespace}{näkyvä välilyönti}
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Komentoja erikoismerkkien kirjoittamiseen}
+  \label{tlk/erikoismerkit-muut}
+}
+
+Tarke- ja erikoismerkkikomentojen lisäksi on olemassa sekalaisia muita
+komentoja erikoisempien asioiden latomiseen. \marginaali{\TeX}
+\marginaali{\LaTeX} Ladontajärjestelmän logojen kirjoittamiseen on
+komennot \komento{TeX} ja \komento{LaTeX}. Suorakulmioita voi tehdä
+\komento{rule}\-/ komennolla, jolle annetaan argumenteiksi ainakin kaksi
+mittaa: leveys ja korkeus. Myös yksi hakasulkeissa annettu valinnainen
+argumentti on mahdollinen. Sekin on mitta ja ilmaisee, kuinka paljon
+suorakulmiota nostetaan tekstin peruslinjasta. Negatiivinen mitta laskee
+suorakulmiota alaspäin. Latexin mittoja ja mittayksiköitä käsitellään
+luvussa \ref{luku/mitat}.
+
+\komentoi{rule}
+\begin{koodilohkosis}
+\rule{1ex}{1ex} abc \rule{3em}{.5bp} abc \rule[1ex]{3em}{.5bp}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \rule{1ex}{1ex} abc \rule{3em}{.5bp} abc \rule[1ex]{3em}{.5bp}
+\end{tulossis}
+
+\noindent
+Komento \komento{strut} latoo näkymättömän, leveydettömän merkin, jonka
+korkeus on rivikorkeuden eli mitan \mitta{baselineskip} mukainen.
+Komentoa voi tarvita joskus esimerkiksi laatikoiden sisällä (luku
+\ref{luku/laatikot}).
+
+Käytännössä \komento{strut}\-/ komento hyödyntää sisäisesti
+\komento{rule}\-/ komentoa ja latoo sen avulla leveydettömän
+suorakulmion. Tarkemmin sanottuna korkeus eli tekstin peruslinjan
+yläpuolinen osa on 0,7 kertaa \mitta{baselineskip}\-/ mitta ja syvyys
+eli peruslinjan alapuolinen osa on 0,3 kertaa \mitta{baselineskip}.
+
+\komentoi{rule}
+\mittai{baselineskip}
+\begin{koodilohkosis}
+\rule[-0.3\baselineskip]{0bp}{\baselineskip}
+\end{koodilohkosis}
+
+\section{Komennot}
+\label{luku/komennot}
+
+Latexin komennot alkavat kenoviivalla (\koodi{\textbackslash}), jonka
+jälkeen tulee komennon nimi. Nimi koostuu yleensä pienistä tai isoista
+kirjaimista, mutta komento voi koostua myös muista merkeistä.
+
+Komennot voivat ottaa vastaan argumentteja eli lisätietoa, jota komento
+käsittelee ja tarvitsee toimintaansa. Jotkin argumentit voivat olla
+pakollisia ja jotkin valinnaisia. Pakolliset kirjoitetaan
+aaltosulkeisiin \koodi{\{}\ldots\koodi{\}} ja valinnaiset hakasulkeisiin
+\koodi{[}\ldots\koodi{]}.
+
+\begin{koodilohkosis}
+\komento
+\komento{argu}{mentteja}
+\komento[valinnainen]{argu}{mentteja}
+\end{koodilohkosis}
+
+\noindent
+Jos pakolliseen argumenttiin haluaa sisällyttää aaltosulkeen, täytyy sen
+eteen kirjoittaa kenoviiva \komento{\{}~\komento{\}}, tai voi myös
+käyttää taulukossa \ref{tlk/erikoismerkit-muut} mainittuja komentoja
+aaltosulkeiden tuottamiseen. Sama pätee aaltosulkeiden latomiseen
+muutenkin.
+
+Hakasulkeet sen sijaan ladotaan tekstiin normaalisti, eikä niiden kanssa
+käytetä kenoviivaa. Poikkeustilanne on komennon valinnaisen argumentin
+sisällä, koska valinnainen argumentti jo sinänsä kirjoitetaan
+hakasulkeiden sisään. Hakasulkeita ei voi suojata kenoviivalla, koska
+\komento{[} ja \komento{]} ovat jo muuhun tarkoitettuja komentoja:
+niillä luodaan matematiikkatilassa (luku \ref{luku/matematiikka}) oleva
+tekstilohko. Valinnaisen argumentin sisään saa hakasulkeen, kun sen
+kirjoittaa aaltosulkeiden sisään. Esimerkiksi komennon
+\komentox{komento}\komentoargv{\{]\}} valinnaiseksi argumentiksi tulee
+lopulta yksi \koodi{]}-merkki.
+
+Komennon yhteydessä sanavälejä käsitellään hieman poikkeuksellisesti.
+Esimerkiksi komennon nimen perässä olevat sanavälit syödään pois, jos
+komennolle ei anneta yhtään argumenttia. Seuraavassa esimerkissä sana
+''Latex'' ladotaan ehjänä, jos vain \komentox{komento} itsessään ei
+kirjoita mitään eikä vaikuta tekstin latomiseen.
+
+\begin{koodilohkosis}
+La\komento   tex
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Latex
+\end{tulossis}
+
+\noindent
+Jos täytyy saada komennon nimen jälkeinen sanaväli näkyviin, täytyy
+kirjoittaa komennon nimen perään aaltosulkeet
+(\komentox{komento}\komentoarg{}) tai kenoviiva
+(\komentox{komento}\komentojatko{\keno}).
+
+Komennon nimen ja argumenttien välissä voi olla sanavälejä, ja ne kaikki
+syödään pois. Komennon ja sen argumentit voi siis kirjoittaa vaikka
+seuraavalla tavalla:
+
+\begin{koodilohkosis}
+\komento  [valinnainen]
+   {argu-}   {mentteja}
+\end{koodilohkosis}
+
+\subsection{Omat komennot ja abstrahointi}
+\label{luku/komennot-abst}
+
+Omien komentojen tärkein tarkoitus on merkintätapojen abstrahointi eli
+teknisen toteutuksen ja yksityiskohtien piilottaminen. Sopiva
+abstrahointi helpottaa lähdedokumentin käsittelemistä.
+
+Esimerkiksi jos kirjoittaa Latexia käsittelevää kirjaa, kannattaa heti
+aluksi luoda komento, jolla merkitään kaikki Latexin komennot. Komennon
+nimi voisi olla vaikka \komentox{komento}, ja sen voisi määritellä
+siten, että se lisää automaattisesti komennon nimen alkuun kenoviivan
+(\koodi{\keno}) ja latoo koko ilmauksen tasalevyisellä fontilla.
+Seuraavassa on esimerkki tällaisen komennon määrittelemisestä ja
+käytöstä:
+
+\komentoi{newcommand}
+\komentoi{texttt}
+\komentoi{textbackslash}
+\begin{koodilohkosis}
+\newcommand{\komento}[1]{\texttt{\textbackslash #1}}
+
+Komennolla \komento{section} tehdään otsikoita.
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Komennolla \texttt{\textbackslash section} tehdään otsikoita.
+\end{tulossis}
+
+\noindent
+Edellä mainitun komennon määritelmään voi olla tarpeen lisätä myöhemmin
+muitakin asioita. Latexin komentojen nimet ovat suunnilleen englantia,
+ja jos nimen tavuttaa, täytyisi se tehdä englannin sääntöjen mukaisesti.
+Esimerkkinä olleen \komentox{komento}\-/ komennon määritelmässä voisi
+siis vaihtaa myös kielen komennolla \komento{textenglish}.%
+\footnote{Kieliasetuksista käsitellään luvussa
+  \ref{luku/kieliasetukset}.}
+
+Jos ollaan kirjoittamassa laajaa tietoteosta, Latex\-/ komennot halutaan
+ehkä lisätä automaattisesti kirjan lopussa olevaan asiahakemistoon (ks.
+s.~\pageref{luku/asiahakemisto}). Niinpä komennon määritelmään lisätään
+vielä sitäkin varten komento \komento{index}.%
+\footnote{Asiahakemistoja käsitellään luvussa \ref{luku/asiasanat}.}
+Lopulta Latex\-/ komentojen merkitsemiseen tarkoitettu
+\komentox{komento} määriteltäisiin seuraavalla tavalla:
+
+\komentoi{newcommand}
+\komentoi{textbackslash}
+\komentoi{texttt}
+\komentoi{textenglish}
+\komentoi{index}
+\begin{koodilohkosis}
+\newcommand{\komento}[1]{%
+  \texttt{\textbackslash\textenglish{#1}}%
+  \index[komennot]{#1@\texttt{\textbackslash #1}}}
+\end{koodilohkosis}
+
+% Asiahakemistot-luvussa on viittaus tähän lukuun ja maininta
+% \index-komennon sisällyttämisestä toisen komennon määritelmään.
+
+\noindent
+Näin oma \komentox{komento} ilmaisee tiiviisti ja havainnollisesti
+tarkoituksen eli sen, että kyseessä on Latex\-/ komento. Se piilottaa
+monimutkaisen teknisen toteutuksen eli fontin ja kielen vaihtamiseen
+sekä asiahakemistoon liittyvät toiminnot. Lisäksi komennon teknistä
+toteutusta on helppoa muuttaa myöhemmin, koska komennon määrittely on
+vain yhdessä paikassa lähdedokumentin alussa.
+
+\subsection{Komentojen määrittely}
+\label{luku/komennot-määrittely}
+
+Komentojen määrittelyyn on kolme erilaista komentoa, ja niille kaikille
+annetaan samanlaiset argumentit. Komennot ovat seuraavat:
+
+\komentoi{newcommand}
+\komentoi{renewcommand}
+\komentoi{providecommand}
+\begin{koodilohkosis}
+\newcommand     {\nimi}[n][oletus]{määritelmä}
+\renewcommand   {\nimi}[n][oletus]{määritelmä}
+\providecommand {\nimi}[n][oletus]{määritelmä}
+\end{koodilohkosis}
+
+\noindent
+Ensimmäinen pakollinen argumentti on komennon nimi (\komentox{nimi}), ja
+se voi koostua vain kirjaimista. Komento \komento{newcommand}
+määrittelee uuden komennon. Mikäli komento on jo olemassa, annetaan
+virheilmoitus. Toinen komento \komento{renewcommand} määrittelee
+olemassa olevan komennon uudelleen. Se antaa virheilmoituksen, jos
+komentoa ei ollut olemassa. Kolmas komento \komento{providecommand}
+puolestaan määrittelee uuden komennon vain siinä tapauksessa, että
+sellaista ei ollut ennen olemassa. Se ei anna virheilmoitusta.
+
+Komentojen toinen pakollinen argumentti \koodi{määritelmä} sisältää
+komennon määritelmän eli mitä tahansa tekstiä tai komentoja.
+Suoritusvaiheessa komento ikään kuin vaihdetaan sen määritelmäksi.
+
+\komentoi{newcommand}
+\begin{koodilohkosis}
+\newcommand{\komento}{Minua komennettiin!}
+\komento
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Minua komennettiin!
+\end{tulossis}
+
+\noindent
+Komentojen ensimmäinen valinnainen argumentti \koodi{n} on luku, joka
+kertoo, kuinka monta argumenttia määriteltävä komento käsittelee.
+Määritelmässä voi käyttää parametreja \koodi{\#1}, \koodi{\#2},
+\koodi{\#3} jne., ja ne korvautuvat komennon suoritusvaiheessa
+ensimmäisellä, toisella, kolmannella jne. argumentilla.
+
+\komentoi{newcommand}
+\begin{koodilohkosis}
+\newcommand{\komento}[2]{Sanoit #1 ja #2!}
+\komento{hip}{hei}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Sanoit hip ja hei!
+\end{tulossis}
+
+\noindent
+Toinen valinnainen argumentti \koodi{oletus} -- jos se on mukana --
+kertoo, että määriteltävän komennon ensimmäinen argumentti on
+valinnainen ja että tämä on sen oletusarvo. Oletusarvoa käytetään
+silloin, kun valinnaista argumenttia ei ole annettu.
+
+\komentoi{newcommand}
+\begin{koodilohkosis}
+\newcommand{\komento}[3][tyyppi]{Hei #1, sanoit #2 ja #3!}
+\komento{hip}{hei} \\
+\komento[Leslie]{hip}{hei}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Hei tyyppi, sanoit hip ja hei! \\
+  Hei Leslie, sanoit hip ja hei!
+\end{tulossis}
+
+\noindent
+Joskus yhden komennon määritelmä sisältää komennon
+\komento{renewcommand}, joka sitten määrittelee uudelleen jonkin toisen
+komennon. Silloin parametrit \koodi{\#1}, \koodi{\#2} jne. on
+tarkoitettu ensimmäisen eli uloimman kerroksen käsiteltäväksi. Sisempi
+kerros käyttää parametreja \koodi{\#\#1}, \koodi{\#\#2} jne.
+
+Kaikista kolmesta komentojen määrittelykomennosta on olemassa
+tähdellinen versio eli sellainen, jonka komennon nimen lopussa on tähti
+(\koodi{*}). Latexin komennoissa on tapana, että tähdellinen versio --
+jos sellainen on olemassa -- tarjoaa samaan asiaan jonkin toisenlaisen
+näkökulman.
+
+\komentoi{newcommand*}
+\komentoi{renewcommand*}
+\komentoi{providecommand*}
+\begin{koodilohkosis}
+\newcommand*     {\nimi}[n][oletus]{määritelmä}
+\renewcommand*   {\nimi}[n][oletus]{määritelmä}
+\providecommand* {\nimi}[n][oletus]{määritelmä}
+\end{koodilohkosis}
+
+\noindent
+Komentojen määrittelyssä tähdelliset versiot toimivat muuten samalla
+tavalla, mutta ne antavat virheilmoituksen, jos komennolle annetut
+argumentit sisältävät enemmän kuin yhden tekstikappaleen. Niinpä
+esimerkin \ref{esim/newcommand} koodi tuottaa käännettäessä virheen.
+
+\begin{esimerkki*}
+  \komentoi{newcommand*}
+\begin{koodilohko}
+\newcommand*{\komento}[1]{Teksti: #1}
+
+\komento{
+  Ensimmäinen tekstikappale.
+
+  Toinen tekstikappale.
+}
+\end{koodilohko}
+  \caption{\komento{newcommand*}\-/ komennolla määritelty komento ei
+    salli argumentteja, joissa on useita tekstikappaleita. Tämä
+    esimerkki tuottaa käännettäessä virheilmoituksen}
+  \label{esim/newcommand}
+\end{esimerkki*}
+
+\komento{newcommand*}\-/komennolla määritelty \komentox{komento} ei siis
+suostu ottamaan vastaan argumentteja, jotka sisältävät kappaleen
+vaihtumisen eli enemmän kuin yhden tekstikappaleen. Tämä voi olla
+hyödyllinen suojausominaisuus.
+
+\subsection{Kestävät ja hauraat komennot}
+\label{luku/komennot-hauraat}
+
+Kaikki Latex\-/ komennot ovat joko kestäviä (\englanti{robust}) tai
+hauraita (\englanti{fragile}). Tällä ei ole yleensä käytännön
+merkitystä, mutta hauraat komennot eivät välttämättä toimi toisen
+komennon argumentissa.
+
+Hauraita komentoja ovat sellaiset, jotka sisältävät tietoa, jota Latex
+kirjoittaa väliaikaistiedostoon ja lukee sieltä takaisin. Kyse on
+esimerkiksi sisällysluetteloon tai muihin automaattisiin luetteloihin
+kirjoitettavasta tiedosta. Hauraita ovat myös rivinvaihdot ja
+valinnaisia argumentteja eli hakasulkeissa annettavia argumentteja
+sisältävät komennot.
+
+Käytännössä ongelmia aiheuttavat esimerkiksi otsikkokomennot
+(\komento{section} ym.) sekä kuvatekstikomento \komento{caption}. Näiden
+argumenttina oleva teksti (ja mahdolliset komennot) kirjoitetaan
+tiedostoon ja ladataan sieltä myöhemmin takaisin. Hauraat komennot eivät
+toimi edellä mainittujen komentojen argumentissa, ja lähdetiedoston
+kääntäminen johtaa virheilmoitukseen. Ongelman voi ainakin joskus
+korjata kirjoittamalla hauraan komennon eteen komennon
+\komento{protect}.
+
+\subsection{Muita vinkkejä}
+
+Komennon viimeistä argumenttia ei välttämättä tarvitse kirjoittaa
+aaltosulkeisiin, jos argumentiksi halutaan vain yksi merkki. Tällaisessa
+tilanteessa komento poimii argumentiksi seuraavan merkin, joka ei ole
+sanaväli.
+
+\komentoi{newcommand}
+\begin{koodilohkosis}
+\newcommand{\x}[1]{Argumentti: <#1>}
+\x abc \\
+\x.abc
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Argumentti: <a>bc \\
+  Argumentti: <.>abc
+\end{tulossis}
+
+\noindent
+Mikäli argumenttina on kenoviivalla alkava komento, sitäkään ei tarvitse
+kirjoittaa aaltosulkeisiin. Latex\-/koodin lukemisen kannalta tällainen
+ei välttämättä ole hyvä käytäntö, koska joskus voi hämärtyä, onko kyse
+kahdesta peräkkäisestä komennosta vai onko toinen komento vain
+argumenttina toiselle.
+
+\komentoi{newcommand}
+\begin{koodilohkosis}
+\newcommand{\x}[1]{Argumentti: <#1>}
+\newcommand{\yyy}{abc}
+\x\yyy
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Argumentti: <abc>
+\end{tulossis}
+
+\noindent
+Tätä merkintätapaa esiintyy jokin verran komentojen määrittelyssä, niin
+että jätetään \komento{newcommand}\-/komennon ensimmäisenä argumenttina
+oleva komennon nimi ilman aaltosulkeita.
+
+\komentoi{newcommand}
+\begin{koodilohkosis}
+\newcommand\yyy{abc}
+\end{koodilohkosis}
+
+\noindent
+Komennon määrittelyssä on välillä hyötyä \komento{ignorespaces}\-/
+komennosta, joka jättää sanavälit huomioimatta komennon jälkeen. Ilman
+tätä komentoa tulisi seuraavassa esimerkissä sanojen väliin yksi
+välilyönti.
+
+\komentoi{newcommand}
+\komentoi{ignorespaces}
+\begin{koodilohkosis}
+\newcommand{\komento}[1]{#1\ignorespaces}
+\komento{yhdys}       sana
+\end{koodilohkosis}
+
+\begin{tulossis}
+  yhdyssana
+\end{tulossis}
+
+\begin{esimerkki*}
+  \komentoi{newcommand}
+  \komentoi{renewcommand}
+\begin{koodilohko}
+\newcommand{\komento}{alkuperäinen}
+\komento
+{%
+  \renewcommand{\komento}{\textit{muutettu}}
+  \komento
+}
+\komento
+\end{koodilohko}
+\begin{tulos}
+  alkuperäinen \textit{muutettu} alkuperäinen
+\end{tulos}
+\caption{Aaltosulkeilla voi rajata komennon määrittelyn
+  vaikutusaluetta}
+\label{esim/aaltosulkeet-rajaaminen}
+\end{esimerkki*}
+
+\noindent
+Aaltosulkeilla (luku \ref{luku/aaltosulkeet}) voi rajata
+komentomäärittelyn vaikutusaluetta. Esimerkin
+\ref{esim/aaltosulkeet-rajaaminen} alussa asetetaan \komentox{komento}
+tiettyyn alkuperäismääritelmään. Aaltosulkeiden sisällä se määritellään
+väliaikaisesti uudestaan. Aaltosulkeilla rajatun ympäristön jälkeen
+komennon uusi määritelmä lakkaa ja komento palautuu alkuperäiseksi.
+
+Monimutkaisiin komentoihin voidaan tarvita ehtorakenteita. Ne saa
+toteutettua \pakettictan{ifthen}\-/ paketin tarjoaman
+\komento{ifthenelse}\-/ komennon avulla. Se on ohjelmointikielistä
+tuttu ehtorakenne: jos annettu ehtolauseke on tosi, käsitellään
+then\-/haara; muussa tapauksessa käsitellään else-haara.
+
+\section{Ympäristöt}
+\label{luku/ympäristöt}
+
+Ympäristöt ovat rakenteita, joilla on aloittava \komento{begin}\-/
+komento ja lopettava \komento{end}\-/ komento sekä nimi. Ympäristöjen
+ajatuksena on, että jokin ominaisuus tai jotkin toiminnot ovat voimassa
+vain ympäristön sisällä ja asiat palautuvat ennalleen ympäristön
+jälkeen. Tässä mielessä ne toimivat samalla tavalla kuin aaltosulkeet
+(luku \ref{luku/aaltosulkeet}). Jos esimerkiksi fonttiasetusta (luku
+\ref{luku/kirjaintyypit}) muuttaa ympäristön sisäpuolella, asetus
+palautuu ympäristön jälkeen samaksi kuin se oli ennen ympäristön alkua.
+Samoin ympäristön sisällä määritellyt komennot ovat voimassa vain
+kyseisessä ympäristössä.
+
+\komentoi{begin}
+\komentoi{end}
+\begin{koodilohkosis}
+\begin{nimi}
+  % ympäristön
+  % vaikutusalue
+\end{nimi}
+\end{koodilohkosis}
+
+\noindent
+Yleisin ympäristö on nimeltään \ymparisto{document}, jonka sisään koko
+dokumentin sisältö kirjoitetaan. Muita ympäristöjä käytetään
+tavallisesta leipätekstistä poikkeavien rakenteiden ilmaisemiseen,
+esimerkiksi luetelmiin ja taulukoihin (luvut \ref{luku/luetelmat} ja
+\ref{luku/taulukot}). Ympäristöjä voi tehdä itsekin mihin hyvänsä
+tarkoitukseen. Niitä määritellään seuraavilla komennoilla:
+
+\komentoi{newenvironment}
+\komentoi{renewenvironment}
+\begin{koodilohkosis}
+\newenvironment   {nimi}[n][oletus]{aloitus}{lopetus}
+\renewenvironment {nimi}[n][oletus]{aloitus}{lopetus}
+\end{koodilohkosis}
+
+\noindent
+Komento \komento{newenvironment} määrittelee uuden ympäristön. Se antaa
+virheilmoituksen, jos samanniminen ympäristö on jo olemassa. Komento
+\komento{renewenvironment} puolestaan määrittelee uudelleen ympäristön,
+joka on jo olemassa. Se antaa virheilmoituksen, jos ympäristöä ei
+ollutkaan olemassa.
+
+Argumentit ovat lähes samanlaiset kuin komentojen määrittelyssä (luku
+\ref{luku/komennot-määrittely}). Ympäristöjen määrittelykomennoilla on
+kolme pakollista argumenttia: ensimmäinen on ympäristön nimi, toinen on
+ympäristön aloitusmääritelmä (\koodi{aloitus}) ja kolmas on
+lopetusmääritelmä (\koodi{lopetus}).
+
+\komentoi{newenvironment}
+\komentoi{begin}
+\komentoi{end}
+\begin{koodilohkosis}
+\newenvironment{ymp}{Tästä se alkaa.}{Tähän se päättyy.}
+
+\begin{ymp}
+  Ympäristön sisältöä.
+\end{ymp}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Tästä se alkaa. Ympäristön sisältöä. Tähän se päättyy.
+\end{tulossis}
+
+\noindent
+Tavallisesti ympäristön aloitusmääritelmään kirjoitetaan jonkin toisen
+ympäristön aloituskomento sekä mahdollisesti suoritetaan joitakin
+asetuskomentoja. Vastaavasti lopetusmääritelmässä lopetetaan ympäristö
+eli palataan normaaliin tilaan. Tarkoituksena on abstrahoida jokin
+monimutkaisempi kokonaisuus eli tehdä uusi helppokäyttöinen ympäristö, joka
+piilottaa teknisen toteutuksen.
+
+\komentoi{newenvironment}
+\komentoi{begin}
+\komentoi{end}
+\begin{koodilohkosis}
+\newenvironment{ymp}
+{\begin{mahtavuus}
+    \omia\hienoja\asetuksia}
+  {\end{mahtavuus}}
+\end{koodilohkosis}
+
+\noindent
+Omille ympäristölle voi määritellä argumentteja samalla tavalla kuin
+komennoillekin. Ensimmäinen valinnainen argumentti \koodi{n} on luku
+joka kertoo, kuinka monta argumenttia määriteltävä ympäristö käsittelee.
+Ympäristön aloitusmääritelmässä voi argumentteihin viitata parametreilla
+\koodi{\#1}, \koodi{\#2}, \koodi{\#3} jne.
+
+Jos toinen valinnainen argumentti \koodi{oletus} on mukana, se
+ilmaisee, että määriteltävän ympäristön ensimmäinen argumentti on
+valinnainen ja että tämä on sen oletusarvo. Oletusta käytetään silloin,
+kun valinnaista argumenttia ei ole annettu. Argumentit annetaan
+ympäristön aloittavan \komento{begin}\-/ komennon yhteydessä.
+
+\komentoi{begin}
+\komentoi{end}
+\begin{koodilohkosis}
+\begin{ymp}[valinnainen]{argu}{mentteja}
+  % ympäristön
+  % vaikutusalue
+\end{ymp}
+\end{koodilohkosis}
+
+\noindent
+Ympäristön määrittelykomennoille on myös tähdelliset versiot
+\komento{newenvironment*} ja \komento{renewenvironment*}. Ne toimivat
+samoin kuin edellä kuvatut tavallisetkin komentoversiot, mutta ne eivät
+salli, että määritellylle ympäristölle annetut argumentit sisältävät
+enemmän kuin yhden tekstikappaleen. Toiminta on siis sama kuin
+komentojenkin määrittelyn tähdellisissä versioissa (luku
+\ref{luku/komennot-määrittely}).
+
+\komentoi{newenvironment*}
+\komentoi{renewenvironment*}
+\begin{koodilohkosis}
+\newenvironment*   {nimi}[n][oletus]{aloitus}{lopetus}
+\renewenvironment* {nimi}[n][oletus]{aloitus}{lopetus}
+\end{koodilohkosis}
+
+\begin{esimerkki*}
+  \komentoi{newenvironment}
+  \komentoi{ignorespaces}
+  \komentoi{ignorespacesafterend}
+  \komentoi{begin}
+  \komentoi{end}
+
+\begin{koodilohko}
+\newenvironment{ymp}
+{Yhdys\ignorespaces}
+{esi\ignorespacesafterend}
+
+\begin{ymp}
+  sana% Kommentti poistaa seuraavan sanavälin.
+\end{ymp}   merkki.
+\end{koodilohko}
+\begin{tulos}
+  Yhdyssanaesimerkki.
+\end{tulos}
+\caption{Sanavälien käyttäytyminen ympäristöjen yhteydessä. Komennoilla
+  \komento{ignorespaces} ja \komento{ignorespacesafterend} voi poistaa
+  seuraavat sanavälit}
+\label{esim/ignorespacesafterend}
+\end{esimerkki*}
+
+\noindent
+Joskus ympäristöjen määrittelyyn on hyödyllistä sisällyttää komento
+\komento{ignorespaces}, joka jättää huomioimatta tämän komennon
+jälkeiset sanavälit. Toinen hyödyllinen on
+\komento{ignorespacesafterend}, joka jättää huomioimatta ympäristön
+lopettavan \komento{end}\-/ komennon jälkeiset sanavälit. Esimerkki
+\ref{esim/ignorespacesafterend} selventää näiden toimintaa.
+
+\section{Mitat}
+\label{luku/mitat}
+
+\subsection{Mittayksiköt}
+
+Koska typografia on pitkälti teksti- ja muiden elementtien sijoittelua,
+tarvitaan sitä varten mittavälineitä. Niinpä Texissäkin on pituusmittoja
+ja useita pituuden mittayksiköitä. Taulukkoon \ref{tlk/mittayksiköt} on
+koottu mittayksiköiden lyhenteet ja merkitykset. Teknisesti on
+samantekevää, mitä yksiköitä käyttää, sillä ne ovat vain välineitä
+pituuden ilmaisemiseen. Sisäisesti Tex käyttää sp-yksikköä, joka
+ilmaisee samalla mittojen tarkkuuden: pienin jakamaton mitta on 1\,sp
+(5,36\,nm).
+
+\leijutlk{
+  \begin{tabular}{ll}
+    \toprule
+    \ots{Lyh.} & \ots{Merkitys} \\
+    \midrule
+    bp & piste uudessa pica-järjestelmässä, 1/72 tuumaa, 0,3528 mm \\
+    pt & piste vanhassa pica-järjestelmässä, 1/72,27 tuumaa, 0,3515 mm \\
+    pc & pica eli 12 pt-pistettä \\
+    sp & 1/65536 pt-pistettä (5,36\,nm), Texin sisäisesti käyttämä yksikkö \\
+    dd & piste Didot-järjestelmässä, 0,376 mm \\
+    cc & cicero eli 12 dd-pistettä \\
+    mm & millimetri \\
+    cm & senttimetri \\
+    in & tuuma, 25,4 mm \\
+    ex & nykyisen fontin x-korkeus, perus- ja gemenalinjan etäisyys \\
+    em & typografisen neliön sivun pituus, sama kuin fontin koko \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Texin mittayksiköiden lyhenteet ja merkitykset}
+  \label{tlk/mittayksiköt}
+}
+
+Usein tietyt yksiköt ovat vakiintuneet tiettyihin tilanteisiin.
+Esimerkiksi fonttien kokoja ja rivikorkeuksia on tapana mitata
+pistemittojen avulla. Nykyään typografiassa käytetään lähinnä
+bp\-/yksikön mukaista pistettä, joka tuli käyttöön Post Script
+\=/standardin myötä vuonna 1984 ja jota käytetään julkaisuohjelmissa.
+Sivun mittoja kuten leveyttä, korkeutta ja marginaaleja ilmaistaan
+tavallisesti metrijärjestelmän avulla eli senttimetreissä tai
+millimetreissä.
+
+Latexin mittojen mittaluvuissa desimaalierottimena on piste, ja
+mittayksikön lyhenne kirjoitetaan kiinni mittalukuun. Seuraavassa
+esimerkissä tehdään vaakasuuntaisia ja pystysuuntaisia välejä
+komennoilla \komento{hspace} ja \komento{vspace}:
+
+\komentoi{hspace}
+\komentoi{vspace}
+\begin{koodilohkosis}
+Sanat\hspace{1.2cm}hassusti
+\vspace{2mm}
+
+\hspace{1.75em}erillään.
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Sanat\hspace{1.2cm}hassusti  \nopagebreak
+  \vspace{2mm}
+
+  \hspace{1.75em}erillään.
+\end{tulossis}
+
+\noindent
+Jos pystysuuntaisen välin tekevä komento \komento{vspace} sattuu
+sivunvaihdon kohdalle, väli jätetään kokonaan tekemättä. Komennosta on
+olemassa tähtiversio \komento{vspace*}, joka tekee välin myös
+sivunvaihdon kohdalle eli ennen tai jälkeen sivunvaihdon.
+
+Vastaavalla tavalla toimii myös vaakasuuntainen väli \komento{hspace}.
+Jos komento sattuu rivinvaihdon kohdalle, komentoa ei huomioida eli väli
+jätetään tekemättä. Tähtiversio \komento{hspace*} tekee välin joka
+tapauksessa.
+
+\subsection{Mittakomennot ja typografinen viivasto}
+
+Mittoja tallennetaan eräänlaisiin muuttujiin, jotka näyttävät päällepäin
+komennoilta eli niiden alussa on kenoviiva (\koodi{\keno}) ja sitten
+kirjaimista koostuva nimi. Esimerkiksi mitta \mitta{textwidth} on
+tekstialueen leveys nykyisellä sivulla. Komentomaisesta ulkoasustaan
+huolimatta mittoja ei voi suorittaa komentoina; ne sopivat vain komennon
+argumentiksi, silloin kun tarvitaan mitta.
+
+Uusia mittoja luodaan komennolla \komento{newlength} ja olemassa olevia
+mittoja asetetaan esimerkiksi komennoilla \komento{setlength} ja
+\komento{addtolength}. Omien mittoja on tarpeen luoda silloin, kun
+halutaan määritellä tietynsuuruinen mitta, jota käytetään Latex\-/
+koodissa useita kertoja.
+
+\komentoi{newlength}
+\komentoi{setlength}
+\komentoi{addtolength}
+\begin{koodilohkosis}
+\newlength{\omamitta}         % Luodaan mitta.
+\setlength{\omamitta}{2.3em}  % Asetetaan mitta.
+\addtolength{\omamitta}{1em}  % Lisätään mittaan.
+\addtolength{\omamitta}{-1em} % Vähennetään mitasta.
+\end{koodilohkosis}
+
+\noindent
+Näin luotuja mittoja voi käyttää mittayksiköiden tavoin, eli niille voi
+asettaa eteen kertoimen. Esimerkiksi seuraava \komento{hspace}\-/
+komento luo vaakasuuntaisen välin, jonka pituus on 0,7 kertaa
+\mittax{omamitta}:
+
+\komentoi{hspace}
+\begin{koodilohkosis}
+\hspace{0.7\omamitta}
+\end{koodilohkosis}
+
+\noindent
+Vaakasuuntaisten välien tekeminen on typografiassa varsin tavallista,
+joten niitä varten on olemassa omia komentoja. Typografisen neliön
+levyisen (1\,em) välin voi tehdä komennolla \komento{quad}. Sen
+puolikkaan (\murtoluku{1}{2}\,em) saa komennolla \komento{enspace}.
+Ohuke eli \murtoluku{1}{6}\,em-väli tehdään \komento{,}\-/ komennolla,
+josta on tarkempaa tietoa luvussa \ref{luku/ohuke}.
+
+Perus Latexissa ei voi tehdä laskutoimituksia mittojen avulla, mutta
+\pakettictan{calc}\-/ paketti laajentaa \komento{setlength}\-/{} ja
+\komento{addtolength}\-/ komentoja siten, että niiden argumentissa voi
+toteuttaa yhteen\-/, vähennys\-/, kerto- ja jako\-las\-kuja
+operaattoreilla \koodi{+-*/}. Myös sulkeita \koodi{()} voi käyttää
+laskujärjestyksen muuttamiseen samoin kuin matemaattisissa lausekkeissa
+tavallisestikin. Jos samassa lausekkeessa on sekä mittoja (esim.
+\mitta{parindent} tai \koodi{1em}) että vakiotermejä (esim.~\koodi{2}),
+täytyy mitta mainita lausekkeessa ensin. Seuraava esimerkki
+havainnollistaa \paketti{calc}\-/ paketin laskutoimituksia:
+
+\komentoi{setlength}
+\mittai{parindent}
+\begin{koodilohkosis}
+\setlength{\omamitta}{\parindent + 1em}
+\setlength{\omamitta}{\parindent * 2}  % ei: 2 * \parindent
+\end{koodilohkosis}
+
+\noindent
+Latex sisältää myös komennot mittojen poimimiseen kirjaimista tai muista
+merkeistä. Mittoja on kolme: leveys (\englanti{width}), korkeus
+(\englanti{height}) ja syvyys (\englanti{depth}). Leveys on merkin
+viemä tila leveyssuunnassa. Korkeus tarkoittaa merkin korkeutta
+peruslinjan yläpuolella, ja syvyys on merkin korkeus peruslinjan
+alapuolella. Kuva \ref{kuva/kirjainmitat} havainnollistaa näitä kolmea
+mittaa sekä typografista viivastoa.
+
+\leijukuva{
+  \rmfamily
+  \begin{tikzpicture}
+    [viiva/.style={line width=.7bp, densely dotted, color=apuviiva},
+    nuoli/.style={<->, line width=1bp, color=mittanuoli}, xscale=1.1,
+    yscale=1.9, baseline=0pt]
+
+    \node at (.04,.25) {\fontsize{120bp}{120bp}\selectfont p};
+
+    \draw [viiva] (-1,.98) rectangle (1,-.5);
+    \draw [viiva] (1,.98) -- (2.25,.98);
+    \draw [viiva] (-1,.02) -- (2.25,.02);
+    \draw [viiva] (1,-.5) -- (2.25,-.5);
+
+    \draw [nuoli] (1.2,.02) -- (1.2,.98);
+    \node at (1.9,.5) [color=mittanuoli] {korkeus};
+
+    \draw [nuoli] (1.2,.02) -- (1.2,-.5);
+    \node at (1.9,-.25) [color=mittanuoli] {syvyys};
+
+    \draw [nuoli] (-1,1.1) -- (1,1.1);
+    \node at (0,1.25) [color=mittanuoli] {leveys};
+
+    \node at (3.13,1.64) {ylälinja};
+    \node at (3.13,1.44) {versaalilinja};
+    \node at (3.13,.98) {gemenalinja};
+    \node at (3.13,.02) {peruslinja};
+    \node at (3.13,-.5) {alalinja};
+
+    \node at (6.52,.74) {\fontsize{120bp}{120bp}\selectfont H};
+
+    \draw [viiva] (5.05,1.47) rectangle (7.95,.02);
+    \draw [viiva] (5.05,.02) -- (4,.02);
+    \draw [viiva] (5.05,1.47) -- (4,1.47);
+    \draw [viiva] (7.95,1.62) -- (4,1.62);
+    \draw [viiva] (7.95,.98) -- (4,.98);
+
+    \draw [nuoli] (4.86,.02) -- (4.86,1.47);
+    \node at (4.1,.5) [color=mittanuoli] {korkeus};
+
+    \draw [nuoli] (5.05,-.1) -- (7.95,-.1);
+    \node at (6.5,-.3) [color=mittanuoli] {leveys};
+  \end{tikzpicture}
+}{
+  \caption{Kirjainten mitat ja typografinen viivasto}
+  \label{kuva/kirjainmitat}
+}
+
+Gemenalinja sijaitsee gemenakirjainten eli pienaakkosten korkeudella.
+Peruslinjan ja gemenalinjan etäisyys on fontin x\=/korkeus (1\,ex).
+Optisen vaikutelman vuoksi gemenalinja ei tarkoita ehdotonta
+gemenakirjainten ylintä kohtaa. Esimerkiksi p\=/kirjaimen yläpääte ja
+silmukan yläkaari voivat yltää hieman gemenalinjan yläpuolelle ja
+silmukan alakaari peruslinjan alapuolelle. Fonttien suunnittelijat
+tekevät tällaisia optisia korjauksia, jotta kirjainten hahmot näyttävät
+yhtä korkeilta ja tasapainoisilta yhdessä.
+
+Versaalilinja sijaitsee versaalikirjainten eli suuraakkosten
+korkeudella. Jotkin kirjaimet voivat yltää hieman versaalilinjan
+yläpuolellekin. Esimerkiksi joidenkin fonttien Hk\=/kirjaimia
+vertailemalla näkee, että k\=/kirjaimen yläpääte yltää H\=/kirjaimen eli
+versaalilinjan yläpuolelle, ylälinjan tuntumaan. Myös tarkemerkit (luku
+\ref{luku/tarkkeet}) voivat sijaita versaalilinjan yläpuolella.
+
+Merkkien leveyden, korkeuden ja syvyyden voi mitata seuraavan esimerkin
+komennoilla. Esimerkin ensimmäisellä rivillä luodaan uudet mitat
+\mittax{leveys}, \mittax{korkeus} ja \mittax{syvyys}, joihin sitten
+tallennetaan merkkien mitat.
+
+\komentoi{newlength}
+\komentoi{settowidth}
+\komentoi{settoheight}
+\komentoi{settodepth}
+\begin{koodilohkosis}
+\newlength{\leveys} \newlength{\korkeus} \newlength{\syvyys}
+\settowidth{\leveys}{abc} % merkkien ”abc” leveys
+\settoheight{\korkeus}{H} % merkin ”H” korkeus
+\settodepth{\syvyys}{p}   % merkin ”p” syvyys
+\end{koodilohkosis}
+
+\noindent
+Mitat saa näkyviin kirjoittamalla mitan eteen komennon \komento{the}.
+Näin mitan pituus ladotaan dokumenttiin. Yksikkönä on typografinen piste
+(pt).
+
+\komentoi{the}
+\begin{koodilohkosis}
+Leveys: \the\leveys, korkeus: \the\korkeus, syvyys: \the\syvyys.
+\end{koodilohkosis}
+
+\begin{tulossis}
+  Leveys: 14.62865pt, korkeus: 6.81897pt, syvyys: 2.4662pt.
+\end{tulossis}
+
+\noindent
+Aiemmin mainituista optisista korjauksista johtuu, että gemenakirjaimet
+eivät ole välttämättä täsmälleen samankorkuisia. Gemena\=/x asettuu
+perus- ja gemenalinjojen väliin, mutta gemena\=/o voi yltää aavistuksen
+verran linjojen ylä- ja alapuolelle. Ihmisen silmään ne näyttävät yhtä
+korkeilta.
+
+\subsection{Venyvät mitat ja välit}
+\label{luku/venyvät-mitat}
+
+Edellä on puhuttu vain kiinteistä mitoista, mutta Latex tuntee myös
+venyvät mitat. Niiden ajatuksena on, että Latexille voi antaa luvan
+kutistaa tai venyttää mittaa tietyissä rajoissa. Venyviä mittoja
+käytettään usein pystysuuntaisissa väleissä, esimerkiksi väliotsikon
+edellä ja jälkeen tai tekstikappaleiden välissä. Latex pystyy latomaan
+sivut yleensä paremman näköiseksi, kun sille antaa venyvien mittojen
+avulla hieman säätövaraa. Alla on esimerkki venyvän kappalevälin
+(\mitta{parskip}) määrittämisestä. Samalla asetetaan kappaleen
+ensimmäisen rivin sisennys (\mitta{parindent}) nollaan (\koodi{0em}).
+
+\komentoi{setlength}
+\mittai{parskip}
+\mittai{parindent}
+\begin{koodilohkosis}
+\setlength{\parskip}{2ex plus 0.2ex minus 0.1ex}
+\setlength{\parindent}{0em}
+\end{koodilohkosis}
+
+\noindent
+Venyvissä mitoissa mainitaan ensin normaali pituus ja sitten sanoilla
+\koodi{plus} ja \koodi{minus} ilmaistaan, kuinka paljon mitta voi venyä
+tai kutistua. Molempia ei välttämättä tarvitse antaa.
+
+Venyvät mitat voivat sisältää ''äärettömän'' mittayksikön \koodi{fill},
+joka antaa luvan venyttää mittaa niin, että kaikki käytettävissä oleva
+tila täyttyy. Äärettömän mittayksikön kanssa mittaluku ilmaisee
+suhdeluvun muihin äärettömiin mittoihin. Seuraava esimerkki
+havainnollistaa asiaa:
+
+\komentoi{hspace}
+\begin{koodilohkosis}
+x\hspace{0mm plus 1fill}x\hspace{0mm plus 2fill}x
+\end{koodilohkosis}
+
+\begin{tulossis}
+  x\hspace{0mm plus 1fill}x\hspace{0mm plus 2fill}x
+\end{tulossis}
+
+\noindent
+Edellisen esimerkin mittojen luonnollinen pituus on nolla (\koodi{0mm}),
+mutta \koodi{plus} ja \koodi{fill} \=/mitan vuoksi ne voivat venyä ja
+täyttää koko käytettävissä olevan tilan. Ensin mainitulla on suhdeluku 1
+(\koodi{1fill}) ja jälkimmäisellä suhdeluku 2 (\koodi{2fill}), joten
+jälkimmäinen väli on kaksinkertainen ensimmäiseen verrattuna. Saman
+äärettömästi venyvän mitan ja suhdeluvut voi ilmaista myös
+\komento{stretch}\-/ mittakomennon avulla seuraavasti:
+
+\komentoi{hspace}
+\komentoi{stretch}
+\begin{koodilohkosis}
+x\hspace{\stretch{1}}x\hspace{\stretch{2}}x
+\end{koodilohkosis}
+
+\begin{tulossis}
+  x\hspace{\stretch{1}}x\hspace{\stretch{2}}x
+\end{tulossis}
+
+\noindent
+Äärettömästi venyvälle, koko tilan täyttävälle mittayksikölle on itse
+asiassa kolme eri versiota: \koodi{fil}, \koodi{fill} ja \koodi{filll}.
+Niiden erona on tärkeysjärjestys. Ensin mainittu \koodi{fil} on vähiten
+tärkeä, ja viimeinen eli \koodi{filll} on tärkein. Jos samassa
+yhteydessä käytetään eri tärkeysasteisia yksiköitä, ylemmäntasoiset
+mitätöivät alemmantasoiset.
+
+\komentoi{hspace}
+\begin{koodilohkosis}
+x\hspace{0mm plus 1filll}x\hspace{0mm plus 1fill}x
+\end{koodilohkosis}
+
+\begin{tulossis}
+  x\hspace{0mm plus 1filll}x\hspace{0mm plus 1fill}x
+\end{tulossis}
+
+\noindent
+Edellisessä esimerkissä ensimmäinen venyvä mitta \koodi{1filll} mitätöi
+jälkimmäisen \koodi{1fill} kokonaan. Yleensä lienee parasta käyttää
+keskimmäistä (\koodi{fill}), mutta eri tärkeysasteille voi olla käyttöä
+esimerkiksi laajennuspaketin koodissa: \koodi{fil} sallii, että
+kirjoittaja tai muu koodi syrjäyttää asetuksen; \koodi{filll} on ehdoton
+sääntö, joka syrjäyttää muut.
+
+Käytännöllisyyssyistä äärettömästi venyvä pituus \koodi{0mm plus 1fill}
+on jo valmiiksi asetettu mittaan \mitta{fill}. Sitä on kätevää käyttää
+esimerkiksi vaaka- ja pystysuuntaisia välejä latovien komentojen
+\komento{hspace} ja \komento{vspace} kanssa:
+
+\komentoi{hspace}
+\komentoi{vspace}
+\mittai{fill}
+\begin{koodilohkosis}
+\hspace{\fill} % ääretön vaakasuuntainen väli
+\vspace{\fill} % ääretön pystysuuntainen väli
+\end{koodilohkosis}
+
+\noindent
+Edellisen esimerkin komennoista on olemassa vieläkin lyhemmät versiot.
+Vaakasuuntainen ääretön väli syntyy myös komennolla \komento{hfill} ja
+pystysuuntainen väli komennolla \komento{vfill}. Seuraavassa toistetaan
+eräs aiempi esimerkki yksinkertaisemmalla tavalla:
+
+\komentoi{hfill}
+\begin{koodilohkosis}
+x\hfill x\hfill\hfill x
+\end{koodilohkosis}
+
+\begin{tulossis}
+  x\hfill x\hfill\hfill x
+\end{tulossis}
+
+\section{Laskurit}
+\label{luku/laskurit}
+
+Laskureiden avulla Latex pitää kirjaa esimerkiksi sivunumeroista,
+lukujen ja alalukujen sekä kuvien ja muiden elementtien numeroinnista.
+Esimerkiksi nyt olemme pääluvun~\arabic{chapter}
+alaluvussa~\arabic{section}, ja mainitut luvut tulevat Latexin
+laskureista automaattisesti.
+
+\leijutlk{
+  \laskurii{part}
+  \laskurii{paragraph}
+  \laskurii{figure}
+  \laskurii{enumi}
+  \laskurii{chapter}
+  \laskurii{subparagraph}
+  \laskurii{table}
+  \laskurii{enumii}
+  \laskurii{section}
+  \laskurii{page}
+  \laskurii{footnote}
+  \laskurii{enumiii}
+  \laskurii{subsection}
+  \laskurii{equation}
+  \laskurii{mpfootnote}
+  \laskurii{enumiv}
+  \laskurii{subsubsection}
+
+  \begin{tabular}{llll}
+    \toprule
+    \laskuri{part} & \laskuri{paragraph}
+    & \laskuri{figure} & \laskuri{enumi} \\
+    \laskuri{chapter} & \laskuri{subparagraph}
+    & \laskuri{table} & \laskuri{enumii} \\
+    \laskuri{section} & \laskuri{page}
+    & \laskuri{footnote} & \laskuri{enumiii} \\
+    \laskuri{subsection} & \laskuri{equation}
+    & \laskuri{mpfootnote} & \laskuri{enumiv} \\
+    \laskuri{subsubsection} \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Latexin laskurit}
+  \label{tlk/latexin-laskurit}
+}
+
+Taulukossa \ref{tlk/latexin-laskurit} ovat Latexin perus laskurit. Monet
+niistä ovat otsikoiden numerointia varten (\englanti{\laskuri{part},
+  \laskuri{chapter}, \laskuri{section}, \laskuri{paragraph}}).
+Sivunumeroita varten on \laskuri{page}\-/laskuri ja matemaattisten
+kaavojen numerointiin \laskuri{equation}\-/laskuri. Leijuvista kuvista
+ja taulukoista (luku \ref{luku/leijuosat}) pidetään kirjaa laskureissa
+\laskuri{figure} ja \laskuri{table}, ja alaviitteiden (luku
+\ref{luku/alaviitteet}) numerointi on laskureissa \laskuri{footnote} ja
+\laskuri{mpfootnote}. Numeroidut luetelmat (luku \ref{luku/luetelmat})
+käsitellään \laskurix{enum}\-/alkuisten laskureiden avulla siten, että
+perustasolla käytetään laskuria \laskuri{enumi}, ja jos sen
+luetelmakohta sisältää toisen numeroidun luetelman, käytetään siinä
+laskuria \laskuri{enumii}, sen sisällä laskuria \laskuri{enumiii} jne.
+
+Edellä mainituista laskureista ei tarvitse yleensä itse huolehtia, sillä
+ne ovat vain tekniikkaa, joka toimii korkeamman tason toimintojen
+taustalla. Joskus on kuitenkin käyttöä myös omille laskureille. Seuraava
+esimerkki esittelee laskureiden käsittelyn peruskomennot. Niissä
+käytetään laskuria nimeltä \laskurix{oma}. Laskurien nimet koostuvat
+pelkistä kirjaimista, eikä niiden alussa ole kenoviivaa niin kuin
+komentojen ja mittojen alussa.
+
+\komentoi{newcounter}
+\komentoi{setcounter}
+\komentoi{addtocounter}
+\begin{koodilohkosis}
+\newcounter{oma}       % Luodaan uusi laskuri ”oma”.
+\setcounter{oma}{3}    % Asetetaan laskurin arvoksi 3.
+\addtocounter{oma}{1}  % Lisätään laskurin arvoon 1.
+\addtocounter{oma}{-1} % Vähennetään laskurin arvosta 1.
+\end{koodilohkosis}
+
+\noindent
+Laskuri on sisäisesti kokonaisluku, mutta sen arvon voi latoa eri
+muodoissa: arabialaisena tai roomalaisena lukuna, kirjaimena tai
+symbolien sarjana. Taulukossa \ref{tlk/laskurien-latominen} ovat komennot
+laskurin arvon latomiseen. Komennon argumentiksi annetaan laskurin nimi.
+Laskurin voi latoa kirjainmuodossa, jos sen arvo on 1--26; symbolit
+toimivat vain lukualueella 1--9.
+
+\leijutlk{
+  \begin{tabular}{ll}
+    \toprule
+    \ots{Komento} & \ots{Merkitys} \\
+    \midrule
+    \komento{arabic} & arabialainen luku: 1, 2, 3\ldots \\
+    \komento{roman} & roomalainen luku: i, ii, iii\ldots \\
+    \komento{Roman} & roomalainen luku: I, II, III\ldots \\
+    \komento{alph} & kirjain: a, b, c\ldots\ (vain 1--26) \\
+    \komento{Alph} & kirjain: A, B, C\ldots\ (vain 1--26) \\
+    \komento{fnsymbol} & symboli:
+                         \textasteriskcentered
+                         \textdagger
+                         \textdaggerdbl\S\P\ldots\ (vain 1--9) \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Komennot laskurien arvon latomiseen}
+  \label{tlk/laskurien-latominen}
+}
+
+Taulukon \ref{tlk/laskurien-latominen} komentojen lisäksi laskuriin
+liittyvän arvon voi latoa komennolla, joka alkaa kirjaimilla
+\komentox{the} ja jatkuu laskurin nimellä. Esimerkiksi komento
+\komento{thepage} latoo sivunumeron eli tekee käytännössä saman asian
+kuin komento \komento{arabic}\komentoarg{page}. Aina nämä eivät
+kuitenkaan ole sama asia, ja \komentox{the}\-/alkuinen komento voi olla
+määritelty toisellakin tavalla. Esimerkiksi tämän oppaan leijuvat
+taulukot numeroidaan laskurilla \laskuri{table}, mutta komento
+\komento{thetable} latoo ensin pääluvun ja sen perään pisteen ja
+taulukon numeron. Viimeisin taulukko on numeroltaan \thetable{} eli
+pääluvun~\arabic{chapter} taulukko~\arabic{table}.
+
+Jos laskurin arvoa tarvitaan Latexin teknisessä tilanteessa eikä
+tarkoituksena ole latoa sitä näkyviin itse dokumenttiin, täytyy käyttää
+komentoa \komento{value}. Seuraava esimerkki luo laskurin nimeltä
+\laskurix{mitta}, jonka arvoa (3) käytetään \komento{hspace}\-/ komennon
+argumenttina mitan ilmaisemiseen (3\,em).
+
+\komentoi{newcounter}
+\komentoi{setcounter}
+\komentoi{hspace}
+\komentoi{value}
+\begin{koodilohkosis}
+\newcounter{mitta}
+\setcounter{mitta}{3}
+x\hspace{\value{mitta}em}x
+\end{koodilohkosis}
+
+\begin{tulossis}
+  x\hspace{3em}x
+\end{tulossis}
+
+\noindent
+Laskurien avulla voi suorittaa peruslaskutoimituksia, kun lataa paketin
+\pakettictan{calc}. Paketti määrittelee uudelleen komennot
+\komento{setcounter} ja \komento{addtocounter} siten, että komennon
+argumentti voi sisältää yhteen\-/, vähennys\-/, kerto- ja
+jako\-las\-kuja käyttämällä operaattoreita \koodi{+-*/}. Sulkeita
+\koodi{()} voi käyttää lausekkeen laskujärjestyksen muuttamiseen.
+
+\komentoi{setcounter}
+\komentoi{value}
+\laskurii{page}
+\begin{koodilohkosis}
+\setcounter{oma}{\value{page} + 3}
+\end{koodilohkosis}
+
+\subsection{Hierarkkiset laskurit}
+\label{luku/hierarkkiset-laskurit}
+
+Laskurit voivat olla hierarkkisia ja riippuvaisia toisista laskureista:
+kun yhden laskurin arvo kasvaa, nollautuu jokin toinen laskuri
+automaattisesti. Tällaista toimintoa käytetään dokumentin lukujen eli
+otsikoiden numeroinnissa. Kirjan pääluvun~1 alaluvut ovat esimerkiksi
+1.1, 1.2, 1.3 jne. Kun alkaa seuraava pääluku~2, nollautuu alaluvun
+laskuri, jotta saadaan oikein numeroidut alaluvut 2.1, 2.2, 2.3 jne.
+Latex huolehtii lukujen numeroinnista automaattisesti, mutta omille
+laskureille täytyy määritellä riippuvuussuhteet itse. Seuraavassa
+esimerkissä luodaan oma laskuri, joka nollautuu automaattisesti aina,
+kun sivu vaihtuu eli laskurin \laskuri{page} arvo kasvaa.
+
+\komentoi{newcounter}
+\laskurii{page}
+\begin{koodilohkosis}
+\newcounter{oma}[page]
+\end{koodilohkosis}
+
+\noindent
+Ylemmän tason laskureita ei kannata kasvattaa komennolla
+\komento{addtocounter}, koska se vain muuttaa laskurin arvoa mutta ei
+huolehdi alemman tason laskurien nollaamisesta. Hierarkkisten laskurien
+kasvattamiseen on seuraavat kaksi komentoa:
+
+\komentoi{stepcounter}
+\komentoi{refstepcounter}
+\begin{koodilohkosis}
+\stepcounter{laskuri}
+\refstepcounter{laskuri}
+\end{koodilohkosis}
+
+\noindent
+Edellä mainitut komennot kasvattavat argumenttina annetun laskurin arvoa
+yhdellä ja nollaavat siitä riippuvaiset alemman tason laskurit.
+Jälkimmäinen komento \komento{refstepcounter} asettaa lisäksi
+ristiviitteen numeron, joten tämän komennon jälkeen mahdollisesti tuleva
+\komento{label}\-/ komento luo ristiviitekohteen. Kun tähän kohtaan
+viitataan muualta käyttämällä \komento{ref}\-/ komentoa, viitteessä
+näkyy laskurin numero tai oikeastaan \komentox{thelaskuri}\-/ komennon
+latoma teksti. Ristiviitteitä käsitellään tarkemmin luvussa
+\ref{luku/ristiviitteet}.
+
+Paketti \pakettictan{chngcntr} helpottaa hierarkkisten laskurien
+muuttamista jälkikäteen. Paketin komentojen avulla voi jälkikäteen
+asettaa jonkin laskurin riippuvaiseksi toisesta laskurista tai poistaa
+riippuvuuden.
+
+\komentoi{newcounter}
+\komentoi{counterwithin}
+\komentoi{counterwithout}
+\begin{koodilohkosis}
+\newcounter{oma}           % Luodaan laskuri ”oma”.
+\counterwithin {oma}{page} % Asetetaan riippuvuus page-laskurista.
+\counterwithout{oma}{page} % Poistetaan riippuvuus.
+\end{koodilohkosis}
+
+\noindent
+Edellä mainitut \paketti{chngcntr}\-/paketin komennot määrittelevät
+uudelleen myös \komentox{the\-oma}\-/ komennon, jolla \laskurix{oma}\-/
+laskurin arvon voi latoa. Se latoo mukaan myös ylemmäntasoisen laskurin
+arvon. Jos tätä \komentox{the}\-/ alkuista komentoa ei halua määritellä
+uudelleen, täytyy käyttää tähdellisiä komennon versioita:
+\komento{counterwithin*} ja \komento{counterwithout*}. Laskuriin
+liittyvän \komentox{the}\-/ komennon voi aina itsekin määritellä
+haluamansa laiseksi komennolla \komento{renewcommand} (luku
+\ref{luku/komennot-määrittely}), esimerkiksi seuraavalla tavalla:
+
+\komentoi{renewcommand}
+\komentoi{arabic}
+\komentoi{alph}
+\laskurii{page}
+\begin{koodilohkosis}
+\renewcommand{\theoma}{\arabic{page}/\alph{oma}}
+\end{koodilohkosis}
+
+\subsection{Kokonaislaskurit}
+
+Latex ei tiedä etukäteen, mihin arvoon laskurit lopulta yltävät. Se vain
+latoo sivuja peräkkäin eikä tiedä mitään tulevasta. Sen vuoksi
+esimerkiksi dokumentin sivumäärää ei voi ihan yksinkertaisella
+komennolla latoa dokumentin alkusivuille.
+
+Tekninen vastaus tämäntyyppisiin ongelmiin löytyy ristiviitteistä (luku
+\ref{luku/ristiviitteet}). Ne toimivat sisäisesti niin, että dokumentin
+ensimmäisellä kääntökerralla kirjoitetaan väliaikaistiedostoon muistiin
+tarpeellisia asioita ja seuraavalla kääntökerralla hyödynnetään
+väliaikaistiedostoa. Dokumentin sivumäärän ja viimeisen sivunumeron
+tallentamiseen on olemassa paketti \pakettictan{totpages}, joka lisää
+viimeiselle sivulle automaattisesti ristiviitteen nimeltä
+\koodi{Tot\-Pages}. Sivumäärän ja viimeisen sivun numeron voi latoa
+komennoilla \komento{ref} ja \komento{pageref}. Esimerkki
+\ref{esim/totpages} havainnollistaa niiden käyttöä.
+
+\begin{esimerkki*}
+  \luokkai{article}
+  \komentoi{documentclass}
+  \komentoi{usepackage}
+  \pakettii{totpages}
+  \komentoi{ref}
+  \komentoi{pageref}
+  \komentoi{addtocounter}
+  \laskurii{page}
+  \komentoi{newpage}
+
+\begin{koodilohko}
+\documentclass{article}
+\usepackage{totpages}
+
+\begin{document}
+Sivumäärä: \ref{TotPages}. Viimeinen sivu: \pageref{TotPages}.
+
+\addtocounter{page}{10} % Sivunumerot 11, 12, 13...
+\newpage Jotain... \newpage ...sisältöä.
+\end{document}
+\end{koodilohko}
+  \caption{Dokumentin sivumäärän ja viimeisen sivun numeron latominen}
+  \label{esim/totpages}
+\end{esimerkki*}
+
+Muunlaisten kokonaislaskurien toteuttamiseen voi käyttää
+\pakettictan{totcount}\-/ pakettia. Se tarjoaa komennon, jolla
+rekisteröidään olemassa oleva laskuri kokonaislaskuriksi. Lisäksi on
+komento, jolla ladotaan tai palautetaan laskurin lopullinen arvo.
+
+\komentoi{newcounter}
+\komentoi{regtotcounter}
+\komentoi{addtocounter}
+\komentoi{total}
+\komentoi{totvalue}
+\begin{koodilohkosis}
+\newcounter{oma}      % Luodaan laskuri ”oma”.
+\regtotcounter{oma}   % Rekisteröidään ”oma” kokonaislaskuriksi.
+\addtocounter{oma}{1} % Kasvatetaan laskurin arvoa.
+\total{oma}           % Ladotaan laskurin lopullinen arvo.
+\totvalue{oma}        % Palautetaan laskurin lopullinen arvo.
+\end{koodilohkosis}
+
+\noindent
+Edellä olevan esimerkin viimeistä komentoa \komento{totvalue} ei käytetä
+laskurin arvon latomiseen itse dokumenttiin vaan sitä käytetään
+teknisissä yhteyksissä kuten toisen Latex\-/komennon argumenttina.
+
+Myös Latexin valmiita laskureita voi rekisteröidä kokonaislaskureiksi.
+Tässä oppaassa on yhteensä \total{chapter} numeroitua päälukua, ja
+mainittu lukumäärä saatiin laskettua seuraavasti:
+
+\komentoi{regtotcounter}
+\komentoi{total}
+\laskurii{chapter}
+\begin{koodilohkosis}
+\regtotcounter{chapter} % Sijoitetaan dokumentin esittelyosaan.
+\total{chapter}         % Latoo päälukujen (chapter) lukumäärän.
+\end{koodilohkosis}
+
+\section{Laatikot}
+\label{luku/laatikot}
+
+Tex ajattelee ladottavan tekstin ja muun sisällön laatikoina eli
+suorakulmioina, joilla on leveys ja korkeus. Esimerkiksi kirjaimet ovat
+teknisesti laatikoita, joita ladotaan peräkkäin. Samoin monet valmiit
+ympäristöt luovat laatikon, joka sisältää jotakin ja vie tietyn verran
+tilaa sivulta.
+
+Dokumentin kirjoittajalle on välillä hyötyä luoda omia laatikoita, koska
+laatikko toimii yhtenä kokonaisuutena, jonka reunoja muut elementit ja
+latomiskoneisto kunnioittavat.
+
+\subsection{Pienet laatikot}
+\label{luku/laatikot-pienet}
+
+Yksinkertainen peruslaatikko tehdään \komento{mbox}\-/ komennolla, joka
+latoo argumenttina annetun tekstin näkymättömän laatikon sisään. Näin
+luotu laatikko pysyy koossa, eli sen sisältämiä sanoja ei esimerkiksi
+tavuteta. Komento sopiikin hyvin tavutuksen estämiseen yksittäisessä
+tilanteessa.
+
+Toinen laatikkokomento \komento{makebox} toimii samalla tavalla kuin
+\komento{mbox} mutta hyväksyy yhden tai kaksi valinnaista argumenttia.
+Komentojen muoto on seuraava:
+
+\komentoi{makebox}
+\begin{koodilohkosis}
+\makebox[leveys]{teksti}
+\makebox[leveys][sijainti]{teksti}
+\end{koodilohkosis}
+
+\noindent
+Argumentti \koodi{leveys} on laatikon leveysmitta ja \koodi{sijainti} on
+kirjainkoodi, joka ilmaisee laatikon sisällön vaakasuuntaisen
+sijoittelun. Kirjain \koodi{c} (\englanti{center}) keskittää sisällön,
+\koodi{l} (\englanti{left}) tasaa sisällön vasemmalle, \koodi{r}
+(\englanti{right}) tasaa sisällön oikealle ja \koodi{s}
+(\englanti{stretch}) tasaa sisällön molemmista reunoista eli venyttää
+laatikon sisäisiä sanavälejä sopivasti.
+
+\komentoi{makebox}
+\begin{koodilohkosis}
+\makebox[12em][s]{Laatikossa on tilaa.}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \makebox[12em][s]{Laatikossa on tilaa.}
+\end{tulossis}
+
+\noindent
+\komento{makebox}\-/ komennon \koodi{leveys}\-/ argumentissa voi käyttää
+apuna mittoja \mitta{width} (leveys), \mitta{height} (korkeus),
+\mitta{depth} (syvyys) ja \mitta{totalheight} (kokonaiskorkeus:
+\mitta{height} + \mitta{depth}), jotka määräytyvät laatikon sisällön
+luontaisten mittojen perusteella. Kuvassa \ref{kuva/kirjainmitat}
+(s.~\pageref{kuva/kirjainmitat}) oleva typografinen viivasto
+havainnollistaa näitä mittoja.
+
+Seuraava esimerkki latoo laatikon, jonka leveys on 1,5\-/ kertainen
+sisällön luontaiseen leveyteen nähden, ja keskittää tekstin. Pystyviivat
+ovat mukana rajojen hahmottamisen vuoksi.
+
+\komentoi{makebox}
+\mittai{width}
+\begin{koodilohkosis}
+|\makebox[1.5\width][c]{Keskitetty}|
+\end{koodilohkosis}
+
+\begin{tulossis}
+  |\makebox[1.5\width][c]{Keskitetty}|
+\end{tulossis}
+
+\noindent
+Laatikkokomento \komento{fbox} toimii kuten \komento{mbox} mutta piirtää
+laatikolle myös näkyvät kehykset. Komento \komento{framebox} on
+puolestaan kehyksellinen versio \komento{makebox}\-/ komennosta.
+Kehysviivan leveyden voi asettaa mitan \mitta{fboxrule} avulla, ja
+kehysviivan etäisyys sisällöstä määritellään mitassa \mitta{fboxsep}.
+
+\komentoi{fbox}
+\komentoi{framebox}
+\komentoi{setlength}
+\mittai{fboxrule}
+\mittai{fboxsep}
+\mittai{width}
+\begin{koodilohkosis}
+\setlength{\fboxsep}{3bp}
+\setlength{\fboxrule}{.5bp}
+\framebox[1.2\width][c]{Laatikossa \fbox{laatikko}}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \setlength{\fboxsep}{3bp}
+  \setlength{\fboxrule}{.5bp}
+  \framebox[1.2\width][c]{Laatikossa \fbox{laatikko}}
+\end{tulossis}
+
+\noindent
+Värillisten laatikoiden ja kehysten tekemistä neuvotaan luvussa
+\ref{luku/korostus-värit}, joka käsittelee väriasioita muutenkin.
+
+Tekstiä sisältävien laatikoiden korkeus vaihtelee kirjainten ja muiden
+merkkien muodon mukaan. Esimerkiksi kirjainten ala- ja yläpidennykset
+kasvattavat laatikon kokoa gemenalinjan yläpuolelle tai peruslinjan
+alapuolelle. Seuraavasta esimerkistä voi vertailla tekstilaatikoiden
+muodostumista:
+
+\komentoi{setlength}
+\komentoi{fbox}
+\mittai{fboxsep}
+\begin{koodilohkosis}
+\setlength{\fboxsep}{0bp}
+\fbox{sana} \fbox{kirja} \fbox{×}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \setlength{\fboxsep}{0bp}
+  \fbox{sana} \fbox{kirja} \fbox{×}
+\end{tulossis}
+
+\noindent
+Edellisen esimerkin kaltaisissa tilanteissa voi olla tarpeen käyttää
+laatikon sisällä komentoa \komento{strut}. Se latoo näkymättömän,
+leveydettömän merkin, jonka korkeus on rivikorkeuden mukainen (mitta
+\mitta{baselineskip}).
+
+\komentoi{setlength}
+\komentoi{fbox}
+\komentoi{strut}
+\mittai{fboxsep}
+\begin{koodilohkosis}
+\setlength{\fboxsep}{0bp}
+\fbox{\strut sana} \fbox{\strut kirja} \fbox{\strut ×}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \setlength{\fboxsep}{0bp}
+  \fbox{\strut sana} \fbox{\strut kirja} \fbox{\strut ×}
+\end{tulossis}
+
+\subsection{Suuret laatikot}
+\label{luku/laatikot-isot}
+
+Jos laatikon täytyy sisältää useita tekstikappaleita tai muuta
+pystysuuntaista sisältöä, tarvitaan esimerkiksi \komento{parbox}\-/
+komentoa. Se tarvitsee ainakin kaksi argumenttia: laatikon leveyden ja
+sisällön.
+
+\komentoi{parbox}
+\begin{koodilohkosis}
+\parbox{leveys}{sisältö}
+\end{koodilohkosis}
+
+\noindent
+\komento{parbox}\-/ laatikon sisällä teksti ladotaan samoin kuin teksti
+normaalistikin eli rivit katkaistaan sanavälien kohdalta ja
+mahdollisesti tavutuskohdista. Muutkin tekstikappaleen asetukset
+pätevät, ja asetukset voi määrittää haluamikseen laatikon sisällä.
+Lisätietoa tekstikappaleista on luvussa \ref{luku/kappale}.
+
+Komento \komento{parbox} hyväksyy myös yhden, kaksi tai kolme
+valinnaista argumenttia. Niillä määritellään laatikon pystysuuntainen
+sijoittelu ympäristöönsä nähden, laatikon korkeus ja laatikon sisällön
+pystysuuntainen sijoittelu. Valinnaiset argumentit toimivat seuraavasti:
+
+\komentoi{parbox}
+\begin{koodilohkosis}
+\parbox[sijainti]{leveys}{sisältö}
+\parbox[sijainti][korkeus]{leveys}{sisältö}
+\parbox[sijainti][korkeus][sisäsijainti]{leveys}{sisältö}
+\end{koodilohkosis}
+
+\noindent
+Argumentti \koodi{sijainti} on kirjain \koodi{c} (\englanti{center},
+keskilinja), \koodi{t} (\englanti{top}, ylälinja) tai \koodi{b}
+(\englanti{bottom}, alalinja). Näillä määritetään, miten laatikko
+sijoitetaan pystysuunnassa suhteessa tekstiin. Seuraava esimerkki
+havainnollistaa ensimmäisen valinnaisen argumentin toimintaa. Laatikon
+sisällä on rivinvaihtokomentoja (\komento{\keno}) ja kolme tekstiriviä.
+
+\komentoi{parbox}
+\begin{koodilohkosis}
+abc \parbox[c]{1em}{1 \\ 2 \\ 3}
+abc \parbox[t]{1em}{1 \\ 2 \\ 3}
+abc \parbox[b]{1em}{1 \\ 2 \\ 3} abc
+\end{koodilohkosis}
+
+\begin{tulossis}
+  abc \parbox[c]{1em}{1 \\ 2 \\ 3}
+  abc \parbox[t]{1em}{1 \\ 2 \\ 3}
+  abc \parbox[b]{1em}{1 \\ 2 \\ 3} abc
+\end{tulossis}
+
+\noindent
+Komennon toinen valinnainen argumentti \koodi{korkeus} määrittää
+laatikon korkeuden. Oletuksena korkeus määräytyy sisällön korkeuden
+mukaan, mutta tällä argumentilla korkeus asetetaan kiinteästi. Se voi
+olla hyödyllistä varsinkin silloin, kun sisältö halutaan tasata laatikon
+sisällä ylös, keskelle tai alas.
+
+Kolmas valinnainen argumentti \koodi{sisäsijainti} nimittäin asettaa
+laatikon sisällön pystysuuntaisen tasauksen. Argumentiksi annetaan
+kirjain \koodi{c} (\englanti{center}, keskelle), \koodi{t}
+(\englanti{top}, ylös), \koodi{b} (\englanti{bottom}, alas) tai
+\koodi{s} (\englanti{stretch}, ylös ja alas). Viimeksi mainittu eli ylös
+ja alas tasaaminen vaatii, että laatikon sisällä on venyviä
+pystysuuntaisia välejä. Niitä käsitellään luvussa
+\ref{luku/venyvät-mitat}.
+
+Ympäristö \ymparisto{minipage} vastaa toiminnallisesti
+\komento{parbox}\-/ komentoa. Se hyväksyy täsmälleen samat argumentit.
+Erona on se, että \ymparisto{minipage}\-/ ympäristön sisällä voi käyttää
+laatikon omia alaviitteitä (luku \ref{luku/alaviitteet}), jotka ladotaan
+laatikon alaosaan.
+
+\ymparistoi{minipage}
+\begin{koodilohkosis}
+\begin{minipage}[sijainti][korkeus][sisäsijainti]{leveys}
+  ...
+\end{minipage}
+\end{koodilohkosis}
+
+\subsection{Laatikoiden siirtely}
+
+Komennolla \komento{raisebox} voi latoa laatikon tekstin ylemmäs tai
+alemmas kuin se normaalisti sijoittuisi. Komennon ensimmäinen argumentti
+on etäisyysmitta, kuinka paljon ylemmäs teksti ladotaan. Negatiivinen
+mitta vie tekstin alemmas. Toinen argumentti on laatikon teksti.
+
+\komentoi{raisebox}
+\begin{koodilohkosis}
+\raisebox{etäisyysmitta}{teksti}
+\end{koodilohkosis}
+
+\noindent
+Argumentissa \koodi{etäisyysmitta} voi käyttää apuna mittoja
+\mitta{width}, \mitta{height}, \mitta{depth} ja \mitta{totalheight},
+joiden merkitys on sama kuin \komento{makebox}\-/ komennolla (luku
+\ref{luku/laatikot-pienet}). \komento{raisebox}\-/ komennolle voi antaa
+yhden tai kaksi valinnaista argumenttia, joilla määritellään laatikolle
+uusi korkeus ja syvyys. Molemmat ovat mittoja, ja ne korvaavat siirretyn
+laatikon tekstin luonnollisen korkeuden ja syvyyden. Komennon argumentit
+annetaan seuraavasti:
+
+\komentoi{raisebox}
+\begin{koodilohkosis}
+\raisebox{etäisyysmitta}[korkeus]{teksti}
+\raisebox{etäisyysmitta}[korkeus][syvyys]{teksti}
+\end{koodilohkosis}
+
+\noindent
+Grafiikkaan kuten kuviin ja väreihin erikoistunut paketti
+\pakettictan{graphicx} sisältää hyödyllisiä laatikkokomentoja:
+\komento{scalebox}, \komento{resizebox} ja \komento{rotatebox}. Komento
+\komento{scalebox} skaalaa tekstin eri kokoiseksi vaaka- tai
+pystysuunnassa.
+
+\komentoi{scalebox}
+\begin{koodilohkosis}
+\scalebox{vaakaskaalaus}[pystyskaalaus]{teksti}
+\end{koodilohkosis}
+
+\noindent
+Argumentit \koodi{vaakaskaalaus} ja \koodi{pystyskaalaus} ovat
+kertoimia. Pystysuuntainen skaalausargumentti on valinnainen: jos sen
+jättää pois, pystysuuntainen skaalaus on samansuuruinen kuin
+vaakasuuntainen. Negatiivisella kertoimella voi kääntää tekstin
+toisinpäin.
+
+\komentoi{scalebox}
+\begin{koodilohkosis}
+\scalebox{2}[1]{leveä} \scalebox{-1}[1]{käännetty}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \scalebox{2}[1]{leveä} \scalebox{-1}[1]{käännetty}
+\end{tulossis}
+
+\noindent
+Samantapainen skaalaustoiminto saadaan myös komennolla
+\komento{resizebox}. Sen argumentiksi ei anneta kertoimia vaan mittoja,
+eli teksti skaalataan annettuihin mittoihin.
+
+\komentoi{resizebox}
+\komentoi{resizebox*}
+\begin{koodilohkosis}
+\resizebox {vaakamitta}{pystymitta}{teksti}
+\resizebox*{vaakamitta}{pystymitta}{teksti}
+\end{koodilohkosis}
+
+\noindent
+Komennon \komentoi{resizebox} normaali versio käsittelee
+\koodi{pystymitta}\-/ argumentin siten, että se tulee olemaan tekstin
+korkeus eli kirjainten peruslinjan yläpuolinen osa. Komennon
+\komentoi{resizebox*} tähdellinen versio puolestaan toimii siten, että
+pystymitta on tekstin kokonaiskorkeus eli peruslinjan yläpuolinen osa
+(korkeus) ja alapuolinen osa (syvyys) yhdessä. Kuva
+\ref{kuva/kirjainmitat} (s.~\pageref{kuva/kirjainmitat}) havainnollistaa
+asiaa. \komento{resizebox}\-/ komennon argumenteissa voi käyttää apuna
+mittoja \mitta{width}, \mitta{height}, \mitta{depth} ja
+\mitta{totalheight} samoin kuin \komento{makebox}\-/ komennossa (luku
+\ref{luku/laatikot-pienet}).
+
+Laatikoiden pyörittely käy \komento{rotatebox}\-/ komennolla. Sen
+argumentiksi täytyy antaa ainakin kääntökulma asteina ja käännettävä
+teksti.
+
+\komentoi{rotatebox}
+\begin{koodilohkosis}
+\rotatebox[asetuksia]{kääntökulma}{teksti}
+\end{koodilohkosis}
+
+\noindent
+Valinnainen argumentti \koodi{asetuksia} voi sisältää asetusvalitsimia
+ja niiden arvoja. Tärkein valitsin on \koodi{origin}, jolla määritetään
+käännettävän tekstin kääntöpiste. Valitsimen arvoksi annetaan yksi tai
+kaksi seuraavista kirjaimista: \koodi{c} (\englanti{center}, keski),
+\koodi{l} (\englanti{left}, vasen), \koodi{r} (\englanti{right}, oikea),
+\koodi{t} (\englanti{top}, ylä), \koodi{b} (\englanti{bottom}, ala) tai
+\koodi{B} (\englanti{baseline}, peruslinja).
+
+\komentoi{rotatebox}
+\begin{koodilohkosis}
+\rotatebox[origin=l] {25}{ylämäki}
+\rotatebox[origin=r]{-25}{alamäki}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \rotatebox[origin=l] {25}{ylämäki}
+  \rotatebox[origin=r]{-25}{alamäki}
+\end{tulossis}
+
+\noindent
+\komento{rotatebox}\-/ komennon valinnaisen argumentin valitsin
+\koodi{units} määrittelee käytetyn kulmayksikön. Valitsimelle annetaan
+arvoksi täysympyrän yksikkömäärä, ja oletusasetus on \koodi{units=\katk
+  360}. Jos haluaa käyttää radiaaneja, sopiva asetus on
+\koodi{units=\katk 6.283185} (2π\,rad).

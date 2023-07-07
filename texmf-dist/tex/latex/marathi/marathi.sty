@@ -6,8 +6,8 @@
 %%
 %% marathi.dtx  (with options: `package')
 %% --------------------------------------------------------------------------
-%% लाटेक् आज्ञासंच मराठी आवृत्ती १.६.५
-%% © २०२१ निरंजन
+%% लाटेक् आज्ञासंच मराठी (आवृत्ती १.७)
+%% प्रतिमुद्राधिकार © २०२०, २०२१ निरंजन
 %% 
 %% ह्या सामग्रीच्या वितरणाचे व प्रतिमुद्रणाचे अधिकार आलोक नित्यमुक्त परवान्यासह मुक्त करण्यात येत
 %% आहेत. ह्या सामग्रीची यथामूल अथवा परिवर्तित प्रतिमुद्रणे व्यावसायिक अथवा अव्यावसायिक
@@ -20,8 +20,8 @@
 %% 
 %% https://gitlab.com/aalok/nityamukta-parwana
 %% --------------------------------------------------------------------------
-%% LaTeX Package marathi v1.6.5
-%% © 2021 Niranjan
+%% LaTeX Package marathi v1.7
+%% Copyright © 2020, 2021 निरंजन
 %% 
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -39,8 +39,8 @@
 %% आज्ञासंच:  marathi
 %% लेखक:   निरंजन
 %% माहिती:   लुआलाटेक् व झीलाटेक् ह्यांच्यासह मराठीचा सुलभ वापर करण्यासाठी.
-%% दुवा:     https://gitlab.com/niruvt/marathi
-%% अडचणी:  https://gitlab.com/niruvt/marathi/-/issues
+%% संग्राहिका:  https://git.gnu.org.ua/marathi.git
+%% अडचणी:  https://puszcza.gnu.org.ua/bugs/?group=marathi
 %% परवाना:   आलोक नित्यमुक्त परवाना. आवृत्ती १.०+
 %%         दुवा: https://gitlab.com/aalok/nityamukta-parwana
 %%         आणि
@@ -61,16 +61,16 @@
 %% 
 %% ह्या कामात marathi.dtx, marathi.ins तसेच त्यांपासून निर्माण केलेली
 %% marathi.sty ही धारिका समाविष्ट आहे.
-\ProvidesPackage{marathi}[2021-06-18 v1.6.5 झीलाटेक् व लुआलाटेक्-सह मराठीचा सुलभ वापर]
+\ProvidesPackage{marathi}[2021-12-16 v1.7 झीलाटेक् व लुआलाटेक्-सह मराठीचा सुलभ वापर]
 \RequirePackage{iftex}
 \iftutex
 \else
 \PackageError{marathi}{%
-  चालक बदला | Unsupported engine
+  चालक बदला | Unsupported engine%
 }%
 {%
   लुआलाटेक् अथवा झीलाटेक् वापरा.\MessageBreak
-  Only LuaLaTeX or XeLaTeX supported.
+  Only LuaLaTeX or XeLaTeX supported%
 }%
 \expandafter\endinput
 \fi
@@ -81,25 +81,25 @@
 \newcommand*\मराठीअंतर{1.5}
 \pgfkeys
 {%
-  marathi/.is family, marathi/.cd,
-  अंतर/.store in=\मराठीअंतर,
-  अंतर/.default=1
-}%
+  marathi/.is family, marathi/.cd,%
+  अंतर/.store in=\मराठीअंतर,%
+  अंतर/.default=1%
+}
 \AddToHook{begindocument/before}
 {%
-  \@ifclassloaded{memoir}
+  \@ifclassloaded{memoir}%
   {%
     \setSingleSpace{\मराठीअंतर}\SingleSpacing
-    \pgfkeys{marathi/अंतर/.code=\setSingleSpace{#1}\SingleSpacing}
+    \pgfkeys{marathi/अंतर/.code=\setSingleSpace{#1}\SingleSpacing}%
   }%
   {%
-    \setstretch{\मराठीअंतर}
-    \pgfkeys{marathi/अंतर/.code=\setstretch{#1}}
+    \setstretch{\मराठीअंतर}%
+    \pgfkeys{marathi/अंतर/.code=\setstretch{#1}}%
   }%
   \@ifpackageloaded{csquotes}{}{%
     \RequirePackage[style=british]{csquotes}%
   }%
-}%
+}
 \DeclareOption*{\expandafter\बदल\expandafter{\CurrentOption}}
 \providecommand{\अंतरबदल}[1]{\बदल{अंतर=#1}}
 \ProcessOptions\relax
@@ -116,7 +116,7 @@
   \setmainfont[%
     Script=Devanagari,%
     Renderer=Harfbuzz,%
-    Language=Marathi
+    Language=Marathi%
   ]%
   {#1}%
 }
@@ -134,7 +134,7 @@
   Mapping=devanagarinumerals,%
   Language=Marathi%
 ]%
-{Shobhika}%
+{Shobhika}
 \providecommand{\टंक}[1]{%
   \setmainfont[%
     Script=Devanagari,%
@@ -142,7 +142,7 @@
     Language=Marathi%
   ]%
   {#1}%
-}%
+}
 \providecommand{\दुसराटंक}[2]{%
   \newfontfamily{#1}[%
     Script=Devanagari,%
@@ -150,7 +150,7 @@
     Language=Marathi%
   ]%
   {#2}%
-}%
+}
 \fi
 \@ifpackageloaded{polyglossia}{\setdefaultlanguage{marathi}}
 {%
@@ -181,7 +181,7 @@
   {marathi}
   \renewcommand\thepart{\localecounter{स्वर}{part}}%
   \renewcommand\theenumiii{\localecounter{व्यंजन}{enumiii}}%
-}%
+}
 \DeclareSymbolFont{devletters}{\encodingdefault}{Shobhika(0)}{}{}
 \ExplSyntaxOn
 \int_step_inline:nnn { "0900 } { "097F }

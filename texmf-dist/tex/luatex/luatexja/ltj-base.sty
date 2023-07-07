@@ -20,9 +20,9 @@
 
 %% Registers
 %\newcount\ltj@tempcnta % defined at luatexja-core.sty
+%\newcount\ltj@tempdima % defined at luatexja-core.sty
 \newcount\ltj@tempcntb
 \newcount\ltj@tempcntc
-\newdimen\ltj@tempdima
 % \newskip\ltj@tempskipa unused
 % \newtoks\ltj@temptoks unused
 
@@ -103,7 +103,7 @@
 %% \ltj@gobble@glue <glue>
 %! 次に続くグルー値を(2 回展開で)読み捨てる. 
 \def\ltj@gobble@glue{
-  \directlua{token.scan_glue()}
+  \directlua{node.free(token.scan_glue())}
 }
 
 %% \ltj@gobble@dimen <dimen>

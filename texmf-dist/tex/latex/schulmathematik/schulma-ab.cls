@@ -1,12 +1,8 @@
 % schulmathematik bundle: document class schulma-ab
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{schulma-ab}[2021-03-13 v1.1 Dokumentenklasse fuer Arbeitsblaetter]
-
-\RequirePackage{xparse}
-
-\ExplSyntaxOn
+\ProvidesExplClass{schulma-ab}{2022-08-12}{1.3}{Dokumentenklasse fuer Arbeitsblaetter}
 
 \tl_new:N \g_schulma_ab_kurs_tl
 \tl_new:N \g_schulma_ab_thema_tl
@@ -15,18 +11,37 @@
 \str_new:N \g_schulma_ab_datum_str
 \str_new:N \g_schulma_ab_nummer_str
 
-\bool_new:N \g_schulma_ab_afuenfquer_bool
+\bool_new:N \g_schulma_ab_afuenf_bool
+\bool_new:N \g_schulma_ab_querformat_bool
 \bool_new:N \g_schulma_ab_oesterreich_bool
+\bool_new:N \g_schulma_ab_musterloesung_bool
+
+\DeclareOption {A4quer}
+  {
+    \bool_gset_true:N \g_schulma_ab_querformat_bool
+  }
+
+\DeclareOption {A5}
+  {
+    \PassOptionsToClass {a5paper} {scrartcl}
+    \bool_gset_true:N \g_schulma_ab_afuenf_bool
+  }
 
 \DeclareOption {A5quer}
   {
     \PassOptionsToClass {a5paper} {scrartcl}
-    \bool_gset_true:N \g_schulma_ab_afuenfquer_bool
+    \bool_gset_true:N \g_schulma_ab_afuenf_bool
+    \bool_gset_true:N \g_schulma_ab_querformat_bool
   }
 
 \DeclareOption {AT}
   {
     \bool_gset_true:N \g_schulma_ab_oesterreich_bool
+  }
+
+\DeclareOption {Musterloesung}
+  {
+    \bool_gset_true:N \g_schulma_ab_musterloesung_bool
   }
 
 \DeclareOption*
@@ -80,10 +95,15 @@
 \RequirePackage {tasks}
 \RequirePackage {enumitem}
 \RequirePackage {scrlayer-scrpage}
+\RequirePackage {comment}
 
-\bool_if:NTF \g_schulma_ab_afuenfquer_bool
+\bool_if:NT \g_schulma_ab_querformat_bool
   {
     \KOMAoption {paper} {landscape}
+  }
+
+\bool_if:NTF \g_schulma_ab_afuenf_bool
+  {
     \KOMAoption {DIV} {11}
   }
   {
@@ -107,7 +127,8 @@
   label=\schulmaalph*),
   after-skip=4.5pt plus2pt minus1pt}
 
-\settasks{before-skip=4.5pt plus2pt minus1pt}
+\settasks{before-skip=9pt plus4pt minus2pt,
+  after-item-skip=9pt plus4pt minus2pt}
 
 \addtokomafont{pagefoot}{\upshape}
 \cfoot{\pagemark/\pageref{LastPage}}
@@ -254,4 +275,25 @@
     \raisebox {-1,5mm} { \rule {#1} {0,4pt} }
   }
 
-\ExplSyntaxOff
+\NewDocumentEnvironment {Lsg} {s}
+% Stern: Lösung beginnt mit einer Gleichung, kein Abstand erforderlich
+  {
+    \IfBooleanF {#1} { \par \medskip }
+  }
+  {
+  }
+
+\bool_if:NF \g_schulma_ab_musterloesung_bool
+  {
+    \excludecomment {Lsg}
+  }
+
+\NewDocumentCommand \NurAufgabe {+m}
+  {
+    \bool_if:NF \g_schulma_ab_musterloesung_bool {#1}
+  }
+
+\NewDocumentCommand \NurLoesung {+m}
+  {
+    \bool_if:NT \g_schulma_ab_musterloesung_bool {#1}
+  }

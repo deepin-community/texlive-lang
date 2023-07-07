@@ -137,6 +137,24 @@ dviドライバの指定です．エンジンに`lualatex`を利用する場合�
     - `black` -> `\color{black}`
     - `[cmyk]0.5,0.5,0.5,0` -> `\color[cmyk]{0.5,0.5,0.5,0}`
 
+### `trimmarks_pattern`
+トンボの形．直接の描画コードを指定します．次のように`centers`に指定すると，上下左右の真ん中のトンボの形が変わります．指定するのは上の真ん中のトンボの描画コードであり，そのほかの場所にはそれを回転したものが描画されます．なお，指定前に`graphicx`パッケージを読み込んでおく必要があります．また`\jlreqtrimmarkswidth`には
+```latex
+\jlreqtrimmarkssetup{
+  trimmarks_pattern = {
+    centers = {
+      \raisebox{3mm}{
+        \vrule width10mm height\jlreqtrimmarkswidth depth 0pt
+        \vrule height10mm width\jlreqtrimmarkswidth depth 3mm
+        \vrule width10mm height\jlreqtrimmarkswidth depth 0pt
+      }
+    }
+  }
+}
+```
+上下左右の形を個別に指定することもできます．例えば上の真ん中のみ変更するには`top-center=<描画コード>`を指定します．同様に`bottom-center`，`left-center`，`right-center`が指定できます．個別指定には`graphicx`パッケージは不要です．
+
+
 ## ライセンス
 このパッケージは二条項BSDライセンスの元で配布されています．詳しくは[LICENSE](LICENSE)をご覧ください．
 
@@ -165,7 +183,10 @@ dviドライバの指定です．エンジンに`lualatex`を利用する場合�
     - expl3コードとの親和性を高めた．
 * 2021-08-12
     - `etoolbox`に依存しないようにした．
-
+* 2022-07-13
+    - 読み込み時にエラーが出るバグ修正．
+* 2022-11-28
+    - `trimmarks_pattern`を`\jlreqtrimmarkssetup`に追加．
 
 --------------
 Noriyuki Abe

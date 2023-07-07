@@ -3,7 +3,7 @@
 --
 luatexbase.provides_module({
   name = 'luatexja.jfont',
-  date = '2021-09-18',
+  date = '2022-08-20',
   description = 'Loader for Japanese fonts',
 })
 
@@ -18,17 +18,18 @@ local getid = node.direct.getid
 local to_direct = node.direct.todirect
 
 local node_new = node.direct.new
-local node_free = node.direct.free
-local has_attr = node.direct.has_attribute
+local node_free = node.direct.flush_node or node.direct.free
+local get_attr = node.direct.get_attribute
 local set_attr = node.direct.set_attribute
 local round = tex.round
 local font_getfont = font.getfont
+local setkern = node.direct.setkern
 
 local attr_icflag = luatexbase.attributes['ltj@icflag']
 local attr_curjfnt = luatexbase.attributes['ltj@curjfnt']
 local attr_curtfnt = luatexbase.attributes['ltj@curtfnt']
-local id_glyph = node.id('glyph')
-local id_kern = node.id('kern')
+local id_glyph = node.id 'glyph'
+local id_kern = node.id 'kern'
 local cat_lp = luatexbase.catcodetables['latex-package']
 local FROM_JFM     = luatexja.icflag_table.FROM_JFM
 
@@ -118,18 +119,18 @@ function luatexja.jfont.define_jfm(to)
                   v.end_adjust = nil
                elseif #(v.end_adjust)==0 then
                   v.end_adjust = nil
-               else 
+               else
                   table.sort(v.end_adjust)
                end
             end
          else
             v.end_adjust = nil
-            if v.end_stretch and v.end_stretch~=0.0 then 
-               v.end_adjust = (v.end_adjust or {}) 
+            if v.end_stretch and v.end_stretch~=0.0 then
+               v.end_adjust = (v.end_adjust or {})
                v.end_adjust[#(v.end_adjust)+1] = v.end_stretch
             end
-            if v.end_shrink and v.end_ahrink~=0.0 then 
-               v.end_adjust = (v.end_adjust or {}) 
+            if v.end_shrink and v.end_ahrink~=0.0 then
+               v.end_adjust = (v.end_adjust or {})
                v.end_adjust[#(v.end_adjust)+1] = -v.end_shrink
             end
             if v.end_adjust then v.end_adjust[#(v.end_adjust)+1] = 0.0 end
@@ -148,8 +149,8 @@ function luatexja.jfont.define_jfm(to)
                elseif xp and type(xp)~='number' then
                   defjfm_res = nil
                else
-                  xp = (xp or 0)*9+36        
-                  if xp<0 or xp>=64 then defjfm_res=nil end 
+                  xp = (xp or 0)*9+36
+                  if xp<0 or xp>=64 then defjfm_res=nil end
                end
                x.priority = xp
             end
@@ -169,8 +170,8 @@ function luatexja.jfont.define_jfm(to)
       end
    end
    if t.version<3 then
-      -- In version 3, 'jcharbdd' is divided into 
-      -- 'alchar': ALchar (or math boundary) 
+      -- In version 3, 'jcharbdd' is divided into
+      -- 'alchar': ALchar (or math boundary)
       -- 'nox_alchar': ALchar (or math boundary), where xkanjiskip won't inserted
       -- 'glue': glue/kern, 'jcharbdd': other cases (和文B, rule, ...)
       t.chars.alchar = t.chars.jcharbdd
@@ -218,10 +219,9 @@ do
          if type(i) == 'number' then -- char_type
             for k,w in pairs(v.glue) do
                v[k] = {
-                  nil,
+                  nil, w[1], w[2], w[3],
                   ratio=w.ratio,
                   priority=FROM_JFM + w.priority,
-                  width = w[1], stretch = w[2], shrink = w[3],
                   kanjiskip_natural = w.kanjiskip_natural,
                   kanjiskip_stretch = w.kanjiskip_stretch,
                   kanjiskip_shrink =  w.kanjiskip_shrink,
@@ -229,10 +229,7 @@ do
                   }
             end
             for k,w in pairs(v.kern) do
-               local g = node_new(id_kern, 1)
-               setfield(g, 'kern', w[1])
-               set_attr(g, attr_icflag, FROM_JFM)
-               v[k] = {g, ratio=w[2]/sz}
+               v[k] = {w[1], ratio=w[2]/sz}
             end
          end
          v.glue, v.kern = nil, nil
@@ -282,7 +279,6 @@ end
 local load_jfont_metric, check_callback_order
 local font_extra_info = {} -- defined later
 do
-   local cstemp
    local global_flag -- true if \globaljfont, false if \jfont
    load_jfont_metric = function()
      if jfm_name=='' then
@@ -303,13 +299,10 @@ do
 
 -- EXT
    local utfbyte = utf.byte
-   function luatexja.jfont.jfontdefX(g, dir, csname)
+   function luatexja.jfont.jfontdefX(g, dir)
       jfm_dir, is_def_jfont = dir, true
-      cstemp = csname:sub( (utfbyte(csname,1,1) == tex.escapechar) and 2 or 1, -1)
-      cstemp = cstemp:sub(1, ((cstemp:sub(-1,-1)==' ') and (cstemp:len()>=2)) and -2 or -1)
       global_flag = g and '\\global' or ''
-      tex.sprint(cat_lp, '\\expandafter\\font\\csname ',
-                 (cstemp==' ') and '\\space' or cstemp, '\\endcsname')
+      tex.sprint(cat_lp, '\\expandafter\\font\\ltj@temp')
    end
 
    luatexbase.create_callback("luatexja.define_jfont", "data", function (ft, fn) return ft end)
@@ -318,15 +311,12 @@ do
    local fastcopy=table.fastcopy
    function luatexja.jfont.jfontdefY()
       local j = load_jfont_metric(jfm_dir)
-      local fn = font.id(cstemp)
-      local f = font_getfont(fn)
+      local fn = token.get_next().mode;  local f = font_getfont(fn)
       if not j then
          ltjb.package_error('luatexja', "bad JFM `" .. jfm_name .. "'",
                             'The JFM file you specified is not valid JFM file.\n'..
                                'So defining Japanese font is cancelled.')
-         tex.sprint(cat_lp, global_flag, '\\expandafter\\let\\csname ',
-                    (cstemp==' ') and '\\space' or cstemp,
-                       '\\endcsname=\\relax')
+         tex.sprint(cat_lp, global_flag, '\\expandafter\\let\\ltj@temp\\relax')
          return
       end
       if not f then return end
@@ -343,16 +333,15 @@ do
       }
       if auto_enable_vrt2 then
          local vert_name = ltju.exist_feature(fn, 'vrt2') and 'vrt2' or 'vert'
-         local rot = fmtable.rotation 
+         local rot = fmtable.rotation
          ltju.enable_feature(fn, vert_name)
          ltju.loop_over_feat(f, {[vert_name]=true}, function (i,k) rot[i] = nil end)
       end
 
       fmtable = luatexbase.call_callback("luatexja.define_jfont", fmtable, fn)
       font_metric_table[fn]=fmtable
-      tex.sprint(cat_lp, global_flag, '\\protected\\expandafter\\def\\csname ',
-                    (cstemp==' ') and '\\space' or cstemp, '\\endcsname{\\ltj@cur'..
-                    (jfm_dir == 'yoko' and 'j' or 't') .. 'fnt', fn, '\\relax}')
+      tex.sprint(cat_lp, global_flag, '\\protected\\expandafter\\def\\ltj@temp',
+        '{\\ltj@cur'.. (jfm_dir == 'yoko' and 'j' or 't') .. 'fnt', fn, '\\relax}')
       jfm_spec = nil
    end
 end
@@ -368,7 +357,7 @@ do
                 to_be_checked[i]=nil
                 if ltj_cb<lotf_cb then
                     local f = ltb.remove_from_callback(n,'luaotfload.letterspace')
-                    ltb.add_to_callback(n, f, 'luaotfload.letterspace', 
+                    ltb.add_to_callback(n, f, 'luaotfload.letterspace',
                         ltb.priority_in_callback(n, 'luaotfload.node_processor') + 1)
                 end
             end
@@ -404,12 +393,12 @@ do
     local semicolon         = P';'
     local comma             = P','
     local equals            = P'='
-    local jf_field_char     = 1 - S'/{};,='
+    local jf_field_char     = 1 - S'/{};,= \t\v'
     local jf_field          = C(jf_field_char^1)
-    local jf_assignment     = jf_field * equals * jf_field
-    local jf_switch         = P'-'    * jf_field * Cc(false) + P'+'^-1 * jf_field * Cc(true)
-    local jf_feature_expr   = Cg(jf_assignment + jf_switch) * comma^0
-    local jf_feature_list   = P'{' * jf_feature_expr^0 * P'}' + jf_feature_expr^0
+    local jf_assignment     = jf_field * ws * equals * ws * jf_field
+    local jf_switch         = P'-' * jf_field * Cc(false) + P'+'^-1 * jf_field * Cc(true)
+    local jf_feature_expr   = Cg(jf_assignment + jf_switch) * ws * comma^0 * ws
+    local jf_feature_list   = ws * ( P'{' * ws * jf_feature_expr^0 * P'}' + jf_feature_expr^0 )
     local jf_list           = C((1-slash)^1) * (slash * Cf(Ct'' * jf_feature_list, rawset))^-1
     local jf_value          = (1 - semicolon)^1
     local function rem(name,value)
@@ -431,7 +420,7 @@ do
    local parser=luaotfload.parsers.font_request
    function is_feature_specified(s,fname)
      local t = lpegmatch(parser,s); return t and t.features and t.features[fname]
-   end    
+   end
    -- extract jfm_name, jfm_spec and jfm_var
    -- normalize position of 'jfm=' and 'jfmvar=' keys
    local function extract_jfm_spec(name)
@@ -464,7 +453,7 @@ do
       jfm_ksp = (is_feature_specified(name,'ltjksp')~=false)
       if jfm_dir == 'tate' then
          vert_activated = (is_feature_specified(name,'vert')~=false) and (is_feature_specified(name,'vrt2')~=false)
-         auto_enable_vrt2 
+         auto_enable_vrt2
            = (is_feature_specified(name,'vert')==nil) and (is_feature_specified(name,'vrt2')==nil)
       else
          vert_activated, auto_enable_vrt2 = nil, nil
@@ -800,7 +789,7 @@ do
     local lo, hi = 1, #t
     while lo < hi do
       local mi = ceil((lo+hi)/2)
-      if t[mi]<=i then lo=mi else hi=mi-1 end 
+      if t[mi]<=i then lo=mi else hi=mi-1 end
     end
     return lo%2==1
   end
@@ -847,14 +836,14 @@ do
       local bname = tfmdata.psname or nameonly(tfmdata.filename)
       if not font_extra_basename[bname] then
          -- if the cache is present, read it
-         -- 
+         --
          local newtime = file_attributes(tfmdata.filename,"modification")
          local v = "extra_" .. string.lower(bname)
          local dest = load_cache(
             v,
-            function (t) 
+            function (t)
                 return (t.lotf_version~=luaotfload.version)
-                       or (t.version~=cache_ver) or (t.modtime~=newtime) 
+                       or (t.version~=cache_ver) or (t.modtime~=newtime)
             end
          )
          -- if the cache is not found or outdated, save the cache
@@ -888,13 +877,17 @@ do
            dummytable.vorigin, dummytable.vheight = dtvo, dtvh
        end
    end
-   
-   local function prepare_extra_data_font(id, res)
+
+   local function prepare_extra_data_font(id, res, name)
       if type(res)=='table' and (res.psname or res.filename) then
-         local bname = res.psname or nameonly(res.filename)
-         local t = font_extra_basename[bname]
-         if not t then bname = prepare_extra_data_base(res) end
-         font_extra_info[id] = bname and (t or font_extra_basename[bname]) or dummytable
+         if (res.embedding=='no') and (type(name)=='string') and (name:sub(1,5)=='psft:') then
+            font_extra_info[id] = res.resources.ltj_extra
+         else
+            local bname = res.psname or nameonly(res.filename)
+            local t = font_extra_basename[bname]
+            if not t then bname = prepare_extra_data_base(res) end
+            font_extra_info[id] = bname and (t or font_extra_basename[bname]) or dummytable
+         end
       end
    end
     luatexbase.add_to_callback(
@@ -907,7 +900,7 @@ do
    luatexbase.add_to_callback(
       'luatexja.define_font',
       function (res, name, size, id)
-         prepare_extra_data_font(id, res)
+         prepare_extra_data_font(id, res, name)
       end,
       'ltj.prepare_extra_data', 1)
 
@@ -937,19 +930,19 @@ do
      [0x3014]=0xFE39, [0x3015]=0xFE3A, [0x3010]=0xFE3B, [0x3011]=0xFE3C,
      [0x300A]=0xFE3D, [0x300B]=0xFE3E, [0x3008]=0xFE3F, [0x3009]=0xFE40,
      [0x300C]=0xFE41, [0x300D]=0xFE42, [0x300E]=0xFE43, [0x300F]=0xFE44,
-     [0xFF3B]=0xFE47, [0xFF3D]=0xFE48, 
+     [0xFF3B]=0xFE47, [0xFF3D]=0xFE48,
   }
   local vert_jpotf_table, vert_feat = {}, {vert=true}
   local utfbyte, utfsub = utf.byte, utf.sub
   luatexja.jfont.register_vert_replace = function(t)
     for i,v in pairs(t) do
-      local ic = (type(i)=='number') and i or 
+      local ic = (type(i)=='number') and i or
         ((type(i)=='string') and utfbyte(utfsub(i,1,1)) or nil)
       if ic then
-        vert_jpotf_table[ic] = (type(v)=='number') and v or 
+        vert_jpotf_table[ic] = (type(v)=='number') and v or
           ((type(v)=='string') and utfbyte(utfsub(v,1,1)) or nil)
       end
-    end  
+    end
   end
 
 luatexbase.add_to_callback(
@@ -1022,28 +1015,28 @@ do
    local is_ucs_in_japanese_char = ltjc.is_ucs_in_japanese_char_direct
    local ensure_tex_attr = ltjb.ensure_tex_attr
    local node_write = node.direct.write
-   local font = font
+   local fonts, getnest = font.fonts, tex.getnest
    local new_ic_kern = function(g)  return node_new(id_kern,3) end
    local dir_tate = luatexja.dir_table.dir_tate
    -- EXT: italic correction
    function luatexja.jfont.append_italic()
-      local p = to_direct(tex.nest[tex.nest.ptr].tail)
+      local p = to_direct(getnest().tail)
       local TEMP = node_new(id_kern)
       if p and getid(p)==id_glyph then
          if is_ucs_in_japanese_char(p) then
             local j = font_metric_table[
-               has_attr(p, (get_dir_count()==dir_tate) and attr_curtfnt or attr_curjfnt)
+               get_attr(p, (get_dir_count()==dir_tate) and attr_curtfnt or attr_curjfnt)
                ]
             local g = new_ic_kern()
-            setfield(g, 'kern', j.char_type[find_char_class(getchar(p), j)].italic)
+            setkern(g, j.char_type[find_char_class(getchar(p), j)].italic)
             node_write(g); ensure_tex_attr(attr_icflag, 0)
          else
             local f = getfont(p)
-            local h = font_getfont(f) or font.fonts[f]
+            local h = font_getfont(f) or fonts[f]
             if h then
-               local g = new_ic_kern()
                if h.characters[getchar(p)] and h.characters[getchar(p)].italic then
-                  setfield(g, 'kern', h.characters[getchar(p)].italic)
+                  local g = new_ic_kern()
+                  setkern(g, h.characters[getchar(p)].italic)
                   node_write(g); ensure_tex_attr(attr_icflag, 0)
                end
             end

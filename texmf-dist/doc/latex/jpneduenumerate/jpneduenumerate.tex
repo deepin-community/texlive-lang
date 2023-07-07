@@ -1,0 +1,654 @@
+\documentclass[%
+fleqn,%
+paper=a4paper,%
+fontsize=10pt,%
+open_bracket_pos=zenkakunibu_nibu,%
+hanging_punctuation,%
+]%
+{jlreq}
+\jlreqsetup{%
+itemization_beforeafter_space=0pt,%
+itemization_itemsep=0pt%
+}
+\makeatletter
+\RequirePackage{luatexja}
+\RequirePackage{luatexja-otf}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath}
+\DeclareRobustCommand{\metaphysicaicon}{\raisebox{-4.0pt}{\includegraphics[width=16pt]{metaphysicaicon.pdf}}}
+\RequirePackage[normalem]{ulem}
+\RequirePackage[explicit]{titlesec}
+\titleformat{\section}[hang]{}{}{0pt}{\uuline{\raisebox{1pt}{\textsf{\thesection\quad #1}}}}[\vspace{0.35\baselineskip}]
+\renewcommand{\thesection}{\S\,\arabic{section}}
+\let\originalsection\section
+\DeclareRobustCommand{\section}{\@ifstar{\@metaphysica@section@star}{\@metaphysica@section@nostar}}
+\DeclareRobustCommand{\@metaphysica@section@star}[1]{\vspace{0.5\baselineskip}\originalsection{#1}\vspace*{-\baselineskip}}
+\DeclareRobustCommand{\@metaphysica@section@nostar}[1]{\vspace{0.5\baselineskip}\originalsection{#1}}
+\RequirePackage[%
+truedimen,%
+margin=30truemm,
+includehead%
+]{geometry}
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\DeclareRobustCommand{\headertitle}[2][\metaphysicaicon]{%
+\rhead[#2]{#1{}\quad\thepage{}/{}\pageref{LastPage}}%
+\lhead[\thepage{}/{}\pageref{LastPage}\quad{}#1]{#2}%
+\cfoot{}%
+}
+\RequirePackage{setspace}
+\setstretch{1.155}
+\DeclareRobustCommand{\linespace}{\@ifstar{\vspace{\baselineskip}}{\vspace{0.25\baselineskip}}}
+\DeclareRobustCommand{\linesmash}{\@ifstar{\vspace{-\baselineskip}}{\vspace{-0.25\baselineskip}}}
+\AtBeginDocument{%
+\abovedisplayskip     =0.125\abovedisplayskip
+\abovedisplayshortskip=0.125\abovedisplayshortskip
+\belowdisplayskip     =0.125\belowdisplayskip
+\belowdisplayshortskip=0.125\belowdisplayshortskip}
+\setlength{\jot}{0pt}%
+\setlength{\mathindent}{2\zw}%
+\renewcommand{\floatpagefraction}{0.75}
+\allowdisplaybreaks[2]
+\RequirePackage[no-math]{fontspec}
+\RequirePackage[no-math,deluxe,haranoaji]{luatexja-preset}
+\RequirePackage{multicolpar}
+\RequirePackage[style=iso]{datetime2}
+\RequirePackage[unicode]{hyperref}
+\RequirePackage{xparse}
+\RequirePackage{dashbox}
+\newcounter{psuedosectioncounter}
+\setcounter{psuedosectioncounter}{1}
+\newcounter{psuedocontentscounter}
+\setcounter{psuedocontentscounter}{1}
+\DeclareRobustCommand{\psuedosection}[3]{%
+\hypertarget{#1}{\mbox{}}\begin{multicolpar}{2}%
+\noindent\uuline{{\raisebox{1pt}{\textsf{\S\ \thepsuedosectioncounter\quad #2}}}}
+
+\noindent\uuline{{\raisebox{1pt}{\textsf{\S\ \thepsuedosectioncounter\quad #3}}}}
+\end{multicolpar}%
+\stepcounter{psuedosectioncounter}%
+\vspace{\baselineskip}%
+}
+\DeclareRobustCommand{\psuedocontents}[3]{%
+\begin{multicolpar}{2}%
+\noindent{\textsf{\hyperlink{#1}{\S\ \thepsuedocontentscounter\quad #2}}}
+
+\noindent{\textsf{\hyperlink{#1}{\S\ \thepsuedocontentscounter\quad #3}}}\end{multicolpar}%
+\stepcounter{psuedocontentscounter}%
+}
+\newenvironment{translateing}%
+{\begin{multicolpar}{2}}
+{\end{multicolpar}\vspace{\baselineskip}}
+\DeclareRobustCommand{\maketitletranslating}%
+{\maketitle\thispagestyle{fancy}
+\vspace{\baselineskip}\begin{multicolpar}{2}
+\textsf{English}
+
+\noindent
+\textsf{日本語 (Japanese)}
+\end{multicolpar}\vspace{\baselineskip}}
+\NewDocumentCommand\macroexplanation{v}{%
+\noindent\hspace*{\fill}{\texttt{#1}}\hspace*{\fill}\linespace%
+}
+\NewDocumentEnvironment{macroexample}{O{0.625} +b}{%
+\noindent\hspace*{\fill}\dbox{\parbox{#1\textwidth}{%
+#2%
+}}\hspace*{\fill}}%
+{\vspace{\baselineskip}}
+\NewDocumentEnvironment{macroexample*}{O{0.625} m +b}{%
+\noindent\hspace*{\fill}\dbox{\parbox{#1\textwidth}{%
+\vspace{-0.5\baselineskip}\begin{#2}%
+#3
+\end{#2}%
+}}\hspace*{\fill}}
+{\vspace{\baselineskip}}
+\let\code\texttt
+\setlength{\fboxsep}{1em}
+\setstretch{1.05}
+\DeclareRobustCommand{\commandtojskip}{\hspace{2.40554pt plus 1.49994pt minus 0.59998pt}}
+\RequirePackage{listings, jlisting}
+\lstset{
+  language=[LaTeX]TeX,
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\small\itshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame=single,
+  breaklines=true,
+  columns=[l]{fullflexible},
+  stepnumber=1,
+  xrightmargin=0.1709\textwidth,
+  xleftmargin=0.1709\textwidth,
+  lineskip=-0.5ex
+}
+\RequirePackage{bxtexlogo}
+\RequirePackage{shortvrb}
+\MakeShortVerb{\|}
+\RequirePackage[lua]{jpneduenumerate}
+\makeatother
+%
+\hypersetup{%
+bookmarksnumbered=true,%
+colorlinks=true,%
+linkcolor=blue,%
+urlcolor=blue,%
+setpagesize=false,%
+pdftitle={The jpneduenumerate package},%
+pdfauthor={Yukoh KUSAKABE},%
+pdfsubject={The jpneduenumerate package},%
+pdfkeywords={TeX LaTeX enumerate Japanese education}}
+\title{The \code{jpneduenumerate} package:\\[0.25\baselineskip]
+enumerative expressions in Japanese education}
+\author{Yukoh KUSAKABE}
+\date{\today}
+\headertitle[Yukoh KUSAKABE\quad\metaphysicaicon]{The \code{jpneduenumerate} package}
+\begin{document}
+\maketitletranslating
+
+\begin{translateing}
+Mathematical equation representation in Japanese education differs somewhat from the standard \LaTeX\ writing style.
+This package introduces enumerative expressions in Japanese education.
+The term ``in Japanese education'' here refers to the results of my own survey of representations in authorized textbooks for high schools of several companies.
+
+日本の教育における数式表現には，\LaTeX の標準である書きかたとはやや異なる部分があります。
+このパッケージでは，日本の教育における列挙表現を導入します。
+なお，ここでの「日本の教育における」とは，数社の高等学校の検定済み教科書における表記を独自に調査した結果により述べています。
+\end{translateing}
+
+\psuedocontents{Requirements}{System Requirements}{前提条件}
+
+\psuedocontents{Installation}{Installation}{インストール}
+
+\psuedocontents{Loading}{Loading}{読み込み}
+
+\psuedocontents{Usage}{Usage}{使用方法}
+
+\psuedocontents{moreinfo}{For More Information}{問い合わせ・詳しくは}
+
+\newpage
+\vspace*{-1.8\baselineskip}
+\psuedosection{Requirements}{System Requirements}{前提条件}
+
+\begin{translateing}
+\textbullet\ \LaTeXe\ format\\
+\textbullet\ \code{enumitem} package\\
+\textbullet\ \code{refcount} package\\
+\textbullet\ \scalebox{0.875}[1]{\pTeX/\upTeX\ engine (when no options are loaded)}\\
+\textbullet\ \code{japanese-otf} package\\\hfill(when no options are loaded)\\
+\textbullet\ \LuaTeX\ engine (\code{[lua]} only)\\
+\textbullet\ \code{luatexja} package (\code{[lua]} only)\\
+\textbullet\ \code{luatexja-otf} package (\code{[lua]} only)
+
+\noindent
+\textbullet\ \LaTeXe フォーマット\\
+\textbullet\ \code{enumitem}パッケージ\\
+\textbullet\ \code{refcount}パッケージ\\
+\textbullet\ \scalebox{0.925}[1]{\pTeX/\upTeX エンジン（オプション不使用時）}\\
+\textbullet\ \code{japanese-otf}パッケージ\\\hfill（オプション不使用時）\\
+\textbullet\ \LuaTeX エンジン（\code{[lua]}使用時）\\
+\textbullet\ \code{luatexja}パッケージ（\code{[lua]}使用時）\\
+\textbullet\ \code{luatexja-otf}パッケージ（\code{[lua]}使用時）
+\end{translateing}
+
+\psuedosection{Installation}{Installation}{インストール}
+
+\begin{translateing}
+If not available, move jpneduenumerate.sty file to \code{\$TEXMF/tex/latex/jpneduenumerate}.
+
+直ちに使えなければ，jpneduenumerate.sty を\commandtojskip\code{\$TEXMF/tex/latex/jpneduenumerate}%（\TeX が見つけられる場所）
+に置いてください。
+\end{translateing}
+
+\psuedosection{Loading}{Loading}{読み込み}
+
+\begin{translateing}
+To use this package, load .sty file with |\usepackage{jpneduenumerate}| command in preamble.
+
+このパッケージを使用するには，プリアンブルに\commandtojskip|\usepackage{jpneduenumerate}| と書いてください。
+%\end{translateing}
+
+%\begin{translateing}
+There are the three options:\\
+\textbullet\ |[casebracket]|/|[stepbracket]| change \\|case|/|step| |enumerate|, |auto|, |keep|, |reset|, |ref| to square bracket (as [1]).\\
+\textbullet\ |[lua]| changes the engine this package runs on from \pTeX/\upTeX\ to \LuaTeX. It does not change the appearance of the output.
+Since the unit |zw| is used when no options are loaded, it can be used only in the \pTeX/\upTeX\ series.
+Since the unit |\zw| is used when the \code{[lua]} loaded, it can be used only in the \LuaTeX\ series and \LuaTeX-ja.
+
+3つのオプションがあります。\\
+\textbullet\ |[casebracket]|/|[stepbracket]|は\\|case|/|step|環境，|auto|，|keep|，|reset|，|ref|を角括弧に変えます（[1]のように）。\\
+\textbullet\ |lua|は，このパッケージが動作するエンジンを\pTeX/\upTeX から\LuaTeX に変更します。それは出力の見た目には変化を及ぼしません。
+オプションを使用しないときには単位|zw|を用いますので，\pTeX/\upTeX 系列でのみ使用できます。
+\code{[lua]}を読み込むと単位\commandtojskip|\zw|を用いますので，\LuaTeX 系列でのみ使用できます。
+\end{translateing}
+
+\newpage
+\vspace*{-1\baselineskip}
+\psuedosection{Usage}{Usage}{使用方法}
+
+\macroexplanation{astarisked environments}
+
+\begin{translateing}
+The environment we will describe can be replaced with asterisked ones to eliminate the |parindent|.
+For example:
+
+これから説明する環境は，アスタリスクをつけることで|parindent|がなくなります。
+たとえば，次のようになります。
+\end{translateing}
+
+\noindent\hspace*{\fill}\fbox{\parbox{0.625\textwidth}{%
+\ttfamily\textbackslash begin\{itemize\}\\
+\textbackslash item 石炭をば早や積み果てつ。中等室の卓のほとりはいと靜にて、熾熱燈の光の晴れがましきも徒なり。\\
+\textbackslash item 今宵は夜毎にこゝに集ひ來る骨牌仲間も「ホテル」に宿りて、舟に殘れるは余一人のみなれば。\\
+\textbackslash end\{itemize\}\\
+%\linespace*
+\textbackslash begin\{itemize*\}\\
+\textbackslash item 石炭をば早や積み果てつ。中等室の卓のほとりはいと靜にて、熾熱燈の光の晴れがましきも徒なり。\\
+\textbackslash item 今宵は夜毎にこゝに集ひ來る骨牌仲間も「ホテル」に宿りて、舟に殘れるは余一人のみなれば。\\
+\textbackslash end\{itemize*\}%
+}}\hspace*{\fill}%
+{\vspace{\baselineskip}}
+
+\begin{macroexample}
+\begin{itemize}
+\item 石炭をば早や積み果てつ。中等室の卓のほとりはいと靜にて、熾熱燈の光の晴れがましきも徒なり。
+\item 今宵は夜毎にこゝに集ひ來る骨牌仲間も「ホテル」に宿りて、舟に殘れるは余一人のみなれば。
+\end{itemize}
+\begin{itemize*}
+\item 石炭をば早や積み果てつ。中等室の卓のほとりはいと靜にて、熾熱燈の光の晴れがましきも徒なり。
+\item 今宵は夜毎にこゝに集ひ來る骨牌仲間も「ホテル」に宿りて、舟に殘れるは余一人のみなれば。
+\end{itemize*}
+\end{macroexample}
+
+\begin{translateing}
+For the purpose of this package, example sentences are in Japanese.
+If you use this package in a Latin text, the |parindent| will be set to the same size, i.e., one full-width character.
+
+このパッケージの目的から，例文は日本語としました。
+欧文のもとでこのパッケージを使用しても，同じ大きさすなわち全角１文字分の|parindent|が設定されます。
+\end{translateing}
+
+\newpage
+\macroexplanation{environment enumerate and itemize}
+
+\begin{translateing}
+The margins and the symbols in the |enumerate| and |itemize| environments are automatically changed when the package is loaded.
+|\labelenumi| is (1), |\labelenumii| is (a), and |\item| is text bullet.
+See the examples immediately above.
+
+パッケージを読み込むと自動的に|enumerate|環境と|itemize|環境の余白と記号が変更されます。
+|\labelenumi|\commandtojskip は(1)，|\labelenumii|\commandtojskip は(a)，|\item|\commandtojskip は・です。
+例は直前のものを見てください。
+\end{translateing}
+
+\macroexplanation{environment caseenumerate}
+
+\begin{translateing}
+If |[casebracket]| is not loaded, |caseenumerate| is an alias for |romanenumerate|.
+If |[casebracket]| is loaded, |caseenumerate| is an alias for |bracketenumerate|.
+The appearance is shown below.
+
+|[casebracket]|を読み込んでいなければ，|caseenumerate|は|romanenumerate|の別名です。
+|[casebracket]|を読み込んでいれば，|caseenumerate|は|bracketenumerate|の別名です。見た目は次に載せます。
+\end{translateing}
+
+\macroexplanation{environment stepenumerate}
+
+\begin{translateing}
+If |[stepbracket]| is not loaded, |stepenumerate| is an alias for |Romanenumerate|.
+If |stepbracket| is loaded, |stepenumerate| is an alias for |bracketenumerate|.
+The appearance is shown below.
+
+|[stepbracket]|を読み込んでいなければ，|stepenumerate|は|Romanenumerate|の別名です。
+|[stepbracket]|を読み込んでいれば，|stepenumerate|は|bracketenumerate|の別名です。見た目は次に載せます。
+\end{translateing}
+
+\macroexplanation{environment romanenumerate}
+
+\begin{translateing}
+This environment replaces the symbols in the |enumerate| environment with a full-width (i).
+
+この環境は|enumerate|環境の記号を全角の(i)に置き換えたものです。
+\end{translateing}
+
+\begin{lstlisting}
+\begin{romanenumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.
+\item They must be felt with the heart.
+\end{romanenumerate}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{romanenumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.
+\item They must be felt with the heart.
+\end{romanenumerate}
+\end{macroexample}
+
+\newpage
+\macroexplanation{environment Romanenumerate}
+
+\begin{translateing}
+This environment replaces the symbols in the |enumerate| environment with a full-width (I).
+
+この環境は|enumerate|環境の記号を全角の(I)に置き換えたものです。
+\end{translateing}
+
+\begin{lstlisting}
+\begin{Romanenumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.
+\item They must be felt with the heart.
+\end{Romanenumerate}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{Romanenumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.
+\item They must be felt with the heart.
+\end{Romanenumerate}
+\end{macroexample}
+
+\macroexplanation{environment bracketenumerate}
+
+\begin{translateing}
+This environment replaces the symbols in the |enumerate| environment with [1].
+
+この環境は|enumerate|環境の記号を[1]に置き換えたものです。
+\end{translateing}
+
+\begin{lstlisting}
+\begin{bracketenumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.
+\item They must be felt with the heart.
+\end{bracketenumerate}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{bracketenumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.
+\item They must be felt with the heart.
+\end{bracketenumerate}
+\end{macroexample}
+
+\macroexplanation{\parenref{<label>}}
+
+\begin{translateing}
+Referred to as (1) depending on the label.
+
+ラベルによって(1)のように参照します。
+\end{translateing}
+
+\macroexplanation{\romanref{<label>}}
+
+\begin{translateing}
+Referred to as \ajroman{1} depending on the label.
+
+ラベルによって\ajroman{1}のように参照します。
+\end{translateing}
+
+\newpage
+\macroexplanation{\parenromanref{<label>}}
+
+\begin{translateing}
+Referred to as (\ajroman{1}) depending on the label.
+
+ラベルによって(\ajroman{1})のように参照します。
+\end{translateing}
+
+\macroexplanation{\Romanref{<label>}}
+
+\begin{translateing}
+Referred to as \ajRoman{1} depending on the label.
+
+ラベルによって\ajRoman{1}のように参照します。
+\end{translateing}
+
+\macroexplanation{\parenRomanref{<label>}}
+
+\begin{translateing}
+Referred to as (\ajRoman{1}) depending on the label.
+
+ラベルによって(\ajRoman{1})のように参照します。
+\end{translateing}
+
+\macroexplanation{\bracketref{<label>}}
+
+\begin{translateing}
+Referred to as [1] depending on the label.
+
+ラベルによって[1]のように参照します。
+\end{translateing}
+
+
+\begin{lstlisting}
+\begin{enumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.\label{A}
+\item They must be felt with the heart.\label{B}
+\end{enumerate}
+
+\parenref{A}\parenref{B}
+\romanref{A}\romanref{B}
+\parenromanref{A}\parenromanref{B}
+\Romanref{A}\Romanref{B}
+\parenRomanref{A}\parenRomanref{B}
+\bracketref{A}\bracketref{B}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{enumerate}
+\item The best and most beautiful things in the world cannot be seen or even touched.\label{A}
+\item They must be felt with the heart.\label{B}
+\end{enumerate}
+
+\parenref{A}\parenref{B}
+\romanref{A}\romanref{B}
+\parenromanref{A}\parenromanref{B}
+\Romanref{A}\Romanref{B}
+\bracketref{A}\bracketref{B}
+\end{macroexample}
+
+\begin{translateing}
+Since the label only manages numbers, the appearance is achieved by changing the ref type.
+
+ラベルは数字しか管理していないので，見た目はrefの種類を変えることで実現します。
+
+As in the example above, these commands except |\parenref| and |\bracketref| disable |hyperref|.
+
+上の例で分かる通り，|\parenref|と|\bracketref|以外のこれらのコマンドは|hyperref|を無効にします。
+\end{translateing}
+
+\newpage
+\macroexplanation{\??auto \??keep \??reset \??ref{<label>}}
+
+\begin{translateing}
+|\??auto| outputs headings that automatically advance in numbering.
+|\??keep| outputs the heading with the previous number.
+|\??reset| resets the heading number back to 1.
+%|\??ref| referred to as (1) depending on the label.
+|\??ref{<label>}| is referenced by label.
+The |??| parts can be the following:\\
+\textbullet\ |square| or |question| (\squarenumber*{1})\\
+\textbullet\ |enumerate| (1)\\
+\textbullet\ |subquestion| (1)\\
+\textbullet\ |case| (\ajroman{1}) / [1] (with |[casebracket]|)\\
+\textbullet\ |step| (\ajRoman{1}) / [1] (with |[stepbracket]|)
+
+|\??auto|は自動で番号が進む見出しを出力します。
+|\??keep|は直前の番号のままで見出しを出力します。
+|\??reset|は見出しの番号を1に戻します。
+|\??ref{<label>}|\commandtojskip はラベルによって参照します。
+|??|の部分には以下のものが使えます。\\
+\textbullet\ |square|または|question| （\squarenumber*{1}）\\
+\textbullet\ |enumerate| (1)\\
+\textbullet\ |subquestion| (1)\\
+\textbullet\ |case| (\ajroman{1}) / [1]（|[casebracket]|読込時）\\
+\textbullet\ |step| (\ajRoman{1}) / [1]（|[casebracket]|読込時）
+
+Non-asterisked commands are heading.
+Asterisked commands are not heading.
+
+アスタリスクのない命令は見出しになります。
+アスタリスクの付いた命令は見出しになりません。
+
+|\case| is synonym for |\caseauto|.
+|\step| is synonym for |\stepauto|.
+
+|\case|は\commandtojskip|\caseauto|の別名です。
+|\step|は\commandtojskip|\stepauto|の別名です。
+\end{translateing}
+
+\begin{lstlisting}
+\setlength{\parindent}{1em}
+\squareauto is heading.
+
+\squareauto* is not heading.
+
+\enumerateauto\enumerateauto\enumeratekeep\enumeratekeep%
+\enumerateauto\label{test}\enumerateauto\enumerateauto%
+\enumeratereset\enumerateauto\enumerateref{test}
+
+\questionauto\subquestionauto\subquestionauto\\
+\caseauto\caseauto\caseauto\caseauto
+\stepauto\stepauto\stepauto\stepauto
+\end{lstlisting}
+
+\begin{macroexample}
+\setlength{\parindent}{1em}
+\squareauto is heading.
+
+\squareauto* is not heading.
+
+\enumerateauto\enumerateauto\enumeratekeep\enumeratekeep%
+\enumerateauto\label{test}\enumerateauto\enumerateauto%
+\enumeratereset\enumerateauto\enumerateauto\enumerateauto
+\enumeratereset\enumerateauto\enumerateref{test}
+
+\questionauto\subquestionauto\subquestionauto\\
+\caseauto\caseauto\caseauto\caseauto
+\stepauto\stepauto\stepauto\stepauto
+\end{macroexample}
+
+\macroexplanation{\equationreset}
+
+\begin{translateing}
+Reset the equation number back to 1.
+
+数式番号を1に戻します。
+\end{translateing}
+
+\begin{lstlisting}
+\begin{gather}
+A\\
+B
+\end{gather}
+\equationreset
+\begin{equation}
+C
+\end{equation}
+\end{lstlisting}
+
+\begin{macroexample}
+\begin{gather}
+A\\
+B
+\end{gather}
+\equationreset
+\begin{equation}
+C
+\end{equation}
+\end{macroexample}
+
+\macroexplanation{\question}
+
+\begin{translateing}
+|\questionauto| and reset the equation, subquestion, enumerate, case and step numbers back to 1.
+
+|\questionauto|を出力し，equation・subquestion・enumerate・case・stepの番号を1に戻します。
+
+|\question*| is synonym for |\questionauto*| (and doesn't reset numbers).
+
+|\question*|\commandtojskip は\commandtojskip|\questionauto*|\commandtojskip の別名です（から，番号は戻しません）。
+\end{translateing}
+
+\macroexplanation{\subquestion}
+
+\begin{translateing}
+|\subquestionauto| and reset the case and step numbers back to 1.
+
+|\subquestionauto|を出力し，|case|と|step|の番号を1に戻します。
+
+|\subquestion*| is another name for |\subquestionauto*| (and doesn't reset numbers).
+
+|\subquestion*|\commandtojskip は\commandtojskip|\subquestionauto*|\commandtojskip の別名です（から，番号は戻しません）。
+\end{translateing}
+
+\newpage
+\questionreset
+\begin{lstlisting}
+\question\subquestion\case\case\subquestion\case\case
+\begin{gather}
+A\\
+B
+\end{gather}
+\subquestion
+
+\question\subquestion\step\step\subquestion\step\step
+\begin{equation}
+C
+\end{equation}
+\end{lstlisting}
+
+\begin{macroexample}
+\question\subquestion\case\case\subquestion\case\case
+\begin{gather}
+A\\
+B
+\end{gather}
+\subquestion
+
+\question\subquestion\step\step\subquestion\step\step
+\begin{equation}
+C
+\end{equation}
+\end{macroexample}
+
+\begin{translateing}
+In the default setting, the equation number and the appearance of the |\subquestion| are identical, which makes it difficult to understand.
+In Japanese high school mathematics, equation numbers are generally expressed as circled numbers, so we have kept this in mind.
+It can be achieved, for example, with the |[circled]| or |[luacircled]| option of my |inlinelabel| package.
+
+既定の設定では数式番号と|\subquestion|の見た目が一致しており分かりにくくなっています。
+日本の高校数学では数式番号は丸囲み数字で表されることが一般的ですから，それを念頭に置いています。
+それは，たとえば私が作成した|inlinelabel|パッケージの|[circled]|または|[luacircled]|オプションで実現できます。
+\end{translateing}
+
+%\def\tagform@#1{\maketag@@@{$\ldots\hspace*{-0.075em}$\ignorespaces\ajMaru{#1}\unskip\@@italiccorr}}%
+\questionreset
+\hspace*{\fill}with |\usepackage[circled]{inlinelabel}| or |\usepackage[luacircled]{inlinelabel}|:\hspace*{\fill}\\
+\begin{macroexample}
+\question\subquestion\case\case\subquestion\case\case
+\begin{gather*}
+A\hspace*{21.05\zw}\ldots\mbox{\ajMaru{1}}\\
+B\hspace*{21\zw}\ldots\mbox{\ajMaru{2}}
+\end{gather*}
+\subquestion
+
+\question\subquestion\step\step\subquestion\step\step
+\begin{equation*}
+C\hspace*{21\zw}\ldots\mbox{\ajMaru{1}}\
+\end{equation*}
+\end{macroexample}
+
+\psuedosection{moreinfo}{For More Information}{問い合わせ・詳しくは}
+
+\noindent\hspace*{\fill}\begin{tabular}{rl}
+\multicolumn{2}{l}{The jpneduenumerate package:}%&
+\\%
+\multicolumn{2}{r}{\hspace{8\zw}\url{https://www.metaphysica.info/technote/package_jpneduenumerate/}}\\
+Yukoh KUSAKABE:&\url{https://www.metaphysica.info/}\\
+&\url{https://twitter.com/metaphysicainfo}\\
+&(screen-name, 日下部幽考 in Japanese)
+\end{tabular}\hspace*{\fill}
+\end{document}

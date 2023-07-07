@@ -38,7 +38,7 @@ Issues and pull requests are welcome.
 Copyright and Licence
 ---------------------
 
-    Copyright (C) 2012, 2014-2020 by Qing Lee <sobenlee@gmail.com>
+    Copyright (C) 2012, 2014-2020, 2022 by Qing Lee <sobenlee@gmail.com>
     ----------------------------------------------------------------------
 
     This work may be distributed and/or modified under the

@@ -1,6 +1,7 @@
 %% File `fapapersize.sty`
+%%    this file is a part of oblivoir-packages.
 %%
-%% Copyright (c) 2006-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2006-2022 Kangsoo Kim <modviv2k15 at gmail.com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -15,18 +16,26 @@
 %% ver 0.03 (2006/11/24)
 %%   stocksize를 별도 지정할 수 있게 함
 %%   option [stock], command \usefastocksize{<width>}{<height>}
-%% ver 0.02
+%% ver 0.02 (2007)
 %%   사륙배판, 국판, 신국판 정의.
 %%   marginnote 영역 설정은 제외되어 있음.
-%% ver 0.1
+%% ver 0.1 (2020)
 %%   option 1in added
+%% ver 0.2 (2022)
+%%   option a4 added
+%%   \definefageometry, \selectfageometry added.
+%% ver 0.3 (2022)
+%%   bug fix about trimmargin and paperwidth in the changetext.
 %%
-\ProvidesPackage{fapapersize}[2020/02/10 v0.1]
+\ProvidesPackage{fapapersize}[2022/03/08 v0.3]
 %%%
 %%% 옵션
 %%% dbl4x6 : 사륙배판
 %%% mum : 국판
 %%% newmum : 신국판
+%%% 1in : margin 1in
+%%% a4 : a4paper + 1in
+%%% stock : stocksize
 \DeclareOption{dbl4x6}{%
   \AtEndOfPackage{\usefapapersize{190mm,260mm,30mm,*,30mm,*}}%
 }
@@ -38,7 +47,10 @@
 }
 \DeclareOption{1in}{%
   \AtEndOfPackage{\usefapapersize{*,*,1in,*,1in,*}}%
- }
+}
+\DeclareOption{a4}{%
+  \AtEndOfPackage{\usefapapersize{210mm,290mm,1in,*,1in,*}}%
+}
 \newif\ifStockSize@\StockSize@false
 \DeclareOption{stock}{%
   \StockSize@true
@@ -143,5 +155,48 @@
   \fi
  \fi
 }
+
+%%%% 
+%%% fapapersize.sty, 2021-06-21
+%%% \definefageometry, \selectfageometry
+%%%
+\ExplSyntaxOn
+	\NewDocumentCommand \definefageometry { m o m o }
+	{
+		\IfValueTF{#2}
+		{
+			\tl_gset:cn { g_famarginsetopt_#1_tl } { #2 }
+		}
+		{
+			\tl_gset:cn { g_famarginsetopt_#1_tl } {}
+		}
+		\tl_gset:cn { g_famarginset_#1_tl } { #3 }
+		\IfValueTF { #4 }
+		{
+			\tl_gset:cn { g_famarginsetoptpost_#1_tl } { #4 }
+		}
+		{
+			\tl_gset:cn { g_famarginsetoptpost_#1_tl } {}
+		}
+	}
+	
+	\NewDocumentCommand \selectfageometry { s m }
+	{
+		\IfBooleanT { #1 } { \clearpage }
+		\tl_use:c { g_famarginsetopt_#2_tl }
+		\exp_args:Nx \usefapapersize{\fa@paperwidth,\fa@paperheight, \use:c{ g_famarginset_#2_tl } }
+		\tl_if_empty:cF { g_famarginsetoptpost_#2_tl }
+		{
+			\tl_use:c { g_famarginsetoptpost_#2_tl }
+		}
+		\ch@ngetext
+	}
+
+\NewDocumentCommand \evenmarginsameasodd {}
+{
+	\setlength\evensidemargin{\oddsidemargin}
+}
+
+\ExplSyntaxOff
 
 \endinput

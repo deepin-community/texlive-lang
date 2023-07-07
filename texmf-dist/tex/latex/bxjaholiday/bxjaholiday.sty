@@ -1,7 +1,7 @@
 %%
 %% This is file 'bxjaholiday.sty'.
 %%
-%% Copyright 2018-2020 Takuto ASAKURA (wtsnjp)
+%% Copyright 2018-2021 Takuto ASAKURA (wtsnjp)
 %%   GitHub:   https://github.com/wtsnjp
 %%   Twitter:  @wtsnjp
 %%
@@ -13,7 +13,7 @@
 % -------------------------------------------------- declarations
 
 \RequirePackage{expl3}
-\ProvidesExplPackage {bxjaholiday} {2020/11/28} {1.1.0}
+\ProvidesExplPackage {bxjaholiday} {2021-09-28} {1.1.1}
   {Support for Japanese holidays}
 
 % -------------------------------------------------- utilities
@@ -850,7 +850,7 @@
 
             { 10 } % October
             {
-              \int_compare:nNnTF { #1 } > { 2020 }
+              \int_compare:nNnTF { #1 } > { 2021 }
                 {
                   \__bxjh_int_compare_and:nnT % second Monday
                     { \int_div_truncate:nn { #3 - 1 } { 7 } = 1 }
@@ -861,7 +861,9 @@
                     { \g_bxjh_sports_tl }
                 }
                 {
-                  \int_compare:nNnTF { #1 } = { 2020 }
+                  \bool_lazy_or:nnTF
+                    { \int_compare_p:n { #1 = 2020 } }
+                    { \int_compare_p:n { #1 = 2021 } }
                     {
                       % pass because of 2020 Tokyo Olympic
                     }

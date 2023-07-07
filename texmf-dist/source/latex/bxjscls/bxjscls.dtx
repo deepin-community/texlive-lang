@@ -33,7 +33,7 @@
 %  Copyright 1999-2016 Haruhiko Okumura
 %  Copyright 2016-2020 Japanese TeX Development Community
 %
-%  Copyright 2013-2021 Takayuki YATO (aka. "ZR")
+%  Copyright 2013-2022 Takayuki YATO (aka. "ZR")
 %
 % \fi
 % \CheckSum{0}
@@ -56,7 +56,10 @@
 %<*driver>
 \ProvidesFile{bxjscls.dtx}
 %</driver>
-  [2021/05/18 v2.5a BXJS document classes]
+  [2022/04/10 v2.7a BXJS document classes]
+% [2022/03/30 v2.7  BXJS document classes]
+% [2022/03/20 v2.6  BXJS document classes]
+% [2021/05/18 v2.5a BXJS document classes]
 % [2021/02/02 v2.5  BXJS document classes]
 % [2021/01/27 v2.4a BXJS document classes]
 % [2020/10/16 v2.4  BXJS document classes]
@@ -128,16 +131,18 @@
 % based on jsclasses [2013/05/14]
 %<*driver>
 \documentclass[a4paper]{ltjsarticle}
-\usepackage[ipaex]{luatexja-preset}
-\usepackage{metalogo}
+%\usepackage[ipaex]{luatexja-preset}
+\renewcommand{\headfont}{\romanseries{sbc}\sffamily}
+\usepackage{bxtexlogo}
+\bxtexlogoimport{*}
 \usepackage{doc}
 \usepackage{color}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
+\newcommand{\Means}{：\quad}
 \newcommand{\TODO}{\par\noindent
   {\usefont{OT1}{cmss}{sbc}{n}\color{red}TODO:}\ }
-\newcommand{\Means}{~：\quad}
 \newcommand{\OR}{$\;|\;$}
 \newcommand{\ZRX}{☃}
 \newenvironment{ZRnote}
@@ -147,9 +152,6 @@
   \makebox{\hspace{.05\linewidth}\rule[#1ex]{.9\linewidth}{.2pt}}\par}
 \newcommand*{\StartZRnote}{\ZRnoteline{.1}}
 \newcommand*{\EndZRnote}{\ZRnoteline{.9}}
-\providecommand*{\eTeX}{$\varepsilon$-\TeX}
-\providecommand*{\upTeX}{u\pTeX}
-\providecommand*{\XeTeX}{XeTeX}
 \newcommand*{\zrWDash}{\symbol{"301C}}% WAVE DASH
 \newcommand*{\zrNote}[1]{［#1］}
 \makeatletter
@@ -335,13 +337,27 @@
 %    \begin{macrocode}
 \RequirePackage{keyval}
 %    \end{macrocode}
-% クラスの本体ではこの他に |geometry| パッケージが読み込まれる。
-% \TODO 依存パッケージの情報。
+% クラスの本体ではこの他に以下のパッケージが読み込まれる。
+% \begin{quote}
+%   |geometry|、|ifpdf|
+% \end{quote}
+% また状況によっては以下のパッケージが読み込まれる可能性がある。
+% \begin{quote}
+%   |bxwareki|、|jslogo|、|plautopatch|、|type1cm|
+% \end{quote}
+%
+% \begin{macro}{\jsAtEndOfClass}
+% このクラスの読込終了時に対するフック。
+% （補助パッケージ中で用いられる。）
+%    \begin{macrocode}
+\def\jsAtEndOfClass{%
+  \expandafter\g@addto@macro\csname\bxjs@clsname.cls-h@@k\endcsname}
+%    \end{macrocode}
+% \end{macro}
 %
 % 互換性のための補助パッケージを読み込む。
 %    \begin{macrocode}
 \IfFileExists{bxjscompat.sty}{%
-  \let\jsAtEndOfClass\@gobble
   \RequirePackage{bxjscompat}%
 }{}
 %    \end{macrocode}
@@ -371,8 +387,8 @@
 % エンジン（{\TeX}の種類）の種別：
 % |j|＝{\pTeX}系、
 % |x|＝{\XeTeX}、
-% |p|＝pdf{\TeX}（含DVIモード）、
-% |l|＝Lua{\TeX}、
+% |p|＝{\pdfTeX}（含DVIモード）、
+% |l|＝{\LuaTeX}、
 % |J|＝NTT j{\TeX}、
 % |O|＝Omega系、
 % |n|＝以上の何れでもない。
@@ -437,7 +453,7 @@
 \fi{\endinput\@@end}
 %    \end{macrocode}
 %
-% Lua{\TeX}の場合、本クラス用のLuaモジュールを用意する。
+% {\LuaTeX}の場合、本クラス用のLuaモジュールを用意する。
 %    \begin{macrocode}
 \ifx l\jsEngine
   \directlua{ bxjs = {} }
@@ -467,8 +483,9 @@
 %
 % \begin{macro}{\ifjsInPdfMode}
 % 〔スイッチ〕
-% pdf{\TeX}／Lua{\TeX}がPDFモードで動作しているか。
-% \Note Lua{\TeX} 0.8x版でのプリミティブ名変更に対応。
+% {\pdfTeX}／{\LuaTeX}がPDFモードで動作しているか。
+% \Note {\LuaTeX} 0.8x版でのプリミティブ名変更に対応。
+% \TODO |iftex| パッケージ（＋自前実装）に置き換える。
 %    \begin{macrocode}
 \newif\ifjsInPdfMode
 \@nameuse{ImposeOldLuaTeXBehavior}
@@ -481,13 +498,22 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\ifbxjs@explIII}
+% 〔スイッチ〕
+% expl3がカーネルに組み込まれているか。
+%    \begin{macrocode}
+\newif\ifbxjs@explIII
+\@ifl@t@r\fmtversion{2020/02/02}{\bxjs@explIIItrue}{}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\ifbxjs@TUenc}
 % 〔スイッチ〕
 % {\LaTeX}の既定のフォントエンコーディングがTUであるか。
 % \Note 2017年1月以降の{\LaTeX}カーネルにおいて
 % 「Unicodeを表す{\LaTeX}公式のフォントエンコーディング」
 % である“TU”が導入され、
-% これ以降の{\LaTeX}を{\XeTeX}またはLua{\TeX}で動かしている場合は、
+% これ以降の{\LaTeX}を{\XeTeX}または{\LuaTeX}で動かしている場合は、
 % 既定のエンコーディングがTUになる。
 % それ以外の場合は、既定のエンコーディングはOT1である。
 %    \begin{macrocode}
@@ -506,6 +532,21 @@
 %    \begin{macrocode}
 \newif\ifbxjs@old@hook@system
 \@ifl@t@r\fmtversion{2020/10/01}{}{\bxjs@old@hook@systemtrue}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjs@CGHN}
+% {\LaTeX}カーネルの2021/11/15版の改修で「要素の順が変わった」
+% フック名について、“新仕様において正しい名前”を
+% “使用中の{\LaTeX}において正しい名前”に変換する。
+% 例えば、|\bxjs@CGHN{package/PKG/after}| は旧仕様の{\LaTeX}では
+% “|package/after/PKG|”に展開される。
+%    \begin{macrocode}
+\@ifl@t@r\fmtversion{2021/11/15}{%
+  \def\bxjs@CGHN#1{#1}%
+}{%else
+  \def\bxjs@CGHN#1{\bxjs@CGHN@a#1//}%
+  \def\bxjs@CGHN@a#1/#2/#3//{#1/#3/#2}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -552,6 +593,37 @@
 % |\@ifstar| の |+| 版。
 %    \begin{macrocode}
 \def\bxjs@ifplus#1{\@ifnextchar+{\@firstoftwo{#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjs@trim}
+% |\bxjs@trim\CS| で、|\CS| の内容のトークン列を先頭と末尾の
+% 空白トークン群を除去したものに置き換える。
+%    \begin{macrocode}
+\def\bxjs@trim#1{\expandafter\bxjs@trim@a#1\@nil#1}
+\def\bxjs@trim@a{\futurelet\bxjs@tmpb\bxjs@trim@b}
+\def\bxjs@trim@b{\bxjs@cond\ifx\bxjs@tmpb\@sptoken\fi
+  {\bxjs@trim@c\bxjs@trim@a}{\bxjs@trim@d}}
+\def\bxjs@trim@c#1 {#1}
+\def\bxjs@trim@d#1\@nil{\bxjs@trim@e#1\@nil: \@nil\@nnil}
+\def\bxjs@trim@e#1 \@nil#2\@nnil{\bxjs@cond\ifx\@nnil#2\@nnil\fi
+  {\bxjs@trim@f#1\@nnil}{\bxjs@trim@e#1\@nil: \@nil\@nnil}}
+\def\bxjs@trim@f#1\@nil#2\@nnil#3{\def#3{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjs@set@array@from@clist}
+% |\bxjs@set@array@from@clist{|\Meta{配列名接頭辞}|}{|%
+% \Meta{コンマ区切りリスト}|}|\Means
+% コンマ区切りの値のリストから擬似配列を生成する。
+% \Note 各要素について、先頭・末尾の空白トークン群は除去される。
+%    \begin{macrocode}
+\def\bxjs@set@array@from@clist#1#2{%
+  \@tempcnta\z@
+  \@for\bxjs@tmpa:=\@empty#2\do{%
+     \bxjs@trim\bxjs@tmpa \bxjs@cslet{#1/\the\@tempcnta}\bxjs@tmpa
+     \advance\@tempcnta\@ne}
+  \bxjs@cslet{#1/\the\@tempcnta}\relax}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -623,11 +695,19 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\ifbxjs@after@preamble}
+% 〔スイッチ〕
+% 文書本体が開始しているか。
+%    \begin{macrocode}
+\newif\ifbxjs@after@preamble
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\bxjs@begin@document@hook}
 % BXJSクラス用の文書本体開始時フック。
 %    \begin{macrocode}
 \@onlypreamble\bxjs@begin@document@hook
-\let\bxjs@begin@document@hook\@empty
+\def\bxjs@begin@document@hook{\bxjs@after@preambletrue}
 \AtBeginDocument{\bxjs@begin@document@hook}
 %    \end{macrocode}
 % \end{macro}
@@ -648,15 +728,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\jsAtEndOfClass}
-% このクラスの読込終了時に対するフック。
-% （補助パッケージ中で用いられる。）
-%    \begin{macrocode}
-\def\jsAtEndOfClass{%
-  \expandafter\g@addto@macro\csname\bxjs@clsname.cls-h@@k\endcsname}
-%    \end{macrocode}
-% \end{macro}
-%
 % 一時的な手続き用の制御綴。
 %    \begin{macrocode}
 \@onlypreamble\bxjs@tmpdo
@@ -666,31 +737,37 @@
 \@onlypreamble\bxjs@tmpdo@d
 %    \end{macrocode}
 %
-% Lua\TeX の場合、原版のコード中のコントロールワード中に現れる
-% 日本語文字のカテゴリコードを一時的に11に変更する。
-% クラス読込終了時点で元に戻される。
-% \Note 現在の{Lua\LaTeX}では、漢字のカテゴリコードは最初から11に
-% なっているので、この処理は特段の意味を持たない。
-% しかし、昔は12になっていて、この場合、日本語文字の
-% コントロールワードの命令を使用するには、カテゴリコードを11に
-% 変更する必要がある。
-%    \begin{macrocode}
-\if l\jsEngine
-\def\bxjs@tmpdo#1{%
-  \xdef\bxjs@pre@jadriver@hook{%
-    \bxjs@pre@jadriver@hook
-    \catcode`#1=\the\catcode`#1\relax}%
-  \catcode`#1=11\relax}
-\@tfor\bxjs@tmpa:=和西暦\do
-  {\expandafter\bxjs@tmpdo\bxjs@tmpa}
-\fi
-%    \end{macrocode}
-%
 % |\jsInhibitGlue| は |\inhibitglue| が定義されていればそれを
 % 実行し、未定義ならば何もしない。
 %    \begin{macrocode}
 \bxjs@robust@def\jsInhibitGlue{%
   \ifx\inhibitglue\@undefined\else \inhibitglue \fi}
+%    \end{macrocode}
+%
+% \paragraph{環境検査 \ZRX}
+% 
+% {\TeX}処理系のバージョンがサポート対象であるかを検査する。
+% \Note 現状での処理系バージョン要件は
+% 「{\XeTeX}は0.997版（2007年頃）以上」
+% という現実離れしたものになっている。
+% \TODO 3.0版において、もっと現実的なバージョン要件を定める予定。
+% 多分「本体」と「標準和文ドライバ」で条件を分けることになる。
+%    \begin{macrocode}
+\@tempswatrue
+\if x\jsEngine
+  \ifdim\the\XeTeXversion\XeTeXrevision\p@<0.997\p@
+    \@tempswafalse \fi
+\fi
+%    \end{macrocode}
+% 非サポートのバージョン場合は強制終了させる。
+%    \begin{macrocode}
+\if@tempswa \expandafter\@gobble
+\else
+  \ClassError\bxjs@clsname
+   {The engine in use is all too old}
+   {It's a fatal error. I'll quit right now.}
+  \expandafter\@firstofone
+\fi{\endinput\@@end}
 %    \end{macrocode}
 %
 % 万が一「2.09互換モード」になっていた場合は、
@@ -1467,6 +1544,8 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \Note |nodvidriver*| はBXJSクラスの仕様上は |nodvidriver| と完全に
+% 等価であるが、「グローバルオプションに何があるか」の点で異なる。
 %    \begin{macrocode}
 \DeclareOption{dvips}{%
   \def\bxjs@driver@opt{dvips}%
@@ -1482,6 +1561,9 @@
   \let\bxjs@driver@given\bxjs@driver@@dvipdfmx}
 \DeclareOption{nodvidriver}{%
   \def\bxjs@driver@opt{nodvidriver}%
+  \let\bxjs@driver@given\bxjs@driver@@none}
+\DeclareOption{nodvidriver*}{%
+  \def\bxjs@driver@opt{nodvidriver*}%
   \let\bxjs@driver@given\bxjs@driver@@none}
 \DeclareOption{pdftex}{%
   \def\bxjs@driver@opt{pdftex}%
@@ -1711,6 +1793,7 @@
 %    \end{macrocode}
 %
 % |noscale| オプションの処理。
+% \TODO |noscale| は3.0版で廃止の予定。
 %    \begin{macrocode}
 \DeclareOption{noscale}{\bxjs@depre@opt@do{noscale}{scale=1}}
 %    \end{macrocode}
@@ -1742,6 +1825,7 @@
 %
 % |ja| オプションの処理。
 % \Note |jadriver| は0.9版で用いられた旧称。
+% \TODO |jadriver| は3.0版で廃止の予定。
 % \Note 単なる |ja| という指定は無視される（Pandoc 対策）。
 %    \begin{macrocode}
 \define@key{bxjs}{jadriver}{%
@@ -1855,6 +1939,7 @@
 \let\bxjs@dvidriver@@dviout=\bxjs@driver@@dvimode
 \let\bxjs@dvidriver@@xdvi=\bxjs@driver@@dvimode
 \let\bxjs@dvidriver@@nodvidriver=\bxjs@driver@@none
+\bxjs@cslet{bxjs@dvidriver@@nodvidriver*}\bxjs@driver@@none
 %    \end{macrocode}
 %
 % |dvi| オプションの処理。
@@ -1997,6 +2082,7 @@
 %
 % \begin{macro}{\ifbxjs@usezw}
 % 〔スイッチ〕 |use-zw| の指定値。
+% \TODO |zw|/|nozw| は3.0版で廃止の予定。
 %    \begin{macrocode}
 \bxjs@declare@bool@option{use-zw}{usezw}{true}
 \DeclareOption{nozw}{\bxjs@depre@opt@do{nozw}{use-zw=false}}
@@ -2006,6 +2092,7 @@
 %
 % \begin{macro}{\ifbxjs@disguise@js}
 % 〔スイッチ〕 |disguise-js| の指定値。
+% \TODO |js|/|nojs| は3.0版で廃止の予定。
 %    \begin{macrocode}
 \bxjs@declare@bool@option{disguise-js}{disguise@js}{true}
 \DeclareOption{nojs}{\bxjs@depre@opt@do{nojs}{disguise-js=false}}
@@ -2243,10 +2330,17 @@
 % \Note ただし |ja| 非指定の場合はスキップする
 % （0.3 版との互換性のため）。
 %    \begin{macrocode}
-  \ifx\bxjs@driver@opt\@undefined \ifx\bxjs@jadriver@opt\@undefined\else
-    \ClassWarningNoLine\bxjs@clsname
-    {No driver option is given}
-  \fi\fi
+  \ifx\bxjs@driver@opt\@undefined
+    \if \ifbxjs@explIII T\else\ifx\bxjs@jadriver@opt\@undefined F\else T\fi\fi T%
+      \ClassWarningNoLine\bxjs@clsname
+       {A driver option is MISSING!!\MessageBreak
+        You should properly specify one of the valid\MessageBreak
+        driver options according to the DVI driver\MessageBreak
+        that is in use:\MessageBreak
+        \@spaces dvips, dvipdfmx, dviout, xdvi,\MessageBreak
+        \@spaces nodvidriver}
+    \fi
+  \fi
 %    \end{macrocode}
 % |dvi=XXX| が指定されていた場合は、
 % |XXX| が指定された時と同じ動作にする。
@@ -2287,16 +2381,23 @@
 %
 % \paragraph{その他のBXJS特有の後処理 \ZRX}
 %
+% 標準の和文ドライバの名前の定数。
+%    \begin{macrocode}
+\def\bxjs@@minimal{minimal}
+\def\bxjs@@standard{standard}
+\def\bxjs@@pandoc{pandoc}
+\def\bxjs@@modern{modern}
+%    \end{macrocode}
+%
 % |\bxjs@jadriver| の正規化。
 % 値が未指定の場合は |minimal| に変える。
 % ただしエンジンが{(u)\pTeX}である場合は |standard|
 % に変える。
 % \Note {(u)\pTeX}以外で |ja| を省略するのは2.0版より非推奨となった。
 %    \begin{macrocode}
-\def\bxjs@@minimal{minimal}
 \ifx\bxjs@jadriver\relax
   \ifx j\jsEngine
-    \def\bxjs@jadriver{standard}
+    \let\bxjs@jadriver\bxjs@@standard
   \else
     \ClassWarningNoLine\bxjs@clsname
      {The option 'ja' is MISSING!!\MessageBreak
@@ -2314,7 +2415,6 @@
 % |calc|、|keyval|、|ifpdf|。
 % \Note Pandocモードでは |plautopatch| の既定値を真とする。
 %    \begin{macrocode}
-\def\bxjs@@pandoc{pandoc}
 \ifx\bxjs@jadriver\bxjs@@pandoc \ifx\bxjs@plautopatch@given\@undefined
     \ifjsWitheTeX
   \bxjs@plautopatchtrue
@@ -2336,7 +2436,7 @@
 \fi\fi
 %    \end{macrocode}
 %
-% 新しいLua{\TeX}（0.87版以降）ではmagがアレなので、
+% 新しい{\LuaTeX}（0.87版以降）ではmagがアレなので、
 % |magstyle=usemag| が指定されていた場合はエラーを出す。
 % （この場合の既定値は |nomag*| であり、
 % エラーの場合は既定値に置き換えられる。）
@@ -2582,7 +2682,7 @@
 % ここで{p\TeX}のzwに相当する単位として用いる長さ変数 |\jsZw| を作成する。
 % 約束により、これは |\jsScale| $\times$ (指定フォントサイズ) に等しい。
 %
-% |nozw| 非指定時は |\zw| を |\jsZw| と同義にする。
+% |use-zw| が真の時は |\zw| を |\jsZw| と同義にする。
 %    \begin{macrocode}
 \newdimen\jsZw
 \jsZw=10\jsc@mpt \jsZw=\jsScale\jsZw
@@ -3308,7 +3408,8 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% 現状ではここで |\mag| を設定している。\par
+% 現状ではここで |\mag| を設定している。
+%
 % |\topskip| も指定する。
 %    \begin{macrocode}
 \ifjsc@mag
@@ -3601,10 +3702,9 @@
 %    \end{macrocode}
 %
 % ここで |geometry| を読み込む。
-% \Note |geometry| のbegin-documentフックにおいて、Lua{\TeX}の
+% \Note |geometry| のbegin-documentフックにおいて、{\LuaTeX}の
 % 旧版互換を有効にする。
 %    \begin{macrocode}
-\bxjs@apply@bd@pre@geometry@hook
 \bxjs@apply@bd@pre@geometry@hook{\bxjs@bd@pre@geometry@hook}
 \bxjs@apply@bd@pre@geometry@hook{\ImposeOldLuaTeXBehavior}
 \bxjs@preproc@layout
@@ -3628,7 +3728,7 @@
 %    \begin{macrocode}
 \g@addto@macro\bxjs@bd@pre@geometry@hook{%
 %    \end{macrocode}
-% BXJS2.0版より、|geometry| の4.x版のサポートは廃止された。
+% BXJSの2.0版より、|geometry| の4.x版のサポートは廃止された。
 %    \begin{macrocode}
     \@ifpackagelater{geometry}{2010/02/12}{}{%else
       \PackageError\bxjs@clsname
@@ -4368,6 +4468,16 @@
 %    \begin{macrocode}
 \let\pltx@cleartorightpage\pltx@cleartooddpage
 \let\pltx@cleartoleftpage\pltx@cleartoevenpage
+%    \end{macrocode}
+%
+% |\vsize| の値がアレな場合は本体開始まで |\clearpage| を無効にする。
+%    \begin{macrocode}
+\ifdim\vsize=\z@
+\begingroup
+\toks@\expandafter{\clearpage}
+\xdef\clearpage{\noexpand\ifbxjs@after@preamble\the\toks@\noexpand\fi}
+\endgroup
+\fi
 %    \end{macrocode}
 % \end{ZRnote}
 %
@@ -8066,7 +8176,7 @@
     \global\let\bxjs@wareki@used\@empty
     \ClassWarning\bxjs@clsname
      {Wareki mode is not supported, since\MessageBreak
-      'bxwareki' is unavailable, found}}
+      'bxwareki' is unavailable, reported}}
   \g@addto@macro\bxjs@begin@document@hook{%
     \let\bxjs@wareki@used\@empty}
 \fi
@@ -8208,8 +8318,8 @@
 %   使用されているエンジンの種別。
 %   （|\if| で判定可能）。
 %   \begin{quote}\begin{tabular}{l@{\qquad}l}
-%   |p|   & pdf{\TeX}（DVIモードも含む）\\
-%   |l|   & Lua{\TeX}（〃）\\
+%   |p|   & {\pdfTeX}（DVIモードも含む）\\
+%   |l|   & {\LuaTeX}（〃）\\
 %   |x|   & {\XeTeX}\\
 %   |j|   & {\pTeX}または{\upTeX}\\
 %   |n|   & 以上の何れでもない
@@ -8219,7 +8329,7 @@
 % \item |\ifjsWitheTeX| \zrNote{スイッチ}\quad
 %   使用されているエンジンが{\eTeX}拡張であるか。
 % \item |\ifjsInPdfMode| \zrNote{スイッチ}\quad
-%   使用されているエンジンが（pdf{\TeX}・Lua{\TeX}の）
+%   使用されているエンジンが（{\pdfTeX}・{\LuaTeX}の）
 %   PDFモードであるか。
 % \item |\jsUnusualPtSize| \zrNote{整数定数を表す文字列のマクロ}\quad
 %   基底フォントサイズが |10pt|、|11pt|、|12pt| のいずれでもない
@@ -8261,7 +8371,7 @@
 %   ほとんどの場合、和文フォントをNFSSで規定する際に |\jsScale|
 %   の値をスケール値として与えれば上手くいく。
 % \item |\jsFontSizeChanged| \zrNote{マクロ}\quad
-%   フォントサイズが変更された時に必ず呼び出されるマクロ。
+%   フォントサイズが変更された時に必ず呼び出される（呼び出すべき）マクロ。
 % \item |\jsResetDimen| \zrNote{マクロ}★\quad
 %   上記 |\jsFontSizeChanged| の中で呼び出される、
 %   ユーザ（和文モジュール）用のフック。
@@ -8277,18 +8387,21 @@
 %^^A========================================================
 % \section{和文ドライバ：minimal \ZRX}
 %
-% |jadriver| の指定が無い場合に適用されるドライバ。
+% |ja| オプションの指定が無い場合に適用されるドライバ。
 % また、standard ドライバはまずこのドライバファイルを
 % 読み込んでいる。
 %
 % このドライバでは、各エンジンについての必要最低限の処理だけを
 % 行っている。
-% 日本語処理のためのパッケージ（xeCJK や Lua{\TeX}-ja 等）
+% 日本語処理のためのパッケージ（xeCJK や {\LuaTeX}-ja 等）
 % を自分で読み込んで適切な設定を行うという使用状況を想定している。
 %
 % ただし、(u){\pTeX}エンジンについては例外で、和文処理機構の
 % 選択の余地がないため、このドライバにおいて、
 % 「JSクラスと同等の指定」を完成させるためのコードを記述する。
+%
+% \TODO 本来は「minimalにすら依存しない」はずのものがminimalの
+% コード中に書かれているような気がする……。
 %
 %^^A----------------
 % \subsection{補助マクロ}
@@ -8445,7 +8558,7 @@
 %
 % \paragraph{補助マクロ}
 %
-% |\jsLetHeadChar| を和文文字トークンに対応させる。
+% |\jsLetHeadChar| をUTF-8バイト列と和文文字トークンに対応させる。
 %    \begin{macrocode}
 \def\bxjs@let@hchar@chr@pp#1#2{%
   \expandafter\bxjs@let@hchar@chr@pp@a\meaning#2\relax#1#2}
@@ -8650,6 +8763,7 @@
 \selectfont
 %    \end{macrocode}
 %
+% これ以降では、
 % |\bxjs@parse@qh| の処理は{\pTeX}系では不要になるので無効化する
 % （つまり |\jsSetQHLength| は |\setlength| と等価になる）。
 %    \begin{macrocode}
@@ -8733,16 +8847,18 @@
 %    \end{macrocode}
 %
 %^^A----------------
-% \subsection{pdf{\TeX}用の処理}
+% \subsection{{\pdfTeX}用の処理}
 %
 %    \begin{macrocode}
-\else\ifx p\jsEngine
+\else\if \if p\jsEngine T\else\if n\jsEngine T\else F\fi\fi T
 %    \end{macrocode}
 %
+% |\jsLetHeadChar| をUTF-8バイト列に対応させる。
 %    \begin{macrocode}
 \let\bxjs@let@hchar@chr\bxjs@let@hchar@chr@ue
 %    \end{macrocode}
 %
+% ムニャムニャ。
 %    \begin{macrocode}
 \@onlypreamble\bxjs@cjk@loaded
 \def\bxjs@cjk@loaded{%
@@ -8790,7 +8906,7 @@
 %    \end{macrocode}
 %
 % \begin{macro}{\bxjs@do@precisetext}
-% |precisetext| オプションの処理。
+% |precisetext| オプションの実際の処理内容。
 %    \begin{macrocode}
 \@onlypreamble\bxjs@do@precisetext
 \ifx\XeTeXgenerateactualtext\@undefined\else
@@ -8801,12 +8917,14 @@
 % \end{macro}
 %
 % \begin{macro}{\bxjs@do@simplejasetup}
-% |simplejasetup| オプションの処理。
+% |simplejasetup| オプションの実際の処理内容。
+% \TODO バージョン要件を見直して暫定措置を解除する。
 %    \begin{macrocode}
 \@onlypreamble\bxjs@do@simplejasetup
 \def\bxjs@do@simplejasetup{%
+  \@namedef{bxjs@zeroglue/0.0pt}{T}%
   \ifnum\XeTeXinterchartokenstate>\z@
-  \else\ifnum\strcmp{\the\XeTeXlinebreakskip}{\the\z@}=\z@
+  \else\expandafter\ifx\csname bxjs@zeroglue/\the\XeTeXlinebreakskip\endcsname\relax\else
     \jsSimpleJaSetup
     \ClassInfo\bxjs@clsname
      {'\string\jsSimpleJaSetup' is applied\@gobble}%
@@ -8890,7 +9008,7 @@
 % かつ |fancyhdr| が使用された場合に以下の対策を行う。
 % \begin{itemize}
 % \item デフォルトの書式設定に含まれる“二文字フォント命令”を除去する。
-% \item bxjsbookにおいて、ヘッダ・フッタの横幅を |\fullwidth| に変える。
+% \item |bxjsbook| においてヘッダ・フッタの横幅を |\fullwidth| に変える。
 % \end{itemize}
 %
 %    \begin{macrocode}
@@ -8964,6 +9082,11 @@
   \global\let\bxjs@pagestyle@hook\relax}
 %    \end{macrocode}
 %
+% 終わり。
+%    \begin{macrocode}
+\fi
+%    \end{macrocode}
+%
 % \paragraph{和文空白命令}
 %    \begin{macrocode}
 \ifbxjs@jaspace@cmd
@@ -9007,10 +9130,6 @@
   \def\bxjs@jaspace@@shibu{\hskip .25\jsZw\relax}
 %    \end{macrocode}
 % \end{macro}
-%
-%    \begin{macrocode}
-\fi
-%    \end{macrocode}
 %
 % 終わり。
 %    \begin{macrocode}
@@ -9208,7 +9327,7 @@
 % \begin{environment}{strongenv}
 % |fontspec| で提供される |\strong| 命令と |strongenv| 環境を
 % 全てのエンジンで使えるようにする。
-% \Note 
+% \Note 既に利用可能である場合は何もしない。
 %    \begin{macrocode}
 \ifbxjs@jp@strong@cmd\jsAtEndOfClass{%
   \ifx\strong\@undefined\ifx\strongenv\@undefined
@@ -9216,15 +9335,21 @@
     \DeclareTextFontCommand{\strong}{\strongenv}%
 %    \end{macrocode}
 % |fontspec| と互換の |\strongfontdeclare| 命令も提供する。
-% ただし、BXJSでの |\strong| は多段階には対応しないので、
-% 引数のコンマ区切りリストのうちの先頭の項目だけが意味をもつ。
 % 既定の設定は |\bfseries|（太字）である。
 % \Note |\strongfontdeclare| は試験的機能とする。
 %    \begin{macrocode}
-    \@ifdefinable{\strongfontdeclare}{\bxjs@protected\def\strongfontdeclare#1{%
-      \bxjs@strong@font@declare@a#1,\@nil}}%
-    \def\bxjs@strong@font@declare@a#1,#2\@nil{\def\bxjs@strong@font{#1}}%
-    \def\bxjs@strong@font{\bfseries}%
+    \newcommand*{\strongfontdeclare}{\bxjs@strongfontdeclare}%
+    \newcount\bxjs@strong@level
+    \bxjs@protected\def\bxjs@strongfontdeclare#1{%
+      \bxjs@set@array@from@clist{bxjs@strong}{#1}%
+      \bxjs@strong@level\z@}%
+    \bxjs@strongfontdeclare{\bfseries}%
+    \def\bxjs@strong@font{%
+      \bxjs@csletcs{bxjs@tmpa}{bxjs@strong/\the\bxjs@strong@level}%
+      \ifx\bxjs@tmpa\relax
+        \advance\bxjs@strong@level\m@ne \bxjs@strong@font
+      \else \advance\bxjs@strong@level\@ne \bxjs@tmpa
+      \fi}%
   \fi\fi
 }\fi
 %    \end{macrocode}
@@ -9421,7 +9546,7 @@
 %
 % \paragraph{和文フォント指定の扱い}
 %
-% |standard| 和文ドライバでは |\jsJaFont| の値を和文フォントの
+% standard和文ドライバでは |\jsJaFont| の値を和文フォントの
 % “プリセット”の指定として用いる。
 % プリセットの値は、{\TeX} Liveの |kanji-config-updmap| コマンドで
 % 使う“ファミリ”と同じにすることを想定する。
@@ -9822,7 +9947,7 @@
 %    \begin{macrocode}
   \ifjsWithupTeX\ifbxjs@old@hook@system\else
     \IfFileExists{pxjahyper-uni.def}{%
-      \AddToHook{package/after/hyperref}{\input{pxjahyper-uni.def}}
+      \AddToHook{\bxjs@CGHN{package/hyperref/after}}{\input{pxjahyper-uni.def}}
     }{}
   \fi\fi
 \fi
@@ -9883,17 +10008,17 @@
 %    \end{macrocode}
 %
 %^^A----------------
-% \subsection{pdf{\TeX}用設定： CJK + bxcjkjatype}
+% \subsection{{\pdfTeX}用設定： CJK + bxcjkjatype}
 %
 %    \begin{macrocode}
-\else\if p\jsEngine
+\else\if \if p\jsEngine T\else\if n\jsEngine T\else F\fi\fi T
 %    \end{macrocode}
 %
 % \paragraph{bxcjkjatypeパッケージの読込}
 %
 % |\jsJaFont| が指定されている場合は、その値を |bxcjkjatype| の
 % オプション（プリセット指定）に渡す。
-% （|auto| ならば |\bxjs@get@kanjiEmbed| を実行する。）
+% ここで値が |auto| である場合は |\bxjs@get@kanjiEmbed| を実行する。
 % スケール値（|\jsScale|）の反映は bxcjkjatype の側で行われる。
 % \Note Pandocモードでは |autotilde| を指定しない。
 %    \begin{macrocode}
@@ -9902,7 +10027,7 @@
 \bxjs@resolve@jafont@paren\bxjs@tmpa
 \edef\bxjs@tmpa{\bxjs@catopt\bxjs@tmpa\bxjs@jp@font}
 \edef\bxjs@tmpa{\bxjs@catopt\bxjs@tmpa{whole}}
-\def\bxjs@tmpb{pandoc}\ifx\bxjs@tmpb\bxjs@jadriver\else
+\ifx\bxjs@jadriver\bxjs@@pandoc\else
   \edef\bxjs@tmpa{\bxjs@catopt\bxjs@tmpa{autotilde}}
 \fi
 \edef\bxjs@next{%
@@ -9914,7 +10039,6 @@
 % \paragraph{hyperref対策}
 %
 % |bxcjkjatype| 使用時は |unicode| にするべき。
-% \Note 取りあえず固定はしない。
 %    \begin{macrocode}
 \ifbxjs@hyperref@enc
   \PassOptionsToPackage{unicode}{hyperref}
@@ -10064,12 +10188,19 @@
 % 「{\XeTeX}のバージョンが0.99992以上の場合に |unicode| を既定で
 % 有効にする」
 % ことにする。
-% \Note 取りあえず固定はしない。
+% \Note {\TeX}の小数の精度は十進で4桁までしか保証されないので、
+% |\strcmp| を利用して文字列で比較している。
+% （整数部が多桁になっても大丈夫。）
+% しかし実は、|\strcmp| プリミティブが追加されたのは
+% 0.9994版（2009年6月）かららしい。
+% \TODO バージョン要件を見直して暫定措置を解除する。
 %    \begin{macrocode}
+\ifx\strcmp\@undefined\else %未定義なら条件を満たさない
 \ifnum\strcmp{\the\XeTeXversion\XeTeXrevision}{0.99992}>\m@ne
   \ifbxjs@hyperref@enc
     \PassOptionsToPackage{unicode}{hyperref}
   \fi
+\fi
 \fi
 %    \end{macrocode}
 %
@@ -10161,13 +10292,13 @@
 %    \end{macrocode}
 %
 %^^A----------------
-% \subsection{Lua{\TeX}用設定： Lua{\TeX}-ja}
+% \subsection{{\LuaTeX}用設定： {\LuaTeX}-ja}
 %
 %    \begin{macrocode}
 \else\if l\jsEngine
 %    \end{macrocode}
 %
-% \paragraph{Lua{\TeX}-jaパッケージの読込}
+% \paragraph{{\LuaTeX}-jaパッケージの読込}
 %
 % |luatexja| とともに |luatexja-fontspec| パッケージを読み込む。
 %
@@ -10372,7 +10503,7 @@
 %
 % \paragraph{和文数式ファミリ}
 %
-% Lua{\TeX}-jaでは和文数式ファミリは常に有効で、既にこの時点で必要な
+% {\LuaTeX}-jaでは和文数式ファミリは常に有効で、既にこの時点で必要な
 % 設定は済んでいる。
 % 従って |@enablejfam| は常に真になる。
 %    \begin{macrocode}
@@ -10557,6 +10688,24 @@
 \fi
 %    \end{macrocode}
 %
+% \begin{macro}{\ifbxjs@bxghost@available}
+% 〔スイッチ〕|bxghost| パッケージが利用できるか。
+%    \begin{macrocode}
+\newif\ifbxjs@bxghost@available
+\ifjsWitheTeX
+  \RequirePackage{pdftexcmds}[2009/09/22]% v0.5
+  \IfFileExists{bxghost.sty}{%
+    \bxjs@bxghost@availabletrue
+    \@namedef{bxjs@bgbv/79E70A0991967E27981832C84DB5DF99}{1}%v0.2.0
+    \ifx\pdf@filemdfivesum\@undefined\else
+      \expandafter\ifx\csname bxjs@bgbv/\pdf@filemdfivesum{bxghost.sty}%
+          \endcsname\relax\else \bxjs@bxghost@availablefalse \fi
+    \fi
+  }{}
+\fi
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\bxjs@endpreamble@hook}
 % |etoolbox| の |\AtEndPreamble| で実行されるBXJSクラス用のフック。
 % \Note {\eTeX}以外では無効になる。
@@ -10685,8 +10834,9 @@
 % この時に何らかのコードを実行させることができる。
 %
 % \begin{macro}{\bxjs@set@dupload@proc}
-% |\bxjs@set@dupload@proc{|\Meta{ファイル名}|}{|\Meta{定義本体}|}|
-% 特定のファイルの読込が |\@filewithoptions| で指示されて、しかも
+% |\bxjs@set@dupload@proc{|\Meta{ファイル名}|}{|\Meta{定義本体}|}|\Means
+% 指定の名前の特定のファイルの読込が |\@filewithoptions| で
+% 指示されて、しかも
 % そのファイルが読込済である場合に、オプション重複検査をスキップして、
 % 代わりに\Meta{定義本体}のコードを実行する。
 % このコード中で |#1| は渡されたオプション列のテキストに置換される。
@@ -10698,7 +10848,7 @@
 \def\bxjs@set@dupload@proc@a#1{%
   \@onlypreamble#1\def#1##1}
 \def\bxjs@unset@dupload@proc#1{%
-  \expandafter\let\csname bxjs@dlp/#1\endcsname\@undefined}
+  \bxjs@cslet{bxjs@dlp/#1}\@undefined}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -10739,6 +10889,9 @@
 % Pandocはこれに対応していないため
 % 不完全なBabelやPolyglossiaの設定を出力してしまう。
 % これを防ぐための対策を行う。
+% \Note Pandoc 2.12版で |lang=ja| 指定に対応し、
+% 正しく{\LaTeX}側の言語名 |japanese| に変換されるようになった。
+% しかし、日本語指定の場合は相変わらず調整処理が必要である。
 %
 % \begin{macro}{\bxjs@polyglossia@options}
 % Polyglossiaのオプション列のテキスト。
@@ -10757,7 +10910,7 @@
 % \end{macro}
 %
 % \paragraph{Polyglossiaについて}
-% つまり{\XeTeX}・{Lua\TeX}の場合。
+% つまり{\XeTeX}および{\LuaTeX}（古いPandocで）の場合。
 % \Note この場合 |etoolbox| が使用可能になっている。
 %    \begin{macrocode}
 \ifnum0\if x\jsEngine1\fi\if l\jsEngine1\fi>0
@@ -10770,7 +10923,7 @@
 \bxjs@set@dupload@proc{polyglossia.sty}{%
   \bxjs@unset@dupload@proc{polyglossia.sty}%
   \ClassWarning\bxjs@clsname
-   {Package polyglossia is required}%
+   {Package polyglossia is requested}%
   \def\bxjs@polyglossia@options{#1}%
 %    \end{macrocode}
 %
@@ -10783,33 +10936,27 @@
 %    \end{macrocode}
 % もし、言語名が空の |\setmainlanguage{}| が実行された場合は、
 % |lang=ja| が指定されたと見なす。
-%    \begin{macrocode}
-    \ifblank{##2}{%
-      \ClassWarning\bxjs@clsname
-       {Main language is invalid, thus the fallback\MessageBreak
-        definitions will be employed}%
-      \bxjs@pandoc@polyglossia@ja
-%    \end{macrocode}
 % 言語名が |japanese| だった場合も同様。
 %    \begin{macrocode}
-    }{\ifstrequal{##2}{japanese}{%
+    \ifboolexpr{test{\ifblank{##2}}or test{\ifstrequal{##2}{japanese}}}{%
       \ClassWarning\bxjs@clsname
-       {Main language is japanese, thus the fallback\MessageBreak
+       {Main language is 'japanese', thus fallback\MessageBreak
         definitions will be employed}%
       \bxjs@pandoc@polyglossia@ja
 %    \end{macrocode}
-% 言語名が非空ならば、本来の |polyglossia| の処理を実行する。
+% それ以外は、改めて |polyglossia| を読み込んで、
+% 本来の処理を実行する。
 %    \begin{macrocode}
     }{%else
       \ClassWarning\bxjs@clsname
-       {Main language is valid (##2),\MessageBreak
+       {Main language is '##2',\MessageBreak
         thus polyglossia will be loaded}%
       \csundef{ver@polyglossia.sty}%
       \edef\bxjs@next{%
         \noexpand\RequirePackage[\bxjs@polyglossia@options]{polyglossia}[]%
       }\bxjs@next
       \setmainlanguage[##1]{##2}%
-    }}}}
+    }}}
 %    \end{macrocode}
 %
 % プレアンブルで |polyglossia| の読込が指示されなかった場合、
@@ -10853,11 +11000,9 @@
 %
 % \paragraph{Babelについて}
 % {\XeTeX}以外の場合。
-% \Note Pandoc 2.6版において、Lua{\TeX}で用いられる多言語パッケージが
-% PolyglossiaからBabelに変更された。
-%    \begin{macrocode}
-\if x\jsEngine\else
-%    \end{macrocode}
+% \Note Pandoc 2.15版から、テンプレートで用いられる多言語パッケージが
+% Babelに統一された。
+% （{\LuaTeX}は2.6版でPolyglossiaからBabelに変更されている。）
 %
 % パッケージの読込を検知するため読込済のマークを付けて
 % duploadの処理を仕込む。
@@ -10866,7 +11011,7 @@
 \bxjs@set@dupload@proc{babel.sty}{%
   \bxjs@unset@dupload@proc{babel.sty}%
   \ClassWarning\bxjs@clsname
-   {Package babel is required}%
+   {Package babel is requested}%
 %    \end{macrocode}
 % パッケージオプションに言語名が空の |main=| があるかを調べる。
 % ある場合は |lang=ja| 対策を実行する。
@@ -10875,23 +11020,25 @@
 %    \begin{macrocode}
   \@tempswafalse \let\bxjs@babel@options\@empty
   \def\bxjs@tmpb{main=}%
+  \def\bxjs@next{main=japanese}%
   \@for\bxjs@tmpa:=#1\do{%
     \ifx\bxjs@tmpa\bxjs@tmpb \@tempswatrue
+    \else\ifx\bxjs@tmpa\bxjs@next \@tempswatrue
     \else \edef\bxjs@babel@options{\bxjs@babel@options,\bxjs@tmpa}%
-    \fi}%
+    \fi\fi}%
   \if@tempswa
     \ClassWarning\bxjs@clsname
-     {Main language is invalid, so fallback\MessageBreak
+     {Main language is 'japanese', thus fallback\MessageBreak
       definitions will be employed}%
-    \bxjs@pandoc@polyglossia@ja
+    \bxjs@pandoc@babel@ja
 %    \end{macrocode}
 % ない場合は、本来の |babel| の処理を実行する。
 %    \begin{macrocode}
   \else
     \ClassWarning\bxjs@clsname
-     {Main language is valid,\MessageBreak
+     {Main language is not 'japanese',\MessageBreak
       thus babel will be loaded}%
-    \expandafter\let\csname ver@babel.sty\endcsname\@undefined
+    \bxjs@cslet{ver@babel.sty}\@undefined
     \RequirePackage[#1]{babel}[]%
   \fi}
 %    \end{macrocode}
@@ -10901,7 +11048,7 @@
 %    \begin{macrocode}
 \g@addto@macro\bxjs@endpreamble@hook{%
   \ifx\bxjs@babel@options\relax
-    \expandafter\let\csname ver@babel.sty\endcsname\@undefined
+    \bxjs@cslet{ver@babel.sty}\@undefined
   \fi}
 %    \end{macrocode}
 % 
@@ -10910,7 +11057,7 @@
 %    \begin{macrocode}
 \@onlypreamble\bxjs@pandoc@babel@ja
 \def\bxjs@pandoc@babel@ja{%
-  \expandafter\let\csname ver@babel.sty\endcsname\@undefined
+  \bxjs@cslet{ver@babel.sty}\@undefined
   \edef\bxjs@next{%
     \noexpand\RequirePackage[\bxjs@babel@options,english]{babel}[]%
   }\bxjs@next
@@ -10923,9 +11070,6 @@
 % \end{macro}
 %
 % lang対策はこれで終わり。
-%    \begin{macrocode}
-\fi
-%    \end{macrocode}
 %
 %^^A----------------
 % \subsection{geometry変数}
@@ -10939,7 +11083,7 @@
 %
 %^^A----------------
 % \subsection{CJKmainfont変数}
-% Lua{\TeX}（+ Lua{TeX}-ja）の場合に CJKmainfont 変数が
+% {\LuaTeX}（+ Lua{TeX}-ja）の場合に CJKmainfont 変数が
 % 指定された場合は |\setmainjfont| の指定にまわす。
 %    \begin{macrocode}
 \if l\jsEngine
@@ -10971,7 +11115,7 @@
 \@onlypreamble\bxjs@info@or@ban
 \def\bxjs@info@or@ban#1{%
   \PackageInfo\bxjs@clsname
-   {Freeze layout on '#1',\MessageBreak detected}}
+   {Freeze layout on '#1',\MessageBreak reported}}
 %    \end{macrocode}
 %
 % \paragraph{indentについて}
@@ -10996,6 +11140,7 @@
       \parindent=\the\parindent\relax
       \parskip=\the\parskip\relax}}
 \fi
+%    \end{macrocode}
 %
 % \paragraph{secnumdepthについて}
 % |secnumdepth| の値を決めるのはnumbersections変数
@@ -11003,13 +11148,18 @@
 % やsecnumdepth変数であるが、何れにしても |secnumdepth|
 % の値は書き換えられる。
 % そのため、|secnumdepth| を復帰させる。
+%    \begin{macrocode}
 \ifbxjs@jp@or@secnumdepth\else
   \bxjs@info@or@ban{secnumdepth}
   \eappto\bxjs@endpreamble@hook{%
     \c@secnumdepth=\the\c@secnumdepth\relax}
 \fi
+%    \end{macrocode}
 %
 % \paragraph{block-headingについて}
+% |\paragraph|、|\subparagraph| を別行見出しに変える処理を抑止する。
+% \Note 2.7.1版以前では別行見出し変更が既定で有効であった。
+%    \begin{macrocode}
 \ifbxjs@jp@or@block@heading\else
   \let\bxjs@frozen@paragraph\paragraph
   \let\bxjs@frozen@subparagraph\subparagraph
@@ -11019,6 +11169,10 @@
   \let\paragraph\bxjs@frozen@paragraph
   \let\subparagraph\bxjs@frozen@subparagraph}
 \fi
+%    \end{macrocode}
+%
+% 以上。
+%    \begin{macrocode}
 \fi
 %    \end{macrocode}
 %
@@ -11065,15 +11219,27 @@
 %^^A----------------
 % \subsection{全角空白文字}
 %
+% {\LaTeX}でない入力では、全角空きを入れるために全角空白文字
+% （U+3000）が使われる可能性があるので、
+% 全角空白文字を和文文字でなく空きとして扱うようにしておく。
+% \Note {(u)\pLaTeX}では対応できないので対象外。
+%
+% \begin{macro}{\pandocZWSpace}
+% 全角空白文字の入力で実行されるコード。
+%    \begin{macrocode}
+\def\pandocZWSpace{\zwspace}
+%    \end{macrocode}
+% \end{macro}
+% 全角空白文字の入力で |\pandocZWSpace| が実行されるようにする。
 %    \begin{macrocode}
 \ifnum0\if x\jsEngine1\fi\if l\jsEngine1\fi>\z@
   \catcode"3000=\active
   \begingroup \catcode`\!=7
-  \protected\gdef!!!!3000{\zwspace}
+  \protected\gdef!!!!3000{\pandocZWSpace}
   \endgroup
 \else\ifx\DeclareUnicodeCharacter\@undefined\else
   \DeclareUnicodeCharacter{3000}{\bxjs@zsp@char}
-  \bxjs@protected\def\bxjs@zsp@char{\zwspace}
+  \bxjs@protected\def\bxjs@zsp@char{\pandocZWSpace}
 \fi\fi
 %    \end{macrocode}
 %
@@ -11099,13 +11265,13 @@
 %    \begin{macrocode}
 \ifbxjs@jp@fix@strong\ifbxjs@jp@strong@cmd
   \let\orgtextbf\textbf
-  \DeclareRobustCommand\bxjstextbf[1]{%
+  \DeclareRobustCommand\pandocTextbf[1]{%
     \begingroup
       \let\textbf\orgtextbf
       \strong{#1}%
     \endgroup}%
   \g@addto@macro\bxjs@begin@document@hook{%
-    \let\textbf\bxjstextbf}
+    \let\textbf\pandocTextbf}
 \fi\fi
 %    \end{macrocode}
 %
@@ -11124,8 +11290,18 @@
 %
 % インラインコード(Code)要素に対する{\LaTeX}出力は |\texttt| となる。
 % |\texttt| の両端に欧文ゴーストが入るようにする。
+% さらに |\verb| の外側にも欧文ゴーストが入るようにする。
+%
 %    \begin{macrocode}
 \ifbxjs@jp@fix@code
+%    \end{macrocode}
+% |bxghost| パッケージが利用できる場合はその機能を利用する。
+% 使えない場合は自前実装を用いる。
+%    \begin{macrocode}
+  \ifbxjs@bxghost@available
+    \RequirePackage[verb]{bxghost}[2020/01/31]% v0.3.0
+    \let\bxjs@eghostguarded\eghostguarded
+  \else
   \chardef\bxjs@eghost@c=23
   \ifx j\jsEngine \xspcode\bxjs@eghost@c=3
   \else\ifx l\jsEngine \ltjsetparameter{alxspmode={\bxjs@eghost@c,3}}
@@ -11135,24 +11311,29 @@
   \ifx\bxjs@eghost@c\@undefined\else
     \font\bxjs@eghost@f=ec-lmr10 at 1.23456pt
     \def\bxjs@pan@eghost{\bgroup\bxjs@eghost@f\bxjs@eghost@c\egroup}
+    \def\bxjs@eghostguarded#1{%
+      \bxjs@pan@eghost\null#1\null\bxjs@pan@eghost}
+  \fi
+  \fi
+  \ifx\bxjs@eghostguarded\@undefined\else
     \let\orgtexttt\texttt
-    \DeclareRobustCommand\bxjstexttt[1]{%
+    \DeclareRobustCommand\pandocTexttt[1]{%
       \ifmmode \nfss@text{\ttfamily #1}%
       \else
         \ifvmode \leavevmode \fi
-        \bxjs@pan@eghost\null
-        \begingroup \ttfamily #1\endgroup
-        \null\bxjs@pan@eghost
+        \bxjs@eghostguarded{\begingroup\ttfamily#1\endgroup}%
       \fi}
     \g@addto@macro\bxjs@begin@document@hook{%
-      \let\texttt\bxjstexttt}
+      \let\texttt\pandocTexttt}
 %    \end{macrocode}
-% さらに |\verb| の外側にも欧文ゴーストが入るようにする。
-% \Note |bxjaghost| の実装を参考にした。
+% |bxghost| を使わない場合の |\verb| の処理。
+% \Note |bxghost| の実装を参考にした。
 %    \begin{macrocode}
+    \ifbxjs@bxghost@available\else
     \expandafter\def\expandafter\verb\expandafter{%
       \expandafter\bxjs@pan@eghost\verb}
     \g@addto@macro\verb@egroup{\bxjs@pan@eghost}
+    \fi
   \fi
 \fi
 %    \end{macrocode}
@@ -11164,20 +11345,20 @@
 % 対応させることを目的にしている。
 %
 % 旧版のテンプレートでは|ifxetex|と|ifluatex|パッケージを読み込んだ
-% 上で「{\XeTeX}でも{\LuaTeX}でもないものは{pdf\TeX}」という前提の
+% 上で「{\XeTeX}でも{\LuaTeX}でもないものは{\pdfTeX}」という前提の
 % 動作をしていた。
-% よって、{(u)\pTeX}に対応させる際には「{pdf\TeX}用の処理が実行される」
+% よって、{(u)\pTeX}に対応させる際には「{\pdfTeX}用の処理が実行される」
 % ことを前提にすればよかった。
 %
 % ところが、Pandocの2.12版では|iftex|パッケージが導入されて
-% 「{pdf\TeX}の判定を直接 |\ifPDFTeX| で行う」ように改修された。
+% 「{\pdfTeX}の判定を直接 |\ifPDFTeX| で行う」ように改修された。
 % このため、{(u)\pTeX}での実行でどのコードが実行されるかを予期する
 % ことが困難になってしまった。
 %
 % これに対処するため、
 % 「文書ファイルのプレアンブル実行中に限って |\ifPDFTeX| が
 % （実際とは異なり）真になるようにする」
-% という細工を施すことで、従来通り「{pdf\TeX}用の処理が実行される」
+% という細工を施すことで、従来通り「{\pdfTeX}用の処理が実行される」
 % 前提が維持されるようにする。
 %
 %    \begin{macrocode}
@@ -11261,7 +11442,7 @@
 %^^A========================================================
 % \section{補助パッケージ：bxjscompat \ZRX}
 %
-% ムニャムニャムニャ……。
+% 古いやつをどうにかするためのムニャムニャ。
 %
 %^^A----------------
 % \subsection{準備}
@@ -11297,7 +11478,10 @@
 %
 % \begin{macro}{\ImposeOldLuaTeXBehavior}
 % \begin{macro}{\RevokeOldLuaTeXBehavior}
-% ムニャムニャ。
+% |\ImposeOldLuaTeXBehavior| は0.85版以降の{\LuaTeX}を
+% \textbf{一時的に}{\pdfTeX}と互換であるように見せかける。
+% |\RevokeOldLuaTeXBehavior| で元に戻すことができる。
+% \Note エンジンが{\LuaTeX}以外の場合は何もしない。
 %    \begin{macrocode}
 \newif\ifbxac@in@old@behavior
 \let\ImposeOldLuaTeXBehavior\relax
@@ -11312,11 +11496,25 @@
 \ifx x\bxac@engine
 %    \end{macrocode}
 %
-% {\XeTeX}文字クラスのムニャムニャ。
+% \paragraph{文字クラスの設定}
+% {\XeTeX}の文字クラス（|\XeTeXcharclass|）のUnicode規定に基づく
+% 設定は、初期の版ではフォーマットに組み込まれていたが、
+% 2016/02/01以降の{\LaTeX}カーネルでは
+% 「必要に応じて後から設定用のファイルを読み込む」
+% 方式に変更された。
+% ここでは「設定されている状態」を担保する。
+% \Note ちなみに、{\XeTeX}に「文字間トークン挿入」の機能が導入された
+% のは0.997版（2007年頃）からのようだ。
+%
+% ただし |xeCJK| が読込済ならば
+% （そちらが適切に設定しているはずなので）何もしない。
 %    \begin{macrocode}
-\@onlypreamble\bxac@adjust@charclass
+\ifx\XeTeXcharclass\@undefined\else
 \bxac@delayed@if@bxjs{%
   \@ifpackageloaded{xeCJK}{}{%else
+%    \end{macrocode}
+% 設定が未実行の状態ならば、設定用のファイルを読む。
+%    \begin{macrocode}
     \ifx\xe@alloc@intercharclass\@undefined\else
         \ifnum\xe@alloc@intercharclass=\z@
       \PackageInfo\bxac@pkgname
@@ -11329,46 +11527,72 @@
            \@gobble}%
       }%
     \fi\fi
+%    \end{macrocode}
+% フォーマット組込だった時代の設定は不完全なところがあるので
+% 補正する。
+%    \begin{macrocode}
     \ifnum\XeTeXcharclass"3041=\z@
       \PackageInfo\bxac@pkgname
         {Adjusting interchar class for CJK...\@gobble}%
-      \@for\bxac@x:={%
+      \@for\bxac@tmpb:={%
         3041,3043,3045,3047,3049,3063,3083,3085,3087,308E,%
         3095,3096,30A1,30A3,30A5,30A7,30A9,30C3,30E3,30E5,%
         30E7,30EE,30F5,30F6,30FC,31F0,31F1,31F2,31F3,31F4,%
         31F5,31F6,31F7,31F8,31F9,31FA,31FB,31FC,31FD,31FE,%
         31FF%
-      }\do{\XeTeXcharclass"\bxac@x=\@ne}%
+      }\do{\XeTeXcharclass"\bxac@tmpb=\@ne}%
     \fi
   }%
 }
+\fi
 %    \end{macrocode}
+%
+% 漢字および完成形ハングルのカテゴリコードが確実に11に
+% なっているようにする。
+%    \begin{macrocode}
+\chardef\bxac@tmpb=11
+\def\bxac@do#1#2{%
+  \@tempcnta=#1\relax
+  \unless\ifnum\catcode\@tempcnta=\bxac@tmpb
+    \chardef\bxac@tmpa=#2\relax
+    \@whilenum{\@tempcnta<\bxac@tmpa}\do{%
+      \catcode\@tempcnta\bxac@tmpb \advance\@tempcnta\@ne}%
+  \fi}
+\bxac@do{"4E00}{"9FCD}
+%    \end{macrocode}
+%
 % 以上。
 %    \begin{macrocode}
 \fi
 %    \end{macrocode}
 %
 %^^A----------------
-% \subsection{Lua{\TeX}部分}
+% \subsection{{\LuaTeX}部分}
 %    \begin{macrocode}
 \ifx l\bxac@engine
 %    \end{macrocode}
 %
-% ムニャムニャ。
+% 0.82～0.84版の{\LuaTeX}を（0.81版以前と同様に）
+% 「{\pdfTeX}の拡張である」ように見せかける処理。
+% \Note 恐らく必要な場面はなかったと思われるので、外しておく。
 %    \begin{macrocode}
-\unless\ifnum\luatexversion<80 \ifnum\luatexversion<85
-  \chardef\pdftexversion=200
-  \def\pdftexrevision{0}
-  \let\pdftexbanner\luatexbanner
-\fi\fi
+%\unless\ifnum\luatexversion<80 \ifnum\luatexversion<85
+%  \chardef\pdftexversion=200
+%  \def\pdftexrevision{0}
+%  \let\pdftexbanner\luatexbanner
+%\fi\fi
 %    \end{macrocode}
 %
 % \begin{macro}{\ImposeOldLuaTeXBehavior}
 % \begin{macro}{\RevokeOldLuaTeXBehavior}
-% ムニャムニャ。
+% 0.85版以降であるかを検査する。
 %    \begin{macrocode}
 \begingroup\expandafter\expandafter\expandafter\endgroup
 \expandafter\ifx\csname outputmode\endcsname\relax\else
+%    \end{macrocode}
+% 該当する場合、以下の5つの{\pdfTeX}拡張プリミティブを
+% 復帰させることになる。
+%    \begin{macrocode}
 \def\bxac@ob@list{%
   \do{\let}\pdfoutput{\outputmode}%
   \do{\let}\pdfpagewidth{\pagewidth}%
@@ -11396,9 +11620,10 @@
 % \end{macro}
 % \end{macro}
 %
-% 漢字および完成形ハングルのカテゴリコードのムニャムニャ。
+% 漢字および完成形ハングルのカテゴリコードが確実に11に
+% なっているようにする。
 %    \begin{macrocode}
-  \ifnum\luatexversion>64 \directlua{
+  \directlua{
     local function range(cs, ce, cc, ff)
       if ff or not tex.getcatcode(cs) == cc then
         local setcc = tex.setcatcode
@@ -11406,6 +11631,7 @@
       end
     end
     range(0x3400, 0x4DB5, 11, false)
+    \ifnum\luatexversion>64
     range(0x4DB5, 0x4DBF, 11, true)
     range(0x4E00, 0x9FCC, 11, false)
     range(0x9FCD, 0x9FFF, 11, true)
@@ -11418,7 +11644,8 @@
     range(0x2B81E, 0x2B81F, 11, true)
     range(0x2B820, 0x2CEA1, 11, false)
     range(0x2CEA2, 0x2FFFD, 11, true)
-  }\fi
+    \fi
+  }
 %    \end{macrocode}
 %
 % 以上。
@@ -11494,9 +11721,9 @@
 % \subsection{和文カテゴリコードの設定}
 %
 % up{\LaTeX}の場合、和文カテゴリコードの設定を
-% Lua{\TeX}-jaと（ほぼ）等価なものに変更する。
+% {\LuaTeX}-jaと（ほぼ）等価なものに変更する。
 %
-% \Note Lua{\TeX}-jaとの相違点：
+% \Note {\LuaTeX}-jaとの相違点：
 % |A830|、|A960|、|1B000|。
 %    \begin{macrocode}
 \if u\bxjx@engine
@@ -11543,7 +11770,7 @@ FE70,FFF0,%
 % \begin{itemize}
 % \item UnicodeとJIS X~0213に共通して含まれるギリシャ文字・キリル文字。
 % \item Latin-1の上位部分とJIS X~0208に共通して含まれる文字
-%  （Lua{\TeX}-jaの定める“範囲8”）。
+%  （{\LuaTeX}-jaの定める“範囲8”）。
 % \end{itemize}
 %
 % \begin{macro}{\bxjx@grkcyr@list}
@@ -11738,7 +11965,7 @@ FE70,FFF0,%
 %    \end{macrocode}
 % \end{macro}
 %
-% \paragraph{pdf{\TeX}・{\upTeX}の場合}
+% \paragraph{{\pdfTeX}・{\upTeX}の場合}
 %    \begin{macrocode}
 \ifnum0\if p\bxjx@engine1\fi\if u\bxjx@engine1\fi>0
 %    \end{macrocode}
@@ -11823,7 +12050,7 @@ FE70,FFF0,%
   \DeclareTextCommandDefault{#4}{\bxjx@ja@or@not{#1}{#3}{#4}}%
   \DeclareUnicodeCharacter{#2}{\TextOrMath{#4}{#5}}}
 %    \end{macrocode}
-% {pdf\TeX}の場合も処理はほとんど同じ。
+% {\pdfTeX}の場合も処理はほとんど同じ。
 % ただし、和文用の定義として |\UTF{|\Meta{符号値}|}| を使う
 % （|\UTF| は |bxcjkjatype| の命令）。
 % |\|[|bxjx@KC/...|] は使わないが定義済にする必要がある。
@@ -11900,7 +12127,7 @@ FE70,FFF0,%
 %
 % 以上。
 %
-% \paragraph{{\XeTeX}・Lua{\TeX}の場合}
+% \paragraph{{\XeTeX}・{\LuaTeX}の場合}
 %    \begin{macrocode}
 \else\ifnum0\if x\bxjx@engine1\fi\if l\bxjx@engine1\fi>0
 %    \end{macrocode}
@@ -11939,7 +12166,7 @@ FE70,FFF0,%
 % 次に、テキストにおいて「特定CJK曖昧文字」の扱いが |\|[|no|]|greekasCJK|
 % で切り替わるようにする。
 % 
-% Lua{\TeX}の場合は、Lua{\TeX}-jaの |jacharrange| の設定を変更する。
+% {\LuaTeX}の場合は、{\LuaTeX}-jaの |jacharrange| の設定を変更する。
 % \Note “範囲2”がギリシャ・キリル文字、“範囲8”がLatin-1の記号。
 %    \begin{macrocode}
 \if l\bxjx@engine
@@ -12021,6 +12248,24 @@ FE70,FFF0,%
 \bxjsp@do\XeTeXversion{\let\bxjsp@engine=x}
 \bxjsp@do\pdftexversion{\let\bxjsp@engine=p}
 \bxjsp@do\luatexversion{\let\bxjsp@engine=l}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\bxjsp@begin@document@hook}
+% 文書本体開始時フック。
+%    \begin{macrocode}
+\@onlypreamble\bxjsp@begin@document@hook
+\let\bxjsp@begin@document@hook\@empty
+\AtBeginDocument{\bxjsp@begin@document@hook}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifbxjsp@babel@used}
+% 〔スイッチ〕Babelが読み込まれたか。
+%    \begin{macrocode}
+\newif\ifbxjsp@babel@used
+\g@addto@macro\bxjsp@begin@document@hook{%
+  \@ifpackageloaded{babel}{\bxjsp@babel@usedtrue}{}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -12151,25 +12396,41 @@ FE70,FFF0,%
 % 1.9f版で非数式の |\ldots| を全て |…| に戻す動作に変更した。
 %    \begin{macrocode}
 \DeclareRobustCommand{\pandocLdots}{%
-  \relax\ifmmode \expandafter\bxjsp@org@ldots
-  \else \expandafter\bxjsp@ja@ellipsis
-  \fi}
+  \let\bxjsp@do\bxjsp@ja@ellipsis
+  \ifmmode \let\bxjsp@do\bxjsp@org@ldots
+  \else\ifbxjsp@babel@used
+    \expandafter\ifx\csname bxjsp@ld/\languagename\endcsname\relax
+      \let\bxjsp@do\bxjsp@org@ldots \fi
+  \fi\fi \bxjsp@do}
+\@namedef{bxjsp@ld/japanese}{1}
 \def\bxjsp@ja@ellipsis{…}
 \let\bxjsp@org@ldots\ldots
 %    \end{macrocode}
 % \end{macro}
 %
-% |\ldots| の実装を置き換える。
-% \Note B|english| オプション指定時は置き換えない。
+% |\ldots| の実装を |\pandocLdots| に置き換える。
 %    \begin{macrocode}
-\AtBeginDocument{%
+\g@addto@macro\bxjsp@begin@document@hook{%
   \let\bxjsp@org@ldots\ldots
-  \ifbxjsp@english\else \let\ldots\pandocLdots \fi}
+%    \end{macrocode}
+% もしここで |\newcommand\pandocLdots{\ldots}| という定義である場合は
+% 置き換えない。
+%    \begin{macrocode}
+  \long\def\bxjsp@tmpa{\ldots}%
+  \ifx\pandocLdots\bxjsp@tmpa\else
+%    \end{macrocode}
+% |english| オプションが指定されていてかつBabelが読み込まれていない場合も
+% 置き換えない。
+%    \begin{macrocode}
+    \ifnum0\ifbxjsp@english\ifbxjsp@babel@used\else1\fi\fi=0
+      \let\ldots\pandocLdots
+    \fi
+  \fi}
 %    \end{macrocode}
 %
 % |\ldots| の直後の文字が非英字の場合、Pandocは「|\ldots。|」の
 % ように空白を入れずに並べて出力する。
-% 「Pandocは非英字と見なすが{\XeTeX}・{Lua\TeX}は英字と見なす
+% 「Pandocは非英字と見なすが{\XeTeX}・{\LuaTeX}は英字と見なす
 % （または将来その可能性がある）」文字で、特に日本語文書に現れる
 % ものについて、非英字扱いにしておく。
 % \Note Pandocは「Unicode 7.0でGCがLetter」な文字を英字と判定している。

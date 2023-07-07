@@ -1,6 +1,6 @@
 %% File `memhangul-x.sty`
 %%
-%% (C) Copyright 2006-2020 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2021 Kangsoo Kim <modviv2k15 at gmail com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,8 +14,8 @@
 %%    part of oblivoir v2
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2020/02/05}
-\def\fileversion{11.11}
+\def\filedate{2021/09/21}
+\def\fileversion{11.12}
 \ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
 %\typeout{Hangul Typography for (x)oblivoir}
 
@@ -151,7 +151,7 @@
   \RequirePackage{xob-font}
   \RequirePackage{xob-dotemph}
 \else\ifxetex
-  \RequirePackage{xetexko-var}
+  \@ifpackageloaded{xetexko}{\RequirePackage{xob-font}}{\RequirePackage{xetexko-var}}
   \RequirePackage{xob-dotemph}
   \else
     \ifKOTEXCJK

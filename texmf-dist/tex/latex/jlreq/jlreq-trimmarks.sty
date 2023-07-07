@@ -1,7 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{jlreq-trimmarks}[2021/08/12 jlreq-trimmarks]
+\ProvidesPackage{jlreq-trimmarks}[2022/11/28 jlreq-trimmarks]
 \RequirePackage{l3keys2e}
-\RequirePackage{jlreq-helpers}
+\RequirePackage{jlreq-helpers}[2022/11/28]
 
 \ExplSyntaxOn
 % check \tombowdatetrue
@@ -42,84 +42,117 @@
 }
 
 % dvipdfmx=f，dvips=s，dviout = o, lualatex = l
-\keys_define:nn { jlreq-trimmarks } { dvipdfmx .code:n = {\let\jlreq@trimmarks@driver=f}, .value_forbidden:n = true }
-\keys_define:nn { jlreq-trimmarks } { dvips .code:n = {\let\jlreq@trimmarks@driver=s}, .value_forbidden:n = true }
-\keys_define:nn { jlreq-trimmarks } { dviout .code:n = {\let\jlreq@trimmarks@driver=o}, .value_forbidden:n = true }
+\keys_define:nn { jlreq-trimmarks } {
+  dvipdfmx .code:n = {\let\jlreq@trimmarks@driver=f}, .value_forbidden:n = true,
+  dvips .code:n = {\let\jlreq@trimmarks@driver=s}, .value_forbidden:n = true,
+  dviout .code:n = {\let\jlreq@trimmarks@driver=o}, .value_forbidden:n = true
+}
 \let\jlreq@trimmarks@engine=\jlreq@engine
-\keys_define:nn { jlreq-trimmarks } { lualatex .code:n = {\let\jlreq@trimmarks@engine=l}, .value_forbidden:n = true }
-\keys_define:nn { jlreq-trimmarks } { uplatex .code:n = {\let\jlreq@trimmarks@engine=u}, .value_forbidden:n = true }
-\keys_define:nn { jlreq-trimmarks } { platex .code:n = {\let\jlreq@trimmarks@engine=p}, .value_forbidden:n = true }
-
-\def\jlreq@trimmarks@switchpapersize{}
-\def\jlreq@trimmarks@addpapersize#1{%
-  \@ifnextchar[{\jlreq@trimmarks@addpapersize@{#1}}{\jlreq@trimmarks@addpapersize@@{#1}}
+\keys_define:nn { jlreq-trimmarks } {
+  lualatex .code:n = {\let\jlreq@trimmarks@engine=l}, .value_forbidden:n = true,
+  uplatex .code:n = {\let\jlreq@trimmarks@engine=u}, .value_forbidden:n = true,
+  platex .code:n = {\let\jlreq@trimmarks@engine=p}, .value_forbidden:n = true
 }
-\def\jlreq@trimmarks@addpapersize@#1[#2]{%
-  \edef\@tempa{\unexpanded{\jlreq@trimmarks@addpapersize@@{#1}}\exp_not:v {jlreq@helper@papersizelist@#2}}%
-  \@tempa
+
+\tl_new:N \g__jlreq_trimmarks_papersizelist_tl
+\cs_set:Nn \__jlreq_trimmarks_addpapersize:nn {
+  \exp_args:Nnv \__jlreq_trimmarks_addpapersize_aux:nn {#1}{jlreq@helper@papersizelist@#2}
 }
-\newcommand*{\jlreq@trimmarks@addpapersize@@}[3]{%
-  \clist_map_variable:nNn {#1} \@tempa {
-    \tl_put_right:Nx \jlreq@trimmarks@switchpapersize {{\exp_not:o {\@tempa}}{\unexpanded{\def\jlreq@resulta{#2}\def\jlreq@resultb{#3}}}}%
-  }%
+\cs_set:Nn \__jlreq_trimmarks_addpapersize_aux:nn {
+  \__jlreq_trimmarks_addpapersize_auxi:nnn {#1}#2
 }
-\__jlreq_trimmarks_afterpkg_addtodeletecs:N \jlreq@trimmarks@switchpapersize
-\__jlreq_trimmarks_afterpkg_addtodeletecs:N \jlreq@trimmarks@addpapersize
-\__jlreq_trimmarks_afterpkg_addtodeletecs:N \jlreq@trimmarks@addpapersize@
-\__jlreq_trimmarks_afterpkg_addtodeletecs:N \jlreq@trimmarks@addpapersize@@
+\cs_set:Nn \__jlreq_trimmarks_addpapersize_auxi:nnn {
+  \clist_map_inline:nn {#1} {
+    \tl_gput_right:Nn \g__jlreq_trimmarks_papersizelist_tl { { ##1 } { \def\jlreq@resulta{#2} \def\jlreq@resultb{#3} } }
+  }
+}
+\tl_set:Nn \g__jlreq_trimmarks_papersizechangeddate_tl {2021-11-05}
+\cs_set:Nn \__jlreq_trimmarks_addpapersize_withjisBwarning:nnn {
+  \__jlreq_trimmarks_addpapersize_withwarning:nnn {#1}{#2}{
+    The~option~`##1'~means~the~papersize~in~the~ISO~B-series,~not~in~the~JIS~B-series.~This~behavior~was~changed~from~jlreq-trimmarks~version~\g__jlreq_trimmarks_papersizechangeddate_tl.~Use~`trimmarks_paper=#3'~for~the~JIS-B-series.~If~you~want~to~specify~the~ISO~B-series~and~if~you~think~this~warning~is~annoying,~use~`trimmarks_paper=#2'
+  }
+}
+\cs_set:Nn \__jlreq_trimmarks_addpapersize_withwarning:nnn {
+  \exp_args:Nnv \__jlreq_trimmarks_addpapersize_withwarning_aux:nnn {#1}{jlreq@helper@papersizelist@#2}{#3}
+}
+\cs_set:Nn \__jlreq_trimmarks_addpapersize_withwarning_aux:nnn {
+  \__jlreq_trimmarks_addpapersize_withwarning_auxi:nnnn {#1}#2{#3}
+}
+\cs_set:Nn \__jlreq_trimmarks_addpapersize_withwarning_auxi:nnnn {
+  \cs_set:Nn \l__jlreq_tmpa:n {
+    \PackageWarningNoLine{jlreq-trimmarks}{#4}
+  }
+  \clist_map_inline:nn {#1} {
+    \tl_gput_right:Nx \g__jlreq_trimmarks_papersizelist_tl { { ##1 } {
+      \exp_not:o { \l__jlreq_tmpa:n {##1} }
+      \exp_not:n { \def\jlreq@resulta{#2} \def\jlreq@resultb{#3} }
+    } }
+  }
+}
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \g__jlreq_trimmarks_papersizelist_tl
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize:nn
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize_aux:nn
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize_auxi:nnn
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize_withjisBwarning:nnn
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize_withwarning:nnn
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize_withwarning_aux:nnn
+\__jlreq_trimmarks_afterpkg_addtodeletecs:N \__jlreq_trimmarks_addpapersize_withwarning_auxi:nnnn
 
-\jlreq@trimmarks@addpapersize{a0,A0}[a0]
-\jlreq@trimmarks@addpapersize{a1,A1}[a1]
-\jlreq@trimmarks@addpapersize{a2,A2}[a2]
-\jlreq@trimmarks@addpapersize{a3,A3}[a3]
-\jlreq@trimmarks@addpapersize{a4,A4}[a4]
-\jlreq@trimmarks@addpapersize{a5,A5}[a5]
-\jlreq@trimmarks@addpapersize{a6,A6}[a6]
-\jlreq@trimmarks@addpapersize{a7,A7}[a7]
-\jlreq@trimmarks@addpapersize{a8,A8}[a8]
-\jlreq@trimmarks@addpapersize{a9,A9}[a9]
-\jlreq@trimmarks@addpapersize{a10,A10}[a10]
+\__jlreq_trimmarks_addpapersize:nn{a0,A0,a0paper}{a0paper}
+\__jlreq_trimmarks_addpapersize:nn{a1,A1,a1paper}{a1paper}
+\__jlreq_trimmarks_addpapersize:nn{a2,A2,a2paper}{a2paper}
+\__jlreq_trimmarks_addpapersize:nn{a3,A3,a3paper}{a3paper}
+\__jlreq_trimmarks_addpapersize:nn{a4,A4,a4paper}{a4paper}
+\__jlreq_trimmarks_addpapersize:nn{a5,A5,a5paper}{a5paper}
+\__jlreq_trimmarks_addpapersize:nn{a6,A6,a6paper}{a6paper}
+\__jlreq_trimmarks_addpapersize:nn{a7,A7,a7paper}{a7paper}
+\__jlreq_trimmarks_addpapersize:nn{a8,A8,a8paper}{a8paper}
+\__jlreq_trimmarks_addpapersize:nn{a9,A9,a9paper}{a9paper}
+\__jlreq_trimmarks_addpapersize:nn{a10,A10,a10paper}{a10paper}
 
-\jlreq@trimmarks@addpapersize{b0,B0}[b0]
-\jlreq@trimmarks@addpapersize{b1,B1}[b1]
-\jlreq@trimmarks@addpapersize{b2,B2}[b2]
-\jlreq@trimmarks@addpapersize{b3,B3}[b3]
-\jlreq@trimmarks@addpapersize{b4,B4}[b4]
-\jlreq@trimmarks@addpapersize{b5,B5}[b5]
-\jlreq@trimmarks@addpapersize{b6,B6}[b6]
-\jlreq@trimmarks@addpapersize{b7,B7}[b7]
-\jlreq@trimmarks@addpapersize{b8,B8}[b8]
-\jlreq@trimmarks@addpapersize{b9,B9}[b9]
-\jlreq@trimmarks@addpapersize{b10,B10}[b10]
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b0,B0}{b0paper}{b0j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b1,B1}{b1paper}{b1j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b2,B2}{b2paper}{b2j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b3,B3}{b3paper}{b3j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b4,B4}{b4paper}{b4j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b5,B5}{b5paper}{b5j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b6,B6}{b6paper}{b6j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b7,B7}{b7paper}{b7j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b8,B8}{b8paper}{b8j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b9,B9}{b9paper}{b9j}
+\__jlreq_trimmarks_addpapersize_withjisBwarning:nnn{b10,B10}{b10paper}{b10j}
 
-\jlreq@trimmarks@addpapersize{c2,C2}[c2]
-\jlreq@trimmarks@addpapersize{c3,C3}[c3]
-\jlreq@trimmarks@addpapersize{c4,C4}[c4]
-\jlreq@trimmarks@addpapersize{c5,C5}[c5]
-\jlreq@trimmarks@addpapersize{c6,C6}[c6]
-\jlreq@trimmarks@addpapersize{c7,C7}[c7]
-\jlreq@trimmarks@addpapersize{c8,C8}[c8]
+\__jlreq_trimmarks_addpapersize:nn{c2,C2,c2paper}{c2paper}
+\__jlreq_trimmarks_addpapersize:nn{c3,C3,c3paper}{c3paper}
+\__jlreq_trimmarks_addpapersize:nn{c4,C4,c4paper}{c4paper}
+\__jlreq_trimmarks_addpapersize:nn{c5,C5,c5paper}{c5paper}
+\__jlreq_trimmarks_addpapersize:nn{c6,C6,c6paper}{c6paper}
+\__jlreq_trimmarks_addpapersize:nn{c7,C7,c7paper}{c7paper}
+\__jlreq_trimmarks_addpapersize:nn{c8,C8,c8paper}{c8paper}
 
-\jlreq@trimmarks@addpapersize{a4var}[a4var]
-\jlreq@trimmarks@addpapersize{b5var}[b5var]
+\__jlreq_trimmarks_addpapersize:nn{a4var}{a4var}
+\__jlreq_trimmarks_addpapersize:nn{b5var}{b5var}
 
-\jlreq@trimmarks@addpapersize{letter}[letter]
-\jlreq@trimmarks@addpapersize{legal}[legal]
-\jlreq@trimmarks@addpapersize{executive}[executive]
-\jlreq@trimmarks@addpapersize{hagaki}[hagaki]
+\__jlreq_trimmarks_addpapersize:nn{letter,letterpaper}{letterpaper}
+\__jlreq_trimmarks_addpapersize:nn{legal,legalpaper}{legalpaper}
+\__jlreq_trimmarks_addpapersize:nn{executive,executivepaper}{executivepaper}
+\__jlreq_trimmarks_addpapersize:nn{ansiapaper}{ansiapaper}
+\__jlreq_trimmarks_addpapersize:nn{ansibpaper}{ansibpaper}
+\__jlreq_trimmarks_addpapersize:nn{ansicpaper}{ansicpaper}
+\__jlreq_trimmarks_addpapersize:nn{ansidpaper}{ansidpaper}
+\__jlreq_trimmarks_addpapersize:nn{ansiepaper}{ansiepaper}
+\__jlreq_trimmarks_addpapersize:nn{hagaki}{hagaki}
 
 % width -> \jlreq@resulta, height -> \jlreq@resultb
-\edef\jlreq@trimmarks@analyzepapersize#1{
-  \noexpand\jlreq@switch{#1}{
-    \exp_not:o {\jlreq@trimmarks@switchpapersize}%
-    {%
-      \noexpand\jlreq@helper@dividebycomma{#1}%
-      \unexpanded{\ifjlreq@result\else}%
-        \unexpanded{\def\jlreq@resulta}{#1}%
-        \unexpanded{\def\jlreq@resultb}{#1}%
-      \noexpand\fi
-    }%
-  }\noexpand\relax
+\def\jlreq@trimmarks@analyzepapersize#1{
+  \str_case:nVF {#1} \g__jlreq_trimmarks_papersizelist_tl
+  {
+    \jlreq@helper@dividebycomma{#1}%
+    \ifjlreq@result\else
+      \def\jlreq@resulta{#1}%
+      \def\jlreq@resultb{#1}%
+    \fi
+  }
 }
 \__jlreq_trimmarks_afterpkg_addtodeletecs:N \jlreq@trimmarks@analyzepapersize
 
@@ -151,9 +184,7 @@
         }[\PackageError{jlreq-trimmarks}{Unknown~value~`##1'~in~the~option~`show'}{\@ehc}]
       }
     }
-  }
-}
-\keys_define:nn { jlreq-trimmarks } {
+  },
   bleed_margin .code:n = {
     \begingroup
       \def\jlreq@do{}%
@@ -304,6 +335,33 @@
   \jlreq@do
 }
 
+\tl_new:N \g__jlreq_trimmarks_pattern_center_top_tl
+\tl_new:N \g__jlreq_trimmarks_pattern_center_bottom_tl
+\tl_new:N \g__jlreq_trimmarks_pattern_center_left_tl
+\tl_new:N \g__jlreq_trimmarks_pattern_center_right_tl
+\cs_set:Nn \__jlreq_check_rotatebox:n {
+  \@ifundefined{rotatebox}{
+    \PackageError{jlreq-trimmarks}{`\string\rotatebox'~is~needed~to~use~#1,~please~load~the~package~`graphicx'~or~its~variant}{\@ehc}
+  }{}
+}
+\keys_define:nn { jlreq-trimmarks-pattern } {
+  top-center .tl_gset:N = \g__jlreq_trimmarks_pattern_center_top_tl,
+  center-top .tl_gset:N = \g__jlreq_trimmarks_pattern_center_top_tl,
+  bottom-center .tl_gset:N = \g__jlreq_trimmarks_pattern_center_bottom_tl,
+  center-bottom .tl_gset:N = \g__jlreq_trimmarks_pattern_center_bottom_tl,
+  center-left .tl_gset:N = \g__jlreq_trimmarks_pattern_center_left_tl,
+  left-center .tl_gset:N = \g__jlreq_trimmarks_pattern_center_left_tl,
+  center-right .tl_gset:N = \g__jlreq_trimmarks_pattern_center_right_tl,
+  right-center .tl_gset:N = \g__jlreq_trimmarks_pattern_center_right_tl,
+  centers .code:n = {
+    \__jlreq_check_rotatebox:n { trimmarks_pattern/centers }
+    \tl_gset:Nn \g__jlreq_trimmarks_pattern_center_top_tl {#1}
+    \tl_gset:Nn \g__jlreq_trimmarks_pattern_center_left_tl { \rotatebox[origin=cb]{90}{#1} }
+    \tl_gset:Nn \g__jlreq_trimmarks_pattern_center_bottom_tl { \rotatebox[origin=cb]{180}{#1} }
+    \tl_gset:Nn \g__jlreq_trimmarks_pattern_center_right_tl { \rotatebox[origin=cb]{270}{#1} }
+  },
+}
+
 \keys_define:nn { jlreqtrimmarkssetup } {
   banner .code:n = {
     \clist_map_variable:nNn { odd,even } \@tempa {
@@ -404,11 +462,15 @@
         }%
       }%
     }%
-  }%
+  },
+  trimmarks_pattern .code:n = {
+    \keys_set:nn { jlreq-trimmarks-pattern } {#1}
+  }
 }
 \NewDocumentCommand { \jlreqtrimmarkssetup } { +m } {
   \keys_set:nn { jlreqtrimmarkssetup } {#1}
 }
+\def\jlreqtrimmarkswidth{\@tombowwidth}
 \@onlypreamble\jlreqtrimmarkssetup
 \@bannertoken{%
   \jobname\space(\number\year-\two@digits\month-\two@digits\day
@@ -417,7 +479,27 @@
 \jlreqtrimmarkssetup{
   banner={\the\@bannertoken},
   banner_font={\@bannerfont},
-  color={}
+  color={},
+  trimmarks_pattern = {
+    top-center = {
+      \vrule width10mm~height\@tombowwidth depth\z@
+      \vrule height10mm~width\@tombowwidth depth\z@
+      \vrule width10mm~height\@tombowwidth depth\z@
+    },
+    bottom-center = {
+      \vrule width10mm~depth\@tombowwidth height\z@
+      \vrule depth10mm~width\@tombowwidth height\z@
+      \vrule width10mm~depth\@tombowwidth height\z@
+    },
+    center-right = {
+      \vrule height 10mm depth10mm width\@tombowwidth
+      \vrule height.5\@tombowwidth depth.5\@tombowwidth width10mm
+    },
+    center-left = {
+      \vrule width10mm height.5\@tombowwidth depth.5\@tombowwidth
+      \vrule height10mm depth10mm width\@tombowwidth
+    }
+  }
 }
 
 \ifx\jlreq@trimmarks@engine\@undefined
@@ -488,9 +570,10 @@
 \def\jlreq@trimmarks@bleed{3mm}
 % left=gutter?
 \def\ifjlreq@trimmarks@leftisgutter{%
-  \bool_if:nTF {
-    ( \legacy_if_p:n { jlreq@trimmarks@tate } && ( ! ( \int_if_odd_p:n { \c@page } || ! \legacy_if_p:n { @twoside } ) ) ) ||
-    ( ! \legacy_if_p:n { jlreq@trimmarks@tate } && ( \int_if_odd_p:n { \c@page } || ! \legacy_if_p:n { @twoside } ) )
+  \ifjlreq@trimmarks@tate {
+    \bool_if:nTF {  ! ( \int_if_odd_p:n { \c@page } || ! \legacy_if_p:n { @twoside } ) )  }
+  }{
+    \bool_if:nTF { ( \int_if_odd_p:n { \c@page } || ! \legacy_if_p:n { @twoside } ) }
   }
 }
 \def\jlreq@trimmarks@bleed@left{\ifjlreq@trimmarks@leftisgutter{\jlreq@trimmarks@bleed@gutter}{\expandafter\csname jlreq@trimmarks@bleed@fore-edge\endcsname}}
@@ -525,7 +608,14 @@
         \hfill
         \setbox\jlreq@tempboxa=\hbox{% \@TC
           \yoko
-          \vrule width10mm height\@tombowwidth depth\z@
+          \setbox\jlreq@tempboxb=\hbox{
+            \g__jlreq_trimmarks_pattern_center_top_tl
+          }%
+          \jlreq@tempdima=\wd\jlreq@tempboxb\relax
+          \ht\jlreq@tempboxb=0pt \dp\jlreq@tempboxb=0pt \wd\jlreq@tempboxb=0pt
+          \kern -0.5\jlreq@tempdima\relax
+          \box\jlreq@tempboxb
+          \kern 0.5\jlreq@tempdima\relax
           \jlreq@trimmarks@outputbanner{before@top@center}{%
             \setbox\jlreq@tempboxa=\hbox to 0pt{\hss\jlreq@trimmarks@bannerfont##1\hskip 5mm}%
             \ht\jlreq@tempboxa=0pt \dp\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
@@ -538,13 +628,11 @@
             \ht\jlreq@tempboxa=0pt \dp\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
             \kern-\jlreq@tempdimb\raise-\jlreq@tempdima\box\jlreq@tempboxa\kern\jlreq@tempdimb
           }%
-          \vrule height10mm width\@tombowwidth depth\z@
           \jlreq@trimmarks@outputbanner{after@top@center}{%
             \setbox\jlreq@tempboxa=\hbox to 0pt{\hskip 5mm\jlreq@trimmarks@bannerfont##1\hss}%
             \ht\jlreq@tempboxa=0pt \dp\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
             \raise 4pt\box\jlreq@tempboxa
           }%
-          \vrule width10mm height\@tombowwidth depth\z@
         }%
         \dp\jlreq@tempboxa=0pt
         \box\jlreq@tempboxa
@@ -630,7 +718,7 @@
       \hbox to\@@paperwidth{%
         \hbox to\z@{% \@CL
           \yoko\hss
-          \vrule width10mm height.5\@tombowwidth depth.5\@tombowwidth
+          \g__jlreq_trimmarks_pattern_center_left_tl
           \jlreq@trimmarks@outputbanner{before@center@left}{%
             \setbox\jlreq@tempboxa=\hbox to 0pt{\tate\hss\adjustbaseline\jlreq@trimmarks@bannerfont##1\hskip 5mm}%
             \ifx l\jlreq@trimmarks@engine
@@ -651,7 +739,6 @@
             \dp\jlreq@tempboxa=0pt \ht\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
             \kern-\jlreq@tempdima\box\jlreq@tempboxa\kern\jlreq@tempdima
           }%
-          \vrule height10mm depth10mm width\@tombowwidth
           \jlreq@trimmarks@outputbanner{in@center@left}{%
             \setbox\jlreq@tempboxa=\hbox{\tate\adjustbaseline\jlreq@trimmarks@bannerfont##1}%
             \ifx l\jlreq@trimmarks@engine
@@ -680,7 +767,6 @@
             \dp\jlreq@tempboxa=0pt \ht\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
             \kern-\jlreq@tempdima\raise\jlreq@tempdimb\box\jlreq@tempboxa\kern\jlreq@tempdima
           }%
-          \vrule height10mm depth10mm width\@tombowwidth
           \jlreq@trimmarks@outputbanner{before@center@right}{%
             \setbox\jlreq@tempboxa=\hbox to 0pt{\tate\hss\adjustbaseline\jlreq@trimmarks@bannerfont##1\hskip 5mm}%
             \jlreq@tempdima=\dimexpr 4pt \ifx l\jlreq@trimmarks@engine + \dp\jlreq@tempboxa\fi\relax
@@ -693,7 +779,8 @@
             \dp\jlreq@tempboxa=0pt \ht\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
             \kern\jlreq@tempdima\box\jlreq@tempboxa\kern-\jlreq@tempdima
           }%
-          \vrule height.5\@tombowwidth depth.5\@tombowwidth width10mm\hss
+          \g__jlreq_trimmarks_pattern_center_right_tl
+          \hss
         }%
       }%
       \vfill
@@ -777,9 +864,17 @@
         \ht\jlreq@tempboxa=0pt
         \box\jlreq@tempboxa
         \hfill
+        \jlreq@tempafalse
         \setbox\jlreq@tempboxa=\hbox{% \@BC
           \yoko
-          \vrule width10mm depth\@tombowwidth height\z@
+          \setbox\jlreq@tempboxb=\hbox{
+            \g__jlreq_trimmarks_pattern_center_bottom_tl
+          }%
+          \jlreq@tempdimb=\wd\jlreq@tempboxb
+          \ht\jlreq@tempboxb=0pt \dp\jlreq@tempboxb=0pt \wd\jlreq@tempboxb=0pt
+          \kern-0.5\jlreq@tempdimb
+          \box\jlreq@tempboxb
+          \kern 0.5\jlreq@tempdimb
           \jlreq@trimmarks@outputbanner{before@bottom@center}{%
             \setbox\jlreq@tempboxa=\hbox to 0pt{\hss\jlreq@trimmarks@bannerfont##1\hskip 5mm}%
             \jlreq@tempdima=\dimexpr\ht\jlreq@tempboxa + 4pt\relax
@@ -793,14 +888,12 @@
             \ht\jlreq@tempboxa=0pt \dp\jlreq@tempboxa=0pt \wd\jlreq@tempboxa=0pt
             \kern-\jlreq@tempdimb\raise\jlreq@tempdima\box\jlreq@tempboxa\kern\jlreq@tempdimb
           }%
-          \vrule depth10mm width\@tombowwidth height\z@
           \jlreq@trimmarks@outputbanner{before@bottom@center}{%
             \setbox\jlreq@tempboxa=\hbox to 0pt{\hskip 5mm\jlreq@trimmarks@bannerfont##1\hss}%
             \jlreq@tempdima=\dimexpr\ht\jlreq@tempboxa + 4pt\relax
             \ht\jlreq@tempboxa=0pt \dp\jlreq@tempboxa=0pt
             \raise-\jlreq@tempdima\box\jlreq@tempboxa
           }%
-          \vrule width10mm depth\@tombowwidth height\z@
         }%
         \ht\jlreq@tempboxa=0pt
         \box\jlreq@tempboxa

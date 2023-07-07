@@ -126,7 +126,7 @@ pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内�
 ### 基本版面
 クラスオプションです．
 
-* `paper=[<紙サイズ名>/{<寸法>,<寸法>}]`：紙サイズです．紙サイズ名はa0からa10，b0からb10，c2からc8を指定できます．B列はJIS B列です．また，`{<横>,<縦>}`と直接寸法を指定することもできます．
+* `paper=[<紙サイズ名>/{<寸法>,<寸法>}]`：紙サイズです．紙サイズ名は`a0paper`から`a10paper`，`b0paper`から`b10paper`，`c2paper`から`c8paper`を指定できます．B列はISO B列です．JIS B列を指定する場合は，`b0j`から`b10j`の対応するものを指定してください．また，`letterpaper`，`legalpaper`，`executivepaper`が指定できます．さらに，`{<横>,<縦>}`と直接寸法を指定することもできます．
 * `fontsize=<寸法;Q,H>`：欧文フォントサイズ．デフォルトは10pt．
 * `jafontsize=<寸法;Q,H>`：和文フォントサイズ．
 * `jafontscale=<実数値>`：欧文フォントと和文フォントの比（和文 / 欧文）．`fontsize`と`jafontsize`が両方指定されている場合は無視される．デフォルトは1．
@@ -164,6 +164,7 @@ pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内�
 * `sidenote_keyword_font=<フォント設定コード>`：`sidenote_symbol=symbol`の時に，注のついている単語のフォント指定．デフォルトは無し（強調しない）
 * `endnote_second_indent=<寸法>`: 後柱の二行目以降の字下げ量を指定します．一行目からの相対字下げ量です．
 * `endnote_position=[headings/paragraph/{_<見出し名1>,_<見出し名2>,...}]`：後注の出力場所を指定します．`headings`は各見出しの直前（デフォルト），`paragraph`は改段落の際に出力します．また，`endnote_position={_chapter,_section}`とすると，`\chapter`と`\section`の直前に出力します．`<_見出し名>`を指定するためには，対象の見出しが本クラスファイルの機能を使って作られていなければいけません．
+* `warichu_opening=<コード>`, `warichu_closing=<コード>`：それぞれ，割注の前と後ろに挿入されます．デフォルトは`（`と`）`です．
 
 ### キャプション
 図表のキャプションを`\jlreqsetup`で変更できます．全ての設定で，各環境ごとの設定をすることができます．例えば`caption_font=\normalsize,table=\Large`とすると，table環境内では`\Large`が適用され，そのほかの環境内では`\normalsize`が適用されます．他の設定も同様です．
@@ -184,14 +185,6 @@ pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内�
 `\jlreqsetup`で指定します．
 * `itemization_beforeafter_space=<寸法>`：箇条書きの前後の空きを指定します．`itemization_beforeafter_space={i=<寸法>}`とするとトップレベルのみに設定を行います．`itemization_beforeafter_space={0pt,i=10pt,ii=5pt}`とすれば，レベル1の箇条書きに10ptを，レベル2のそれに5ptを，それ以外には0ptを設定します．レベルは上記のように小文字ローマ数字で指定します．
 * `itemization_itemsep=<寸法>`：項目同士の空きを指定します．
-
-### 定理環境
-`\jlreqsetup`で指定します．
-* `theorem_beforeafter_space=<寸法>`：定理環境の前後の空きを指定します．
-* `theorem_label_font=<フォント設定コード>`：定理環境のラベル部分のフォントを設定します．
-* `theorem_font=<フォント設定コード>`：定理環境本体のフォントを設定します．
-
-`amsthm`パッケージが読み込まれると，新しい定理スタイル`jlreq`が定義され，現在のスタイルが`jlreq`へと変更されます．このとき，上記設定はこの`jlreq`スタイルへの設定として機能します．
 
 ### 前付きなど
 `\frontmatter` / `\mainmatter` / `\backmatter` / `\appendix`での処理を`\jlreqsetup`で指定できます．
@@ -380,6 +373,38 @@ JFMの名前は次の通りです．`[]`で囲まれている文字は設定に�
 ## その他
 * クラスオプション`jlreq_notes`が渡されると，日本語組版処理の記述と矛盾する設定が行われた場合に通知がされます．
 
+## jlreq-complements
+`jlreq-complements`パッケージはLaTeXのドキュメントクラスで標準的に提供される環境などをカスタマイズ可能なものに変更するパッケージです．以下のように使います．次のオプションを受け付けます．
+* `platex`, `uplatex`, `lulalatex`：エンジンの指定です．
+* `setupname=<名前>`：カスタマイズするための命令名を指定します．デフォルトでは`jlreqcomplementssetup`で，`jlreqcomplementssetup{<設定項目>}`とプリアンブルに書くことで設定できます．
+
+`jlreq`内では`\usepackage[<jlreq内で認識しているエンジン>,setupname=jlreqsetup]{jlreq-complements}`相当で読み込みがされていますので，今までの`\jlreqsetup`で環境のカスタマイズをすることができます．なお，このように既存の名前を指定してうまく行くためにはもともとの命令と整合的である必要があります．通常は避けた方がよいでしょう．
+
+### `thebibliography`環境
+* `thebibliography_heading=<コード>`：`thebibliography`環境の見出しを出力する命令を指定します．
+* `thebibliography_after_label_space=<寸法>`：`thebibliography`環境における各項目のラベル以降の空きを指定します．
+* `thebibliography_indent=<寸法>`：`thebibliography`環境全体の字下げ量を指定します．
+* `thebibliography_mark=<コード>`：`thebibliography`環境の見出しを柱に登録するためのコードを指定します．
+* `thebibliography_precode=<コード>`，`thebibliography_postcode=<コード>`：それぞれ，`thebibliography`環境の前後に実行されるコードを指定します．
+
+### `theindex`環境
+* `theindex_heading=<コード>`：`theindex`環境の見出しを出力する命令を指定します．
+* `theindex_mark=<コード>`：`theindex`環境の見出しを柱に登録するためのコードを指定します．
+* `theindex_twocolumn=[true/false]`：`theindex`環境を二段組みで出力するかを指定します．
+* `theindex_column_gap=<寸法>`：`theindex_twocolumn=true`の時の`theindex`環境内での段間を指定します．
+* `theindex_column_rule_width=<寸法>`：`theindex_twocolumn=true`の時の`theindex`環境内での`\columnseprule`の値を指定します．
+* `theindex_pagestyle=<ページスタイル名>`：`theindex`環境でのページスタイルを指定します．
+* `theindex_postcode=<コード>`，`theindex_precode=<コード>`：それぞれ，`theindex`環境の前後に実行されるコードを指定します．
+
+### 定理環境
+* `theorem_beforeafter_space=<寸法>`：定理環境の前後の空きを指定します．
+* `theorem_label_font=<フォント設定コード>`：定理環境のラベル部分のフォントを設定します．
+* `theorem_font=<フォント設定コード>`：定理環境本体のフォントを設定します．
+* `theorem_indent=<寸法>`：定理環境本体の字下げ量を指定します．
+* `proof_label_font=<フォント設定コード>`：`amsthm`パッケージが読み込まれたときのみ有効な設定です．
+
+`amsthm`パッケージが読み込まれると，新しい定理スタイル`jlreq`が定義され，現在のスタイルが`jlreq`へと変更されます．このとき，上記設定はこの`jlreq`スタイルへの設定として機能します．
+
 ## ライセンス
 このパッケージは二条項BSDライセンスの元で配布されています．詳しくは[LICENSE](LICENSE)をご覧ください．
 
@@ -521,7 +546,30 @@ JFMの名前は次の通りです．`[]`で囲まれている文字は設定に�
 * 2021-08-12
     - `etoolbox`への直接の依存をなくした．
     - バグ修正
-
+* 2021-10-09
+    - バグ修正
+* 2021-11-05
+    - `paper=b*`をISO系列とした．
+    - LaTeXのフック関連コードの多くを削除．（まだ安定していなそうなので．）
+    - `\RequirePackage{ifthen}`をやめた．
+    - upLaTeXにおける`\kcatcode`の再設定をやめた．
+* 2022-04-05
+    - `\jlreqsetup`に`warichu_opening`と`warichu_closing`を追加．
+    - 別行見出し周りのペナルティを少し調整．
+    - `\DeclareFontShape`後の`\selectfont`でエラーが出るバグ修正．
+    - `use_reverse_pagination`がうまく動いていなかったのを修正．
+    - 二番目の柱を使うと不自然に消えることがあるバグの修正．ついでに`\DeclarePageStyle`を書き直した．
+    - `\@makefntext`を調整．
+    - その他バグ修正．
+* 2022-04-11
+    - バグ修正．
+* 2022-07-13
+    - 右側の柱が正しく配置されないバグ修正．
+* 2022-11-28
+    - `\SetBlockHeadingSpaces`時に柱への登録が行われなかったバグを修正．
+    - ISO C4の用紙サイズが間違っていたのを修正．
+    - `jlreq-complements`を追加．
+    - その他バグ修正やその他のパッケージとの調整など．
 
 --------------
 Noriyuki Abe

@@ -137,6 +137,9 @@
 % \changes{v1.8f}{2020/09/30}{add a fourth argument for better
 %    hyperref compability
 %    (sync with ltsect.dtx 2020/07/27 v1.1e)}
+% \changes{v1.8f-ltj-21}{2021-12-22}{余計なコメントの削除．}
+% \changes{v1.8f-ltj-22}{2022-04-11}{kern featureが有効になっていたのを修正．}
+% \changes{v1.8f-ltj-23}{2022-09-12}{|\stockwidth|がカーネルで定義される可能性に対応．}
 % \fi
 %
 % \iffalse
@@ -166,7 +169,7 @@
 %<11pt&bk>\ProvidesFile{ltjtbk11.clo}
 %<12pt&bk>\ProvidesFile{ltjtbk12.clo}
 %</tate>
-  [2020-09-30 v1.8f-ltj-20
+  [2022-09-12 v1.8f-ltj-23
 %<article|report|book> Standard LuaLaTeX-ja class]
 %<10pt|11pt|12pt>  Standard LuaLaTeX-ja file (size option)]
 %<*driver>
@@ -644,6 +647,8 @@
 %
 % [2020-05-30 LTJ] 「フォントメトリックの変更」の節の内容の処理をここで行います。
 %
+% [2022-04-11 LTJ] kern featureを無効にするのを忘れていました．
+%
 %    \begin{macrocode}
 \ifptexmin
 \directlua{luatexbase.add_to_callback('luatexja.load_jfm',
@@ -651,8 +656,8 @@
   'ltj.jclasses_load_jfm', 1)}
 {\jfont\g=\ltj@stdmcfont:jfm=min } % loading jfm-min.lua
 \expandafter\let\csname JY3/mc/m/n/10\endcsname\relax
-\DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [0.962216] \ltj@stdmcfont:jfm=min}{}
-\DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [0.962216] \ltj@stdgtfont:jfm=min;jfmvar=goth}{}
+\DeclareFontShape{JY3}{mc}{m}{n}{<-> s * [0.962216] \ltj@stdmcfont:-kern;jfm=min}{}
+\DeclareFontShape{JY3}{gt}{m}{n}{<-> s * [0.962216] \ltj@stdgtfont:-kern;jfm=min;jfmvar=goth}{}
 \ltjglobalsetparameter{differentjfm=both}
 \directlua{luatexbase.remove_from_callback('luatexja.load_jfm', 'ltj.jclasses_load_jfm')}
 \fi
@@ -973,10 +978,13 @@
 % [2017-01-17 LTJ] [lt]jsclassesに合わせ、トンボオプションが指定されているとき「だけ」|\stockwidth|、
 % |\stockheight|を定義するようにしました。aminophenさん、ありがとうございます。
 %
+% [2022-09-12 LTJ] \LaTeXe カーネルに|\stockwidth|、|\stockheight|が追加されるようですので、
+% クラスファイル側では未定義のときのみこれらの長さ変数を定義します。h20y6mさん、ありがとうございます。
+%
 %    \begin{macrocode}
 \iftombow
-  \newlength{\stockwidth}
-  \newlength{\stockheight}
+  \ifdefined\stockwidth\else\newlength{\stockwidth}\fi
+  \ifdefined\stockheight\else\newlength{\stockheight}\fi
   \setlength{\stockwidth}{\paperwidth}
   \setlength{\stockheight}{\paperheight}
   \advance \stockwidth 2in
@@ -4712,8 +4720,6 @@
 % \section{各種パッケージへの対応}
 % もともと縦組での利用を想定されていないいくつかのパッケージについて、
 % 補正するためのコードを記述しておきます。
-%% この節のコードは|filehook|パッケージ（Lua\TeX-ja読み込み時に自動でロードされます）
-%% の機能を用いています。
 %
 % [2020-08-03 LTJ] \LaTeX\~2020-10-01に対応するため、Lua\TeX-jaの提供する命令
 % （|filehook|パッケージの命令の別名か、新\LaTeX のフック機構を利用して同様の内容を書いたもの）

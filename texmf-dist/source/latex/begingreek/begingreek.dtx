@@ -5,28 +5,28 @@
 \input docstrip.tex
 \keepsilent
 \preamble
-Copyright 2015 Claudio Beccari All rights reserved.
+Copyright 2015-2022 Claudio Beccari All rights reserved.
 
  This system is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-This file is distributed under the LPPL licence, version 1.3c 
-dated 2008-05-04 or later as it appears in 
-CTAN/macros/latex/base/lppl.tex.
+This file beginngreek.sty, derived from the begingreek.dtx file, 
+is distributed under the LPPL licence, version 1.3c dated 2008-05-04 or 
+later as it appears in CTAN/macros/latex/base/lppl.tex.
 
 IMPORTANT NOTICE:
 
-You are not allowed to change this file.
+You are allowed to modify this file ONLY if you change its name and the name of the source .dtx file. You cannot distribute a modified version of the source and the derived files under the same original name. According to the LPPL, you must keep the original author name, but you must assume the role of the modified version maintenance.
 
 You are allowed to distribute this file under the condition that it is
 specified in the source file begingreek.dtx.
 
 If you receive only some of these files from someone, complain!
 
-You are NOT ALLOWED to distribute this file alone.  You are NOT
+You are NOT ALLOWED to distribute this file alone. You are NOT
 ALLOWED to take money for the distribution or use of either this
-file or a changed version, except for a nominal charge for copying
+file or a modified version, except for a nominal charge for copying
 etc.
 \endpreamble
 \askforoverwritefalse
@@ -39,19 +39,15 @@ etc.
 %\fi
 % \iffalse 
 %<*dtx>
-\ProvidesFile{begingreek.dtx}[2015/02/16 v.1.5 describes environment greek (CB)]
+\ProvidesFile{begingreek.dtx}[2022/05/06 v.1.7 Describes environment greek]
 %</dtx>
-%<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
-%<package>\ProvidesPackage{begingreek}[2015/02/16 v.1.5 defines environment greek (CB)]
+%<package>\NeedsTeXFormat{LaTeX2e}[2018/01/01]
+%<package>\ProvidesPackage{begingreek}[2022/05/06 v.1.7 Defines environment greek]
 %
 %<*driver>
 \documentclass{ltxdoc}
 \GetFileInfo{begingreek.dtx}
-  \title{The \textsf{begingreek} package%
-%        \thanks{This file
-%        has version number \fileversion, last
-%        revised on \filedate.}%
-}
+  \title{The \textsf{begingreek} package}
  \author{Claudio Beccari -- \texttt{claudio dot beccari at gmail dot com}}
  \date{Version \fileversion\ of \filedate}
  \providecommand\babel{\textsf{babel}}
@@ -68,13 +64,12 @@ etc.
       \end{quote}\ignorespaces
       }
  \newcommand*\acro[1]{\expandafter\textsc\expandafter{\MakeLowercase{#1}}}
- \usepackage[greek.polutoniko,english]{babel}
- \usepackage[utf8]{inputenc}
+ \usepackage[greek.ancient,english]{babel}
  \usepackage[T1]{fontenc}
  \usepackage{lmodern,textalpha}
- \usepackage{multicol,booktabs}\renewcommand\columnseprule{0.4pt}
+ \usepackage{multicol,booktabs,color}\renewcommand\columnseprule{0.4pt}
  \usepackage{begingreek}
- \def\alfabeto{abgdezhjiklmnxoprsctufqyw}
+ \def\alfabeto{αβγδεζηθικλμνξοπρσςτυφχψω}
 
  
 \begin{document}
@@ -83,34 +78,35 @@ etc.
 \end{document}
 %</driver>
 % \fi
-% \CheckSum{82}
+%\CheckSum{77}
 %\begin{multicols}{2}\tableofcontents\end{multicols}
 %
 % \begin{abstract}
-% This small extension module defines the environment |greek| to be used with
-% |pdfLaTeX| so as to imitate the similar environment defined in |polyglossia|.
-% A corresponding command, |\greektxt|, is also defined.
-% Of course there are some differences, but it has been used extensively and
-% it is useful.
+% This small extension module defines the environment |greek| to be used
+% with |pdfLaTeX| so as to perform as the similar environment defined in
+% |polyglossia|. A corresponding command, |\greektxt|, is also defined.
+% Of course there are some differences, but it has been used extensively
+% and proved to be quite useful.
 % \end{abstract}
 
 % \section{Introduction}
-% When using |pdfLaTeX| and |babel|, language changes are done with |babel|'s
-% language switching commands |\selectlanguage|, |\foreignlanguage| or with the
-% environments |otherlanguage| and |otherlanguage*|. They work fine, but
-% sometimes it is better to have a more ``agile'' command or environment
-% that can be used at least in place of the last three commands or
-% environments. Some more extra functionalities may be desirable, such
-% as the possibility of specifying a different default font family or to
+% When using |pdfLaTeX| and |babel|, language changes are done with
+% |babel|'s language switching commands |\selectlanguage|,
+% |\foreignlanguage| or with the environments |otherlanguage| and
+% |otherlanguage*|. They work fine, but sometimes it is better to have a
+% more friendly command or environment that can be used at least in place
+% of the last three commands or environments.
+%
+% Some more extra functionalities may be desirable, such as the
+% possibility of specifying a different font family or to
 % switch font family for a particular stretch of Greek text.
 % 
-% This small module does exactly what is described above; it has been created
-% only to be used with |pdfLaTeX|, therefore if it gets loaded with a package that
-% will be run with |XeLaTeX| or |LuaLaTex| it will complain loudly and its
-% loading will be aborted; no, not simply that: the only way to exit from
-% this wrong situation is to quit compilation. The strong error message is
-% such that the user is forced to quit and either change compiler or comment
-% out the call to this module.
+% This small module does exactly what is described above; it has been
+% created only to be used with |pdfLaTeX|, therefore if it gets loaded
+% with a package that is to be run with |XeLaTeX| or |LuaLaTex| it will
+% complain loudly and its loading will be aborted. The strong error
+% message is such that the user is forced to quit and either change
+% compiler or comment out the call to this module.
 %
 % \section{Usage}
 % This module is loaded in the preamble in the usual way:
@@ -119,18 +115,19 @@ etc.
 %\end{sintassi}
 %
 % The \meta{greek font family} must be specified with the exact name that
-% appears in the \emph{font definition file} with file extension |.fd|; for
-% example, if the Didot fonts produced by the Greek Font Society (GFS) are
-% desired, it must be specified as |udidot| because the |.fd| file is named
-% |lgrudidot.fd|; we recall that the names of the |.fd| files result from
-% the agglutination of the encoding code and the family name, everything in
-% lower case: |lgr| is the lower case code of the LGR encoding, and |udidot|
-% is the family name. As another example, if the Greek
-% Baskerville font, also distributed by the same GFS, is required, the font family
-% name is |gfsbaskerville| as it can be deduced from the name of the |.fd| file.
+% appears in the \emph{font description file} with file extension |.fd|;
+% for example, if the Didot fonts produced by the Greek Font Society (GFS)
+% are desired, the \emph{font description file} must be specified as
+% |udidot| because the |.fd| file is named |lgrudidot.fd|; we recall that
+% the names of the |.fd| files result from the agglutination of the
+% encoding code and the family name, everything in lower case: |lgr|
+% is the lower case code of the LGR encoding, and |udidot| is the family
+% name. As another example, if the Greek Baskerville font, also distributed
+% by the same GFS, is required, the font family name is |gfsbaskerville|
+% as it can be deduced from the name of the |.fd| file.
 % The same similar attention must be paid for the other available Greek
-% fonts. Table~\ref{tab:greek-fonts} gives an overview of the correspondence
-% between font names, font families, and their appearance.
+% fonts. Table~\ref{tab:greek-fonts} gives an overview of the
+% correspondence% between font names, font families, and their appearance.
 %
 % If no optional \meta{greek font family} is specified, the default Latin
 % Modern compatible LGR encoded Greek fonts are selected.
@@ -139,9 +136,9 @@ etc.
 % collections, not only those distributed by the Greek Font Society;
 % table~\ref{tab:greek-fonts} displays some families already available at
 % the time of writing this documentation. This table shows only the normal
-% upright shape of each listed family, but each collection may contain also
-% other families, other shapes and the matching Latin fonts in encodings
-% T1 and/or~OT1. 
+% upright shape of each listed family, but each collection might contain
+% also other families, other shapes and the matching Latin fonts in codings
+% T1 or~OT1. 
 %
 %\begin{table}
 %\centering
@@ -166,51 +163,54 @@ etc.
 %\bottomrule
 %\end{tabular}
 %
-%\caption{Some greek font families available with \TeX\ Live 2014; the first font group is made available by the Greek Font Society; the second group is made available by different authors. The last font is just the default.}
+%\caption{Some greek font families available with \TeX\ Live; the first
+% font group is made available by the Greek Font Society; the second group
+% is made available by different authors. The last font is just the default
+% one.}
 %\label{tab:greek-fonts}
 %\end{table}
 %
 % Another point should be stressed; the fonts distributed by the Greek Font
-% Society are pretty good but, please, do not expect that they are complete as the
-% Latin Modern compatible ones; the latter were built in order to satisfy
-% the most stringent requirements of the Hellenists; while the former were
-% designed to satisfy the every day needs of Greek typesetting.  
+% Society are pretty good but, please, do not expect that they are complete
+% as the Latin Modern compatible ones; the latter were built in order to
+% satisfy the most stringent requirements of the Hellenists; while the
+% former were designed to satisfy the every day needs of Greek typesetting.  
 % I don't claim that the default fonts are better than the ones
-% provided by other groups; it is just a caveat that with some fonts certain
-% glyphs are available which are not available with other fonts.
+% provided by other groups; it is just a caveat that with some fonts
+% certain glyphs are available which are not available with other fonts.
 % 
 % \section{Incomplete fonts and different encoding}
-% I would like to stress even more the necessity of reading the documentation
-% relative to each Greek font collection you want to use in your document. Some
-% fonts, such as Epigrafica, have been designed just for the monotonic
-% Greek spelling (unfortunately the Epigrafica documentation is not so clear
-% about this point); but these fonts have their |.fd| files with the family
-% name |epigrafica|; everything appears normal, but as soon you typeset
-% even the shortest text with the polytonic spelling, you
-% find out that most diacritics are missing; the |.log| file reports missing
-% glyphs, but the warning is not so easy to decipher; this is due to the way
-% \LaTeX\ writes out messages to the |.log| file.
+% I would like to stress even more the necessity of reading the
+% documentation relative to each Greek font collection you want to use
+% in your document. Some fonts, such as Epigrafica, have been designed
+% just for the monotonic Greek spelling; the Epigrafica documentation
+% is explicit about this point, and says that there is work in progress
+% to extend the functionality to the polytonic Greek version; dated 2006,
+% but apparently this work has not been completed. 
 %
 % Other non LGR encoded fonts may be used to typeset Greek text, 
-% for example Ibycus, Yannis Harambous' Greek fonts, Sylvio Levi's
-% fonts; they may be used with Plain \TeX\ and therefore don't use |.fd| files;
-% or they have their own package, for example |ibycus.sty|, to make the fonts
-% accessible to \LaTeX\ users. Therefore don't use this extension module
-% |begingreek| with these fonts; if you do and specify the names of these fonts
-% as if they were their font family names, you get a warning message and the
-% Greek text gets typeset with the default fonts (see the next paragraph).
+% for example the Ibycus fonts, the Yannis Harambous' Greek fonts,
+% the  Sylvio Levi's fonts; they may be used with Plain \TeX\ and
+% therefore don't use |.fd| files; or they have their own package,
+% for example |ibycus.sty|, to make the fonts accessible to \LaTeX\ 
+% users. Therefore don't use this extension module |begingreek| with
+% these fonts; if you do and specify the names of these fonts as if
+% they were their font family names, you get a warning message and
+% the Greek text gets typeset with the default fonts (see the next
+% paragraph).
 %
-% \section{Default font control}
+% \section{Font controls}
+%{\color{red}%
 % It may happen to misspell the Greek font family name to be specified as
-% an option to the module loading statement. This specified
-% name is used to create the corresponding |.fd| file name and it is checked
+% an option to the module loading statement. This specified name is used
+% to create the corresponding |.fd| file name and it is checked
 % if this |.fd| actually exists. If it does not exist, a warning message
 % is output and the default Greek font is used in its place.
 %
 % The |.fd| might be missing also if a basic incomplete \TeX\ system
 % distribution is installed; in this case the user should provide to
 % complete the installation or refrain from using a Greek font family
-% that is not available or that misses the companion |.fd| file.
+% that is not available or that misses the companion |.fd| file.}
 %
 % \section{The new \texttt{greek} environment}
 % With this package loaded, the user has a new environment available; this
@@ -224,24 +224,25 @@ etc.
 % as several paragraphs.
 %
 % This Greek text may be input in three different ways: in order to get
-% \greektxt{αὐτῇ}, it is possible to write the source file as \verb+a>ut~h|+,
-% or \verb+a\>t\~h|+, or |αὐτῇ|. The third way looks much better to a
-% Hellenist, but it may be difficult to type-in without a suitable
+% \greektxt{αὐτῇ}, it is possible to write the source file as
+% |αὐτῇ| or \verb+a>ut~h|+, or \verb+a\>t\~h|+. The first way looks much
+% better to a Hellenist, but it may be difficult to type without a suitable
 % keyboard and/or operating system; it also requires loading the
-% \pack{textalpha} package. Notice that the first form, characteristic
-% of the LGR encoded Greek fonts, relies on the font ligature functionality,
-% but in certain cases it lets some kerning failures become visible;
-% the second form relies on the internal LICR definitions (LICR:
-% LaTeX Internal Character Representation) and no kerning failures
+% \pack{textalpha} package. Notice that the second form, characteristic
+% of the LGR encoded Greek fonts, relies on the font ligature
+% functionality, but in certain cases it lets some kerning failures
+% become visible; the third form relies on the internal LICR definitions
+% (LICR: LaTeX Internal Character Representation) and no kerning failures
 % take place; the direct Greek input relies on a special extended LICR
 % when used with |pdfLaTeX|. The LICR definitions have been part of any
 % modern \TeX\ Live distribution since December~2013.
 %
 % The optional argument \meta{other Greek font family} is just another
-% family; the less you have to type, the less error-prone is your source code.
-% Nevertheless the family name that is being specified is tested for
-% the existence of its corresponding font |.fd| file, and if this file
-% does not exist or the family name is misspelt, the default Greek font is used. 
+% family; the less you have to type, the less error-prone is your source
+% code. \textcolor{red}{Nevertheless the family name that is being
+% specified is tested for the existence of its corresponding font |.fd|
+% file, and if this file does not exist or the family name is misspelt,
+% the default Greek font is used}. 
 %
 % \section{The command \texttt{\char92greektxt}}
 % For very short Greek texts an even simpler approach may be defined.
@@ -257,31 +258,33 @@ etc.
 % a paragraph terminator (command |\par| or a blank line) an error flag is
 % raised.
 % 
-%
 % \section{Font shapes and series}
 % For both the environment |greek| and the command |\greektxt| the font
 % shape and/or series are specified with the usual shape and/or font
 % declarations such as |\bfseries|, |\itshape|, and so on. Some families
 % have non standard shapes; the default Latin Modern
 % compatible Greek fonts extra shapes are already defined in their 
-% specific |.fd| font file; the same is true with other families; in
+% specific |.fd| font files; the same is true with other families; in
 % general the medium and bold extended series and the upright and
 % italic/slanted shapes are always available; although
-% table~\ref{tab:greek-fonts} displays some families where the \emph{normal}
-% shape is already oblique, those families miss another italic or slanted
-% shape.
+% table~\ref{tab:greek-fonts} displays some families where the
+% \emph{normal} shape is already oblique, those families miss another
+% italic or slanted shape.
 %
-% The user therefore should control the documentation of the extension module
-% relative to each family; should this documentation be missing, the user
-% should fetch the font |.fd| file, open it with a text editor, and read
-% inside the file which shapes are available; this does not necessarily
-% imply that the specific font extension module has a special command to choose
-% that shape, but the user can define himself one. This is not unusual:
-% even the standard Computer Modern (CM) Latin fonts have available the
-% {\fontshape{ui}\selectfont upright italic shape,} but the \LaTeX\ kernel
-% and all standard classes miss the |\uishape| declaration and the |\textui|
-% command, in spite that the |ui| internal shape code is defined and the
-% font is available.
+% The user therefore should control the documentation of the extension
+% module relative to each family; should this documentation be missing,
+% the user should fetch the font |.fd| file, open it with a text editor,
+% and read inside the file which shapes are available; this does not
+% necessarily imply that the specific font extension module has a special
+% command to choose that shape, but the user can define himself one. This
+% is not unusual: even the standard Computer Modern (CM) Latin fonts have
+% available the {\fontshape{ui}\selectfont upright italic shape,} but the
+% \LaTeX\ kernel and all standard classes miss the |\uishape| declaration
+% and the |\textui| command, in spite that the |ui| internal shape code is
+% defined and the font is available. With  the 2021 release of \TeX~Live
+% the list of available standard font series and shapes codes has been
+% extended, and this glitch apparently is eliminated, at least with the
+% various fonts available with the standard \TeX~Live installation.
 %
 %
 % \section{Examples}
@@ -300,7 +303,8 @@ etc.
 % \multicolumn1c{Command}		& \multicolumn1c{Result} \\
 % \cs{greektxt}\Arg{\cs{alphabet}}			& \greektxt{\alfabeto}	\\
 % \cs{greektxt}\Arg{\cs{bfseries}\cs{alphabet}}	& \greektxt{\bfseries\alfabeto}\\
-% \cs{greektxt}\Arg{\cs{lishape}\cs{alphabet}}& \greektxt{\fontshape{li}\selectfont\alfabeto}\\[2ex]
+% \cs{greektxt}\Arg{\cs{lishape}\cs{alphabet}}& \greektxt{\fontshape{li}\selectfont\alfabeto}\\
+%\cs{greektxt}\Arg{\cs{itshape}\cs{alphabet}}& \greektxt{\itshape\alfabeto}\\[2ex]
 %\multicolumn2c{Bodoni}\\\midrule 
 % \multicolumn1c{Command}		& \multicolumn1c{Result} \\
 % \cs{greektxt[bodoni]}\Arg{\cs{alphabet}}		&\greektxt[bodoni]{\alfabeto}\\
@@ -311,13 +315,24 @@ etc.
 % \caption{Some examples of family, series and shape selection}
 % \label{tab:examples}
 % \end{table}
+% 
+% Please notice in table~\ref{tab:examples} the difference between the
+% lipsian  |li| and the italic |it| shapes; the former is more compact
+% and uses a “curly” epsilon, while the latter, besides being slightly
+% larger, uses an “arched” epsilon. Notice also that the GFS fonts, such
+% as the Bodoni one used in table~\ref{tab:examples}, do not have two
+% different oblique shapes as the Latin Modern ones do. The italic shape
+% of the Latin Modern fonts imitates the GFS Olga font, while the its
+% lipsian shape imitates the fonts used by some printers in Lipsia
+% (Germany).
 %
 % \section{Acknowledgements}
 % I should acknowledge the collaboration of a person, whose name I can't
-% remember, whom a couple of years ago I developed the first embryo of
-% this module with; the project was abandoned, I don't remember why. I must
-% thank also Mauro Sacchetto whose questions posted in the forum of the
-% Italian TUG forced me to resume the project; he also tested the
+% remember, with whom some of years ago I developed the first embryo of
+% this module; the project was eventually abandoned, I don't remember why.
+%
+% I must thank also Mauro Sacchetto whose questions posted in the forum 
+% of the Italian TUG forced me to resume the project; he also tested the
 % environment and the command, and gave me a very important feedback.
 % 
 %\StopEventually{}
@@ -327,8 +342,8 @@ etc.
 % here we describe the real code.
 % 
 % First we load the module \pack{iftex} in order to test if the typesetting
-% engine is |pdfTeX|; if it is not, we provide an error message and force the
-% user to quit the job.
+% engine is |pdfTeX|; if it is not, we provide an error message and force
+% the user to quit the job, besides aborting this package loading.
 %\iffalse
 %<package*>
 %\fi
@@ -345,28 +360,31 @@ Type X to quit}{\@ehd}
 %    \end{macrocode}
 % At this point we know we are typesetting with the |pdfTeX| engine; now
 % we test if the |greek| language has been specified to \babel. It does
-% not matter which attributes or modifiers of the language have been specified,
-% but any Greek variant is valid. We use the $\varepsilon$-\TeX\ command
-% |\ifcsname| so that we do not produce any trace in memory and in particular
-% we do not need to test the macro with |\ifx| against |\relax|.
-% If the language |greek| has not been specified to \babel\ or if this
-% module has been loaded before \babel\ itself, an error flag is raised and the
-% user is forced to quit the job.
+% not matter which attributes or modifiers of the language have been
+% specified, but any Greek variant is valid. We use the
+% $\varepsilon$-\TeX\ command |\ifcsname| so that we do not leave any
+% trace in memory and in particular we do not need to test the macro
+% with |\ifx| against |\relax|. If the language |greek| has not been
+% specified to \babel\ or if this module has been loaded before
+% \babel\ itself, an error flag is raised and the user is forced to quit
+% the job.
 %    \begin{macrocode}
 \unless\ifcsname captionsgreek\endcsname
-\PackageError{begingreek}{\MessageBreak
-Package `begingreek' may be used only\MessageBreak
-if language `greek' is already defined\MessageBreak
-Check that `begingreek' is loaded after\MessageBreak 
-`babel' and that the language `greek'\MessageBreak 
-has been specified\MessageBreak\MessageBreak
+\PackageError{begingreek}{%
+****************************************\MessageBreak
+Package `begingreek' may be used only   \MessageBreak
+if language `greek' is already defined. \MessageBreak
+Check that `begingreek' is loaded after \MessageBreak 
+`babel' and that the language `greek'   \MessageBreak 
+has been specified                      \MessageBreak
+****************************************\MessageBreak
 Type X to quit}{\@ehd}
 \expandafter\endinput
 \fi
 %    \end{macrocode}
 % Now we can define the package option with the standard facilities
-% provided by the \LaTeX\ kernel. First we set some the default Greek
-% font family to the |lmr| one (Latin Modern compliant ``serifed''
+% provided by the \LaTeX\ kernel. First we set the default Greek
+% font family to the |lmr| one (Latin Modern compliant “serifed”
 % Greek fonts). Then we define a generic option that uses the
 % |\CurrentOption| macro for setting another default Greek font family.
 % Of course it is necessary to test if the generic option passed as an
@@ -381,35 +399,46 @@ Type X to quit}{\@ehd}
 %    \begin{macrocode}
 \def\greekfontfamily{lmr}
 
-\DeclareOption*{\IfFileExists{lgr\CurrentOption.fd}{%
-\edef\greekfontfamily{\CurrentOption}}{%
-\PackageWarning{begingreek}{%
-The file lgr\CurrentOption.fd does not exist\MessageBreak
-Either provide such a file, or specify a\MessageBreak
-valid Greek font family to the\MessageBreak 
-\string\begin\string{greek\string} package\MessageBreak
-I continue with the default font family\MessageBreak}}}
+\DeclareOption*{%
+  \IfFileExists{lgr\CurrentOption.fd}%
+  {\edef\greekfontfamily{\CurrentOption}}%
+  {\PackageWarning{begingreek}{%
+    The file lgr\CurrentOption.fd does not exist\MessageBreak
+    Either provide such a file, or specify a    \MessageBreak
+    valid Greek font family to the              \MessageBreak 
+    \string\begin\string{greek\string} package  \MessageBreak
+    I continue with the default font family     \MessageBreak}%
+  }%
+}
 \ProcessOptions\relax
 
 %    \end{macrocode}
 %
-% Now we can define the new environment |greek|. Notice that we use 
-% the default Greek font family to specify the environment optional argument,
-% but we have to test the validity of the font family name; we cannot
-% use the same name |\greekfontfamily| in the internal definitions
-% otherwise we'd produce an infinite loop; so we have to change the name
-% of the macro that holds the specified family name; if it is an
-% invalid name, either misspelt or inexistent, we reset it to the default,
-% either the overall default or the package defined default (saved
-% in |\greekfontfamily|) so we can proceed without further problems.
+% Now we can define the new environment |greek|.
+% Notice that we use the default Greek font family to specify the
+% environment optional argument, but we have to test the validity
+% of the font family name; we cannot use the same name |\greekfontfamily|
+% in the internal definitions otherwise we'd produce an infinite loop;
+% so we have to change the name of the macro that holds the specified
+% family name; if it is an invalid name, either misspelt or inexistent,
+% we reset it to the default, either the overall default or the package
+% defined default (saved in |\greekfontfamily|) so we can proceed without
+% further problems.
+%
+% Let us define the message to be issued from the environment or the command if the |fd| file relative to the chosen font is not found and to select it or the default one:
+%    \begin{macrocode}
+\def\CBverifyandselectfont{\IfFileExists{lgr\Greekfontfamily.fd}{}%
+  {\PackageWarning{begingreek}{\MessageBreak
+   Font family lgr\Greekfontfamily.fd does not exist\MessageBreak
+   Default fonts used\MessageBreak}%
+\def\Greekfontfamily{\greekfontfamily}}%
+\fontfamily{\Greekfontfamily}\selectfont}
+%    \end{macrocode}
+
 %    \begin{macrocode}
 \newenvironment{greek}[1][\greekfontfamily]{\begin{otherlanguage}{greek}%
 \edef\Greekfontfamily{#1}%
-\IfFileExists{lgr\Greekfontfamily.fd}{}%
-{\PackageWarning{begingreek}{%
-Font family lgr\Greekfontfamily.fd does not exist\MessageBreak
-Default fonts used}\def\Greekfontfamily{\greekfontfamily}}%
-\fontfamily{\Greekfontfamily}\selectfont
+\CBverifyandselectfont
 }{\end{otherlanguage}}
 
 %    \end{macrocode}
@@ -419,12 +448,8 @@ Default fonts used}\def\Greekfontfamily{\greekfontfamily}}%
 %    \begin{macrocode}
 \newcommand*\greektxt[2][\greekfontfamily]{%
 \edef\Greekfontfamily{#1}%
-\foreignlanguage{greek}{%
-\IfFileExists{lgr\Greekfontfamily.fd}{}%
-{\PackageWarning{begingreek}{%
-Font family lgr\Greekfontfamily.fd does not exist\MessageBreak
-Default fonts used}\def\Greekfontfamily{\greekfontfamily}}%
-\fontfamily{\Greekfontfamily}\selectfont#2}}
+\CBverifyandselectfont
+\foreignlanguage{greek}{#2}}
 
 %    \end{macrocode}
 %

@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright 2019--2021 Uroš Stefanović and any individual authors
+% Copyright 2019--2022 Uroš Stefanović and any individual authors
 % listed elsewhere in this file.  All rights reserved.
 % Earlier Maintainers: Dejan Muhamedagić, Slobodan Janković, Javier Bezos López, Johannes L. Braams
 % 
@@ -32,7 +32,7 @@
 %<code>\ProvidesLanguage{serbian}
 %\fi
 %\ProvidesFile{serbian.dtx}
-        [2021/04/10 2.1 Serbian Latin support for the Babel system]
+        [2022/09/30 2.2a Serbian Latin support for the Babel system]
 %\iffalse
 %% File `serbian.dtx'
 %
@@ -98,7 +98,9 @@
 %    If you prefer to use `juni' and `juli' instead of default `jun' and `jul',
 %    use the \Lopt{datei} attribute. Also, the |\today*| macro prints the date without dot after the year
 %    (used when after the date is the punctuation mark, such as comma).
-%     Alternatively, the commands |\todayRoman| and |\todayRoman*| prints the current date using Roman numerals for months.
+%    Alternatively, the commands |\todayRoman| and |\todayRoman*| prints the current date using Roman numerals for months;
+%    |\todayGen| and |\todayGen*| prints the current month name in the genitive case,
+%    and |\todayArabic| and |\todayArabic*| prints the current month as a number.
 %
 %    The alphabetical enumerations in texts use the Latin alphabet and alphabetic order,
 %    but the letters q, w, x and y are omitted by the rules of the Serbian language (22 letters are used).
@@ -271,6 +273,7 @@
 %    \end{macrocode}
 %
 %    The macro |\dateserbian| redefines the commands |\today|, |\today*|, |\todayRoman| and |\todayRoman*| to produce Serbian dates.
+%    Also, the commands |\todayGen|, |\todayGen*|, |\todayArabic| and |\todayArabic*| are provided.
 %
 %    \begin{macrocode}
   \def\dateserbian{%
@@ -287,8 +290,23 @@
     oktobar\or
     novembar\or
     decembar\fi}%
+   \def\month@serbian@gen{\ifcase\month\or
+    januara\or
+    februara\or
+    marta\or
+    aprila\or
+    maja\or
+    juna\or
+    jula\or
+    avgusta\or
+    septembra\or
+    oktobra\or
+    novembra\or
+    decembra\fi}%
     \def\today{\number\day.~\month@serbian\ \number\year\@ifstar{}{.}}%
-    \def\todayRoman{\number\day.~\@Roman\month~\number\year\@ifstar{}{.}}}
+    \def\todayRoman{\number\day.~\@Roman\month~\number\year\@ifstar{}{.}}%
+    \def\todayGen{\number\day.~\month@serbian@gen\ \number\year\@ifstar{}{.}}%
+    \def\todayArabic{\number\day.~\number\month.~\number\year\@ifstar{}{.}}}
   \let\dateserbian@datei=\dateserbian
   \addto\dateserbian@datei{
     \def\month@serbian@datei{\ifnum\month=6 juni%
@@ -392,9 +410,9 @@
     w\or x\or y\or z\else\@ctrerr\fi
 \fi}%
 \addto\extrasserbian{%
-  \babel@save\enumEng \def\enumEng{\srbl@lettering=\tw@}
-  \babel@save\enumLat \def\enumLat{\srbl@lettering=\z@}
-  \babel@save\enumCyr \def\enumCyr{\srbl@lettering=\@ne}
+  \babel@save\enumEng\def\enumEng{\srbl@lettering=\tw@}%
+  \babel@save\enumLat\def\enumLat{\srbl@lettering=\z@}%
+  \babel@save\enumCyr\def\enumCyr{\srbl@lettering=\@ne}%
 }%
 %    \end{macrocode}
 %

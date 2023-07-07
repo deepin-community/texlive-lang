@@ -4,7 +4,7 @@
 
 % LaTeX only!
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{luatexja-ruby}[2021-05-04 v0.52]
+\ProvidesPackage{luatexja-ruby}[2022-07-03 v0.53]
 \RequirePackage{luatexja}
 
 %%------------------
@@ -78,6 +78,14 @@
   \expandafter\def\csname ltj@@rubyip@tbaseheight\endcsname{#1}%
 }
 %% これらの値が正のとき，親文字の高さをこの値（\zh 単位）とみなす
+
+\ltj@@rkeydef{yrubydepth} % 縦組以外 (yoko, utod, dtou)
+\ltj@@rkeydef{trubydepth} % 縦組
+\define@key[ltj]{ruby}{rubydepth}{%
+  \expandafter\def\csname ltj@@rubyip@yrubydepth\endcsname{#1}%
+  \expandafter\def\csname ltj@@rubyip@trubydepth\endcsname{#1}%
+}
+
 \define@boolkey[ltj]{ruby}{intrude_jfmgk}[true]{}
 \define@boolkey[ltj]{ruby}{intrude_xkanjiskip}[true]{}
 \define@boolkey[ltj]{ruby}{intrude_kanjiskip}[true]{}
@@ -100,7 +108,7 @@
 % Lua ソースに渡す table 生成
 \bgroup
 \catcode`\_=11
-\gdef\ltj@@ruby@create@table#1{% #1: ルビ全角
+\gdef\ltj@@ruby@create@table#1#2{% #1: ルビ全角幅，#2: ルビ全角高さ
     \string{
       eps = \ltj@safe@dimen{\ltj@@rubyip@epsilon\zw},
       before_jfmgk = 0, after_jfmgk = 0,
@@ -119,6 +127,8 @@
           + 1048576 * \ifltj@ruby@rubysmash1\else0\fi),
       baseheight = \ltj@safe@dimen{\ifnum\ltjgetparameter{direction}=3
                      \ltj@@rubyip@tbaseheight\else\ltj@@rubyip@ybaseheight\fi\zh},
+      rubydepth = \ltj@safe@dimen{\ifnum\ltjgetparameter{direction}=3
+                     \ltj@@rubyip@trubydepth\else\ltj@@rubyip@yrubydepth\fi#2},
       intrude_jfmgk = \string{
        \ifltj@ruby@intrude_jfmgk [luatexja.icflag_table.FROM_JFM]=true,\fi
        \ifltj@ruby@intrude_kanjiskip
@@ -181,9 +191,10 @@
 \protected\def\ltjruby{\@ifnextchar[\ltj@@ruby{\ltj@@ruby[]}}%]
 \AtBeginDocument{%
   \ifdefined\ruby\else\let\ruby=\ltjruby\fi
+  \ifdefined\kenten\else\let\kenten=\ltjkenten\fi
   \directlua{luatexja.ruby.read_old_break_info()}%
 }
-\def\ltj@@ruby[#1]#2#3{{% #1: option #2: 親文字群，#3: ルビ文字列群，共に| 区切り
+\protected\def\ltj@@ruby[#1]#2#3{{% #1: option #2: 親文字群，#3: ルビ文字列群，共に| 区切り
   \setkeys[ltj]{ruby}{#1}%
   \directlua{luatexja.ruby.ruby_tmplist_r = \string{\string};
 	luatexja.ruby.ruby_tmplist_p = \string{\string}}%
@@ -191,9 +202,10 @@
   % 引数展開，テーブルにセット
   \pxrr@decompbar{#2}{\let\ltj@@ruby@mark\ltj@@ruby@sp\pxrr@res}%
   \pxrr@decompbar{#3}{\let\ltj@@ruby@mark\ltj@@ruby@sr\pxrr@res}%
-  {\fontsize{\ltj@@rubyip@size\dimen0}\z@\selectfont\ltj@@rubyip@fontcmd\global\dimen1=\zw}%
+  {\fontsize{\ltj@@rubyip@size\dimen0}\z@\selectfont\ltj@@rubyip@fontcmd
+    \global\dimen1=\zw\global\dimen2=\zh}%
   \directlua{%
-    luatexja.ruby.texiface(\ltj@@ruby@create@table{\dimen1},
+    luatexja.ruby.texiface(\ltj@@ruby@create@table{\dimen1}{\dimen2},
     luatexja.ruby.ruby_tmplist_r, luatexja.ruby.ruby_tmplist_p)}%
 }}
 
@@ -207,7 +219,6 @@
 }
 
 \protected\def\ltjkenten{\@ifnextchar[\ltj@@kenten{\ltj@@kenten[]}}%]
-\let\kenten=\ltjkenten
 \def\ltj@@kenten[#1]#2{{%
   \setkeys[ltj]{ruby}{#1, stretchruby=101}%
   \@tfor\ltj@@kenten@temp:=#2\do{\ltj@@ruby[]{\ltj@@kenten@temp}{\ltj@@rubyip@kenten}}%
@@ -244,11 +255,12 @@
 \ltjsetparameter{rubypreintrusion={-1,1}}
 
 \setkeys[ltj]{ruby}{
-  pre=-1, post=-1, mode=1, 
+  pre=-1, post=-1, mode=1,
   stretchruby={1}{2}{1}, stretch = {1}{2}{1},
   stretchbol={0}{1}{1}, stretcheol={1}{1}{0},
   maxmargin=0.5, size=0.5, intergap=0, rubysmash=false,
   kenten=\textbullet, fontcmd=\relax, ybaseheight=0.88, tbaseheight=0.5,
+  yrubydepth=0.12, trubydepth=0.5,
   intrude_jfmgk, intrude_kanjiskip, intrude_xkanjiskip,
   epsilon=0.0001,
 }

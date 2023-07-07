@@ -1,13 +1,12 @@
 % schulmathematik bundle: package schulma
-% Version 1.1
-% 13. März 2021
-\RequirePackage{xparse}
-\ProvidesExplPackage {schulma} {2021-03-13} {1.1} {Befehle für die Schulmathematik}
+% Version 1.3
+% 12. August 2022
+\ProvidesExplPackage{schulma}{2022-08-12}{1.3}{Befehle für die Schulmathematik}
 
-\RequirePackage[intlimits]{mathtools}
-\RequirePackage{autoaligne}
-\RequirePackage{icomma}
-\RequirePackage{pgfplots}
+\RequirePackage [intlimits] {mathtools}
+\RequirePackage {autoaligne}
+\RequirePackage {icomma}% verträgt sich nicht mit libertinus-otf
+\RequirePackage {pgfplots}
 
 \ExplSyntaxOff
 \usetikzlibrary{shapes.misc}
@@ -15,22 +14,23 @@
 
 \pgfplotsset
   {
-    compat=newest,
-    axis~lines=middle,
-    label~style=
+    compat = newest ,
+    axis~lines = middle ,
+    label~style =
       {
-        font=\small
+        font = \small
       },
-    ticklabel~style=
+    ticklabel~style =
       {
-        font=\footnotesize,
-        /pgf/number~format/use~comma
+        font = \footnotesize ,
+        /pgf/number~format/use~comma ,
+        /pgf/number~format/fixed
       },
-    tick~style={thick},
-    every~axis~plot/.append~style=
+    tick~style = {thick} ,
+    scaled~ticks = false ,
+    every~axis~plot/.append~style =
       {
-        semithick,
-        scaled~ticks=false
+        semithick
       }
   }
 
@@ -38,22 +38,22 @@
   {
     \tl_set:Nn \l_tmpa_tl
       {
-        xlabel={$x$},ylabel={$y$},
-        minor~tick~num=1,minor~tick~length=0pt,
-        grid=both
+        xlabel = {$x$} , ylabel = {$y$} ,
+        minor~tick~num = 1 , minor~tick~length = 0pt ,
+        grid = both
       }
-    \begin{tikzpicture}
-    \IfValueTF{#1}
+    \begin {tikzpicture}
+    \IfValueTF {#1}
       {
-        \begin{axis}[\l_tmpa_tl,#1]
+        \begin {axis} [ \l_tmpa_tl , #1 ]
       }
       {
-        \begin{axis}[\l_tmpa_tl]
+        \begin {axis} [\l_tmpa_tl]
       }
   }
   {
-    \end{axis}
-    \end{tikzpicture}
+    \end {axis}
+    \end {tikzpicture}
   }
 
 \NewDocumentCommand \LGS {m}
@@ -68,22 +68,38 @@
       }
   }
 
+\tl_new:N \g_schulma_eulersche_zahl_tl
+\tl_new:N \g_schulma_differential_tl
+
+\AtBeginDocument
+  {
+    \tl_gset:Nx \g_schulma_eulersche_zahl_tl
+      {
+        \@ifpackageloaded {euler} {e} { \exp_not:N \mathrm {e} }
+      }
+    \tl_gset:Nx \g_schulma_differential_tl
+      {
+        \@ifpackageloaded {euler} {d} { \exp_not:N \mathrm {d} }
+      }
+  }
+
 \NewDocumentCommand \ehoch {m}
   {
-    \mathrm{e}^{#1}
+    \g_schulma_eulersche_zahl_tl ^ {#1}
   }
 
 \NewDocumentCommand \diff {m}
   {
-    \mathrm{d}#1
+    \g_schulma_differential_tl
+    #1
   }
 
 \NewDocumentCommand \Pkt {o m m}
   {
     \ensuremath
       {
-        \IfValueT{#1}{#1}
-        \mathopen{} % Zusatzabstand entfernen
+        \IfValueT {#1} {#1}
+        \mathopen {} % Zusatzabstand entfernen
         \left( {#2} \, \middle| \, {#3} \right)
       }
   }
@@ -92,8 +108,8 @@
   {
     \ensuremath
       {
-        \IfValueT{#1}{#1}
-        \mathopen{} % Zusatzabstand entfernen
+        \IfValueT {#1} {#1}
+        \mathopen {} % Zusatzabstand entfernen
         \left( {#2} \, \middle| \, {#3} \, \middle| \, {#4} \right)
       }
   }
@@ -102,9 +118,9 @@
   {
     \ensuremath
       {
-        \begin{pmatrix}
+        \begin {pmatrix}
         #1 \\ #2 \\ #3
-        \end{pmatrix}
+        \end {pmatrix}
       }
   }
 
@@ -112,9 +128,9 @@
   {
     \ensuremath
       {
-        \begin{pmatrix}
+        \begin {pmatrix}
         #1 \\[0,5ex] #2 \\[0,5ex] #3
-        \end{pmatrix}
+        \end {pmatrix}
       }
   }
 
@@ -129,10 +145,10 @@
   {
     Kreuz/.style =
       {
-        cross~out,
-        draw,
-        minimum~size = 5pt,
-        inner~sep = 0pt,
+        cross~out ,
+        draw ,
+        minimum~size = 5pt ,
+        inner~sep = 0pt ,
         outer~sep = 0pt
       }
   }

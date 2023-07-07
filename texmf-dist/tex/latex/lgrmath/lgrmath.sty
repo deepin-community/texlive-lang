@@ -1,0 +1,435 @@
+%%
+%% This is file `lgrmath.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% lgrmath.dtx  (with options: `sty')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from lgrmath.sty.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file lgrmath.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lgrmath}
+         [2022/11/16 1.0 Greek in math mode via LGR font of one's choice (JFB)]
+\RequirePackage{kvoptions}
+\def\lgrmath@fontfamily{lmr}
+\def\lgrmath@scale{1}
+\def\lgrmath@upshape{n}
+\def\lgrmath@itshape{it}
+\newif\iflgrmath@upper@up\lgrmath@upper@uptrue
+\newif\iflgrmath@lower@up
+\edef\lgrmath@series{\seriesdefault}
+\edef\lgrmath@boldseries{\bfdefault}
+\def\lgrmath@upper@shape{\lgrmath@upshape}
+\def\lgrmath@lower@shape{\lgrmath@itshape}
+\def\lgrmath@style{TeX}
+\newif\iflgrmath@sty
+\define@key{lgrmath}{font}[lmr]{\def\lgrmath@fontfamily{#1}}
+\define@key{lgrmath}{upshape}{\edef\lgrmath@upshape{#1}}
+\define@key{lgrmath}{itshape}{\edef\lgrmath@itshape{#1}}
+\define@key{lgrmath}{style}{%
+   \edef\lgrmath@style{#1}%
+   \lowercase\expandafter{\expandafter\def\expandafter\lgrmath@style
+               \expandafter{\lgrmath@style}}%
+   \lgrmath@stytrue
+}
+\define@key{lgrmath}{Greek}{\edef\lgrmath@upper@shape{#1}}
+\define@key{lgrmath}{greek}{\edef\lgrmath@lower@shape{#1}%
+                             \edef\lgrmath@upper@shape{#1}}
+\define@key{lgrmath}{series}{\edef\lgrmath@series{#1}}
+\define@key{lgrmath}{boldseries}{\edef\lgrmath@boldseries{#1}}
+\DeclareBoolOption[false]{alphabets}
+\def\lgrmath@style@iso{%
+    \lgrmath@upper@upfalse
+    \lgrmath@lower@upfalse
+    \let\lgrmath@upper@shape\lgrmath@itshape
+    \let\lgrmath@lower@shape\lgrmath@itshape
+}
+\def\lgrmath@style@french{%
+    \lgrmath@upper@uptrue
+    \lgrmath@lower@uptrue
+    \let\lgrmath@upper@shape\lgrmath@upshape
+    \let\lgrmath@lower@shape\lgrmath@upshape
+}
+\let\lgrmath@style@up\lgrmath@style@french
+\def\lgrmathk@style@tex{%
+    \lgrmath@upper@uptrue
+    \lgrmath@lower@upfalse
+    \let\lgrmath@upper@shape\lgrmath@upshape
+    \let\lgrmath@lower@shape\lgrmath@itshape
+}
+\def\lgrmath@process@style{%
+   \lgrmath@styfalse
+   \ifcsname lgrmath@style@\lgrmath@style\endcsname
+     \csname lgrmath@style@\lgrmath@style\endcsname
+   \else
+     \PackageWarning{lgrmath}{Unknown (here, lowercased) style `\lgrmath@style'}%
+   \fi
+}
+\def\lgrmath@process@shapes{%
+   \edef\lgrmath@upper@shape{\lgrmath@upper@shape}%
+   \edef\lgrmath@lower@shape{\lgrmath@lower@shape}%
+   \ifx\lgrmath@upper@shape\lgrmath@upshape
+      \lgrmath@upper@uptrue
+   \else
+      \ifx\lgrmath@upper@shape\lgrmath@itshape
+         \lgrmath@upper@upfalse
+      \else
+   \expandafter\in@\expandafter{\expandafter.\lgrmath@upper@shape,}{.up,}%
+   \ifin@\lgrmath@upper@uptrue
+   \else
+     \expandafter\in@\expandafter{\expandafter.\lgrmath@upper@shape,}{.it,}%
+     \ifin@\lgrmath@upper@upfalse
+     \else
+        \lgrmath@process@upper@lastresort
+   \fi\fi\fi\fi
+   \ifx\lgrmath@lower@shape\lgrmath@itshape
+      \lgrmath@lower@upfalse
+   \else
+      \ifx\lgrmath@lower@shape\lgrmath@upshape
+         \lgrmath@lower@uptrue
+      \else
+   \expandafter\in@\expandafter{\expandafter.\lgrmath@lower@shape,}{.it,}%
+   \ifin@\lgrmath@lower@upfalse
+   \else
+     \expandafter\in@\expandafter{\expandafter.\lgrmath@lower@shape,}{.up,}%
+     \ifin@\lgrmath@lower@uptrue
+     \else
+        \lgrmath@process@lower@lastresort
+   \fi\fi\fi\fi
+}%
+\def\lgrmath@process@upper@lastresort{%
+    \lgrmath@upper@uptrue
+    \let\lgrmath@upshape\lgrmath@upper@shape
+}
+\def\lgrmath@process@lower@lastresort{%
+    \lgrmath@lower@upfalse
+    \let\lgrmath@itshape\lgrmath@lower@shape
+}
+\ProcessLocalKeyvalOptions*
+\iflgrmath@sty
+  \lgrmath@process@style
+\else
+  \lgrmath@process@shapes
+\fi
+\def\lgrmath@process@upper@lastresort{%
+    \PackageWarning{lgrmath}{%
+                       Too late for the shape `\lgrmath@upper@shape'\MessageBreak
+                       originating in Greek or greek option. Ignored.\MessageBreak
+                       Use `up' or `it'}%
+}
+\def\lgrmath@process@lower@lastresort{%
+    \PackageWarning{lgrmath}{%
+                       Too late for the shape `\lgrmath@lower@shape'\MessageBreak
+                       originating in greek option. Ignored.\MessageBreak
+                       Use `up' or `it'}%
+}
+\def\lgrmathsetup#1{%
+    \setkeys{lgrmath}{#1}%
+    \iflgrmath@sty\lgrmath@process@style\else\lgrmath@process@shapes\fi
+    \lgrmath@setgreekcs
+}
+\DisableKeyvalOption{lgrmath}{font}
+\DisableKeyvalOption{lgrmath}{upshape}
+\DisableKeyvalOption{lgrmath}{itshape}
+\DisableKeyvalOption{lgrmath}{series}
+\DisableKeyvalOption{lgrmath}{boldseries}
+\DisableKeyvalOption{lgrmath}{alphabets}
+\DeclareFontEncoding{LGR}{}{}
+\DeclareSymbolFont{lgrmathup}{LGR}{\lgrmath@fontfamily}
+                                  {\lgrmath@series}
+                                  {\lgrmath@upshape}
+\SetSymbolFont{lgrmathup}{bold}{LGR}{\lgrmath@fontfamily}
+                                    {\lgrmath@boldseries}
+                                    {\lgrmath@upshape}
+\DeclareSymbolFont{lgrmathit}{LGR}{\lgrmath@fontfamily}
+                                  {\lgrmath@series}
+                                  {\lgrmath@itshape}
+\SetSymbolFont{lgrmathit}{bold}{LGR}{\lgrmath@fontfamily}
+                                    {\lgrmath@boldseries}
+                                    {\lgrmath@itshape}
+\iflgrmath@alphabets
+   \DeclareSymbolFontAlphabet{\lgrmathup}{lgrmathup}
+   \DeclareSymbolFontAlphabet{\lgrmathit}{lgrmathit}
+\fi
+\DeclareMathSymbol{\Alphaup}{\mathalpha}{lgrmathup}{65}
+\DeclareMathSymbol{\Betaup}{\mathalpha}{lgrmathup}{66}
+\DeclareMathSymbol{\Gammaup}{\mathalpha}{lgrmathup}{71}
+\DeclareMathSymbol{\Deltaup}{\mathalpha}{lgrmathup}{68}
+\DeclareMathSymbol{\Epsilonup}{\mathalpha}{lgrmathup}{69}
+\DeclareMathSymbol{\Zetaup}{\mathalpha}{lgrmathup}{90}
+\DeclareMathSymbol{\Etaup}{\mathalpha}{lgrmathup}{72}
+\DeclareMathSymbol{\Thetaup}{\mathalpha}{lgrmathup}{74}
+\DeclareMathSymbol{\Iotaup}{\mathalpha}{lgrmathup}{73}
+\DeclareMathSymbol{\Kappaup}{\mathalpha}{lgrmathup}{75}
+\DeclareMathSymbol{\Lambdaup}{\mathalpha}{lgrmathup}{76}
+\DeclareMathSymbol{\Muup}{\mathalpha}{lgrmathup}{77}
+\DeclareMathSymbol{\Nuup}{\mathalpha}{lgrmathup}{78}
+\DeclareMathSymbol{\Xiup}{\mathalpha}{lgrmathup}{88}
+\DeclareMathSymbol{\Omicronup}{\mathalpha}{lgrmathup}{79}
+\DeclareMathSymbol{\Piup}{\mathalpha}{lgrmathup}{80}
+\DeclareMathSymbol{\Rhoup}{\mathalpha}{lgrmathup}{82}
+\DeclareMathSymbol{\Sigmaup}{\mathalpha}{lgrmathup}{83}
+\DeclareMathSymbol{\Tauup}{\mathalpha}{lgrmathup}{84}
+\DeclareMathSymbol{\Upsilonup}{\mathalpha}{lgrmathup}{85}
+\DeclareMathSymbol{\Phiup}{\mathalpha}{lgrmathup}{70}
+\DeclareMathSymbol{\Chiup}{\mathalpha}{lgrmathup}{81}
+\DeclareMathSymbol{\Psiup}{\mathalpha}{lgrmathup}{89}
+\DeclareMathSymbol{\Omegaup}{\mathalpha}{lgrmathup}{87}
+\DeclareMathSymbol{\alphaup}{\mathalpha}{lgrmathup}{97}
+\DeclareMathSymbol{\betaup}{\mathalpha}{lgrmathup}{98}
+\DeclareMathSymbol{\gammaup}{\mathalpha}{lgrmathup}{103}
+\DeclareMathSymbol{\deltaup}{\mathalpha}{lgrmathup}{100}
+\DeclareMathSymbol{\epsilonup}{\mathalpha}{lgrmathup}{101}
+\DeclareMathSymbol{\zetaup}{\mathalpha}{lgrmathup}{122}
+\DeclareMathSymbol{\etaup}{\mathalpha}{lgrmathup}{104}
+\DeclareMathSymbol{\thetaup}{\mathalpha}{lgrmathup}{106}
+\DeclareMathSymbol{\iotaup}{\mathalpha}{lgrmathup}{105}
+\DeclareMathSymbol{\kappaup}{\mathalpha}{lgrmathup}{107}
+\DeclareMathSymbol{\lambdaup}{\mathalpha}{lgrmathup}{108}
+\DeclareMathSymbol{\muup}{\mathalpha}{lgrmathup}{109}
+\DeclareMathSymbol{\nuup}{\mathalpha}{lgrmathup}{110}
+\DeclareMathSymbol{\xiup}{\mathalpha}{lgrmathup}{120}
+\DeclareMathSymbol{\omicronup}{\mathalpha}{lgrmathup}{111}
+\DeclareMathSymbol{\piup}{\mathalpha}{lgrmathup}{112}
+\DeclareMathSymbol{\rhoup}{\mathalpha}{lgrmathup}{114}
+\DeclareMathSymbol{\sigmaup}{\mathalpha}{lgrmathup}{115}
+\DeclareMathSymbol{\tauup}{\mathalpha}{lgrmathup}{116}
+\DeclareMathSymbol{\upsilonup}{\mathalpha}{lgrmathup}{117}
+\DeclareMathSymbol{\phiup}{\mathalpha}{lgrmathup}{102}
+\DeclareMathSymbol{\chiup}{\mathalpha}{lgrmathup}{113}
+\DeclareMathSymbol{\psiup}{\mathalpha}{lgrmathup}{121}
+\DeclareMathSymbol{\omegaup}{\mathalpha}{lgrmathup}{119}
+\DeclareMathSymbol{\Alphait}{\mathalpha}{lgrmathit}{65}
+\DeclareMathSymbol{\Betait}{\mathalpha}{lgrmathit}{66}
+\DeclareMathSymbol{\Gammait}{\mathalpha}{lgrmathit}{71}
+\DeclareMathSymbol{\Deltait}{\mathalpha}{lgrmathit}{68}
+\DeclareMathSymbol{\Epsilonit}{\mathalpha}{lgrmathit}{69}
+\DeclareMathSymbol{\Zetait}{\mathalpha}{lgrmathit}{90}
+\DeclareMathSymbol{\Etait}{\mathalpha}{lgrmathit}{72}
+\DeclareMathSymbol{\Thetait}{\mathalpha}{lgrmathit}{74}
+\DeclareMathSymbol{\Iotait}{\mathalpha}{lgrmathit}{73}
+\DeclareMathSymbol{\Kappait}{\mathalpha}{lgrmathit}{75}
+\DeclareMathSymbol{\Lambdait}{\mathalpha}{lgrmathit}{76}
+\DeclareMathSymbol{\Muit}{\mathalpha}{lgrmathit}{77}
+\DeclareMathSymbol{\Nuit}{\mathalpha}{lgrmathit}{78}
+\DeclareMathSymbol{\Xiit}{\mathalpha}{lgrmathit}{88}
+\DeclareMathSymbol{\Omicronit}{\mathalpha}{lgrmathit}{79}
+\DeclareMathSymbol{\Piit}{\mathalpha}{lgrmathit}{80}
+\DeclareMathSymbol{\Rhoit}{\mathalpha}{lgrmathit}{82}
+\DeclareMathSymbol{\Sigmait}{\mathalpha}{lgrmathit}{83}
+\DeclareMathSymbol{\Tauit}{\mathalpha}{lgrmathit}{84}
+\DeclareMathSymbol{\Upsilonit}{\mathalpha}{lgrmathit}{85}
+\DeclareMathSymbol{\Phiit}{\mathalpha}{lgrmathit}{70}
+\DeclareMathSymbol{\Chiit}{\mathalpha}{lgrmathit}{81}
+\DeclareMathSymbol{\Psiit}{\mathalpha}{lgrmathit}{89}
+\DeclareMathSymbol{\Omegait}{\mathalpha}{lgrmathit}{87}
+\DeclareMathSymbol{\alphait}{\mathalpha}{lgrmathit}{97}
+\DeclareMathSymbol{\betait}{\mathalpha}{lgrmathit}{98}
+\DeclareMathSymbol{\gammait}{\mathalpha}{lgrmathit}{103}
+\DeclareMathSymbol{\deltait}{\mathalpha}{lgrmathit}{100}
+\DeclareMathSymbol{\epsilonit}{\mathalpha}{lgrmathit}{101}
+\DeclareMathSymbol{\zetait}{\mathalpha}{lgrmathit}{122}
+\DeclareMathSymbol{\etait}{\mathalpha}{lgrmathit}{104}
+\DeclareMathSymbol{\thetait}{\mathalpha}{lgrmathit}{106}
+\DeclareMathSymbol{\iotait}{\mathalpha}{lgrmathit}{105}
+\DeclareMathSymbol{\kappait}{\mathalpha}{lgrmathit}{107}
+\DeclareMathSymbol{\lambdait}{\mathalpha}{lgrmathit}{108}
+\DeclareMathSymbol{\muit}{\mathalpha}{lgrmathit}{109}
+\DeclareMathSymbol{\nuit}{\mathalpha}{lgrmathit}{110}
+\DeclareMathSymbol{\xiit}{\mathalpha}{lgrmathit}{120}
+\DeclareMathSymbol{\omicronit}{\mathalpha}{lgrmathit}{111}
+\DeclareMathSymbol{\piit}{\mathalpha}{lgrmathit}{112}
+\DeclareMathSymbol{\rhoit}{\mathalpha}{lgrmathit}{114}
+\DeclareMathSymbol{\sigmait}{\mathalpha}{lgrmathit}{115}
+\DeclareMathSymbol{\tauit}{\mathalpha}{lgrmathit}{116}
+\DeclareMathSymbol{\upsilonit}{\mathalpha}{lgrmathit}{117}
+\DeclareMathSymbol{\phiit}{\mathalpha}{lgrmathit}{102}
+\DeclareMathSymbol{\chiit}{\mathalpha}{lgrmathit}{113}
+\DeclareMathSymbol{\psiit}{\mathalpha}{lgrmathit}{121}
+\DeclareMathSymbol{\omegait}{\mathalpha}{lgrmathit}{119}
+\DeclareMathSymbol{\varsigmaup}{\mathalpha}{lgrmathup}{99}
+\DeclareMathSymbol{\varvarsigmaup}{\mathalpha}{lgrmathup}{6}
+\DeclareMathSymbol{\varSigmaup}{\mathalpha}{lgrmathup}{22}
+\DeclareMathSymbol{\Sampiup}{\mathalpha}{lgrmathup}{23}
+\DeclareMathSymbol{\sampiup}{\mathalpha}{lgrmathup}{27}
+\DeclareMathSymbol{\digammaup}{\mathalpha}{lgrmathup}{147}
+\DeclareMathSymbol{\Digammaup}{\mathalpha}{lgrmathup}{195}
+\DeclareMathSymbol{\koppaup}{\mathalpha}{lgrmathup}{18}
+\DeclareMathSymbol{\varsigmait}{\mathalpha}{lgrmathit}{99}
+\DeclareMathSymbol{\varvarsigmait}{\mathalpha}{lgrmathit}{6}
+\DeclareMathSymbol{\varSigmait}{\mathalpha}{lgrmathit}{22}
+\DeclareMathSymbol{\Sampiit}{\mathalpha}{lgrmathit}{23}
+\DeclareMathSymbol{\sampiit}{\mathalpha}{lgrmathit}{27}
+\DeclareMathSymbol{\digammait}{\mathalpha}{lgrmathit}{147}
+\DeclareMathSymbol{\Digammait}{\mathalpha}{lgrmathit}{195}
+\DeclareMathSymbol{\koppait}{\mathalpha}{lgrmathit}{18}
+\def\lgrmath@setgreekcs{%
+    \iflgrmath@upper@up
+       \let\Alpha\Alphaup
+       \let\Beta\Betaup
+       \let\Gamma\Gammaup
+       \let\Delta\Deltaup
+       \let\Epsilon\Epsilonup
+       \let\Zeta\Zetaup
+       \let\Eta\Etaup
+       \let\Theta\Thetaup
+       \let\Iota\Iotaup
+       \let\Kappa\Kappaup
+       \let\Lambda\Lambdaup
+       \let\Mu\Muup
+       \let\Nu\Nuup
+       \let\Xi\Xiup
+       \let\Omicron\Omicronup
+       \let\Pi\Piup
+       \let\Rho\Rhoup
+       \let\Sigma\Sigmaup
+       \let\Tau\Tauup
+       \let\Upsilon\Upsilonup
+       \let\Phi\Phiup
+       \let\Chi\Chiup
+       \let\Psi\Psiup
+       \let\Omega\Omegaup
+       \let\Sampi\Sampiup
+       \let\Digamma\Digammaup
+       \let\varSigma\varSigmaup
+    \else
+       \let\Alpha\Alphait
+       \let\Beta\Betait
+       \let\Gamma\Gammait
+       \let\Delta\Deltait
+       \let\Epsilon\Epsilonit
+       \let\Zeta\Zetait
+       \let\Eta\Etait
+       \let\Theta\Thetait
+       \let\Iota\Iotait
+       \let\Kappa\Kappait
+       \let\Lambda\Lambdait
+       \let\Mu\Muit
+       \let\Nu\Nuit
+       \let\Xi\Xiit
+       \let\Omicron\Omicronit
+       \let\Pi\Piit
+       \let\Rho\Rhoit
+       \let\Sigma\Sigmait
+       \let\Tau\Tauit
+       \let\Upsilon\Upsilonit
+       \let\Phi\Phiit
+       \let\Chi\Chiit
+       \let\Psi\Psiit
+       \let\Omega\Omegait
+       \let\Sampi\Sampiit
+       \let\Digamma\Digammait
+       \let\varSigma\varSigmait
+    \fi
+    \iflgrmath@lower@up
+       \let\alpha\alphaup
+       \let\beta\betaup
+       \let\gamma\gammaup
+       \let\delta\deltaup
+       \let\epsilon\epsilonup
+       \let\zeta\zetaup
+       \let\eta\etaup
+       \let\theta\thetaup
+       \let\iota\iotaup
+       \let\kappa\kappaup
+       \let\lambda\lambdaup
+       \let\mu\muup
+       \let\nu\nuup
+       \let\xi\xiup
+       \let\omicron\omicronup
+       \let\pi\piup
+       \let\rho\rhoup
+       \let\sigma\sigmaup
+       \let\tau\tauup
+       \let\upsilon\upsilonup
+       \let\phi\phiup
+       \let\chi\chiup
+       \let\psi\psiup
+       \let\omega\omegaup
+       \let\varsigma\varsigmaup
+       \let\varvarsigma\varvarsigmaup
+       \let\sampi\sampiup
+       \let\digamma\digammaup
+       \let\koppa\koppaup
+    \else
+       \let\alpha\alphait
+       \let\beta\betait
+       \let\gamma\gammait
+       \let\delta\deltait
+       \let\epsilon\epsilonit
+       \let\zeta\zetait
+       \let\eta\etait
+       \let\theta\thetait
+       \let\iota\iotait
+       \let\kappa\kappait
+       \let\lambda\lambdait
+       \let\mu\muit
+       \let\nu\nuit
+       \let\xi\xiit
+       \let\omicron\omicronit
+       \let\pi\piit
+       \let\rho\rhoit
+       \let\sigma\sigmait
+       \let\tau\tauit
+       \let\upsilon\upsilonit
+       \let\phi\phiit
+       \let\chi\chiit
+       \let\psi\psiit
+       \let\omega\omegait
+       \let\varsigma\varsigmait
+       \let\varvarsigma\varvarsigmait
+       \let\sampi\sampiit
+       \let\digamma\digammait
+       \let\koppa\koppait
+    \fi
+}%
+\lgrmath@setgreekcs
+\def\lgrmathgreektable#1#2#3{%
+\begingroup
+\def\s##1{{\usefont{T1}{mlmtt}{m}{n}\string##1}}%
+\usefont{LGR}{#1}{#2}{#3}%
+\begin{tabular}{|lc|lc|lc|lc|}
+\hline
+\s\Alpha  &A &\s\Nu     &N &\s\alpha  &a &\s\nu     &n \\
+\s\Beta   &B &\s\Xi     &X &\s\beta   &b &\s\xi     &x \\
+\s\Gamma  &G &\s\Omicron&O &\s\gamma  &g &\s\omicron&o \\
+\s\Delta  &D &\s\Pi     &P &\s\delta  &d &\s\pi     &p \\
+\s\Epsilon&E &\s\Rho    &R &\s\epsilon&e &\s\rho    &r \\
+\s\Zeta   &Z &\s\Sigma  &S &\s\zeta   &z &\s\sigma  &s \\
+\s\Eta    &H &\s\Tau    &T &\s\eta    &h &\s\tau    &t \\
+\s\Theta  &J &\s\Upsilon&U &\s\theta  &j &\s\upsilon&u \\
+\s\Iota   &I &\s\Phi    &F &\s\iota   &i &\s\phi    &f \\
+\s\Kappa  &K &\s\Chi    &Q &\s\kappa  &k &\s\chi    &q \\
+\s\Lambda &L &\s\Psi    &Y &\s\lambda &l &\s\psi    &y \\
+\s\Mu     &M &\s\Omega  &W &\s\mu     &m &\s\omega  &w \\
+\hline
+\end{tabular}
+\endgroup
+}%
+\def\lgrmathgreektableextra#1#2#3{%
+\begingroup
+\def\s##1{{\usefont{T1}{mlmtt}{m}{n}\string##1}}%
+\usefont{LGR}{#1}{#2}{#3}%
+\begin{tabular}{lclclc}
+\s\varsigma   &\char99   &\s\digamma&\char147 &\s\varSigma&\char22 \\
+\s\varvarsigma&\char6    &\s\koppa  &\char18  &\s\Sampi   &\char23 \\
+\s\sampi      &\char27   &          &         &\s\Digamma &\char195\relax
+\end{tabular}
+\endgroup
+}%
+\endinput
+%%
+%% End of file `lgrmath.sty'.

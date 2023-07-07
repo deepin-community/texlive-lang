@@ -41,17 +41,20 @@
 \usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{multicol}
-\title{\texttt{teubner.sty}%
-\thanks{This paper documents \texttt{teubner.sty} version \fileversion\ of \filedate.}\\
-A package to extend the \textsf{greek} option\\ of the \babel\ package}
+\title{\texttt{teubner}%
+\thanks{This paper documents \texttt{teubner} version \fileversion\ of \filedate.}\\
+An extension for Greek philology\\
+User manual}
 \author{Claudio Beccari\thanks{\texttt{claudio dot beccari at gmail dot com}}}
-\date{February 2021}% <---- this is the date of the teubenr-doc document!
+\date{October 2022}% <---- this is the date of the teubner-doc document!
 \def\comando#1{\expandafter\texttt\expandafter{\string#1}}
 \def\cs#1{\texttt{\char92#1}}
 \def\ARG#1{\texttt{\char123}\meta{#1}\texttt{\char125}}
 \def\meta#1{$\langle${\normalfont\itshape#1}$\rangle$}
 \let\marg\ARG\let\Arg\meta
 \def\Marg#1{\texttt{\char123#1\char125}}\let\brArg\Marg
+\def\oarg#1{\texttt{[\meta{#1}]}}
+\def\Oarg#1{\texttt{[#1]}}
 \def\opt#1{\texttt{[}\meta{#1}\texttt{]}}
 \def\g#1 {\textDidot{#1}}
 \def\l#1 {\textLipsias{#1}}
@@ -77,6 +80,8 @@ A package to extend the \textsf{greek} option\\ of the \babel\ package}
 \providecommand\setfontsize{}
 \DeclareRobustCommand*\setfontsize[2][1.2]{%
 \linespread{#1}\fontsize{#2}{#2}\selectfont}
+
+\listfiles
 
 \begin{document}\errorcontextlines=20
 
@@ -118,7 +123,6 @@ Since \pack{teubner} is a module that adds to the |greek.ldf| support for \pack{
 \section{Package options}
 
 The  options available to \pack{teubner} are collected in table~\ref{t:opzioni} with their meaning and usefulness.
-
 \begin{table}
 \thrule
 \centering\def\R{\rule[-1ex]{0pt}{3ex}}\let \i\itshape
@@ -218,9 +222,11 @@ You can see that the family name \texttt{futs}, corresponding to the regular Fou
 Notice the \verb|\Lipsiantrue| command before issuing the matching command \verb|\ifFamily}|. This command is optional and is used only if the composer wishes to use the Lipsian fonts; in this case the \texttt{li} shape is also defined, so that the \verb|\textli| and 
 \verb|\lishape| commands do not issue any error message. At the end of the execution of the \verb|\ifFamily| command, the boolean switch is automatically reset to \verb|\Lipsianfalse|.
 
-\noindent\textbf{Warning}: According to several maintainers of the language support packages, the procedure used with \verb|\ifFamily|, that produces in the local working directory a real, permanent \texttt{.fd} file, is not the best approach to create such pairing of fonts. G\"unter Milde, for example, produced a \pack{substitutefontfamily} package that defines the command \comando\subtitutefontfamily\ which creates a similar association, but does not write anything to the disk; simply the created association declarations are stored in the job memory, so that when the typesetting job is over, no traces remain on disk; this certainly avoids clogging the disk with the same files scattered all over in different directories that were the working ones for different typesetting jobs.
+\noindent\textbf{Warning}: According to several maintainers of the language support packages, the procedure used with \verb|\ifFamily|, that produces in the local working directory a real, permanent \texttt{.fd} file, is not the best approach to create such pairing of fonts. G\"unter Milde, for example, produced a \pack{substitutefontfamily} package that defines the command \comando\subtitutefontfamily\ which creates a similar association, but does not write anything to the disk; simply the created association declarations are stored in the \TeX\ working memory, so that when the typesetting job is over, no traces remain on disk; this certainly avoids clogging the disk with the same files scattered all over in different directories that were the working ones for different typesetting jobs.
 
-A small caveat: when you issue for the first time the \verb|\ifFamily| command you might not see the expected result (while with Milde's package you immediately obtain the expected result), and your Greek text might be typeset with the default “Greek error font”. But the second time you typeset your document the expected result is obtained with the correct fonts. This is because with the very first run a new font description file is generated, and this file will be available only in subsequent typesetting runs.
+\noindent\textbf{A small caveat}: when you issue for the first time the \verb|\ifFamily| command you might not see the expected result (while with Milde's package you immediately obtain the expected result), and your Greek text might be typeset with the default “Greek error font”. But the second time you typeset your document the expected result is obtained with the correct fonts. This is because with the very first run a new font description file is generated, and this file will be available only in subsequent typesetting runs.
+
+\noindent\textbf{Another warning}: this \pack{teubner} package sometimes uses the “bold not extended” series, typical with the Lipsian fonts, so as to better match their medium blackness with darker fonts such as, for example, the Times extend ones. Sometimes the Lipsian shape is in force, but the metric symbols (see below) are also used, but such fonts lack the Lipsian shape. It might happen that you use some math symbols; the math symbols with \pdfLaTeX\ do not have anything similar to the Lipsian shape.In such cases the typesetting program issues a warning and at the end of the job you might read in the \texttt{.log} file a message such as \emph{Some font shapes were not available, defaults substituted.} No worry; the message is correct, but no errors are actually visible in the output PDF file. See below what you can do if you find such warning messages as “annoying” ones.
 
 Nevertheless this does not imply that the correct fonts are used if the font switching macros are used without scoping groups or environments. Sometimes, when you use declarations instead of commands, it might be necessary to issue an apparently redundant \verb|\rmfamily| or \verb|\selectfont| command in order to re-establish the correct defaults.
 
@@ -229,12 +235,16 @@ In order to insert \emph{short texts} in Greek, either in Didot upright or in Li
 
 The \emph{text commands}, contrary to the corresponding \emph{text declarations}, typeset their argument within a group, so that the font characteristics are also correctly restored after the command execution is completed. 
 
-Therefore I suggest you to either use the text commands or to use the declarations as environment names (without the initial backslash), so that they provide the necessary group delimiters; it is syntactically correct and useful to input something such as:
+Therefore we suggest you to either use the text commands or to use the declarations as environment names (without the initial backslash), so that they provide the necessary group delimiters; it is syntactically correct and useful to input something such as:
 \begin{quote}
 \verb|\begin{Lipsiakostext}|\\
 \meta{Greek text to be typeset with the Lipsian font}\\
 \verb|\end{Lipsiakostext}|
 \end{quote}
+
+Some authors have defined themselves the environments \amb{GRD} and \amb{GRL} to typeset longer texts with Didot or, respectively, Lipsian fonts and such definitions are included in the \pack{teubner} package; see the documentation of the code in the \file{teubner.pdf} file.
+
+Such environments have been tested with the Latin Modern, extended Times and extended Palatino fonts and with the standard classes besides the \class{memoir} and \class{scrbook} ones. No kludges were necessary with the Latin Modern fonts and the standard classes; some kludges were necessary in order to get the expected results with the other tested  fonts and classes; such kludges are described in the above code documentation file. They are not complicated, but users that use different fonts and/or different classes might need to apply similar kludges to their software. 
 
 
 \section{Font installation}
@@ -307,7 +317,7 @@ Greek diacritical marks; extended accent macros are also shown; notice that a co
 \end{table}
 
 Macrons and breves are just single glyphs and do not appear in combination with any letter, due to the limitation of 256 glyphs per font; but they may be input by means of commands \verb|\M| and \verb|\B| respectively when typesetting in Greek in order to use them as single diacritics; for more than one diacritic superimposed to one another, when macrons and breves are involved, some other commands are available as shown in table~\ref{t:accentmacros}. 
-
+f
 The new (2013) Greek support for \babel\ contains now the LICR encoded accent macros that allow to use any encoding input method, including direct input of Greek characters. The internal representation of accent macros resorts to the same symbols shown in table~\ref{t:accenti}; simply they are prefixed by a backslash and/or the accent sequence is prefixed with one backslash; therefore \textDidot{>'a|} may be obtained with \verb+>'a|+, or \verb+\>\'a|+, or  \verb+\>'a|+. The last form is to be  preferred with some shapes as discussed in the following paragraphs. But the LICR (\LaTeX\ Internal Character Representation) is much more than this; it separates the input encoding from the output font encoding, so that direct literal greek input is possible (of course with the \opt{utf8} encoding) and the output is useful for both LGR encoded 8-bit fonts and the UNICODE encoded OpentType fonts; this way \pack{babel} and the Greek support for \babel, provided by the new \file{greek.ldf}, may be used also with \XeLaTeX\ and \LuaLaTeX. Moreover now (October 2014) file \file{greek.ldf} can select the ancient Greek hyphenation when typesetting with \pdfLaTeX\footnote{This is why with this release of the \pack{teubner} package, the default language attribute is set to \texttt{ancient}.}; with \pack{polyglossia} this possibility was available from the very beginning of the Greek support by this package.
 The 2020 version of the \file{greek.ldf} file introduces some new coding incompatible with the extension provided by this module (up to version~48) to get Greek Milesian and Attic numerals. From \pack{teubner} version~5.0, the LICR codes used by the new \file{greek.ldf} file are extended in oder to get Greek numerals that use the ancient glyphs, and therefore some macros are redefined. On the occasion of this update, the necessary macros for the Greek numerals have been redefined by means of the \LaTeX\,3 language through the interface macros previously defined by the \pack{xparse} package and now (2020) integral part of the \LaTeX\ kernel; see below for further details.
 
@@ -558,13 +568,8 @@ if you type \texttt{\comando\AtticNumeral\{1999\}} you get \textLipsias{\AtticNu
 if you type \texttt{\comando\AtticNumeral\{55555\}} you get \textLipsias{\AtticNumeral{55555}}
 \end{quote}
 
-\section{New commands}
-This package introduces many new commands for typesetting Greek in a philological way. Most such commands are collected in table~\ref{t:extcomandi}.
 
-A short remark on the command \comando\ap: this useful command inserts \emph{anything} as a superscript of anything else; it works both in text mode and in math mode\footnote{Numerical superscripts or apices do not require math mode; numerical footnote labels are automatically inserted by \LaTeX's \comando\footnote\ command; non numerical footnote labels are easily inserted with \LaTeX's \comando\footnotemark\ and \comando\footnotetext\ commands with their optional arguments.}. In particular while typesetting a philological text in different languages and with different alphabets, \comando\ap\ typesets the superscript with the current language and alphabet; if any change is required, the \comando\ap's argument can contain any language or alphabet specific declaration. You can typeset something such as \textLipsias{Baq\'ulides\,\ap{\textlatin{a}}} by switching language and alphabet as required; the specific declarations and the commands contained in table~\ref{t:extcomandi} come handy also in these cases.
-
-
-\begin{table}[!p]\thrule%\centering
+\begin{table}[!p]\thrule
 \let\c\comando
 \resizebox*{\textwidth}{!}{\footnotesize
 \begin{tabular}{cl|cl}
@@ -618,6 +623,18 @@ text                    & \c\textlatin\ARG{text}        &\cap{g}                
 with the homonymous math command; this is now resolved. Thank you Ansten.\par}
 \caption{Extended commands}\label{t:extcomandi}
 \end{table}
+
+\section{New commands}
+This package introduces many new commands for typesetting Greek in a philological way. Most such commands are collected in table~\ref{t:extcomandi}.
+
+A short remark on the command \comando\ap: this useful command inserts \emph{anything} as a superscript of anything else; it works both in text mode and in math mode\footnote{Numerical superscripts or apices do not require math mode; numerical footnote labels are automatically inserted by \LaTeX's \comando\footnote\ command; non numerical footnote labels are easily inserted with \LaTeX's \comando\footnotemark\ and \comando\footnotetext\ commands with their optional arguments.}. In particular while typesetting a philological text in different languages and with different alphabets, \comando\ap\ typesets the superscript with the current language and alphabet; if any change is required, the \comando\ap's argument can contain any language or alphabet specific declaration. You can typeset something such as \textLipsias{Baq\'ulides\,\ap{\textlatin{a}}} by switching language and alphabet as required; the specific declarations and the commands contained in table~\ref{t:extcomandi} come handy also in these cases.
+
+Please, read the \file{teubner.pdf} file for what concerns command \cs{LLadd}; it accepts two \emph{optional} kerning values in order to adapt the internal spaces in accordance with the nature of the \meta{text} argument; with capital letters and/or sloping fonts, such kerning values may come handy for a perfect final result. Nevertheless a lot of attention was used to cope with such situations so as to avoid the above described corrections.
+Its new syntax is the following:
+\begin{quote}
+\cs{LLadd}\oarg{left kerning}\marg{text}\oarg{right kerning}
+\end{quote}
+where both kerning values imply a \emph{reduction} of space if they are specified as positive values; therefore if you specify negative values, the space is increased. Using of font size units, such as \texttt{ex} or \texttt{em} is recommended, since xuch units assure the automatic correct value even when changing font size.
 
 
 \section{Metrics}
@@ -1005,6 +1022,5 @@ which produces:
 
 \section*{Acknowledgements}
 This project was  initially carried on with the help of Mr Paolo Ciacchi when he was writing his ancient Greek philology master thesis. After he got his master's degree at the University of Trieste, I continued by myself, but I remain really indebted to Mr~Ciacchi.
-
 
 \end{document}

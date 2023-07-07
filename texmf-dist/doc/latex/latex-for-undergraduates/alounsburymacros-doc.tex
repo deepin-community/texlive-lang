@@ -1,0 +1,181 @@
+\documentclass[12pt]{article}
+\usepackage{alounsburymacros, fancyvrb, hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\newcommand{\notAMathOperator}{\mathrm{sin}}
+\DeclareMathOperator{\aMathOperator}{sin}
+
+\begin{document}
+    \title{The \texttt{alounsburymacros} package}
+    \author{1.0.2 \ 2022/10/06}
+    \date{Andrew Lounsbury}
+    \maketitle
+
+    \section{Description}
+    This package serves as a set of examples of user-defined \LaTeX\ commands. Everything here is something that I used or experimented with during my time as an undergraduate student. Some of the commands may not be useful at all. The primary purpose of most commands in this package is to reduce the amount of typing required. 
+
+    \section{Writing Your Own Commands}
+    If you're reading this, you're presumably an undergraduate student who might be interested in using \LaTeX. In general, I think the best way to start using \LaTeX\ and then form a habit of it is to start early and to learn things little by little. \p
+    That being said, one of the most useful things you can do is to write commands that make things easier. I would recommend accumulating these commands in one file (package) as you go along, similarly to what I've done here with \texttt{alounsburymacros}. 
+    \begin{example*}
+        In Real Analysis, I found that I was having to type $\mathscr{R}(\alpha)$ (\texttt{\textbackslash mathscr\{R\}(\textbackslash alpha)}) over and over again. So, I wrote the command 
+        \begin{verbatim}
+            \newcommand{\ara}{\mathscr{R}(\alpha)}
+        \end{verbatim}
+        to avoid this. `\texttt{ar}' is an onomatopoeic rendition of the letter `R' spoken aloud, and the second `\texttt{a}' stands for ``alpha.'' You have to get creative with naming these things. 
+    \end{example*}
+    
+    \section{Some Actual Documentation}
+    Some of this information is similar to the formalities you might see in the documentation of other packages. \p
+    I'm not going to take the time to document every command I've made in \texttt{alounsburymacros}; however, I've made many comments throughout \texttt{alounsburymacros.sty}, If you want to get an idea of what's included in the package, just open the \texttt{sty} file in your editor read through those comments. 
+
+    \subsection{License}
+    This software is contributed to the public domain. In other words, I don't care what you do with it. Add things to it, remove things from it, copy things from it to your own set of macros, distribute it, whatever. 
+
+    \subsection{Acknowledgements}
+    Most of the \texttt{LINEAR ALGEBRA} section and perhaps a few commands elsewhere were provided to me in my freshman year by Dr.\ R.\ Ablamowicz, emeritus. 
+
+    \subsection{Dependencies}
+    The \texttt{alounsburymacros} package loads 
+    \href{https://ctan.org/pkg/forloop}{\texttt{forloop}}, 
+    \href{https://ctan.org/pkg/mathrsfs}{\texttt{mathrsfs}}, 
+    \href{https://ctan.org/pkg/mathtools}{\texttt{mathtools}}, 
+    \href{https://ctan.org/pkg/nicefrac}{\texttt{nicefrac}}, 
+    \href{https://ctan.org/pkg/xcolor}{\texttt{xcolor}}, 
+    \href{https://ctan.org/pkg/amsmath}{\texttt{amsmath}}, 
+    \href{https://ctan.org/pkg/amsfonts}{\texttt{amsfonts}}, 
+    \href{https://ctan.org/pkg/amsfonts}{\texttt{amssymb}}, 
+    \href{https://ctan.org/pkg/amsthm}{\texttt{amsthm}}, 
+    \href{https://ctan.org/pkg/cancel}{\texttt{cancel}}, 
+    \href{https://ctan.org/pkg/calligra}{\texttt{calligra}}, 
+    \href{https://ctan.org/pkg/enumitem}{\texttt{enumitem}}, 
+    \href{https://ctan.org/pkg/fancyvrb}{\texttt{fancyvrb}}, 
+    \href{https://ctan.org/pkg/graphicx}{\texttt{graphicx}}, 
+    \href{https://ctan.org/pkg/pagecolor}{\texttt{pagecolor}},  
+    \href{https://ctan.org/pkg/pifont}{\texttt{pifont}},  
+    \href{https://ctan.org/pkg/suppose}{\texttt{suppose}},  
+    \href{https://ctan.org/pkg/totcount}{\texttt{totcount}},  
+    \href{https://ctan.org/pkg/upgreek}{\texttt{upgreek}},  
+    \href{https://ctan.org/pkg/verbatim}{\texttt{verbatim}},  
+    \href{https://ctan.org/pkg/verse}{\texttt{verse}}, and 
+    \href{https://ctan.org/pkg/fontenc}{\texttt{fontenc}}.
+    Most packages will rely on nowhere near as many packages as this. It only loads this many because \texttt{alounsburymacros} is essentially my personal preamble file, so I put whatever I wanted there. \p
+    These dependencies may require or include other packages. For instance, the \href{https://ctan.org/pkg/nicefrac}{\texttt{nicefrac}} package includes the \href{https://ctan.org/pkg/units}{\texttt{units}} package. If you require one of these packages to be loaded with some option, consider loading it yourself before the \texttt{alounsburymacros} package or use, e.g., 
+    \begin{Verbatim}
+        \PassOptionsToPackage{tight}{units}
+    \end{Verbatim}
+
+    \subsection{Option \texttt{b}}
+    Using the \texttt{alounsburymacros} package with the option \texttt{b}:
+    \begin{center}
+        \fbox{\texttt{\textbackslash usepackage[b]\{alounsburymacros\}}}
+    \end{center}
+    will use the \href{https://ctan.org/pkg/pagecolor}{\texttt{pagecolor}} package to set the page color to black and the text color to white. 
+
+    \subsection{Commands using \texttt{mathtools}}
+    The commands \texttt{\textbackslash Mid} and \texttt{\textbackslash set} are respectively renamed from the commands \texttt{\textbackslash given} and \texttt{\textbackslash Set} from page 27 of the \href{https://ctan.org/pkg/mathtools}{\texttt{mathtools}} package documentation as follows: 
+    \begin{verbatim}
+        % just to make sure it exists
+        \providecommand\Mid{}
+        % can be useful to refer to this outside \set
+        \newcommand\SetSymbol[1][]{%
+            \nonscript\:#1\vert%
+            \allowbreak%
+            \nonscript\:%
+            \mathopen{}%
+        }
+        \DeclarePairedDelimiterX{\set}[1]\{\}{%
+            \renewcommand\Mid{\SetSymbol[\delimsize]}%
+            #1%
+        }
+    \end{verbatim}
+    The command \texttt{\textbackslash set} is invoked as \texttt{\textbackslash set\{}$\langle$\textit{argument}$\rangle$\texttt{\}}: 
+    \[
+        2\Z = \set{x \in \Z \mid x \bmod 2 = 0}, 
+    \]
+    but adding a \texttt{*} makes everything extensible, in which case we use \texttt{\textbackslash Mid} rather than \texttt{\textbackslash mid}: 
+    \[
+        \Q = \set*{\f{x}{y} \Mid x,y \in \Z}. 
+    \]
+
+    \subsection{Proof Environments with the Technique Specified}
+    This package contains proof environments with the technique specified in the title of the proof. I had to create supplementary environments with \verb$\newtheorem{...}{...}$ in order to make the actual environments that have Q.E.D. symbols with \verb$\newenvironment{...}{...}$. In other words, use 
+    \begin{Verbatim}
+    \begin{pfco}
+        ...
+    \end{pfco}
+    \end{Verbatim}
+    rather than 
+    \begin{Verbatim}
+    \begin{pfcombinatorial}
+        ...
+    \end{pfcombinatorial}
+    \end{Verbatim}
+    \begin{pfco}
+        The Q.E.D. symbols in these environments function the same way that they do in the regular \texttt{proof} environment. 
+    \end{pfco}
+    \begin{pfi}
+        We can even push the Q.E.D. symbol into a display that ends the proof: 
+        \[
+            \vf\vec{e_j} = \msumi{i}{1} \mdel{f_i}{x_j}\vec{u}_j. \qedhere
+        \]
+    \end{pfi}
+
+    \subsection{For Whom it May Interest}
+    There are a couple of things in \texttt{alounsburymacros} that you may never use but may be curious about. 
+    \subsubsection{Conditionals}
+    At the end of \texttt{alounsburymacros.sty} there are some experimental commands for typing ditto marks:\dit. They are underdeveloped and not very useful, but I'm leaving them as an example of the more dynamic things we can do with \LaTeX, such as for-from-to loops, for-each-in loops, while loops, etc. \p
+    One applications of conditionals is in drawing with Ti\textit{k}Z. For examples of \verb$\foreach$, refer to \href{https://stuff.mit.edu/afs/athena/contrib/tex-contrib/beamer/pgf-1.01/doc/generic/pgf/version-for-tex4ht/en/pgfmanualse15.html}{this page}. \p
+    Assuming I haven't changed it since writing this, I've also used the conditional \verb$\ifnum$ \dots \verb$\fi$ in my \href{https://ctan.org/pkg/suppose}{\texttt{suppose}} package. 
+
+    \subsubsection{\texttt{\textbackslash mspace\{\dots\}}}
+    The command \verb$\mspace{...}$\footnote{
+        I believe \texttt{\textbackslash mspace\{\dots\}} is either short for ``\texttt{mu} space'' or short for ``math space,'' but I'm not sure which. 
+    }
+    is a more precise way of inserting horizontal space in math mode. It accepts rational values of the unit \texttt{mu}. The conversion is \\
+    
+    \noindent
+    18 \texttt{mu} = 1 \verb$\quad$ = 1 \texttt{em} = the width of `M' in the current font. 
+    \begin{gather*}
+        x \mspace{18mu} y \\
+        x \quad y \\
+        xMy
+    \end{gather*}
+    1 \verb$\qquad$ is the width of `MM'.
+    \begin{gather*}
+        x \mspace{36mu} y \\
+        x \qquad y \\
+        xMMy
+    \end{gather*}
+    Other spaces are defined to be a certain number of \texttt{mu}. \\
+    For instance, the thin space \verb$\,$ is 3 \texttt{mu}: 
+    \begin{gather*}
+        x \mspace{3mu} y \\
+        x\,y
+    \end{gather*}
+    The thick space \verb$\;$ is 6 \texttt{mu}: \\
+    \begin{gather*}
+        x \mspace{6mu} y \\
+        x\;y
+    \end{gather*}
+    The negative thin space \verb$\!$ is $-3$ \texttt{mu}:
+    \begin{gather*}
+        x \mspace{-3mu} y \\
+        x\!y
+    \end{gather*}
+    Another typesetting unit is \texttt{ex}, or x-height, which is the height of the lowercase `x' character: \rule{1pt}{1ex}x. 
+
+    \subsection{\texttt{\textbackslash DeclareMathOperator\{\dots\}\{\dots\}}}
+    Commands line $\sin, \max, \sup$ are defined as math operators with the command \verb$\DeclareMathOperator{\commandname}{$\opt{text}\verb$}$. It displays \opt{text} in the \texttt{mathrm} font and places a space after \opt{text} if a delimiter does not immediately follow, which, for instance, is how we write $\sin$ by hand when we omit the parentheses. \p
+    Compare the following commands that are defined at the beginning of this document: 
+    \[
+        \begin{array}{c|c}
+            \texttt{\textbackslash DeclareMathOperator\{\dots\}\{\dots\}} & \texttt{\textbackslash newcommand\{\dots\}\{\dots\}} \\ \hline
+            \aMathOperator\pi & \notAMathOperator\pi         
+        \end{array}
+    \]
+\end{document}

@@ -13,11 +13,7 @@
 
 \def\size#1{\mathit{#1}}
 \def\code#1{\texttt{#1}}
-\def\codechar#1{\ensuremath{\langle\mbox{\null\code{#1}\null}\rangle}}
-
-% logos
-\def\pTeX{p\kern-.10em\TeX}\def\upTeX{u\pTeX}
-\def\OMEGA{$\Omega$}
+\def\codechar#1{\ensuremath{\langle\mbox{\kern0pt\code{#1}\kern0pt}\rangle}}
 
 \title{\emph{JFMファイルフォーマット}}
 \author{ASCII Corporation \& Japanese \TeX\ Development Community}
@@ -136,7 +132,7 @@ JFMファイルでもTFMファイルと同じく，拡張子は\code{.tfm}が用
   \item[\node{remainder} (8bits)]
 \end{description}
 
-JFMでは$\size{bc}$は必ずゼロ\footnote{前節にある通り，文字コード及び
+JFMでは$\size{bc}$は必ずゼロ\footnote{前節にあるとおり，文字コード及び
 文字タイプの項が0のものが必ず1つ存在するため．}なので，
 1つのJFMに含まれる\node{char\_info}は全部で$\size{ec}+1$ワードになる．
 
@@ -275,14 +271,46 @@ JFMで扱うことができなかった．また，オリジナルの仕様で�
 それと同様である．2018年2月に日本語\TeX{}開発コミュニティによって，
 \pTeX{}及びpPLtoTFで新たにサポートされた．
 
+\subsection{JFMフォーマットの制約事項}
 
-\section{JPLファイル}\label{jpl-format}
+冒頭に述べたとおり，文字タイプ(\node{char\_type})の上限は255であり，
+それに伴い可能な字幅も最大256種類しか許されない（さらに同じ字幅でも
+\node{glue}又は\node{kern}の挿入規則を変える場合はその分減る）．
+しかし，実際のフォントでは字幅が256種類を超えることもあり，
+そのような時にJFMフォーマットは使用できない．
 
-TFMはバイナリ形式であるが，これをプロパティ（特性）という概念を使って
-テキスト形式で視覚化したものがPL (Property List)ファイルである．
-同様に，JFMをテキスト形式で視覚化したものが
-\emph{JPL (Japanese Property List)}ファイルである．
-JPLファイルでもPLファイルと同じく，拡張子は\code{.pl}が用いられる．
+例として，OTFパッケージ(japanese-otf) \cite{jotf}が提供する
+「ヒラギノフォントのプロポーショナル仮名を使う|\propshape|命令」では
+\begin{itemize}
+ \item 組版時に使われる\code{(up)phiraminw3-h.tfm}などの
+  「(u)\pTeX 用JFM」は，約物類とプロポーショナル仮名のみに対応する
+  ので，字幅が256種類以内
+ \item VFを介して実際のフォントに割り当てられる
+  \code{hiramin-w3-h.tfm}などの「DVIドライバ用JFM」は，
+  Adobe-Japan1-5の20{,}317文字を全てCIDコード順に実際のフォントに
+  即して定義しようとして，字幅が256種類を超えてしまう
+\end{itemize}
+という状況になっており，後者はJFMフォーマットで定義できない．
+
+一方で，\OMEGA で使われるOFMフォーマットは最大65{,}536種類の字幅を
+定義でき，かつ主要なDVIドライバ(\code{dvipdfmx}, \code{dvips})は
+JFMとOFMの両方に対応している．
+そこで\emph{あくまで回避策であるが}，(u)\pTeX 用JFMはそのままに，
+機能しないDVIドライバ用JFMの代わりに「正しい字幅を定義したOFM」を
+用意して\code{dvipdfmx}や\code{dvips}に優先的に使わせるという方法が
+長らく用いられてきた．OTFパッケージが提供するOFMファイル群（|\CID|で
+使われる\code{otf-cjmr-h.ofm}\footnote{実はこちらは字幅が256種類
+以内であり，JFMフォーマットで十分対応できるが．}や|\propshape|で
+使われる\code{hiramin-w3-h.ofm}など）はこの目的で用意されている\cite{cidofm}．
+% メモ：\def\xspace{}
+%   * OTFパッケージの|\CID|, |\propshape|では
+%     DVIドライバ用JFMに割り当てるCMapは恒等変換|Identity-{H,V}|を指定
+%   * \TL~2021以前の\code{dvips}では，
+%     回避策として用意された縦組用OFMがかえって邪魔となり不正な出力になった
+%     （\code{-noomega}でOFMを無視する必要があった）が，
+%     \TL~2022以降は「OFMの|FONTDIR RT|をJFMの|DIRECTION TATE|と同等に扱う」
+%     という改修を入れており，
+%     \code{otf-cj**-v.ofm}や\code{hira***-w*-v.ofm}もそれを利用するようにした
 
 
 % -- tables begin
@@ -356,6 +384,91 @@ $\size{ng}$ & $\size{np}$ \\ \hline
 \end{table}
 \MakeShortVerb*{|}
 % -- tables end
+\clearpage
+
+
+\section{JPLファイル}\label{jpl-format}
+
+TFMはバイナリ形式であるが，これをプロパティ（特性）という概念を使って
+テキスト形式で視覚化したものがPL (Property List)ファイルである．
+同様に，JFMをテキスト形式で視覚化したものが
+\emph{JPL (Japanese Property List)}ファイルである．
+JPLファイルでもPLファイルと同じく，拡張子は\code{.pl}が用いられる．
+
+和文用JPLに特有のプロパティとして，以下が存在する．
+
+\subsection{\code{CHARSINTYPE}}
+\code{CHARSINTYPE \codechar{1バイト長の整数} \codechar{任意個数の和文文字}}の
+形式で，文字タイプ\node{char\_type}及びそれに属する文字コードを設定する．
+以下に示すのは，開き括弧類を\node{char\_type}が1のグループに，
+閉じ括弧類を\node{char\_type}が2のグループに指定する例である（最初の
+\code{O 1}と\code{O 2}はそれぞれ8進数の1，2）．
+\begin{verbatim}
+(CHARSINTYPE O 1
+   （ 〔 ［ ｛ 〈 《 「 『 【
+   )
+(CHARSINTYPE O 2
+   ） 〕 ］ ｝ 〉 》 」 』 】
+   )
+\end{verbatim}
+
+なお，\codechar{任意個数の和文文字}は直接入力のほか16進数コード値で与える
+こともできる．JISコードの場合は\code{J}で始め，UCSコード（\upTeX 専用）の
+場合は\code{U}で始める．
+以下の指定は上の例と等価である（例えば\codechar{（}はJIS~0x214A）．
+\begin{verbatim}
+(CHARSINTYPE O 1
+   J 214A J 214C J 214E J 2150 J 2152 J 2154 J 2156 J 2158 J 215A
+   )
+(CHARSINTYPE O 2
+   J 214B J 214D J 214F J 2151 J 2153 J 2155 J 2157 J 2159 J 215B
+   )
+\end{verbatim}
+
+\subsection{\code{TYPE}}
+\code{TYPE \codechar{1バイト長の整数} \codechar{プロパティリスト}}の
+形式で，文字タイプ\node{char\_type}に含まれる文字の性質を定義する．
+欧文用PLの\code{CHARACTER}プロパティに相当するが，利用可能な下位のプロパティは
+\begin{itemize}
+ \item \code{CHARWD \codechar{実数値}}：文字の幅
+ \item \code{CHARHT \codechar{実数値}}：文字の高さ
+ \item \code{CHARDP \codechar{実数値}}：文字の深さ
+ \item \code{CHARIC \codechar{実数値}}：文字のイタリック補正値
+\end{itemize}
+に限られる（\code{NEXTLARGER}と\code{VARCHAR}は使えない）．
+
+以下の例は，\pTeX の既定で使用している|min10.tfm|のソース|min10.pl|からの
+抜粋である．|min10.tfm|のデザインサイズは10.0\,ptであるので，これは
+文字タイプ0に含まれる文字の幅を9.62216\,pt，高さを7.77588\,pt，
+深さを1.38855\,ptという定義である．
+\begin{verbatim}
+(TYPE O 0
+   (CHARWD R 0.962216)
+   (CHARHT R 0.777588)
+   (CHARDP R 0.138855)
+   )
+\end{verbatim}
+
+\subsection{\code{GLUEKERN}}
+JFMの\node{glue\_kern}テーブルに収めるプログラムを記述する．
+欧文用PLの\code{LIGTABLE}と似ているが，\code{LIG}の代わりに\code{GLUE}を
+用いるところが異なる．
+% [TODO] 書きかけ
+
+\subsection{\code{DIRECTION}}
+\code{DIRECTION \codechar{文字列}}の形式で，日本語フォントの組方向を指定する．
+\codechar{文字列}の一文字目が|Y|であれば横組，|T|であれば縦組として扱う．
+未指定の場合はデフォルトで横組として扱う．
+(u)\pTeX と一緒に標準で配布しているものは，横組用に
+\begin{verbatim}
+(DIRECTION YOKO)
+\end{verbatim}
+を，縦組用に
+\begin{verbatim}
+(DIRECTION TATE)
+\end{verbatim}
+を指定している．
+
 \clearpage
 
 
@@ -529,7 +642,7 @@ JFMおよび和文VFを操作する種々の機能を提供するPerlスクリ�
 
 しばしば「|min10|系」と呼ばれる．
 歴史が非常に古く，開発当時のドキュメントは残念ながらほとんど残っていない．
-以下は，株式会社アスキーによる「日本語\TeX version j1.7」\cite{jtex1.7}に
+以下は，株式会社アスキーによる「日本語\TeX\ version j1.7」\cite{jtex1.7}に
 付属していたドキュメント|README.KANJI|からの抜粋である．
 
 \begin{quotation}
@@ -574,13 +687,15 @@ I」を参照して下さい。（中略）
 があります。
 \end{quotation}
 
+\jfont\minten=min10 % used in this paragraph!
 通常の和文フォントは正方形の仮想ボディに収まるようにデザインされるが，
-例えば公称10ポイントの|min10|は「幅9.62216pt，高さ7.77588pt，深さ1.38855pt」の
+例えば公称10ポイントの|min10|は「幅\the\fontcharwd\minten`漢，
+高さ\the\fontcharht\minten`漢，深さ\the\fontchardp\minten`漢」の
+% 幅9.62216pt，高さ7.77588pt，深さ1.38855pt
 扁平な矩形でデザインされている（$\mathrm{zw}=9.62216\,\mathrm{pt}$と
 $\mathrm{zh}=9.16443\,\mathrm{pt}$が一致しない）．
-また，例えば|ちょっと|が「ちょっと」ではなく
-「{\jfont\minten=min10 \minten ちょっと}」と詰まるなどの
-不自然な挙動も知られている\cite{min10otobe}．
+また，例えば|ちょっと|が「ちょっと」ではなく「{\minten ちょっと}」と
+詰まるなどの不自然な挙動も知られている\cite{min10otobe}．
 ただし，\emph{互換性維持のため，コミュニティが修正を行う予定はない}．
 
 \paragraph{JISフォントメトリック}
@@ -647,6 +762,12 @@ zw，zhの値を仮定した既存スタイルに影響を与えないように
  \bibitem{jistfm}
    奥村晴彦，「pLaTeX2e 新ドキュメントクラス」，2016/07/07,\\
    |https://oku.edu.mie-u.ac.jp/~okumura/jsclasses/|
+ \bibitem{jotf}
+   Shuzaburo Saito，「Open Type Font用VF」，2019/04/01,\\
+   |https://psitau.kitunebi.com/otf.html|
+ \bibitem{cidofm}
+   Hironobu Yamashita，「otf-cjXX-X.ofm は何のため？」，2019/05/31,\\
+   |https://github.com/texjporg/japanese-otf-mirror/issues/15|
 \end{thebibliography}
 
 \end{document}

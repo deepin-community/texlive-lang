@@ -1,7 +1,7 @@
 %%
 %% This is file 'bxorigcapt.sty'.
 %%
-%% Copyright (c) 2017-2018 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2016-2022 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -10,9 +10,9 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bxorigcapt}[2018/09/05 v0.2a]
+\ProvidesPackage{bxorigcapt}[2022/04/10 v1.0]
 \def\bxoc@pkgname{bxorigcapt}
-\providecommand*\bxDebug[1]{}
+\providecommand\bxDebug[1]{}
 
 %% code guard
 \edef\bxoc@restore@codes{%
@@ -38,43 +38,40 @@
 %% \bxoc@target@lang
 \let\bxoc@target@lang\relax
 
-%% language options
+%% \bxoc@warn@or@info
+\let\bxoc@warn@or@info\PackageInfo
+
+%% handle options
+% 'warn'/'nowarn'
+\DeclareOption{warn}{%
+  \let\bxoc@warn@or@info\PackageWarning
+}
+\DeclareOption{nowarn}{%
+  \let\bxoc@warn@or@info\PackageInfo
+}
+% 'main'
+\DeclareOption{main}{%
+  \let\bxoc@target@lang\relax
+}
+% language options
 \DeclareOption*{%
   \edef\bxoc@target@lang{\CurrentOption}%
 }
 % dispatch
 \ProcessOptions*
+\bxDebug{target language = %
+  \ifx\bxoc@target@lang\relax (main)\else \bxoc@target@lang\fi}
 
 %--------------------------------------- environment
 
-%% switch 'bxoc@polyglossia@available'
-\newif\ifbxoc@polyglossia@available
-\begingroup
-  \@tempswafalse
-  % engine check
-  \def\bxoc@next#1{%
-    \edef\bxoc@tmpa{\string#1}\edef\bxoc@tmpb{\meaning#1}%
-    \ifx\bxoc@tmpa\bxoc@tmpb \@tempswatrue \fi
-  }
-  \bxoc@next\XeTeXversion
-  \bxoc@next\luatexversion
-  % file check
-  \if@tempswa
-    \IfFileExists{polyglossia.sty}{}{\@tempswafalse}
-    \IfFileExists{etoolbox.sty}{}{\@tempswafalse}
-  \fi
-  \if@tempswa
-    \bxDebug{Polyglossia might be loaded}
-    \global\bxoc@polyglossia@availabletrue
-  \fi
-\endgroup
+%% packages
+\RequirePackage{etoolbox}[2011/01/03]% v2.1
+\ifx\numdef\@undefined % etoolbox is aborted
+  \PackageWarningNoLine
+   {Package loading is aborted}
+\expandafter\endinput\fi\relax
 
 %--------------------------------------- general
-
-%% packages
-\ifbxoc@polyglossia@available
-  \RequirePackage{etoolbox}\relax
-\fi
 
 %% \bxoc@name@list
 % The list of caption names.
@@ -96,7 +93,8 @@
 %%<+> \bxorigcaptDeprecateCommand{<csname>,...}
 \@onlypreamble\bxorigcaptDeprecateCommand
 \newcommand*\bxorigcaptDeprecateCommand[1]{%
-  \edef\bxoc@deprecated@ldf@list{\bxoc@deprecated@ldf@list,#1}}
+  \eappto\bxoc@deprecated@ldf@list{,#1}%
+}
 
 %--------------------------------------- hook
 
@@ -113,7 +111,8 @@
          {Both Babel and Polyglossia are loaded!\MessageBreak
           Such usage is not supported}%
          {All the function of \bxoc@pkgname\space
-          is invalidated.\MessageBreak\@ehc}%
+              is invalidated.\MessageBreak
+          \@ehc}%
         % annihilate
         \let\bxoc@babel@hook\relax
         \let\bxoc@check@conflict\relax
@@ -137,36 +136,21 @@
 \@onlypreamble\bxoc@babel@hook
 \let\bxoc@babel@hook\@empty
 \bxoc@if@babel@or@polyglossia@loaded{%
-  \ifbxoc@polyglossia@available
-    \AtEndPreamble{%
+  \AtEndPreamble{%
+    \bxoc@check@conflict
+    \bxoc@babel@hook
+  }%
+}{%else
+  \AtEndPreamble{%
+    \bxoc@if@babel@or@polyglossia@loaded{%
       \bxoc@check@conflict
       \bxoc@babel@hook
+    }{%else
+      \bxoc@warn@or@info\bxoc@pkgname
+       {Neither Polyglossia nor Babel is\MessageBreak
+        loaded, reported}%
     }%
-  \else
-    \AtEndOfPackage{\bxoc@babel@hook}%
-  \fi
-}{%else
-  \ifbxoc@polyglossia@available
-    \AtEndPreamble{%
-      \bxoc@if@babel@or@polyglossia@loaded{%
-        \bxoc@check@conflict
-        \bxoc@babel@hook
-      }{%else
-        \PackageWarning\bxoc@pkgname
-         {Neither Polyglossia nor Babel is\MessageBreak
-          loaded,}%
-      }%
-    }%
-  \else
-    \AtBeginDocument{%
-      \@ifpackageloaded{babel}{%
-        \bxoc@babel@hook
-      }{%else
-        \PackageWarning\bxoc@pkgname
-         {Babel is not loaded,}%
-      }%
-    }%
-  \fi
+  }%
 }
 
 %--------------------------------------- deprecated ldf stuffs
@@ -176,11 +160,11 @@
 \def\bxoc@clear@deprecated@ldf{%
   \begingroup
     \@for\bxoc@tmpa:=\bxoc@deprecated@ldf@list\do{%
-      \ifx\@bxoc@tmpa\@empty\else
-        \expandafter\ifx\csname \bxoc@tmpa\endcsname\relax\else
+      \ifx\bxoc@tmpa\@empty\else
+        \ifcsdef{\bxoc@tmpa}{%
           \bxDebug{Smashed \@backslashchar\bxoc@tmpa}%
-          \global\expandafter\let\csname\bxoc@tmpa\endcsname\@empty
-        \fi
+          \global\cslet{\bxoc@tmpa}\@empty
+        }{}%
       \fi
     }%
   \endgroup
@@ -189,7 +173,7 @@
 \@onlypreamble\bxoc@clear@deprecated@ldf@a
 \def\bxoc@clear@deprecated@ldf@a{%
   \global\let\bxoc@clear@deprecated@ldf@a\relax
-  \gdef\bxorigcaptDeprecateCommand##1{%
+  \gdef\bxorigcaptDeprecateCommand##1{% modified
     \edef\bxoc@deprecated@ldf@list{##1}%
     \bxoc@clear@deprecated@ldf}}
 \g@addto@macro\bxoc@babel@hook{\bxoc@clear@deprecated@ldf}
@@ -209,13 +193,13 @@
   \@for\bxoc@tmpa:=\bxoc@name@list\do{%
     \edef\bxoc@next{%
       \noexpand\g@addto@macro\noexpand\bxoc@save@captions{%
-        \let\expandafter\noexpand\csname bxoc@@\bxoc@tmpa name\endcsname
-            \expandafter\noexpand\csname\bxoc@tmpa name\endcsname}%
+        \let\expandonce{\csname bxoc@@\bxoc@tmpa name\endcsname}%
+            \expandonce{\csname\bxoc@tmpa name\endcsname}}%
     }\bxoc@next
     \edef\bxoc@next{%
       \noexpand\g@addto@macro\noexpand\bxoc@restore@captions{%
-        \let\expandafter\noexpand\csname \bxoc@tmpa name\endcsname
-            \expandafter\noexpand\csname bxoc@@\bxoc@tmpa name\endcsname}%
+        \let\expandonce{\csname\bxoc@tmpa name\endcsname}%
+            \expandonce{\csname bxoc@@\bxoc@tmpa name\endcsname}}%
     }\bxoc@next
   }
 \endgroup
@@ -238,24 +222,27 @@
       \PackageError\bxoc@pkgname
        {The main language is not set}%
        {\@ehc}%
-      \def\bxoc@target@lang{?bxoc}
-      \@namedef{date\bxoc@target@lang}{}%
+      \def\bxoc@target@lang{?bxoc}%
+      \cslet{date\bxoc@target@lang}\@empty
     \fi
   \fi
-  \bxDebug{target=\bxoc@target@lang}%
-  \expandafter\ifx\csname date\bxoc@target@lang\endcsname\relax
+  \bxDebug{target language = \bxoc@target@lang}%
+  \ifcsundef{date\bxoc@target@lang}{%
     \PackageError\bxoc@pkgname
      {Language '\bxoc@target@lang' not defined}%
-      \@ehc
-    \@namedef{date\bxoc@target@lang}{}%
-  \fi
-  \expandafter\ifx\csname captions\bxoc@target@lang\endcsname\relax
-    \@namedef{captions\bxoc@target@lang}{}%
-  \fi
-  \expandafter\g@addto@macro\csname date\bxoc@target@lang\endcsname{%
-    \bxoc@restore@date}%
-  \expandafter\g@addto@macro\csname captions\bxoc@target@lang\endcsname{%
-    \bxoc@restore@captions}%
+     {\@ehc}%
+    \cslet{date\bxoc@target@lang}\@empty
+  }{}%
+  \ifcsundef{captions\bxoc@target@lang}{%
+    \cslet{captions\bxoc@target@lang}\@empty
+  }{}%
+  \csappto{date\bxoc@target@lang}{\bxoc@restore@date}%
+  \csappto{captions\bxoc@target@lang}{\bxoc@restore@captions}%
+  % do not do 'ensure'!
+  \ifcsundef{bbl@e@\bxoc@target@lang}{}{%else
+    \bxDebug{ensure for \bxoc@target@lang\space invalidated}%
+    \csundef{bbl@e@\bxoc@target@lang}%
+  }%
 }
 
 %% Saves the current captions

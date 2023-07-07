@@ -2,11 +2,53 @@
 
 \chapter{macOS}\label{chap:macOS}
 
-\section{安装 Homebrew}
+\section{安装 Mac\TeX}
 
-强烈建议用户使用 \href{https://brew.sh}{Homebrew}.
-Homebrew 是一个包管理, 类似 Ubuntu 上面的 \texttt{apt-get}.
-安装教程可以在其网站找到, 这里简单列出来：
+Mac\TeX{} 是 \TeX{} Live 在 macOS 下的再打包版本,
+并额外加入了一些辅助程序.
+在 macOS 上安装 Mac\TeX 可以选择以下两种方式: 
+\begin{description}
+  \item[直接下载 Mac\TeX{} 安装包进行安装]
+  将安装文件下载到本地,
+  然后按照安装提示进行安装.
+  \item[借助 Homebrew 以命令行方式安装]
+  先安装 Homebrew,
+  然后通过命令行进行在线安装.
+\end{description}
+
+目前比较推荐直接下载 Mac\TeX{} 安装包的安装方式,
+因为最近一段时间以来,
+大陆用户对 GitHub 的访问极不稳定,
+有可能会导致 Homebrew 安装失败.
+
+\subsection{直接下载 Mac\TeX{} 安装包进行安装}
+
+\href{https://mirror.ctan.org/systems/mac/mactex/MacTeX.pkg}{下载} Mac\TeX{} 的安装包 \texttt{MacTeX.pkg},
+在系统内点击已下载的 \texttt{MacTeX.pkg} 文件,
+根据系统提示进行安装即可.
+这个过程与安装 macOS 上的其他软件并无太多不同.
+
+另外,
+用户也可以选择国内各个镜像来下载 \texttt{MacTeX.pkg}.
+因其独特性,
+用户需调整附录~\ref{chp:appendix:mirror} 中提供的大陆地区的源的网址,
+具体来讲,
+是将 \texttt{.../texlive} 改为 \texttt{.../mac/mactex}.
+例如,
+阿里云的镜像地址为 \url{https://mirrors.aliyun.com/CTAN/systems/mac/mactex/},
+北京交通大学的镜像地址为 \url{https://mirror.bjtu.edu.cn/ctan/systems/mac/mactex/},
+其他镜像类似,
+不再一一列举.
+
+\subsection{借助 Homebrew 以命令行方式安装}
+
+建议用户学习使用 \href{https://brew.sh}{Homebrew},
+Homebrew 是一个包管理工具,
+类似 Ubuntu 上面的 \texttt{apt-get}.
+
+\subsubsection{安装 Homebrew}
+Homebrew 安装教程可以在其网站找到, 这里简单列出来：
+
 \begin{lstlisting}[language=bash]
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 \end{lstlisting}
@@ -30,7 +72,7 @@ Homebrew 是一个包管理, 类似 Ubuntu 上面的 \texttt{apt-get}.
   source ~/.zshrc
 \end{lstlisting}
 
-\subsection{Xcode}
+\subsubsection{Xcode}
 
 根据 \href{https://docs.brew.sh/Xcode\#supported-xcode-versions}{Homebrew 网站}的提示\footnote{原文是 Homebrew supports and recommends the latest Xcode and/or Command Line Tools available for your platform},
 推荐用户在安装 Homebrew 前先安装 Xcode.
@@ -39,9 +81,9 @@ Homebrew 是一个包管理, 类似 Ubuntu 上面的 \texttt{apt-get}.
   xcode-select --install
 \end{lstlisting}
 
-\section{安装 Mac\TeX}
+\subsubsection{安装 Mac\TeX}
 
-Mac\TeX{} 是 \TeX{} Live 在 macOS 下的再打包版本, 额外加入了一些辅助程序. 如果已经安装了 Homebrew,
+安装 Homebrew 后,
 只需在\textsf{终端}执行以下命令即可完成安装:
 \begin{lstlisting}[language=bash]
   brew cask install mactex
@@ -55,13 +97,11 @@ Mac\TeX{} 是 \TeX{} Live 在 macOS 下的再打包版本, 额外加入了一些
 \end{lstlisting}
 安装完成后 Basic\TeX{} 依然会缺很多包, 手动安装会比较麻烦, 所以不推荐没有经验的用户尝试.
 
-如果不通过 Homebrew 安装 Mac\TeX,
-可以直接\href{https://mirrors.ctan.org/systems/mac/mactex/MacTeX.pkg}{下载}%
-它的安装包而后手动安装.
-同样可以考虑更换大陆镜像进行下载,
-具体请参考附录~\ref{chp:appendix:mirror}.
-
 \section{卸载 Mac\TeX}
+
+如果用户直接下载了 Mac\TeX{} 安装包进行安装,
+可以对照\href{https://www.tug.org/mactex/uninstalling.html}{这里}的介绍来卸载,
+通常我个人会比较建议在跨版本升级前卸载就版本.
 
 如果用户借助 Homebrew cask 安装了 Mac\TeX,
 那么卸载工作可能会稍显麻烦.
@@ -70,6 +110,13 @@ Mac\TeX{} 是 \TeX{} Live 在 macOS 下的再打包版本, 额外加入了一些
 
 \section{跨版本升级 Mac\TeX}
 
+如果用户直接下载了 Mac\TeX{} 安装包进行安装,
+可以先卸载旧版本,
+再安装新版本,
+或者干脆保留多个版本,
+具体见\href{https://www.tug.org/mactex/multipletexdistributions.html}{这里}.
+
+如果用户借助 Homebrew cask 安装了 Mac\TeX,
 跨版本升级 (Mac\TeX{} 的版本与 \TeX{} Live 保持一致), 可在\textsf{终端}借助 Homebrew 完成:
 \begin{lstlisting}[language=bash]
   brew update

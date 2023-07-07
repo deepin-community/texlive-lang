@@ -1,6 +1,6 @@
 %% File `oblivoir-xl.cls`
 %%
-%% (C) Copyright 2006-2021 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2022 Kangsoo Kim <modviv2k15 at gmail dot com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xl}
-  [2020/03/03 v0.8.5 article-like class to typeset Korean]
+  [2022/04/07 v0.8.8 article-like class to typeset Korean]
 %\typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
@@ -45,8 +45,11 @@
 \DeclareOptionX{kosection}{\kosectiontrue}
 \newif\ifnobookmarks\nobookmarksfalse
 \DeclareOptionX{nobookmarks}{\nobookmarkstrue}
+\newif\ifbookmarkpkg\bookmarkpkgfalse
+\DeclareOptionX{bookmark}{\bookmarkpkgtrue}
 \newif\ifhyperrefwithlyx\hyperrefwithlyxfalse
 \DeclareOptionX{lyxhyper}{\hyperrefwithlyxtrue}{\hyperrefwithlyxfalse}
+\DeclareOptionX{nohyperref}{\hyperrefwithlyxtrue}{\hyperrefwithlyxfalse}
 \newif\if@tendotfive\@tendotfivefalse
 \DeclareOptionX{10.5pt}{\@tendotfivetrue}
 \newif\if@koreanfn\@koreanfnfalse
@@ -179,9 +182,13 @@
 \ExplSyntaxOn
 
 \if@lwarp
+  \if@polyglossia\else
 	\ifluatex
 		\RequirePackage{luatexko}
-	\fi
+	\else\ifxetex
+		\RequirePackage{xetexko}
+	\fi\fi
+  \fi
 	\RequirePackage[\g_lwarp_option_str]{lwarp}
 	\RequirePackage{xob-lwarp}
 \fi
@@ -276,7 +283,7 @@
 %%% footnotes and floats. codes from memmanadd.pdf
 \renewcommand*{\footnoterule}{\kern-3pt\vfill
   \hrule width 0.4\columnwidth \kern 2.6pt}
-\setlength{\skip\footins}{1.3\onelineskip}
+\setlength{\skip\footins}{1.2\onelineskip}
 
 %%% toc 등의 레이아웃.
 \if@chapter\else
@@ -344,30 +351,36 @@
  \else 
    \@Call@Hyperref@With@Bookmarks
  \fi
+ \ifbookmarkpkg
+   \RequirePackage{bookmark}
+ \fi
 }
 
 \def\@Call@Hyperref@Without@Bookmarks{%
- \ifluatex
-  \usepackage[unicode,bookmarks=false]{hyperref}
- \else\ifxetex
-  \usepackage[bookmarks=false]{hyperref}
- \else
-  \usepackage[unicode,bookmarks=false]{hyperref}
- \fi\fi
+% \ifluatex
+%  \usepackage[unicode,bookmarks=false]{hyperref}
+% \else\ifxetex
+%  \usepackage[bookmarks=false]{hyperref}
+% \else
+%  \usepackage[unicode,bookmarks=false]{hyperref}
+% \fi\fi
+  \RequirePackage[bookmarks=false]{hyperref}
 }
 
 \def\@Call@Hyperref@With@Bookmarks{%
- \ifluatex
-  \usepackage[unicode]{hyperref}
- \else\ifxetex
-  \usepackage{hyperref}
- \else
-  \usepackage[unicode]{hyperref}
- \fi\fi 
+% \ifluatex
+%  \usepackage[unicode]{hyperref}
+% \else\ifxetex
+%  \usepackage{hyperref}
+% \else
+%  \usepackage[unicode]{hyperref}
+% \fi\fi 
+  \RequirePackage{hyperref}
 }
 
 %% LyX 1.6.x의 Insert-Hyperlink 기능과 충돌하지 않게 하기 위하여
 %% hyperref을 로드하지 않음. (lyxhyper 옵션)
+%% lyxhyper = nohyperref
 %% note: memhfixc는 memoir 자신이 로드해준다.
 \ifnokorean\relax\else
   \ifhyperrefwithlyx\relax\else

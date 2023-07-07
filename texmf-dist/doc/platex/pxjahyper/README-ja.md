@@ -12,7 +12,10 @@ LaTeX： pLaTeX 上での hyperref のサポート
 ### 前提環境
 
   * フォーマット： LaTeX
-  * エンジン： pTeX、upTeX、pTeX-ng  
+  * エンジン：
+      - pTeX 3.0版以降
+      - upTeX 0.10版以降
+      - pTeX-ng (試験的)
     ※一部の機能では e-TeX 拡張が必要。
   * DVIウェア： dvipdfmx
   * 依存パッケージ：
@@ -69,6 +72,37 @@ pxjahyper-enc パッケージ ー 文字コード設定
 
 更新履歴
 --------
+
+  * Version 1.2a 〈2022/10/19〉
+      - バグ修正。(thanks: @h20y6m さん)
+
+  * Version 1.2  〈2022/05/27〉
+      - LaTeX カーネル 2022/06/01 版への対応。
+      - `\pxjahypersetup` を追加。
+      - 設定キー `fallback` を追加。
+      - `\pxDeclarePdfTextCommand/Composite` の不具合を修正。
+      - (試験的) 設定キー `extjis` を追加。
+      - (試験的) 設定キー `ajhankaku-chars` を追加。
+
+  * Version 1.1  〈2022/05/10〉
+      - オプション `fallback-geta`/`fallback-delete` を追加。
+      - `\Uchar` を利用したUnicode文字出力をサポート。
+      - オプション `(no)charcmds` を追加。
+      - hyperref のドライバ指定が非サポートの場合に警告する。
+      - `otfmacros` オプション指定の条件を撤廃する。
+      - `autodvidriver` を `resetdvidriver` に変える。
+
+  * Version 1.0a 〈2022/04/15〉
+      - バグ修正。
+
+  * Version 1.0  〈2022/04/01〉
+      - オプション `auto` を `autodvidriver` に改名（旧名は非推奨）。
+      - オプション `nodvidriver` の非推奨の旧名 `none`を廃止した。
+      - `disablecmds` の対象に jsclasses 独自の命令を追加した。
+      - (試験的)“pTeX + hyperref unicode モード”に対するサポート。
+
+  * Version 0.9d 〈2022/03/15〉
+      - LaTeX カーネル 2021/11/15 版への対応。(thanks: @wtsnjp さん)
 
   * Version 0.9c 〈2021/06/06〉
       - pxjahyper-uni モジュールを実際に使用する。

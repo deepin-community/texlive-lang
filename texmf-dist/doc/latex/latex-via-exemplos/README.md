@@ -1,5 +1,5 @@
-LaTeX Via Exemplos
-==================
+LaTeX2e Via Exemplos
+====================
 
 This is the LaTeX2e course written in brazilian portuguese
 language.

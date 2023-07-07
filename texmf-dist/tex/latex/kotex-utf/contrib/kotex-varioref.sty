@@ -1,6 +1,7 @@
 %% File `kotex-varioref.sty`
 %%
 %% (C) Copyright 2008-2013 slomo
+%%                    2022 Kangsoo Kim
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -10,29 +11,71 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2006/05/20 or later.
 %%
+\ProvidesPackage{kotex-varioref}[2022/06/20 korean texts for varioref]
+\RequirePackage{l3keys2e}
 \@ifpackageloaded{varioref}{}{\RequirePackage{varioref}[2006/05/13]}
 
+\ExplSyntaxOn
+
+\keys_define:nn { kotexvarioref }
+{
+	pagename	.tl_set:N = \pagename,
+	aftertext	.tl_set:N = \kvr@aftertext,
+	beforetext	.tl_set:N = \kvr@beforetext,
+	currenttext	.tl_set:N = \kvr@currenttext,
+	totext		.tl_set:N = \kvr@to,
+	footnotename	.tl_set:N = \kvr@footnotename,
+	figurename	.tl_set:N = \kvr@figurename,
+	tablename	.tl_set:N = \kvr@tablename
+}
+
+\keys_set:nn { kotexvarioref }
+{
+	pagename = 페이지,
+	aftertext = 다음,
+	beforetext = 앞,
+	currenttext = 현재,
+	totext = 에서,
+	footnotename = 각주,
+	figurename = \figurename,
+	tablename = \tablename
+}
+
+\ProcessKeysOptions { kotexvarioref }
+
+\newif\ifUI\UIfalse
+\NewDocumentCommand \kvr@ui {}
+{
+	\ifUI 의\else\fi
+}
+
+\NewDocumentCommand \kotexvarioreftexts { m }
+{
+	\keys_set:nn { kotexvarioref } { #1 }
+}
+
+\ExplSyntaxOff
 
 %
 % user interfaces
 %
 \renewcommand{\vref}[2][\reftextcurrent]
-	{\vpageref[#1]{#2} \ref{#2}}
+	{\vpageref[#1]{#2}\kvr@ui{} \ref{#2}}
 \renewcommand{\vrefrange}[3][\reftextcurrent]
-	{\vpagerefrange[#1]{#2}{#3}의 \reftextlabelrange{#2}{#3}}
+	{\vpagerefrange[#1]{#2}{#3}\kvr@ui{} \reftextlabelrange{#2}{#3}}
 
 
 %
 % reftexts
 %
-\renewcommand{\reftextfaceafter}{다음 \pagename}%
-\renewcommand{\reftextfacebefore}{앞 \pagename}%
-\renewcommand{\reftextafter}{다음 \pagename}%
-\renewcommand{\reftextbefore}{앞 \pagename}%
-\renewcommand{\reftextcurrent}{현재 \pagename}%
+\renewcommand{\reftextfaceafter}{\kvr@aftertext{} \pagename}%
+\renewcommand{\reftextfacebefore}{\kvr@beforetext{} \pagename}%
+\renewcommand{\reftextafter}{\kvr@aftertext{} \pagename}%
+\renewcommand{\reftextbefore}{\kvr@beforetext{} \pagename}%
+\renewcommand{\reftextcurrent}{\kvr@currenttext{} \pagename}%
 \renewcommand{\reftextfaraway}[1]{\pageref{#1}\pagename}%
 \renewcommand{\reftextpagerange}[2]{\pageref{#1}--\pageref{#2}\pagename}%
-\renewcommand{\reftextlabelrange}[2]{\ref{#1}에서 \ref{#2}}
+\renewcommand{\reftextlabelrange}[2]{\ref{#1}\kvr@to{} \ref{#2}}
 
 %
 % labelformats
@@ -40,9 +83,9 @@
 \labelformat{part}{#1\partname}
 \labelformat{chapter}{#1\chaptername}
 \labelformat{section}{#1\sectionname}
-\labelformat{figure}{\figurename~#1}
-\labelformat{table}{\tablename~#1}
-\labelformat{footnote}{각주~#1}
+\labelformat{figure}{\kvr@figurename~#1}
+\labelformat{table}{\kvr@tablename~#1}
+\labelformat{footnote}{\kvr@footnotename{}~#1}
 
 \endinput
 

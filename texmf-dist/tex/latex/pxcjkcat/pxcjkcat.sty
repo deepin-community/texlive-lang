@@ -1,134 +1,339 @@
-%
-% pxcjkcat.sty
-%
-%%%% package declaration
+%%
+%% This is file 'pxcjkcat.sty'.
+%%
+%% Copyright (c) 2010-2022 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%% package declaration
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{pxcjkcat}[2018/04/01 v1.1 PX cjk-category mode]
-%\RequirePackage{ifuptex}[2008/03/14]\RequirenativeupTeX
-
-
-%%%% error messages
+\ProvidesPackage{pxcjkcat}[2022/06/06 v1.4 PX cjk-category mode]
 \def\pxkc@pkgname{pxcjkcat}
+
+%% code guards
+\edef\pxkc@restore@codes{%
+\catcode33=\the\catcode33%
+\catcode34=\the\catcode34%
+\catcode39=\the\catcode39%
+\catcode43=\the\catcode43%
+\catcode45=\the\catcode45%
+\catcode46=\the\catcode46%
+\catcode47=\the\catcode47%
+\catcode58=\the\catcode58%
+\catcode60=\the\catcode60%
+\catcode62=\the\catcode62%
+\catcode63=\the\catcode63%
+\catcode94=\the\catcode94%
+\catcode96=\the\catcode96%
+\catcode239=\the\catcode239%
+\endlinechar=\the\endlinechar%
+\relax}%
+\catcode33=12 % <!>
+\catcode34=12 % <">
+\catcode39=12 % <'>
+\catcode43=12 % <+>
+\catcode45=12 % <->
+\catcode46=12 % <.>
+\catcode47=12 % </>
+\catcode58=12 % <:>
+\catcode60=12 % <<>
+\catcode62=12 % <>>
+\catcode63=12 % <?>
+\catcode94=7 % <^>
+\catcode96=12 % <`>
+\catcode239=13 %
+\AtEndOfPackage{%
+\pxkc@restore@codes
+\let\pxkc@restore@codes\relax}
+
+%--------------------------------------- general
+
+%% error messages
 \def\pxkc@error{\PackageError\pxkc@pkgname}
-\def\pxkc@err@ivcsy#1{\pxkc@error
-  {Invalid name (#1) for cjk-category}%
-  {It was replaced by 18(cjk).}}
-\def\pxkc@err@ivbsy#1{\pxkc@error
-  {Invalid name (#1) for Unicode block}\@eha}
-\def\pxkc@err@ivmsy#1{\pxkc@error
-  {Invalid name (#1) for cjk-category mode}\@eha}
+\def\pxkc@err@ivcsy#1{%
+  \PackageError\pxkc@pkgname
+   {Invalid name (#1) for cjk-category}%
+   {It was replaced by 18(cjk).\MessageBreak
+    \@ehc}}
+\def\pxkc@err@ivbsy#1{%
+  \PackageError\pxkc@pkgname
+   {Invalid name (#1) for Unicode block}%
+   {\@eha}}
+\def\pxkc@err@ivmsy#1{%
+  \PackageError\pxkc@pkgname
+   {Invalid name (#1) for cjk-category mode}%
+   {\@eha}}
+\def\pxkc@err@naltn{%
+  \PackageError\pxkc@pkgname
+   {Change to cjk-category of 'latn' is forbidden}%
+   {\@eha}}
 \def\pxkc@warn@dfblk#1{%
   \PackageWarning\pxkc@pkgname
-   {Defunct Unicode block '#1' is\MessageBreak
+   {Unsupported Unicode block '#1' is\MessageBreak
     specified}}
+\def\pxkc@err@ivfmt#1{%
+  \PackageError\pxkc@pkgname
+   {Block specs are given in bad format%
+    \ifx\detokenize\@undefined\else
+      :\MessageBreak \space'\detokenize{#1}'\fi}%
+   {\@eha}}
+
+%% \pxkc@debug{<message>}
 \ifx\bxUseDebug\@undefined
 \let\pxkc@debug\@gobble
 \else
 \def\pxkc@debug#1{\typeout{**[\pxkc@pkgname] #1}}
 \fi
 
-%%%% environment check
-\@tempswafalse
-\ifx\ucs\@undefined\else \ifnum\ucs"3000="3000
-    \@tempswatrue
-\fi\fi
-\if@tempswa\else
-  \pxkc@error{Native upTeX is required.}%
-    {Package loading is aborted.}
-\expandafter\endinput\fi\relax
+%% packages
+\RequirePackage{keyval}\relax
 
-%--------------------------------------- general
+%% unique tokens
+\def\pxkc@end{\pxkc@end@}
+\def\pxkc@mt{\pxkc@mt@}
+\let\pxkc@mk\indent
 
 %% variables
 \newif\ifpxkc@ok
-\newif\ifpxkc@warn@defunct \pxkc@warn@defuncttrue
+\newif\ifpxkc@warn@bad \pxkc@warn@badtrue
+\let\pxkc@good@mccv\relax
+\let\pxkc@mccv\relax
+\let\pxkc@ccmode@opt\relax
 \let\pxkc@arg\relax
 \let\pxkc@blk\relax
-\let\pxkc@grp\relax
-\let\pxkc@cc\relax
+\let\pxkc@cp\relax
 
 %% \pxkc@letcs\CSa{<csname-b>}
 \def\pxkc@letcs#1#2{%
   \expandafter\let\expandafter#1\csname#2\endcsname}
+
 %% \pxkc@expanded{<text>}
 \def\pxkc@expanded#1{%
-  \edef\pxkc@nxt{#1}\pxkc@nxt}
+  \edef\pxkc@next{#1}\pxkc@next}
 
-%---------------------------------------
+%% \pxkc@setup{<key>=<value>,...}
+\def\pxkc@setup#1{%
+  \let\pxkc@KV@errx\KV@errx \def\KV@errx##1{\@unknownoptionerror}%
+  \setkeys{\pxkc@pkgname}{#1}
+  \let\KV@errx\pxkc@KV@errx}
 
-%%%% option handler
-\chardef\pxkc@mccv=1
+%% \pxkc@handle@key{<key>}{<value>}{<name>}
+\def\pxkc@handle@key#1#2#3{%
+  \expandafter\let\expandafter\pxkc@tmpa\csname pxkc@#3\endcsname
+  \ifx\pxkc@tmpa\relax
+    \PackageError\pxkc@pkgname
+     {Invalid value for key '#1':\MessageBreak\@spaces#2}%
+     {\@eha}%
+  \else \pxkc@tmpa
+  \fi}
+
+%--------------------------------------- package options
+
+%% mode CCV options
 \DeclareOption{ccv1}{\chardef\pxkc@mccv=1 }
 \DeclareOption{ccv2}{\chardef\pxkc@mccv=2 }
 \DeclareOption{ccv3}{\chardef\pxkc@mccv=3 }
+\DeclareOption{ccv4}{\chardef\pxkc@mccv=4 }
 \DeclareOption{ccv+}{\chardef\pxkc@mccv=0 }
-\let\pxkc@ccmode\relax
-\DeclareOption*{\edef\pxkc@ccmode{\CurrentOption}}
+\DeclareOption{real}{\chardef\pxkc@mccv=0 }
+%% mode options
+% NB. \[pxkc@M@@...] is later redefined.
+\def\pxkc@M@@forcecjk     {1}
+\def\pxkc@M@@prefercjk    {1}
+\def\pxkc@M@@prefercjkvar {1}
+\def\pxkc@M@@japanese     {3}
+\def\pxkc@M@@japanesevar  {3}
+\def\pxkc@M@@prefernoncjk {1}
+\def\pxkc@M@@default      {1}
+\def\pxkc@M@@nomode       {0}% special
+\chardef\pxkc@good@mccv=0
+%% key-value options
+\define@key{\pxkc@pkgname}{ccv}{%
+  \pxkc@handle@key{ccv}{#1}{kv@ccv@@#1}}
+\@namedef{pxkc@kv@ccv@@1}{\chardef\pxkc@mccv=1 }
+\@namedef{pxkc@kv@ccv@@2}{\chardef\pxkc@mccv=2 }
+\@namedef{pxkc@kv@ccv@@3}{\chardef\pxkc@mccv=3 }
+\@namedef{pxkc@kv@ccv@@4}{\chardef\pxkc@mccv=4 }
+\@namedef{pxkc@kv@ccv@@real}{\chardef\pxkc@mccv=0 }
+%% dispatch
+\DeclareOption*{%
+  \@ifundefined{pxkc@M@@\CurrentOption}{% key option
+    \expandafter\pxkc@setup\expandafter{\CurrentOption}%
+  }{%else; mode option
+    \chardef\pxkc@good@mccv=\@nameuse{pxkc@M@@\CurrentOption}\relax
+    \edef\pxkc@ccmode@opt{\CurrentOption}}}
 \ProcessOptions\relax
+
+%% clear up
+\ifnum\pxkc@good@mccv=0
+  \let\pxkc@ccmode@opt\relax
+\fi
+\let\pxkc@M@@nomode\@undefined
+
+%% set default mode CCV (ccv1)
+\ifx\pxkc@mccv\relax
+  \chardef\pxkc@mccv=1
+\else
+  \chardef\pxkc@good@mccv=0 % disable check
+\fi
+
+%--------------------------------------- environment check
+
+%% check engine
+\def\pxkc@tmpa{Native upTeX is required}
+\ifx\ucs\@undefined\else \ifnum\ucs"3000="3000
+  \ifx\forcecjktoken\@undefined
+    \def\pxkc@tmpa{This upTeX is too old}
+  \else \let\pxkc@tmpa\relax
+  \fi
+\fi\fi
+\ifx\pxkc@tmpa\relax\else
+  \PackageError\pxkc@pkgname
+   {\pxkc@tmpa}%
+   {Package loading is aborted.\MessageBreak
+    \@ehc}
+\expandafter\endinput\fi\relax
+
+%% engine version
+\chardef\pxkc@uptex@version=0
+\def\pxkc@next#1.#2#3#4\pxkc@end{%
+  \ifx\pxkc@mk#1\pxkc@mk \ifnum99<1#2#3
+    \chardef\pxkc@uptex@version=\the\uptexversion#2#3\relax
+  \fi\fi}
+\ifx\uptexversion\@undefined\else \ifx\uptexrevision\@undefined\else
+  \expandafter\pxkc@next\uptexrevision...\pxkc@end
+\fi\fi
 
 %%-------- classification version check
 
-%% \pxkc@issameblock
-\def\pxkc@issameblock#1#2{%
-  \pxkc@okfalse{\kcatcode#1=16\kcatcode#2=17\relax
-    \ifnum\kcatcode#1=17 \aftergroup\pxkc@oktrue\fi}}
-\pxkc@issameblock{"FF01}{"FF11}\ifpxkc@ok
+%% \pxkc@is@same@block
+\def\pxkc@is@same@block#1#2{%
+  \pxkc@okfalse
+  \begingroup
+    \kcatcode#1=16\kcatcode#2=17\relax
+    \ifnum\kcatcode#1=17 \aftergroup\pxkc@oktrue\fi
+  \endgroup}
+
+%% \pxkc@ccv : real CCV
+\pxkc@is@same@block{"FF01}{"FF11}\ifpxkc@ok
   \chardef\pxkc@ccv=1     % v0.11+
 \else
-  \pxkc@issameblock{"A0}{"C0}\ifpxkc@ok
+  \pxkc@is@same@block{"A0}{"C0}\ifpxkc@ok
     \chardef\pxkc@ccv=2   % v0.29+
-  \else
+  \else\ifnum\pxkc@uptex@version<125
     \chardef\pxkc@ccv=3   % v1.23+
-  \fi
+  \else
+    \chardef\pxkc@ccv=4   % v1.25+
+  \fi\fi
 \fi
-\ifx\bxDebugCcv\@undefined\else
+\ifx\bxDebugCcv\@undefined\else % override
   \chardef\pxkc@ccv=\bxDebugCcv\relax
 \fi
-\ifnum\pxkc@mccv=\z@ \let\pxkc@mccv\pxkc@ccv \fi
+\pxkc@debug{upTeX version \number\pxkc@uptex@version}
 \pxkc@debug{CJK category version \number\pxkc@ccv}
-%
-\ifnum\pxkc@mccv>\pxkc@ccv
-  \pxkc@error{Invalid mode-CCV option (ccv\number\pxkc@mccv)}%
-  {The mode-CCV value given (\number\pxkc@mccv) is
-  larger than the real CCV (\number\pxkc@ccv).\MessageBreak
-  I assume the mode-CCV equals the real CCV.}
+
+%% Here show warning about the buggy engine version (v1.24)
+\ifnum\pxkc@ccv=1 \ifnum\pxkc@uptex@version=124
+  \PackageWarningNoLine\pxkc@pkgname
+   {The upTeX engine of version 1.24 is used!\MessageBreak
+    This version has a bug on CJK category,\MessageBreak
+    and here real CCV is regard as 1}
+\fi\fi
+
+%% Here show warning for mode CCV recommendation.
+%% (No warning if the good mode CCV is unavailable.)
+\ifnum\pxkc@good@mccv>\pxkc@mccv \ifnum\pxkc@good@mccv>\pxkc@ccv\else
+  \PackageWarningNoLine\pxkc@pkgname
+   {Mode CCV \number\pxkc@good@mccv\space
+      (option 'ccv\number\pxkc@good@mccv') is recommended\MessageBreak
+    for the use of category mode '\pxkc@ccmode@opt'!\MessageBreak
+    Or you can simply suppress this warning by giving\MessageBreak
+    option 'ccv\number\pxkc@mccv' explicitly}
+\fi\fi
+
+%% set mode CCV if 'ccv+' is given
+\ifnum\pxkc@mccv=\z@
   \let\pxkc@mccv\pxkc@ccv
 \fi
 
-%%------ \setcjkcategory, etc.
+%% mode CCV cannot be newer than real CCV
+\ifnum\pxkc@mccv>\pxkc@ccv
+  \PackageError\pxkc@pkgname
+   {Bad mode-CCV option (ccv\number\pxkc@mccv) is given!\MessageBreak
+    The mode-CCV (\number\pxkc@mccv) is newer than
+      the real CCV (\number\pxkc@ccv)}
+   {I assume the mode-CCV equals the real CCV.\MessageBreak
+    \@ehc}
+  \let\pxkc@mccv\pxkc@ccv
+\fi
 
-%% \pxkc@kcatcode
+%--------------------------------------- helpers
+
+%% constants
+\chardef\pxkc@ascii@max="7F
+
+%% \pxkc@cond\ifXXX...\fi{<true>}{<false>}
+\def\pxkc@cond#1\fi{%
+  #1\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi}
+
+%% \pxkc@get@jchar{<charcode>}
+\def\pxkc@get@jchar#1{%
+  \begingroup
+    \forcecjktoken
+    \kansujichar\@ne=#1\relax
+    \xdef\pxkc@jchar{\kansuji\@ne}%
+  \endgroup}
+
+%% \pxkc@kcatcode{<charcode>}{<kcatcode>}
 \ifx\bxUseDebug\@undefined
 \def\pxkc@kcatcode#1#2{\kcatcode#1=#2\relax}
 \else
-\def\pxkc@kcatcode#1#2{\kcatcode#1=#2\relax
-  \chardef\pxkc@xa=#1\chardef\pxkc@xb=#2\relax
-  \expandafter\pxkc@kcatcode@a\meaning\pxkc@xa\@nil}
-\def\pxkc@kcatcode@a#1"#2\@nil{%
-  \pxkc@debug{\string\kcatcode"#2 set to \number\pxkc@xb}}
+\def\pxkc@kcatcode#1#2{%
+  \kcatcode#1=#2\relax
+  \chardef\pxkc@tmpa=#1\relax
+  \expandafter\pxkc@kcatcode@a\meaning\pxkc@tmpa\pxkc@end}
+\def\pxkc@kcatcode@a#1"#2\pxkc@end{%
+  \pxkc@debug{\string\kcatcode"#2 set to \number\kcatcode\pxkc@tmpa}}
 \fi
 
 %--------------------------------------- data tables
 
-%%%% table
+%% variables
+%\[pxkc@B@@<block>] : start charcode of the block
+%\[pxkc@G@@<block>] : members of the group block
+%\[pxkc@C@@<category>] : kcatcode value of the category
+
+%% \pxkc@bslst
+\def\pxkc@bslst{\@gobble}
+\def\pxkc@bbslst{}
+%% \pxkc@bval{<min_ccv>}{<block>}{<charcode>}{<full_name>}
 \def\pxkc@bval#1#2#3#4{% #4 is unused for now
-  \ifnum#1>\pxkc@ccv\else
+  \ifnum#1<\z@\else
+    % check if min_ccv >= 2 (now min_ccv has no other role)
     \ifnum#1<\tw@ \pxkc@okfalse
     \else
-      \@tempcnta=#3\relax \@tempcntb\@tempcnta \advance\@tempcntb\m@ne
-      \pxkc@issameblock\@tempcnta\@tempcntb
+      \@tempcnta=#3\relax
+      \@tempcntb\@tempcnta \advance\@tempcntb\m@ne
+      \pxkc@is@same@block\@tempcnta\@tempcntb
     \fi
-    \ifpxkc@ok \pxkc@debug{defunct: #2}%
-      \@namedef{pxkc@B@@#2}{-1}% invalid
+    \ifpxkc@ok % bad
+      \@namedef{pxkc@B@@#2}{-1}%
+      \edef\pxkc@bbslst{\pxkc@bbslst\space#2}%
+    \else\ifnum#3=\z@ % 'latn'
+      \@namedef{pxkc@B@@#2}{0}%
     \else
       \@namedef{pxkc@B@@#2}{#3}%
-      \edef\pxkc@bslst{\pxkc@bslst\pxkc@sep#2}\def\pxkc@sep{,}%
-    \fi
+      \edef\pxkc@bslst{\pxkc@bslst,#2}%
+    \fi\fi
   \fi}
-\def\pxkc@bslst{}\def\pxkc@sep{}
-\def\pxkc@cval#1#2{\@namedef{pxkc@C@@#1}{#2}}
+%% \pxkc@gval{<gblock>}{<block>,...}{<full_name>}
 \def\pxkc@gval#1#2#3{\@namedef{pxkc@G@@#1}{#2}}
 
+%% \pxkc@cval{<category>}{<kcatcode>}
+\def\pxkc@cval#1#2{\@namedef{pxkc@C@@#1}{#2}}
 \pxkc@cval{noncjk}{15}
 \pxkc@cval{kanji}{16}
 \pxkc@cval{han}{16}
@@ -136,9 +341,8 @@
 \pxkc@cval{cjk}{18}
 \pxkc@cval{hangul}{19}
 
-%--------------------------------------- block tables
-
-%=======================================
+%% Basic blocks
+%B======================================
 \pxkc@bval{1}{latn}{"0}         {Basic Latin}
 \pxkc@bval{1}{latn1}{"80}       {Latin-1 Supplement}
 \pxkc@bval{1}{latnA}{"100}      {Latin Extended-A}
@@ -202,6 +406,7 @@
 \pxkc@bval{2}{lepc}{"1C00}      {Lepcha}
 \pxkc@bval{2}{olck}{"1C50}      {Ol Chiki}
 \pxkc@bval{2}{cyrlC}{"1C80}     {Cyrillic Extended-C}
+\pxkc@bval{4}{geor2}{"1C90}     {Georgian Extended}
 \pxkc@bval{2}{sund1}{"1CC0}     {Sundanese Supplement}
 \pxkc@bval{2}{sym38}{"1CD0}     {Vedic Extensions}
 \pxkc@bval{1}{latn4}{"1D00}     {Phonetic Extensions}
@@ -341,7 +546,13 @@
 \pxkc@bval{2}{phlp}{"10B80}     {Psalter Pahlavi}
 \pxkc@bval{2}{orkh}{"10C00}     {Old Turkic}
 \pxkc@bval{2}{hung}{"10C80}     {Old Hungarian}
+\pxkc@bval{4}{rohg}{"10D00}     {Hanifi Rohingya}
 \pxkc@bval{2}{sym42}{"10E60}    {Rumi Numeral Symbols}
+\pxkc@bval{4}{yezi}{"10E80}     {Yezidi}
+\pxkc@bval{4}{sogo}{"10F00}     {Old Sogdian}
+\pxkc@bval{4}{sogd}{"10F30}     {Sogdian}
+\pxkc@bval{4}{chrs}{"10FB0}     {Chorasmian}
+\pxkc@bval{4}{elym}{"10FE0}     {Elymaic}
 \pxkc@bval{2}{brah}{"11000}     {Brahmi}
 \pxkc@bval{2}{kthi}{"11080}     {Kaithi}
 \pxkc@bval{2}{sora}{"110D0}     {Sora Sompeng}
@@ -360,41 +571,58 @@
 \pxkc@bval{2}{mong1}{"11660}    {Mongolian Supplement}
 \pxkc@bval{2}{takr}{"11680}     {Takri}
 \pxkc@bval{2}{ahom}{"11700}     {Ahom}
+\pxkc@bval{4}{dogr}{"11800}     {Dogra}
 \pxkc@bval{2}{wara}{"118A0}     {Warang Citi}
+\pxkc@bval{4}{diak}{"11900}     {Dives Akuru}
+\pxkc@bval{4}{nand}{"119A0}     {Nandinagari}
 \pxkc@bval{3}{zanb}{"11A00}     {Zanabazar Square}
 \pxkc@bval{3}{soyo}{"11A50}     {Soyombo}
 \pxkc@bval{2}{pauc}{"11AC0}     {Pau Cin Hau}
 \pxkc@bval{2}{bhks}{"11C00}     {Bhaiksuki}
 \pxkc@bval{2}{marc}{"11C70}     {Marchen}
 \pxkc@bval{3}{gonm}{"11D00}     {Masaram Gondi}
+\pxkc@bval{4}{gong}{"11D60}     {Gunjala Gondi}
+\pxkc@bval{4}{maka}{"11EE0}     {Makasar}
+\pxkc@bval{4}{lisu1}{"11FB0}    {Lisu Supplement}
+\pxkc@bval{4}{taml1}{"11FC0}    {Tamil Supplement}
 \pxkc@bval{1}{xsux}{"12000}     {Cuneiform}
 \pxkc@bval{1}{xsux1}{"12400}    {Cuneiform Numbers and Punctuation}
 \pxkc@bval{2}{xsux2}{"12480}    {Early Dynastic Cuneiform}
 \pxkc@bval{2}{egyp}{"13000}     {Egyptian Hieroglyphs}
+\pxkc@bval{4}{egyp1}{"13430}    {Egyptian Hieroglyph Format Controls}
 \pxkc@bval{2}{hluw}{"14400}     {Anatolian Hieroglyphs}
 \pxkc@bval{2}{bamu1}{"16800}    {Bamum Supplement}
 \pxkc@bval{2}{mroo}{"16A40}     {Mro}
 \pxkc@bval{2}{bass}{"16AD0}     {Bassa Vah}
 \pxkc@bval{2}{hmng}{"16B00}     {Pahawh Hmong}
+\pxkc@bval{4}{medf}{"16E40}     {Medefaidrin}
 \pxkc@bval{2}{plrd}{"16F00}     {Miao}
 \pxkc@bval{2}{cjk14}{"16FE0}    {Ideographic Symbols and Punctuation}
 \pxkc@bval{2}{tang}{"17000}     {Tangut}
 \pxkc@bval{2}{tang1}{"18800}    {Tangut Components}
+\pxkc@bval{4}{kits}{"18B00}     {Khitan Small Script}
+\pxkc@bval{4}{tang2}{"18D00}    {Tangut Supplement}
 \pxkc@bval{2}{kana2}{"1B000}    {Kana Supplement}
 \pxkc@bval{3}{kanaA}{"1B100}    {Kana Extended-A}
+\pxkc@bval{4}{kana3}{"1B130}    {Small Kana Extension}
 \pxkc@bval{3}{nshu}{"1B170}     {Nushu}
 \pxkc@bval{2}{dupl}{"1BC00}     {Duployan}
 \pxkc@bval{2}{sym53}{"1BCA0}    {Shorthand Format Controls}
 \pxkc@bval{1}{sym32}{"1D000}    {Byzantine Musical Symbols}
 \pxkc@bval{1}{sym33}{"1D100}    {Musical Symbols}
 \pxkc@bval{1}{sym34}{"1D200}    {Ancient Greek Musical Notation}
+\pxkc@bval{4}{sym58}{"1D2E0}    {Mayan Numerals}
 \pxkc@bval{1}{sym35}{"1D300}    {Tai Xuan Jing Symbols}
 \pxkc@bval{1}{sym36}{"1D360}    {Counting Rod Numerals}
 \pxkc@bval{1}{sym37}{"1D400}    {Mathematical Alphanumeric Symbols}
 \pxkc@bval{2}{sgnw}{"1D800}     {Sutton SignWriting}
 \pxkc@bval{2}{glag1}{"1E000}    {Glagolitic Supplement}
+\pxkc@bval{4}{hmnp}{"1E100}     {Nyiakeng Puachue Hmong}
+\pxkc@bval{4}{wcho}{"1E2C0}     {Wancho}
 \pxkc@bval{2}{mend}{"1E800}     {Mende Kikakui}
 \pxkc@bval{2}{adlm}{"1E900}     {Adlam}
+\pxkc@bval{4}{sym59}{"1EC70}    {Indic Siyaq Numbers}
+\pxkc@bval{4}{sym61}{"1ED00}    {Ottoman Siyaq Numbers}
 \pxkc@bval{2}{sym51}{"1EE00}    {Arabic Mathematical Alphabetic Symbols}
 \pxkc@bval{2}{sym43}{"1F000}    {Mahjong Tiles}
 \pxkc@bval{2}{sym44}{"1F030}    {Domino Tiles}
@@ -409,17 +637,22 @@
 \pxkc@bval{2}{sym55}{"1F780}    {Geometric Shapes Extended}
 \pxkc@bval{2}{sym56}{"1F800}    {Supplemental Arrows-C}
 \pxkc@bval{2}{sym57}{"1F900}    {Supplemental Symbols and Pictographs}
+\pxkc@bval{4}{sym60}{"1FA00}    {Chess Symbols}
+\pxkc@bval{4}{sym62}{"1FA70}    {Symbols and Pictographs Extended-A}
+\pxkc@bval{4}{sym63}{"1FB00}    {Symbols for Legacy Computing}
 \pxkc@bval{1}{haniB}{"20000}    {CJK Unified Ideographs Extension B}
 \pxkc@bval{2}{haniC}{"2A700}    {CJK Unified Ideographs Extension C}
 \pxkc@bval{2}{haniD}{"2B740}    {CJK Unified Ideographs Extension D}
 \pxkc@bval{2}{haniE}{"2B820}    {CJK Unified Ideographs Extension E}
 \pxkc@bval{3}{haniF}{"2CEB0}    {CJK Unified Ideographs Extension F}
 \pxkc@bval{1}{hani2}{"2F800}    {CJK Compatibility Ideographs Supplement}
+\pxkc@bval{4}{haniG}{"30000}    {CJK Unified Ideographs Extension G}
 \pxkc@bval{1}{spc07}{"E0000}    {Tags}
 \pxkc@bval{1}{spc08}{"E0100}    {Variation Selectors Supplement}
 \pxkc@bval{1}{spc09}{"F0000}    {Supplementary Private Use Area-A}
 \pxkc@bval{1}{spc10}{"100000}   {Supplementary Private Use Area-B}
 %=======================================
+%% Block subdivisions
 \ifnum\pxkc@ccv<2 \else
 \pxkc@gval{cjk12}{cjk1a,cjk1b,cjk1c}{Halfwidth and Fullwidth Forms}
 \pxkc@bval{0}{cjk1a}{"FF01}{Halfwidth and Fullwidth Forms/Other}
@@ -431,87 +664,152 @@
 \pxkc@bval{0}{latnx}{"00A0}{Latin-1 Supplement/Other}
 \pxkc@bval{0}{latny}{"00C0}{Latin-1 Supplement/Latin}
 \fi
-  %
-\edef\pxkc@foreachblk{\noexpand\@for\noexpand\x:={\pxkc@bslst}}
-\let\pxkc@bval\relax\let\pxkc@cval\relax\let\pxkc@bslst\relax
+\ifx\pxkc@bbslst\@empty\else
+  \pxkc@debug{Unsupported blocks:\pxkc@bbslst}
+\fi
+
+%% \pxkc@foreach@blocks
+\edef\pxkc@foreach@blocks{%
+  \noexpand\@for\noexpand\pxkc@blk:={\pxkc@bslst}}
+
+%% clean up
+\let\pxkc@bval\relax
+\let\pxkc@cval\relax
+\let\pxkc@gval\relax
+\let\pxkc@bslst\relax
+\let\pxkc@bbslst\relax
 
 %--------------------------------------- public interfaces
 
 %%<*> \cjkcategory{<block>}{<category>}
 % Sets the kcatcode of block <block> to <category>.
 % Here <block> is given as a block name or a single character in the
-% block to be specified; <category> is given as a category name or
-% a number ranged in 15--19.
-\def\cjkcategory{%
-  \bgroup\forcecjktoken\pxkc@cjkcategory@oa}
-\def\pxkc@cjkcategory@oa#1{%
-  \gdef\pxkc@nxt{\pxkc@cjkcategory@ob{#1}}%
-  \egroup\pxkc@nxt}
-\def\pxkc@cjkcategory@ob#1#2{%
-  \ifnum2<1#2 \edef\pxkc@arg{#2}%
-  \else\@ifundefined{pxkc@C@@#2}%
-   {\pxkc@err@ivcsy{#2}\def\pxkc@arg{18}}%
-   {\edef\pxkc@arg{\@nameuse{pxkc@C@@#2}}}\fi
+% block (groups are not considered) to be specified;
+% <category> is given as a category name or a kcatcode value (15--19).
+\newcommand*\cjkcategory{%
+  \begingroup
+    \forcecjktoken
+  \expandafter\endgroup\pxkc@cjkcategory@}% read args
+\def\pxkc@cjkcategory@#1#2{%
+  \edef\pxkc@arg{#2}%
+  \ifnum2<1\pxkc@arg\relax \else % <category> is a number
+    \@ifundefined{pxkc@C@@#2}{%
+      \pxkc@err@ivcsy{#2}\def\pxkc@arg{18}%
+    }{%else
+      \edef\pxkc@arg{\@nameuse{pxkc@C@@#2}}%
+    }%
+  \fi
   \pxkc@cjkcategory@a{#1}}
-\chardef\pxkc@la="7F
-\def\pxkc@cjkcategory@a#1{%
-  \@for\pxkc@x:={#1}\do{%
-    \expandafter\pxkc@cjkcategory@b\expandafter{\pxkc@x}}}
-\def\pxkc@cjkcategory@b#1{%
-  \pxkc@chkchr{#1}\ifnum\pxkc@cc>\pxkc@la
-    \pxkc@kcatcode{\pxkc@cc}{\pxkc@arg}%
+\def\pxkc@cjkcategory@a#1{%{<block>}
+  \pxkc@expand@text\pxkc@tmpa{#1}%
+  \ifx\pxkc@tmpa\relax
+    \pxkc@err@ivfmt{#1}%
   \else
-    \pxkc@cjkcategory@c{#1}%
+    \@for\pxkc@blk:=\pxkc@tmpa\do{%
+      \expandafter\pxkc@cjkcategory@b\expandafter{\pxkc@blk}}%
   \fi}
-\def\pxkc@cjkcategory@c#1{%
-  \pxkc@letcs\pxkc@grp{pxkc@G@@#1}%
-  \ifx\pxkc@grp\relax
-    \pxkc@letcs\pxkc@blk{pxkc@B@@#1}%
-    \ifx\pxkc@blk\relax
-      \pxkc@err@ivbsy{#1}%
-    \else\ifnum\pxkc@blk<\z@
-      \ifpxkc@warn@defunct \pxkc@warn@dfblk{#1}\fi
-    \else
-      \pxkc@kcatcode{\pxkc@blk}{\pxkc@arg}%
-    \fi\fi
+\def\pxkc@cjkcategory@b#1{%
+  \pxkc@get@cp{#1}\ifpxkc@ok % charcode
+    \pxkc@kcatcode{\pxkc@cp}{\pxkc@arg}%
   \else
-    \pxkc@expanded{\noexpand\pxkc@cjkcategory@a{\pxkc@grp}}%
+    \ifcase\pxkc@cp % no-op
+    \or % name
+      \edef\pxkc@blk{#1}%
+      \pxkc@set@cjkcategory
+    \else \pxkc@err@ivfmt{#1}% error
+    \fi
   \fi}
 
-%%<*> \pxkc@cjkcategory{<block>}{<kcatcode>}
-%%<*> \pxkc@cjkcategory@mccv{<mccv>}{<block>}{<kcatcode>}
-% Another entry point for internal use.
+%% \pxkc@set@cjkcategory
+% Sees \pxkc@blk (block name) and \pxkc@arg (kcatcode).
+\def\pxkc@set@cjkcategory{%
+  \pxkc@letcs\pxkc@tmpa{pxkc@G@@\pxkc@blk}%
+  \ifx\pxkc@tmpa\relax
+    \pxkc@letcs\pxkc@cp{pxkc@B@@\pxkc@blk}%
+    \ifx\pxkc@cp\relax
+      \pxkc@err@ivbsy{\pxkc@blk}%
+    \else\ifnum\pxkc@cp<\z@ % bad
+      \ifpxkc@warn@bad \pxkc@warn@dfblk{\pxkc@blk}\fi
+    \else\ifnum\pxkc@cp=\z@
+      \ifnum\pxkc@arg=15 \else
+        \pxkc@err@naltn
+      \fi
+    \else
+      \pxkc@kcatcode{\pxkc@cp}{\pxkc@arg}%
+    \fi\fi\fi
+  \else
+    \pxkc@expanded{\noexpand\pxkc@cjkcategory@a{\pxkc@tmpa}}%
+  \fi}
+
+%% \pxkc@cjkcategory{<block>}{<kcatcode>}
+%% \pxkc@cjkcategory@mccv{<minmccv>}{<maxmccv>}{<block>}{<kcatcode>}
+% Other entry points for internal use.
 \def\pxkc@cjkcategory#1#2{%
-  \edef\pxkc@arg{#2}%
-  \pxkc@cjkcategory@c{#1}}
+  \def\pxkc@blk{#1}\edef\pxkc@arg{#2}%
+  \pxkc@set@cjkcategory}
 \def\pxkc@cjkcategory@mccv#1#2#3#4{%
   \ifnum#1>\pxkc@mccv\else \ifnum#2<\pxkc@mccv\else
     \pxkc@cjkcategory{#3}{#4}%
   \fi\fi}
 
-%% \pxkc@chkchr{<arg>}
-\def\pxkc@chkchr#1{%
-  \afterassignment\pxkc@chkchr@a\chardef\pxkc@cc=`#1?\relax}
-\def\pxkc@chkchr@a#1\relax{}
+%% \pxkc@get@cp{<arg>}
+% ok / 0=nop / 1=name / 2=err
+\def\pxkc@get@cp#1{%
+  \pxkc@okfalse \chardef\pxkc@cp\z@
+  \pxkc@get@cp@a#1\pxkc@mk\pxkc@end}
+\def\pxkc@get@cp@a#1{%
+  \pxkc@cond\ifx#1\pxkc@mk\fi{%
+    \pxkc@get@cp@fin\pxkc@mk
+  }{\pxkc@cond\ifnum\pxkc@get@cp@b#1>\z@\fi{%
+    \pxkc@get@cp@c#1%
+  }{\pxkc@cond\ifnum2<"1#1 \fi{%
+    \pxkc@get@cp@c"#1%
+  }{%else
+    \chardef\pxkc@cp`#1 %
+    \pxkc@cond\ifnum\pxkc@cp>\pxkc@ascii@max\fi{%
+      \pxkc@oktrue \pxkc@get@cp@fin
+    }{%
+      \pxkc@okfalse \chardef\pxkc@cp\@ne \pxkc@get@cp@e
+    }%
+  }}}}
+\def\pxkc@get@cp@b#1{0\if#1"1\fi\if#1'1\fi\if#1+1\fi}
+\def\pxkc@get@cp@c{%
+  \afterassignment\pxkc@get@cp@d\count@=}
+\def\pxkc@get@cp@d{%
+  \chardef\pxkc@cp\count@
+  \ifnum\pxkc@cp=\count@ \pxkc@oktrue
+  \else \chardef\pxkc@cp\z@
+  \fi
+  \pxkc@get@cp@fin}
+\def\pxkc@get@cp@e#1\pxkc@mk{%
+  \pxkc@get@cp@fin\pxkc@mk}
+\def\pxkc@get@cp@fin#1\pxkc@mk\pxkc@end{%
+  \ifx\pxkc@mt#1\pxkc@mt\else
+    \pxkc@okfalse \chardef\pxkc@cp\tw@
+  \fi}
 
 %%<*> \cjkcategorymode{<mode>}
 % Invokes the cjk-category mode <mode>.
-\def\cjkcategorymode#1{%
-  \pxkc@letcs\pxkc@nxt{pxkc@M@@#1}%
-  \ifx\pxkc@nxt\relax
-    \pxkc@err@ivmsy
+\newcommand*\cjkcategorymode[1]{%
+  \pxkc@letcs\pxkc@next{pxkc@M@@#1}%
+  \ifx\pxkc@next\relax
+    \pxkc@err@ivmsy{#1}%
   \else
-    \pxkc@warn@defunctfalse
-    \pxkc@nxt
-    \pxkc@warn@defuncttrue
+    \pxkc@warn@badfalse
+    \pxkc@next
+    \pxkc@warn@badtrue
+    \kcatcode0=15 % 'latn' is fixed
   \fi}
 
 %--------------------------------------- CJK category modes
 
-%% Invariant blocks
+%% variables
+\let\pxkc@cat\relax
+\let\pxkc@base@cat\relax
+
+%% \[pxkc@K@@<block>] : the kcatcode of CJK core blocks
 \def\do#1#2{\expandafter\chardef\csname pxkc@K@@#1\endcsname=#2 }
-%=======================================
-\do{latn}  {15} % Basic Latin
+%C======================================
 \do{hang1} {19} % Hangul Jamo
 \do{sym15} {18} % Enclosed Alphanumerics
 \do{cjk01} {16} % CJK Radicals Supplement
@@ -546,8 +844,11 @@
 \do{cjk14} {18} % Ideographic Symbols and Punctuation
 \do{tang}  {18} % Tangut
 \do{tang1} {18} % Tangut Components
+\do{kits}  {18} % Khitan Small Script
+\do{tang2} {18} % Tangut Supplement
 \do{kana2} {17} % Kana Supplement
 \do{kanaA} {17} % Kana Extended-A
+\do{kana3} {17} % Small Kana Extension
 \do{nshu}  {18} % Nushu
 \do{sym45} {18} % Enclosed Alphanumeric Supplement
 \do{cjk13} {18} % Enclosed Ideographic Supplement
@@ -557,23 +858,26 @@
 \do{haniE} {16} % CJK Unified Ideographs Extension E
 \do{haniF} {16} % CJK Unified Ideographs Extension F
 \do{hani2} {16} % CJK Compatibility Ideographs Supplement
+\do{haniG} {16} % CJK Unified Ideographs Extension G
 %=======================================
+\ifnum\pxkc@mccv<2
+  \do{cjk1b} {18}
+  \do{cjk1c} {18}
+\fi
 
-%%%% cjkcategory modes
-\def\pxkc@resetcjkcat#1{%
+%% \pxkc@reset@all{<kcatcode>}
+\def\pxkc@reset@all#1{%
   \chardef\pxkc@base@cat=#1\relax
-  \pxkc@foreachblk\do{%
-    \pxkc@letcs\pxkc@cat{pxkc@K@@\x}%
+  \pxkc@foreach@blocks\do{%
+    \pxkc@letcs\pxkc@cat{pxkc@K@@\pxkc@blk}%
     \ifx\pxkc@cat\relax \let\pxkc@cat\pxkc@base@cat \fi
-    \pxkc@kcatcode{\@nameuse{pxkc@B@@\x}}{\pxkc@cat}}%
-  \ifnum\pxkc@mccv<2
-    \pxkc@cjkcategory{cjk12}{18}%
-  \fi}
+    \pxkc@kcatcode{\@nameuse{pxkc@B@@\pxkc@blk}}{\pxkc@cat}}}
 
-%=======================================
+%% \[pxkc@M@@<mode>] : the implementation of a mode
+%P======================================
 %% 'forcecjk'
 \def\pxkc@M@@forcecjk{%
-  \pxkc@resetcjkcat{18}%
+  \pxkc@reset@all{18}%
 }
 %% 'prefercjk'
 \def\pxkc@M@@prefercjk{%
@@ -585,7 +889,7 @@
 %% 'prefercjkvar'
 \def\pxkc@M@@prefercjkvar{%
   \pxkc@M@@japanesevar
-  \pxkc@cjkcategory@mccv{3}{3}{latny}{18}%
+  \pxkc@cjkcategory@mccv{3}{4}{latny}{18}%
   \pxkc@cjkcategory{latnA}{18}%
   \pxkc@cjkcategory{latnB}{18}%
   \pxkc@cjkcategory{latn2}{18}%
@@ -606,7 +910,7 @@
 \def\pxkc@M@@japanesevar{%
   \pxkc@M@@prefernoncjk
   \pxkc@cjkcategory@mccv{1}{2}{latn1}{18}%
-  \pxkc@cjkcategory@mccv{3}{3}{latnx}{18}%
+  \pxkc@cjkcategory@mccv{3}{4}{latnx}{18}%
   \pxkc@cjkcategory{sym04}{18}%
   \pxkc@cjkcategory{sym07}{18}%
   \pxkc@cjkcategory{sym08}{18}%
@@ -627,74 +931,200 @@
 }
 %% 'prefernoncjk'
 \def\pxkc@M@@prefernoncjk{%
-  \pxkc@resetcjkcat{15}%
+  \pxkc@reset@all{15}%
 }
 %=======================================
 %% 'default'
 \def\pxkc@M@@default{%
   \pxkc@M@@forcecjk
-  \pxkc@cjkcategory@mccv{3}{3}{latny}{15}%
-  \pxkc@cjkcategory@mccv{3}{3}{latnA}{15}%
+  \pxkc@cjkcategory@mccv{3}{4}{latny}{15}%
+  \pxkc@cjkcategory@mccv{3}{4}{latnA}{15}%
+  \pxkc@cjkcategory@mccv{4}{4}{latnB}{15}%
 }
 
-%%%% \showcjkcategory
-\def\showcjkcategory{%
-  \pxkc@foreachblk\do{%
-    \expandafter\ifx\csname pxkc@G@@\x\endcsname\relax
-      \typeout{\x\space= \the\kcatcode\@nameuse{pxkc@B@@\x}}%
-    \fi}}
+%--------------------------------------- safe text expansion
 
-%%-------- \withcjktokendisabled, etc.
+%% variables
+\let\pxkc@expd\relax
 
-%% \pxkc@genprobe
-\def\pxkc@genprobe{%
+%% \pxkc@expand@text\CS{<text>}
+\def\pxkc@expand@text#1#2{%
+  \begingroup
+    \let\UTFviii@invalid@err \noexpand
+    \let\UTFviii@two@octets  \pxkc@lead@byte@NB
+    \let\UTFviii@three@octets\pxkc@lead@byte@NC
+    \let\UTFviii@four@octets \pxkc@lead@byte@ND
+    \edef\pxkc@tmpa{#2}%
+    \let\UTFviii@invalid@err \pxkc@expand@text@err
+    \let\UTFviii@two@octets  \pxkc@lead@byte@PB
+    \let\UTFviii@three@octets\pxkc@lead@byte@PC
+    \let\UTFviii@four@octets \pxkc@lead@byte@PD
+    \let\pxkc@expd\@empty
+    \expandafter\pxkc@expand@text@a\pxkc@tmpa\pxkc@mk\pxkc@end
+    \global\let\pxkc@g@tmpa\pxkc@expd
+  \endgroup
+  \let#1\pxkc@g@tmpa}
+\def\pxkc@expand@text@a{%
+  \futurelet\pxkc@tok\pxkc@expand@text@b}
+\def\pxkc@expand@text@b{%
+  \ifcat\noexpand\pxkc@tok0% other
+    \let\pxkc@next\pxkc@expand@text@d
+  \else\ifcat\noexpand\pxkc@tok\@sptoken
+    \let\pxkc@next\pxkc@expand@text@f
+  \else\ifx\pxkc@tok\pxkc@mk % end
+    \let\pxkc@next\pxkc@expand@text@fin
+  \else\ifx\pxkc@tok\bgroup
+    \let\pxkc@next\pxkc@expand@text@err
+  \else\expandafter\ifx\noexpand\pxkc@tok\pxkc@tok % unexpandable
+    \let\pxkc@next\pxkc@expand@text@c
+  \else \let\pxkc@next\pxkc@expand@text@e
+  \fi\fi\fi\fi\fi
+  \pxkc@next}
+\def\pxkc@expand@text@c#1{%
+  \edef\pxkc@expd{\pxkc@expd#1}%
+  \pxkc@expand@text@a}
+\def\pxkc@expand@text@d#1{%
+  \ifnum`#1>\pxkc@ascii@max % high byte
+    \let\pxkc@next\pxkc@expand@text@ret
+    \lccode"EF=`#1\relax\lowercase{\expandafter^^ef}% reactivate
+  \else \expandafter\pxkc@expand@text@c\expandafter#1%
+  \fi}
+\def\pxkc@expand@text@e#1{%
+  \ifcat\noexpand#1\noexpand^^ef% active-char
+    \let\pxkc@next\pxkc@expand@text@ret
+    \expandafter#1%
+  \else \expandafter\pxkc@expand@text@err
+  \fi}
+\expandafter\def\expandafter\pxkc@expand@text@f\space{%
+  \pxkc@expand@text@c\space}
+\def\pxkc@expand@text@fin#1#2\pxkc@end{%
+  \ifx\pxkc@mt#2\pxkc@mt \else \let\pxkc@expd\relax \fi}
+\def\pxkc@expand@text@err{%
+  \pxkc@expand@text@fin\pxkc@mk}
+\def\pxkc@expand@text@ret{% UTF-8 bytes are read
+  \pxkc@get@jchar\count@
+  \pxkc@expand@text@c\pxkc@jchar}
+
+%% processors
+\def\pxkc@lead@byte@NB#1{\noexpand#1\noexpand}
+\def\pxkc@lead@byte@NC#1#2{\noexpand#1\noexpand#2\noexpand}
+\def\pxkc@lead@byte@ND#1#2#3{\noexpand#1\noexpand#2\noexpand#3\noexpand}
+\def\pxkc@lead@byte@PB#1#2{%
+  \count@`#1 \advance\count@-"C0
+  \pxkc@trail@byte{#2}\pxkc@next}
+\def\pxkc@lead@byte@PC#1#2#3{%
+  \count@`#1 \advance\count@-"E0
+  \pxkc@trail@byte{#2}\pxkc@trail@byte{#3}\pxkc@next}
+\def\pxkc@lead@byte@PD#1#2#3#4{%
+  \count@`#1 \advance\count@-"F0
+  \pxkc@trail@byte{#2}\pxkc@trail@byte{#3}\pxkc@trail@byte{#4}\pxkc@next}
+\def\pxkc@trail@byte#1{%
+  \multiply\count@"40 \advance\count@`#1 \advance\count@-"80 }
+
+%--------------------------------------- miscellaneous accessories
+
+%%<*> \showcjkcategory
+\newcommand*\showcjkcategory{%
+  \pxkc@foreach@blocks\do{%
+    \@ifundefined{pxkc@B@@\pxkc@blk}{}{%else
+      \typeout{\pxkc@blk\space= \the\kcatcode\@nameuse{pxkc@B@@\pxkc@blk}}%
+    }}}
+
+%--------------------------------------- get current cjktoken state
+
+%% variables
+\let\pxkc@ctmode\relax
+
+\ifx\currentcjktoken\@undefined         %<*!e-pTeX>
+
+%% \pxkc@make@probe
+\def\pxkc@make@probe{%
   \edef\pxkc@tmpa{\expandafter\string\csname
    pxkc@@\string ^^e3\string ^^81\string ^^82%
    \string ^^e3\string ^^82\string ^^a2\endcsname}}
-\bgroup \kcatcode"3040=15\kcatcode"30A0=18
-  \disablecjktoken\pxkc@genprobe \global\let\pxkc@prb@d\pxkc@tmpa
-  \enablecjktoken\pxkc@genprobe  \global\let\pxkc@prb@e\pxkc@tmpa
-  \forcecjktoken\pxkc@genprobe   \global\let\pxkc@prb@f\pxkc@tmpa
-\egroup
+\begingroup \kcatcode"3040=15 \kcatcode"30A0=18
+  \disablecjktoken\pxkc@make@probe \global\let\pxkc@prb@d\pxkc@tmpa
+  \enablecjktoken\pxkc@make@probe  \global\let\pxkc@prb@e\pxkc@tmpa
+  \forcecjktoken\pxkc@make@probe   \global\let\pxkc@prb@f\pxkc@tmpa
+\endgroup
 
-%% \pxkc@getcjktokmod\CS
-\def\pxkc@getcjktokmod#1{%
-  \bgroup \kcatcode"3040=15\kcatcode"30A0=18\pxkc@genprobe
+%% \pxkc@get@cjktoken@mode\CS
+\def\pxkc@get@cjktoken@mode#1{%
+  \begingroup
+    \kcatcode"3040=15 \kcatcode"30A0=18 \pxkc@make@probe
     \ifx\pxkc@tmpa\pxkc@prb@d \global\chardef\pxkc@gtmpa\z@
     \else\ifx\pxkc@tmpa\pxkc@prb@e \global\chardef\pxkc@gtmpa\@ne
     \else\ifx\pxkc@tmpa\pxkc@prb@f \global\chardef\pxkc@gtmpa\tw@
-    \else \global\let\pxkc@gtmpa\m@ne \fi\fi\fi
-  \egroup \let#1\pxkc@gtmpa}
+    \else \global\chardef\pxkc@gtmpa\@cclv
+    \fi\fi\fi
+  \endgroup
+  \let#1\pxkc@gtmpa}
 
-%%<+> \getcjktokenmode
+% The method does not work on new upTeX, but running LaTeX
+% on new upTeX without e-TeX is highly improbable....
+\ifx\pxkc@prb@d\pxkc@prb@e
+  \def\pxkc@get@cjktoken@mode#1{%
+    \chardef#1\@cclv} % always fail
+\fi
+
+\else                                   %<*e-pTeX>
+
+\def\pxkc@get@cjktoken@mode#1{%
+  \chardef#1\ifcase\currentcjktoken
+    \@ne \or \z@ \or \tw@ \or \@cclv
+  \fi}
+
+\fi                                     %</e-pTeX>
+
+%%<*> \getcjktokenmode
 % Returns the value showing current mode to \thecjktokenmode
 %  0: \disablecjktoken
 %  1: \enablecjktoken
 %  2: \forcecjktoken
-\def\getcjktokenmode{\pxkc@getcjktokmod\thecjktokenmode}
+%  255: failure
+\newcommand*\getcjktokenmode{%
+  \pxkc@get@cjktoken@mode\thecjktokenmode}
 
-%%<*> \setcjktokenmode{<val>}
-\def\pxkc@setcjktokmod#1{%
-  \ifcase#1\disablecjktoken\or\enablecjktoken\or\forcecjktoken\fi}
+%%<*> \setcjktokenmode{<value>}
+\newcommand*\setcjktokenmode[1]{%
+  \ifcase#1\disablecjktoken
+  \or \enablecjktoken
+  \or \forcecjktoken
+  \fi}
 
 %%<*> \withcjktokendisabled, etc.
-\def\withcjktokendisabled{\pxkc@withcjktokmod\disablecjktoken\@iden}
-\def\withcjktokenenabled{\pxkc@withcjktokmod\enablecjktoken\@iden}
-\def\withcjktokenforced{\pxkc@withcjktokmod\forcecjktoken\@iden}
-\def\withcjktokendisabledex{\pxkc@withcjktokmod\disablecjktoken}
-\def\withcjktokenenabledex{\pxkc@withcjktokmod\enablecjktoken}
-\def\withcjktokenforcedex{\pxkc@withcjktokmod\forcecjktoken}
-\def\pxkc@withcjktokmod#1{%
-  \pxkc@getcjktokmod\pxkc@tokmod #1\pxkc@withcjktokmod@a}
-\def\pxkc@withcjktokmod@a#1#2{%
-  #1{#2}\pxkc@setcjktokmod\pxkc@tokmod}
+\newcommand*\withcjktokendisabled{%
+  \pxkc@with@cjktoken@mode\disablecjktoken\@iden}
+\newcommand*\withcjktokenenabled{%
+  \pxkc@with@cjktoken@mode\enablecjktoken\@iden}
+\newcommand*\withcjktokenforced{%
+  \pxkc@with@cjktoken@mode\forcecjktoken\@iden}
+\newcommand*\withcjktokendisabledex{%
+  \pxkc@with@cjktoken@mode\disablecjktoken}
+\newcommand*\withcjktokenenabledex{%
+  \pxkc@with@cjktoken@mode\enablecjktoken}
+\newcommand*\withcjktokenforcedex{%
+  \pxkc@with@cjktoken@mode\forcecjktoken}
+\def\pxkc@with@cjktoken@mode#1{%
+  \pxkc@get@cjktoken@mode\pxkc@ctmode
+  \ifnum\pxkc@ctmode=\@cclv \pxkc@with@cjktoken@mode@b \fi
+  #1%
+  \pxkc@with@cjktoken@mode@a}
+\def\pxkc@with@cjktoken@mode@a#1#2{%
+  #1{#2}%
+  \setcjktokenmode\pxkc@ctmode}
+\def\pxkc@with@cjktoken@mode@b{%
+  \global\let\pxkc@with@cjktoken@mode@b\relax
+  \PackageWarning\pxkc@pkgname
+   {Failed in getting current cjktoken mode,\MessageBreak
+    reported}}
 
-%%------ initial setup
+%--------------------------------------- initial setup
 
-\ifx\pxkc@ccmode\relax\else
-\cjkcategorymode{\pxkc@ccmode}
+\ifx\pxkc@ccmode@opt\relax\else
+  \cjkcategorymode{\pxkc@ccmode@opt}
 \fi
 
-%%------ all done
+%--------------------------------------- all done
 \endinput
 %% EOF

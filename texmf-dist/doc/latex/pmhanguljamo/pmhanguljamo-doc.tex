@@ -1,10 +1,12 @@
+%!TEX TS-program = arara
+% arara: xelatex: { shell: yes, synctex: yes }
 \documentclass[a4paper]{article}
 \usepackage{kotex}
 %\usepackage{fontspec}
 %\setmainfont{Noto Serif}
 %\setsansfont{Noto Sans}
 %\setmonofont{Noto Sans Mono}
-\setmainfont{XITS}
+\setmainfont{STIX Two Text}
 
 \usepackage{hologo}
 \newcommand*\XeTeX{\hologo{XeTeX}}
@@ -12,7 +14,7 @@
 \newcommand*\LuaTeX{\hologo{LuaTeX}}
 \newcommand*\LuaLaTeX{\hologo{LuaLaTeX}}
 
-\usepackage{pmhanguljamo}
+\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
 \usepackage[colorlinks]{hyperref}
 
 %\usepackage{polyglossia}
@@ -20,7 +22,7 @@
 %\newfontfamily\hangulfont{UnBatang.ttf}[Script=Hangul,Renderer=OpenType]
 %%\newcommand*\jamo[1]{\begingroup\hangulfont\jamoword{#1}}
 
-\setmainhangulfont{Noto Serif CJK KR}[Script=Hangul,Renderer=OpenType]
+\setmainhangulfont{Noto Serif CJK KR}
 
 \providecommand*\textkorean[1]{#1}
 \newenvironment{korean}{}{}
@@ -30,12 +32,16 @@
 \newcommand*\thispkg{\pkg{pmhanguljamo}}
 %\maxsecnumdepth{section}
 
+\usepackage{hvextern}
+
 \begin{document}
 
 \title{Poorman's Hangul Jamo Input Method \\ \Large \texttt{pmhanguljamo.sty} }
 \author{Kangsoo Kim}
 %\date{10 Mar 2021\quad version 0.3.5}
-\date{20 Sep 2021\quad version 0.3.6}
+%\date{20 Sep 2021\quad version 0.3.6}
+%\date{6 Sep 2022\quad version 0.5.1}
+\date{7 Sep 2022\quad version 0.5.2}
 
 \maketitle
 
@@ -66,17 +72,22 @@ with this package \thispkg.
 
 Put the following line in your preamble:
 \begin{verbatim}
-\usepackage{pmhanguljamo}
+\usepackage[<options>]{pmhanguljamo}
 \end{verbatim}
-
-The option \texttt{[RRK]} or \texttt{[rrk]}
-can be given, in which case the \emph{Standard Korean Romanization Transliteration}
-input method is activated. In section~\ref{sec:rrk},
-we will explain about it.
-Without option, the default input method of this package is used, that
-is explained in sections~\ref{sec:rule}--\ref{sec:exam}.
+\begin{enumerate}
+\item \texttt{[rrk]} or \texttt{[RRK]}. The \emph{Standard Korean Romanization Transliteration} input method is activated. In section~\ref{sec:rrk},
+we will explain about it. If this option is missing, the default input
+method is used, which is explained in sections~\ref{sec:rule}--\ref{sec:exam}.
 You are to specify just one of them. Using both methods in one document is
 not allowed.
+
+\item \texttt{pmfont=<fontname>}. The font that is used to typeset Hangul 
+characters in the scope of \verb|\jamoword| or \texttt{jamotext}. If this option missing, the Jamo-Hangul font is to be same as the \textit{main font} of 
+the document.
+
+\item \texttt{pmfontfeature=<fontfeature>}. It is possible to provide \emph{font features} to
+the font selected as \texttt{pmfont}.
+\end{enumerate}
 
 \subsection{Commands and Environment Provided}
 
@@ -84,13 +95,13 @@ The main command to typeset Hangul is \verb|\jamoword|.
 
 \begin{quote}
 Input:
-\verb|\jamoword{myec dan/e/ga or su iss/svb/ni/da/.}|\\
-Result: \textkorean{\jamoword{myec dan/e/ga or su iss/svb/ni/da/.}}
+\verb|\jamoword{han/gvr/vi yeis i/rvm/vn hun/min/jex/vm/i/da/.}|\\
+Result: \textkorean{\jamoword{han/gvr/vi yeis i/rvm/vn hun/min/jex/vm/i/da/.}}
 \end{quote}
 
 The argument of the command consists of roman alphabets 
-and a few marks that represent the transliteration of Hangul Jamo.
-The transliteration rule will be explained in the section~\ref{sec:rule} (page~\pageref{sec:rule}).
+and a few marks that represent Hangul Jamo.
+The transliteration rule will be explained in the section~\ref{sec:rule}, page~\pageref{sec:rule}.
 
 And an environment named \emph{jamotext} is provided.
 In the environment, multiple paragraphs can be located. So, it is
@@ -104,7 +115,7 @@ ip/sai/ei i/nvn ba/ram/ei/do \\
 na/nvn goi/ro/ue/haiss/da/.
 \end{jamotext}
 \end{verbatim}
-The result:
+Result:
 \begin{quote}
 \begin{korean}
 \begin{jamotext}
@@ -117,64 +128,148 @@ na/nvn goi/ro/ue/haiss/da/.
 \end{korean}
 \end{quote}
 
+\paragraph{ASCII-Escaping Trick}
+Sometimes it is needed to locate a few math materials or ASCII stuffs
+in the midst of Jamo Hangul texts. The tricky syntax 
+\begin{verbatim}
+   !{<ASCII stuffs>}
+\end{verbatim}
+makes it possible to insert non-Jamo ASCII characters into \texttt{jamotext}
+context. Note that it is not allowed in the arguments of \verb|\jamoword|.
+
+\begin{verbatim}
+\begin{jamotext}
+in/gan/i pog/jex/goa eg/ab/ei 
+!{tyranny and oppression} 
+dai/hax/ha/nvn ma/ji/mag su/dan/v/ro/se 
+!{as a last resort}
+ban/ran/vr ir/v/ki/do/rog gax/yo/bad/ji 
+anh/v/rye/myen
+
+pi/ta/go/ra/sv/vi jex/ri/ !{\unskip :} 
+!{$a^2+b^2=c^2$}.
+\end{jamotext}
+\end{verbatim}
+
+\noindent Result:\\
+\begin{jamotext}
+in/gan/i pog/jex/goa eg/ab/ei 
+!{tyranny and oppression} 
+dai/hax/ha/nvn ma/ji/mag su/dan/v/ro/se 
+!{as a last resort}
+ban/ran/vr ir/v/ki/do/rog gax/yo/bad/ji 
+anh/v/rye/myen
+
+pi/ta/go/ra/sv/vi jex/ri/ !{\unskip :} !{$a^2+b^2=c^2$}.
+\end{jamotext}
+
+\bigskip
+
+The \verb|!{| mark must be located in the head of a word.
+To remove the preceding space of a word, \verb|\unskip| is
+used in the example. This trick will be useful when using
+math equations, \LaTeX\ macros, or English words along with long Jamo Hangul
+texts.
+
 
 \subsection{Setting up in your Preamble}
 
 Without any other packages, you can type Hangul. Be sure that
 proper fonts should be declared for Hangul, utilizing \pkg{fontspec}.
 
-\begin{verbatim}
-\documentclass{article}
+\begin{externalDocument}[ 
+	compiler=xelatex,
+	code,
+	lstOptions={basicstyle=\ttfamily},
+	cleanup]{testa}
+\documentclass{standalone}
+%StartVisiblePreamble
 \usepackage{fontspec}
-\usepackage{pmhanguljamo}
-
+\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
+%StopVisiblePreamble
 \begin{document}
-\fontspec[Script=Hangul]{UnBatang.ttf}
 \jamoword{an/nyex/ha/sei/yo}
 \end{document}
-\end{verbatim}
+\end{externalDocument}
 
-\texttt{UnBatang.ttf} is a font shipped in \pkg{unfonts-core} package of \TeX\,Live.
-Not all Korean fonts can be available to typeset so-called `Old Hangul',
+If you don't want to specify \texttt{pmfont} option, you should manually
+declare the proper font for Jamo Hangul with \texttt{Script=Hangul} option.\footnote{See section \ref{sec:font}.}
+
+\begin{externalDocument}[ 
+	compiler=xelatex,
+	code,
+	lstOptions={basicstyle=\ttfamily},
+	cleanup]{testa}
+\documentclass{standalone}
+%StartVisiblePreamble
+\usepackage{fontspec}
+\usepackage{pmhanguljamo}
+\newfontfamily\mypmfont{Noto Serif KR}[Script=Hangul]
+%StopVisiblePreamble
+\begin{document}
+\mypmfont\jamoword{an/nyex/ha/sei/yo}
+\end{document}
+\end{externalDocument}
+
+%\texttt{UnBatang.ttf} is a font shipped in \pkg{unfonts-core} package of \TeX\,Live.
+Not all Korean fonts are available to typeset so-called `Old Hangul',
 because they happen to lack
 the feature of composing Korean syllables from conjoining Jamo codes. Fortunately,
 we have a few more fonts besides \texttt{UnBatang} that are \emph{proper}
 and freely available, which are listed in the section~\ref{sec:font}.
 In \TeX\,Live distribution, \texttt{UnBatang} is the only \emph{proper} one.
 
-The \pkg{polyglossia} package provides Korean language support. This package \thispkg\
+The \pkg{polyglossia} package provides Korean language support. \thispkg\
 can be used with it. The following is an example.
 
-\begin{verbatim}
-\documentclass{article}
+\begin{externalDocument}[ 
+	compiler=xelatex,
+	code,
+	lstOptions={basicstyle=\ttfamily},
+	cleanup]{testa}
+\documentclass{standalone}
+%StartVisiblePreamble
 \usepackage{polyglossia}
 \setmainlanguage{english}
 \setotherlanguage{korean}
-\newfontfamily\hangulfont{UnBatang.ttf}[Script=Hangul]
+\newfontfamily\hangulfont{Noto Serif KR}[Script=Hangul]
 \usepackage{pmhanguljamo}
-
+%StopVisiblePreamble
 \begin{document}
 \begin{korean}
-\jamoword{han/gvr/vr si/hem/hab/ni/da/.}
+\jamoword{a/rvm/da/un han/gvr/ib/ni/da/.}
 \end{korean}
 \end{document}
-\end{verbatim}
+\end{externalDocument}
+
+In this example, the Korean language is set as `other language',
+and the default font for Korean is declared as `\verb|\hangulfont|'.
+In the \textit{korean} environment, the \verb|\hangulfont| will be
+used for Hangul.
 
 Or the ko.\TeX\ package bundle can be used together.
 
-\begin{verbatim}
-\documentclass{article}
+\begin{externalDocument}[ 
+	compiler=xelatex,
+	code,
+	lstOptions={basicstyle=\ttfamily},
+	cleanup]{testa}
+\documentclass{standalone}
+%StartVisiblePreamble
 \usepackage{kotex}
-\usepackage{pmhanguljamo}
-\setmainhangulfont{UnBatang.ttf}[Script=Hangul]
-
+\usepackage[pmfont={NotoSerifKR-Regular.otf}]{pmhanguljamo}
+%StopVisiblePreamble
 \begin{document}
 \jamoword{na/ras/mar/ss@/mi}
 \end{document}
-\end{verbatim}
+\end{externalDocument}
 
-In any case, the option \verb|[Script=Hangul]| should be given
-to the font settings for Hangul. For more information, see section~\ref{sec:font}.
+When ko.\TeX\ is used, the fontspec command for Hangul is not
+\verb|\fontspec| but \verb|\hangulfontspec|. We recommend that
+you use \texttt{pmfont=} option to avoid the complicated situation.
+
+%The \verb|[Script=Hangul]| should be given
+%to the font settings for Hangul. For more information, see section~\ref{sec:font}.
 
 The Korean writing system does not have hyphenation rules.
 The line breaking can occur just after almost every syllable. Therefore,
@@ -238,16 +333,16 @@ the same as Korean Romanization Method (RRK).\footnote{The \emph{Revised Romaniz
 \item The letter `c' is for `\textkorean{\jmcc{C}}'. In the RRK, it is `\texttt{ch}' there.
 \item The letter for `\textkorean{\jmcc{X}}' is \texttt{x}, which is a bit strange, but commonly accepted `\texttt{ng}' was not to be chosen. It is reserved for another consonant `\textkorean{\jamoword{@ng/}}'
 \item The letters `q, z, f' are more freely selected. These letters are the lost ones in Modern Korean.
-\item The letter `w' is chosen to present \emph{Choseong Filler}.
+\item The `light labial consonants', \textkorean{\jmcc{BX}, \jmcc{PX}} in the Old Hangul can be input as `bx, px, bbx, mx'. 
 %\footnote{\emph{Jungseong Filler} is not provided.} 
 \item\label{itm:llr} The letters `l' and `lr' are 
 prepared for very rare case. In the 15th century Korean, `\textkorean{\jamoword{sla}}' and
 `\textkorean{\jamoword{slra}}' were distinguishable. `sl' is chosen for the SIOS with left branch being longer, and `slr' means right branch longer. The same is the case `ssl', `sslr', `jl', `jlr' etc.
-\item The `light labial consonants', \textkorean{\jmcc{BX}, \jmcc{PX}} in the Old Hangul can be input as `bx, px, bbx, mx'. 
 \item In the Modern Korean, only `gg, dd, bb, ss, jj' are additionally permitted in the leading consonant position,
 But in the Old Hangul this limitation was not applied. So \emph{Choseong} can have multiple consonants, e.g., `bsg', `bsd', `ss', `sd' etc.
 \item The leading `zero consonant' can be omitted. So if a syllable begins with vowel, then the leading `\textkorean{\jmcc{X}}' will appear. You can write the leading `x' of a syllable or not.
 For example, `\verb|\jamoword{xax}|' and `\verb|\jamoword{ax}|' will generate the same result `\jamo{xax}'.
+\item The letter `w' is chosen to present \emph{Choseong Filler}. For example, \verb|\jamoword{wan}| renders \jamoword{wan}.
 \end{enumerate}
 
 \subsection{Vowels}
@@ -317,11 +412,15 @@ They can be downloaded from the url and used freely. And note that
 \texttt{UnBatang} is already installed in your \TeX\,Live installation.
 
 \begin{description}
-\item[Hamchorom LVT] Hamchorom fonts by Hancom Inc., and their variants with GSUB tables by KTS (the Korean \TeX\ Society).  \url{https://github.com/dohyunkim/hcr-lvt}
-\item[KoPub World] free fonts by Korea Publisher Society. \url{http://www.kopus.org/biz/electronic/font.aspx}
-\item[Malgun Gothic] One of Windows 10 system font. 
+\item[Hamchorom or Hamchorom-LVT] Hamchorom fonts by Hancom Inc., 
+\url{https://www.hancom.com/cs_center/csDownload.do},
+and their variants with GSUB tables by KTS (the Korean \TeX\ Society).  \url{https://github.com/dohyunkim/hcr-lvt}
+\item[KoPub World] free fonts by Korea Publisher Society. 
+\url{https://www.kopus.org/biz-electronic-font2/}.
+\item[Malgun Gothic] One of Windows 10 system fonts. 
 \item[Nanum Yet Hangul] Two font families from Naver. Nanum Myeongjo Yet Hangeul and Nanum Barun Gothic Yet Hangeul. \url{https://hangeul.naver.com/2014/archaicword}
-\item[Noto CJK or Source Han] Google's Noto CJK fonts. Or Adobe's Source Han fonts. \url{https://www.google.com/get/noto/help/cjk/}
+\item[Noto Korean or Source Han] Google's Noto Korean fonts --- Noto Serif Korean, Noto Sans Korean. Or Adobe's Source Han fonts. 
+\url{https://fonts.google.com}.
 \item[Un Batang] \verb|UnBatang.ttf|. on CTAN. \url{https://ctan.org/pkg/unfonts-core}
 \end{description}
 
@@ -339,7 +438,9 @@ Hamchorom Batang LVT font as:
 \begin{verbatim}
 \newfontfamily\pmjamofont{HCR Batang LVT}[Script=Hangul]
 \end{verbatim}
-and then issue \verb|\pmjamofont| command in the scope of Hangul to be typeset.
+and then issue \verb|\pmjamofont| command in the scope of Hangul to be typeset.\footnote{%
+	When \texttt{pmfont=} option is given, the \texttt{Script=Hangul} is
+	automatically activated by the package.}
 It is recommended that the \emph{proper} font should be used consistently.
 
 \medskip
@@ -363,7 +464,7 @@ The preamble is like this:
 \usepackage{pmhanguljamo}
 \usepackage{polyglossia}
 \setotherlanguage{korean}
-\newfontfamily\hangulfont{UnBatang.ttf}[Script=Hangul]
+\newfontfamily\hangulfont{Noto Serif KR}[Script=Hangul]
 \end{verbatim}
 
 \subsection{Modern Hangul}\label{sec:exammodern}
@@ -455,12 +556,12 @@ A 15th century text with tone marks (\emph{BangJeom}).
 \begin{verbatim}
 \begin{korean}
 \begin{jamotext}
-na/ras;mar:ss@/mi; dyuq/guig;ei; dar/a;
-mun/jj@x;oa;ro; se/rv s@/m@s/di; a/ni;h@r/ss@i;
-i;ren jyen/c@;ro; e/rin; b@ig;syeq;i; 
-ni/rv/go;jye; horf; bai; 
-i/sye;do; m@/c@m;nai: jey bdv;dvr; si/re; pye/di; 
-mod:h@rf no;mi; ha/ni;ra;.
+	na/ras;mar:ss@/mi;
+	中dyuq/國guig;ei; dar/a;
+	文mun/字jj@x;oa;ro; se/rv/ s@/m@s/di; a/ni;h@r/ss@i;
+	i;ren jyen/c@;ro; e/rin; 百b@ig;姓syeq;i; 
+	ni/rv/go;jye; horf; bai; i/sye;do;
+	m@/c@m;nai: jei bdv;dvr; si/re; pye/di; mod:h@rf no;mi; ha/ni;ra;
 \end{jamotext}
 \end{korean}
 \end{verbatim}
@@ -468,11 +569,12 @@ mod:h@rf no;mi; ha/ni;ra;.
 \begin{quote}
 \begin{korean}
 \begin{jamotext}
-na/ras;mar:ss@/mi; dyuq/guig;ei; dar/a;
-mun/jj@x;oa;ro; se/rv s@/m@s/di; a/ni;h@r/ss@i;
-i;ren jyen/c@;ro; e/rin; b@ig;syeq;i; ni/rv/go;jye; horf; bai; 
-i/sye;do; m@/c@m;nai: jey bdv;dvr; si/re; pye/di; 
-mod:h@rf no;mi; ha/ni;ra;.
+	na/ras;mar:ss@/mi;
+	中dyuq/國guig;ei; dar/a;
+	文mun/字jj@x;oa;ro; se/rv/ s@/m@s/di; a/ni;h@r/ss@i;
+	i;ren jyen/c@;ro; e/rin; 百b@ig;姓syeq;i; 
+	ni/rv/go;jye; horf; bai; i/sye;do;
+	m@/c@m;nai: jei bdv;dvr; si/re; pye/di; mod:h@rf no;mi; ha/ni;ra
 \end{jamotext}
 \end{korean}
 \end{quote}
@@ -521,8 +623,8 @@ the original Hangul writings, while standard is the phonetic transcription one.
 So we can make use of the former as an input method.
 
 If the package option \texttt{[RRK]} or \texttt{[rrk]} is given, 
-the RRK method is activated. In this case, only `Modern Hangul' can
-be available. 
+the RRK method is activated. With this method, only `Modern Hangul' can
+be typeset.
 
 \subsection{Transliteration Rule of RRK}
 
@@ -546,7 +648,7 @@ RRK transliteration rule.
 \centering
 \caption{RRK Vowels} \label{tab:rrkvow}
 \fontspec{UnDotum.ttf}
-\begin{tabular}{ll|ll|ll|ll|ll||ll}
+\begin{tabular}{ll|ll|ll|ll|ll|ll}
 \hline
 ㅏ & a & ㅓ & eo & ㅗ & o &  ㅜ & u & ㅡ & eu & ㅣ & i\\ 
 ㅐ & ae & ㅔ & e & ㅚ & oe & ㅟ & wi &  & & & \\ \hline
@@ -557,12 +659,12 @@ RRK transliteration rule.
 
 \begin{enumerate}
 \item When the leading consonant `{\fontspec{UnBatang}\jmcc{X}}' is placed
-at the head of a word, it can be ommitted. Otherwise the hyphen character (\verb|-|) should be put. For example, \\
+at the head of a word, it can be ommitted. Otherwise the hyphen character (\verb|-|) should exist. For example, \\
 \verb|\jamoword{annyeonghase-yo}| \textkorean{\jamoword{annyeonghase-yo}} \\
 \verb|\jamoword{jung-ang jungang}| \textkorean{\jamoword{jung-ang jungang}} \\
 \verb|\jamoword{ha-yeossseubnida}| \textkorean{\jamoword{ha-yeossseubnida}}
 
-\item The hyphen character \verb|-| can be used to forcibly separate syllables.
+\item The hyphen character \verb|-| can also be used to forcibly separate syllables.
 And the special character \verb|/| is taken as another syllable separator.
 They are exchangeable.\\
 \verb|\jamoword{haeb/ssal haeb-ssal}| \textkorean{\jamoword{haeb/ssal haeb-ssal}}
@@ -591,7 +693,6 @@ has only leading `@', i.e., \textkorean{\jamoword{x@}} should be input by `\verb
 If the syllable has trailing consonants or is part of a word, just \verb|@| is
 good. \\
 \verb|\jamoword{h@ngeul @@nam-eun}| \textkorean{\jamoword{h@ngeul @@nam-eun}}. 
-
 \end{enumerate}
 
 \subsection{Example of RRK method}
@@ -658,7 +759,7 @@ please read the documentation
 (in Korean).
 
 
-\section{Acknowledgement}
+\section{Acknowledgements}
 
 Thanks go to yihoze at the KTUG board, there he commented, 
 ``The IM apps I've tried such as Korean Windows Old Hangul IM or Saenaru IM 

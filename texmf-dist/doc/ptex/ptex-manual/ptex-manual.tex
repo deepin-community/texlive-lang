@@ -17,7 +17,6 @@
 \usepackage{pxjahyper}
 \usepackage{hologo}
 \usepackage{makeidx}\makeindex
-
 % common
 \usepackage{ptex-manual}
 
@@ -48,11 +47,6 @@
 \MakeShortVerb*{|}
 %%%%%%%%%%%%%%%%
 
-% logos
-\def\epTeX{$\varepsilon$-\pTeX}\def\eTeX{$\varepsilon$-\TeX}
-\def\eupTeX{$\varepsilon$-\upTeX}\def\upTeX{u\pTeX}
-\def\pTeX{p\kern-.10em\TeX}
-
 \def\_{\leavevmode\vrule width .45em height -.2ex depth .3ex\relax}
 
 \frenchspacing
@@ -69,12 +63,10 @@
 （以下，「コミュニティ版\pTeX 」）についてまとめたものである．
 \pTeX はもともとアスキー株式会社によって開発された\footnote{最新版は
 p3.1.11 (2009/08/17)．\url{https://asciidwango.github.io/ptex/}}ので，
-しばしば「ASCII \pTeX 」と呼ばれる．
-コミュニティ版\pTeX は，ASCII \pTeX に幾つかの改良を加えた
-「ptexenc版\pTeX\footnote{2004年から2011年まで開発されていた，
-UNIX向け日本語\TeX ディストリビューションptetexや後継のptexliveの
-一部であった．なお，バージョン番号はASCII~\pTeX と同じとされた．}」を
-基にしている．そのため，オリジナルのASCII~\pTeX とは
+しばしば「アスキー\pTeX 」または「ASCII \pTeX 」と呼ばれる．
+コミュニティ版\pTeX は，日本語\TeX 開発コミュニティがアスキー\pTeX を
+国際的なディストリビューション（かつてのte\TeX や現在の\TeX~Live）へ
+導入するにあたって幾つかの改良を加えたものであり，オリジナルとは
 動作が異なる点もあるので注意されたい．
 \begin{itemize}
   \item コミュニティ版\pTeX の開発元：\\
@@ -108,24 +100,100 @@ UNIX向け日本語\TeX ディストリビューションptetexや後継のptexl
 % https://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=460
 
 \TeX82で扱える文字コードの範囲は0--255であった．
-\pTeX ではこれに加えてJIS~X~0208の文字も利用可能になっている．
+\pTeX ではこれに加えてJIS~X~0208の文字も利用可能になっており，
+入力ファイルの文字コードはISO-2022-JP (jis)，EUC-JP (euc)，
+Shift-JIS (sjis)またはUTF-8 (utf8)に対応している．
 
-\pTeX への入力は\emph{「7ビットASCII文字集合」に
-「ISO-2022-JP (jis)，EUC-JP (euc)，Shift-JIS (sjis)または
-UTF-8 (utf8)のいずれかでエンコードされたJIS~X~0208の文字集合」を
-加えたもの}として解釈される．
-なお，入出力ファイルの文字コードは，起動時のオプション|-kanji=|<encoding>に
-よって指定できる（可能な<encoding>の値は|utf8|，|euc|，|sjis|，|jis|）．
+\begin{dangerous}
+ここでは，歴史に興味のある読者への情報として，アスキー\pTeX から
+現在のコミュニティ版\pTeX に至る文字コードの扱いの変遷を述べる．
 
+初期のアスキー\pTeX は「EUC版\pTeX 」「SJIS版\pTeX 」「JIS版\pTeX 」の
+3つのプログラムを別々に用意しており，一つの\pTeX バイナリでは文字コードが
+EUC-JP，Shift-JIS，ISO-2022-JPのどれか一つのファイルしか処理できなかった．
+% JIS のファイルなら EUC/SJIS どちらの ptex でも読み込めますが，
+% これも最初からではなく p2.1.5 (1997年) 以降のようで，
+% それまではスタイルファイルも EUC や SJIS にしておく必要があったようです．
+|-kanji| オプションが追加され，一つの\pTeX バイナリで複数の文字コードを
+選択処理できるようになったのは\pTeX~p3.0.1とp3.0.4の間（2002年10月頃）である．
+% http://tutimura.ath.cx/ptexlive/?ptexenc%2FDetails
+% の土村さんのコメント (2008-02-23) より
+
+コミュニティ版\pTeX は，UNIX向け日本語\TeX ディストリビューション
+ptetex\footnote{土村展之さんによって2004年から2009年まで開発．
+その後継のptexliveは，2010年に\pTeX が\TeX~Liveに取り込まれる際のベースに
+なった．}の開発過程で誕生した．
+2006年頃から文字コードがUTF-8のファイル入力への対応が進められ，2007年には
+文字コード変換を担う関数群が\code{ptexenc}というライブラリに切り出された．
+現在の\TeX~Liveでも\code{ptexenc}は種々のプログラムで利用されている．
+\end{dangerous}
+
+\subsection{ファイルの文字コードと内部コード}
+\pTeX への入力は，ファイルの文字コードそのままで扱われるとは限らず，
+\emph{内部コード}に変換されて内部処理に回される．ファイルの文字コードと
+内部コードは，それぞれ起動時のオプションによって制御できる．
+\begin{itemize}
+ \item |-kanji=|<encoding>
+  \begin{quotation}
+   入出力テキストファイルの文字コードを指定する．\\
+   利用可能な<encoding>の値：\code{euc}, \code{sjis}, \code{jis}, \code{utf8}
+  \end{quotation}
+ \item |-kanji-internal=|<encoding>
+  \begin{quotation}
+   内部コードを指定する（INIモード専用\footnote{フォーマットファイルは
+   内部コードに依存するので，実際の処理と整合性をとるため
+   virtual modeでは読み込んだフォーマットファイルと同じ内部コードで
+   動作するように固定している．\pTeX\ p3.8.2以降の仕様．}）．\\
+   利用可能な<encoding>の値：\code{euc}, \code{sjis}
+  \end{quotation}
+\end{itemize}
+このとおり，\pTeX への入力を仮にUTF-8としても，
+必ずEUC-JPかShift-JISのいずれかの内部コードに変換されるため，
+\emph{\pTeX はJIS~X~0208外の文字をサポートしない}．
+
+\pTeX の入出力ファイルの文字コードと内部コードは起動時のバナーから分かる．
+例えば
+\begin{verbatim}
+This is pTeX, Version 3.14159265-p3.8.0 (utf8.euc) (TeX Live 2018)
+(preloaded format=ptex)
+\end{verbatim}
+というバナーの場合は，|(utf8.euc)| から
+\begin{itemize}
+ \item 入出力ファイルの（既定）文字コードはUTF-8（但し，JIS~X~0208の範囲内）
+ \item \pTeX の内部コードはEUC-JP
+\end{itemize}
+という情報が見て取れる．入出力ファイルの文字コードと内部コードが同じ場合は，
+\begin{verbatim}
+This is pTeX, Version 3.14159265-p3.8.0 (sjis) (TeX Live 2018)
+(preloaded format=ptex)
+\end{verbatim}
+のように表示される．この例は，入出力ファイルの文字コードと内部コードが
+ともにShift-JISであることを示す．
+
+\begin{dangerous}
+上にはこのように書いたが，
+極めて細かい話をすれば，起動時のバナーは時にウソをつくので注意．
+ログファイルには記録されるバナーは常に正しい．これは以下の事情による．
+
+virtual modeでは，起動直後にバナーを表示してから，フォーマットファイル
+読込が行われる．この時点で初めて，起動時の内部コードとフォーマットの
+内部コードの整合性が確認される．ここでもし合致しなかった場合は，\pTeX は
+警告を表示してフォーマットに合った内部コードを選択し，以降の処理を行う．
+ログファイルはこの後にオープンされるため，そこには正しい内部コード
+（フォーマットと同じ内部コード）が書き込まれる\cite{build55}．
+
+このようなウソは，\pTeX に限らず\code{(preloaded format=***)}でも見られる．
+\end{dangerous}
+
+\subsection{和文文字と欧文文字の区別}
+\pTeX への入力は\emph{「7ビットASCII文字集合」に「あるファイルの文字コードで
+エンコードされたJIS~X~0208の文字集合」を加えたもの}として解釈される．
 そして，以下の規則により欧文文字と和文文字に区別して取り扱われる．
-なお，内部コードは|-kanji-internal=|<encoding>によって変更できる
-（可能な値は|euc|，|sjis|）が，こちらはini modeでのフォーマット作成時
-に限られ，virtual modeでは不可である（フォーマットの内部コードと実際の
-処理の整合性をとるため，\pTeX\ p3.8.2以降の仕様）．
 \begin{itemize}
  \item 7ビットASCII文字集合は欧文文字として扱われる．
  \item 最上位ビットが1の場合，\pTeX はそのバイトで始まる列について
-    EUC-JPまたはShift-JISのいずれかの内部コードへの変換を試みる．
+    ファイルの文字コードからEUC-JPまたはShift-JISのいずれかの
+    内部コードへの変換を試みる．
     和文文字の内部コードとして許される整数は
     $256c_1+c_2$，但し$c_i\in C_i$であり，ここで
   \begin{description}
@@ -136,13 +204,43 @@ UTF-8 (utf8)のいずれかでエンコードされたJIS~X~0208の文字集合�
     $C_2=\{\hex{40},\dots,\hex{7e}\}\cup\{\hex{80},\dots,\hex{fc}\}$.
   \end{description}
     である．この内部コードのパターンに合えば和文文字として扱われ，
-    合わなければ8ビット欧文文字のバイト列として扱われる．\footnote{例えば，
+    合わなければ8ビット欧文文字のバイト列として扱われる\footnote{例えば，
     入力ファイルの文字コードがUTF-8の場合，JIS~X~0208にない文字は
-    UTF-8のバイト列として読み込まれる．}
+    UTF-8のバイト列として読み込まれる．}．
 \end{itemize}
 % 参考：kanji.c の |is_char_kanji| の実装
 
-% [TODO] 8ビット欧文文字の ^^ab 形式への変換について
+なお，\TeX82には「|^^|記法」という間接的な入力法があり，|^^ab|のように
+カテゴリーコード7の文字2つに続いて|0|--|9|, |a|--|f|のいずれかが2つ続くと
+それを16進文字コードとする文字入力がなされたのと同じ処理に回るが，
+\pTeX 系列ではこれは\emph{常に欧文扱い}される（アスキー\pTeX~3.1.4以降
+\footnote{\pTeX~3.1.8で制御綴内での扱いが改善された．また，
+コミュニティ版\pTeX~4.0.0で文字列化においても常に欧文扱いするように改修した．
+これについては\ref{sec:printkanji16bit}節を参照．}）．
+
+最近（2010年代以降）では，\pTeX でもファイルの文字コードをUTF-8とする
+利用が増えてきた．
+コミュニティ版\pTeX では，\code{ptexenc}ライブラリによって
+UTF-8ファイル入力を内部コードEUC-JPまたはShift-JISに変換する際に
+以下の特殊な加工を行っている．
+% http://tutimura.ath.cx/ptetex/?UTF-8%C2%D0%B1%FE%282%29
+\begin{itemize}
+ \item Unicodeでのバラツキを同一視する多対一変換
+  \footnote{例えば，ソースファイル中の全角ダーシ(\code{U+2015})と
+  EMダーシ(\code{U+2014})は同一視され，内部的にはJISコード\code{"213D}と
+  して扱われ，ファイルに書き出される時は\code{U+2015}になる．}
+ \item BOMの無視（ファイル先頭に限らず）
+ \item 濁音・半濁音の合字処理
+ \item JISに変換できない文字を|^^ab|形式に変換
+  \footnote{例えば，ソースファイル中にçのような欧文文字を直接書くと，
+  これは和文文字の内部コードに変換できないため|^^c3^^a7|に変換される．}
+\end{itemize}
+なお，UTF-8ファイル出力時にはこのような加工の逆変換は行わない（入力時に
+加工されたままで出力される）．
+
+このように\emph{\pTeX は入力を内部コードに変換する処理を含むため，
+オリジナルの\TeX や\pdfTeX などの欧文\TeX とは入力に関して必ずしも
+互換でない}ことに注意が必要である．
 
 \begin{dangerous}
  以上で述べた「内部コードの範囲」はJIS~X~0213の漢字集合1面（Shift-JISの場合は2面も）を
@@ -165,45 +263,7 @@ UTF-8 (utf8)のいずれかでエンコードされたJIS~X~0208の文字集合�
  意図通りに出力されるかは全くの別問題である．
 \end{dangerous}
 
-\pTeX の入出力ファイルの文字コードと内部コードは起動時のバナーから分かる．
-例えば
-\begin{verbatim}
-This is pTeX, Version 3.14159265-p3.8.0 (utf8.euc) (TeX Live 2018)
-(preloaded format=ptex)
-\end{verbatim}
-というバナーの場合は，|(utf8.euc)| から
-\begin{itemize}
- \item 入出力ファイルの（既定）文字コードはUTF-8（但し，JIS~X~0208の範囲内）
- \item \pTeX の内部コードはEUC-JP
-\end{itemize}
-という情報が見て取れる．入出力ファイルの文字コードと内部コードが同じ場合は，
-\begin{verbatim}
-This is pTeX, Version 3.14159265-p3.8.0 (sjis) (TeX Live 2018)
-(preloaded format=ptex)
-\end{verbatim}
-のように表示される（この例は，入出力ファイルの文字コードと内部コードが
-ともにShift-JISの場合）．
-
-\begin{dangerous}
-上にはこのように書いたが，
-極めて細かい話をすれば，起動時のバナーは時にウソをつくので注意．
-ログファイルには記録されるバナーは常に正しい．これは以下の事情による．
-
-virtual modeでは，起動直後にバナーを表示してから，フォーマットファイル
-読込が行われる．この時点で初めて，起動時の内部コードとフォーマットの
-内部コードの整合性が確認される．ここでもし合致しなかった場合は，\pTeX は
-警告を表示してフォーマットに合った内部コードを選択し，以降の処理を行う．
-ログファイルはこの後にオープンされるため，そこには正しい内部コード
-（フォーマットと同じ内部コード）が書き込まれる\cite{build55}．
-
-このようなウソは，\pTeX に限らず|(preloaded format=***)|でも見られる．
-\end{dangerous}
-
-なお，\pTeX はDVIファイル内の和文文字コードとしてはJISコードを出力する．
-ただし，|\special|命令の文字列は内部コードで符号化されたバイト列として書き出される．
-
-\section{文字コードの取得と指定}
-
+\subsection{文字コードの取得と指定}
 \pTeX でも\TeX82と同様に，
 バッククオート(|`|)を使って「|`あ|」のようにして和文文字の内部コードを
 内部整数として得ることができる．欧文文字については，1文字の制御綴を
@@ -234,70 +294,15 @@ virtual modeでは，起動直後にバナーを表示してから，フォー�
 有限オートマトンとして記述できる(\cite{topic})．
 \pTeX では，和文文字には
 16~($\mathit{kanji}$), 17~($\mathit{kana}$), 18~($\mathit{other\_kchar}$)の
-カテゴリーコードの3つのいずれかが
-割り当てられており，\pTeX の入力プロセッサの状態遷移図は
-\autoref{fig:ptex_input}のように\TeX82のそれを拡張したものになっている．
+カテゴリーコードのいずれかが割り当てられている，
 
-\autoref{fig:ptex_input}を見れば分かるように，
+また，\pTeX~p4.0.0での入力プロセッサは
+\ref{sec:ptex_input}節で述べるように\TeX82のそれを拡張したものになっている．
+後の\autoref{fig:ptex_input}を見れば分かるように，
 （欧文文字直後の改行は空白文字扱いされるのと対照的に）
-\emph{和文文字直後の改行は何も発生しない}．和文文字の直後にグループ開始・終了が来て
-行が終わった場合も同様である．
-
-\begin{figure}[b]
-\small
-\[
-\entrymodifiers={++[o][F-]}
-\xymatrix{%
-  *\txt{}&*\txt{}&*\txt{}&*\txt{}\\
-  *\txt{}\ar[r]&
-  \textit{N} \ar@(ur,ul)[rr]^{1,2,7,13,E}
-  \ar[u]^{5\tpar, 14}
-  \ar@(d,l)[]^{9\tign,10\tign}
-  \ar@/_3em/[ddrr]^(0.55){J}
-  \ar[dr]^(0.4){0}&*\txt{}
-  &\textit{M}
-  \ar[u]^-{5\tsp,14}\ar@/_.5em/[dd]_(0.7){J}
-  \ar@/_3em/[lldd]_(0.85){10}
-  \ar@(u,r)[]^{1,2,7,9\tign,13,E}
-  \ar@/_1ex/[dl]_0&*\txt{}\\
-  *\txt{}&*\txt{}&*+[F-]\txt{\mbox{制御綴読み取り}}
-  \ar@{-->}@/^.5em/[dl]\ar@{-->}@/_1ex/[ur]\\
-  *\txt{}&
-  \textit{S}\ar@/^.5em/[ur]^-(0.4){0}
-  \ar[d]^-{5,14}
-  \ar@(d,l)^{9\tign,10\tign}
-  \ar@(d,d)@/_3em/[rr]_{J}
-  \ar@/_3em/[uurr]_(0.3){1,2,7,13,E}&*\txt{}&
-  \textit{K}\ar[ul]^(0.3){0}\ar@/_.5em/[uu]_{7,13,E}
-  \ar@/^1.5em/[ll]^{10}
-  \ar@(d,r)[]_{1,2,9\tign,J}
-  \ar[d]_-{5,14}
-  &*\txt{}\\
-  *\txt{}&*\txt{}&*\txt{}&*\txt{}
-%
-}
-\]
-\begin{itemize}
-  \item 状態\textit{N} (new line)，状態\textit{M} (middle of line)，
-  状態\textit{S} (skipping spaces)は\TeX82と同じであるが，
-  新たに状態\textit{K} (middle of kanji)が追加されている．
-  \item 矢印の上下に書いた数字はカテゴリーコードを表す．
-  \item ``E''はカテゴリーコード3, 4, 6, 8, 11, 12の文字達を，
-  ``J''は和文文字を表す．
-  \item ``$5\tpar$''のような下付き添字は「挿入するトークン」を表している．
-  但し，``$9\tign$'', ``$10\tign$''はその文字を無視することを示している．
-  \item 図中央の「制御綴読み取り」の後で$S$,~$M$どちらの状態になるかは，
-  次のように決まっている：
-  \begin{itemize}
-    \item 制御綴が「|\ |」のようなカテゴリーコード10の文字
-    からなるコントロールシンボルのときは状態$S$に遷移する．
-    \item 制御綴が「|\#|」「|\】|」のようなその他のコントロールシンボルのときは状態$M$に遷移する．
-    \item 制御綴がコントロールワードのときは状態$S$に遷移する．
-  \end{itemize}
-\end{itemize}
-\caption{\pTeX の入力プロセッサの状態遷移図}
-\label{fig:ptex_input}
-\end{figure}
+\emph{和文文字直後の改行は何も発生しない}．
+これは，日本語の原稿内では自由な箇所で改行が行えたほうが便利なためである．
+% jtexdoc.tex に記載あり
 
 和文文字のカテゴリーコードの値による動作の違いは次のようになる：
 \begin{itemize}
@@ -321,10 +326,10 @@ virtual modeでは，起動直後にバナーを表示してから，フォー�
 
 \begin{cslist}
   \csitem[\.{kcatcode} <character code>=<16--18>]
-  日本語\TeX 開発コミュニティ版の\pTeX では，和文文字のカテゴリーコード(|\kcatcode|)は
+  コミュニティ版\pTeX では，和文文字のカテゴリーコード(|\kcatcode|)は
   DVI中の上位バイトごと（すなわち，JISコードでいう区ごと）に値が設定可能である
   \footnote{%
-    オリジナルのASCII~\pTeX では，内部コードの上位バイトごとに値が設定可能であった．
+    オリジナルのアスキー\pTeX では，内部コードの上位バイトごとに値が設定可能であった．
     すなわち，内部コードがEUC-JPのときは区ごとに設定可能であったが，
     内部コードがShift-JISのときは
     $2n-1$区・$2n$区($1\leq n\leq 47$)は同一のカテゴリーコードを持つことになる．
@@ -346,18 +351,19 @@ virtual modeでは，起動直後にバナーを表示してから，フォー�
   %   * TeX Live 2019 rebuild 2019-05-30 (p3.8.2)
   %   * TeX Live 2020 (p3.8.3)
   %   * TeX Live 2021 (p3.9.0)
-
-  なお，\upTeX においては，|\kcatcode|は大きく仕様変更されている．
 \end{cslist}
 \begin{dangerous}
-  例えば，以下のコードで定義される|\X|, |\Y|で引数終端をしめす「あ」には
-  カテゴリーコードの情報は格納されない．そのため，|\X|,~|\Y|は全く同じ動作となる．
-  \begin{verbatim}
+  例えば，以下のコードで定義される|\X|, |\Y|で引数終端を示す「あ」には
+  カテゴリーコードの情報は格納されない．
+  そのため，\pTeX では|\X|,~|\Y|は全く同じ動作となる．
+\begin{verbatim}
   \kcatcode`あ=16
   \def\X#1あ{\message{X: #1}}
   \kcatcode`あ=17
   \def\Y#1あ{\message{X: #1}}
-  \end{verbatim}
+\end{verbatim}
+  なお，\upTeX では|\kcatcode|は大きく仕様変更されており，
+  |\X|と|\Y|は異なる動作となる．
 \end{dangerous}
 
 \begin{dangerous}
@@ -367,10 +373,307 @@ virtual modeでは，起動直後にバナーを表示してから，フォー�
   事実上は「16--18のどれかを格納可能な追加レジスタ」程度の使い方しかない．
 \end{dangerous}
 
-% [TODO] 和文文字を含む文字列化の挙動
-% "kanji character " になることも明文化したい
-% どの \section に含めるかわからないのでとりあえずここに置く
-|\string|や|\meaning|などの文字トークン列生成については以下の通り：
+\subsection{\pTeX の入力プロセッサ【\pTeX~4.0.0での改修を含む】}\label{sec:ptex_input}
+\TeX82の入力プロセッサは有限オートマトンとして記述できる．\pTeX においてもその点は
+変わらないが，和文文字絡みで拡張されたものになっている．
+
+\begin{figure}[tb]
+\small
+\[
+\entrymodifiers={++[o][F-]}
+\xymatrix{%
+  *\txt{}&*\txt{}&*\txt{}&*\txt{}\\
+  *\txt{}\ar[r]&
+  \textit{N} \ar@(ur,ul)[rr]^{1,2,7,13,E}
+  \ar[u]^{5\tpar, 14}
+  \ar@(d,l)[]^{9\tign,10\tign}
+  \ar@/_3em/[ddrr]^(0.55){J}
+  \ar[dr]^(0.4){0}&*\txt{}
+  &\textit{M}
+  \ar[u]^-{5\tsp,14}\ar@/_.5em/[dd]_(0.7){J}
+  \ar@/_3em/[lldd]_(0.85){10}
+  \ar@(u,r)[]^{1,2,7,9\tign,13,E}
+  \ar@/_1ex/[dl]_0&*\txt{}\\
+  *\txt{}&*\txt{}&*+[F-]\txt{\mbox{制御綴読み取り}}
+  \ar@{-->}@/^1ex/[dl]\ar@{-->}@/_1ex/[ur]
+  \ar@{-->}@/^1ex/[rrr]
+  &*\txt{}&*\txt{}&\textit{T}
+  \ar@/^1ex/[lll]^(0.25){0}
+  \ar[llu]_{7,13,E}\ar[d]^-{5,14}\ar@/^1ex/[lld]^{1,2,J}
+  \ar@(u,r)[]^{9\tign,10\tign}
+  \\
+  *\txt{}&
+  \textit{S}\ar@/^.5em/[ur]^-(0.4){0}
+  \ar[d]^-{5,14}
+  \ar@(d,l)^{9\tign,10\tign}
+  \ar@(d,d)@/_3em/[rr]_{J}
+  \ar@/_3em/[uurr]_(0.3){1,2,7,13,E}&*\txt{}&
+  \textit{K}\ar[ul]^(0.3){0}\ar@/_.5em/[uu]_(0.3){7,13,E}
+  \ar@/^1.5em/[ll]^{10}
+  \ar@(d,r)[]_{1,2,9\tign,J}
+  \ar[d]_-{5,14}
+  &*\txt{}&*\txt{}\\
+  *\txt{}&*\txt{}&*\txt{}&*\txt{}
+%
+}
+\]
+  \centering
+  \parbox{35zw}{%
+    ``E''はカテゴリーコード3, 4, 6, 8, 11, 12の文字達を，``J''は和文文字を表す．\\
+    ``$5\tpar$''のような下付き添字は「挿入するトークン」を表す．\\
+    但し，``$9\tign$'', ``$10\tign$''はその文字を無視することを示している．
+  }
+  \caption{\pTeX~p4.0.0（既定）の入力プロセッサの状態遷移図}
+  \label{fig:ptex_input}
+\end{figure}
+
+\autoref{fig:ptex_input}は\emph{\pTeX~p4.0.0既定時}における入力プロセッサの状態遷移図である．
+\TeX82から拡張された点，および説明が必要な点を以下に述べる．
+\begin{description}
+  \item[内部状態の追加] \TeX82 では状態\textit{N} (new line)，状態\textit{M} (middle of line)，
+  状態\textit{S} (skipping spaces)という3状態であったが，\pTeX では
+  次の2状態が追加された：
+  \begin{description}
+    \item[状態\textit{K}] 和文文字の直後．状態\textit{M}との差異は改行でスペースを出力しないこと．
+    \item[状態\textit{T}] 和文文字で終わるコントロールワードの直後．
+    状態\textit{S}との差異はグループ開始・終了(|{|, |}|)での遷移先が
+    状態\textit{M}でなく状態\textit{K}であること．
+  \end{description}
+  \item[「制御綴読み取り」後の状態] 以下のように決まっている：
+  \begin{itemize}
+    \item 制御綴が「|\ |」のようなカテゴリーコード10の文字
+    からなるコントロールシンボルのときは状態$S$に遷移する．
+    \item 制御綴が「|\#|」「|\】|」のようなその他のコントロールシンボルのときは状態$M$に遷移する．
+    \item 制御綴がコントロールワードのときは，
+    その名称の末尾の文字が欧文文字のときは状態$S$に，和文文字のときは状態$T$に遷移する．
+  \end{itemize}
+\end{description}
+
+実際には以下に説明する\.{ptexlineendmode}プリミティブによって，\pTeX の入力プロセッサの挙動は
+ある程度ユーザが制御できる．
+
+\begin{cslist}
+  \csitem[\.{ptexlineendmode}=<0--7>]
+  \pTeX の入力プロセッサの挙動を制御する．この値を2進法で$zyx$と表したとき
+  \footnote{%
+    つまり$x$は「一の位」，$y$は「二の位」，$z$は「四の位」である．
+    8以上の値を指定した場合は，下位3~bitの値が使われる．
+    負数を指定してもエラーは発生しないが，その場合の動作は未定義である．
+  }，$x$,~$y$,~$z$の値は，それぞれ以下のような状態で行が終わった場合，
+  改行が空白文字を発生させるかを制御する．
+  いずれも0では「空白文字を発生させない」，1では「空白文字を発生させる」．
+  \begin{description}
+    \item[$x$] 和文文字で終わるコントロールワードの直後にグループ開始・終了が1つ以上
+    \footnote{%
+      \pTeX では，このとき「改行が何も発生させない」挙動を伝統的にとってきた
+      （\TeX82からの改造量を減らしたかったのであろう）．
+      この挙動の是非が\.{ptexlineendmode}実装の一要因となった．
+    }
+    \item[$y$] 和文文字からなるコントロールシンボルの直後
+    \item[$z$] （コントロールワード・コントロールシンボルの名称の一部でない）
+    和文文字の直後にグループ開始・終了が1つ以上
+  \end{description}
+
+  このプリミティブは\pTeX~p4.0.0で追加された．既定値は0（つまり$x=y=z=0$）．
+\end{cslist}
+\begin{dangerous}
+  「和文文字からなるコントロールシンボルの直後にグループ開始・終了が1つ以上ある」状態で行が終了した場合，
+  改行が空白文字を発生させるのは$y$,~$z$のうち少なくとも1つが1のときである．
+\end{dangerous}
+
+\begin{dangerous}
+  従って，和文文字と行末の関係を例で示すと，以下のようになる：
+  \medskip
+
+  \begin{enumerate}
+    \itemsep\medskipamount
+    \item コントロールワード・コントロールシンボルの一部でない和文文字で行が終わった場合，
+    改行は何も発生しない．
+
+    \medskip
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+あいあ
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+あいあ
+い
+    \end{minipage}%
+
+    \item コントロールワード・コントロールシンボルの一部でない和文文字の直後に
+    グループ開始・終了(|{|, |}|)が1つ以上ある状態で行が終わった場合，
+    \.{ptexlineendmode}の値が0--3のとき，改行は何も発生しない．
+    4--7のとき，改行は空白文字を発生する．
+
+    \medskip
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=0
+{あいあ}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=0
+{あいあ}
+い
+    \end{minipage}%
+    \hfill\vrule\hfill\kern-2zw
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=4
+{あいあ}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=4
+{あいあ}
+い
+    \end{minipage}
+    \item 和文文字で終わるコントロールワードの直後にグループ開始・終了が
+    1つ以上ある状態で行が終わった場合，
+    \.{ptexlineendmode}の値が偶数のとき，改行は何も発生しない．
+    奇数のとき，改行は空白文字を発生する．
+
+    \medskip
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=0
+\def\漢{あ}{\漢}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=0
+\def\漢{あ}{\漢}
+い
+    \end{minipage}%
+    \hfill\vrule\hfill\kern-2zw
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=1
+\def\漢{あ}{\漢}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=1
+\def\漢{あ}{\漢}
+い
+    \end{minipage}
+    \item 和文文字からなるコントロールシンボルで行が終わった場合，
+    \.{ptexlineendmode}の値が0,~1, 4,~5のとき，改行は何も発生しない．
+    2,~3, 6,~7のとき，改行は空白文字を発生する．
+
+    \medskip
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=0
+\def\】{あ}\】
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=0
+\def\】{あ}\】
+い
+    \end{minipage}%
+    \hfill\vrule\hfill\kern-2zw
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=2
+\def\】{あ}\】
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=2
+\def\】{あ}\】
+い
+    \end{minipage}
+    \item 和文文字からなるコントロールシンボルの直後にグループ開始・終了が1つ以上ある状態で行が終わった場合，
+    \.{ptexlineendmode}の値が0,~1のとき，改行は何も発生しない．
+    その他のとき，改行は空白文字を発生する．
+
+    \medskip
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=0
+\def\】{あ}{\】}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=0
+\def\】{あ}{\】}
+い
+    \end{minipage}%
+    \hfill\vrule\hfill\kern-2zw
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=1
+\def\】{あ}{\】}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=1
+\def\】{あ}{\】}
+い
+    \end{minipage}
+    \par\medskip
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=2
+\def\】{あ}{\】}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=2
+\def\】{あ}{\】}
+い
+    \end{minipage}%
+    \hfill\vrule\hfill\kern-2zw
+    \begin{minipage}[t]{13zw}
+\begin{verbatim}
+\ptexlineendmode=4
+\def\】{あ}{\】}
+い
+\end{verbatim}
+    \end{minipage}\quad →\quad
+    \begin{minipage}[t]{5zw}
+\ptexlineendmode=4
+\def\】{あ}{\】}
+い
+    \end{minipage}
+    \medskip
+  \end{enumerate}
+\ptexlineendmode=0
+
+  なお，以前の\pTeX の入力プロセッサの挙動は
+  \begin{itemize}
+    \item \pTeX~p3.8.1以前（アスキー版も同じ）の挙動は|\ptexlineendmode=3|~($(x,y,z)=(1,1,0)$)
+    \item \pTeX~p3.8.2以降p3.10.0まで挙動は|\ptexlineendmode=1|~($(x,y,z)=(1,0,0)$)
+  \end{itemize}
+  としてそれぞれ再現できる(\cite{build87})．
+
+% * 欧文文字直後の改行では空白文字を発生させる
+%     * コントロールワードや「\ 」の直後の改行は何も発生しない
+%     * 「\ 」以外のコントロールシンボルの直後の改行は空白文字を発生させる
+% * 和文文字直後の改行は何も発生させない
+%     * 和文文字→グループ境界 {, } が有限個という状態で行が終わった場合も，
+%       何も発生しない（！）
+% ref. https://qiita.com/h-kitagawa/items/de963380bd3e576ab4e3
+\end{dangerous}
+
+
+
+\subsection{和文文字の文字列化の挙動【\pTeX~4.0.0での改修を含む】}\label{sec:printkanji16bit}
+|\string|や|\meaning|などの文字トークン列生成については以下の通りである．
 \begin{itemize}
   \item 欧文文字は\TeX82と同様で，（文字コード32の空白を除き）
     すべてカテゴリーコード12の文字トークンになるが，
@@ -383,13 +686,49 @@ virtual modeでは，起動直後にバナーを表示してから，フォー�
       という問題があった．
       \TeX~Live 2018の\pTeX~p3.8.1でこの問題は修正された(\cite{build37})．}．
   \item 和文文字はそのカテゴリーコードによらず，|\meaning|すると
-    \begin{itemize}
+    \begin{itemize}% すべて "kanji character " になる
       \item \the\kcatcode`漢:\quad \texttt{\meaning 漢}
       \item \the\kcatcode`あ:\quad \texttt{\meaning あ}
       \item \the\kcatcode`）:\quad \texttt{\meaning ）}
     \end{itemize}
     となる．
 \end{itemize}
+
+さて，\pTeX~version 3系列（\TeX~Live 2021まで）では|\meaning|，|\string|等の
+文字列化や制御綴名において和文文字と欧文文字の区別が失われてしまうケースがあった．
+% 途中の結果を一旦配列 |str_pool| に格納する処理で和欧文の区別が失われていた．
+\pTeX~4.0.0以降（\TeX~Live 2022）では，この状況でも
+和欧文の区別が維持される\cite{build81}．
+\begin{dangerous}
+\TeX~Live 2021では，ファイル文字コードUTF-8，内部コードEUC-JPの場合に例えば
+\begin{verbatim}
+  \def\fuga{^^c3^^bf 耽}\fuga
+  \meaning\fuga
+\end{verbatim}
+と入力すると，一行目は\def\fuga{^^c3^^bf 耽}「\code{\fuga}」であるのに対し
+二行目は「\code{macro:->耽 耽}」となっていた（\char\euc"C3BFはEUC-JPで
+\code{"C3BF}である．|^^c3^^bf|の代わりに直接\code{ÿ}と入力しても同様）．
+また
+\begin{verbatim}
+  \catcode"C3=11 \catcode"BF=11
+  \def\耽{P} \def\^^c3^^bf{Q}
+\end{verbatim}
+としたときの|\meaning\耽|は「|macro:->Q|」であった．
+改修後の\TeX~Live 2022では，一つ目の例は
+  \def\fuga{^^c3^^bf 耽}「\code{\meaning\fuga}」% 和欧文が区別される
+であるし，二つ目の例は
+  \catcode"C3=11 \catcode"BF=11
+  \def\耽{P} \def\^^c3^^bf{Q}
+  「\code{\meaning\耽}」% 和欧文が区別されるので "P" になるはず
+となる．
+% メモ：上の例は「^^c5^^bf <=> 顛」でもよかったのだが，
+% マニュアルの欧文フォント newtx/newtx で表示可能な文字にした．
+% 外部ファイル出力の変化例：
+%   \label{ß}%        % TL2021: <C3>^^9f => TL2022: ^^c3^^9f
+%   \label{^^c3^^9f}% % TL2021: <C3>^^9f => TL2022: ^^c3^^9f
+%   \label{ÿ}%        % TL2021: 耽       => TL2022: ^^c3^^bf
+%   \label{^^c3^^bf}% % TL2021: 耽       => TL2022: ^^c3^^bf
+\end{dangerous}
 
 % jtex.tex の「ラインブレーク」を簡略化
 \section{禁則}
@@ -1269,8 +1608,8 @@ p3.1.2で復活したという経緯がある．}．
 
 % luatexja.dtx より pTeX 用に移植
 \begin{dangerous}
-  以上に挙げたプリミティブ(|\kuten|, |\jis|, |\euc|, |\sjis|, |\kansuji|)は
-  展開可能(expandable)であり，
+  以上に挙げたプリミティブ(|\kuten|, |\jis|, |\euc|, |\sjis|, |\ucs|,
+  |\toucs|, |\kansuji|)は展開可能(expandable)であり，
   内部整数を引数にとるが，実行結果は\emph{文字列}であることに注意
   （\TeX82の|\number|, |\romannumeral|と同様）．
 
@@ -1518,6 +1857,9 @@ has been |\let| equal to a non-active character token.
 \pTeX でも通常2であるが，\pTeX の拡張DVI命令である|dir|が
 使用されている場合のみ3にセットされる．
 
+% [TODO] 書き方を工夫したい．
+|\special|命令の文字列は内部コードで符号化されたバイト列として書き出される．
+
 \begin{thebibliography}{99}
  \bibitem{topic} Victor Eijkhout, \textit{\TeX\ by Topic, A \TeX nician's Reference},
   Addison-Wesley, 1992.\\
@@ -1560,6 +1902,12 @@ has been |\let| equal to a non-active character token.
  \bibitem{man4} aminophen, 「pTeX の和文文字トークンのカテゴリーコード」，
   2019/04/22,\\
   \url{https://github.com/texjporg/ptex-manual/issues/4}
+ \bibitem{build87} h-kitagawa, 「[ptex] ［和字］+［ブレース］で終わっている行の行端の扱い」，
+  2019/08/05,\\
+  \url{https://github.com/texjporg/tex-jp-build/issues/87}
+ \bibitem{build81} h-kitagawa, 「バイト列と和文文字トークンの区別」，
+  2019/06/08,\\
+  \url{https://github.com/texjporg/tex-jp-build/issues/81}
  \bibitem{dvistd0} TUG DVI Standards Working Group,
   \textit{The DVI Driver Standard, Level 0}.\\
   \url{https://ctan.org/pkg/dvistd}

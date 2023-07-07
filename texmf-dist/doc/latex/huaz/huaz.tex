@@ -1,0 +1,381 @@
+%%
+%% `huaz.tex' documentation of the huaz package
+%%
+%% Copyright 2022 by Tibor Tomacs
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Tibor Tomacs.
+%%
+\documentclass[12pt]{article}
+\usepackage{listings,xcolor,lmodern,xurl}
+\usepackage[pdfstartview=FitH,colorlinks,allcolors=teal,bookmarksnumbered]{hyperref}
+\usepackage[a4paper,top=1in,bottom=1.2in]{geometry}
+\usepackage[T1]{fontenc}
+\PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
+\usepackage[english,magyar]{babel}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\lstset{literate={<}{{$\langle$}}1{>}{{$\rangle$}}1
+  {ö}{{\"o}}1{ü}{{\"u}}1{ó}{{\'o}}1{é}{{\'e}}1{á}{{\'a}}1{í}{{\'i}}1}
+
+\lstnewenvironment{examplelst}{\lstset{
+aboveskip=\bigskipamount,
+basicstyle=\footnotesize\color{blue!70!black}\ttfamily,
+backgroundcolor=\color{black!3},
+rulecolor=\color{black!15},
+frame=trbl,
+framesep=5pt,
+columns=fullflexible,
+xleftmargin=5.4pt,
+xrightmargin=5.4pt, 
+keepspaces}}{}
+
+\newcommand{\commandinline}{\hspace*{-15mm}\lstinline[
+delim={[is][\color{green!50!black}\normalfont\small\sffamily]{!}{!}},
+basicstyle=\color{red!70!black}\normalfont\ttfamily,
+columns=fullflexible,
+keepspaces]}
+
+\newcommand{\verbinline}{\lstinline[
+delim={[is][\color{green!50!black}\normalfont\small\sffamily]{!}{!}},
+basicstyle=\normalfont\ttfamily,
+columns=fullflexible,
+keepspaces]}
+
+\makeatletter
+\def\@oddfoot{\hfill\textsf{\color{gray}\thepage}\hfill}
+\def\@evenfoot{\@oddfoot}
+\def\ps@plain{\def\@oddfoot{\hfill\textsf{\color{gray}\thepage}\hfill}}
+\makeatother
+
+\def\huaz{\textbf{\sffamily hu\color{gray}az}}
+
+\begin{document}
+
+\title{The \huaz\ package\\
+       {\large v1.0 (2022/10/16)}}
+\author{Tibor Tómács\\
+        {\normalsize\href{email:tomacs.tibor@uni-eszterhazy.hu}{\nolinkurl{tomacs.tibor@uni-eszterhazy.hu}}}}
+\date{}
+\maketitle
+
+\begin{otherlanguage}{english}
+\begin{abstract}
+In Hungarian there are two definite articles, \emph{``a''} and \emph{``az''}, which are determined by the pronunciation of the subsequent word. The definite article is \emph{``az''}, if the first phoneme of the pronounced word is a vowel, otherwise it is \emph{``a''}.
+The \huaz\ package helps the user to insert automatically the correct definite article for cross-references and other commands containing text. Thus, if these change, the definite articles will also change accordingly.
+
+\medskip
+\emph{Sorry, the documentation is in Hungarian, because only users of the Hungarian language are interested.}
+\end{abstract}
+\end{otherlanguage}
+
+\section{Bevezetés}
+
+A magyar nyelvben a határozott névelő egy szó előtt aszerint \emph{,,a''} vagy \emph{,,az''}, hogy a szó kiejtve mássalhangzóval vagy magánhangzóval kezdődik. Például \emph{,,a szék''} vagy \emph{,,az asztal''}. Ez egyszerűnek tűnik, de gondoljon a következő esetekre:
+
+\begin{itemize}
+\item Például ha oldalszámra akar hivatkozni, akkor a \verb|\pageref| parancsot szoktuk használni. Ha ez elé akar határozott névelőt rakni, akkor nem mindegy, hogy mi az oldalszám. Például \emph{,,az~1.~oldal''}, \emph{,,a~2.~oldal''}, \emph{,,az~5.~oldal''}, \emph{,,a~10.~oldal''}. Így egyáltalán nem biztos, hogy az ,,\verbinline|a \pageref{!<kulcs>!}|'' kód megfelelő eredményt ad. Hasonló a probléma minden kereszthivatkozás esetén (\verb|\ref|, \verb|\pageref|, \verb|\eqref|, \verb|\cite|).
+
+\item Az is fontos, hogy egy kifejezés római szám vagy sem. Például \emph{,,az~V.~fejezet''}, ha \emph{V} római szám, azaz 5 a jelentése. Ugyanakkor \emph{,,a~V.~fejezet''}, ha \emph{V} betűt jelöl vagy alfanumerikus szám esetén a 22 értéket (\emph{V} az angol ábécében a 22.~betű).
+
+\item Néhány mássalhangzó speciális tulajdonságú. Például \emph{,,az M betű''}, de \emph{,,a Magyar Közlöny''}; \emph{,,az Ny betű''}, de \emph{,,a Nyugdíjfolyósító Igazgatóság''}; stb.
+\end{itemize}
+
+Először megemlítünk két eddigi megoldást a határozott névelők automatikus kezelésére, kiemelve azok hibáit és hiányosságait.
+
+\subsection{A magyar.ldf}
+
+Egyik lehetőség a \texttt{babel} csomag \texttt{magyar} opcióját beállító \texttt{magyar.ldf} fájl használata. Ennek teljes dokumentációja elérhető innen: \url{https://math.bme.hu/latex/magyarldf-doc.pdf}. 
+
+Az ebben definiált \verb|\az|, \verb|\aref|, \verb|\apageref|, \verb|\acite|, stb. parancsok alapvetően jól használhatóak, de van néhány fontos hiba, melyek a \huaz\ csomag megírását motiválták:
+
+\begin{itemize}
+\item Az \verb|\eqref| parancsnak nincs névelős verziója. Helyette az \verbinline|\aref({!<kulcs>!})| használható, de ez dőlt betűs környezetben nem álló betűs eredményt ad, mint az \verb|\eqref| esetében. Másik lehetőség, ami ezt a problémát megoldja, az \verbinline|\az{\eqref{!<kulcs>!}}| parancs. Ugyanakkor egyik megoldás sem kezeli a római számozású vagy a \verb|\tag| paranccsal címkézett egyenleteket.
+
+\item Az \verbinline|\az{\ref{!<kulcs>!}}| és \verbinline|\az{\pageref{!<kulcs>!}}| nem kezeli a római számozású hivatkozásokat. 
+
+\item  Az előző hiba akkor is fennáll, amikor az \verb|\az| parancsban egy római számmal kezdődő szöveg van. Például \verb|\az{V.~osztály}| eredménye \emph{,,a V.~osztály''}.
+
+\item Amennyiben nem kereszthivatkozáshoz, hanem egy szöveghez, vagy valamilyen szöveget tároló parancshoz kell automatikus névelő, akkor az ékezetes betűket UTF-8 kódolás esetén rosszul detektálja. A hiba alapvető oka, hogy az UTF-8 kódolású karakterek nem egy, hanem több bájton vannak kódolva, amit a \texttt{magyar.ldf} nem vesz figyelembe. Ezért például \verb|\az{ágy}| eredménye \emph{,,a ágy''}, mert nem betűként érzékeli az \emph{,,á''} betűt, így azt sem tudja, hogy ez magánhangzó. Meglepő módon \verb|\az{száz}| eredménye \emph{,,az száz''} is rossz. Ennek az az oka, hogy mivel számára az \emph{,,á''} nem betű, ezért az \emph{,,sz''} betűt különállónak tekinti, ami elé valóban \emph{,,az''} kell.
+
+\item Hibának ugyan nem tekinthető, de mindenesetre kényelmetlen, hogy például \verb|\az{\textbf{N betű}}| esetén a \verb|\textbf| parancs megzavarja a szó betűinek detektálását, így a névelő helytelenül \emph{,,a''} lesz.
+\end{itemize}
+
+\subsection{A nevelok csomag}
+
+2015-ben készült a \texttt{nevelok} csomag, ami szintén az automatikus határozott névelők kezelésére készült. A szerzője valószínűleg nem ismerte a \texttt{magyar.ldf} már akkor létező lehetőségeit, ezért készíthette ezt a jóval kevesebbet tudó csomagot. 
+
+2022-ben telepített \TeX-rendszeren tesztelve azt tapasztaltam, hogy nem kezeli az ékezetes betűk semmilyen formáját és sok esetben ad kereszthivatkozásoknál is rossz névelőt. Az utóbbinak az az oka, hogy közvetlenül a \verb|\ref| parancsot vizsgálja, ami nem kifejthető parancs. 
+
+Ezen dokumentáció elkészültéig semmilyen fejlesztése nem történt. Jelen állapotában nem javasolt ennek a csomagnak a használata.
+
+\subsection{A \texorpdfstring{\huaz}{huaz} csomag célja és működése}
+
+A \huaz\ csomag célja segíteni a felhasználót abban, hogy a kereszthivatkozásokhoz és szöveget tartalmazó parancsokhoz automatikusan beszúrja a megfelelő határozott névelőt. Így ha ezek változnak, akkor a határozott névelők is megfelelően változnak. 
+
+A másik cél ezt úgy megtenni, hogy a \texttt{magyar.ldf} és a \texttt{nevelok.sty} hibáit és hiányosságait korrigálja illetve pótolja.
+
+A \huaz\ csomag a következő esetekben illeszt az adott szöveg elé ,,az'' névelőt:
+
+\begin{enumerate}
+\item Az első betű magánhangzó (legyen az kis- vagy nagybetű, ékezetes vagy sem, magyar vagy sem, UTF-8, ISO-8859-2 karakterrel vagy repülő ékezettel megadva).
+
+\item Az első betű olyan kis vagy nagy mássalhangzó, amit önmagában kiejtve magánhangzóval kezdünk (például F, L, M, stb.) míg a második karakter (ha van) nem betű, hanem szám, írásjel vagy szóköz. Például ,,M-10''. Ide soroltunk néhány nem magyar ékezetes mássalhangzót is. Például ,,Ň.1''.
+
+\item Az első két karakter egy olyan kis vagy nagy kétjegyű mássalhangzó, amit önmagában kiejtve magánhangzóval kezdünk (például Ny, Ly, Sz, stb.) míg a harmadik karakter (ha van) nem betű, hanem szám, írásjel vagy szóköz. Például ,,NY betű''.
+
+\item Az első karakter 5.
+
+\item 1, 4, 7 vagy 10 jegyű számmal kezdődik és az első számjegy 1 (egy, ezer, egymillió, egymilliárd).
+\end{enumerate}
+
+Ha a szó elején található karakterek római számként is értelmezhetőek, akkor megválasztható, hogy azt konvertálja arab számra és a névelőt ahhoz határozza meg vagy sem. Például ,,XII/A'' esetén.
+
+\section{A \texorpdfstring{\huaz}{huaz} csomag használata}
+
+A \huaz\ csomagot a szokott módon kell betölteni:
+
+\commandinline|\usepackage{huaz}|
+
+Csomagopciók nincsenek. UTF-8 (\texttt{utf8}) és ISO-8859-2 (\texttt{latin2}) kódolású forrásfájl esetén működik, de a repülő ékezeteket is jól kezeli. Kompatibilis a \texttt{pdflatex}, \texttt{xelatex} és \texttt{lualatex} fordítókkal is. Például \texttt{pdflatex} fordítóval a következő betöltés megfelelő:
+
+\begin{examplelst}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{huaz}
+\PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
+\usepackage[magyar]{babel}
+\begin{document}
+ ...
+\end{document}
+\end{examplelst}
+A \texttt{hyperref} csomaggal is kompatibilis, így az is betölthető a \huaz\ mellé.
+
+A \texttt{magyar.ldf} \texttt{defaults=hu-min} opciója bekapcsol néhány olyan opciót is, amely elérhetővé teszi a saját automatikus névelőparancsait. Ezt ugyan nem kötelező, de hasznos a \huaz\ csomag használata esetén kikapcsolni. Ehhez a
+\begin{examplelst}
+\PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
+\end{examplelst}
+sor helyett használja a következőt:
+\begin{examplelst}
+\PassOptionsToPackage{defaults=hu-min,az=no,
+                      shortrefcmds=no,hunnewlabel=no}{magyar.ldf}
+\end{examplelst}
+
+A \texttt{xelatex} és \texttt{lualatex} fordítók esetén \texttt{babel} helyett a 
+\begin{examplelst}
+\usepackage{polyglossia}
+\setdefaultlanguage{hungarian}
+\end{examplelst}
+is használható.
+
+A \huaz\ csomag felhasználja az \texttt{xstring}, \texttt{refcount} és \texttt{iftex} csomagok szolgáltatásait, így ezek is betöltődnek. Másrészt felhasználásra kerül néhány 2021. október 10-én bevezetett változás a \LaTeX\ kerneljében, így csak az ezután telepített rendszereken működik megfelelően a csomag.
+
+\subsection{Parancsok}
+
+\commandinline|\az{!<szöveg>!}|
+
+A \verbinline|!<szöveg>!| elé a megfelelő határozott névelő kerül kisbetűs alakban. Ha a \verbinline|!<szöveg>!| elején római számként értelmezhető karakterek vannak, akkor a névelő az arab megfelelőjéhez igazodik. Például
+\begin{examplelst}
+Idén \az{V.B}~osztály rendezi a farsangot.
+\end{examplelst}
+eredménye ,,Idén az V.B~osztály rendezi a farsangot.''.
+
+A \verbinline|!<szöveg>!| lehet szöveget tároló parancs is. Például
+\begin{examplelst}
+\newcommand{\osztaly}{V.B}
+Idén \az{\osztaly}~osztály rendezi a farsangot.
+\end{examplelst}
+eredménye ,,Idén az V.B~osztály rendezi a farsangot.''.
+
+A \verbinline|!<szöveg>!| tartalmazhat szövegformázó parancsokat is (bővebben lásd \az{\ref{subsec-kapocs}}.~alszakaszban). Például
+\begin{examplelst}
+\newcommand{\osztaly}{V.B}
+Idén \az{\textbf{\osztaly}}~osztály rendezi a farsangot.
+\end{examplelst}
+eredménye ,,Idén az \textbf{V.B}~osztály rendezi a farsangot.''.
+
+A \verbinline|!<szöveg>!| lehet standard kereszthivatkozás is (\verb|\ref|, \verb|\pageref|, \verb|\eqref|, \verb|\cite|). Például
+\begin{examplelst}
+\section{Cím}\label{seca}
+\section{Cím}\label{secb}
+\az{\ref{seca}}.~szakaszban, \az{\textbf{\ref{secb}}}.~szakaszban
+\end{examplelst}
+eredménye ,,az 1. szakaszban, a \textbf{2}. szakaszban''. Ha a \texttt{section} számláló kiírása római számozásra van állítva a \verb|\renewcommand{\thesection}{\Roman{section}}| paranccsal, akkor az előző kód eredménye ,,az I. szakaszban, a \textbf{II}. szakaszban''.
+
+\subsubsection*{Korlátozások}
+\begin{enumerate}
+\item A \verbinline|!<szöveg>!| elején csak a \verb|\ref|, \verb|\pageref|, \verb|\eqref|, \verb|\cite| kereszthivatkozásokkal működik helyesen. Például a \texttt{hyperref} csomag \verb|\ref*| és \verb|\pageref*| parancsai nem működnek közvetlenül \verbinline|!<szöveg>!|-ként, de ez megoldható a később ismertetett \verb|\az*| paranccsal.
+
+\item A \verbinline|!<szöveg>!| elején a \verb|\cite| parancs jól működik a  \texttt{natbib} csomaggal és \texttt{bibtex} esetében is. A \texttt{biblatex} csomag használata esetén akkor működik jól, ha a \texttt{style} vagy \texttt{citestyle} opciók értéke \texttt{numeric}, \texttt{numeric-verb}, \texttt{alphabetic}, \texttt{alphabetic-verb} vagy \texttt{authoryear}. Akkor is jól működik, ha nem adjuk meg a \texttt{style} illetve \texttt{citestyle} opciók egyikét sem.
+
+\item A pdf vázlatfájába nem lehet \verb|\az| paranccsal szöveget beilleszteni. Tehát például a következő kód nem ad helyes vázlatfát, ha \texttt{hyperref} vagy \texttt{bookmark} csomagot használ:
+\begin{examplelst}
+\section{...\az{\ref{sec}}...}
+\end{examplelst}
+Viszont a cím a szövegben, fejlécben és a tartalomjegyzékben jól fog megjelenni. A problémát a később ismertetett \verb|\azsaved| paranccsal lehet megoldani.
+\end{enumerate}
+
+\commandinline|\az*{!<szöveg>!}|
+
+Ugyanaz mint a \texttt{*} nélküli esetben, de ekkor csak a névelő kerül kiírásra. Például \texttt{hyperref} csomag használatával:
+\begin{examplelst}
+\section{Cím}\label{sec}
+\az*{\ref{sec}}~\ref*{sec}.~szakaszban
+\end{examplelst}
+
+\commandinline|\azv{!<szöveg>!}|
+
+Ugyanaz mint \verbinline|\az{!<szöveg>!}|, de ha a \verbinline|!<szöveg>!| elején római számként értelmezhető karakterek vannak, akkor a névelő nem az arab megfelelőjéhez igazodik, hanem mint egyszerű karakterekhez. Például
+\begin{examplelst}
+\renewcommand{\thesection}{\Alph{section}}
+\setcounter{section}{21}
+\section{Cím}\label{sec}
+\az{\ref{sec}}.~szakaszban, \azv{\ref{sec}}.~szakaszban
+\end{examplelst}
+eredménye ,,az V.~szakaszban, a V.~szakaszban'', mert az első esetben a V betűt római számként értelmezte, a második esetben pedig nem. Mivel most alfanumerikus számra van beállítva a \texttt{section} számláló, ezért a második eset a jó.
+
+\commandinline|\azv*{!<szöveg>!}|
+
+Ugyanaz mint a \texttt{*} nélküli esetben, de ekkor csak a névelő kerül kiírásra.
+
+A parancsok nevében az ,,a'' betű kicserélhető ,,A'' betűre. Ekkor a határozott névelő nagybetűvel fog kezdődni, ami mondatok elején szükséges.
+
+\commandinline|\Az{!<szöveg>!}|\\
+\commandinline|\Az*{!<szöveg>!}|\\
+\commandinline|\Azv{!<szöveg>!}|\\
+\commandinline|\Azv*{!<szöveg>!}|
+
+Például
+\begin{examplelst}
+\section{Cím}\label{sec}
+\Az{\ref{sec}}.~szakaszban áttekintjük a téma rövid történetét.
+\end{examplelst}
+eredménye {,,Az 1.~szakaszban áttekintjük a téma rövid történetét.''}.
+
+\commandinline|\azsaved|
+
+Amikor kiadja az előző parancsok bármelyikét, akkor generálódik egy kifejthető \verb|\azsaved| parancs is. Ennek eredménye az a határozott névelő amelyik a szó elé kell. 
+
+Amikor \texttt{hyperref} vagy \texttt{bookmark} csomagot használ, akkor ahogyan azt korábban említettük, a következő kód esetén a cím, fejléc, tartalomjegyzék rendben lesz, de a pdf vázlatfája nem:
+\begin{examplelst}
+\section{\Az{\ref{sec}}...}
+\end{examplelst}
+Ez az \verb|\azsaved| paranccsal a következő módon oldható meg:
+\begin{examplelst}
+\section{\texorpdfstring{\Az{\ref{sec}}...}{\azsaved~\ref{sec}...}}
+\end{examplelst}
+Ekkor a vázlatfába az
+\begin{examplelst}
+\azsaved~\ref{sec}...
+\end{examplelst}
+kód kerül, ami már helyes eredményt ad. Ez a probléma a \verb|\texorpdfstring| helyett az
+
+\commandinline|\aznotshow|
+
+paranccsal egyszerűbben is megoldható. Ugyanis ezt helyezve az \verb|\az| (vagy bármelyik verziója) elé, az eredmény nem jelenik meg, csak az \verb|\azsaved| generálódik le a megfelelő határozott névelővel. Így
+\begin{examplelst}
+\aznotshow\Az{\ref{sec}}
+\section{\azsaved~\ref{sec}...}
+\end{examplelst}
+szintén helyes eredményt ad a vázlatfában is.
+
+\subsection{Rövidítések}
+
+\commandinline|\aref{!<kulcs>!}  | $\equiv$ \verbinline|\az{\ref{!<kulcs>!}}|\\
+\commandinline|\aref*{!<kulcs>!} | $\equiv$ \verbinline|\az*{\ref{!<kulcs>!}}|\\
+\commandinline|\avref{!<kulcs>!} | $\equiv$ \verbinline|\azv{\ref{!<kulcs>!}}|\\
+\commandinline|\avref*{!<kulcs>!}| $\equiv$ \verbinline|\azv*{\ref{!<kulcs>!}}|
+
+\commandinline|\aeqref{!<kulcs>!}  | $\equiv$ \verbinline|\az{\eqref{!<kulcs>!}}|\\
+\commandinline|\aeqref*{!<kulcs>!} | $\equiv$ \verbinline|\az*{\eqref{!<kulcs>!}}|\\
+\commandinline|\aveqref{!<kulcs>!} | $\equiv$ \verbinline|\azv{\eqref{!<kulcs>!}}|\\
+\commandinline|\aveqref*{!<kulcs>!}| $\equiv$ \verbinline|\azv*{\eqref{!<kulcs>!}}|
+
+\commandinline|\apageref{!<kulcs>!}  | $\equiv$ \verbinline|\az{\pageref{!<kulcs>!}}|\\
+\commandinline|\apageref*{!<kulcs>!} | $\equiv$ \verbinline|\az*{\pageref{!<kulcs>!}}|\\
+\commandinline|\avpageref{!<kulcs>!} | $\equiv$ \verbinline|\azv{\pageref{!<kulcs>!}}|\\
+\commandinline|\avpageref*{!<kulcs>!}| $\equiv$ \verbinline|\azv*{\pageref{!<kulcs>!}}|
+
+\commandinline|\acite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}  | $\equiv$ \verbinline|\az{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
+\commandinline|\acite*[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!} | $\equiv$ \verbinline|\az*{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
+\commandinline|\avcite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!} | $\equiv$ \verbinline|\azv{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
+\commandinline|\avcite*[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}| $\equiv$ \verbinline|\azv*{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|
+
+A parancsok nevében az első ,,a'' betű kicserélhető ,,A'' betűre. Ekkor a határozott névelő nagybetűvel fog kezdődni, ami mondatok elején szükséges:
+
+\commandinline|\Aref \Avref \Aeqref \Aveqref \Apageref \Avpageref \Acite \Avcite|
+
+Például
+\begin{examplelst}
+\section{Cím}\label{seca}
+\section{Cím}\label{secb}
+\Aref{seca}.~és \aref{secb}.~szakaszban
+\end{examplelst}
+eredménye ,,Az 1. és a 2. szakaszban''.
+
+\subsection{A huaz kapocs}\label{subsec-kapocs}
+
+Amikor a \huaz\ csomag megkeresi a megfelelő határozott névelőt, akkor a szövegben található kereszthivatkozásokat lecseréli a kifejthető verziójukra, továbbá a kifejtés során a formázó parancsokat (\verb|\emph|, \verb|\textbf|, \verb|\small|, stb.) figyelmen kívül hagyja. Emiatt lehetséges, hogy például a következő kódok működnek:
+\begin{examplelst}
+\newcommand{\osztaly}{V.B}
+Idén \az{\textbf{\osztaly}}~osztály rendezi a farsangot.
+\end{examplelst}
+
+\begin{examplelst}
+\section{Cím}\label{sec}
+\az{\textbf{\ref{sec}}}
+\end{examplelst}
+
+\commandinline|\AddToHook{huaz}{!<kód>!}|
+
+A \huaz\ csomag azon szövegformázó parancsokat hagyja figyelmen kívül, melyek egy előre definiált listában szerepelnek. Amennyiben olyan formázó parancsot használ, ami még ezen a listán nem található, akkor az a felhasználó által is bővíthető. Például
+\begin{examplelst}
+\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
+\newcommand{\mytext}{X.A~osztály}
+\az{\myfont{\mytext}}
+\end{examplelst}
+esetén a \verb|\myfont| nincs ezen a listán, ezért ez a kód hibával fordul. A listára az
+\begin{examplelst}
+\AddToHook{huaz}{\def\myfont{}}
+\end{examplelst}
+módon vehető fel. Ezzel azt érjük el, hogy a névelő megállapítása során a \verb|\myfont| parancs ne jelentsen semmit. Tehát a következő kód már megfelelően működik:
+\begin{examplelst}
+\AddToHook{huaz}{\def\myfont{}}
+\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
+\newcommand{\mytext}{X.A~osztály}
+\az{\myfont{\mytext}}
+\end{examplelst}
+Az előző eset a \texttt{huaz} kapocs nélkül így is megoldható:
+\begin{examplelst}
+\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
+\newcommand{\mytext}{X.A~osztály}
+\az*{\mytext}~\myfont{\mytext}
+\end{examplelst}
+Ha a \verb|\myfont| a \verb|\mytext| definíciójában szerepel, akkor a \texttt{huaz} kapocs használata nem kerülhető meg:
+\begin{examplelst}
+\AddToHook{huaz}{\def\myfont{}}
+\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
+\newcommand{\mytext}{\myfont{X.A~osztály}}
+\az{\mytext}
+\end{examplelst}
+Kereszthivatkozásnál, ha maga a számozás van standardtól különböző paranccsal formázva, akkor a \texttt{huaz} kapocs használata szintén nem kerülhető meg. Például
+\begin{examplelst}
+\AddToHook{huaz}{\def\myfont{}}
+\DeclareRobustCommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
+\renewcommand{\thesection}{\myfont{\arabic{section}}}
+\section{Cím}\label{sec}
+\aref{sec}
+\end{examplelst}
+Itt a \verb|\myfont| azért lett erős parancsként definiálva, mert mozgó argumentumba kerül. Az előző példa esete ritkán fordul elő, mert a számláló típusának megadásánál (arab, római, stb.) nem szokás szövegformázó parancsot is alkalmazni.
+
+\end{document}

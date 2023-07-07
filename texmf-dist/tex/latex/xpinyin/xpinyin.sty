@@ -6,7 +6,7 @@
 %%
 %% xpinyin.dtx  (with options: `package')
 %% 
-%%     Copyright (C) 2012-2020 by Qing Lee <sobenlee@gmail.com>
+%%     Copyright (C) 2012-2022 by Qing Lee <sobenlee@gmail.com>
 %% --------------------------------------------------------------------------
 %% 
 %%     This work may be distributed and/or modified under the
@@ -27,10 +27,10 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
-\GetIdInfo$Id: xpinyin.dtx d74fa10 2020-10-19 20:23:41 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: xpinyin.dtx dd0cc20 2022-07-14 18:53:49 +0800 Qing Lee <sobenlee@gmail.com> $
   {Automatically add pinyin to Chinese characters}
 \ProvidesExplPackage{\ExplFileName}
-  {\ExplFileDate}{2.9}{\ExplFileDescription}
+  {\ExplFileDate}{3.1}{\ExplFileDescription}
 \msg_new:nnn { xpinyin } { l3-too-old }
   {
     Support~package~'expl3'~too~old. \\\\
@@ -46,8 +46,8 @@
   { \sys_if_engine_xetex_p: }
   { \sys_if_engine_pdftex_p: }
   { \msg_critical:nn { xpinyin } { engine-not-supported } }
-\RequirePackage { xparse }
-\RequirePackage { l3keys2e }
+\cs_if_exist:NF \NewDocumentCommand
+  { \RequirePackage { xparse } }
 \prop_const_from_keyval:Nn \c__xpinyin_tone_prop
   {
     { ā } = { \@tabacckludge= a } ,
@@ -187,9 +187,9 @@
           {
             \l__xpinyin_pinyin_box_hook_tl
             \__xpinyin_select_font:
-            \clist_if_exist:cTF { c__xpinyin_multiple_ #1 _clist }
-              { \l__xpinyin_multiple_tl \l__xpinyin_format_tl }
-              { \l__xpinyin_format_tl }
+            \l__xpinyin_format_tl
+            \clist_if_exist:cT { c__xpinyin_multiple_ #1 _clist }
+              { \l__xpinyin_multiple_tl }
             {#3}
           }
         \dim_compare:nNnT
@@ -576,7 +576,12 @@
       { c__xpinyin_ \__xpinyin_char_to_unicode:n {#1} _tl }
       { \__xpinyin_pinyin:n {#2} }
   }
-\ProcessKeysOptions { xpinyin }
+\cs_if_exist:NTF \ProcessKeyOptions
+  { \ProcessKeyOptions [ xpinyin ] }
+  {
+    \RequirePackage { l3keys2e }
+    \ProcessKeysOptions { xpinyin }
+  }
 %% 
 %%     This package consists of the file  xpinyin.dtx,
 %%                  and the derived files xpinyin.sty,

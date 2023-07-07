@@ -2,7 +2,7 @@
 % !TeX program  = XeLaTeX
 % !TeX encoding = UTF-8
 %
-% Copyright (C) 2003--2021
+% Copyright (C) 2003--2022
 % CTEX.ORG and any individual authors listed elsewhere in this file.
 % --------------------------------------------------------------------------
 %
@@ -56,7 +56,7 @@ Issues and pull requests are welcome.
 Copyright and Licence
 ---------------------
 
-    Copyright (C) 2003--2021
+    Copyright (C) 2003--2022
     CTEX.ORG and any individual authors listed elsewhere in this file.
     ----------------------------------------------------------------------
 
@@ -163,7 +163,7 @@ Copyright and Licence
 
 \preamble
 
-    Copyright (C) 2003--2021
+    Copyright (C) 2003--2022
     CTEX.ORG and any individual authors listed in the documentation.
 ---------------------------------------------------------------------
 
@@ -443,7 +443,7 @@ Copyright and Licence
 %<class|style|ctexcap|ctexhook|ctexpatch>\NeedsTeXFormat{LaTeX2e}
 %<class>\input{ctexbackend.cfg}
 %<class|style|ctexcap|ctexhook|ctexpatch>\RequirePackage{expl3}
-%<+!driver>\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+%<+!driver>\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
 %<ctex>  {Chinese adapter in LaTeX (CTEX)}
 %<ctex>\ProvidesExplPackage{\ExplFileName}
 %<ctexsize>  {Chinese font size definition (CTEX)}
@@ -530,7 +530,7 @@ Copyright and Licence
 %<founder>\ProvidesExplFile{ctex-fontset-founder.def}
 %<ubuntu>  {Ubuntu fonts definition (CTEX)}
 %<ubuntu>\ProvidesExplFile{ctex-fontset-ubuntu.def}
-%<!driver>  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
+%<!driver>  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
 %</!(fd|ctexspa|dict|backend)>
 %<c19&rm>\ProvidesFile{c19rm.fd}%
 %<c19&sf>\ProvidesFile{c19sf.fd}%
@@ -548,10 +548,10 @@ Copyright and Licence
 %<backend>\ProvidesFile{ctexbackend.cfg}%
 %<dict&theorem&GBK>\ProvidesDictionary{translator-theorem-dictionary}{ChineseGBK}%
 %<dict&theorem&UTF8>\ProvidesDictionary{translator-theorem-dictionary}{ChineseUTF8}%
-%<fd>  [2021/06/20 v2.5.7 Chinese font definition (CTEX)]
-%<ctexspa>  [2021/06/20 v2.5.7 Space info for CJKpunct (CTEX)]
-%<backend>  [2021/06/20 v2.5.7 Backend configuration file (CTEX)]
-%<dict&theorem>  [2021/06/20 v2.5.7 Chinese translation for theorem name (CTEX)]
+%<fd>  [2022/07/14 v2.5.10 Chinese font definition (CTEX)]
+%<ctexspa>  [2022/07/14 v2.5.10 Space info for CJKpunct (CTEX)]
+%<backend>  [2022/07/14 v2.5.10 Backend configuration file (CTEX)]
+%<dict&theorem>  [2022/07/14 v2.5.10 Chinese translation for theorem name (CTEX)]
 %</!(driver|readme|install|zhmap|spa|docstrip)>
 %<*driver>
 \documentclass{ctxdoc}
@@ -575,7 +575,7 @@ Copyright and Licence
 % \changes{v2.4.15}{2019/03/23}{同步 \LaTeXiii{} 2019/03/05。}
 % \changes{v2.5.1}{2020/05/02}{\pkg{zhconv} 更名为 \pkg{ctex-zhconv}。}
 %
-% \CheckSum{6400}
+% \CheckSum{6630}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1608,7 +1608,6 @@ Copyright and Licence
 %
 % 多层选项之间用斜线分开，例如，\opt{part/name} 选项设置 \tn{part} 标题的在数
 % 字前后的名称，而 \opt{section/number} 选项设置 \tn{section} 标题的数字类型。
-% 注意，斜线 |/| 的前后不能有空格或者换行。
 %
 % 使用 \tn{ctexset} 设置多级选项时，还可以在同一个上级选项下设置多个下级选项。
 % 例如，同时设置 |part| 一级标题的 \opt{pagestyle} 选项，|chapter| 一级标题的
@@ -3211,6 +3210,7 @@ Copyright and Licence
 %     \item \pkg{ltxcmds} 宏包。
 %     \item \pkg{pdftexcmds} 宏包。
 %     \item \pkg{xkeyval} 宏包。
+%     \item \pkg{chinese-jfm} 宏包。
 %   \end{itemize}
 %   \item \pkg{fontspec} 宏包。
 %   \item[\ding{229}] 以上是使用 \LuaLaTeX{} 编译时的依赖项。
@@ -3292,9 +3292,21 @@ Copyright and Licence
 %<@@=ctex>
 %    \end{macrocode}
 %
+% \changes{v2.5.9}{2022/05/27}{设置消息模块的名字和类型。}
+% \changes{v2.5.10}{2022/06/10}{更新一些内部函数。}
+% \changes{v2.5.10}{2022/07/08}{不直接依赖 \pkg{xparse} 和 \pkg{l3keys2e}。}
+%
 %    \begin{macrocode}
 %<*class|style>
-\RequirePackage { xparse , l3keys2e }
+\cs_if_exist:NF \NewDocumentCommand
+  { \RequirePackage { xparse } }
+%<class>\prop_gput:Nnn \g_msg_module_type_prop { ctex } { Class }
+%<article>\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexart }
+%<book>\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexbook }
+%<report>\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexrep }
+%<beamer>\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexbeamer }
+%<ctexsize>\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexsize }
+%<ctexheading>\prop_gput:Nnn \g_msg_module_name_prop { ctex } { ctexheading }
 %</class|style>
 %    \end{macrocode}
 %
@@ -3307,7 +3319,7 @@ Copyright and Licence
 % \changes{v2.4.10}{2017/07/22}{使用 \texttt{lazy} 函数对 Boolean 表达式
 % 进行最小化运算（\LaTeXiii{} 2017/07/19）。}
 %
-% 检查 \pkg{expl3} 和 \pkg{l3keys2e} 的版本。
+% 检查 \pkg{expl3} 的版本。
 %    \begin{macrocode}
 \msg_new:nnnn { ctex } { l3-too-old }
   { Support~package~`#1'~too~old. }
@@ -3316,12 +3328,8 @@ Copyright and Licence
     `l3kernel'~and~`l3packages'\\\\
     using~your~TeX~package~manager~or~from~CTAN.
   }
-\@ifpackagelater { expl3 } { 2020/07/17 } { }
+\@ifpackagelater { expl3 } { 2021/02/10 } { }
   { \msg_error:nnn { ctex } { l3-too-old } { expl3 } }
-%<*class>
-\@ifpackagelater { l3keys2e } { 2015/12/20 } { }
-  { \msg_error:nnn { ctex } { l3-too-old } { l3keys2e } }
-%</class>
 %    \end{macrocode}
 %
 % \begin{variable}{\c_@@_engine_str,\c_@@_engine_file_str}
@@ -3551,10 +3559,19 @@ Copyright and Licence
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{variable}{\g_@@_std_options_clist}
+% \begin{variable}{\ctex_load_std_class:n,\g_@@_std_options_clist}
 % 保存传递给标准文档类的选项。
+% 使用 \tn{PassOptionsToClass} 是为了预防可能存在的选项冲突，选项列表展开后再传递。
 %    \begin{macrocode}
 %<*class>
+\cs_new_protected:Npn \ctex_load_std_class:n #1
+  {
+    \tl_const:Nn \c_@@_class_tl {#1}
+    \exp_args:No \PassOptionsToClass
+      { \g_@@_std_options_clist }
+      {#1}
+    \LoadClass {#1}
+  }
 \clist_new:N \g_@@_std_options_clist
 %</class>
 %    \end{macrocode}
@@ -3787,7 +3804,7 @@ Copyright and Licence
     space .choices:nn =
       { true , auto , false }
       {
-        \exp_args:Nx \ctex_at_end:n
+        \exp_args:Ne \ctex_at_end:n
           { \ctex_set:n { space = \l_keys_choice_tl } }
       } ,
     space  .default:n = { true } ,
@@ -3973,7 +3990,12 @@ Copyright and Licence
 % 处理宏包选项。
 %    \begin{macrocode}
 %<*class|style>
-\ProcessKeysOptions { ctex / option }
+\cs_if_exist:NTF \ProcessKeyOptions
+  { \ProcessKeyOptions [ ctex / option ] }
+  {
+    \RequirePackage { l3keys2e }
+    \ProcessKeysOptions { ctex / option }
+  }
 %</class|style>
 %    \end{macrocode}
 %
@@ -4004,27 +4026,19 @@ Copyright and Licence
   }
 %    \end{macrocode}
 %
-% 使用 \tn{PassOptionsToClass} 是为了预防可能存在的选项冲突。
+% 载入标准文档类。
 %    \begin{macrocode}
 %<*article>
-\tl_const:Nn \c_@@_class_tl { article }
-\PassOptionsToClass { \g_@@_std_options_clist } { article }
-\LoadClass { article }
+\ctex_load_std_class:n { article }
 %</article>
 %<*book>
-\tl_const:Nn \c_@@_class_tl { book }
-\PassOptionsToClass { \g_@@_std_options_clist } { book }
-\LoadClass { book }
+\ctex_load_std_class:n { book }
 %</book>
 %<*report>
-\tl_const:Nn \c_@@_class_tl { report }
-\PassOptionsToClass { \g_@@_std_options_clist } { report }
-\LoadClass { report }
+\ctex_load_std_class:n { report }
 %</report>
 %<*beamer>
-\tl_const:Nn \c_@@_class_tl { beamer }
-\PassOptionsToClass { \g_@@_std_options_clist } { beamer }
-\LoadClass { beamer }
+\ctex_load_std_class:n { beamer }
 %</beamer>
 %    \end{macrocode}
 %
@@ -4141,8 +4155,8 @@ Copyright and Licence
           { \tl_gput_right:cn { #1 + #2 } { \ctex_add_cmap:n {#1} } }
       }
   }
-\cs_generate_variant:Nn \ctex_family_cmap:nn { x }
-\cs_new_eq:NN \CTEX@Family@CMap \ctex_family_cmap:xn
+\cs_generate_variant:Nn \ctex_family_cmap:nn { ee }
+\cs_new_eq:NN \CTEX@Family@CMap \ctex_family_cmap:ee
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4150,6 +4164,7 @@ Copyright and Licence
 %
 % \begin{macro}[int]{\ctex_add_cmap:n}
 % \changes{v2.5.7}{2021/06/06}{确保 cmap 文件存在。}
+% \changes{v2.5.10}{2022/07/11}{使用封装好的函数。}
 % 给 |#1| 编码的 CJK 字体加上 CMap。
 %    \begin{macrocode}
 \cs_new_protected:Npn \ctex_add_cmap:n #1
@@ -4169,12 +4184,14 @@ Copyright and Licence
     \exp_args:Ne \file_get_full_name:nNTF
       { \str_lowercase:n {#2} .cmap } \l_@@_cmap_file_tl
       {
-        \tex_immediate:D \tex_pdfobj:D stream ~ file { \l_@@_cmap_file_tl }
+        \pdf_object_unnamed_write:nx
+          { fstream }
+          { { } { \l_@@_cmap_file_tl } }
         \cs_new_protected:Npx #1
           {
             \pdfnobuiltintounicode \tex_font:D
             \tex_pdffontattr:D \tex_font:D
-              { /ToUnicode ~ \int_value:w \tex_pdflastobj:D \c_space_tl 0 ~ R }
+              { /ToUnicode ~ \pdf_object_ref_last: }
           }
       }
       { \cs_new_eq:NN #1 \prg_do_nothing: }
@@ -4186,39 +4203,40 @@ Copyright and Licence
 % \begin{macro}[int]{\DeclareFontFamily}
 % 只在 \pdfLaTeX{} 下加 CMap。如 \pkg{cmap} 宏包被引入，则不重复设置。
 %    \begin{macrocode}
-\group_begin:
-\char_set_catcode_other:N \#
-\sys_if_output_pdf:TF
+\sys_if_output_pdf:T
   {
-    \group_end:
-    \ctex_appto_cmd:NnnTF \DeclareFontFamily { \ExplSyntaxOff }
-      { \CTEX@Family@CMap {#1} {#2} }
+    \exp_args:Nno \use:n
+      { \cs_gset_protected:Npn \DeclareFontFamily #1#2#3 }
       {
-        \ctex_at_end_package:nn { cmap }
-          {
-            \cs_gset_eq:NN \ctex_add_cmap:n \use_none:n
-            \cs_gset_eq:NN \CTEX@Family@CMap \use_none:nn
-          }
+        \DeclareFontFamily {#1} {#2} {#3}
+        \CTEX@Family@CMap  {#1} {#2}
       }
-      { \ctex_patch_failure:N \DeclareFontFamily }
+    \ctex_at_end_package:nn { cmap }
+      {
+        \cs_gset_eq:NN \ctex_add_cmap:n \use_none:n
+        \cs_gset_eq:NN \CTEX@Family@CMap \use_none:nn
+      }
   }
-  { \group_end: }
 %    \end{macrocode}
 % \end{macro}
 %
 % 首先检查选项，决定是否载入 \pkg{zhmCJK} 宏包。
 %    \begin{macrocode}
-\if_bool:N \g_@@_zhmCJK_bool
-  \PassOptionsToPackage { encoding = \g_@@_encoding_tl } { zhmCJK }
-  \RequirePackage { zhmCJK }
+\bool_if:NTF \g_@@_zhmCJK_bool
+  {
+    \exp_args:Ne \PassOptionsToPackage
+      { encoding = \g_@@_encoding_tl }
+      { zhmCJK }
+    \RequirePackage { zhmCJK }
+  }
 %    \end{macrocode}
 % 不载入 \pkg{zhmCJK} 宏包时直接调用 \pkg{CJK} 及相关宏包。
 %    \begin{macrocode}
-\else:
-  \str_if_eq:onTF { \g_@@_encoding_tl } { GBK }
-    { \RequirePackage { CJK } }
-    { \RequirePackage { CJKutf8 } }
-  \RequirePackage { CJKpunct , CJKspace }
+  {
+    \str_if_eq:onTF { \g_@@_encoding_tl } { GBK }
+      { \RequirePackage { CJK } }
+      { \RequirePackage { CJKutf8 } }
+    \RequirePackage { CJKpunct , CJKspace }
 %    \end{macrocode}
 %
 % \changes{v2.4.4}{2016/09/09}{解决 \opt{zhmap} 文件的 \tn{catcode} 问题。}
@@ -4226,21 +4244,46 @@ Copyright and Licence
 % \begin{macro}[int]{\ctex_load_zhmap:nnnn}
 % 载入 \pkg{zhmetrics} 的字体映射文件，同时设置 \tn{CJKrmdefault} 等。
 %    \begin{macrocode}
-  \cs_new_protected:Npn \ctex_load_zhmap:nnnn #1#2#3#4
-    {
-      \tl_set:Nn \CJKrmdefault {#1}
-      \tl_set:Nn \CJKsfdefault {#2}
-      \tl_set:Nn \CJKttdefault {#3}
-      \ctex_set_zhmap:n { \ctex_file_input:n { ctex-zhmap- #4 .tex } }
-    }
-  \@onlypreamble \ctex_load_zhmap:nnnn
+    \cs_new_protected:Npn \ctex_load_zhmap:nnnn #1#2#3#4
+      {
+        \tl_set:Nn \CJKrmdefault {#1}
+        \tl_set:Nn \CJKsfdefault {#2}
+        \tl_set:Nn \CJKttdefault {#3}
+        \ctex_set_zhmap:n { \ctex_file_input:n { ctex-zhmap- #4 .tex } }
+      }
+    \@onlypreamble \ctex_load_zhmap:nnnn
+  }
 %    \end{macrocode}
 % \end{macro}
 %
-% \pkg{zhmCJK} 判断结束。
+% \changes{v2.5.10}{2022/06/10}{取消 \LaTeX\ 2022-06-01 对书名号的定义。}
+%
+% \begin{macro}{\ctex_undeclare_unicode_character:n,\ctex_utfviii_char:n}
+% \LaTeX\ 2022-06-01 将通常用作中文书名号的 U+3008 和 U+3009 分别定义为
+% \tn{textlangle} 和 \tn{textrangle}，这个定义会被 \pkg{CJKutf8} 包会优先使用。
+% 我们总是使用中文书名号，需要取消 \LaTeX\ 的定义，作用是局部的，不使用 \cs{cs_undefine:N}。
 %    \begin{macrocode}
-\fi:
+\cs_new_protected:Npn \ctex_undeclare_unicode_character:n #1
+  { \cs_set_eq:cN { u8 : \ctex_utfviii_char:n {#1} } \tex_undefined:D }
+\cs_new:Npn \ctex_utfviii_char:n #1
+  {
+    \exp_last_unbraced:Ne \@@_utfviii_char_aux:nnnn
+      { \char_to_utfviii_bytes:n {#1} }
+  }
+\cs_new:Npn \@@_utfviii_char_aux:nnnn #1#2#3#4
+  {
+    \char_generate:nn {#1} { 12 }
+    \tl_if_empty:nF {#2} { \char_generate:nn {#2} { 12 } }
+    \tl_if_empty:nF {#3} { \char_generate:nn {#3} { 12 } }
+    \tl_if_empty:nF {#4} { \char_generate:nn {#4} { 12 } }
+  }
+\CJKaddEncHook { UTF8 }
+  {
+    \ctex_undeclare_unicode_character:n { "3008 }
+    \ctex_undeclare_unicode_character:n { "3009 }
+  }
 %    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}[int]{\ctex_CJK_input:n,\CJK@input}
 % 载入 \pkg{CJK} 包的 \file{.enc} 和 \file{.bdg} 等文件时，需要设置 \tn{endlinechar} 为 $-1$。
@@ -4307,8 +4350,11 @@ Copyright and Licence
 %    \begin{macrocode}
 \AtBeginDocument
   {
-    \str_if_eq:eeF { \l_@@_punct_tl } { quanjiao }
-      { \punctstyle { \l_@@_punct_tl } }
+    \use:e
+      {
+        \str_if_eq:nnF { \l_@@_punct_tl } { quanjiao }
+          { \exp_not:N \punctstyle { \l_@@_punct_tl } }
+      }
   }
 %    \end{macrocode}
 %
@@ -4317,22 +4363,8 @@ Copyright and Licence
 \ctex_at_end_preamble:n { \ctex_update_default_family: }
 %    \end{macrocode}
 %
-% 启用中文字符功能。\opt{GBK} 编码时，将汉字的首字节设置为活动字符，并对这些
-% 字符初始化；\opt{UTF8} 编码时，上游宏包已经处理好。
-% \tn{CJK@makeActive} 应该先于 \file{ctex-name-gbk.cfg} 等文件的载入。
-% 注意 \tn{CJK@loadBinding} 需要调用补丁后的 \tn{CJK@input}。使用
-% \pkg{zhmCJK} 时，此功能已经被启用。
-%    \begin{macrocode}
-\reverse_if:N \if_bool:N \g_@@_zhmCJK_bool
-  \str_if_eq:onF { \g_@@_encoding_tl } { UTF8 }
-    {
-      \CJK@makeActive
-      \CJK@loadBinding { standard }
-    }
-%    \end{macrocode}
-%
-% 在导言区结束时调用 \tn{CJK@envStart} 启用完整的中文功能。
-%
+% 从 \LaTeX\ 2018-04-01 开始，传统引擎的默认编码被设置成 UTF-8，
+% 汉字的首字节已经被设置成活动字符，我们无需再使用 \tn{CJK@makeActive} 设置。
 % \tn{CJK@envStart} 的定义是
 % \begin{verbatim}
 %   \def\CJK@envStart#1#2#3{
@@ -4362,23 +4394,218 @@ Copyright and Licence
 % 最里层，最后也就不需要 \tn{clearpage}。\pkg{zhmCJK} 已经提供类似功能。
 % 注意先使用 \cs{ctex_update_default_family:} 更新 \tn{CJKfamilydefault}。
 %    \begin{macrocode}
-  \exp_args:Nx \ctex_at_end_preamble:n
-    {
-      \exp_not:N \CJK@envStart
-        { } { \g_@@_encoding_tl } { \exp_not:N \CJKfamilydefault }
-      \exp_not:N \CJKtilde
-    }
-%    \end{macrocode}
-%
-% \pkg{zhmCJK} 判断结束。
-%    \begin{macrocode}
-\fi:
+\bool_if:NF \g_@@_zhmCJK_bool
+  {
+    \str_if_eq:onTF { \g_@@_encoding_tl } { UTF8 }
+      { \CJK@loadBinding { UTF8 } }
+      { \CJK@loadBinding { standard } }
+    \exp_args:Ne \ctex_at_end_preamble:n
+      {
+        \exp_not:N \CJK@envStart
+          { } { \g_@@_encoding_tl } { \exp_not:N \CJKfamilydefault }
+        \exp_not:N \CJKtilde
+      }
+  }
 %    \end{macrocode}
 %
 % \begin{macro}[int]{\ctex_auto_ignorespaces:}
 % 保存 \tn{CJK@@ignorespaces} 的定义，方便使用。
 %    \begin{macrocode}
 \cs_new_eq:NN \ctex_auto_ignorespaces: \CJK@@@@ignorespaces
+%    \end{macrocode}
+% \end{macro}
+%
+% \changes{v2.5.10}{2022/07/08}{解决 \pkg{CJK} 包与 \cs{text_uppercase:n} 等转化函数的冲突。}
+%
+% \begin{macro}{\CJK@X,\CJK@XX,\CJK@XXX,\CJK@XXXX}
+% 最新 \LaTeX\ 中的 \tn{MakeUppercase} 等大小写转化命令被定义为 \LaTeXiii\ 中对应的
+% \cs{text_uppercase:n} 等函数。
+% 它会先将参数用 \cs{text_expand:n} 逐步展开，这与 \pkg{CJK} 包的定义不兼容。
+% 可以有多种方法解决这个冲突，最简单直接的方法是将首字节的活动字符用 \tn{protected} 来定义，
+% 但可能有一定的兼容性问题。保险起见，我们采用将 \tn{CJK@X} 等内部宏转化为 \tn{protected}
+% 宏的方式，并将参数提前由字符转化为数字，避免在移动参数中被进一步展开。
+%    \begin{macrocode}
+\cs_new:Npn \@@_char:N #1
+  { \exp_args:Ne \CTEX@char@n { \int_value:w `#1 } }
+\cs_new:Npn \@@_char:NN #1#2
+  {
+    \token_if_eq_meaning:NNTF #2 \protect
+      { \@@_char_aux:NN #1 }
+      { \@@_char_aux:NN #1#2 }
+  }
+\cs_new:Npn \@@_char_aux:NN #1#2
+  {
+    \exp_last_unbraced:Ne \CTEX@char@nn
+      {
+        { \int_value:w `#1 }
+        { \int_value:w `#2 }
+      }
+  }
+\cs_new:Npn \@@_char:NNN #1#2#3
+  {
+    \token_if_eq_meaning:NNTF #2 \protect
+      { \@@_char_auxi:NNNN #1#3 }
+      { \@@_char_auxii:NNN #1#2#3 }
+  }
+\cs_new:Npn \@@_char_auxi:NNN #1#2#3#4
+  { \@@_char_auxii:NNN #1#2#4 }
+\cs_new:Npn \@@_char_auxii:NNN #1#2#3
+  {
+    \exp_last_unbraced:Ne \CTEX@char@nnn
+      {
+        { \int_value:w `#1 }
+        { \int_value:w `#2 }
+        { \int_value:w `#3 }
+      }
+  }
+\cs_new:Npn \@@_char:NNNN #1#2#3#4
+  {
+    \token_if_eq_meaning:NNTF #2 \protect
+      { \@@_char_auxi:NNNNN #1#3 }
+      { \@@_char_auxii:NNNN #1#2#3#4 }
+  }
+\cs_new:Npn \@@_char_auxi:NNNNN #1#2#3#4#5
+  { \@@_char_auxii:NNNN #1#2#3#5 }
+\cs_new:Npn \@@_char_auxii:NNNN #1#2#3#4
+  {
+    \exp_last_unbraced:Ne \CTEX@char@nnnn
+      {
+        { \int_value:w `#1 }
+        { \int_value:w `#2 }
+        { \int_value:w `#3 }
+        { \int_value:w `#4 }
+      }
+  }
+\cs_gset_eq:NN \CJK@X    \@@_char:N
+\cs_gset_eq:NN \CJK@XX   \@@_char:NN
+\cs_gset_eq:NN \CJK@XXX  \@@_char:NNN
+\cs_gset_eq:NN \CJK@XXXX \@@_char:NNNN
+%    \end{macrocode}
+% \pkg{CJKutf8} 包优先使用 |\u8:xxx| 的 \LaTeX\ 定义。
+%    \begin{macrocode}
+\str_if_eq:onF { \g_@@_encoding_tl } { GBK }
+  {
+    \exp_args:Nne \use:n
+      { \cs_gset:Npn \@@_char_aux:NN #1#2 }
+      {
+        \exp_not:N \cs_if_exist_use:cF
+          { u8: \exp_not:N \tl_to_str:n { #1#2 } }
+          { \exp_not:o { \@@_char_aux:NN {#1} {#2} } }
+      }
+    \exp_args:Nne \use:n
+      { \cs_gset:Npn \@@_char_auxii:NNN #1#2#3 }
+      {
+        \exp_not:N \cs_if_exist_use:cF
+          { u8: \exp_not:N \tl_to_str:n { #1#2#3 } }
+          { \exp_not:o { \@@_char_auxii:NNN {#1} {#2} {#3} } }
+      }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mule@arg}
+% 处理文档被 |extconv| 等工具预处理过的情况，只考虑最简单的情形。
+%    \begin{macrocode}
+\group_begin:
+\char_set_catcode_active:n { "7F }
+\cs_new:Npn \@@_char_preproc:w #1 ^^7f #2 ^^7f
+  { \exp_args:No \CTEX@char@nn { \int_value:w `#1 } {#2} }
+\cs_gset_eq:NN \mule@arg \@@_char_preproc:w
+\group_end:
+\exp_args:Ne \ctex_at_end:n
+  {
+    \char_set_catcode:nn
+      { \int_value:w "7F }
+      { \char_value_catcode:n { "7F } }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\CTEX@char@n,\CTEX@char@nn,\CTEX@char@nnn,\CTEX@char@nnnn}
+% 额外加入 \cs{mode_leave_vertical:} 是为了解决某些历史遗留问题。
+%    \begin{macrocode}
+\cs_new_protected:Npn \CTEX@char@n #1
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 }
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nn #1#2
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 } {#2}
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nnn  #1#2#3
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 } {#2} {#3}
+    \CJK@ignorespaces
+  }
+\cs_new_protected:Npn \CTEX@char@nnnn #1#2#3#4
+  {
+    \mode_leave_vertical:
+    \use:c { CJK@ #1 } {#2} {#3} {#4}
+    \CJK@ignorespaces
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\CTEX@char@nn@n,\CTEX@char@nnn@n,\CTEX@char@nnnn@n}
+% 以下给 \tn{CTEX@char@nn} 等定义在 \cs{text_expand:n} 中的等价形式，
+% 将它们的参数用只有一个参数的 \tn{CTEX@char@nn@n} 等包装起来，
+% 并将 \tn{CTEX@char@nn@n} 等放入排除列表中，避免可能的大小写转化。
+%    \begin{macrocode}
+\cs_new_protected:Npn \CTEX@char@nn@n   #1 { \CTEX@char@nn   #1 }
+\cs_new_protected:Npn \CTEX@char@nnn@n  #1 { \CTEX@char@nnn  #1 }
+\cs_new_protected:Npn \CTEX@char@nnnn@n #1 { \CTEX@char@nnnn #1 }
+\cs_new:Npn \@@_char_wrap:nn #1#2
+  { \CTEX@char@nn@n   { {#1} {#2} } }
+\cs_new:Npn \@@_char_wrap:nnn #1#2#3
+  { \CTEX@char@nnn@n  { {#1} {#2} {#3} } }
+\cs_new:Npn \@@_char_wrap:nnnn #1#2#3#4
+  { \CTEX@char@nnnn@n { {#1} {#2} {#3} {#4} } }
+\tl_put_right:Nn \l_text_case_exclude_arg_tl
+  {
+    \CTEX@char@n
+    \CTEX@char@nn@n
+    \CTEX@char@nnn@n
+    \CTEX@char@nnnn@n
+  }
+\text_declare_expand_equivalent:Nn \CTEX@char@nn   { \@@_char_wrap:nn }
+\text_declare_expand_equivalent:Nn \CTEX@char@nnn  { \@@_char_wrap:nnn }
+\text_declare_expand_equivalent:Nn \CTEX@char@nnnn { \@@_char_wrap:nnnn }
+%    \end{macrocode}
+% 以下给 \tn{CTEX@char@nn@n} 等定义在 \cs{text_purify:n} 中的等价形式，
+% 将参数中的数字转化回字符。
+%    \begin{macrocode}
+\cs_new:Npn \@@_char_raw:n #1
+  { \char_generate:nn {#1} { 12 } }
+\cs_new:Npn \@@_char_raw:nn #1#2
+  {
+    \char_generate:nn {#1} { 12 }
+    \char_generate:nn {#2} { 12 }
+  }
+\cs_new:Npn \@@_char_raw:nnn #1#2#3
+  {
+    \char_generate:nn {#1} { 12 }
+    \char_generate:nn {#2} { 12 }
+    \char_generate:nn {#3} { 12 }
+  }
+\cs_new:Npn \@@_char_raw:nnnn #1#2#3#4
+  {
+    \char_generate:nn {#1} { 12 }
+    \char_generate:nn {#2} { 12 }
+    \char_generate:nn {#3} { 12 }
+    \char_generate:nn {#4} { 12 }
+  }
+\cs_new:Npn \@@_char_raw_nn:n   #1 { \use:e { \@@_char_raw:nn   #1 } }
+\cs_new:Npn \@@_char_raw_nnn:n  #1 { \use:e { \@@_char_raw:nnn  #1 } }
+\cs_new:Npn \@@_char_raw_nnnn:n #1 { \use:e { \@@_char_raw:nnnn #1 } }
+\text_declare_purify_equivalent:Nn \CTEX@char@n      { \@@_char_raw:n }
+\text_declare_purify_equivalent:Nn \CTEX@char@nn@n   { \@@_char_raw_nn:n }
+\text_declare_purify_equivalent:Nn \CTEX@char@nnn@n  { \@@_char_raw_nnn:n }
+\text_declare_purify_equivalent:Nn \CTEX@char@nnnn@n { \@@_char_raw_nnnn:n }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4508,7 +4735,7 @@ Copyright and Licence
 % \changes{v2.4.4}{2016/09/12}{不再默认设置 \pkg{xeCJK} 的伪粗体。}
 %    \begin{macrocode}
 \RequirePackage { xeCJK }
-\exp_args:Nx \xeCJKsetup
+\exp_args:Ne \xeCJKsetup
   {
     LoadFandol   = false ,
     PunctStyle   = \l_@@_punct_tl
@@ -4550,9 +4777,9 @@ Copyright and Licence
   { \msg_critical:nnx { ctex } { luatexja-loaded } { \g_file_curr_name_str } }
   {
     \ctex_at_begin_package:nn { luatexja }
-      { \msg_redirect_name:nnn { ctex } { disable-package } { info } }
+      { \msg_redirect_name:nnn { ctexhook } { disable-package } { info } }
     \ctex_at_end_package:nn { luatexja }
-      { \msg_redirect_name:nnn { ctex } { disable-package } { } }
+      { \msg_redirect_name:nnn { ctexhook } { disable-package } { } }
     \ctex_disable_package:n { ltj-latex }
   }
 %    \end{macrocode}
@@ -4782,33 +5009,53 @@ Copyright and Licence
 %
 % \paragraph{\pkg{Lua} 函数}
 %
+% \changes{v2.5.8}{2021/11/29}{简化部分 \pkg{Lua} 函数。}
+%
 % 直接用 |token.set_lua| 定义，不是传统意义上的 \TeX \ 宏。
 %    \begin{macrocode}
 \group_begin:
 \char_set_catcode_space:n { 32 }
 \lua_now:e
   {
-    local func = lua.get_functions_table()
+%    \end{macrocode}
+% \begin{macro}{ctex.newluacmd}
+% 定义新的 \pkg{Lua} 函数。
+%    \begin{macrocode}
+    ctex = ctex or { }
+    local ctex = ctex
+    local functions = lua.get_functions_table()
+    local new_luafunction = luatexbase.new_luafunction
+    local create, set_lua = token.create, token.set_lua
+    local lua_cmds = {
+      lua_call            = true ,
+      lua_expandable_call = true ,
+    }
+    local newluacmd = function (name, func, ...)
+      local tok = create(name)
+      local id = lua_cmds[tok.cmdname] and tok.index
+      local id = id or new_luafunction(name)
+      set_lua(name, id, ...)
+      functions[id] = func
+    end
+    ctex.newluacmd = newluacmd
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
     local ltjfont = luatexja.jfont
     local getattribute = tex.getattribute
-    local set_lua = token.set_lua
+    local tex_set, sprint = tex.set, tex.sprint
     local scan_int, scan_arg = token.scan_int, token.scan_argument
-    local new_luafunction = luatexbase.new_luafunction
 %    \end{macrocode}
 % \begin{macro}{\ctex_ltj_add_kyenc:n}
 % 保存 jfont 的编码，用于判断。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = ltjfont.add_kyenc_list
-    set_lua("ctex_ltj_add_kyenc:n", id, "global", "protected")
+    newluacmd("ctex_ltj_add_kyenc:n", ltjfont.add_kyenc_list, "global", "protected")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ctex_ltj_is_kenc:n}
 % 判断编码是否属于 jfont。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = ltjfont.is_kenc
-    set_lua("ctex_ltj_is_kenc:n", id, "global")
+    newluacmd("ctex_ltj_is_kenc:n", ltjfont.is_kenc, "global")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ctex_ltj_patch_external_font:n}
@@ -4823,8 +5070,7 @@ Copyright and Licence
 % 主要目的是，如果当前字形有替代字体，则往字形的定义中加入一些标志，确保
 % \texttt{font.id} 唯一。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    newluacmd("ctex_ltj_patch_external_font:n", function ()
       local s = scan_arg()
       local is_braced, is_quoted
       if s:sub(1,1) == '{' and s:sub(-1)=='}' then
@@ -4837,108 +5083,67 @@ Copyright and Licence
       if     is_braced then s = '{'..s..'}'
       elseif is_quoted then s = '"'..s..'"'
       end
-      tex.sprint(-2, s)
-    end
-    set_lua("ctex_ltj_patch_external_font:n", id, "global")
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\ctex_ltj_use_jfont:}
-% 使用 jfont，确保当前的 \tn{font} 是 jfont。
-%    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
-      font.current(getattribute("ltj@curjfnt"))
-    end
-    set_lua("ctex_ltj_use_jfont:", id, "global", "protected")
+      sprint(-2, s)
+    end, "global")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ctex_ltj_set_alt_font:nnnn}
 % |#1| 和 |#2| 分别是字符区间的首末，|#3| 是基础字体，|#4| 是替代字体。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    newluacmd("ctex_ltj_set_alt_font:nnnn", function ()
       local b = tonumber(scan_arg())
       local e = tonumber(scan_arg())
       local alt  = scan_arg()
       local base = scan_arg()
       ltjfont.set_alt_font_latex(b, e, alt, base)
-    end
-    set_lua("ctex_ltj_set_alt_font:nnnn", id, "global", "protected")
+    end, "global", "protected")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ctex_ltj_clear_alt_font:n}
 % 清除 |#1| 的替代字体。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    newluacmd("ctex_ltj_clear_alt_font:n", function ()
       local base = scan_arg()
       ltjfont.clear_alt_font_latex(base)
-    end
-    set_lua("ctex_ltj_clear_alt_font:n", id, "global", "protected")
+    end, "global", "protected")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ctex_ltj_pickup_alt_font:nn}
 % 定义 |#1| 的替代字体，|#2| 是字体大小。\\
 % 会在内部执行 \tn{ltj@pickup@altfont@auxy} 和 \tn{ltj@pickup@altfont@copy}。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    newluacmd("ctex_ltj_pickup_alt_font:nn", function ()
       local base = scan_arg()
       local size = scan_arg()
       ltjfont.output_alt_font_cmd("y", base)
       ltjfont.pickup_alt_font_a(size)
-    end
-    set_lua("ctex_ltj_pickup_alt_font:nn", id, "global", "protected")
+    end, "global", "protected")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\@@_pickup_alt_font:Nn}
 % |#1| 是 \texttt{font.id}，|#2| 是字体名称。
 % 在 \tn{ltj@pickup@altfont@copy} 之中使用。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    newluacmd("@@_pickup_alt_font:Nn", function ()
       local num  = scan_int()
       local base = scan_arg()
       ltjfont.pickup_alt_font_b(num, base)
-    end
-    set_lua("@@_pickup_alt_font:Nn", id, "global", "protected")
+    end, "global", "protected")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\@@_if_alt_set:nT}
 % 判断是否存在替代字体。会设置变量 |aftl_base| 和返回 \tn{@firstofone} 或 \tn{@gobble}。
-% \begin{verbatim}
-%   function luatexja.jfont.does_alt_set(bbase)
-%     aftl_base = alt_font_table_latex[bbase]
-%     tex.sprint(cat_lp, aftl_base and '\\@firstofone' or '\\@gobble')
-%   end
-% \end{verbatim}
-% \pkg{luatexja} 20200412.0 以后的定义为：
-% \begin{verbatim}
-%   function luatexja.jfont.does_alt_set()
-%     aftl_base = alt_font_table_latex[scan_arg()]
-%     tex.sprint(cat_lp, aftl_base and '\\@firstofone' or '\\@gobble')
-%   end
-% \end{verbatim}
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = \LuaTeXjaversion > 20200412.0
-      and ltjfont.does_alt_set
-      or  function ()
-            local base = scan_arg()
-            ltjfont.does_alt_set(base)
-          end
-    set_lua("@@_if_alt_set:nT", id, "global")
+    newluacmd("@@_if_alt_set:nT", ltjfont.does_alt_set, "global")
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ctex_ltj_zero_globaldefs:}
 % 设置 \tn{globaldefs} 为 $0$，避免全局设置，应当在分组中使用。
 % 这里通过 Lua 设置，可以不受外部 \TeX\ 环境中的 \tn{globaldefs} 的影响。
 %    \begin{macrocode}
-    local id = new_luafunction("ctex")
-    func[id] = function ()
-      tex.set("globaldefs", 0)
-    end
-    set_lua("ctex_ltj_zero_globaldefs:", id, "global", "protected")
+    newluacmd("ctex_ltj_zero_globaldefs:", function ()
+      tex_set("globaldefs", 0)
+    end, "global", "protected")
   }
 \group_end:
 %    \end{macrocode}
@@ -4962,6 +5167,8 @@ Copyright and Licence
 %    \end{macrocode}
 % \end{macro}
 %
+% \changes{v2.5.8}{2021/11/18}{兼容 \pkg{microtype}。}
+%
 % \begin{macro}{\@@_select_font_aux:}
 % 使用 \tn{pickup@font} 取得字体名称前，总需要先设置 \tn{font@name}。在这里将
 % \tn{f@family} 换成 CJK 字体族，并确保编码正确。
@@ -4971,7 +5178,8 @@ Copyright and Licence
     \group_begin:
       \tl_set_eq:NN \f@encoding \CJK@encoding
       \tl_set_eq:NN \f@family \CJK@family
-      \@@_push_fontname:n { \use:c { \curr@fontshape / \f@size } }
+      \cs_set_eq:NN \pickup@font \ctex_ltj_pickup_font:
+      \@@_push_fontname:n { \curr@fontshape / \f@size }
       \ctex_ltj_pickup_font:
     \group_end:
     \font@name
@@ -4988,12 +5196,12 @@ Copyright and Licence
 \cs_new_protected:Npn \@@_push_fontname:n #1
   {
     \seq_gpush:No \g_@@_fontname_seq { \font@name }
-    \cs_gset_nopar:Npx \font@name {#1}
+    \tl_gset:Nx \font@name { \exp_not:c {#1} }
   }
 \cs_new_protected:Npn \@@_pop_fontname:
   {
     \seq_gpop:NNT \g_@@_fontname_seq \l_@@_tmp_tl
-      { \cs_gset_eq:NN \font@name \l_@@_tmp_tl }
+      { \tl_gset_eq:NN \font@name \l_@@_tmp_tl }
   }
 \seq_new:N \g_@@_fontname_seq
 %    \end{macrocode}
@@ -5065,6 +5273,14 @@ Copyright and Licence
     \use:c { \f@encoding + \f@family }
     \use:c { \curr@fontshape }
   }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ctex_ltj_use_jfont:}
+% 使用 jfont，确保当前的 \tn{font} 是 jfont。
+%    \begin{macrocode}
+\cs_new_protected_nopar:Npn \ctex_ltj_use_jfont:
+  { \tex_setfontid:D \ltj@curjfnt }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -5152,7 +5368,7 @@ Copyright and Licence
       {
         \group_begin:
           \use:e { \exp_not:N \split@name #1 / \f@size } \@nil
-          \@@_push_fontname:n { \use:c { \curr@fontshape / \f@size } }
+          \@@_push_fontname:n { \curr@fontshape / \f@size }
           \ctex_ltj_pickup_font:
         \group_end:
         \@@_pop_fontname:
@@ -5188,7 +5404,7 @@ Copyright and Licence
 \cs_new:Npn \ctex_ltj_if_jfont:nTF #1
   {
     \ctex_ltj_is_kenc:n { \@@_ltj_if_jfont:w #1 / \q_stop }
-    \ifin@ \exp_after:wN \use_i:nn \else: \exp_after:wN \use_ii:nn \fi:
+    \legacy_if:nTF { in@ }
   }
 \cs_new:Npn \@@_ltj_if_jfont:w #1 / #2 \q_stop
   {#1}
@@ -5296,19 +5512,33 @@ Copyright and Licence
 %
 % \paragraph{字体族的定义与使用}
 %
-% \begin{macro}[int]{\ctex_mono_jfm:n}
-% \begin{variable}{\l_@@_jfm_tl}
-% \pkg{LuaTeX-ja} 中与标点格式 \opt{plain} 对应的 \texttt{JFM} 是 \opt{mono}。
+% \changes{v2.5.9}{2022/05/26}{依赖 \pkg{chinese-jfm} 宏包。}
+%
+% \begin{macro}[int]{\ctex_set_jfm:n}
+% \begin{variable}{\l_@@_jfm_tl, \l_@@_redirect_jfm_prop}
+% 设置 \texttt{JFM}，需要进行一些重定向操作。
 %    \begin{macrocode}
-\cs_new_protected:Npn \ctex_mono_jfm:n #1
+\cs_new_protected:Npn \ctex_set_jfm:n #1
   {
-    \str_if_eq:nnTF {#1} { plain }
-      { \tl_set:Nn \l_@@_jfm_tl { mono } }
+    \prop_get:NnNF \l_@@_redirect_jfm_prop {#1} \l_@@_jfm_tl
       { \tl_set:Nn \l_@@_jfm_tl {#1} }
   }
+\cs_generate_variant:Nn \ctex_set_jfm:n { o }
+\prop_new:N \l_@@_redirect_jfm_prop
+\prop_set_from_keyval:Nn \l_@@_redirect_jfm_prop
+  {
+    plain    = mono ,
+    quanjiao = zh_CN / quanjiao ,
+    banjiao  = zh_CN / banjiao ,
+    kaiming  = zh_CN / kaiming
+  }
+\keys_define:nn { ctex_ltj / fontspec }
+  {
+    JFM           .code:n = \ctex_set_jfm:n {#1} ,
+    JFM .value_required:n = true
+  }
 \tl_new:N \l_@@_jfm_tl
-\cs_generate_variant:Nn \ctex_mono_jfm:n { o }
-\ctex_mono_jfm:o { \l__ctex_punct_tl }
+\ctex_set_jfm:o { \l__ctex_punct_tl }
 %    \end{macrocode}
 % \end{variable}
 % \end{macro}
@@ -6784,60 +7014,63 @@ Copyright and Licence
 % 定义。\pkg{pxeverysel} 宏包取消了检查，但也需要恢复定义，避免重复使用钩子。
 % \pkg{KOMA-Script} 宏包也会进行检查，我们需要小心处理。
 %    \begin{macrocode}
-\if_bool:N \c_@@_everysel_loaded_bool
-  \if_cs_exist:N \@EverySelectfont@Init
-    \group_begin:
-      \cs_set:Npn \@@_tmp:N #1
-        {
-          \tl_set:Nn \l_@@_tmp_tl {#1}
-          \cs_new_eq:NN \CTEX@selectfont@save #1
-          \cs_new_protected:Npn \@@_restore_selectfont:
-            {
-              \cs_if_free:NF \scr@new@selectfont
-                {
+\bool_if:NTF \c_@@_everysel_loaded_bool
+  {
+    \cs_if_free:NF \@EverySelectfont@Init
+      {
+        \group_begin:
+        \cs_set:Npn \@@_tmp:N #1
+          {
+            \tl_set:Nn \l_@@_tmp_tl {#1}
+            \cs_new_eq:NN \CTEX@selectfont@save #1
+            \cs_new_protected:Npn \@@_restore_selectfont:
+              {
+                \cs_if_free:NF \scr@new@selectfont
+                  {
 %    \end{macrocode}
 % \pkg{CJK} 直接修改 \tn{selectfont} 和 \pkg{pxeverysel} 的补丁，
 % 会使 \pkg{KOMA-Script} 的 \tn{par@update} 失效。
 %    \begin{macrocode}
 %<*pdftex|uptex|aptex>
-                  \cs_if_free:NF \par@update
+                    \cs_if_free:NF \par@update
 %<*uptex|aptex>
-                    {
-                      \tl_put_right:Nn \@EverySelectfont@Init
-                        { \tl_put_right:Nn #1 { \par@update } }
-                    }
+                      {
+                        \tl_put_right:Nn \@EverySelectfont@Init
+                          { \tl_put_right:Nn #1 { \par@update } }
+                      }
 %</uptex|aptex>
 %<*pdftex>
-                    { \tl_put_right:Nn #1 { \par@update } }
-                  \cs_set_eq:NN \scr@selectfont \CTEX@selectfont@save
+                      { \tl_put_right:Nn #1 { \par@update } }
+                    \cs_set_eq:NN \scr@selectfont \CTEX@selectfont@save
 %</pdftex>
 %</pdftex|uptex|aptex>
-                  \cs_set_eq:NN \scr@new@selectfont #1
-%<!pdftex>                  \cs_set_eq:NN \CTEX@selectfont@save \scr@selectfont
-                }
-              \tl_put_left:Nn \@EverySelectfont@Init
-                { \cs_set_eq:NN #1 \CTEX@selectfont@save }
-              \cs_undefine:N \@@_restore_selectfont:
-            }
-        }
-      \ctex_parse_name:NN \@@_tmp:N \selectfont
-    \exp_last_unbraced:NNo \group_end:
-    \ctex_patch_cmd_once:NnnnTF { \l_@@_tmp_tl }
-      { \ExplSyntaxOff }
-      { \size@update }
-      { \CTEX@selectfont@hook \size@update }
-      { \@@_restore_selectfont: }
-      { \ctex_patch_failure:N \selectfont }
-  \fi:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \EverySelectfont }
+                    \cs_set_eq:NN \scr@new@selectfont #1
+%<!pdftex>                    \cs_set_eq:NN \CTEX@selectfont@save \scr@selectfont
+                  }
+                \tl_put_left:Nn \@EverySelectfont@Init
+                  { \cs_set_eq:NN #1 \CTEX@selectfont@save }
+                \cs_undefine:N \@@_restore_selectfont:
+              }
+          }
+        \ctex_parse_name:NN \@@_tmp:N \selectfont
+      \exp_last_unbraced:NNo \group_end:
+      \ctex_patch_cmd_once:NnnnTF { \l_@@_tmp_tl }
+        { \ExplSyntaxOff }
+        { \size@update }
+        { \CTEX@selectfont@hook \size@update }
+        { \@@_restore_selectfont: }
+        { \ctex_patch_failure:N \selectfont }
+      }
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \EverySelectfont }
+  }
 %    \end{macrocode}
 % 使用 \LaTeX \ 2021-06-01 的新钩子，不使用 \pkg{everysel} 包的情况。
 %    \begin{macrocode}
-\else:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \ctex_gadd_ltxhook:nn { selectfont } }
-\fi:
+  {
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \ctex_gadd_ltxhook:nn { selectfont } }
+  }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -6922,17 +7155,14 @@ Copyright and Licence
     local fmt = luatexja.jfont.font_metric_table
     local getattribute = tex.getattribute
     local setdimen = tex.setdimen
-    local func = lua.get_functions_table()
-    local id = luatexbase.new_luafunction("ctex")
-    func[id] = function ()
+    ctex.newluacmd("ctex_update_kanjisize:", function ()
       local ft = fmt[getattribute("ltj@curjfnt")] or nulltable
       local ft = ft and ft.char_type or nulltable
       local fk = ft and ft[0] or nulltable
       setdimen("cht", fk.height or 0)
       setdimen("cdp", fk.depth or 0)
       setdimen("cwd", fk.width or ft.zw or 0)
-    end
-    token.set_lua("ctex_update_kanjisize:", id, "global", "protected")
+    end, "global", "protected")
   }
 \group_end:
 \ctex_add_to_selectfont:n { \ctex_update_kanjisize: }
@@ -6980,7 +7210,7 @@ Copyright and Licence
         \tl_set:Nx \l_@@_punct_tl {#1}
 %<pdftex>        \punctstyle { \l_@@_punct_tl }
 %<xetex>        \xeCJKsetup { PunctStyle = \l_@@_punct_tl }
-%<luatex>        \ctex_mono_jfm:o { \l_@@_punct_tl }
+%<luatex>        \ctex_set_jfm:o { \l_@@_punct_tl }
 %<uptex|aptex>        \msg_warning:nn { ctex } { invalid-option }
       } ,
     punct .default:n = { quanjiao } ,
@@ -7271,8 +7501,13 @@ Copyright and Licence
 %
 % \subsection{中文数字与日期}
 %
+% 需要注意的是，\pkg{ltkeys} 设置的选项列表是
+% |\@raw@opt@|\meta{\textbackslash @currname}|.|\meta{\textbackslash @currext}，
+% 该列表不会将 \tn{PassOptionsToPackage} 传递的选项完全展开。
 %    \begin{macrocode}
-\PassOptionsToPackage { encoding = \g_@@_encoding_tl } { zhnumber }
+\exp_args:Ne \PassOptionsToPackage
+  { encoding = \g_@@_encoding_tl }
+  { zhnumber }
 \RequirePackage { zhnumber }
 %    \end{macrocode}
 %
@@ -7504,11 +7739,11 @@ Copyright and Licence
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_def_heading_keys:n #1
   {
-    \tl_put_right:Nx \l_@@_tmp_tl
+    \exp_args:NNe \tl_put_right:Nn \l_@@_tmp_tl
       {
-        #1                  .meta:nn = { ctex / #1 } { ####1 } ,
+        #1                  .meta:nn = { ctex / #1 } { ##1 } ,
         #1 / name            .code:n =
-          { \ctex_assign_heading_name:nn {#1} { ####1 } } ,
+          { \ctex_assign_heading_name:nn {#1} { ##1 } } ,
         #1 / number        .tl_set:N = \exp_not:c { CTEX@the#1 } ,
         #1 / beforeskip    .tl_set:N = \exp_not:c { CTEX@#1@beforeskip } ,
         #1 / afterskip     .tl_set:N = \exp_not:c { CTEX@#1@afterskip} ,
@@ -7527,8 +7762,7 @@ Copyright and Licence
         #1 / hang        .bool_set:N = \exp_not:c { CTEX@#1@hang } ,
         #1 / hang         .initial:n = true ,
         #1 / runin       .bool_set:N = \exp_not:c { CTEX@#1@runin } ,
-        #1 / tocline      .cs_set:Np = \exp_not:c { CTEX@#1@tocline}
-                                       \exp_not:n { ##1##2 } ,
+        #1 / tocline      .cs_set:Np = \exp_not:c { CTEX@#1@tocline } ##1##2 ,
         \@@_plus_key_aux:nn {#1} { break } ,
 %</article|book|report>
         \@@_plus_key_aux:nn {#1} { format } ,
@@ -7543,9 +7777,9 @@ Copyright and Licence
   {
     #1 / #2   .tl_set:N = \exp_not:c { CTEX@#1@#2 } ,
     #1 / #2 +   .code:n =
-      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ####1 } } ,
+      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ##1 } } ,
     #1 / #2 ~ + .code:n =
-      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ####1 } }
+      { \tl_put_right:Nn \exp_not:c { CTEX@#1@#2 } { ##1 } }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -7686,6 +7920,18 @@ Copyright and Licence
 %    \end{macrocode}
 % \end{macro}
 %
+% \changes{v2.5.10}{2022/06/23}{展开传递 \opt{pagestyle} 的值。}
+%
+% \begin{macro}[int]{\CTEX@setthispagestyle}
+% 将 \verb"\CTEX@(part|chapter)@pagestyle" 展开后再传给 \tn{thispagestyle}。
+%    \begin{macrocode}
+%<*book|report>
+\cs_new_protected:Npn \CTEX@setthispagestyle #1
+  { \exp_args:Ne \thispagestyle { \use:c { CTEX@#1@pagestyle } } }
+%</book|report>
+%    \end{macrocode}
+% \end{macro}
+%
 % \changes{v2.4.4}{2016/09/18}{提供 \tn{partmark}。}
 % \begin{macro}[int]{\partmark}
 % 提供 \tn{partmark}。
@@ -7781,7 +8027,7 @@ Copyright and Licence
 % \fi
   \CTEX@part@break
 % \thispagestyle{plain}%
-  \thispagestyle{\CTEX@part@pagestyle}%
+  \CTEX@setthispagestyle{part}%
   \if@twocolumn
     \onecolumn
     \@tempswatrue
@@ -7956,7 +8202,7 @@ Copyright and Licence
 % \if@openright\cleardoublepage\else\clearpage\fi
 % \thispagestyle{plain}%
   \CTEX@chapter@break
-  \thispagestyle{\CTEX@chapter@pagestyle}%
+  \CTEX@setthispagestyle{chapter}%
   \global\@topnum\z@
 % \@afterindentfalse
   \ifodd \CTEX@chapter@afterindent
@@ -8449,20 +8695,22 @@ Copyright and Licence
 \cs_new_protected:Npn \CTEX@hyperheadinghook
   {
     \group_begin:
-      \ifHy@implicit
-        \cs_set_eq:NN \H@old@chapter \Hy@org@chapter
-        \seq_map_inline:Nn \c_@@_headings_cs_seq
-          {
-            \cs_if_eq:ccT { H@old@ ##1 } { CTEX@ ##1 }
-              {
-                \cs_gset_eq:cc { @ ##1 } { CTEX@ ##1 }
-                \cs_gset_eq:cN { CTEX@makeanchor@ ##1 } \CTEX@makeanchor
-              }
-          }
-      \else:
-        \seq_map_inline:Nn \c_@@_headings_cs_seq
-          { \cs_gset_eq:cN { CTEX@makeanchor@ ##1 } \CTEX@makeanchor }
-      \fi:
+      \legacy_if:nTF { Hy@implicit }
+        {
+          \cs_set_eq:NN \H@old@chapter \Hy@org@chapter
+          \seq_map_inline:Nn \c_@@_headings_cs_seq
+            {
+              \cs_if_eq:ccT { H@old@ ##1 } { CTEX@ ##1 }
+                {
+                  \cs_gset_eq:cc { @ ##1 } { CTEX@ ##1 }
+                  \cs_gset_eq:cN { CTEX@makeanchor@ ##1 } \CTEX@makeanchor
+                }
+            }
+        }
+        {
+          \seq_map_inline:Nn \c_@@_headings_cs_seq
+            { \cs_gset_eq:cN { CTEX@makeanchor@ ##1 } \CTEX@makeanchor }
+        }
     \group_end:
   }
 %    \end{macrocode}
@@ -8635,6 +8883,22 @@ Copyright and Licence
   }
 %    \end{macrocode}
 %
+% \changes{v2.5.8}{2021/12/04}{兼容 \pkg{titlesec} 包和 \tn{CTEXifname}。}
+% 在 \pkg{titlesec} 包定义的标题中更新 \tn{CTEXifname}。
+%    \begin{macrocode}
+\ctex_at_end_package:nn { titlesec }
+  {
+    \ctex_patch_cmd:Nnn \ttl@labelling
+      { \let \ifttl@toclabel \ifttl@label }
+      {
+        \let \ifttl@toclabel \ifttl@label
+        \CTEX@updatettlifname
+      }
+    \cs_new_protected:Npn \CTEX@updatettlifname
+      { \legacy_if:nTF { ttl@label } { \CTEX@ifnametrue } { \CTEX@ifnamefalse } }
+  }
+%    \end{macrocode}
+%
 % \paragraph{兼容 \pkg{titleps} 宏包}
 %
 % \changes{v2.3}{2015/12/25}{兼容 \pkg{titleps} 宏包。}
@@ -8787,21 +9051,23 @@ Copyright and Licence
 % \changes{v2.4.11}{2017/09/13}{补充页眉空格。}
 %    \begin{macrocode}
 %<*article>
-\if@twoside
-  \ctex_patch_cmd:Nnn \ps@headings
-    { \ifnum \c@secnumdepth > \z@ \thesection \quad \fi }
-    { \CTEXifname { \CTEXthesection \quad } { } }
-  \ctex_patch_cmd:Nnn \ps@headings
-    { \ifnum \c@secnumdepth > \@ne \thesubsection \quad \fi }
-    { \CTEXifname { \CTEXthesubsection \quad } { } }
-\else:
+\legacy_if:nTF { @twoside }
+  {
+    \ctex_patch_cmd:Nnn \ps@headings
+      { \ifnum \c@secnumdepth > \z@ \thesection \quad \fi }
+      { \CTEXifname { \CTEXthesection \quad } { } }
+    \ctex_patch_cmd:Nnn \ps@headings
+      { \ifnum \c@secnumdepth > \@ne \thesubsection \quad \fi }
+      { \CTEXifname { \CTEXthesubsection \quad } { } }
+  }
 %    \end{macrocode}
 % 不知为何，标准文档类此处对 \texttt{secnumdepth} 的判断为 $0$，与 \tn{section} 的层次 $1$ 不符。
 %    \begin{macrocode}
-  \ctex_patch_cmd:Nnn \ps@headings
-    { \ifnum \c@secnumdepth > \m@ne \thesection \quad \fi }
-    { \CTEXifname { \CTEXthesection \quad } { } }
-\fi:
+  {
+    \ctex_patch_cmd:Nnn \ps@headings
+      { \ifnum \c@secnumdepth > \m@ne \thesection \quad \fi }
+      { \CTEXifname { \CTEXthesection \quad } { } }
+  }
 %</article>
 %<*book|report>
 \ctex_patch_cmd:Nnn \ps@headings
@@ -8813,11 +9079,12 @@ Copyright and Licence
 %<book>    \fi \fi
   }
   { \CTEXifname { \CTEXthechapter \quad } { } }
-\if@twoside
-  \ctex_patch_cmd:Nnn \ps@headings
-    { \ifnum \c@secnumdepth > \z@ \thesection . ~ \ \fi }
-    { \CTEXifname { \CTEXthesection \quad } { } }
-\fi:
+\legacy_if:nT { @twoside }
+  {
+    \ctex_patch_cmd:Nnn \ps@headings
+      { \ifnum \c@secnumdepth > \z@ \thesection . ~ \ \fi }
+      { \CTEXifname { \CTEXthesection \quad } { } }
+  }
 %</book|report>
 %    \end{macrocode}
 % \end{macro}
@@ -8851,18 +9118,20 @@ Copyright and Licence
     \@ifpackagewith { fancyhdr } { headings }
       {
 %<*article>
-        \if@twoside
-          \ctex_patch_cmd:Nnn \ps@headings
-            { \ifnum \c@secnumdepth > \z@ \thesection \quad \fi }
-            { \CTEXifname { \CTEXthesection \quad } { } }
-          \ctex_patch_cmd:Nnn \ps@headings
-            { \ifnum \c@secnumdepth > \@ne \thesubsection \quad \fi }
-            { \CTEXifname { \CTEXthesubsection \quad } { } }
-        \else:
-          \ctex_patch_cmd:Nnn \ps@headings
-            { \ifnum \c@secnumdepth > \z@ \thesection \quad \fi }
-            { \CTEXifname { \CTEXthesection \quad } { } }
-        \fi:
+        \legacy_if:nTF { @twoside }
+          {
+            \ctex_patch_cmd:Nnn \ps@headings
+              { \ifnum \c@secnumdepth > \z@ \thesection \quad \fi }
+              { \CTEXifname { \CTEXthesection \quad } { } }
+            \ctex_patch_cmd:Nnn \ps@headings
+              { \ifnum \c@secnumdepth > \@ne \thesubsection \quad \fi }
+              { \CTEXifname { \CTEXthesubsection \quad } { } }
+          }
+          {
+            \ctex_patch_cmd:Nnn \ps@headings
+              { \ifnum \c@secnumdepth > \z@ \thesection \quad \fi }
+              { \CTEXifname { \CTEXthesection \quad } { } }
+          }
 %</article>
 %<*book|report>
         \ctex_patch_cmd:Nnn \ps@headings
@@ -8874,11 +9143,12 @@ Copyright and Licence
 %<book>            \fi \fi
           }
           { \CTEXifname { \CTEXthechapter \quad } { } }
-        \if@twoside
-          \ctex_patch_cmd:Nnn \ps@headings
-            { \ifnum \c@secnumdepth > \z@ \thesection . ~ \ \fi }
-            { \CTEXifname { \CTEXthesection \quad } { } }
-        \fi:
+        \legacy_if:nT { @twoside }
+          {
+            \ctex_patch_cmd:Nnn \ps@headings
+              { \ifnum \c@secnumdepth > \z@ \thesection . ~ \ \fi }
+              { \CTEXifname { \CTEXthesection \quad } { } }
+          }
 %</book|report>
       }
       { }
@@ -9601,8 +9871,7 @@ Copyright and Licence
 % 不使用标题定义时的通用设置，注意此处 \cs{c_@@_std_class_tl} 可能没有定义。
 %    \begin{macrocode}
 %<*generic>
-\tl_set:Nn \l_@@_tmp_tl { beamer }
-\tl_if_eq:NNTF \c_@@_std_class_tl \l_@@_tmp_tl
+\tl_if_eq:NnTF \c_@@_std_class_tl { beamer }
   {
     \str_if_eq:onTF { \g_@@_encoding_tl } { GBK }
       {
@@ -9688,7 +9957,7 @@ Copyright and Licence
 \seq_new:N \c_@@_font_size_seq
 \cs_new_protected:Npn \@@_save_font_size:nn #1#2
   {
-    \use:x
+    \use:e
       {
         \prop_gput:Nnn \exp_not:N \c_@@_font_size_prop {#1}
           {
@@ -10054,7 +10323,7 @@ Copyright and Licence
           {
             \file_if_exist:nF { ctex-fontset- \g_@@_fontset_tl .def }
               {
-                \use:x
+                \use:e
                   {
                     \ctex_detect_platform:
                     \msg_error:nnxx { ctex } { fontset-not-found }
@@ -10918,17 +11187,17 @@ Copyright and Licence
 % 文件标识信息。
 %    \begin{macrocode}
 %<adobe>\ProvidesFile{ctex-zhmap-adobe.tex}%
-%<adobe>  [2021/06/20 v2.5.7 Adobe font map loader for DVIPDFMx (CTEX)]
+%<adobe>  [2022/07/14 v2.5.10 Adobe font map loader for DVIPDFMx (CTEX)]
 %<fandol>\ProvidesFile{ctex-zhmap-fandol.tex}%
-%<fandol>  [2021/06/20 v2.5.7 Fandol font map loader for DVIPDFMx (CTEX)]
+%<fandol>  [2022/07/14 v2.5.10 Fandol font map loader for DVIPDFMx (CTEX)]
 %<founder>\ProvidesFile{ctex-zhmap-founder.tex}%
-%<founder>  [2021/06/20 v2.5.7 Founder font map loader for pdfTeX and DVIPDFMx (CTEX)]
+%<founder>  [2022/07/14 v2.5.10 Founder font map loader for pdfTeX and DVIPDFMx (CTEX)]
 %<mac>\ProvidesFile{ctex-zhmap-mac.tex}%
-%<mac>  [2021/06/20 v2.5.7 Mac font map loader for DVIPDFMx (CTEX)]
+%<mac>  [2022/07/14 v2.5.10 Mac font map loader for DVIPDFMx (CTEX)]
 %<ubuntu>\ProvidesFile{ctex-zhmap-ubuntu.tex}%
-%<ubuntu>  [2021/06/20 v2.5.7 Ubuntu font map loader for DVIPDFMx (CTEX)]
+%<ubuntu>  [2022/07/14 v2.5.10 Ubuntu font map loader for DVIPDFMx (CTEX)]
 %<windows>\ProvidesFile{ctex-zhmap-windows.tex}%
-%<windows>  [2021/06/20 v2.5.7 Windows font map loader for pdfTeX and DVIPDFMx (CTEX)]
+%<windows>  [2022/07/14 v2.5.10 Windows font map loader for pdfTeX and DVIPDFMx (CTEX)]
 %    \end{macrocode}
 %
 % \paragraph{\pkg{ctex-zhmap-adobe.tex}}
@@ -11556,7 +11825,7 @@ Copyright and Licence
     \@ifpackageloaded {#1}
       { \msg_error:nnxx }
       { \@@_disable_package_aux:nnnn }
-      { ctex } { disable-package } {#1} { \@currname }
+      { ctexhook } { disable-package } {#1} { \@currname }
   }
 \cs_new_protected:Npx \@@_disable_package_aux:nnnn #1#2#3#4
   {
@@ -11567,7 +11836,7 @@ Copyright and Licence
       }
       { \tl_const:cn { ver@ #3 . \exp_not:N \@pkgextension } { 9999/99/99 } }
   }
-\msg_new:nnn { ctex } { disable-package }
+\msg_new:nnn { ctexhook } { disable-package }
   { Package~`#1'~can~not~be~loaded~with~`#2'. }
 %    \end{macrocode}
 % \end{macro}
@@ -11587,8 +11856,8 @@ Copyright and Licence
   }
   {
     \cs_new_protected:Npn \ctex_replace_package:nn
-      { \msg_warning:nnnn { ctex } { replace-package-invalid } }
-    \msg_new:nnn { ctex } { replace-package-invalid }
+      { \msg_warning:nnnn { ctexhook } { replace-package-invalid } }
+    \msg_new:nnn { ctexhook } { replace-package-invalid }
       {
         \token_to_str:N \ctex_replace_package:nn \{#1\}\{#2\}~is~invalid~
         before~LaTeX~2020-10-01.
@@ -11607,8 +11876,8 @@ Copyright and Licence
       { \ctex_gadd_package_hook:nnn { before } {#1} }
   }
 \cs_new_protected:Npn \@@_package_loaded_warning:nn #1#2
-  { \msg_warning:nnx { ctex } { invalid-hook } {#1} }
-\msg_new:nnn { ctex } { invalid-hook }
+  { \msg_warning:nnx { ctexhook } { invalid-hook } {#1} }
+\msg_new:nnn { ctexhook } { invalid-hook }
   {
     Package~`#1'~is~loaded. \\
     \token_to_str:N \ctex_at_begin_package:nn \{#1\}\{...\}~is~invalid.
@@ -11630,6 +11899,7 @@ Copyright and Licence
 % \end{macro}
 %
 % \changes{v2.5.6}{2021/02/16}{使用正确的导言区末尾钩子。}
+% \changes{v2.5.8}{2021/11/18}{兼容 \LaTeX \ 2021/11/15。}
 %
 % \LaTeX \ 2020/10/01 开始提供常用钩子管理机制。在新机制下，我们只需要做简单的包装。
 %    \begin{macrocode}
@@ -11641,8 +11911,12 @@ Copyright and Licence
       { \ctex_gadd_ltxhook:nn { begindocument/before } }
     \cs_new_protected:Npn \ctex_after_end_preamble:n
       { \ctex_gadd_ltxhook:nn { begindocument/end } }
-    \cs_new_protected:Npn \ctex_gadd_package_hook:nnn #1#2
-      { \ctex_gadd_ltxhook:nn { package/#1/#2 } }
+    \cs_new_protected:Npx \ctex_gadd_package_hook:nnn #1#2
+      {
+        \ctex_if_format_at_least:nTF { 2021/11/15 }
+          { \ctex_gadd_ltxhook:nn { package/#2/#1 } }
+          { \ctex_gadd_ltxhook:nn { package/#1/#2 } }
+      }
     \file_input_stop:
   }
   { }
@@ -11776,8 +12050,8 @@ Copyright and Licence
       { \ctex_patch_failure:N #1 }
   }
 \cs_new_protected:Npn \ctex_patch_failure:N #1
-  { \msg_warning:nnx { ctex } { patch-failure } { \token_to_str:N #1 } }
-\msg_new:nnn { ctex } { patch-failure }
+  { \msg_warning:nnx { ctexpatch } { patch-failure } { \token_to_str:N #1 } }
+\msg_new:nnn { ctexpatch } { patch-failure }
   { Oops!~Command~`#1'~is~NOT~patchable.\\ }
 %    \end{macrocode}
 % \end{macro}
@@ -11854,7 +12128,7 @@ Copyright and Licence
           { \cs_if_exist_p:c { #1##3 } }
           {
             \group_begin:
-            \use:x
+            \use:e
               {
                 \group_end:
                 \@@_parse_name:nNNNnN
@@ -11896,7 +12170,7 @@ Copyright and Licence
       }
     \cs_new:Npn \@@_parse_name:w ##1 #3 ~ ##2 #2 ##3 \q_stop { ##1##2 }
   }
-\use:x
+\use:e
   {
     \@@_tmp:w
       { \c_backslash_str }
@@ -11973,7 +12247,7 @@ Copyright and Licence
     \@@_patch_rescan:NNn \l_@@_prefix_tl      \l_@@_prefix_str      {#2}
     \@@_patch_rescan:NNn \l_@@_parameter_tl   \l_@@_parameter_str   {#2}
     \@@_patch_rescan:NNn \l_@@_replacement_tl \l_@@_replacement_str {#2}
-    \use:x
+    \use:e
       {
         \exp_not:o { \l_@@_prefix_tl } \tex_def:D \exp_not:N #1
           \exp_not:o { \l_@@_parameter_tl }
@@ -12000,7 +12274,7 @@ Copyright and Licence
     \group_end:
     \ctex_if_rescanable:NnTF #1 {#3}
       {
-        \use:x
+        \use:e
           {
             \@@_patch_replace:nnnTF {#2}
               { \tl_to_str:n {#4} }

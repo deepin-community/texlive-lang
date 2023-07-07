@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>C/WEB programs in “TeX Live 2021”</title>
+  <title>C/WEB programs in TeX Live 2022</title>
   <style>
     html {
       line-height: 1.5;
@@ -21,7 +21,7 @@
       padding-top: 50px;
       padding-bottom: 50px;
       hyphens: auto;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       text-rendering: optimizeLegibility;
       font-kerning: normal;
     }
@@ -29,6 +29,9 @@
       body {
         font-size: 0.9em;
         padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
       }
     }
     @media print {
@@ -92,6 +95,7 @@
     pre code {
       padding: 0;
       overflow: visible;
+      overflow-wrap: normal;
     }
     .sourceCode {
      background-color: transparent;
@@ -133,6 +137,12 @@
     #TOC li {
       list-style: none;
     }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
     #TOC a:not(:hover) {
       text-decoration: none;
     }
@@ -150,59 +160,165 @@
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">C/WEB programs in “TeX&nbsp;Live&nbsp;2021”</h1>
+<h1 class="title">C/WEB programs in TeX Live 2022</h1>
 </header>
 <h2 id="introduction">Introduction</h2>
-<p>Welcome to “All Things <code>WEB</code>” in “TeX Live.”</p>
-<p>Here you find the documented source code of all major <code>WEB</code> and <code>CWEB</code> programs in readable format. The “named” entries represent the unmodified base sources as written by their respective authors, the attached “<code>chg</code>” links point to “only the changed sections (or modules)” as applied for release in the “TeX<br />
-Live” distribution, so you may want to study these pairs in parallel. Care has been taken to keep the section numbers for the main parts intact.</p>
-<p>Although not all the programs presented here are written or maintained by Donald Knuth, it is more convenient for everything to be collected in one place for reading and searching. And they all stem from the system that Knuth created.</p>
-<p>Note that all <code>WEB</code> programs are mogrified from Pascal code to C code before compilation, so further modifications and amendments will occur “for the real thing,” i.e., the production of the executable <code>WEB</code> programs. (The <code>CWEB</code> programs do not require these extra modifications, they get linked directly to the external runtime environment.)</p>
-<p>If you believe to have found anything that remains technically, historically, typographically, or politically incorrect in any of these files, please feel free to <a href="https://tug.org/texmfbug/">report bugs in TeX and friends</a> or <a href="mailto:andreas_github@freenet.de">contact the maintainer of this library</a> directly.</p>
-<h2 id="canonical-knuthian-web-programs">Canonical Knuthian WEB programs</h2>
+<p>Welcome to “All Things <code>WEB</code>” in TeX Live.</p>
+<p>Here you find the documented source code of all major
+<code>WEB</code> and <code>CWEB</code> programs in readable format. The
+<code>NAMED</code> entries represent the unmodified base sources as
+written by their respective authors, the attached <code>chg</code> links
+point to only the changed sections (or modules) as applied for release
+in the TeX Live distribution, so you may want to study these pairs in
+parallel. Care has been taken to keep the section numbering intact.</p>
+<p>Although not all the programs presented here are written or
+maintained by Donald Knuth, it is more convenient for everything to be
+collected in one place for reading and searching. And they all stem from
+the system that Knuth created.</p>
+<p>Note that all <code>WEB</code> programs are mogrified from Pascal
+code to C code before compilation, so further modifications and
+amendments will occur for the real thing, i.e., the production of the
+executable <code>WEB</code> programs. (The <code>CWEB</code> programs do
+not require these extra modifications, they get linked directly to the
+external runtime environment.)</p>
+<p>If you believe to have found anything that remains technically,
+historically, typographically, or politically incorrect in any of these
+files, please feel free to <a href="https://tug.org/texmfbug/">report
+bugs in TeX and friends</a> or <a
+href="mailto:andreas_github@freenet.de">contact the maintainer of this
+collection</a> directly.</p>
+<h2 id="canonical-knuthian-web-programs">Canonical Knuthian WEB
+programs</h2>
 <ul>
-<li><p><code>etc/</code> <span>[</span> <a href="etc/vftovp.pdf"><code>VFtoVP</code></a> <sub><a href="etc/vftovp-changes.pdf"><code>chg</code></a></sub> <a href="etc/vptovf.pdf"><code>VPtoVF</code></a> <sub><a href="etc/vptovf-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>mf/</code> <span>[</span> <a href="mf/mf.pdf"><code>Metafont</code></a> <sub><a href="mf/mf-changes.pdf"><code>chg</code></a></sub> <a href="mf/trapman.pdf"><code>TRAPMAN</code></a> <span>]</span></p></li>
-<li><p><code>mfware/</code> <span>[</span> <a href="mfware/gftype.pdf"><code>GFtype</code></a> <sub><a href="mfware/gftype-changes.pdf"><code>chg</code></a></sub> <a href="mfware/gftopk.pdf"><code>GFtoPK</code></a> <sub><a href="mfware/gftopk-changes.pdf"><code>chg</code></a></sub> <a href="mfware/gftodvi.pdf"><code>GFtoDVI</code></a> <sub><a href="mfware/gftodvi-changes.pdf"><code>chg</code></a></sub> <a href="mfware/mft.pdf"><code>MFT</code></a> <sub><a href="mfware/mft-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>tex/</code> <span>[</span> <a href="tex/glue.pdf"><code>GLUE</code></a> <a href="tex/tex.pdf"><code>TeX</code></a> <sub><a href="tex/tex-changes.pdf"><code>chg</code></a></sub> <a href="tex/tripman.pdf"><code>TRIPMAN</code></a> <span>]</span></p></li>
-<li><p><code>texware/</code> <span>[</span> <a href="texware/pooltype.pdf"><code>POOLtype</code></a> <sub><a href="texware/pooltype-changes.pdf"><code>chg</code></a></sub> <a href="texware/tftopl.pdf"><code>TFtoPL</code></a> <sub><a href="texware/tftopl-changes.pdf"><code>chg</code></a></sub> <a href="texware/pltotf.pdf"><code>PLtoTF</code></a> <sub><a href="texware/pltotf-changes.pdf"><code>chg</code></a></sub> <a href="texware/dvitype.pdf"><code>DVItype</code></a> <sub><a href="texware/dvitype-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>web/</code> <span>[</span> <a href="web/webman.pdf"><code>WEBMAN</code></a> <a href="web/weave.pdf"><code>WEAVE</code></a> <sub><a href="web/weave-changes.pdf"><code>chg</code></a></sub> <a href="web/tangle.pdf"><code>TANGLE</code></a> <sub><a href="web/tangle-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
+<li><p><code>etc/</code> <span>[</span> <a
+href="etc/vftovp.pdf"><code>VFtoVP</code></a>+<a
+href="etc/vftovp-changes.pdf"><code>chg</code></a> <a
+href="etc/vptovf.pdf"><code>VPtoVF</code></a>+<a
+href="etc/vptovf-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>mf/</code> <span>[</span> <a
+href="mf/mf.pdf"><code>Metafont</code></a>+<a
+href="mf/mf-changes.pdf"><code>chg</code></a> <a
+href="mf/trapman.pdf"><code>TRAPMAN</code></a> <span>]</span></p></li>
+<li><p><code>mfware/</code> <span>[</span> <a
+href="mfware/gftype.pdf"><code>GFtype</code></a>+<a
+href="mfware/gftype-changes.pdf"><code>chg</code></a> <a
+href="mfware/gftopk.pdf"><code>GFtoPK</code></a>+<a
+href="mfware/gftopk-changes.pdf"><code>chg</code></a> <a
+href="mfware/gftodvi.pdf"><code>GFtoDVI</code></a>+<a
+href="mfware/gftodvi-changes.pdf"><code>chg</code></a> <a
+href="mfware/mft.pdf"><code>MFT</code></a>+<a
+href="mfware/mft-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>tex/</code> <span>[</span> <a
+href="tex/glue.pdf"><code>GLUE</code></a> <a
+href="tex/tex.pdf"><code>TeX</code></a>+<a
+href="tex/tex-changes.pdf"><code>chg</code></a> <a
+href="tex/tripman.pdf"><code>TRIPMAN</code></a> <span>]</span></p></li>
+<li><p><code>texware/</code> <span>[</span> <a
+href="texware/pooltype.pdf"><code>POOLtype</code></a>+<a
+href="texware/pooltype-changes.pdf"><code>chg</code></a> <a
+href="texware/tftopl.pdf"><code>TFtoPL</code></a>+<a
+href="texware/tftopl-changes.pdf"><code>chg</code></a> <a
+href="texware/pltotf.pdf"><code>PLtoTF</code></a>+<a
+href="texware/pltotf-changes.pdf"><code>chg</code></a> <a
+href="texware/dvitype.pdf"><code>DVItype</code></a>+<a
+href="texware/dvitype-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>web/</code> <span>[</span> <a
+href="web/webman.pdf"><code>WEBMAN</code></a> <a
+href="web/weave.pdf"><code>WEAVE</code></a>+<a
+href="web/weave-changes.pdf"><code>chg</code></a> <a
+href="web/tangle.pdf"><code>TANGLE</code></a>+<a
+href="web/tangle-changes.pdf"><code>chg</code></a> <a
+href="web/twill.pdf"><code>TWILL</code></a> <span>]</span></p></li>
 </ul>
-<h2 id="complementary-web-programs-by-other-authors">Complementary WEB programs by other authors</h2>
+<h2 id="complementary-web-programs-by-other-authors">Complementary WEB
+programs by other authors</h2>
 <ul>
-<li><p><code>other/</code> <span>[</span> <a href="other/dvicopy.pdf"><code>DVIcopy</code></a> <sub><a href="other/dvicopy-changes.pdf"><code>chg</code></a></sub> <a href="other/patgen.pdf"><code>PatGen</code></a> <sub><a href="other/patgen-changes.pdf"><code>chg</code></a></sub> <a href="other/pktogf.pdf"><code>PKtoGF</code></a> <sub><a href="other/pktogf-changes.pdf"><code>chg</code></a></sub> <a href="other/pktype.pdf"><code>PKtype</code></a> <sub><a href="other/pktype-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>bibtex/</code> <span>[</span> <a href="bibtex/bibtex.pdf"><code>BibTeX</code></a> <sub><a href="bibtex/bibtex-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>pdftex/</code> <span>[</span> <a href="pdftex/pdftex.pdf"><code>pdfTeX</code></a> <sub><a href="pdftex/pdftex-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>xetex/</code> <span>[</span> <a href="xetex/xetex.pdf"><code>XeTeX</code></a> <sub><a href="xetex/xetex-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
+<li><p><code>other/</code> <span>[</span> <a
+href="other/dvicopy.pdf"><code>DVIcopy</code></a>+<a
+href="other/dvicopy-changes.pdf"><code>chg</code></a> <a
+href="other/patgen.pdf"><code>PatGen</code></a>+<a
+href="other/patgen-changes.pdf"><code>chg</code></a> <a
+href="other/pktogf.pdf"><code>PKtoGF</code></a>+<a
+href="other/pktogf-changes.pdf"><code>chg</code></a> <a
+href="other/pktype.pdf"><code>PKtype</code></a>+<a
+href="other/pktype-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>bibtex/</code> <span>[</span> <a
+href="bibtex/bibtex.pdf"><code>BibTeX</code></a>+<a
+href="bibtex/bibtex-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>pdftex/</code> <span>[</span> <a
+href="pdftex/pdftex.pdf"><code>pdfTeX</code></a>+<a
+href="pdftex/pdftex-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>xetex/</code> <span>[</span> <a
+href="xetex/xetex.pdf"><code>XeTeX</code></a>+<a
+href="xetex/xetex-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
 </ul>
-<h2 id="cweb-programs-by-knuth-et-al.">CWEB programs by Knuth <em>et&nbsp;al.</em></h2>
+<h2 id="cweb-programs-by-knuth-et-al.">CWEB programs by Knuth
+<em>et al.</em></h2>
 <ul>
-<li><p><code>cweb/</code> <span>[</span> <a href="cweb/cwebman.pdf"><code>CWEBMAN</code></a> <a href="cweb/common.pdf"><code>COMMON</code></a> <sub><a href="cweb/common-changes.pdf"><code>chg</code></a></sub> <a href="cweb/ctangle.pdf"><code>CTANGLE</code></a> <sub><a href="cweb/ctangle-changes.pdf"><code>chg</code></a></sub> <a href="cweb/cweave.pdf"><code>CWEAVE</code></a> <sub><a href="cweb/cweave-changes.pdf"><code>chg</code></a></sub><br />
-<a href="cweb/ctwill.pdf"><code>CTWILL</code></a> <a href="cweb/refsort.pdf"><code>REFSORT</code></a> <sub><a href="cweb/refsort-changes.pdf"><code>chg</code></a></sub> <a href="cweb/twinx.pdf"><code>TWINX</code></a> <sub><a href="cweb/twinx-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>ctie/</code> <span>[</span> <a href="ctie/ctie.pdf"><code>CTIE</code></a> <sub><a href="ctie/ctie-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
-<li><p><code>tie/</code> <span>[</span> <a href="tie/tie.pdf"><code>TIE</code></a> <sub><a href="tie/tie-changes.pdf"><code>chg</code></a></sub> <span>]</span></p></li>
+<li><p><code>cweb/</code> <span>[</span> <a
+href="cweb/cwebman.pdf"><code>CWEBMAN</code></a> <a
+href="cweb/common.pdf"><code>COMMON</code></a>+<a
+href="cweb/common-changes.pdf"><code>chg</code></a> <a
+href="cweb/ctangle.pdf"><code>CTANGLE</code></a>+<a
+href="cweb/ctangle-changes.pdf"><code>chg</code></a> <a
+href="cweb/cweave.pdf"><code>CWEAVE</code></a>+<a
+href="cweb/cweave-changes.pdf"><code>chg</code></a><br />
+<a href="cweb/ctwill.pdf"><code>CTWILL</code></a> <a
+href="cweb/refsort.pdf"><code>REFSORT</code></a>+<a
+href="cweb/refsort-changes.pdf"><code>chg</code></a> <a
+href="cweb/twinx.pdf"><code>TWINX</code></a>+<a
+href="cweb/twinx-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>ctie/</code> <span>[</span> <a
+href="ctie/ctie.pdf"><code>CTIE</code></a>+<a
+href="ctie/ctie-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>tie/</code> <span>[</span> <a
+href="tie/tie.pdf"><code>TIE</code></a>+<a
+href="tie/tie-changes.pdf"><code>chg</code></a> <span>]</span></p></li>
 </ul>
-<h2 id="errata-for-computers-typesetting-by-donald-e.-knuth">Errata for “Computers &amp; Typesetting” by Donald E. Knuth</h2>
+<h2 id="errata-for-computers-typesetting-by-donald-e.-knuth">Errata for
+“Computers &amp; Typesetting” by Donald E. Knuth</h2>
 <ul>
 <li><p><code>errata/</code></p>
 <ul>
 <li><p><a href="errata/errorlog.pdf">The Errors of TeX</a></p></li>
-<li><p><a href="errata/errata.one.pdf">The TeXbook, 1<sup>st</sup> printing</a></p></li>
-<li><p><a href="errata/errata.two.pdf">The TeXbook, 2<sup>nd</sup> printing</a></p></li>
-<li><p><a href="errata/errata.three.pdf">Computers &amp; Typesetting, 15 June 1987</a></p></li>
-<li><p><a href="errata/errata.four.pdf">Computers &amp; Typesetting, 20 February 1989</a></p></li>
-<li><p><a href="errata/errata.five.pdf">Computers &amp; Typesetting, 30 September 1989</a></p></li>
-<li><p><a href="errata/errata.six.pdf">Computers &amp; Typesetting, 31 December 1990</a></p></li>
-<li><p><a href="errata/errata.seven.pdf">Computers &amp; Typesetting, 15 March 1992</a></p></li>
-<li><p><a href="errata/errata.eight.pdf">Computers &amp; Typesetting, pre-Millennium ed.</a></p></li>
-<li><p><a href="errata/errata.nine.pdf">The TeXbook, September 1996</a></p></li>
-<li><p><a href="errata/errata.ten.pdf">Computers &amp; Typesetting, 1<sup>st</sup> Millennium ed.</a></p></li>
-<li><p><a href="errata/errata.eleven.pdf">Computers &amp; Typesetting, 2<sup>nd</sup> Millennium ed.</a></p></li>
-<li><p><a href="errata/errata.twelve.pdf">Computers &amp; Typesetting, early 2014</a></p></li>
-<li><p><a href="errata/errata.pdf">Computers &amp; Typesetting, 31 January 2021</a></p></li>
+<li><p><a href="errata/errata.one.pdf">The TeXbook,
+1<sup>st</sup> printing</a></p></li>
+<li><p><a href="errata/errata.two.pdf">The TeXbook,
+2<sup>nd</sup> printing</a></p></li>
+<li><p><a href="errata/errata.three.pdf">Computers &amp; Typesetting,
+15 June 1987</a></p></li>
+<li><p><a href="errata/errata.four.pdf">Computers &amp; Typesetting,
+20 February 1989</a></p></li>
+<li><p><a href="errata/errata.five.pdf">Computers &amp; Typesetting,
+30 September 1989</a></p></li>
+<li><p><a href="errata/errata.six.pdf">Computers &amp; Typesetting,
+31 December 1990</a></p></li>
+<li><p><a href="errata/errata.seven.pdf">Computers &amp; Typesetting,
+15 March 1992</a></p></li>
+<li><p><a href="errata/errata.eight.pdf">Computers &amp; Typesetting,
+pre-Millennium ed.</a></p></li>
+<li><p><a href="errata/errata.nine.pdf">The TeXbook, September
+1996</a></p></li>
+<li><p><a href="errata/errata.ten.pdf">Computers &amp; Typesetting,
+1<sup>st</sup> Millennium ed.</a></p></li>
+<li><p><a href="errata/errata.eleven.pdf">Computers &amp; Typesetting,
+2<sup>nd</sup> Millennium ed.</a></p></li>
+<li><p><a href="errata/errata.twelve.pdf">Computers &amp; Typesetting,
+early 2014</a></p></li>
+<li><p><a href="errata/errata.pdf">Computers &amp; Typesetting,
+31 January 2021</a></p></li>
 </ul></li>
 </ul>
 <h2 id="happy-cweb-programming">Happy C/WEB Programming!</h2>
-<p>2021-03-17 Andreas Scherer</p>
+<p>2022-02-02 Andreas Scherer</p>
 </body>
 </html>

@@ -52,7 +52,11 @@ enddef;
 
 %%%%Alias
 def Place expr o =
-    if path o: draw o else: draw o fi
+  if path o: draw o else: draw o fi
+enddef;
+
+def Placer expr o =
+  if path o: draw o else: draw o fi
 enddef;
 
 %impression
@@ -122,7 +126,7 @@ vardef OvalVar(expr ar)=
   save Ovar; picture Ovar;
   save TAvar; path TAvar;
   string TTv;
-  TTv=ar&"\barre";
+  TTv="\barre\bfseries "&ar;%
   TAvar=OvalBox(TTv);
   Ovar=image(
       fill TAvar if print=false : withcolor OrangeTrois else : withcolor white fi;
@@ -287,7 +291,7 @@ vardef OvalMenuCap(expr art)=OvalCapMenu(art) enddef;
 vardef OvalCapMenu(expr ar)=
   save $; picture $;
   string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TAMC;
   TAMC=OvalBox(TTm);
@@ -317,8 +321,8 @@ enddef;
 vardef OvalMouvMenu(expr ar)=
   save $;  picture $;
   path ta; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else:
-      "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}"
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else:
+      "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}"
   fi;
   ta=OvalBox(TTm);
   $=image(
@@ -332,7 +336,7 @@ enddef;
 vardef OvalAppMenu(expr ar)=
   save $;  picture $;
   path ta; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   ta=OvalBox(TTm);
   $=image(
@@ -349,7 +353,7 @@ vardef OvalMenuSon(expr ar)=
   save $; save TA;
   picture $;
   string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TA;
   TA=OvalBox(TTm);
@@ -365,7 +369,7 @@ vardef OvalMenuControle(expr ar)=
   save $; save TA;
   picture $;
   string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TA;
   TA=OvalBox(TTm);
@@ -383,11 +387,11 @@ vardef OvalStylo(expr ar)=
   string TT,TTI;
   if string ar:
     if print:
-      TT=ar&"\hbox to1em{\barre}\blacktriangledown"
+      TT=ar&"\hbox to1em{}\barre\blacktriangledown"
     else:
-      TT=ar&"\hbox to1em{\barre}{\color{white}\blacktriangledown}"
+      TT=ar&"\hbox to1em{}\barre{\color{white}\blacktriangledown}"
     fi;
-    TTI=ar&"\hbox to1em{\barre}\phantom{\blacktriangledown}";
+    TTI=ar&"\hbox to1em{}\barre\phantom{\blacktriangledown}";
     path TA;
     TA=OvalBox(TT);
     $=image(
@@ -420,7 +424,7 @@ vardef OvalMenuEvenement(expr ar)=
   save $; save TA;
   picture $;
   string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TA;
   TA=OvalBox(TTm);
@@ -436,7 +440,7 @@ enddef;
 vardef RecMouvMenu(expr ar)=
   save $;  picture $;
   path ta; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}"
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}"
   fi;
   ta=RecBox(TTm);
   $=image(
@@ -450,7 +454,7 @@ enddef;
 vardef RecMenuApp(expr ar)=
   save $;  picture $;
   save ta; path ta; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   ta=RecBox(TTm);
   $=image(
@@ -464,7 +468,7 @@ enddef;
 vardef RecMenuOp(expr ar)=
   save $; save TA;
   picture $; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TA;
   TA=RecBox(TTm);
@@ -479,7 +483,7 @@ enddef;
 vardef RecMenuSon(expr ar)=
   save $; save TA;
   picture $; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}" fi;
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}" fi;
   path TA;
   TA=RecBox(TTm);
   $=image(
@@ -493,7 +497,7 @@ enddef;
 vardef RecEvenementMenu(expr ar)=
   save $;  picture $;
   path ta; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   ta=RecBox(TTm);
   $=image(
@@ -507,7 +511,7 @@ enddef;
 vardef RecMenuCap(expr ar)=
     save $;  picture $;
   path ta; string TTm;
-    TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+    TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
     fi;
   ta=RecBox(TTm);
   $=image(
@@ -521,7 +525,7 @@ enddef;
 vardef RecMenuVar(expr ar)=
   save $; save TA;
   picture $; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TA;
   TA=RecBox(TTm);
@@ -536,7 +540,7 @@ enddef;
 vardef RecMenuList(expr ar)=
   save $; save TA;
   picture $; string TTm;
-  TTm=if print:ar&"\hbox to1em{\barre}\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:ar&"\hbox to1em{}\barre\blacktriangledown" else: "{\color{white}"&ar&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   path TA;
   TA=RecBox(TTm);
@@ -1654,7 +1658,7 @@ vardef FinBlocRepeter=
   drawoptions();
   texto=image(
       labeloffset:=0;
-    label.lrt(TEX("\hbox to"&decimal(LongRep[numblocrep])&"pt{\phantom{\barre fin du bloc}}"),if unknown _coinprec: (0,0) else:_coinprec fi);
+    label.lrt(TEX("\barre\hbox to"&decimal(LongRep[numblocrep])&"pt{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
   labeloffset:=3;
   );
 path cadre;
@@ -1712,6 +1716,11 @@ enddef;
 
 vardef FinBlocRepeterI=FinBlocRepeter enddef;
 
+vardef BlocUserFinRepeter(expr col)=
+  colControle:=col;
+  FinBlocRepeter
+enddef;
+
 vardef Si(expr xa)=
   LONG:=0;
   save $;
@@ -1737,7 +1746,7 @@ vardef FinBlocSi=
   drawoptions();
   texto=image(
       labeloffset:=0;
-    label.lrt(TEX("\hbox to"&decimal(LongRep[numblocrep])&"pt{\phantom{\barre fin du bloc}}"),if unknown _coinprec: (0,0) else:_coinprec fi);
+    label.lrt(TEX("\barre\hbox to"&decimal(LongRep[numblocrep])&"pt{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
   labeloffset:=3;
   );
 path cadre;
@@ -1787,6 +1796,7 @@ fi;
 $=image(
     fill cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
   draw cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
+  draw texto;
   if BlocStopAvant=false:
     draw (coindebutbloc[numblocrep]+(0.0625+0.5cm,0)+(eb,0)){dir180}..
       {dir-90}(coindebutbloc[numblocrep]+(0.5cm,0)+(0,-eb))--
@@ -1848,7 +1858,7 @@ vardef Sinon=
   drawoptions();
   texto=image(
       labeloffset:=0;
-    label.lrt(TEX("\, \hbox to"&decimal(LongRep[numblocrep])&"pt{\bfseries\barre sinon}"),if unknown _coinprec: (0,0) else:_coinprec fi) if print=false : withcolor blanc fi;
+    label.lrt(TEX("\barre\,\hbox to"&decimal(LongRep[numblocrep])&"pt{}"),if unknown _coinprec: (0,0) else:_coinprec fi) if print=false : withcolor blanc fi;
   labeloffset:=3;
   );
   path cadre;
@@ -1896,7 +1906,9 @@ vardef Sinon=
 $=image(
     fill cadre withcolor if print=true : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
   draw cadre withcolor if print=true : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
-  draw texto;
+  drawoptions(withcolor white);
+  label.rt(TEX("\longbarre\sffamily\bfseries sinon"),(xpart(llcorner texto),ypart(center texto)));
+  drawoptions();
     if BlocStopAvant=false:
       draw (coindebutbloc[numblocrep]+(0.0625+0.5cm,0)+(eb,0.125)){dir180}..
 	{dir-90}(coindebutbloc[numblocrep]+(0.5cm,0)+(0,-eb))--
@@ -1973,7 +1985,7 @@ vardef Stop(expr nbpas)=
   save $;
   picture $,texto;
   string TTm;%Pour sauvegarder le nbpas car en l'utilisant dans les if, il ne permet pas la concaténation...
-  TTm=if print:nbpas&"\hbox to1em{\barre}\blacktriangledown" else:"{\color{white}"&nbpas&"\hbox to1em{\barre}\blacktriangledown}";
+  TTm=if print:nbpas&"\hbox to1em{}\barre\blacktriangledown" else:"{\color{white}"&nbpas&"\hbox to1em{}\barre\blacktriangledown}";
   fi;
   texto=image(
       path ti;
@@ -2510,8 +2522,9 @@ vardef BlocGrisMulti(text argris)=
 $
 enddef;
 
-boolean BlocE;
+boolean BlocE,BlocR;
 BlocE:=false;
+BlocR:=false;
 
 vardef BlocUser(expr colblocuser)(text textbloc)=
   LONG:=0;
@@ -2524,10 +2537,15 @@ vardef BlocUser(expr colblocuser)(text textbloc)=
       draw BUTB;
     );
   ColBloc:=colblocuser;
-  if BlocE=false:
-    $=Affichage(texto);
-  else:
+  if BlocE:
     $=AffichageED(texto);
+  elseif BlocR:
+    LONG:=0;
+    numblocrep:=numblocrep+1;
+    LongRep[numblocrep]:=abs(llcorner texto-lrcorner texto);%afin de conserver la longueur du"répéter..."
+    $=AffichageControle(texto);
+  else:
+    $=Affichage(texto);
   fi;
   $
 enddef;
@@ -3138,7 +3156,7 @@ vardef TestOpContient(expr pasun,pasdeux)=
   save $; picture $;
   save TAa; path TAa;
   save LTa; picture LTa;
-  LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"contient",if string pasun : OvalNb(pasdeux) else: pasun fi,"?");
+  LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"contient",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi,"?");
   TAa=DiamondBox(LTa);
   $=image(
       fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
@@ -3359,3 +3377,71 @@ vardef ListeLongueur(expr nbpas)=
   $
 enddef;
 
+vardef Boussole(expr nbpas)=
+  save $; picture $;
+  picture Bouss[];
+  Bouss1=image(
+      draw Orienter("90");
+    );
+  Bouss2=image(
+      _coinprec:=(0,0);
+      draw Orienter("0");
+    );
+  Bouss3=image(
+            _coinprec:=(0,0);
+      draw Orienter("-90");
+    );
+  Bouss4=image(
+            _coinprec:=(0,0);
+      draw Orienter("180");
+    );
+  $=image(
+    draw Bouss1 rotatedabout(center Bouss1,-90) shifted ((2cm,0)-(center Bouss1));
+    draw Bouss2 shifted ((0,2cm)-(center Bouss2));
+    draw Bouss3 rotatedabout(center Bouss3,90) shifted((-2cm,0)-(center Bouss3));
+    draw Bouss4 rotatedabout(center Bouss4,180) shifted((0,-2cm)-(center Bouss4));
+    pair PtBous[];
+    PtBous1=(-1.2cm,-1.2cm);
+    PtBous2-PtBous1=(2*1.2cm,0);
+    PtBous3-PtBous2=(0,2*1.2cm);
+    PtBous4-PtBous3=PtBous1-PtBous2;
+    path CadreBous;
+    CadreBous=(PtBous1+(0,eb)){dir-90}..{dir0}(PtBous1+(eb,0)) if nbpas="180":--0.4[PtBous1,PtBous2]--(1/2[PtBous1,PtBous2]+(0,-0.3cm))--0.6[PtBous1,PtBous2] fi--(PtBous2+(-eb,0)){dir 0}..{dir 90}(PtBous2+(0,eb)) if nbpas="90":--0.4[PtBous2,PtBous3]--(1/2[PtBous2,PtBous3]+(0.3cm,0))--0.6[PtBous2,PtBous3] fi--(PtBous3+(0,-eb)){dir90}..{dir180}(PtBous3+(-eb,0)) if nbpas="0":--0.4[PtBous3,PtBous4]--(1/2[PtBous3,PtBous4]+(0,0.3cm))--0.6[PtBous3,PtBous4] fi--(PtBous4+(eb,0)){dir 180}..{dir -90}(PtBous4-(0,eb)) if nbpas="-90":--0.4[PtBous4,PtBous1]--(1/2[PtBous4,PtBous1]+(-0.3cm,0))--0.6[PtBous4,PtBous1] fi
+      --cycle;
+    fill CadreBous withcolor BleuMouvTrois;
+    draw CadreBous;
+    path CercleBouss;
+    CercleBouss=fullcircle scaled (0.55*sqrt(2)*2.4cm);
+    fill CercleBouss withcolor 0.2[BleuMouvTrois,white];
+    trace CercleBouss withcolor dBleuMouvTrois;
+    if nbpas="0":
+      fill ((0,0)--(subpath(0,2) of CercleBouss)--cycle) withcolor 0.4[BleuMouvTrois,white];
+      draw (point(2) of CercleBouss)--(0,0)--(point(0) of CercleBouss) withpen pencircle scaled 1.25 withcolor white;
+    fi;
+    if nbpas="90":
+      draw (0,0)--(point(0) of CercleBouss) withpen pencircle scaled 1.25 withcolor white;
+    fi;
+    if nbpas="180":
+      fill ((0,0)--(subpath(6,8) of CercleBouss)--cycle) withcolor 0.4[BleuMouvTrois,white];
+      draw (point(6) of CercleBouss)--(0,0)--(point(8) of CercleBouss) withpen pencircle scaled 1.25 withcolor white;
+    fi;
+    if nbpas="-90":
+      fill ((0,0)--(subpath(0,4) of CercleBouss)--cycle) withcolor 0.4[BleuMouvTrois,white];
+      draw (point(0) of CercleBouss)--(0,0)--(point(4) of CercleBouss) withpen pencircle scaled 1.25 withcolor white;
+    fi;    
+    for k=0 upto 17:
+      draw 0.6[(0,0),point ((k/18)*length CercleBouss) of CercleBouss]--0.8[(0,0),point ((k/18)*length CercleBouss) of CercleBouss] withcolor white;
+    endfor;
+    picture FlecheBouss;
+    FlecheBouss=image(
+	fill fullcircle scaled 4mm withcolor white;
+      draw fullcircle scaled 4mm;
+      drawarrow (-1mm,0)--(1mm,0) withpen pencircle scaled 2 withcolor BleuMouvTrois;
+      );
+    draw FlecheBouss shifted (point(0) of CercleBouss);
+    draw (FlecheBouss rotated 90) shifted (point(2) of CercleBouss);
+    draw (FlecheBouss rotated 180) shifted (point(4) of CercleBouss);
+    draw (FlecheBouss rotated -90) shifted (point(6) of CercleBouss);
+    );
+  $
+enddef;

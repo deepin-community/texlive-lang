@@ -1,10 +1,9 @@
 % schulmathematik bundle: document class schulma-klausur
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-klausur}{2021-03-13}{1.1}{Dokumentenklasse fuer Klausuren}
+\ProvidesExplClass{schulma-klausur}{2022-08-12}{1.3}{Dokumentenklasse fuer Klausuren}
 
-\RequirePackage {xparse}
 \RequirePackage {etoolbox}
 
 \str_new:N \g_schulma_klausur_datum_str
@@ -27,8 +26,11 @@
 \bool_new:N \g_schulma_klausur_differenzenquotient_bool
 \bool_new:N \g_schulma_klausur_differentialquotient_bool
 \bool_new:N \g_schulma_klausur_musterloesung_bool
+\bool_new:N \l_schulma_klausur_loesung_bool
 
 \int_new:N \g_schulma_klausur_anzahl_hilfen_int
+\int_new:N \g_schulma_klausur_gesamtzeitbedarf_int
+\int_new:N \g_schulma_klausur_gesamtpunktzahl_int
 
 \clist_new:N \l_schulma_klausur_notenliste_clist
 
@@ -49,6 +51,31 @@
     Differentialquotient:
     \[ f' ( x\sb{0} ) = \lim \sb { x \rightarrow x\sb{0} }
     \frac {f(x)-f(x\sb{0})} {x-x\sb{0}} \]
+  }
+
+\msg_new:nnn {schulma-klausur} {Aufgabennachricht}
+  {
+    Aufgabe~ \arabic {Aufgabe} :~
+    \str_if_eq:nnTF {#1} {-NoValue-} {[ohne~Titel]} {#1}
+    \str_if_eq:nnF {#2} {-NoValue-} {,~#2~min}
+    \str_if_eq:nnF {#3} {-NoValue-} {,~#3~Punkte}
+  }
+
+\msg_new:nnn {schulma-klausur} {Aufgabensumme}
+  {
+    insgesamt~ \arabic {Aufgabe} ~Aufgaben
+    \int_compare:nNnT { \g_schulma_klausur_gesamtzeitbedarf_int } > {0}
+      {
+        ,~
+        \int_to_arabic:n { \g_schulma_klausur_gesamtzeitbedarf_int }
+        \c_space_tl min
+      }
+    \int_compare:nNnT { \g_schulma_klausur_gesamtpunktzahl_int } > {0}
+      {
+        ,~
+        \int_to_arabic:n { \g_schulma_klausur_gesamtpunktzahl_int }
+        \c_space_tl Punkte
+      }
   }
 
 \tl_set:Nn \l_schulma_klausur_aufgabentitel_tl {Aufgabe}
@@ -137,6 +164,9 @@
 \newlength \Teilaufgabenabstand
 \setlength \Teilaufgabenabstand {4.5pt plus2pt minus1pt}
 
+\RequirePackage {schulma}
+\RequirePackage {schulma-physik}
+
 \bool_if:NTF \g_schulma_klausur_musterloesung_bool
   {
     \LoadClass [t] {schulma-praes}
@@ -171,7 +201,7 @@
 
     \resetcounteronoverlays {Aufgabe}
 
-    \NewDocumentCommand \Aufgabe {s o d()}
+    \NewDocumentCommand \Aufgabe {s o o d()}
       {
         \stepcounter {Aufgabe}
         \frametitle
@@ -188,11 +218,19 @@
 
     \NewDocumentEnvironment {Teilaufgaben} { }
       {
-        \begin {list} { \stepcounter {Teilaufgabe} \alph {Teilaufgabe} ) }
+        \begin {list}
+          {
+            \FarbeAufgabe
+            \stepcounter {Teilaufgabe}
+            \alph {Teilaufgabe} )
+          }
           {
             \setlength \topsep {\Teilaufgabenabstand}
             \setlength \itemsep {\Teilaufgabenabstand}
-            \FarbeAufgabe
+            \bool_if:NF \l_schulma_klausur_loesung_bool
+              {
+                \FarbeAufgabe
+              }
           }
       }
       {
@@ -202,15 +240,12 @@
     \NewDocumentEnvironment {Lsg} {s}
     % Stern: Lösung beginnt mit einer Gleichung, kein Abstand erforderlich
       {
-        \IfBooleanF {#1}
-          {
-            \par
-            \medskip
-          }
-    
+        \IfBooleanF {#1} { \par \medskip }
+        \bool_gset_true:N \l_schulma_klausur_loesung_bool
         \FarbeLoesung
       }
       {
+        \bool_gset_false:N \l_schulma_klausur_loesung_bool
       }  
 
     \RenewDocumentCommand \Datum {m}
@@ -317,10 +352,13 @@
           }
       }{}{} % pretocmd hat vier Argumente
 
-    \NewDocumentCommand \Aufgabe {s o d()}
+    \AtEndDocument { \msg_note:nn {schulma-klausur} {Aufgabensumme} }
+
+    \NewDocumentCommand \Aufgabe {s o o d()}
       {
         \item
         \stepcounter {Aufgabe}
+        \msg_note:nnnnn {schulma-klausur} {Aufgabennachricht} {#2} {#3} {#4}
         \group_begin:
         \sffamily \bfseries
         \l_schulma_klausur_aufgabentitel_tl
@@ -328,11 +366,16 @@
         \arabic {Aufgabe}
         \IfValueT {#3}
           {
+            \int_gadd:Nn \g_schulma_klausur_gesamtzeitbedarf_int {#3}
+          }
+        \IfValueT {#4}
+          {
             \mdseries
             \rmfamily
             \slshape
             \c_space_tl
-            (#3~Punkte)
+            (#4~Punkte)
+            \int_gadd:Nn \g_schulma_klausur_gesamtpunktzahl_int {#4}
           }
         \IfBooleanF {#1} {.}
         \group_end:
@@ -341,6 +384,7 @@
 
     \bool_if:NTF \g_schulma_klausur_afuenfquer_bool
       {
+        \KOMAoption {paper} {landscape}
         \RequirePackage [top=2.7cm, bottom=3cm, hmargin=2.5cm] {geometry}
       }
       {
@@ -368,8 +412,11 @@
   label=\schulmaalph*),
   after-skip=4.5pt plus2pt minus1pt}
 
-\settasks{before-skip=4.5pt plus2pt minus1pt}
+\settasks{before-skip=9pt plus4pt minus2pt,
+  after-item-skip=9pt plus4pt minus2pt}
   }
+
+\RequirePackage {adjustbox}
 
 \cs_new:Npn \schulma_klausur_notentabelle:n #1
   {
@@ -426,10 +473,6 @@
         }
       \end {tabular}
   }
-
-\RequirePackage {adjustbox}
-\RequirePackage {schulma}
-\RequirePackage {schulma-physik}
 
 \bool_if:NTF \g_schulma_klausur_oesterreich_bool
   {

@@ -3,6 +3,9 @@ EXAMPLES = \
 	testsans.tex	\
 	testscaled-120.tex	\
 	testscaled-65.tex	\
+	oldnum.tex	\
+	digits-axes.tex	\
+	digits-cfr.tex	\
 	$(NULL)
 
 EXTRA_DIST = $(EXAMPLES)

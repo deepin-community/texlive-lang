@@ -1,0 +1,443 @@
+%%
+%% jpneduenumerate.sty
+%% for making handouts of Japanese high school mathematics
+%%
+%% Copyright (C) 2022 Yukoh KUSAKABE (screen-name)
+%%   https://www.metaphysica.info/
+%%   https://twitter.com/metaphysicainfo
+%%
+%% This package released under
+%% [the MIT license](https://ctan.org/license/mit).
+%%
+%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jpneduenumerate}[2022/07/15 v1.2]
+%
+%% [lua]
+\newif\if@jpnedu@enumerate@lua
+\@jpnedu@enumerate@luafalse
+\DeclareOption{lua}{\@jpnedu@enumerate@luatrue}%
+%
+%% [casebracket]
+\newif\if@jpnedu@enumerate@casebracket
+\@jpnedu@enumerate@casebracketfalse
+\DeclareOption{casebracket}{\@jpnedu@enumerate@casebrackettrue}%
+%
+%% [stepbracket]
+\newif\if@jpnedu@enumerate@stepbracket
+\@jpnedu@enumerate@stepbracketfalse
+\DeclareOption{stepbracket}{\@jpnedu@enumerate@stepbrackettrue}%
+%
+\ExecuteOptions{}
+\ProcessOptions\relax
+%
+%% replace defaluts
+% for \setlist
+\RequirePackage{enumitem}
+%
+% for \getrefnumber
+\RequirePackage{refcount}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% with [lua] %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+\if@jpnedu@enumerate@lua
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% for \ajroman \ajRoman
+\RequirePackage{luatexja-otf}
+%
+% If you do not use pLaTeX, LaTeX cannot use '\zw'.
+% In that case, please write \usepackage{bxjacalcux}.
+\setlist{nosep,leftmargin=2\zw,itemindent=1\zw,labelsep=1.15\zw,listparindent=1\zw}
+\setlist[itemize,1]{label=\textbf{\textperiodcentered}}
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\renewcommand{\labelenumii}{(\alph{enumii})}
+%%
+%
+% Asterisked envionments don't have parindent.
+%
+%% \begin{itemize*}
+\newenvironment{itemize*}%
+{\begin{itemize}[nosep,leftmargin=3\zw,itemindent=0\zw,labelsep=1.15\zw]}%
+{\end{itemize}}
+%
+%% \begin{enumerate*}
+\newenvironment{enumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3\zw,itemindent=0\zw,labelsep=1.15\zw]}%
+{\end{enumerate}}
+%
+%% \begin{romanenumerate} 
+%% \begin{romanenumerate*}
+\newenvironment{romanenumerate}%
+{\begin{enumerate}[nosep,leftmargin=2\zw,itemindent=1\zw,labelsep=1.15\zw,listparindent=1\zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajroman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+\newenvironment{romanenumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3\zw,itemindent=0\zw,labelsep=1.15\zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajroman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+%
+%% \begin{Romanenumerate}
+%% \begin{Romanenumerate*}
+\newenvironment{Romanenumerate}%
+{\begin{enumerate}[nosep,leftmargin=2\zw,itemindent=1\zw,labelsep=1.15\zw,listparindent=1\zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajRoman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+\newenvironment{Romanenumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3\zw,itemindent=0\zw,labelsep=1.15\zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajRoman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+%
+%% \begin{bracketenumerate} 
+%% \begin{bracketenumerate*}
+\newenvironment{bracketenumerate}%
+{\begin{enumerate}[nosep,leftmargin=2\zw,itemindent=1\zw,labelsep=1.15\zw,listparindent=1\zw]%
+\renewcommand{\labelenumi}{[\arabic{enumi}]}%
+\renewcommand{\labelenumii}{[\alph{enumii}]}%
+}%
+{\end{enumerate}}
+\newenvironment{bracketenumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3\zw,itemindent=0\zw,labelsep=1.15\zw]%
+\renewcommand{\labelenumi}{[\arabic{enumi}]}%
+\renewcommand{\labelenumii}{[\alph{enumii}]}%
+}%
+{\end{enumerate}}
+%
+%% \@jpneduenumerate@z@w@space
+\chardef\@jpneduenumerate@z@w@space=\jis"2121\relax
+%
+%% \@jpneduenumerate@makenumber
+% Non-stared macros are heading ones.
+% Stared macros are non-heading ones.
+\newcommand{\@jpneduenumerate@makenumber}[2]{%
+\expandafter\newcommand\csname #1\endcsname%
+{\@ifstar{\csname @jpneduenumerate#1@star\endcsname}{\csname @jpneduenumerate#1@nostar\endcsname}}%
+\expandafter\newcommand\csname @jpneduenumerate#1@star\endcsname[1]%
+{#2}%
+\expandafter\newcommand\csname @jpneduenumerate#1@nostar\endcsname[1]%
+{\noindent#2\hspace{0.5\zw}}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% without [lua] %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+\else
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% for \ajroman \ajRoman
+\RequirePackage{otf}
+%
+% If you do not use pLaTeX, LaTeX cannot use 'zw'.
+% In that case, please write \usepackage{bxjacalcux}.
+\setlist{nosep,leftmargin=2zw,itemindent=1zw,labelsep=1.15zw,listparindent=1zw}
+\setlist[itemize,1]{label=\textbf{\textperiodcentered}}
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\renewcommand{\labelenumii}{(\alph{enumii})}
+%%
+%
+% Asterisked envionments don't have parindent.
+%
+%% \begin{itemize*}
+\newenvironment{itemize*}%
+{\begin{itemize}[nosep,leftmargin=3zw,itemindent=0zw,labelsep=1.15zw]}%
+{\end{itemize}}
+%
+%% \begin{enumerate*}
+\newenvironment{enumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3zw,itemindent=0zw,labelsep=1.15zw]}%
+{\end{enumerate}}
+%
+%% \begin{romanenumerate} 
+%% \begin{romanenumerate*}
+\newenvironment{romanenumerate}%
+{\begin{enumerate}[nosep,leftmargin=2zw,itemindent=1zw,labelsep=1.15zw,listparindent=1zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajroman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+\newenvironment{romanenumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3zw,itemindent=0zw,labelsep=1.15zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajroman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+%
+%% \begin{Romanenumerate}
+%% \begin{Romanenumerate*}
+\newenvironment{Romanenumerate}%
+{\begin{enumerate}[nosep,leftmargin=2zw,itemindent=1zw,labelsep=1.15zw,listparindent=1zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajRoman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+\newenvironment{Romanenumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3zw,itemindent=0zw,labelsep=1.15zw]%
+\renewcommand{\labelenumi}{(\ajLabel\ajRoman{enumi})}%
+\renewcommand{\labelenumii}{(\alph{enumii})}%
+}%
+{\end{enumerate}}
+%
+%% \begin{bracketenumerate} 
+%% \begin{bracketenumerate*}
+\newenvironment{bracketenumerate}%
+{\begin{enumerate}[nosep,leftmargin=2zw,itemindent=1zw,labelsep=1.15zw,listparindent=1zw]%
+\renewcommand{\labelenumi}{[\arabic{enumi}]}%
+\renewcommand{\labelenumii}{[\alph{enumii}]}%
+}%
+{\end{enumerate}}
+\newenvironment{bracketenumerate*}%
+{\begin{enumerate}[nosep,leftmargin=3zw,itemindent=0zw,labelsep=1.15zw]%
+\renewcommand{\labelenumi}{[\arabic{enumi}]}%
+\renewcommand{\labelenumii}{[\alph{enumii}]}%
+}%
+{\end{enumerate}}
+%
+%% \@jpneduenumerate@makenumber
+% Non-stared macros are heading ones.
+% Stared macros are non-heading ones.
+\newcommand{\@jpneduenumerate@makenumber}[2]{%
+\expandafter\newcommand\csname #1\endcsname%
+{\@ifstar{\csname @jpneduenumerate#1@star\endcsname}{\csname @jpneduenumerate#1@nostar\endcsname}}%
+\expandafter\newcommand\csname @jpneduenumerate#1@star\endcsname[1]%
+{#2}%
+\expandafter\newcommand\csname @jpneduenumerate#1@nostar\endcsname[1]%
+{\noindent#2\hspace{0.5zw}}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% common %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%% \begin{caseenumerate}
+%% \begin{caseenumerate*}
+%% \begin{stepenumerate}
+%% \begin{stepenumerate*}
+\if@jpnedu@enumerate@casebracket
+\newenvironment{caseenumerate}%
+{\begin{bracketenumerate}}%
+{\end{bracketenumerate}}
+\newenvironment{caseenumerate*}%
+{\begin{bracketenumerate*}}%
+{\end{bracketenumerate*}}
+\else
+\newenvironment{caseenumerate}%
+{\begin{romanenumerate}}%
+{\end{romanenumerate}}
+\newenvironment{caseenumerate*}%
+{\begin{romanenumerate*}}%
+{\end{romanenumerate*}}
+\fi
+\if@jpnedu@enumerate@stepbracket
+\newenvironment{stepenumerate}%
+{\begin{bracketenumerate}}%
+{\end{bracketenumerate}}
+\newenvironment{stepenumerate*}%
+{\begin{bracketenumerate*}}%
+{\end{bracketenumerate*}}
+\else
+\newenvironment{stepenumerate}%
+{\begin{Romanenumerate}}%
+{\end{Romanenumerate}}
+\newenvironment{stepenumerate*}%
+{\begin{Romanenumerate*}}%
+{\end{Romanenumerate*}}
+\fi
+%
+%% \@jpneduenumerate@z@w@space
+\chardef\@jpneduenumerate@z@w@space=\jis"2121\relax
+%
+%% Refs
+% \ref{<\labelenumii of romanenumerate and Romanenumerate>} doesn't work.
+\@jpneduenumerate@makenumber{parenref}{(\ref{#1})}
+\@jpneduenumerate@makenumber{romanref}{\ajroman{\getrefnumber{#1}}}
+\@jpneduenumerate@makenumber{parenromanref}{(\ajroman{\getrefnumber{#1}})}
+\@jpneduenumerate@makenumber{Romanref}{\ajRoman{\getrefnumber{#1}}}
+\@jpneduenumerate@makenumber{parenRomanref}{(\ajRoman{\getrefnumber{#1}})}
+\@jpneduenumerate@makenumber{bracketref}{[\ref{#1}]}
+%
+%%* ENUMERATE GENERATOR
+%% \@jpneduenumeratetext@makenumber
+\newcommand{\@jpneduenumeratetext@makenumber}[2]{%
+% make the counter
+\newcounter{jpneduenumeratetext#1counter}%
+\setcounter{jpneduenumeratetext#1counter}{0}%
+%* print only counter number
+\@jpneduenumerate@makenumber{#1number}{#2}%
+% step
+\expandafter\newcommand\csname #1numberauto\endcsname%
+{\refstepcounter{jpneduenumeratetext#1counter}\csname thejpneduenumeratetext#1counter\endcsname}%
+% keep
+\expandafter\newcommand\csname #1numberkeep\endcsname%
+{\csname thejpneduenumeratetext#1counter\endcsname}%
+% reset
+\expandafter\newcommand\csname #1numberreset\endcsname%
+{\setcounter{jpneduenumeratetext#1counter}{0}}%
+%*
+%* print counter
+% Non-asterisked macros are heading.
+% Asterisked macros are not heading.
+% step
+\expandafter\newcommand\csname #1auto\endcsname%
+{\@ifstar{\csname @ghostheadingdefault#1auto@star\endcsname}{\csname @ghostheadingdefault#1auto@nostar\endcsname}}%
+\expandafter\newcommand\csname @ghostheadingdefault#1auto@star\endcsname%
+{\csname @jpneduenumerate#1number@star\endcsname{\csname #1numberauto\endcsname}}%
+\expandafter\newcommand\csname @ghostheadingdefault#1auto@nostar\endcsname%
+{\csname @jpneduenumerate#1number@nostar\endcsname{\csname #1numberauto\endcsname}}%
+% keep
+\expandafter\newcommand\csname #1keep\endcsname%
+{\@ifstar{\csname @ghostheadingdefault#1keep@star\endcsname}{\csname @ghostheadingdefault#1keep@nostar\endcsname}}%
+\expandafter\newcommand\csname @ghostheadingdefault#1keep@star\endcsname%
+{\csname @jpneduenumerate#1number@star\endcsname{\csname #1numberkeep\endcsname}}%
+\expandafter\newcommand\csname @ghostheadingdefault#1keep@nostar\endcsname%
+{\csname #1number\endcsname{\csname #1numberkeep\endcsname}}%
+% reset (same as numberreset)
+\expandafter\newcommand\csname #1reset\endcsname%
+{\setcounter{jpneduenumeratetext#1counter}{0}}%
+%*
+}
+%%
+%%*
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% with [lua] %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+\if@jpnedu@enumerate@lua
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%% Numbers
+\@jpneduenumeratetext@makenumber{square}{\mbox{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1\zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}#1}\kern-1\zw\@jpneduenumerate@z@w@space}}
+\@jpneduenumeratetext@makenumber{question}{\mbox{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1\zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}#1}\kern-1\zw\@jpneduenumerate@z@w@space}}
+% NG: \mbox{(#1)}
+%%
+%
+%% Refs
+\@jpneduenumerate@makenumber{squareref}{{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1\zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}\ref{#1}}\kern-1\zw\@jpneduenumerate@z@w@space}}
+\@jpneduenumerate@makenumber{questionref}{{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1\zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}\ref{#1}}\kern-1\zw\@jpneduenumerate@z@w@space}}
+% \@jpneduenumerate@makenumber{questionref}{\mbox{\@jpneduenumerate@z@w@space\kern-1\zw\framebox[1.3em]{\ref{#1}}\kern-1\zw\@jpneduenumerate@z@w@space}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% without [lua] %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+\else
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%% Numbers
+\@jpneduenumeratetext@makenumber{square}{\mbox{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}#1}\kern-1zw\@jpneduenumerate@z@w@space}}
+\@jpneduenumeratetext@makenumber{question}{\mbox{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}#1}\kern-1zw\@jpneduenumerate@z@w@space}}
+% NG: \mbox{(#1)}
+%%
+%
+%% Refs
+\@jpneduenumerate@makenumber{squareref}{{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}\ref{#1}}\kern-1zw\@jpneduenumerate@z@w@space}}
+\@jpneduenumerate@makenumber{questionref}{{\setlength{\fboxsep}{3pt}\@jpneduenumerate@z@w@space\kern-1zw\framebox[1.5em]{\vphantom{\raisebox{2pt}{1}\raisebox{-2pt}{1}}\ref{#1}}\kern-1zw\@jpneduenumerate@z@w@space}}
+% \@jpneduenumerate@makenumber{questionref}{\mbox{\@jpneduenumerate@z@w@space\kern-1zw\framebox[1.3em]{\ref{#1}}\kern-1zw\@jpneduenumerate@z@w@space}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% common %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\@jpneduenumeratetext@makenumber{subquestion}{\:(#1)}
+\@jpneduenumeratetext@makenumber{enumerate}{\:(#1)}
+\@jpneduenumerate@makenumber{subquestionref}{\:\mbox{(\ref{#1})}}
+\@jpneduenumerate@makenumber{enumerateref}{\:\mbox{(\ref{#1})}}
+%
+\if@jpnedu@enumerate@casebracket
+\@jpneduenumeratetext@makenumber{case}{\:[#1]}
+\@jpneduenumerate@makenumber{caseref}{\:\mbox{[\ref{#1}]}}
+\else
+\@jpneduenumeratetext@makenumber{case}{\mbox{(\ajroman{#1})}}
+\@jpneduenumerate@makenumber{caseref}{\refused{#1}\mbox{(\ajroman{\getrefnumber{#1}})}}
+%
+%%* AVOID ERROR of COUNTER
+%% case
+\renewcommand{\caseauto}{\@ifstar{\@jpneduenumeratetext@avoid@caseauto@star}{\@jpneduenumeratetext@avoid@caseauto@nostar}}
+\newcommand{\@jpneduenumeratetext@avoid@caseauto@star}{%
+\refstepcounter{jpneduenumeratetextcasecounter}%
+\@jpneduenumeratecasenumber@star{\value{jpneduenumeratetextcasecounter}}%
+}
+\newcommand{\@jpneduenumeratetext@avoid@caseauto@nostar}{%
+\refstepcounter{jpneduenumeratetextcasecounter}%
+\casenumber{\value{jpneduenumeratetextcasecounter}}%
+}
+\renewcommand{\casekeep}{\@ifstar{\@jpneduenumeratetext@avoid@casekeep@star}{\@jpneduenumeratetext@avoid@casekeep@nostar}}
+\newcommand{\@jpneduenumeratetext@avoid@casekeep@star}{%
+\@jpneduenumeratecasenumber@star{\value{jpneduenumeratetextcasecounter}}%
+}
+\newcommand{\@jpneduenumeratetext@avoid@casekeep@nostar}{%
+\casenumber{\value{jpneduenumeratetextcasecounter}}%
+}
+%
+\fi
+\if@jpnedu@enumerate@stepbracket
+\@jpneduenumeratetext@makenumber{step}{\:[#1]}
+\@jpneduenumerate@makenumber{stepref}{\:\mbox{[\ref{#1}]}}
+\else
+\@jpneduenumeratetext@makenumber{step}{\mbox{(\ajRoman{#1})}}
+\@jpneduenumerate@makenumber{stepref}{\refused{#1}\mbox{(\ajRoman{\getrefnumber{#1}})}}
+%
+%%* AVOID ERROR of COUNTER
+%% step
+\renewcommand{\stepauto}{\@ifstar{\@jpneduenumeratetext@avoid@stepauto@star}{\@jpneduenumeratetext@avoid@stepauto@nostar}}
+\newcommand{\@jpneduenumeratetext@avoid@stepauto@star}{%
+\refstepcounter{jpneduenumeratetextstepcounter}%
+\@jpneduenumeratestepnumber@star{\value{jpneduenumeratetextstepcounter}}%
+}
+\newcommand{\@jpneduenumeratetext@avoid@stepauto@nostar}{%
+\refstepcounter{jpneduenumeratetextstepcounter}%
+\stepnumber{\value{jpneduenumeratetextstepcounter}}%
+}
+\renewcommand{\stepkeep}{\@ifstar{\@jpneduenumeratetext@avoid@stepkeep@star}{\@jpneduenumeratetext@avoid@stepkeep@nostar}}
+\newcommand{\@jpneduenumeratetext@avoid@stepkeep@star}{%
+\@jpneduenumeratestepnumber@star{\value{jpneduenumeratetextstepcounter}}%
+}
+\newcommand{\@jpneduenumeratetext@avoid@stepkeep@nostar}{%
+\stepnumber{\value{jpneduenumeratetextstepcounter}}%
+}
+\fi
+%
+%%*
+%
+%% \equationreset
+\DeclareRobustCommand{\equationreset}{\setcounter{equation}{0}}
+%
+%% \question
+\providecommand{\question}{\@ifstar{\@jpneduenum@question@star}{\@jpneduenum@question@nostar}}
+\DeclareRobustCommand{\@jpneduenum@question@star}{\questionauto*}
+\DeclareRobustCommand{\@jpneduenum@question@nostar}{%
+\setcounter{equation}{0}%
+\setcounter{jpneduenumeratetextsubquestioncounter}{0}%
+\setcounter{jpneduenumeratetextenumeratecounter}{0}%
+\setcounter{jpneduenumeratetextcasecounter}{0}%
+\setcounter{jpneduenumeratetextstepcounter}{0}%
+\questionauto}
+%
+%% \subquestion
+\providecommand{\subquestion}{\@ifstar{\@jpneduenum@subquestion@star}{\@jpneduenum@subquestion@nostar}}
+\DeclareRobustCommand{\@jpneduenum@subquestion@star}{\subquestionauto*}
+\DeclareRobustCommand{\@jpneduenum@subquestion@nostar}{%
+\setcounter{jpneduenumeratetextcasecounter}{0}%
+\setcounter{jpneduenumeratetextstepcounter}{0}%
+\subquestionauto}
+%
+%% \case
+\providecommand{\case}{\@ifstar{\@jpneduenum@case@star}{\@jpneduenum@case@nostar}}
+\DeclareRobustCommand{\@jpneduenum@case@star}{\caseauto*}
+\DeclareRobustCommand{\@jpneduenum@case@nostar}{\caseauto}
+%
+%% \step
+\providecommand{\step}{\@ifstar{\@jpneduenum@step@star}{\@jpneduenum@step@nostar}}
+\DeclareRobustCommand{\@jpneduenum@step@star}{\stepauto*}
+\DeclareRobustCommand{\@jpneduenum@step@nostar}{\stepauto}
+%
+%% EOF

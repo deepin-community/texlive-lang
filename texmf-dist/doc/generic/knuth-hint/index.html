@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>C/WEB programs in TeX Live 2022</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">C/WEB programs in TeX Live 2022</h1>
+</header>
+<h2 id="introduction">Introduction</h2>
+<p>Welcome to “All Things <code>WEB</code>” in TeX Live.</p>
+<p>Here you find the documented source code of all major
+<code>WEB</code> and <code>CWEB</code> programs in readable format. With
+the exceptions of <code>XeTeX</code> and <code>CTWILL</code>, all
+documents are in the <code>HINT</code> format and can be viewed with the
+<code>hintview</code> program.</p>
+<p>The <code>NAMED</code> entries represent the unmodified base sources
+as written by their respective authors, the attached <code>chg</code>
+links point to only the changed sections (or modules) as applied for
+release in the TeX Live distribution, so you may want to study these
+pairs in parallel. Care has been taken to keep the section numbering
+intact.</p>
+<p>Although not all the programs presented here are written or
+maintained by Donald Knuth, it is more convenient for everything to be
+collected in one place for reading and searching. And they all stem from
+the system that Knuth created.</p>
+<p>Note that all <code>WEB</code> programs are mogrified from Pascal
+code to C code before compilation, so further modifications and
+amendments will occur for the real thing, i.e., the production of the
+executable <code>WEB</code> programs. (The <code>CWEB</code> programs do
+not require these extra modifications, they get linked directly to the
+external runtime environment.)</p>
+<p>If you believe to have found anything that remains technically,
+historically, typographically, or politically incorrect in any of these
+files, please feel free to <a href="https://tug.org/texmfbug/">report
+bugs in TeX and friends</a> or <a
+href="mailto:andreas_github@freenet.de">contact the maintainer of this
+collection</a> directly.</p>
+<h2 id="canonical-knuthian-web-programs">Canonical Knuthian WEB
+programs</h2>
+<ul>
+<li><p><code>etc/</code> <span>[</span> <a
+href="etc/vftovp.hnt"><code>VFtoVP</code></a>+<a
+href="etc/vftovp-changes.hnt"><code>chg</code></a> <a
+href="etc/vptovf.hnt"><code>VPtoVF</code></a>+<a
+href="etc/vptovf-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>mf/</code> <span>[</span> <a
+href="mf/mf.hnt"><code>Metafont</code></a>+<a
+href="mf/mf-changes.hnt"><code>chg</code></a> <a
+href="mf/trapman.hnt"><code>TRAPMAN</code></a> <span>]</span></p></li>
+<li><p><code>mfware/</code> <span>[</span> <a
+href="mfware/gftype.hnt"><code>GFtype</code></a>+<a
+href="mfware/gftype-changes.hnt"><code>chg</code></a> <a
+href="mfware/gftopk.hnt"><code>GFtoPK</code></a>+<a
+href="mfware/gftopk-changes.hnt"><code>chg</code></a> <a
+href="mfware/gftodvi.hnt"><code>GFtoDVI</code></a>+<a
+href="mfware/gftodvi-changes.hnt"><code>chg</code></a> <a
+href="mfware/mft.hnt"><code>MFT</code></a>+<a
+href="mfware/mft-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>tex/</code> <span>[</span> <a
+href="tex/glue.hnt"><code>GLUE</code></a> <a
+href="tex/tex.hnt"><code>TeX</code></a>+<a
+href="tex/tex-changes.hnt"><code>chg</code></a> <a
+href="tex/tripman.hnt"><code>TRIPMAN</code></a> <span>]</span></p></li>
+<li><p><code>texware/</code> <span>[</span> <a
+href="texware/pooltype.hnt"><code>POOLtype</code></a>+<a
+href="texware/pooltype-changes.hnt"><code>chg</code></a> <a
+href="texware/tftopl.hnt"><code>TFtoPL</code></a>+<a
+href="texware/tftopl-changes.hnt"><code>chg</code></a> <a
+href="texware/pltotf.hnt"><code>PLtoTF</code></a>+<a
+href="texware/pltotf-changes.hnt"><code>chg</code></a> <a
+href="texware/dvitype.hnt"><code>DVItype</code></a>+<a
+href="texware/dvitype-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>web/</code> <span>[</span> <a
+href="web/webman.hnt"><code>WEBMAN</code></a> <a
+href="web/weave.hnt"><code>WEAVE</code></a>+<a
+href="web/weave-changes.hnt"><code>chg</code></a> <a
+href="web/tangle.hnt"><code>TANGLE</code></a>+<a
+href="web/tangle-changes.hnt"><code>chg</code></a> <a
+href="web/twill.hnt"><code>TWILL</code></a> <span>]</span></p></li>
+</ul>
+<h2 id="complementary-web-programs-by-other-authors">Complementary WEB
+programs by other authors</h2>
+<ul>
+<li><p><code>other/</code> <span>[</span> <a
+href="other/dvicopy.hnt"><code>DVIcopy</code></a>+<a
+href="other/dvicopy-changes.hnt"><code>chg</code></a> <a
+href="other/patgen.hnt"><code>PatGen</code></a>+<a
+href="other/patgen-changes.hnt"><code>chg</code></a> <a
+href="other/pktogf.hnt"><code>PKtoGF</code></a>+<a
+href="other/pktogf-changes.hnt"><code>chg</code></a> <a
+href="other/pktype.hnt"><code>PKtype</code></a>+<a
+href="other/pktype-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>bibtex/</code> <span>[</span> <a
+href="bibtex/bibtex.hnt"><code>BibTeX</code></a>+<a
+href="bibtex/bibtex-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>pdftex/</code> <span>[</span> <a
+href="pdftex/pdftex.hnt"><code>pdfTeX</code></a>+<a
+href="pdftex/pdftex-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>xetex/</code> <span>[</span> <a
+href="xetex/xetex.pdf"><code>XeTeX</code></a>+<a
+href="xetex/xetex-changes.pdf"><code>chg</code></a>
+<span>]</span></p></li>
+</ul>
+<h2 id="cweb-programs-by-knuth-et-al.">CWEB programs by Knuth
+<em>et al.</em></h2>
+<ul>
+<li><p><code>cweb/</code> <span>[</span> <a
+href="cweb/cwebman.hnt"><code>CWEBMAN</code></a> <a
+href="cweb/common.hnt"><code>COMMON</code></a>+<a
+href="cweb/common-changes.hnt"><code>chg</code></a> <a
+href="cweb/ctangle.hnt"><code>CTANGLE</code></a>+<a
+href="cweb/ctangle-changes.hnt"><code>chg</code></a> <a
+href="cweb/cweave.hnt"><code>CWEAVE</code></a>+<a
+href="cweb/cweave-changes.hnt"><code>chg</code></a><br />
+<a href="cweb/ctwill.pdf"><code>CTWILL</code></a> <a
+href="cweb/refsort.hnt"><code>REFSORT</code></a>+<a
+href="cweb/refsort-changes.hnt"><code>chg</code></a> <a
+href="cweb/twinx.hnt"><code>TWINX</code></a>+<a
+href="cweb/twinx-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>ctie/</code> <span>[</span> <a
+href="ctie/ctie.hnt"><code>CTIE</code></a>+<a
+href="ctie/ctie-changes.hnt"><code>chg</code></a>
+<span>]</span></p></li>
+<li><p><code>tie/</code> <span>[</span> <a
+href="tie/tie.hnt"><code>TIE</code></a>+<a
+href="tie/tie-changes.hnt"><code>chg</code></a> <span>]</span></p></li>
+</ul>
+<h2 id="errata-for-computers-typesetting-by-donald-e.-knuth">Errata for
+“Computers &amp; Typesetting” by Donald E. Knuth</h2>
+<ul>
+<li><p><code>errata/</code></p>
+<ul>
+<li><p><a href="errata/errorlog.hnt">The Errors of TeX</a></p></li>
+<li><p><a href="errata/errata.one.hnt">The TeXbook,
+1<sup>st</sup> printing</a></p></li>
+<li><p><a href="errata/errata.two.hnt">The TeXbook,
+2<sup>nd</sup> printing</a></p></li>
+<li><p><a href="errata/errata.three.hnt">Computers &amp; Typesetting,
+15 June 1987</a></p></li>
+<li><p><a href="errata/errata.four.hnt">Computers &amp; Typesetting,
+20 February 1989</a></p></li>
+<li><p><a href="errata/errata.five.hnt">Computers &amp; Typesetting,
+30 September 1989</a></p></li>
+<li><p><a href="errata/errata.six.hnt">Computers &amp; Typesetting,
+31 December 1990</a></p></li>
+<li><p><a href="errata/errata.seven.hnt">Computers &amp; Typesetting,
+15 March 1992</a></p></li>
+<li><p><a href="errata/errata.eight.hnt">Computers &amp; Typesetting,
+pre-Millennium ed.</a></p></li>
+<li><p><a href="errata/errata.nine.hnt">The TeXbook, September
+1996</a></p></li>
+<li><p><a href="errata/errata.ten.hnt">Computers &amp; Typesetting,
+1<sup>st</sup> Millennium ed.</a></p></li>
+<li><p><a href="errata/errata.eleven.hnt">Computers &amp; Typesetting,
+2<sup>nd</sup> Millennium ed.</a></p></li>
+<li><p><a href="errata/errata.twelve.hnt">Computers &amp; Typesetting,
+early 2014</a></p></li>
+<li><p><a href="errata/errata.hnt">Computers &amp; Typesetting,
+31 January 2021</a></p></li>
+</ul></li>
+</ul>
+<h2 id="happy-cweb-programming">Happy C/WEB Programming!</h2>
+<p>2022-02-02 Andreas Scherer</p>
+</body>
+</html>

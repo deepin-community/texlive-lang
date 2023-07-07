@@ -1,6 +1,6 @@
 %!TEX TS-program = Arara
-% arara: pdflatex: {shell: yes}
-% arara: pdflatex: {shell: yes}
+% arara: pdflatex: {synctex: yes}
+% arara: pdflatex: {synctex: yes}
 \documentclass[12pt,ngerman,a4paper,fullparskip]{scrreprt}
 
 \usepackage[left=2cm,top=3cm,bottom=3cm]{geometry}
@@ -40,7 +40,8 @@
 %\newcommand{\href}[2]{#1}
 %\usepackage{tex4ht}
 
-\newcommand{\tlcurrentyear}{2021}
+\newcommand{\tlcurrentyear}{2022}
+\newcommand{\AllTeX}{All\TeX}
 \newcommand{\TL}{\TeX\ Live\xspace}
 \newcommand{\email}[1]{\texttt{#1}}
 \newcommand{\acro}[1]{\texttt{#1}}
@@ -176,19 +177,15 @@ vertrieben wird. Kapitel~\ref{sec:tl-coll-dists} beschreibt kurz den Inhalt der 
 
 
 
-{\TL} enthält lauf"|fähige Versionen von \TeX, \LaTeXe, \ConTeXt, \MF, \MP, {\BibTeX}  und vielen 
-anderen Programmen, sowie eine umfassende Auswahl an Makros, Zeichensätzen und
-Beschreibungen, die gemäß der Standard"=\TeX"=Verzeichnisstruktur (\TDS) abgelegt sind.
+{\TL} enthält lauf"|fähige Versionen von \TeX, \LaTeXe, \ConTeXt, \MF, \MP, {\BibTeX}  und vielen anderen Programmen, sowie eine umfassende Auswahl an Makros, Zeichensätzen und Beschreibungen, die gemäß der Standard"=\TeX"=Verzeichnisstruktur (\TDS) abgelegt sind.
 
-Eine kurze Zusammenfassung der wesentlichen Änderungen der aktuellen \TL-Version
-gegenüber der Vorgängerversion finden Sie im Kapitel~\ref{sec:tlcurrent} auf
-Seite~\pageref{sec:tlcurrent}.
+Eine kurze Zusammenfassung der wesentlichen Änderungen der aktuellen \TL-Version gegenüber der Vorgängerversion finden Sie im Kapitel~\ref{sec:tlcurrent} auf Seite~\pageref{sec:tlcurrent}.
 
 \section{Unterstützung verschiedener Betriebssysteme}\label{sec:os-support}
 
 \TL{} enthält direkt ausführbare Programme für viele Unix-basierte Betriebssysteme, insbesondere GNU/Linux und \MacOSX\ und Cygwin. Selbst wenn für Ihr Unix-System wider Erwarten keine ausführbaren Programme enthalten sind, sollten Sie in der Lage sein, aus den mitgelieferten Programm-Quellen ein funktionierendes \TeX-System zu kompilieren.
 
-Bezüglich Microsoft Windows: Versionen ab Windows~7 werden unterstützt, unter Windows Vista sollte es ebenfalls funktionieren. Auf älteren Windows-Versionen wie Windows~XP oder Windows 2000 lässt sich \TL~ nicht installieren.
+Bezüglich Microsoft Windows: Versionen ab Windows~7 werden unterstützt, unter Windows Vista sollte es ebenfalls funktionieren. Auf älteren Windows-Versionen wie Windows~XP oder Windows 2000 lässt sich \TL~ nicht einmal installieren.
 
 Es existieren zwar keine  64-Bit-Ver\-sionen der Programme, allerdings sollten die 32-Bit-Programme problemlos auf 64-Bit-Systemen funktionieren.
 
@@ -205,13 +202,9 @@ aus bestimmten Paketen bestehen soll.
 Wenn Sie die \DVD{} besitzen (oder das ISO-Image der \DVD{} herunter
 geladen haben -- dieses kann auf einigen Systemen sogar direkt als
 virtuelles Medium \enquote{gemountet} werden), können Sie \TL{} nach
-Wunsch auf Ihrer Festplatte installieren. Im Gegensatz zu früher ist
-\TL{} nicht mehr direkt von der \DVD{} lauffähig. Sie können aber
-eine portable Version z.\,B. auf einem USB-Stick installieren, wie in
-Kapitel~\ref{sec:portable-tl} beschrieben.
+Wunsch auf Ihrer Festplatte installieren. \TL{} ist nicht direkt von der \DVD{} lauffähig. Sie können aber eine portable Version z.\,B. auf einem USB-Stick installieren, wie in Kapitel~\ref{sec:portable-tl} beschrieben.
 
-Beide Methoden werden in den Abschnitten zur Installation beschrieben.
-Hier daher nur die kurze Zusammenfassung:
+Beide Methoden werden in den späteren Abschnitten zur Installation beschrieben, hier daher nur die kurze Zusammenfassung:
 
 \begin{itemize}
 \item Für Linux/Unix ist \cmdname{install-tl} das zentrale Installationsskript, unter Windows ist es \cmdname{install-tl-windows}  . Das Installationsskript bietet eine grafische Benutzeroberfläche (GUI) für die Standardinstallation  (den sogenannten \enquote{GUI mode} mit der Option \code{-gui}) sowie einen  Textmodus  mit der Option \code{-gui=text}. Unter \MacOSX und Windows ist die grafische Benutzeroberfläche Standard. 
@@ -234,8 +227,6 @@ Aus diesem Grund empfehlen wir bei der Verarbeitung von unbekanntem Quellcode, a
 
 Ein weiterer Aspekt der Sicherheit ist es, sicherzustellen, dass heruntergeladene Inhalte nicht (unterwegs) verändert wurden. Der \prog{tlmgr} prüft daher heruntergeladene Pakete, sofern PGP auf Ihrem System verfügbar ist. PGP ist nicht Teil von \TL,  unter \url{https://texlive.info/tlgpg} finden Sie weitere Informationen dazu.
 
-
-
 \section{Hilfe zu \TeX, \LaTeX\ \& Co}\label{sec:help}
 
 Die \TeX-Gemeinschaft ist ebenso aktiv wie hilfsbereit, und es wird
@@ -251,7 +242,7 @@ empfohlenen Reihenfolge vor:
 \begin{description}
 \item [Einführung:] Wenn Sie \TeX-Anfänger sind und eine englische Einführung in das System benötigen, sollten Sie \url{https://tug.org/begin.html} lesen.
 
-Für deutschsprachige \LaTeX-Anfänger ist die \enquote{\LaTeXe-Kurzbeschreibung} von großem Nutzen 
+Für deutschsprachige \LaTeX-Anfänger ist sicherlich die \enquote{\LaTeXe-Kurzbeschreibung} sehr hilfreich 
  (\OnCD{texmf-doc/doc/german/lshort-german/l2kurz.pdf}).
 
 \item [\TeX-\acro{FAQ}s:]
@@ -270,8 +261,7 @@ Bitte schauen Sie bei auftretenden Problemen, insbesondere wenn Sie als Anfänge
 
 \item [\TeX-\acro{WWW}-Ressourcen:] Unter \url{https://tug.org/interest.html} finden Sie eine große Anzahl \TeX-spezifischer Links zu Büchern, Handbüchern und Artikeln zu allen Aspekten des \TeX-Systems.
 
-\item [Archive:] Als Foren für die Hilfestellung sind die Usenet-News-Gruppen (Für eine Einführung zum Usenet siehe \url{https://de.wikipedia.org/wiki/Usenet}.)
-      \url{news:de.comp.text.tex} (Deutsch), \url{news:comp.text.tex} (Englisch), die Mailing-Liste \email{texhax@tug.org}  sowie das Internet-Forum \url{https://tex.stackexchange.com} zu nennen. 
+\item [Archive:] Als Foren für die Hilfestellung sind die Usenet-News-Gruppen (Für eine Einführung zum Usenet siehe \url{https://de.wikipedia.org/wiki/Usenet}.)  \url{news:de.comp.text.tex} (Deutsch), \url{news:comp.text.tex} (Englisch), die Mailing-Liste \email{texhax@tug.org}  sowie das Internet-Forum \url{https://tex.stackexchange.com} zu nennen. 
 
 In deren Archiven finden sich die Fragen und Antworten vieler Jahre. Ihre Suche können Sie in Google
       beispielsweise mit \url{https://groups.google.de/group/de.comp.text.tex/topics}
@@ -409,8 +399,7 @@ Alle Bäume, auch die lokal erstellten, sollten der \TeX\ Directory Structure (T
   von jedem TDS-kompatiblem \TeX-System nutzbar sein sollten. Eine Ausnahme bilden die ausführbaren Binärdateien, die unterhalb des \code{bin/} Verzeichnisses liegen. 
 \item [TEXMFHOME] In diesem Baum können einzelne Nutzer Ergänzungen oder
   Aktualisierungen von Makros, Fonts etc. ablegen. Standardmäßig befindet
-  sich dieser Baum unterhalb von \verb+$HOME+, so dass andere Nutzer von
-  Änderungen hier nicht beeinflusst werden.
+  sich dieser Baum unterhalb des Benutzerverzeichnisses (\verb+$HOME+), sodass andere Nutzer von Änderungen in diesem Verzeichnis nicht beeinflusst werden.
 \item [TEXMFSYSCONFIG] Systemweiter Baum, wird von den Hilfsprogrammen
   \verb+texconfig-sys+, \verb+updmap-sys+ und \verb+fmtutil-sys+
   verwendet, so dass hier das Verhalten des \TL-Systems für alle Nutzer
@@ -435,8 +424,8 @@ Der Standard der Verzeichnisstruktur von \TL sieht wie folgt aus:
 \begin{description}
   \item[Systemweites Wurzelverzeichnis] kann \TL{}-Versionen aus mehreren Jahren beinhalten:
   \begin{description}
-    \item[2020] Eine Vorversion von \TL.
-    \item[2021] Die aktuelle Version.
+    \item[2021] Eine Vorversion von \TL.
+    \item[2022] Die aktuelle Version.
     \begin{description}
       \item [bin] ~
       \begin{description}
@@ -457,9 +446,9 @@ Der Standard der Verzeichnisstruktur von \TL sieht wie folgt aus:
   \item[Home-Verzeichnis des Benutzers]
       (\texttt{\$HOME} oder \texttt{\%USERPROFILE\%}):
     \begin{description}
-      \item[.texlive2020] Vom Nutzer privat erzeugte Dateien und Konfigurationsdaten
-        der Vorversion.
       \item[.texlive2021] Vom Nutzer privat erzeugte Dateien und Konfigurationsdaten
+        der Vorversion.
+      \item[.texlive2022] Vom Nutzer privat erzeugte Dateien und Konfigurationsdaten
         für die aktuelle Version von \TL.
       \begin{description}
         \item [texmf-var\ \ \ ] \envname{TEXMFVAR}
@@ -522,8 +511,9 @@ Das Handbuch finden Sie unter \OnCD{texmf-dist/doc/luatex/base/luatex.pdf}.
 \item[\cmdname{dvipdfmx}]       DVI-nach-PDF-Konverter (erzeugt auch \acro{CJK}-konformes PDF aus
 DVI-Dateien mit OMEGA-Erweiterungen)
 \item[\cmdname{dvilj}]          Druckertreiber für die HP-LaserJet"=Familie    
-\item[\cmdname{makeindex}, \cmdname{xindy}] Erzeugen eines Stichwortverzeichnisses         
-\item[\cmdname{mpost}]          \MF-ähnliches Grafikprogramm                   
+\item[\cmdname{makeindex}, \cmdname{xindy}, \cmdname{upmendex}, \cmdname{xindex}] Erzeugen von Stichwortverzeichnissen
+\item[\cmdname{mpost}]          \MF-ähnliches Grafikprogramm  
+\item[dvipdfmx] konvertiere \dvi{} to PDF, eine Alternative zu pdf\TeX\
 \item[\cmdname{psnup}, \cmdname{psselect}]          \PS-Tools
 \item[\cmdname{pdfjam}, \cmdname{pdfjoin}]          \acro{PDF}-Tools
 \item [context, mtxrun] Con\TeX{}t and \acro{PDF} processor.
@@ -558,8 +548,7 @@ die erste Stufe des Installationsprogramms und Entpackers (siehe Abbildung \ref{
 
 \item [\TeX{} Collection \DVD:] Hier finden Sie die Dateien \filename{install-tl} (Unix)
 bzw.\  unter Windows \filename{install-tl-windows.bat} im Verzeichnis \dirname{texlive}
-der \DVD. Unter Windows startet beim Einlegen der DVD im Allgemeinen automatisch 
-ein Programm, bei dem Sie unter anderem das Installationsprogramm von \TL auswählen können.  Die \DVD\ erhalten Sie als Mitglied eines \TeX-Vereins (wie \url{https://www.dante.de} für den deutschsprachigen Raum, von der Fachbuchhandlung Lehmanns (\url{https://www.lob.de}) oder international von der \TeX{} Users Group (\url{https://tug.org/store}). 
+der \DVD. Unter Windows startet beim Einlegen der DVD im Allgemeinen automatisch ein Programm, bei dem Sie unter anderem das Installationsprogramm von \TL auswählen können.  Die \DVD\ erhalten Sie als Mitglied eines \TeX-Vereins (wie \url{https://www.dante.de} für den deutschsprachigen Raum, von der Fachbuchhandlung Lehmanns (\url{https://www.lob.de}) oder international von der \TeX{} Users Group (\url{https://tug.org/store}). 
 
 Alternativ können Sie das \ISO-Image der \TL aus dem Internet laden. Nach der Installation von der DVD sollten Sie die Internet-Aktualisierung aktivieren, für Details siehe Kapitel \ref{sec:dvd-install-net-updates}.
 \end{description}
@@ -567,11 +556,10 @@ Alternativ können Sie das \ISO-Image der \TL aus dem Internet laden. Nach der I
 \begin{figure}[tb]
 \centering
 \includegraphics[width=0.6\linewidth]{nsisinstaller}
-\caption{Erste Stufe des Windows \code{.exe}Installationsprogramms}\label{fig:nsis}
+\caption{Erste Stufe des Windows \code{.exe} Installationsprogramms}\label{fig:nsis}
 \end{figure}
 
-
-Egal welche Quelle verwendet wird, es wird der gleiche Installer genutzt. Der hauptsächliche Unterschied ist, dass man bei der Verwendung des Net-Installers die neuesten verfügbaren Pakete direkt aus dem Internet erhält. Bei der Verwendung von \DVD\ und \ISO\ Images erhält man den Stand des letzten Major Release. Zwischen zwei Major Releases gibt es \textbf{keine} Aktualisierung der \DVD\ oder \ISO\ Images.
+Egal welche Quelle verwendet wird, es wird das gleiche Installationsprogramm genutzt. Der hauptsächliche Unterschied ist, dass man bei der Verwendung des Net-Installers die neuesten verfügbaren Pakete direkt aus dem Internet erhält. Bei der Verwendung von \DVD\ und \ISO\ Images erhält man den Stand des letzten Major Release. Zwischen zwei Major Releases gibt es \textbf{keine} Aktualisierung der \DVD\ oder \ISO\ Images.
 
 Wenn Sie über einen Proxy-Server die \TL-Daten herunterladen müssen, können Sie eine \filename{~/.wgetrc} Datei oder Umgebungsvariablen für wget nutzen. Wenn sie von der \DVD\ oder dem \ISO\ Abbild installieren, hat dies keine Auswirkungen.
 
@@ -582,7 +570,7 @@ Die folgenden Kapitel beschreiben die Installation für die einzelnen Betriebssy
 
 Im Folgenden werden die Eingaben des Benutzers nach dem Kommando-Prompt \samp{>} \Ucom{fett} dargestellt.
 
-Das Skript \filename{install-tl} ist ein Perl-Skript. Am Einfachsten starten
+Das Programm \filename{install-tl} ist ein Perl-Skript. Am Einfachsten starten
 Sie es auf einem Unix-System in der Kommandozeile mit
 \begin{alltt}
 > \Ucom{cd /pfad/zum/installer}
@@ -603,7 +591,7 @@ Hierfür muss \dirname{Tcl/Tk} installiert sein, dann funktioniert die Installat
 > \Ucom{perl install-tl -gui}
 \end{alltt}
 
-Die alten  \code{wizard} und \code{perltk} Optionen gibt es ebenfalls noch, sie tun das gleiche wie die Option \code{-gui}
+Die alten code{wizard} und \code{perltk} Optionen gibt es ebenfalls noch, sie erledigen das gleiche wie die Option \code{-gui}
 
 Alle Optionen des Installationsprogramms werden mit
 \begin{alltt}
@@ -657,12 +645,19 @@ Zur Installation im Textmodus verwenden Sie:
 wie folgt angezeigt:
 
 \begin{alltt}
-> \Ucom{install-tl -help}
+> \Ucom{install-tl-windows -help}
 \end{alltt}
+
+Hinweis: Wenn Sie einen eigenen Mirror von \dirname{tlnet} betreiben, dann befindet sich die \texttt{install-tl-windows.exe} im selben Verzeichnis. Rufen Sie die Hilfe wie folgt auf:
+
+\begin{alltt}
+> \Ucom{install-tl-windows.bat -help}
+\end{alltt}
+
 
 \begin{figure}[tb]
 \begin{boxedverbatim}
-Installing TeX Live 2021 from: ...
+Installing TeX Live 2022 from: ...
 Platform: x86_64-linux => 'GNU/Linux on x86_64'
 Distribution: inst (compressed)
 ...
@@ -673,11 +668,11 @@ Distribution: inst (compressed)
  <S> set installation scheme (scheme-full)
 
  <C> customizing installation collections
-     40 collections out of 41, disk space required: 7172 MB
+     40 collections out of 41, disk space required: 7239 MB
 
  <D> directories:
    TEXDIR (the main TeX directory):
-     /usr/local/texlive/2021
+     /usr/local/texlive/2022
    ...
 
  <O> options:
@@ -701,14 +696,14 @@ Actions:
 
 \begin{figure}[tb]
 \includegraphics[width={\linewidth}]{wizard-w32}
-\caption{Basis-Installation Modus (Windows), der \enquote{Advanced} Modus wird ähnlich aussehen wie 
+\caption{Basis-Installationsmodus (Windows), der \enquote{Fortgeschrittene} Modus wird ähnlich aussehen wie 
 \ref{fig:advanced-lnx}}\label{fig:wizard-w32}
 \end{figure}
 
 
 \begin{figure}[tb]
 \includegraphics[width={\linewidth}]{advanced-lnx}
-\caption{Advanced GUI-Installation-Modus (\GNU/Linux)}\label{fig:advanced-lnx}
+\caption{Fortgeschrittener GUI-Installation-Modus (\GNU/Linux)}\label{fig:advanced-lnx}
 \end{figure}
 
 \section{Cygwin}\label{sec:cygwin}
@@ -832,16 +827,14 @@ Noch mehr Kontrolle über die Komponenten Ihres Systems haben Sie nach der Insta
 
 Die Verzeichnisstruktur von \TL wurde bereits im Kapitel~\ref{sec:texmftrees} auf S.~\pageref{sec:texmftrees}
 beschrieben. Als Wurzelverzeichnis für \TL (\dirname{TEXDIR}) wird unter Windows
-\verb|%SystemDrive%\texlive\2021| und unter Unix (\dirname{/usr/local/texlive/2021}) angenommen. 
+\verb|%SystemDrive%\texlive\2022| und unter Unix (\dirname{/usr/local/texlive/2022}) angenommen. 
 
 Prinzipiell können Sie diesen Pfad problemlos ändern, z.\,B. wenn Sie \TL als Standardnutzer und nict als Admin installieren wollen bzw. keine Schreibrechte in dem oben angegebenen Verzeichnis besitzen.
 
-Auf Wunsch können Sie \TL also auch in Ihrem Home-Verzeichnis installieren, wenn Sie sowieso der einzige Nutzer von \TL auf Ihrem Rechner sind. Für Ihr Home-Verzeichnis können Sie den Pfad ">|~|"< verwenden und so beispielsweise \TL nach  |~/texlive/2021| installieren.
+Auf Wunsch können Sie \TL also auch in Ihrem Home-Verzeichnis installieren, wenn Sie sowieso der einzige Nutzer von \TL auf Ihrem Rechner sind. Für Ihr Home-Verzeichnis können Sie den Pfad ">|~|"< verwenden und so beispielsweise \TL nach  |~/texlive/2022| installieren.
 
-Wir empfehlen Ihnen, die Jahreszahl im Verzeichnisnamen beizubehalten. So können Sie von Jahr zu Jahr
-einfach die neue Version testen, ohne die alte zu entsorgen. Bei Bedarf können Sie einen symbolischen
-Link (z.B. \dirname{/usr/local/texlive-cur}) verwenden, der jeweils auf das Verzeichnis der aktuellen
-Version von \TL verweist.
+Wir empfehlen Ihnen, die Jahreszahl im Verzeichnisnamen beizubehalten. So können Sie von Jahr zu Jahr einfach die neue Version testen, ohne die alte zu entsorgen. Bei Bedarf können Sie einen symbolischen
+Link (z.B. \dirname{/usr/local/texlive-cur}) verwenden, der jeweils auf das Verzeichnis der aktuellen Version von \TL verweist.
 
 Wenn Sie die Einstellung \dirname{TEXDIR} im Installationsprogramm ändern, werden die Werte für
 \dirname{TEXMFLOCAL}, \dirname{TEXMFSYSVAR} und \dirname{TEXMFSYSCONFIG} automatisch angepasst. In Abbildung \ref{fig:advanced-lnx} finden Sie eine Übersicht der entsprechenden Optionen.
@@ -885,9 +878,7 @@ Liste der erlaubten Programme wird in der Datei \filename{texmf.cnf} definiert.
 Für weitere Informationen siehe Kapitel~\ref{sec:2011news} über Neuerungen in 
 \TL\ 2011.
 
-\item[create all format files:] Auch wenn das Erzeugen von Formatdateien für Makropakete, die Sie gar nicht benötigen, Zeit und Platz kostet, empfehlen wir trotzdem, diese Option ausgewählt zu belassen.
-  Falls Sie diese Option abwählen, werden Formatdateien jeweils bei Bedarf erzeugt, und dann
-  im persönlichen \dirname{TEXMFVAR}-Baum des aktuellen Benutzers abgelegt. Dort liegende Formate werden allerdings nicht automatisch neu generiert, wenn z.\,B. Programme oder Silbentrennmuster aktualisiert werden, so dass im Extremfall nach einem Update Inkompatibilitäten entstehen können.
+\item[create all format files:] Auch wenn das Erzeugen von Formatdateien für Makropakete, die Sie gar nicht benötigen, Zeit und Platz kostet, empfehlen wir trotzdem, diese Option ausgewählt zu belassen.  Falls Sie diese Option abwählen, werden Formatdateien jeweils bei Bedarf erzeugt, und dann im persönlichen \dirname{TEXMFVAR}-Baum des aktuellen Benutzers abgelegt. Dort liegende Formate werden allerdings nicht automatisch neu generiert. Wenn z.\,B. Programme oder Silbentrennmuster aktualisiert werden, dann kann es zu Inkompatibilitäten kommen. 
 
 \item[install font/macro \ldots\ tree:] Mit dieser Option können Sie  verhindern, dass die Dokumentation und die Quelldateien der Pakete  installiert werden. Wir raten aber, die Vorgabe zu übernehmen, d.\,h. die Dokumentation und Quelldateien zu installieren.
 
@@ -924,7 +915,7 @@ erhalten Sie eine Liste der vorhanden Kommando\-zeilen\-optionen.  Sie können d
 verwenden. Die wichtigsten sind:
 
 \begin{description}
-\item[-gui] Nutze wenn möglich die grafische Oberfläche, Standard unter \MacOSX\ und Windows, benötigt Tcl/TK 8.5 oder höher. Die Legacy-Optionen \texttt{-gui=perltk} und \texttt{-gui=wizard} sind noch verfügbar, aber rufen die gleiche grafische Benutzeroberfläche auf.  Wenn Tcl/Tk nicht verfügbar ist, wird die Installation im Textmodus durchgeführt.
+\item[-gui] Nutze wenn möglich die grafische Oberfläche. Dies benötigt Tcl/TK 8.5  oder höher. Tcl/TK 8.5 ist nur Teil von Mac OS X bis Monterey, danach müssen Sie es selbst installieren. Die Legacy-Optionen \texttt{-gui=perltk} und \texttt{-gui=wizard} sind noch verfügbar, aber rufen die gleiche grafische Benutzeroberfläche auf.  Wenn Tcl/Tk nicht verfügbar ist, wird die Installation im Textmodus durchgeführt.
 
 \item[-no-gui] Installation im Textmodus. Da dies unter Unix Standard ist, wirkt sich diese Option nur
   unter Windows aus. Da die Installation zum Benutzen von \TL direkt von \DVD im grafischen Modus nicht
@@ -999,9 +990,9 @@ aufgeführt, wie die Befehle zum Setzen der Umgebungsvariablen (z.\,B. in \filen
 aussehen könnten:
 
 \begin{verbatim}
-PATH=/usr/local/texlive/2021/bin/x86_64-linux:$PATH; export PATH
-MANPATH=/usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH; export MANPATH
-INFOPATH=/usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH; export INFOPATH
+PATH=/usr/local/texlive/2022/bin/x86_64-linux:$PATH; export PATH
+MANPATH=/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH; export MANPATH
+INFOPATH=/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH; export INFOPATH
 \end{verbatim}
 
 
@@ -1009,9 +1000,9 @@ INFOPATH=/usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH; export INFOPATH
 und könnte so aussehen:
 
 \begin{verbatim}
-setenv PATH /usr/local/texlive/2021/bin/x86_64-linux:$PATH
-setenv MANPATH /usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH
-setenv INFOPATH /usr/local/texlive/2020/texmf-dist/doc/info:$INFOPATH
+setenv PATH /usr/local/texlive/2022/bin/x86_64-linux:$PATH
+setenv MANPATH /usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH
+setenv INFOPATH /usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH
 \end{verbatim}
 
 \subsection{Systemweites Setzen von Umgebungsvariablen}
@@ -1029,8 +1020,8 @@ Daher hier nur zwei Hinweise:
 hinzu zu fügen:
 
 \begin{verbatim}
-MANPATH_MAP /usr/local/texlive/2021/bin/ix86_64-linux \
-            /usr/local/texlive/2021/texmf-dist/doc/man
+MANPATH_MAP /usr/local/texlive/2022/bin/ix86_64-linux \
+            /usr/local/texlive/2022/texmf-dist/doc/man
 \end{verbatim}
 
 \item Prüfen Sie, ob es auf Ihrem System eine Datei \filename{/etc/environment} gibt, in der die
@@ -1231,11 +1222,41 @@ Roman/ICU'\dots} erhalten, muss Ihr System so konfiguriert werden, dass
 es die von \TL\ mitgelieferten Schriften findet (siehe Kapitel~\ref{sec:font-conf-sys}).
 \end{enumerate}
 
+\subsection{\TL Deinstallieren}
+\label{sec:uninstall}
+
+Um \TL\ nach einer erfolgreichen Installation zu deinstallieren, führen Sie
+
+\begin{alltt}
+> \Ucom{tlmgr uninstall --all}
+\end{alltt}
+
+aus. Sie müssen dies bestätigen, sonst erfolgt keine Deinstallation. Hinweis:
+Ohne die \code{-{}-all} Option wird der Schalter \code{uninstall} genutzt, um einzelne Pakete zu deinstallieren.
+
+Der Befehl löscht keine benutzerspezifischen Verzeichnisse, siehe section~{sec:texmftrees}:
+
+\begin{description}
+\item [TEXMFCONFIG] Dieses Verzeichnis enthält Konfigurationsanpassungen auf Nutzer-Ebene. Wenn sie erhalten bleiben sollen, sichern Sie sie vorher.
+
+\item [TEXMFVAR] Dieses Verzeichnis enthält zum Beispiel lokale Formatdateien. Wenn Sie es nicht noch zu anderen Zwecken genutzt haben, dann ist das Löschen kein Problem.
+
+\item[TEXMFHOME] Enthält Dateien, die Sie persönlich der TeX Installation hinzugefügt haben. Sie sollten dieses Verzeichnis nur löschen, wenn Sie kein TeX mehr nutzen möchten.
+
+\end{description}
+
+\noindent Die Verzeichnisse für diese Variablen können Sie mittels \code{kpsewhich -var-value=\code{var}} abfragen.
+
+Die \prog{tlmgr} Deinstallation nimmt keine Anpassungen der Pfad-Umgebungsvariablen und Systemzugriffen für Schriftaren vor (siehe 
+Abschnitt~\ref{sec:postinstall}). Diese Schritte müssen Sie manuell vornehmen, sofern gewünscht.
+
+Unter Windows kann die Deinstallation von TeX Live über die grafische Oberfläche vorgenommen werden, siehe Abschnitt~\ref{sec:winfeatures}.
+
 \section{Hinweise auf weitere Software}
 
 In vielen Fällen ist die Installation weiterer Software sinnvoll:
 \begin{description}
-\item[Ghostscript] \url{https://www.cs.wisc.edu/~ghost/},
+\item[Ghostscript] \url{https://www.cs.wisc.edu/~ghost/}, ein freier PostScript und PDF Interpreter
 \item[Perl] \url{https://www.perl.org/} mit Zusatzpaketen von
       \acro{CPAN}, \url{https://www.cpan.org/},
 \item[ImageMagick] \url{https://www.imagemagick.com}, für die Bearbeitung
@@ -1246,7 +1267,7 @@ In vielen Fällen ist die Installation weiterer Software sinnvoll:
      Editoren, die \TeX\ unterstützen, je nach persönlichem Geschmack des
      Benutzers. Hier ist eine Auswahl, wobei einige davon nur für Windows verfügbar sind:
   \begin{itemize}
-  \item \cmdname{GNU Emacs}, der bester Editor der Welt (viel besser als vi), siehe
+  \item \cmdname{GNU Emacs}, ein sehr guter Editor siehe
         \url{https://www.gnu.org/software/emacs/emacs.html}.
   \item \cmdname{Emacs} mit Auc\TeX\ für Windows findet man auf der Homepage  \url{https://www.gnu.org/software/auctex}.
   \item \cmdname{LEd} findet sich unter \url{https://www.latexeditor.org/}.
@@ -1295,12 +1316,10 @@ Mehr Informationen dazu unter (\code{texdoc tlaunch} oder \url{https://ctan.org/
 
 \chapter{Portables \TL  auf DVD oder USB-Stick}\label{sec:portable-tl}
 
-Wenn Sie \TL\ im portablen Modus verwenden wollen (z.\,B. auf einem Rechner,
-auf dem Sie "`Gast"' sind), können Sie \TL\ mit der Option \optname{-portable} (bzw. der Option \code{V} im Text-Installer oder der entsprechenden Option im grafischen Installer) auf einem USB-Stick installieren (siehe Kapitel \ref{sec:cmdline}). 
+Wenn Sie \TL\ im portablen Modus verwenden wollen (z.\,B. auf einem Rechner, auf dem Sie "`Gast"' sind), können Sie \TL\ mit der Option \optname{-portable} (bzw. der Option \code{V} im Text-Installer oder der entsprechenden Option im grafischen Installer) auf einem USB-Stick installieren (siehe Kapitel \ref{sec:cmdline}). 
 
-Vom technischen Standpunkt aus betrachtet wird die portable Installation so erzeugt, dass die Standardwerte für \envname{TEXMFHOME}, \envname{TEXMFVAR} und
-\envname{TEXMFCONFIG} die selben sind wie für \envname{TEXMFLOCAL}, beziehungsweise 
-\envname{TEXMFSYSVAR}  und \envname{TEXMFSYSCONFIG}; Konfigurationen pro Nutzer sowie  Caches werden nicht erzeugt.
+Vom technischen Standpunkt aus betrachtet wird die portable Installation so erzeugt, dass die Standardwerte für \envname{TEXMFHOME}, \envname{TEXMFVAR} und \envname{TEXMFCONFIG} die selben sind wie für \envname{TEXMFLOCAL}, beziehungsweise 
+\envname{TEXMFSYSVAR}  und \envname{TEXMFSYSCONFIG}; Konfigurationen pro Nutzer sowie Caches werden nicht erzeugt.
 
 Um \TeX\ von dieser portablen Installation ausführen zu können, muss das entsprechenden Verzeichnis mit den Binaries dem Suchpfad hinzugefügt werden. Unter Windows kann man \filename{tl-tray-menu} im Stammverzeichnis der Installation doppelt klicken, um zwischen verschiedenen Aufgaben zu wählen.
 
@@ -1435,12 +1454,12 @@ running post install action for xetex
 install: xetex-def
 ...
 running mktexlsr
-mktexlsr: Updating /usr/local/texlive/2021/texmf-dist/ls-R...
+mktexlsr: Updating /usr/local/texlive/2022/texmf-dist/ls-R...
 ...
 running fmtutil-sys --missing
 ...
 Transcript written on xelatex.log.
-fmtutil: /usr/local/texlive/2021/texmf-var/web2c/xetex/xelatex.fmt installed.
+fmtutil: /usr/local/texlive/2022/texmf-var/web2c/xetex/xelatex.fmt installed.
 \end{alltt}
 
 Wie man sieht, beachtet \prog{tlmgr} die Abhängigkeiten von Paketen und installiert im obigen Beispiel von \XeTeX{} benötigte Komponenten nach. Weiterhin werden automatisch im Anschluss die Dateilisten der Verzeichnisbäume aktualisiert und fehlende Formate generiert.
@@ -1753,9 +1772,9 @@ Werte für einen Suchpfad auch anzeigen lassen. (Siehe dazu das Kapitel
 
 \subsection{Konfigurationsdateien}
 
-Die \KPS-Bibliothek liest zur Laufzeit die \emph{Konfigurationsdateien} mit den Namen \file{.../2021/texmf.cnf}. Sollten Sie Anpassungen an den Standardvorgaben vornehmen \textit{müssen}, ist dies der richtige Ort. 
+Die \KPS-Bibliothek liest zur Laufzeit die \emph{Konfigurationsdateien} mit den Namen \file{.../2022/texmf.cnf}. Sollten Sie Anpassungen an den Standardvorgaben vornehmen \textit{müssen}, ist dies der richtige Ort. 
 
-Die Haupt-Konfigurationsdatei befindet sich in \file{.../2021/texmf-dist/web2c/texmf.cnf}. Diese Datei sollten Sie nicht anpassen, da Ihre Anpassungen beim nächsten Update überschrieben werden.
+Die Haupt-Konfigurationsdatei befindet sich in \file{.../2022/texmf-dist/web2c/texmf.cnf}. Diese Datei sollten Sie nicht anpassen, da Ihre Anpassungen beim nächsten Update überschrieben werden.
 
 Im Folgenden wird die Syntax der Datei \file{texmf.cnf} angegeben. Konsultieren Sie zum besseren Verständnis beim Lesen die auf der DVD enthaltene Konfigurationsdatei.
 
@@ -3284,19 +3303,17 @@ höher (High~Sierra, Mojave, und Catalina);
 \TeX~Catalogue, da sie oft keine Verbindung zu Paket-Updates hatten.
 \end{itemize}
 
-\section{Gegenwart (\tlcurrentyear)}\label{tlcurrent}
-\label{sec:tlcurrent}
+\section{\TL 2021}\label{sec:2021news}
 
-Allgmeines: 
+Allgemeines: 
 
 \begin{itemize}
-\item Donald Knuth's Änderungen for his 2021 Anpassungen  von  \TeX\ und Metafont sind enthalten 
+\item Donald Knuths 2021-Anpassungen von \TeX\ und Metafont sind enthalten
 (\url{https://tug.org/TUGboat/tb42-1/tb130knuth-tuneup21.pdf}). Sie sind auch auf CTAN als \code{knuth-dist} und \code{knuth-local} Pakete verfügbar.  Wie erwartet wurde, fixen sie eher obskure Fälle und haben keine praktischen Auswirkungen mit Ausnahme der folgenden:
 
 \item wenn \cs{tracinglostchars} auf 3 oder höher gesetzt wird, erzeugen fehlende Zeichen einen Fehler und nicht nur eine Log-Meldung, außerdem wird das fehlende Zeichen als Hex-Wert angezeigt.
 
-\item Ein neuer ganzzahliger Parameter, \cs{tracingstacklevels}, und \cs{tracingmacros} 
-erzeugen ein Präfix für die Makro-Expansionstiefe, das auf jeder relevanten Zeile im Log ausgegeben wird, z.\,B.  |~..|  bei der Tiefe 2. Das Makro-Logging wird abgeschnitten bei Tiefen, die größer sind als der gesetzte Parameterwert.
+\item Ein neuer ganzzahliger Parameter, \cs{tracingstacklevels}, und \cs{tracingmacros} erzeugen ein Präfix für die Makro-Expansionstiefe, das auf jeder relevanten Zeile im Log ausgegeben wird, z.\,B.  |~..|  bei der Tiefe 2. Das Makro-Logging wird abgeschnitten bei Tiefen, die größer sind als der gesetzte Parameterwert.
 
 \end{itemize}
 
@@ -3370,19 +3387,104 @@ Felder für lokale und entfernte Katalogdaten.
 \texttt{texmf-var/web2c/tlmgr-commands.log}.
 \end{itemize}
 
+\section{Gegenwart (\tlcurrentyear)}\label{tlcurrent}
+\label{sec:tlcurrent}
+
+General: \begin{itemize}
+\item Neue TeX-Engine \code{hitex}, die als Ausgabeformat HINT-Dateien nutzt. HINT wurde speziell für das Lesen technischer Dokumente auf mobilen Endgeräten geschaffen. Anzeigeprogramme gibt es für GNU/Linux, Windows, und Android
+
+\item Donald Knuths Programm \code{twill} zur Erzeugung von Mini-Indexen in originalen \texttt{WEB} Dateien ist enthalten.
+
+\end{itemize}
+
+Cross-Engine Erweiterungen (nicht für das originale \TeX{}, Aleph, und hi\TeX{}):
+
+\begin{itemize}
+\item Neues Pimitiv \cs{showstream}, um \cs{show} Ausgaben in eine Datei umzulenken.
+\item Neue Primitive \cs{partokenname} und \cs{partokencontext} erlauben das Überladen des \cs{par} Tokens, das bei Leerzeilen und am Ende von vboxen ausgegeben wird
+\end{itemize}
+
+ep\TeX{}, eup\TeX{}: 
+
+\begin{itemize}
+\item Neue Primitive: \cs{lastnodefont}, \cs{suppresslongerror},
+\cs{suppressoutererror}, \cs{suppressmathparerror}.
+\item pdf\TeX{} Erweiterung \cs{vadjust pre} ist jetzt verfügbar
+\end{itemize}
+
+Lua\TeX{}: 
+
+\begin{itemize}
+\item Unterstützung für  Structured Destinations aus PDF 2.0.
+\item PNG /Smask für PDF 2.0.
+\item Variables Font Interface für luahbtex.
+\item Unterschiedliche Radikalstile Voreinstellungen in mathdefaultsmode.
+\item Blockiere optional ausgewählte diskrete Erstellung.
+\item Verbesserungen bei der TrueType Font Implementierung.
+\item Effizientere \cs{fontdimen} Allokation.
+\item Ignoriere Absätze die nur einen lokalen par Knoten gefolgt von  
+Synchronizationsknoten besitzen.
+\end{itemize}
+
+MetaPost: Bugfix für das Problem der unendlichen Makro Expansion.
+
+pdf\TeX{}: \begin{itemize}
+\item Unterstützung für  Structured Destinations aus PDF 2.0.
+\item Bei letterspaced Schriften nutze explizit \cs{fontdimen}6 wenn es spezifiziert wurde.
+\item Beginne eine Warnung immer am Zeilenanfang.
+\item Bei Zeichen mit Autokerning (\cs{pdfappendkern} und
+\cs{pdfprependkern}) führe die Protrusion durch
+\end{itemize}
+
+p\TeX{}\ et al.: \begin{itemize}
+\item Großes Update von p\TeX{} auf Version 4.0.0, um aktuelles \LaTeX{} besser zu unterstützen.
+\item Neue Primitive \cs{ptexlineendmode} und \cs{toucs}.
+\item \cs{ucs} (früher verfügbar in uptex und euptex) sind jetzt auch in p\TeX\ und ep\TeX{} verfügbar.
+\item Unterscheide 8-bit Zeichen und Japanische Zeichen, siehe dazu den TUGboat Artikel von Hironori Kitagawa \newline 
+(\url{https://tug.org/TUGboat/tb41-3/tb129kitagawa-char.pdf}).
+\end{itemize}
+
+Xe\TeX{}: Neue Wrapper Skripte \texttt{xetex-unsafe} und
+\texttt{xelatex-unsafe} für den einfacheren Aufruf von Dokumenten, die beide, \XeTeX{} und PSTricks, Transparenzoperatoren nutzen, was unsicher ist (solange, bis die Reimplementierung in Ghostscript erfolgt) Aus Sicherheitsgründen empfehlen wir die Nutzung von Lua\AllTeX{}.
+
+Dvipdfmx: \begin{itemize}
+\item Unterstützung für PSTricks ohne \texttt{-dNOSAFER} nutzen zu müssen, außer bei Transparenzeffekten.
+\item Die \texttt{-r} Option, um die Auflösung bei Bitmap-Fonts zu setzen, funktioniert wieder 
+\end{itemize}
+
+Dvips: Standardmäßig erfolgt keine automatische Medienanpassung bei rotierten Dokumentseiten, die neue Option  \texttt{--landscaperotate} schaltet dies ein.
+
+\code{upmendex}: Experimentelle Unterstützung für arabische und hebräische Schriften; verbesserte Zeichen-Klassifikation und Sprachunterstützung.
+
+Kpathsea: Der erste Pfad, der durch \texttt{kpsewhich -all} zurückgegeben wird, ist der selbe wie bei der nicht \enquote{-all} Suche.
+
+\code{tlmgr} und Infrastruktur: 
+
+\begin{itemize}
+\item Nutze standardmäßig https für den Zugriff auf \code{mirror.ctan.org} 
+
+\item Nutze \code{TEXMFROOT} anstelle von  \code{SELFAUTOPARENT} für die leichtere Re-Lokation
+
+\item \code{install-tl}: wenn der Download oder die Installation eines Pakets fehlschlägt, versuche es später noch genau einmal.
+
+\end{itemize}
+
+Mac\TeX{}: Mac\TeX{} und seine Binärdateien \texttt{universal-darwin}
+erfordern macOS 10.14 oder höher (Mojave, Catalina, Big~Sur, Monterey). Die Binärdateien aus dem \verb|x86_64-darwinlegacy| Ordner -- nur verfügbar mit dem Unix \texttt{install-tl} -- uterstützt 10.6 (Snow~Leopard) und neuer.
+
+Plattformen: Keine Änderungen an den Plattformen in diesem Jahr. Für das Release 2023 ist die Umstellung der Windows Binärdateien auf 64-Bit geplant. Eine gleichzeitige Unterstützung von 32-Bit und 64-Bit ist leider nicht möglich.
 
 \section{Zukunft}
 
 \emph{{\TL} ist nicht perfekt! -- und wird es auch nie sein.}  Wir planen, 
-Neuauf"|lagen zu produzieren, die umfangreichere
-Hilfstexte, mehr Hilfsprogramme, mehr Installationshilfen und (natürlich)
+Neuauf"|lagen zu produzieren, die umfangreichere Hilfstexte, mehr Hilfsprogramme, mehr Installationshilfen und (natürlich)
 den ständig verbesserten und überprüften Satz der Makros und Zeichensätze
 enthalten. Diese Arbeit wird von Freiwilligen in ihrer knappen Freizeit
 geleistet. Viel Arbeit steht noch an. Wenn Sie uns helfen können,
 zögern Sie keine Sekunde, sich bei uns zu melden.
 
 Verbesserungen, Anregungen und Erweiterungen für künftige Ausgaben
-der {\TK} senden Sie bitte an:\hfill\null
+der {\TK} senden Sie bitte an: \hfill\null
 
 \begin{quote}
 \email{tex-live@tug.org}\\
@@ -3390,8 +3492,7 @@ der {\TK} senden Sie bitte an:\hfill\null
 \end{quote}
 
 Neue Versionen, Anmerkungen und zusätzliches Material werden über
-die \CTAN-Server im Verzeichnis \dirname{info/texlive} zur Verfügung gestellt.
-Im \acro{WWW} können Sie sich über die Adresse
+die \CTAN-Server im Verzeichnis \dirname{info/texlive} zur Verfügung gestellt. Im \acro{WWW} können Sie sich über die Adresse
 \url{https://www.tug.org/tex-live/} informieren und die Bestellformalitäten
 einsehen.
 

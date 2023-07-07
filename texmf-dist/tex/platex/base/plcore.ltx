@@ -34,22 +34,29 @@
 \fi
 \def\pfmtname{pLaTeX2e}
 \def\pfmtversion
-   {2021-06-01}
-\def\ppatch@level{2}
+   {2021-11-15}
+\def\ppatch@level{1}
 \edef\platexBANNER{\noexpand\platexNILa
                    \the\everyjob % LaTeX banner and delayed codes
                    \noexpand\platexNILb}
 \begingroup
   \ifnum\ppatch@level=0
-    \toks2={\pfmtname\space<\pfmtversion>\space}%
+    \toks2={\pfmtname\space<\pfmtversion>}%
   \else\ifnum\ppatch@level>0
-    \toks2={\pfmtname\space<\pfmtversion>+\ppatch@level\space}%
+    \toks2={\pfmtname\space<\pfmtversion>+\ppatch@level}%
   \else
-    \toks2={\pfmtname\space<\pfmtversion>-pre\ppatch@level\space}%
+    \toks2={\pfmtname\space<\pfmtversion>-pre\ppatch@level}%
   \fi\fi
-  \edef\platexNILa#1\typeout#2#3\platexNILb{%
-    #1\noexpand\typeout{\the\toks2 (based on #2)}#3}
-  \global\everyjob\expandafter\expandafter\expandafter{\platexBANNER}%
+  \ifdefined\LaTeXReleaseInfo
+    \global\LaTeXReleaseInfo\expandafter{\expanded{%
+      \noexpand\show@release@info{\the\toks2, based on}%
+      \unexpanded\expandafter{\the\LaTeXReleaseInfo}%
+    }}%
+  \else
+    \edef\platexNILa#1\typeout#2#3\platexNILb{%
+      #1\noexpand\typeout{\the\toks2 \space(based on #2)}#3}
+    \global\everyjob\expandafter\expandafter\expandafter{\platexBANNER}%
+  \fi
 \endgroup
 \let\platexBANNER=\@undefined
 \chardef\pltx@newhook@avail=\z@
@@ -1784,7 +1791,7 @@
   \let\removejfmglue\@undefined
 \else
   \setbox0\hbox{%
-    \ifdefined\ucs %% upTeX check
+    \ifnum\jis"2121="3000 %% upTeX check
       \jfont\tenmin=upjisr-h at 9.62216pt
     \else
       \jfont\tenmin=min10
@@ -2187,6 +2194,7 @@
     \splittopskip\footnotesep
     \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
     \hsize\columnwidth \@parboxrestore
+    \def\@currentcounter{footnote}%
     \protected@edef\@currentlabel{%
        \csname p@footnote\endcsname\@thefnmark
     }%

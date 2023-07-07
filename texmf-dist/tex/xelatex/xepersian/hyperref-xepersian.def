@@ -7,7 +7,9 @@
 %% xepersian.dtx  (with options: `table,hyperref-xepersian.def')
 %% 
 %%   __________________________________________________
-%%   Copyright (c) 2008--2020  Vafa Khalighi
+%%   Vafa Khalighi
+%% 
+%%   Copyright (c) 2008--2022  Vafa Khalighi
 %%   Copyright (c) 2018--2020 bidi-tex GitHub Organization
 %% 
 %%   It may be distributed and/or modified under the LaTeX Project Public License,
@@ -18,7 +20,7 @@
 %%   by Vafa Khalighi.
 %% 
 %% 
-%% \CheckSum{10882}
+%% \CheckSum{11192}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,7 +37,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
-\ProvidesFile{hyperref-xepersian.def}[2015/02/02 v0.6 bilingual captions for hyperref package]
+\ProvidesFile{hyperref-xepersian.def}[2022/10/30 v0.8 xepersian adaptations for hyperref package]
   \def\equationautorefname{\if@RTL معادله\else Equation\fi}%
   \def\footnoteautorefname{\if@RTL زیرنویس\else footnote\fi}%
   \def\itemautorefname{\if@RTL فقره\else item\fi}%
@@ -52,20 +54,22 @@
   \def\FancyVerbLineautorefname{\if@RTL سطر\else line\fi}%
   \def\theoremautorefname{\if@RTL قضیه\else Theorem\fi}%
   \def\pageautorefname{\if@RTL صفحه\else page\fi}%
-\AtBeginDocument{%
-\let\HyOrg@appendix\appendix
-\def\appendix{%
-  \ltx@IfUndefined{chapter}%
-    {\gdef\theHsection{\Alph{section}}}%
-    {\gdef\theHchapter{\Alph{chapter}}}%
-  \xdef\Hy@chapapp{\Hy@appendixstring}%
-  \HyOrg@appendix
-}
-}
+\ifHy@implicit
+  \AtBeginDocument{%
+    \let\HyOrg@appendix\appendix
+      \def\appendix{%
+        \ltx@IfUndefined{chapter}%
+          {\gdef\theHsection{\Alph{section}}}%
+          {\gdef\theHchapter{\Alph{chapter}}}%
+        \xdef\Hy@chapapp{\Hy@appendixstring}%
+        \HyOrg@appendix
+      }%
+    }%
+\fi
 \pdfstringdefDisableCommands{%
-\let\lr\@firstofone
-\let\rl\@firstofone
-\def\XePersian{XePersian}
+  \let\lr\@firstofone
+  \let\rl\@firstofone
+  \def\XePersian{XePersian}%
 }
 \ltx@IfUndefined{@resets@pp}{%
 }{%

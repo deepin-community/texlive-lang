@@ -1,0 +1,201 @@
+%%
+%% asternote.sty
+%%
+%% Copyright (C) 2022 Yukoh KUSAKABE (screen-name)
+%%   https://www.metaphysica.info/
+%%   https://twitter.com/metaphysicainfo
+%%
+%% This package released under
+%% [the MIT license](https://ctan.org/license/mit).
+%%
+%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{asternote}[2022/07/08 v1.1]
+%
+%% \if@asternote@japanese
+\newif\if@asternote@japanese
+\@asternote@japanesefalse
+%
+%% [japanese]
+\DeclareOption{japanese}{\@asternote@japanesetrue}
+%
+%% \if@asternote@luajapanese
+\newif\if@asternote@luajapanese
+\@asternote@luajapanesefalse
+%
+%% [luajapanese]
+\DeclareOption{luajapanese}{\@asternote@luajapanesetrue}
+%
+%
+\ExecuteOptions{}
+\ProcessOptions\relax
+%
+%% \@astnt@noindent@switch
+\newif\if@astnt@noindent@switch
+\@astnt@noindent@switchtrue
+%
+%% \setasternotenoindent
+%% \setasternoteindent
+\DeclareRobustCommand{\setasternotenoindent}{\@astnt@noindent@switchtrue}
+\DeclareRobustCommand{\setasternoteindent}{\@astnt@noindent@switchfalse}
+%
+%% \@astnt@notesuperscript@switch
+\newif\if@astnt@notesuperscript@switch
+\@astnt@notesuperscript@switchtrue
+%
+%% \setasternotetext
+%% \setasternotesuperscript
+\DeclareRobustCommand{\setasternotetext}{\@astnt@notesuperscript@switchfalse}
+\DeclareRobustCommand{\setasternotesuperscript}{\@astnt@notesuperscript@switchtrue}
+%
+%% \@astnt@refsuperscriptswitch
+\newif\if@astnt@refsuperscript@switch
+\@astnt@refsuperscript@switchfalse
+%
+%% \setasterreftext
+%% \setasterrefsuperscript
+\DeclareRobustCommand{\setasterreftext}{\@astnt@refsuperscript@switchfalse}
+\DeclareRobustCommand{\setasterrefsuperscript}{\@astnt@refsuperscript@switchtrue}
+%
+%% \@astnt@numbersuperscriptswitch
+\newif\if@astnt@numbersuperscript@switch
+\@astnt@numbersuperscript@switchfalse
+%
+%% \setasternumbertext
+%% \asternumbersetsuperscript
+\DeclareRobustCommand{\setasternumbertext}{\@astnt@numbersuperscript@switchfalse}
+\DeclareRobustCommand{\asternumbersetsuperscript}{\@astnt@numbersuperscript@switchtrue}
+%
+%% asternotecounter
+\newcounter{asternotecounter}
+\setcounter{asternotecounter}{0}
+%
+%% \asternotereset
+\DeclareRobustCommand{\asternotereset}{\setcounter{asternotecounter}{0}}
+%
+%% \asternotetext{<LABEL>}
+%% \asternotesuperscript{<LABEL>}
+%%% NO OPTIONS
+\DeclareRobustCommand{\asternotetext}[1]{\refstepcounter{asternotecounter}\textsf{[*\theasternotecounter ]}\expandafter\label{#1}}
+%%% [japanese]
+\if@asternote@japanese
+\DeclareRobustCommand{\asternotetext}[1]{\refstepcounter{asternotecounter}\textsf{［*\theasternotecounter ］}\expandafter\label{#1}}
+\fi
+%%% [luajapanese]
+\if@asternote@luajapanese
+\DeclareRobustCommand{\asternotetext}[1]{\refstepcounter{asternotecounter}\textsf{［*\theasternotecounter ］}\expandafter\label{#1}}
+\fi
+%%% NO OPTIONS
+\DeclareRobustCommand{\asternotesuperscript}[1]{\refstepcounter{asternotecounter}\makebox{\@textsuperscript{\scriptsize\textsf{[*\theasternotecounter ]}}\expandafter\label{#1}}}
+%%% [japanese]
+\if@asternote@japanese
+\DeclareRobustCommand{\asternotesuperscript}[1]{\refstepcounter{asternotecounter}\makebox[2zw]{\@textsuperscript{\scriptsize\!\!\textsf{［*\theasternotecounter ］}}\expandafter\label{#1}}}
+\fi
+%%% [luajapanese]
+\if@asternote@luajapanese
+\DeclareRobustCommand{\asternotesuperscript}[1]{\refstepcounter{asternotecounter}\makebox[2\zw]{\@textsuperscript{\scriptsize\!\!\textsf{［*\theasternotecounter ］}}\expandafter\label{#1}}}
+\fi
+%
+%% \asternote{<LABEL>}
+\DeclareRobustCommand{\asternote}[1]{%
+\if@astnt@notesuperscript@switch
+% when \setasternotesuperscript
+%  when \setasternotenoindent
+ \if@astnt@noindent@switch
+ {\noindent\asternotesuperscript{#1}}%
+ \else
+%  when \setasternoteindent
+ {\asternotesuperscript{#1}}%
+ \fi
+\else
+% when \asternotetext
+%  when \setasternotenoindent
+ \if@astnt@noindent@switch
+ {\noindent\asternotetext{#1}}%
+ \else
+%  when \setasternoteindent
+ {\asternotetext{#1}}%
+ \fi
+\fi
+}%
+%
+%% \asterreftext{<LABEL>}
+%% \asterrefsuperscript{<LABEL>}
+%%% NO OPTIONS
+\DeclareRobustCommand{\asterreftext}[1]{{\textsf{[*\ref{#1}]}}}
+\DeclareRobustCommand{\asterrefsuperscript}[1]{\@textsuperscript{\scriptsize\textsf{[*\ref{#1}]}}}
+%%% [japanese]
+\if@asternote@japanese
+\DeclareRobustCommand{\asterreftext}[1]{{\textsf{［*\ref{#1}］}}}
+\DeclareRobustCommand{\asterrefsuperscript}[1]{\@textsuperscript{\scriptsize\!\!\textsf{［*\ref{#1}］}}}
+\fi
+%%% [luajapanese]
+\if@asternote@luajapanese
+\DeclareRobustCommand{\asterreftext}[1]{{\textsf{［*\ref{#1}］}}}
+\DeclareRobustCommand{\asterrefsuperscript}[1]{\@textsuperscript{\scriptsize\!\!\textsf{［*\ref{#1}］}}}
+\fi
+%
+%% \asterref{<LABEL>}
+\DeclareRobustCommand{\asterref}[1]{%
+\if@astnt@refsuperscript@switch
+% when \setasterrefsuperscript
+%  when \setasternotenoindent
+ \if@astnt@noindent@switch
+ {\noindent\asterrefsuperscript{#1}}%
+ \else
+%  when \setasternoteindent
+ {\asterrefsuperscript{#1}}%
+ \fi
+\else
+% when \asterreftext
+%  when \setasternotenoindent
+ \if@astnt@noindent@switch
+ {\noindent\asterreftext{#1}}%
+ \else
+%  when \setasternoteindent
+ {\asterreftext{#1}}%
+ \fi
+\fi
+}%
+%
+%% \asternumbertext{<LABEL>}
+%% \asternumbersuperscript{<LABEL>}
+%
+%%% NO OPTIONS
+\DeclareRobustCommand{\asternumbertext}[1]{{\textsf{[*{#1}]}}}
+\DeclareRobustCommand{\asternumbersuperscript}[1]{\@textsuperscript{\scriptsize\textsf{[*{#1}]}}}
+%%% [japanese]
+\if@asternote@japanese
+\DeclareRobustCommand{\asternumbertext}[1]{{\textsf{［*{#1}］}}}
+\DeclareRobustCommand{\asternumbersuperscript}[1]{\@textsuperscript{\scriptsize\!\!\textsf{［*{#1}］}}}
+\fi
+%%% [luajapanese]
+\if@asternote@luajapanese
+\DeclareRobustCommand{\asternumbertext}[1]{{\textsf{［*{#1}］}}}
+\DeclareRobustCommand{\asternumbersuperscript}[1]{\@textsuperscript{\scriptsize\!\!\textsf{［*{#1}］}}}
+\fi
+%
+%% \asternumber{<LABEL>}
+\DeclareRobustCommand{\asternumber}[1]{%
+\if@astnt@numbersuperscript@switch
+% when \setasterrefsuperscript
+%  when \setasternotenoindent
+ \if@astnt@noindent@switch
+ {\noindent\asternumbersuperscript{#1}}%
+ \else
+%  when \setasternoteindent
+ {\asternumbersuperscript{#1}}%
+ \fi
+\else
+% when \asterreftext
+%  when \setasternotenoindent
+ \if@astnt@noindent@switch
+ {\noindent\asternumbertext{#1}}%
+ \else
+%  when \setasternoteindent
+ {\asternumbertext{#1}}%
+ \fi
+\fi
+}%
+%
+%% EOF

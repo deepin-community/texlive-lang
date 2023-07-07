@@ -1,10 +1,8 @@
 % schulmathematik bundle: document class schulma-gutachten
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-gutachten}{2021-03-13}{1.1}{Dokumentenklasse fuer Gutachten ueber schriftliche Abiturklausuren}
-
-\RequirePackage {xparse}
+\ProvidesExplClass{schulma-gutachten}{2022-08-12}{1.3}{Dokumentenklasse fuer Gutachten ueber schriftliche Abiturklausuren}
 
 \bool_new:N \g_schulma_gutachten_bell_bool
 \bool_new:N \g_schulma_gutachten_oesterreich_bool
@@ -284,7 +282,7 @@
         \c_space_tl
         Bewertungseinheiten;~
         dies~entspricht~
-        \SI { \fp_to_decimal:N \l_schulma_gutachten_prozentsatz_fp } {\percent}
+        \qty { \fp_to_decimal:N \l_schulma_gutachten_prozentsatz_fp } {\percent}
         .~
         \IfValueTF {#5}
           {

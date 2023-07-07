@@ -1,0 +1,482 @@
+% Tekijä:   Teemu Likonen <tlikonen@iki.fi>
+% Lisenssi: Creative Commons Nimeä-JaaSamoin 4.0 Kansainvälinen (CC BY-SA 4.0)
+% https://creativecommons.org/licenses/by-sa/4.0/legalcode.fi
+
+\documentclass[fleqn]{book}
+\usepackage{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath}
+\usepackage[math-style=ISO]{unicode-math}
+\usepackage[finnish,showseconds=false]{datetime2}
+\usepackage{ragged2e}
+\usepackage[hang,bottom,norule]{footmisc}
+\usepackage[clearempty]{titlesec}
+\usepackage{titletoc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{floatrow}
+\usepackage{caption}
+\usepackage{wrapfig}
+\usepackage{fancyvrb}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
+\usepackage[makeindex, splitindex]{indextools}
+\usepackage{chngcntr}
+\usepackage{realscripts}
+\usepackage{csquotes}
+\usepackage[style=authoryear, dashed=false, maxbibnames=99,
+datezeros=false]{biblatex}
+\usepackage{tikz}
+\usepackage{totcount}
+\usepackage{nowidow} \setnowidow \setnoclub
+\usepackage{hanging}
+\usepackage{lettrine}
+\usepackage{multicol}
+\usepackage{textpos}
+\usepackage[unicode,hyperfootnotes=false]{hyperref}
+\usepackage[shortcuts]{extdash}
+
+\geometry{ a5paper, twoside, hscale=.72, vscale=.77, hmarginratio=17:28,
+  vmarginratio=20:32, footskip=12mm, footnotesep=13bp,
+  marginparwidth=50bp, marginparsep=10bp }
+
+% \geometry{ papersize={158mm, 220mm}, layout=a5paper, layoutoffset={5mm,
+%     5mm}, showcrop }
+
+\urlstyle{sf}
+\newcommand{\kulmaurl}[1]
+{\href{#1}{\guilsinglleft\nolinkurl{#1}\guilsinglright}}
+\newcommand{\kulmasp}[1]
+{\href{mailto:#1}{\guilsinglleft\nolinkurl{#1}\guilsinglright}}
+
+\input{versio}
+
+\newcommand{\otsikko}{Käytännöllistä Latexia}
+\newcommand{\alaotsikko}{Latex-ladontajärjestelmän opas}
+\newcommand{\tekija}{Teemu Likonen}
+\newcommand{\tekijat}{Teemu Likonen \kulmasp{tlikonen@iki.fi}}
+
+\hypersetup{ hidelinks, bookmarksnumbered,
+  pdfinfo={
+    Title={\otsikko},
+    Subject={\alaotsikko, versio \versio},
+    Author={\tekija},
+    Keywords={Latex, tekstinvalmistus, ladonta, tekstinkäsittely,
+      oppaat, atk-ohjelmat, kirjoittaminen, typografia}
+  }
+}
+
+\setdefaultlanguage{finnish}
+\setotherlanguage{english}
+\newcommand{\englanti}[1]{\textenglish{#1}}
+\newcommand{\englantik}[1]{\textenglish{\emph{#1}}}
+
+\defaultfontfeatures[\ttfamily]{Ligatures={TeXReset, NoCommon}}
+\usepackage[oldstyle,semibold,ScaleSF=MatchLowercase,StretchTT=.8]
+{libertinus-otf}
+
+\renewcommand{\scriptsize}{\fontsize{7bp}{7bp}\selectfont}
+\renewcommand{\footnotesize}{\fontsize{8bp}{9bp}\selectfont}
+\renewcommand{\small}{\fontsize{9bp}{10bp}\selectfont}
+\renewcommand{\normalsize}{\fontsize{10.5bp}{13bp}\selectfont}
+\renewcommand{\large}{\fontsize{13bp}{15bp}\selectfont}
+\renewcommand{\Large}{\fontsize{16bp}{18bp}\selectfont}
+\renewcommand{\LARGE}{\fontsize{20bp}{22bp}\selectfont}
+\renewcommand{\huge}{\fontsize{24bp}{26bp}\selectfont}
+\linespread{1}
+\normalsize
+
+\newcommand{\gemenanum}{\addfontfeatures{Numbers=Lowercase}}
+\newcommand{\versaalinum}{\addfontfeatures{Numbers=Uppercase}}
+\newcommand{\murtoluku}[2]{{\addfontfeatures{Fractions=On}#1/#2}}
+
+\setlength{\emergencystretch}{1em}
+
+\setlength{\parindent}{1em}
+\setlength{\bibhang}{\parindent}
+\setlength{\bibitemsep}{.5ex plus .1ex minus .1ex}
+\newlength{\sisennys}\setlength{\sisennys}{1.8em}
+\setlength{\parskip}{0em}
+\setlength{\footnotemargin}{.8em}
+\setlength{\floatsep}{2ex plus 1ex minus .5ex}
+\setlength{\textfloatsep}{4ex plus 1ex minus .5ex}
+\setlength{\multicolsep}{0bp}
+\setlength{\intextsep}{0bp}
+
+\renewcommand{\topfraction}{.75}
+\renewcommand{\floatpagefraction}{.7}
+
+\addbibresource{kirjallisuutta.bib}
+\nocite{*}
+\renewcommand{\bibfont}{\RaggedRight}
+
+\DeclareDelimFormat[bib]{nametitledelim}{\addcolon\space}
+\DeclareDelimFormat[bib]{multinamedelim}{\space--\space}
+\DeclareDelimFormat[bib]{finalnamedelim}{\space--\space}
+\DeclareDelimFormat[textcite,parencite]{finalnamedelim}{\space\&\space}
+\DeclareFieldFormat{url}{Saatavissa: \kulmaurl{#1}}
+\DeclareNameAlias{sortname}{family-given}
+\DeclareNameAlias{default}{family-given}
+\DefineBibliographyStrings{finnish}{andothers = {ym.}}
+
+\DeclareNewFloatType{esimerkki}{name=Esimerkki, within=chapter}
+
+\indexsetup{level=\section*, toclevel=section, noclearpage}
+
+\makeindex[name=paketit, title={Paketit}, columns=2, columnsep=1em]
+\makeindex[name=komennot, title={Komennot}, columns=2, columnsep=1em]
+\makeindex[name=ymparistot, title={Ympäristöt}, columns=2, columnsep=1em]
+\makeindex[name=mitat, title={Mitat}, columns=2, columnsep=1em]
+\makeindex[name=laskurit, title={Laskurit}, columns=2, columnsep=1em]
+\makeindex[name=dokumenttiluokat, title={Dokumenttiluokat}, columns=2,
+columnsep=1em]
+
+\renewcommand{\theFancyVerbLine}
+{\sffamily\versaalinum\fontsize{6bp}{7bp}\selectfont\arabic{FancyVerbLine}}
+
+\DefineVerbatimEnvironment{koodilohko}{Verbatim}{ fontsize=\small,
+  gobble=0, frame=single, framesep=.4em, numbers=left, numbersep=.3em,
+  xleftmargin=0em, xrightmargin=0mm, baselinestretch=1 }
+
+\DefineVerbatimEnvironment{koodilohkosis}{Verbatim}{
+  fontsize=\small, gobble=0, frame=none, numbers=none,
+  numbersep=0em, xleftmargin=\sisennys, xrightmargin=0mm,
+  baselinestretch=1, samepage=true }
+
+\newcommand{\seurausnuoli}{\textcolor[gray]{.5}{⇒}}
+
+\newenvironment{tulos}{%
+  \begin{textblock*}{1cm}(-2em,3bp)
+    \small\seurausnuoli
+  \end{textblock*}
+  \begin{minipage}{\linewidth}
+    \linespread{1}\small
+  }{%
+  \end{minipage}
+  \par\addvspace{\baselineskip}
+}
+
+\newenvironment{tulossis}{%
+  \begin{list}{}{
+      \setlength{\leftmargin}{\sisennys}
+      \small
+    }\item[\seurausnuoli]}{%
+  \end{list}}
+
+\floatsetup{ style=plain, font={small}, justification=raggedright,
+  margins=raggedright, captionskip=0ex, capposition=bottom }
+
+\floatsetup[table]{ style=plain, captionskip=2ex }
+\floatsetup[figure]{ style=plain, captionskip=2ex }
+
+\captionsetup{ font={small, sf}, labelfont={bf}, textfont={},
+  textformat=period, margin=.5em, justification=RaggedRight,
+  singlelinecheck=off }
+
+\newcommand{\leijutlk}[2]{%
+  \begin{table*}
+    \floatbox{table}{\versaalinum #1}{#2}
+  \end{table*}}
+
+\newcommand{\leijukuva}[2]{%
+  \begin{figure*}
+    \floatbox{figure}{#1}{#2}
+  \end{figure*}}
+
+\newenvironment{nluetelma}{%
+  \begin{list}{\arabic{enumi}.}{
+      \usecounter{enumi}
+      \setlength{\leftmargin}{1.3em}
+      \setlength{\labelsep}{.3em}
+      \setlength{\itemsep}{.2ex plus .2ex}
+      \setlength{\parsep}{0em}
+      \setlength{\topsep}{.2ex plus .2ex}
+      \RaggedRight
+    }}{\end{list}}
+
+\newenvironment{maaritelma}[1]{%
+  \begin{list}{}{
+    \setlength{\leftmargin}{\parindent}
+    \setlength{\labelwidth}{\parindent}
+    \setlength{\listparindent}{\parindent}
+    \setlength{\labelsep}{1em}
+    \setlength{\itemindent}{1em}
+    \setlength{\itemsep}{.2ex plus .2ex}
+    \setlength{\parsep}{0em}
+    \setlength{\topsep}{.2ex plus .2ex}
+    \renewcommand{\makelabel}[1]{#1}
+  }}{\end{list}}
+
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+
+\definecolor{tavu}{rgb}{1,0,0}
+\definecolor{apuviiva}{gray}{.4}
+\definecolor{mittanuoli}{rgb}{1,0,0}
+
+\definecolor{luokka}{rgb}{0,.3,.3}
+\definecolor{komento}{rgb}{0,0,.5}
+\definecolor{mkomento}{rgb}{.4,0,.4}
+\definecolor{ymparisto}{rgb}{0,.3,0}
+\definecolor{mymparisto}{rgb}{.4,0,.4}
+\definecolor{mitta}{rgb}{.4,0,0}
+\definecolor{laskuri}{rgb}{.4,0,.4}
+\definecolor{paketti}{rgb}{.35,.35,0}
+
+\newcommand{\keno}{\textbackslash}
+\newcommand{\marginaali}[1]{\marginpar{\RaggedRight\footnotesize #1}}
+
+\newcommand{\koodi}[1]{\texttt{#1}}
+\newcommand{\koodil}[1]{\enquote{\texttt{#1}}}
+\newcommand{\yipilkku}{\textsuperscript*{,}}
+
+\newcommand{\luokkax}[1]{\textcolor{luokka}{\textsf{#1}}}
+\newcommand{\luokkai}[1]{\index[dokumenttiluokat]{#1@\luokkax{#1}}}
+\newcommand{\luokka}[1]{\luokkax{#1}\luokkai{#1}}
+\newcommand{\luokkactan}[1]{\luokka{#1}\avctan{#1}}
+
+\newcommand{\komentox}[1]{\textcolor{komento}{\koodi{\keno #1}}}
+\newcommand{\komentoi}[1]{\index[komennot]{#1@\komentox{#1}}}
+\newcommand{\komento}[1]{\komentox{#1}\komentoi{#1}}
+\newcommand{\komentojatko}[1]{\katk\textcolor{komento}{\koodi{#1}}}
+\newcommand{\komentoarg}[1]{\komentojatko{\{#1\}}}
+\newcommand{\komentoargv}[1]{\komentojatko{[#1]}}
+
+\newcommand{\mkomentox}[1]{\textcolor{mkomento}{\koodi{\keno #1}}}
+\newcommand{\mkomentoi}[1]{\index[komennot]{#1@\mkomentox{#1}}}
+\newcommand{\mkomento}[1]{\mkomentox{#1}\mkomentoi{#1}}
+\newcommand{\mkomentojatko}[1]{\katk\textcolor{mkomento}{\koodi{#1}}}
+\newcommand{\mkomentoarg}[1]{\mkomentojatko{\{#1\}}}
+\newcommand{\mkomentoargv}[1]{\mkomentojatko{[#1]}}
+
+\newcommand{\ymparistox}[1]{\textcolor{ymparisto}{\koodi{#1}}}
+\newcommand{\ymparistoi}[1]{\index[ymparistot]{#1@\ymparistox{#1}}}
+\newcommand{\ymparisto}[1]{\ymparistox{#1}\ymparistoi{#1}}
+
+\newcommand{\mymparistox}[1]{\textcolor{mymparisto}{\koodi{#1}}}
+\newcommand{\mymparistoi}[1]{\index[ymparistot]{#1@\mymparistox{#1}}}
+\newcommand{\mymparisto}[1]{\mymparistox{#1}\mymparistoi{#1}}
+
+\newcommand{\mittax}[1]{\textcolor{mitta}{\koodi{\keno #1}}}
+\newcommand{\mittai}[1]{\index[mitat]{#1@\mittax{#1}}}
+\newcommand{\mitta}[1]{\mittax{#1}\mittai{#1}}
+
+\newcommand{\laskurix}[1]{\textcolor{laskuri}{\koodi{#1}}}
+\newcommand{\laskurii}[1]{\index[laskurit]{#1@\laskurix{#1}}}
+\newcommand{\laskuri}[1]{\laskurix{#1}\laskurii{#1}}
+
+\newcommand{\pakettix}[1]{\textcolor{paketti}{\textsf{#1}}}
+\newcommand{\pakettii}[1]{\index[paketit]{#1@\pakettix{#1}}}
+\newcommand{\paketti}[1]{\pakettix{#1}\pakettii{#1}}
+\newcommand{\pakettictan}[1]{\paketti{#1}\avctan{#1}}
+
+\newcommand{\tavukohta}{\textcolor{tavu}{\raisebox{-.2ex}{\rule{.6bp}{2ex}}}}
+\newcommand{\uctunnus}[1]{\textsc{\englanti{#1}}}
+\newcommand{\avctan}[1]{\footnote{\url{https://www.ctan.org/pkg/#1}}}
+
+\newcommand{\ots}[1]{{\sffamily\bfseries #1}}
+\newcommand{\otsrivi}[1]{{\sffamily #1}}
+\newcommand{\katk}{\discretionary{}{}{}}
+
+\addto{\captionsfinnish}{
+  \renewcommand{\contentsname}{Sisällys}
+}
+
+\newcommand{\otsikkotyyli}{ \raggedright \sffamily \bfseries }
+
+\titleformat{\chapter}
+[display]
+{\Large\bfseries}
+{\chaptertitlename\hspace{.3em}\thechapter}
+{1.5ex}
+{\otsikkotyyli\huge}[]
+\titlespacing*{\chapter}{0em}{*13}{*8}
+
+\titleformat{\section}
+{\otsikkotyyli\large}
+{\thesection}
+{.8em}
+{}[]
+\titlespacing*{\section}{0pt}{*4}{*2}
+
+\titleformat{\subsection}
+{\otsikkotyyli\normalsize}
+{\thesubsection}
+{.8em}
+{}[]
+\titlespacing*{\subsection}{0bp}{*2}{*1}
+
+\titleformat{\subsubsection}
+{\otsikkotyyli\mdseries\scshape\normalsize}
+{\thesubsubsection}
+{.8em}
+{}[]
+\titlespacing*{\subsubsection}{0bp}{*2}{*1}
+
+\titlecontents{chapter}
+[8mm]
+{\addvspace{1.5ex}\rmfamily\bfseries\large}
+{\contentslabel{8mm}}
+{\hspace{-8mm}}
+{\small\titlerule[0bp]\contentspage}
+[\addvspace{.5ex}]
+
+\titlecontents{section}
+[8mm]
+{\addvspace{.5ex}\rmfamily\normalsize}
+{\contentslabel{8mm}}
+{}
+{~\small\titlerule*[3mm]{.}\contentspage}
+[\addvspace{.2ex}]
+
+\titlecontents{subsection}
+[18mm]
+{\rmfamily\small}
+{\contentslabel{10mm}}
+{}
+{~\small\titlerule*[3mm]{.}\contentspage}
+[]
+
+\titlecontents*{subsubsection}
+[18mm]
+{\rmfamily\footnotesize}
+{\thecontentslabel. }
+{}
+{ (\thecontentspage)}
+[ -- ][.]
+
+\regtotcounter{chapter}
+
+\begin{document}
+\rmfamily % Pienversaali ei toimi leipätekstissä ilman tätä.
+
+\input{tavutusvihjeet}
+
+\pagestyle{empty}
+
+\newgeometry{top=1cm, bottom=1.8cm, hmargin=1.3cm}
+
+% \newgeometry{ top=1cm, bottom=1.8cm, hmargin=1.3cm, papersize={158mm,
+%     220mm}, layout=a5paper, layoutoffset={5mm, 5mm}, showcrop }
+
+\pdfbookmark[0]{Nimiö}{sivu/nimiö}
+\DTMsetstyle{finnish-numeric}
+
+\vspace*{.2\textheight}
+
+{
+
+  \setlength{\parindent}{0pt}
+
+  \fontsize{16bp}{16bp}\rmfamily \tekija
+
+  \fontsize{52bp}{52bp}\sffamily\bfseries%
+  \hspace{-3bp}%
+  {\addfontfeatures{LetterSpace=-4} Käytännöllistä}
+
+  \fontsize{65bp}{65bp}\selectfont%
+  \hspace{-5bp}%
+  \LaTeX{}ia
+
+}
+
+\vfill
+
+{
+
+  \raggedleft
+  \alaotsikko \\
+  Versio \versio
+
+}
+
+\clearpage
+\restoregeometry
+\pdfbookmark[0]{Tekijänoikeus}{sivu/tekijänoikeus}
+
+\null\vfill
+
+{
+  \setlength{\parindent}{0em}
+  \setlength{\parskip}{1.2ex plus .1ex}
+
+  \section*{\otsikko}
+
+  \textsc{Tekijä:} \tekijat
+
+  \textsc{Versio:} \versio
+
+  \textsc{Päiväys:} \DTMtoday{} kello \DTMcurrenttime{} (ensijulkaisu:
+  26.12.2021)
+
+  \textsc{Saatavissa:} \url{https://github.com/tlikonen/latex-opas}
+
+  \textsc{Lisenssi:} \emph{Creative Commons Nimeä-Jaa\-Samoin 4.0
+    Kansainvälinen} (\textsc{cc by-sa} 4.0). Lisenssi antaa sinulle
+  luvan kopioida ja levittää tätä teosta tai sen osia missä tahansa
+  välineessä ja muodossa. Sisältöä saa muokata, ja sen pohjalta saa
+  luoda uusia teoksia mihin tahansa tarkoitukseen, myös kaupallisesti.
+  Ehdot ovat seuraavat:
+
+  \begin{list}{\textbullet}{
+      \setlength{\leftmargin}{1em}
+      \setlength{\topsep}{0ex}
+      \setlength{\partopsep}{0ex}
+      \setlength{\itemsep}{0ex}
+    }
+  \item Sinun on mainittava tekijä(t) asianmukaisesti, tarjottava linkki
+    lisenssin koko tekstiin (ks. alla) sekä mainittava, mikäli olet
+    tehnyt muutoksia.
+  \item Jos muokkaat teosta tai luot sen pohjalta uuden teoksen, sinun on
+    jaettava muutoksiasi samalla lisenssillä kuin alkuperäistä teosta.
+  \item Et saa asettaa sellaisia oikeudellisia ehtoja tai teknisiä
+    estoja, jotka estävät muita tekemästä asioita, jotka tämä lisenssi
+    sallii.
+  \end{list}
+
+  Lisenssin koko teksti: \\
+  \url{https://creativecommons.org/licenses/by-sa/4.0/legalcode.fi}
+
+}
+
+\cleardoublepage
+
+\pagestyle{plain}
+\pdfbookmark[0]{Sisällys}{sivu/sisällys}
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\setcounter{secnumdepth}{-1}
+\input{luku-esipuhe}
+\setcounter{secnumdepth}{2}
+\input{luku-valmistautuminen}
+\input{luku-merkintakieli}
+\input{luku-asetukset}
+\input{luku-rakenne}
+\input{luku-erikoiset}
+\setcounter{secnumdepth}{-1}
+
+\chapter{Kirjallisuutta}
+\label{luku/kirjallisuutta}
+
+\printbibliography[heading=none]
+
+\chapter{Asiahakemistot}
+\label{luku/asiahakemisto}
+
+\printindex[dokumenttiluokat]
+\indexprologue{\noindent Tekstitilan ja matematiikkatilan komennot on
+  ladottu eri väreillä: \komentox{teksti} ja \mkomentox{matematiikka}.}
+\printindex[komennot]
+\printindex[laskurit]
+\printindex[mitat]
+\printindex[paketit]
+\clearpage
+\indexprologue{\noindent Tekstitilan ja matematiikkatilan ympäristöt on
+  ladottu eri väreillä: \ymparistox{teksti} ja
+  \mymparistox{matematiikka}.}
+\printindex[ymparistot]
+
+\end{document}

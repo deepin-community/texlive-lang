@@ -6,7 +6,6 @@
 \usepackage{iftex}[2019/10/24]
 \RequireLuaTeX
 
-\usepackage{xspace}
 \usepackage{array,longtable}
 \usepackage{varioref}
 \renewcommand{\reftextpagerange}[2]{\pageref{#1}--\pageref{#2}}
@@ -122,11 +121,10 @@
 
 \title{Mode d’emploi du module \ext{babel-french}}
 \author{\href{mailto:daniel.flipo@free.fr}{Daniel \textsc{Flipo}}}
-\newcommand*{\latestversion}{3.5m}
+\newcommand*{\latestversion}{3.5p}
 \date{Version {\latestversion} -- \today}
 
 \begin{document}
-%\def\today{30 juillet 2020}
 
 \maketitle
 \thispagestyle{empty}
@@ -147,7 +145,6 @@
   La présente documentation en français est également disponible sur CTAN,
   il n’y a plus besoin de la récupérer sur mon site
   personnel {\expandafter\expandafter\expandafter\url{\urlperso/babel-french}}.
-
 \end{abstract}
 
 \bgroup
@@ -161,25 +158,6 @@
   \vspace{-\baselineskip}\noindent
   \descindentFB=0pt
   \begin{description}
-  \item[8 juillet 2014] Ajout des sections~\ref{ssec:captions}
-     p.~\pageref{ssec:captions} (\textit{caption names}) et \ref{ssec:biblatex}
-     p.~\pageref{ssec:biblatex} (\biblatex).
-  \item[28 juillet 2014] Présentation des listes,
-     configuration d’\ext{enumitem} (section~\ref{ssec:lists}).
-   \item[16 sept. 2014] Ajout de l’option \fbo{SmallCapsFigTabCaptions},
-     voir p.~\pageref{scfigtab}.
-  \item[9 avril 2015] Charger \ext{listings} après \ext{babel}
-     (section~\ref{sec:Incomp}).
-  \item[14 février 2016] Adaptation à la version 3.2a, voir
-    section~\ref{ssec:changes-3.2}.
-  \item[30 mars 2016] Charger \ext{subcaption} après \ext{babel}
-    (section~\ref{sec:Incomp}).
-  \item[14 mai 2016] Mise à jour pour TeXLive~2016,
-    voir section~\ref{ssec:changes-3.2}. L’historique des changements
-    antérieurs à la version~3.0 a été supprimé.
-  \item[3 juillet 2016] Ajout dans la version~3.2d, du paramètre
-    |\descindentFB| pour les listes \env{description}, voir
-    section~\ref{ssec:lists}.
   \item[15 janvier 2017] La version~3.2f est compatible avec l’extension
     \ext{icomma}.
   \item[30 janvier 2017] Le comportement par défaut de la commande
@@ -199,7 +177,14 @@
     voir p.~\pageref{listspacing}.
   \item[14 mars 2019] Nouvelle commande |\NoEveryParQuote|,  voir
     p.~\pageref{frquote}.
-\end{description}
+  \item[18 avril 2022] Nouvelle commande |\bname{}|, variante sans petites
+    capitales de |\bsc{}|  voir p.~\pageref{bname}.
+  \item[11 nov. 2022] Avec Lua(La)TeX le codage |«~abc~»| ne produit plus
+    d’espace parasite.  La redéfinition de |\shorthandoff{}|,
+    |\shorthandon{}| sous LuaTeX/XeTeX est supprimée.
+  \item[3 janvier 2022] Modification de la commande |\DecimalMathComma|,
+    voir p.~\pageref{decimalmathcomma}.
+  \end{description}
 \end{abstract}
 \egroup
 
@@ -283,9 +268,10 @@ le faire dépend du format utilisé :
   commandes\\
   |\usepackage[T1]{fontenc}|\\
   |\usepackage{lmodern}|\\
-  et de déclarer le codage d’entrée (celui qui est utilisé par l’éditeur choisi),
-  par exemple |utf8| (recommandé) ou |latin9| ou |latin1| ou |applemac|, etc.\\
-  |\usepackage[utf8]{inputenc}|
+  la déclaration du codage d’entrée n’est nécessaire que si celui-ci n’est
+  pas le codage par défaut (|utf8| depuis 2018), par exemple |latin9| ou
+  |latin1| ou |applemac|, etc.\\
+  |\usepackage[latin9]{inputenc}|
 \item avec LuaLaTeX ou XeLaTeX on peut ajouter |\usepackage{fontspec}| mais
   ceci est devenu facultatif avec les formats LaTeX récents (2017).
 \end{itemize}
@@ -317,7 +303,7 @@ L’utilisation de fontes de la famille CM/LM n’est pas du tout indispensable,
 
   Il est également possible d’utiliser des  fontes PostScript, pour plus de
   détails consulter par exemple le chapitre~15 du livre
-  \textit{\LaTeX, l’essentiel} de \bsc{D.~Bitouzé} et \bsc{J.-C.~Charpentier}.
+  \textit{LaTeX, l’essentiel} de \bsc{D.~Bitouzé} et \bsc{J.-C.~Charpentier}.
 \end{itemize}
 
 \section{Description de la francisation par babel-french}
@@ -458,20 +444,19 @@ au comportement standard de LaTeX (typographie américaine).
 Des commandes ont été prévues pour faciliter la saisie :
 \begin{itemize}
 
-\item Les guillemets peuvent être saisis grâce aux commandes |\og| et |\fg|%
-  \footnote{Si les caractères « et » sont accessibles au clavier,
-      ils peuvent être utilisés pour saisir les guillemets, voir
-      la fin de la section~\ref{sec:Perso}, p.~\pageref{og-fg}.},
-  ce qui donne selon la langue de travail « guillemets français » ou
-  \begin{otherlanguage}{english}``english quotes’’\end{otherlanguage}.
+\item Les guillemets français peuvent être saisis grâce à la commande
+  |\frquote{|\textit{texte}|}| qui affiche \frquote{\textit{texte}}
+  avec les espaces insécables adéquats. Il est également possible de coder
+  |\og texte\fg{}| (ancienne syntaxe toujours valide).
+
+  Si les caractères « et » sont accessibles au clavier%
+  \footnote{grâce à une touche \texttt{Compose} par exemple…},
+  ils peuvent être utilisés pour saisir les guillemets français, voir
+  la fin de la section~\ref{sec:Perso}, p.~\pageref{og-fg}.
 
   Notez que les guillemets français ne devraient \emph{jamais} être saisis
   avec |<<| et |>>| contrairement à ce qui se fait avec
   {e-French} (voir section~\ref{sec:CompatFP}).
-
-  Depuis la version~3.1, une alternative, |\frquote{|\textit{texte}|}|, est
-  proposée pour la saisie des guillemets français avec l’espace adéquat,
-  le résultat est \frquote{\textit{texte}}.
 
   L’usage de |\frquote{}| est recommandé pour les citations longues
   (c.-à-d. s’étendant sur plus d’un paragraphe) et pour les citations
@@ -563,9 +548,10 @@ Le codage est le suivant :
   On obtient de vraies lettres supérieures
   \begin{itemize}
   \item avec les moteurs LuaTeX et XeTeX, à condition de charger les extensions
-    \ext{fontspec} et \ext{realscripts} et d’utiliser une police de type
-    OpenType qui connaisse la directive «\code{VerticalPosition=Superior}»
-    (polices Linux Libertine O, Iwona, par exemple) ;
+    \ext{fontspec} \emph{et} \ext{realscripts} et d’utiliser une police de type
+    OpenType qui connaisse la directive «sups» (c’est le cas de la plupart
+    d’entre-elles, il est possible de s’en assurer sous linux grâce à la
+    commande |otfinfo -f `kpsewhich nom_police.otf`|) ;
   \item sous (pdf)LaTeX avec certaines polices type~1 expertes
     (Fourier-Utopia).
   \end{itemize}
@@ -584,12 +570,21 @@ vertical des lettres supérieures simulées par |\fup|
 (voir dans le code de \file{frenchb.dtx} les commandes |\FBsupS| et
 |\FBsupR|).
 
-\item L’usage français veut que les noms propres soient imprimés en
-  petites capitales et ne soient pas coupés en bout de ligne, la commande
-  |\bsc| (\textit{boxed small caps}) en facilite la saisie :
-  on saisira par exemple |Leslie~\bsc{Lamport}| pour
-  obtenir Leslie~\bsc{Lamport} sans risque de coupure \textsc{Lam-port}
-  en bout de ligne.
+\item Les commandes |\bname{}|\label{bname} (\textit{boxed name})
+  et |\bsc{}| (\textit{boxed small caps}) facilitent la saisie des noms
+  propres : toutes deux empêchent la coupure de leur argument, sauf au niveau
+  du tiret pour les noms composés ;
+  la seconde imprime son argument en petites capitales, ce qui est d’usage par
+  exemple dans les bibliographies ou les signatures.\\
+  Exemples : |\bname{Montesquieu}|, |Albert~\bsc{Camus}|.\\
+  N.B. Ces commandes ne mettent pas leur argument dans une |\mbox{}|, leur
+  effet n’est pas aussi radical : un |\kern0pt| inhibe toute coupure du mot
+  suivant, ce qui marche bien pour les noms simples ou composés avec un tiret
+  et a l’avantage de préserver l’expansion éventuellement faite par
+  \pkg{microtype}.  Les patronymes à particule peuvent poser problème : coder
+  |Jean~\bname{de La Fontaine}| n’aurait strictement aucun effet (les coupures
+  après `de’, après `La’ ou `Fon-taine’ restent possibles), en revanche
+  |Jean~de~La~\bname{Fontaine}| empêcherait toute coupure.
 
 \item les commandes |\primo|, |\secundo|,
   |\tertio| et |\quarto| peuvent
@@ -598,8 +593,8 @@ vertical des lettres supérieures simulées par |\fup|
   Ensuite, |\FrenchEnumerate{6}| donne \FrenchEnumerate{6}.
 
 \item Les abréviations de «numéro», \No, \Nos, \no{} et \nos, sont obtenues
-  en tapant |\No|, |\Nos|, |\no| et |\nos| ;
-  l’espace qui suit est insécable : coder |\no1| ou |\no 1|.
+  en tapant |\No|, |\Nos|, |\no| et |\nos| ; elles incluent
+  une espace insécable finale : coder |\no1| ou |\no 1| suffit.
 
 \item Le caractère \degre{} (à ne pas confondre avec le petit «o» de \No)
   est saisi |\degre|, mais comme les espaces avant
@@ -627,15 +622,23 @@ vertical des lettres supérieures simulées par |\fup|
   (jan-vier, dé-cembre, …) qui est interdite par défaut.
 
 \enlargethispage{\baselineskip}
-\item En mode mathématique, la virgule est toujours suivie d’une espace
-   car elle est traitée comme un signe de ponctuation et non comme
-   une virgule décimale. La commande |\DecimalMathComma| supprime cette
-   espace (mais uniquement en français), on revient  au comportement par
-   défaut avec |\StandardMathComma|. Remarquer qu’après une
-   commande |\DecimalMathComma|, il est nécessaire de saisir un espace
-   explicite dans les listes et les intervalles par exemple |$(x,\ y)$|
-   et |$[0,\ 1]$|.
-   Ces deux commandes sont utilisables n’importe où dans le document.
+\item En mode mathématique, la virgule est toujours suivie d’une espace car
+  elle est traitée comme un signe de ponctuation et non comme une virgule
+  décimale%
+  \footnote{Une virgule décimale peut toujours être codée \code{\{,\}} en mode
+    math.}.
+  La commande |\DecimalMathComma| supprime cette espace (mais uniquement en
+  français), on revient au comportement standard avec |\StandardMathComma|.
+  On peut l’utiliser dans un groupe pour limiter sa portée, sinon
+  après une commande |\DecimalMathComma|, il est nécessaire de saisir une
+  espace (fine) dans les listes et les intervalles par exemple |$(x,\,y)$| et
+  |$[0,\,1]$|.\hlabel{decimalmathcomma}
+
+  |\DecimalMathComma| peut être placée soit dans le préambule, soit dans le
+  corps du document \emph{en mode texte} et dans une partie \emph{en français},
+  son effet survit à un changement de langue (passage en anglais et retour en
+  français par exemple), sauf bien sûr si elle est placée dans un groupe.
+
    Une solution alternative consiste à utiliser l’extension \ext{icomma}.
 
 \item La commande |\nombre|, destinée à formater
@@ -659,7 +662,10 @@ les commandes
 |\ieme|, |\iemes|,
 |\fg| et |\dots| sont
 respectés sans avoir à les forcer par des |{}| ou
-des~\code{\boi\textvisiblespace}.
+des~\code{\boi\textvisiblespace}. Noter cependant que l’auteur de \pkg{xspace}
+ne recommande plus vraiment son utilisation, aussi peut-on préférer
+\emph{ne pas charger} \pkg{xspace} et gérer les espaces soi-même :
+« |les 1\ier, 2 et 3~mai| » ou « |le 1\ier~mai| » (espace insécable).
 
 \section{Personnalisation}
 \label{sec:Perso}
@@ -982,17 +988,17 @@ La liste étant longue, les options sont regroupées par thèmes.
     \fbsetup{} sont optionnels.} ;
   \hlabel{og-fg} lorsqu’on dispose de guillemets français au
   clavier (grâce à une touche \textit{compose} par exemple), cette option permet
-  d’utiliser directement ces guillemets à la place des commandes |\og| et |\fg|%
-  \footnote{Toutefois, si des guillemets doivent être utilisés dans une
-    commande \cs{index}, ils \emph{doivent} être codés en \cs{og} et
-    \cs{fg}.}.
-  On peut ainsi saisir \code{«guillemets»} ou \code{« guillemets »} (avec ou
-  sans espaces à l’intérieur) pour obtenir «guillemets» avec espaces
-  insécables adéquates en français. En revanche, si on active cette option,
-  \emph{il ne faut pas coder explicitement les espaces insécables} :
-  \code{«}|~|\code{guillemets}|~|\code{»}
-  produirait «~guillemets~» où l’espace qui suit le guillemet ouvrant est
-  trop large.
+  d’utiliser directement ces guillemets à la place des commandes |\frquote{}|
+  ou |\og| et |\fg|.
+  On peut ainsi saisir \code{«guillemets»} (sans espace) ou
+  \code{« guillemets »} (avec espaces à l’intérieur) pour obtenir «guillemets»
+  avec les espaces insécables adéquates en français. En revanche, si on active
+  cette option,
+  \emph{il ne faut pas coder explicitement les espaces insécables}%
+  \footnote{Sauf avec le moteur LuaTeX qui permet de parer à cette
+    éventualité !}:
+  \code{«}|~|\code{guillemets}|~|\code{»} produirait avec pdfLaTeX ou XeLaTeX
+  une espace trop large après le guillemet ouvrant.
 
   Les espaces insécables ne sont ajoutées que lorsque la langue
   courante est le français : en allemand, le codage \code{(»Auf Deutsch«)}
@@ -1551,6 +1557,28 @@ etc.) sont maintenant prises en compte correctement.
     |\textorpdfstring{}{}| (suggestion de l’équipe LaTeX3).
 \end{itemize}
 
+La commande |\bname{}| (voir section~\pageref{bname}) a été ajoutée en
+version~3.5n, la documentation concernant la commande |\bsc{}| a été revue
+comme celle concernant la saisie des guillemets.
+
+À partir de la version 3.5o :
+\begin{itemize}
+\item Le codage (déconseillé) |«~abc~»| ne produit plus d’espace parasite
+  \emph{avec Lua(La)TeX}, ceci répond à la demande formulée
+  \href{https://tex.stackexchange.com/questions/661377/}{ici}.
+\item Les commandes |\shorthandoff{}| et |\shorthandon{}| affichent maintenant
+  le message standard de \pkg{babel} lorsqu’elles sont exécutées (à tort) sous
+  LuaTeX ou XeTeX. Leur redéfinition, qui permettait de conseiller
+  |\NoAutoSpacing| à la place, a été supprimée à la demande de Javier Bezos,
+  car elle cassait la variante |\shorthandoff*{}|.
+\end{itemize}
+
+\vspace{\parskip}
+Le comportement de |\DecimalMathComma| a changé en version~3.5p suite à une
+remarque de Fabrice Eudes : elle peut désormais être utilisée dans le préambule.
+Voir section~\ref{decimalmathcomma} p.~\pageref{decimalmathcomma} pour plus de
+détails.
+
 \subsection{Changements entre les versions  3.4d et 3.3d}
 \label{ssec:changes-3.4}
 
@@ -1899,9 +1927,9 @@ cette liste.
   virgule par une espace fine.
 
 \item Dans une commande |\index{}|, les guillemets français doivent
-  obligatoirement être codés sous la forme |\og|, |\fg| :
+  obligatoirement être codés sous la forme |\frquote{}| (ou |\og|, |\fg|) :
   \hlabel{ch-doc4}
-  |\index{\og toto\fg}| donne le résultat attendu, tandis que
+  |\index{\frquote{toto}| donne le résultat attendu, tandis que
   |\index{«toto»}| provoque soit une erreur à la compilation (en LaTeX),
   soit un mauvais classement de l’entrée |«toto»| dans l’index (en
   XeLaTeX et LuaLaTeX).
@@ -1979,7 +2007,7 @@ La solution \biblatex/\biber{} présente des nombreux avantages par rapport
 \end{itemize}
 
 Pour la mise en œuvre pratique de \biblatex/\biber{}, consulter le manuel
-\textit{\LaTeX, l’essentiel} de \bsc{D.~Bitouzé} et \bsc{J.-C.~Charpentier} ou
+\textit{LaTeX, l’essentiel} de \bsc{D.~Bitouzé} et \bsc{J.-C.~Charpentier} ou
 la documentation en anglais \file{biblatex.pdf}.
 
 \section[Compatibilité avec e-french]

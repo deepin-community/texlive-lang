@@ -15,6 +15,9 @@
 /*      Revision 2.1 1997/02/11 minor corrections; add more accents           */
 /*      Revision 2.2 2002/01/02 minor corrections; tidy                       */
 /*      Revision 2.2.1 2016-08-31 compilation and other fixes                 */
+/*      Revision 2.2.2 2017-02-22 portability and other tweaks                */
+/*      Revision 2.2.3 2018-02-10 extend working buffers ten times            */
+/*      Revision 2.2.4 2022-09-24 fix abort on MacOS X                        */
 /*                                                                            */
 /*      Copyright 1996 & 2002 Charles Wikner                                  */
 /*      This program can be redistributed and/or modified under the terms     */
@@ -24,7 +27,9 @@
 /*                                                                            */
 /******************************************************************************/
 
+#ifndef DEBUG
 #define DEBUG 0
+#endif
 
 /* Set DEBUG 0 for normal                                                     */
 /* If non-zero, STDIO is used for input/output                                */
@@ -36,9 +41,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 
 /* DECLARE FUNCTIONS */
-void   exit        (int);
 void   search      (void);
 void   write_outbuf(void);
 void   write_line  (char *);
@@ -60,10 +65,13 @@ void   samyoga     (void);
 int    aci         (char *);
 void   translit    (void);
 
-FILE *infile, *outfile, *fopen();
-char infilename[80];
-char outfilename[80];
-#define FILENAME_SCANF "%79s"
+FILE *infile, *outfile;
+#define FILENAME_LEN 4096
+char infilename[FILENAME_LEN+1];
+char outfilename[FILENAME_LEN+1];
+#define SKT_STRINGIFY2(X) #X
+#define SKT_STRINGIFY(X) SKT_STRINGIFY2(X)
+#define FILENAME_SCANF "%" SKT_STRINGIFY(FILENAME_LEN) "s"
 
 #define TRUE 1
 #define FALSE 0
@@ -86,9 +94,13 @@ int err_cnt;             /* incremented by any error while in \skt..          */
 #define err_max 10       /* after err_max errors, program aborts              */
 int line_cnt;            /* line number of current input line                 */
 
-char inbuf[255];         /* input file line buffer of text being processed    */
+#define BUFFER_LENGTH_MULTIPLIER 10
+
+/* input file line buffer of text being processed    */
+char inbuf[255*BUFFER_LENGTH_MULTIPLIER];
 char *i_ptr;             /* general pointer to input buffer                   */
-char outbuf[2048];       /* output file line buffer of text processed         */
+/* output file line buffer of text processed         */
+char outbuf[2048*BUFFER_LENGTH_MULTIPLIER];
 char *o_ptr;             /* general pointer to output buffer                  */
 
 unsigned char cont_end;   /* flag TRUE when line ends with %-continuation     */
@@ -99,12 +111,15 @@ unsigned char nasal;      /* storage for working nasal character              */
 unsigned char ac_char;    /* storage for working vowel character              */
 unsigned char pre_ra;     /* storage/flag for 'r' at beginning of samyoga     */
 char ac_hook;             /* vowel hook code                                  */
-char sktbuf[255];         /* storage for sanskrit in internal code            */
+/* storage for sanskrit in internal code            */
+char sktbuf[255*BUFFER_LENGTH_MULTIPLIER];
 char *s_ptr;              /* general pointer to sanskrit buffer               */
 char *old_sptr;           /* points to samyoga start; used by warning message */
-char work[256];           /* general scratchpad                               */
+/* general scratchpad                               */
+char work[256*BUFFER_LENGTH_MULTIPLIER];
 char *w_ptr;              /* general pointer to work buffer                   */
-char tmp[2048];           /* temporary buffer for previous syllable           */
+/* temporary buffer for previous syllable           */
+char tmp[2048*BUFFER_LENGTH_MULTIPLIER];
 int  wid;                 /* character print width                            */
 int  top;                 /* amount to backspace for top flags                */
 int  bot;                 /* amount to backspace for bottom flags             */
@@ -152,7 +167,7 @@ main(int argc,
   o_ptr = outbuf; *o_ptr = '\0';
   for (k=0; k<total_options+1; k++) option[k] = FALSE; /* disable everything  */
 
-  printf("SKT.C Version 2.2.1 2016-08-31\n");
+  printf("SKT.C Version 2.2.4 2022-09-24\n");
 
 #if (DEBUG == 0)
 
@@ -177,11 +192,11 @@ main(int argc,
     }
   p = strchr(infilename,'.');
   if (p == 0) strcat(infilename,".skt");  /* default input file extension */
-  if ((infile=fopen(infilename,"r")) == NULL)
+  if ((infile=fopen(infilename,"rb")) == NULL)
         { printf("Cannot open file %s\n",infilename); exit(1); }
   p = strchr(outfilename,'.');
   if (p == 0) strcat(outfilename,".tex"); /* set default output file extension */
-  if ((outfile=fopen(outfilename,"w")) == NULL)
+  if ((outfile=fopen(outfilename,"wb")) == NULL)
         { printf("Cannot open output file %s\n",outfilename); exit(1); }
 #else
   printf("Enter text (blank line terminates program) :\n");
@@ -287,7 +302,7 @@ char c, d, e;
     write_line(outbuf);
     *o_ptr = e;
     if (c!='\0') { *--o_ptr = d; *--o_ptr = c; } /* restore displaced chars */
-    strcpy(outbuf,o_ptr);
+    memmove(outbuf, o_ptr, strlen(o_ptr) + 1);
   }
   o_ptr = outbuf;
   *o_ptr = '\0';
@@ -333,7 +348,6 @@ char * str_find(char *buf, char *str)
 
 void get_line(void)
 {
-char *p;
   i_ptr = inbuf;
   *i_ptr = '\0';
   line_cnt++;
@@ -400,9 +414,10 @@ char * command(char *p)
 /*           of inbuf.                                                        */
 
 void error(char *s, int n)
-{ char err_str[80]; int j;
+{ char err_str[80];
   if (++err_cnt <= err_max)
-    { if (n > 0)  { for (j=0; j<n; j++) err_str[j] = *(i_ptr+j);
+    { if (n > 0)  { int j;
+                    for (j=0; j<n; j++) err_str[j] = *(i_ptr+j);
                     err_str[j] = '\0';
                   }
       if (n == 0) { strcpy(err_str,"oct(");
@@ -423,15 +438,22 @@ void error(char *s, int n)
 /* Function: process input text within {\skt.., converting to internal        */
 /*           format in sktbuf                                                 */
 
-#define ISAC(c) (((strchr("aAiIuUwWxXeEoO",c) != 0) && c) ? TRUE : FALSE)
+#define ISAC(c) (((c) && (strchr("aAiIuUwWxXeEoO",(c)) != 0)) ? TRUE : FALSE)
 
-#define CAT(w,x,y,z) \
-strcat(w,x); if((y)>9)chrcat(w,('0'+((y)/10))); \
-chrcat(w,('0'+((y)%10))); strcat(w,z)
+void
+cat(char * w, char const * x, int y, char const * z)
+{
+  strcat(w,x);
+  if((y)>9) chrcat(w,('0'+((y)/10)));
+  chrcat(w,('0'+((y)%10)));
+  strcat(w,z);
+}
+
+#define CAT(w,x,y,z) cat((w),(x),(y),(z));
 
 void process(void)
 { int j,k,cap_flag, underscore, nasal_vowel, n_flag, vedic;
-unsigned char *i, c,d;
+unsigned char c,d;
 #define CF ac_flag=svara_flag=ylv_flag=underscore=cap_flag=roman_flag=nasal_vowel=n_flag=vedic=FALSE
 #define CC CF; continue
 #define CR ac_flag=svara_flag=ylv_flag=underscore=cap_flag=nasal_vowel=n_flag=vedic=FALSE;
@@ -446,7 +468,7 @@ unsigned char *i, c,d;
     c = *i_ptr; d = *(i_ptr+1);
 /* END OF LINE */
     if ((c == '\0') || (c == '\n'))
-      { sktword(); strcat (outbuf,i_ptr); write_outbuf(); get_line(); CC; }
+      { sktword(); strcat(outbuf,i_ptr); write_outbuf(); get_line(); CC; }
 /* COMMENT DELIMITER */
     if (c == '%')
     { if (*(i_ptr+1) == '\n') sktcont();
@@ -462,7 +484,7 @@ unsigned char *i, c,d;
     if (c < ' ')
     { error("Illegal control character: ",0); CI; }
 /* ADDED IMBEDDED ROMAN */
-    if ( (strchr("[`']",c) && c==d) || ((c == '.') && (d == '!')) )
+    if ((c==d && strchr("[`']",c)) || ((c == '.') && (d == '!')) )
     { if (sktbuf[0]) sktword();
       if (!xlit) { if (feint) strcat(outbuf,"\\ZF{");
                    if (bold)  strcat(outbuf,"\\ZB{");
@@ -492,7 +514,7 @@ unsigned char *i, c,d;
         { if (*(i_ptr+1) != '.') break;
           i_ptr++; continue;
         }
-        if ((strchr("()*+,-/:;=?",c) && c) == 0) break;
+        if ((c && strchr("()*+,-/:;=?",c)) == 0) break;
       }
       if (!xlit) strcat(outbuf,"}");
       CR; continue;
@@ -734,7 +756,7 @@ unsigned char *i, c,d;
     CR;
     if (ISAC(c) || c=='\26') ac_flag = TRUE;
 /**/
-    if (strchr("!\"%()&:;<=>?`\'\27\30\31\32\33\34\35\36\37",c) && c)
+    if (c && strchr("!\"%()&:;<=>?`\'\27\30\31\32\33\34\35\36\37",c))
         svara_flag = TRUE;
     if ((c == 'y') || (c == 'l') || (c == 'v')) ylv_flag = TRUE;
     if (c == 'n') n_flag = TRUE; /* allow accents on letter 'n' */
@@ -783,18 +805,48 @@ void sktcont(void)
 
 /* Function: convert contents of sktbuf to output string in outbuf            */
 
-static char hal_chars[] = "BCDFGJKLNPQRSTVZbcdfghjklmnpqrstvyz";
+static char const hal_chars[] = "BCDFGJKLNPQRSTVZbcdfghjklmnpqrstvyz";
                                               /* internal code for consonants */
-#define ISHAL(c) (((strchr(hal_chars,c) != 0) && c) ? TRUE : FALSE)
+#define ISHAL(c) (((c) && (strchr(hal_chars,(c)) != 0)) ? TRUE : FALSE)
 
-#define CLRVADATA wid=top=bot=dep=rldep=fbar=fwh=bwh=ra=ya=bs=vaflg=0
+void
+clr_vadata(void)
+{
+  wid=0;
+  top=0;
+  bot=0;
+  dep=0;
+  rldep=0;
+  fbar=0;
+  fwh=0;
+  bwh=0;
+  ra=0;
+  ya=0;
+  bs=0;
+  vaflg=0;
+}
 
-#define CLRFLAGS \
-ac_hook=post_ra=pre_ra=virama=bindu=candrabindu=accent=hal_flag=post_ya=0
+#define CLRVADATA clr_vadata()
 
-#define VA(p,q,r,s,t,u,v,w,x,y,z) \
+void
+clr_flags(void)
+{
+  ac_hook=0;
+  post_ra=0;
+  pre_ra=0;
+  virama=0;
+  bindu=0;
+  candrabindu=0;
+  accent=0;
+  hal_flag=0;
+  post_ya=0;
+}
+
+#define CLRFLAGS clr_flags();
+
+#define VA(p,q,r,s,t,u,v,w,x,y,z) do { \
 wid+=p; top=q; bot=r; dep=s; rldep=t; if(!vaflg){fbar=u; fwh=v;} bwh=w; \
-ra=x; ya=y; strcat(work,z); vaflg++;
+ra=x; ya=y; strcat(work,z); vaflg++; } while (0)
 
 void sktword(void)
 { char c;
@@ -909,7 +961,7 @@ void fixed(char c)
 {
   switch(c)
   {  case '0':                     VA(12,0,0, 0,0,0, 3,2,0,0,"0");  break;
-     case '1':   if (option[61]) { VA(12,0,0, 0,0,0, 2,3,0,0,"@1"); break;}
+     case '1':   if (option[61]) { VA(12,0,0, 0,0,0, 2,3,0,0,"@1"); break; }
                  else            { VA(12,0,0, 0,0,0, 3,2,0,0,"1");  break; }
      case '2':                     VA(12,0,0, 0,0,0, 2,2,0,0,"2");  break;
      case '3':                     VA(12,0,0, 0,0,0, 2,2,0,0,"3");  break;
@@ -920,12 +972,12 @@ void fixed(char c)
                  else            { VA(12,0,0, 0,0,0, 3,2,0,0,"5");  break; }
      case '6':   if (option[66]) { VA(12,0,0, 0,0,0, 3,3,0,0,"@6"); break; }
                  else            { VA(12,0,0, 0,0,0, 2,2,0,0,"6");  break; }
-     case '7':                     VA(12,0,0, 0,0,0, 2,2,0,0,"7");  break;
+     case '7':                   { VA(12,0,0, 0,0,0, 2,2,0,0,"7");  break; }
      case '8':   if (option[68]) { VA(12,0,0, 0,0,0, 2,2,0,0,"@8"); break; }
-                 else              VA(12,0,0, 0,0,0, 2,3,0,0,"8");  break;
+                 else            { VA(12,0,0, 0,0,0, 2,3,0,0,"8");  break; }
      case '9':   if (option[79]) { VA(12,0,5, 0,0,0, 2,3,0,0,"@2"); break; }
                  if (option[69]) { VA(12,0,5, 0,0,0, 2,3,0,0,"@9"); break; }
-                 else              VA(12,0,5, 0,0,0, 2,3,0,0,"9");  break;
+                 else            { VA(12,0,5, 0,0,0, 2,3,0,0,"9");  break; }
      case '-':   if (option[10] == 0) break;      /* discretionary hyphen */
                  switch (whiteness)
                    {  case 2: strcat(tmp,".");  break;
@@ -1012,7 +1064,7 @@ void single(void)
      case 'H':   VA( 7,0,0, 0,0,0, 3,6,0,0,"H");          /* visarga              */
                  if (interspace==5) {strcat(work,"\\ZS{2}"); break;}
                  if (interspace>5) {strcat(work,"\\ZS{4}"); break;}
-     case 'Y':   VA(12,0,0, 0,0,0, 2,3,0,0,"Y");  break;  /* avagraha             */
+     case 'Y':   VA(12,0,0, 0,0,0, 2,3,0,0,"Y");  /* avagraha             */
                  if (whiteness < 3) { CAT(tmp,"\\ZS{",2*(3-whiteness),"}"); }
                  break;
      case '$':   if (option[61]) {
@@ -1036,7 +1088,7 @@ void single(void)
      default:  error("Lost in single()",-1);
   }
   if ( (ac_char != '\26' ) && ( whiteness < 7) )
-     { if (strchr("iIuUxXwWeE",ac_char) && ac_char)
+     { if (ac_char && strchr("iIuUxXwWeE",ac_char))
        { switch (interspace - whiteness - fwh)
          { case 1: strcat(tmp,"."); break;
            case 2: strcat(tmp,":"); break;
@@ -1125,7 +1177,7 @@ void sam_warning(void)
 (ac_hook=='e' || ac_hook=='E' || pre_ra || bindu || candrabindu)
 
 #define TOPACCENT \
-(strchr("!(\":;<=>?\27",accent) && accent)
+(accent && strchr("!(\":;<=>?\27",accent))
 
 #define BOTHOOKS \
 (virama || c=='U' || c=='X' || c=='W')
@@ -1135,7 +1187,7 @@ void addhooks(void)
   accent = bindu = candrabindu = 0;
   c = *s_ptr;
   if (c == '#') { candrabindu = TRUE; c = *++s_ptr; }
-  if (strchr("!(\"&:;<=>?\27\30\31\32\33\34\35\36",c) && c)
+  if (c && strchr("!(\"&:;<=>?\27\30\31\32\33\34\35\36",c))
      { accent = c; c = *++s_ptr; }
   if (c == '#') { candrabindu = TRUE; c = *++s_ptr; }
   if ( (c == 'M') || (c == 'R') ) { bindu = TRUE; c = *++s_ptr; }
@@ -1183,8 +1235,8 @@ void addhooks(void)
      { t = 0; if (option[4]) t = 8; if (option[5]) t = 12;
               if (option[4] && option[5]) t = 16;
        if (t < v) t = v;
-       if (    (strchr("eioEIO",ac_char) && ac_char)
-            && (strchr("=>?\"\27",accent)  && accent)  )
+       if (    (ac_char && strchr("eioEIO",ac_char) )
+            && (accent && strchr("=>?\"\27",accent) )  )
           { v=8; if ((accent=='\"') || (accent=='\27')) v=3; }
        if (t < v) t = v;
        if (t)   { CAT(work,"\\ZV{",t,"}{"); }
@@ -1294,7 +1346,7 @@ void addhooks(void)
        if (v) strcat(work,"}");
        if (bot) strcat(work,"}");
      }
-  if ( (strchr("&\30\31\32\33\34\35\36",accent) && accent) || (*s_ptr=='%') )
+  if ( (accent && strchr("&\30\31\32\33\34\35\36",accent)) || (*s_ptr=='%') )
      { if (dep > 2) { if (v<0) v=dep-2-v;
                       else v=dep-2; }
        else v=dep;
@@ -1406,7 +1458,7 @@ void backac(void)
 /* now set ac_flag according to vowel                                         */
    if (c == 'o') ac_hook = 'e';
    if (c == 'O') ac_hook = 'E';
-   if (strchr("uUeExXwW",c) && c) ac_hook = ac_char;
+   if (c && strchr("uUeExXwW",c)) ac_hook = ac_char;
 /* finally add all flags, accents, nasals, and final vertical as necessary    */
    j=low_right; k=high_right;     /* save interference from previous syllable */
    addhooks();
@@ -1473,7 +1525,6 @@ void backac(void)
 
 void autohyphen(void)
 {
-char *p;
    if (option[11] && *s_ptr!='\0' && ac_char
                       && !(*s_ptr=='-'  && option[10]))
       {
@@ -1513,14 +1564,14 @@ switch (bwh)
 /* LS : if (string_match && option[a]) VA;                                    */
 /* LT : if (string_match && option[a]) { if (option[b]) VA#1 else VA#2 }      */
 
-#define LS(t,u,v,w) n=strlen(t);              \
-        if((option[u]==0) && (strncmp(p,t,n)==0))  \
-          { w; p+=n; v;}
+#define LS(t,u,v,w) { size_t n;                           \
+    if((option[u]==0) && (strncmp(p,t,n=strlen(t))==0))   \
+      { w; p+=n; v;} }
 
-#define LT(t,u,v,w,x,y,z) n=strlen(t);        \
-        if((option[u]==0) && (strncmp(p,t,n)==0))  \
-          { if(option[x]==0) { w; p+=n; v; }     \
-                     else { z; p+=n; y; } }
+#define LT(t,u,v,w,x,y,z) { size_t n;                           \
+    if((option[u]==0) && (strncmp(p,t,n=strlen(t))==0))         \
+      { if(option[x]==0) { w; p+=n; v; }                        \
+        else { z; p+=n; y; } } }
 
 #define NX sam_flag = 'X'; break;
 #define NR sam_flag = 'R'; break;
@@ -1534,7 +1585,7 @@ switch (bwh)
 
 void samyoga(void)
 {
-char *p, sam_flag; int j,k,n;
+ char *p, sam_flag;
  option[0] = 0;
  sam_flag = 0;
  p = s_ptr;
@@ -1710,7 +1761,9 @@ char *p, sam_flag; int j,k,n;
   LS("jy",   119,NC,VA(20,0,0, 0,2,0, 1,0,6,2,"\\ZM{0Jj0djRdA}*.ay1"));
   if(*p=='j') { if (ISHAL(*(p+1)) || option[119]) {
                     VA(18,0,0, 0,0,0, 1,0,2,1,"j2"); IC; }
-              else  VA(12,3,3, 2,0,0, 1,3,3,2,"\\ZM{0Jj0djRdA}*.a"); IR; }
+              else {
+                    VA(12,3,3, 2,0,0, 1,3,3,2,"\\ZM{0Jj0djRdA}*.a"); IR; }
+              }
   LT("J",      0,NR,VA(23,0,0, 0,0,0, 0,3,2,1,"jJ"),
               42,NR,VA(25,4,4, 0,2,0, 0,1,1,2,"j1`J"));
   LT("V",      0,NC,VA( 8,0,0, 0,0,0, 1,0,3,1,":]"),
@@ -2007,9 +2060,9 @@ char *p, sam_flag; int j,k,n;
   LS("n",    157,NR,VA(14,3,3, 0,0,0, 0,3,2,2,"m1\\ZM{hFnaLe}:a"));
   LT("l",    158,NR,VA(13,2,1, 2,0,0, 0,1,2,6,"m1\\ZM{aLeDPEDFIhBl}+"),
               46,NR,VA(14,3,3, 5,1,0, 0,3,2,2,"m1\\ZM{aLeDdElbL}:a"));
-  if (strchr("mr",*p) && *p)
+  if (*p && strchr("mr",*p))
                   { VA(10,0,0, 0,1,0, 0,0,4,1,"m"); NC; }
-  if (strchr("lbByv",*p) && *p)
+  if (*p && strchr("lbByv",*p))
                   { VA( 9,0,0, 0,0,0, 0,0,1,1,"m1"); NC; }
   if (ISHAL(*p))  { VA(10,0,0, 0,3,0, 0,0,4,1,"m1\\ZM{cLe}."); NC; }
                     VA(10,0,0, 0,1,0, 0,0,4,1,"m"); NC;
@@ -2032,10 +2085,10 @@ case 'y':
               strcat(work,"\\ZH{-6}{<}");IC;}
   NC;
 
-case 'r':
-  j=0;
+case 'r': {
+  int j=0;
   if (ra)
-     { k=dep;
+     { int k=dep;
        if (ra==5) k-=3;
        if (bot) j++; if (k) j+=2;
        switch (j)
@@ -2060,6 +2113,7 @@ case 'r':
       if(*p=='u') { VA( 8,5,4, 0,0,1, 0,0,0,0,"r8"); *p='a'; NX; }
       if(*p=='U') { VA(10,7,6, 0,0,1, 0,1,0,0,"r9"); *p='a'; NX; }
                     VA( 6,3,1, 0,0,1, 0,2,0,0,"="); NX; }
+}
 
 case 'l':
   if (option[160]==0) {
@@ -2143,9 +2197,9 @@ case 'v':
   LS("nv",   170,NR,VA(19,3,3, 0,2,1, 0,3,6,2,"=\\ZM{fMo0HnHMu}*:a"));
   LS("n",    170,NR,VA(12,0,0, 0,1,1, 0,0,2,1,"=+:\\ZM{rMolHneHegMi}"));
   LS("r",      0,NC,VA(11,0,0, 0,0,1, 0,0,2,1,"s1\\ZM{aLeDDr}:"));
-  if (strchr("sm",*p) && *p) {
+  if (*p && strchr("sm",*p)) {
                     VA(10,0,0, 0,0,1, 0,0,2,1,"s"); NC; }
-  if (strchr("GZCJqNdDpPBrZSh",*p) && *p) {
+  if (*p && strchr("GZCJqNdDpPBrZSh",*p)) {
                     VA(10,0,0, 0,0,1, 0,0,2,1,"s1\\ZM{cLe}."); NC; }
   if (ISHAL(*p))  { VA( 9,0,0, 0,0,1, 0,0,2,1,"s1"); NC; }
                     VA(10,0,0, 0,0,1, 0,0,2,1,"s"); NC;
@@ -2173,7 +2227,7 @@ case 'h':
                     VA(10,0,0, 0,2,0, 0,0,2,1,"L2");  NC; }
                     if(ISHAL(*p)) {
                     VA(11,0,0, 0,0,0, 0,0,2,1,"L2."); NC; }
-               else VA(10,0,0, 0,2,0, 0,0,2,1,"L2");  NC; }
+               else { VA(10,0,0, 0,2,0, 0,0,2,1,"L2"); NC; } }
   if(ISHAL(*p))   { VA(10,3,3, 0,0,0, 0,0,3,1,"L1");  NC; }
                     VA(10,3,3, 0,3,0, 0,0,3,1,"L" );  NX;
 
@@ -2207,19 +2261,26 @@ int aci(char *p)
 
 /* Function: transliterate contents of sktbuf, output result in outbuf        */
 
-#define SWITCHFLAG(Y,Z) switch(flag)                                        \
-            {  case 0: strcat(outbuf,Y); break;                             \
-               case 1: if (tech) strcat(outbuf,"\\ZX{"); strcat(outbuf,Z);  \
-                       if (tech) strcat(outbuf,"}"); break;                 \
-               case 2: strcat(outbuf,"\\ZW{"); strcat(outbuf,Y);            \
-                       strcat(outbuf,"}"); break;                           \
-               case 3: strcat(outbuf,"\\ZY{"); strcat(outbuf,Z);            \
-                       strcat(outbuf,"}"); break;                           \
-             } flag=0
+void
+switch_flag(char const * Y, char const * Z, int * flag) {
+  switch (*flag) {
+  case 0: strcat(outbuf,Y); break;
+  case 1: if (tech) strcat(outbuf,"\\ZX{"); strcat(outbuf,Z);
+    if (tech) strcat(outbuf,"}"); break;
+  case 2: strcat(outbuf,"\\ZW{"); strcat(outbuf,Y);
+    strcat(outbuf,"}"); break;
+  case 3: strcat(outbuf,"\\ZY{"); strcat(outbuf,Z);
+    strcat(outbuf,"}"); break;
+  }
+  *flag=0;
+}
+
+#define SWITCHFLAG(Y,Z) switch_flag((Y), (Z), &flag)
+
 
 #define XLIT(X,Y,Z) case X: SWITCHFLAG(Y,Z); break
 
-#define STACK(X,Y,Z) case X: ISTACK(X,Y,Z)
+#define STACK(X,Y,Z) case X: ISTACK(X,Y,Z); break
 
 #define ISTACK(X,Y,Z) c=0; if(*p=='#'){c+=30; if(option[38]) c+=30; p++;}  \
          switch(*p)                                                        \
@@ -2240,7 +2301,7 @@ int aci(char *p)
            else { if(option[11] && (*p!='\0') && !(*p=='-' && option[10])) \
                       strcat(outbuf,"\\-"); }                              \
          }                                                                 \
-         break
+
 
 #define NASAL(X,Y,Z) case X: if (*p == '#') strcat(outbuf,"\\~{");         \
                              SWITCHFLAG(Y,Z);                              \
@@ -2330,9 +2391,9 @@ char c, *p;
 
    /* now for the vowels with stacked nasal and accent                     */
 
-   case 'i': if (strchr("!`'\"(#\27",*p) && *p) { ISTACK('i',"{\\i}","I"); }
+   case 'i': if (*p && strchr("!`'\"(#\27",*p)) { ISTACK('i',"{\\i}","I"); }
              else { ISTACK('i',"i","I"); } break;
-   case 'E': if (strchr("!`'\"(#\27",*p) && *p) { ISTACK('E',"{a\\i}","AI"); }
+   case 'E': if (*p && strchr("!`'\"(#\27",*p)) { ISTACK('E',"{a\\i}","AI"); }
              else { ISTACK('E',"ai","AI"); } break;
 
 
@@ -2346,7 +2407,7 @@ char c, *p;
 
    case 'w': if (option[26])
              { save = flag; SWITCHFLAG("lr\\llap{\\d{\\kern.51em}}","L\\d R");
-               flag = save; if ( strchr("!\"#$%&'():;<=>?`",*p) && *p)
+               flag = save; if ( *p && strchr("!\"#$%&'():;<=>?`",*p))
                                { ISTACK('w',"{\\i}","I"); break; }
                             ISTACK('w',"i","I"); break; }
              ISTACK('w',"\\d l","\\d L"); break;
@@ -2358,7 +2419,7 @@ char c, *p;
 
    case 'x': if (option[25])
              { save = flag; SWITCHFLAG("r\\llap{\\d{\\kern.51em}}","\\d R");
-               flag = save; if (strchr("!\"#$%&'():;<=>?`",*p) && *p)
+               flag = save; if (*p && strchr("!\"#$%&'():;<=>?`",*p))
                                { ISTACK('x',"{\\i}","I"); break; }
                             ISTACK('x',"i","I"); break; }
              ISTACK('x',"r\\llap{\\d{\\kern.51em}}","\\d R"); break;

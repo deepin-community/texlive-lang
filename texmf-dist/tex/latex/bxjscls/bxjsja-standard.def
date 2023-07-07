@@ -21,7 +21,7 @@
 %% same distribution. (The sources need not necessarily be
 %% in the same archive or directory.)
 \ProvidesFile{bxjsja-standard.def}
-  [2021/05/18 v2.5a BXJS document classes]
+  [2022/04/10 v2.7a BXJS document classes]
 %% このファイルは日本語文字を含みます
 \input{bxjsja-minimal.def}
 \bxjs@simplejasetupfalse
@@ -86,10 +86,18 @@
   \ifx\strong\@undefined\ifx\strongenv\@undefined
     \DeclareRobustCommand{\strongenv}{\bxjs@strong@font}%
     \DeclareTextFontCommand{\strong}{\strongenv}%
-    \@ifdefinable{\strongfontdeclare}{\bxjs@protected\def\strongfontdeclare#1{%
-      \bxjs@strong@font@declare@a#1,\@nil}}%
-    \def\bxjs@strong@font@declare@a#1,#2\@nil{\def\bxjs@strong@font{#1}}%
-    \def\bxjs@strong@font{\bfseries}%
+    \newcommand*{\strongfontdeclare}{\bxjs@strongfontdeclare}%
+    \newcount\bxjs@strong@level
+    \bxjs@protected\def\bxjs@strongfontdeclare#1{%
+      \bxjs@set@array@from@clist{bxjs@strong}{#1}%
+      \bxjs@strong@level\z@}%
+    \bxjs@strongfontdeclare{\bfseries}%
+    \def\bxjs@strong@font{%
+      \bxjs@csletcs{bxjs@tmpa}{bxjs@strong/\the\bxjs@strong@level}%
+      \ifx\bxjs@tmpa\relax
+        \advance\bxjs@strong@level\m@ne \bxjs@strong@font
+      \else \advance\bxjs@strong@level\@ne \bxjs@tmpa
+      \fi}%
   \fi\fi
 }\fi
 \ifjsWitheTeX
@@ -399,7 +407,7 @@
   \bxjs@check@hyperref@unicode{false}
   \ifjsWithupTeX\ifbxjs@old@hook@system\else
     \IfFileExists{pxjahyper-uni.def}{%
-      \AddToHook{package/after/hyperref}{\input{pxjahyper-uni.def}}
+      \AddToHook{\bxjs@CGHN{package/hyperref/after}}{\input{pxjahyper-uni.def}}
     }{}
   \fi\fi
 \fi
@@ -442,13 +450,13 @@
       \reDeclareMathAlphabet{\mathsf}{\@mathsf}{\@mathgt}%
     \fi}
 \fi
-\else\if p\jsEngine
+\else\if \if p\jsEngine T\else\if n\jsEngine T\else F\fi\fi T
 \bxjs@adjust@jafont{f}
 \let\bxjs@jafont@paren\@firstofone
 \bxjs@resolve@jafont@paren\bxjs@tmpa
 \edef\bxjs@tmpa{\bxjs@catopt\bxjs@tmpa\bxjs@jp@font}
 \edef\bxjs@tmpa{\bxjs@catopt\bxjs@tmpa{whole}}
-\def\bxjs@tmpb{pandoc}\ifx\bxjs@tmpb\bxjs@jadriver\else
+\ifx\bxjs@jadriver\bxjs@@pandoc\else
   \edef\bxjs@tmpa{\bxjs@catopt\bxjs@tmpa{autotilde}}
 \fi
 \edef\bxjs@next{%
@@ -529,10 +537,12 @@
     \noexpand\RequirePackage[\bxjs@tmpa]{zxjafont}[2013/01/28]% v0.2a
   }\bxjs@next
 \fi
+\ifx\strcmp\@undefined\else %未定義なら条件を満たさない
 \ifnum\strcmp{\the\XeTeXversion\XeTeXrevision}{0.99992}>\m@ne
   \ifbxjs@hyperref@enc
     \PassOptionsToPackage{unicode}{hyperref}
   \fi
+\fi
 \fi
 \AtEndOfPackage{%
 \def\@gnewline #1{%

@@ -19,27 +19,33 @@
 %	lwarp
 ]{oblivoir}
 
+\usepackage{xcolor}
+
 \usepackage{fapapersize}
 \usefapapersize{*,*,30mm,*,35mm,*}
+\definefageometry{default}{30mm,*,35mm,*}[\nopagecolor]
+\definefageometry{test}{15mm,25mm,35mm,*}[\pagecolor{cyan!15}]
 
 \usepackage{kotex-logo}
 
 \hypersetup{colorlinks,linkcolor=blue}
 
-%%% ifpxltex can be installed from KTUG Private Repository. not included in TeX Live
-\usepackage{ifpxltex}
+\usepackage{afterpage}
+\usepackage{oblivoir-misc}
+\usepackage{graphicx}
 
-\IfpxlTeXpxl*{p}{x,l}
-{
+%%% ifpxltex can be installed from KTUG Private Repository. not included in TeX Live
+%\usepackage{ifpxltex}
+
+\ifLuaOrXeTeX
 	\def\myREF#1#2{\ref{#1}}
 	\def\myLabel#1#2{\label{#1}}
 	\def\myPageREF#1#2{\pageref{#1}}
-}
-{
+\else
 	\def\myREF#1#2{\ref{#2}}
 	\def\myLabel#1#2{\label{#2}}
 	\def\myPageREF#1#2{\pageref{#2}}
-}
+\fi
 
 \def\cs#1{\texttt{\textbackslash #1}}
 \def\util#1{\texttt{#1}}
@@ -49,15 +55,14 @@
 \def\oblivoirdblquote#1{``#1''}
 \fi
 
-\IfpxlTeX*{x,l}
-{
+\ifLuaOrXeTeX
 	\defaultfontfeatures{Renderer=OpenType}
 	\setkomonofont(NanumBarunGothic-YetHangul.ttf)[Scale=0.9]
 	\setobmonofont(Menlo)[Scale=.9]
 	\setobmainfont(Minion Pro)
 	\setobsansfont(Myriad Pro)
 	\setkomainfont[KoPubWorldBatang ](Light)(Bold)
-}
+\fi
 
 \newcommand\xobclass{x\-ob\-liv\-oir\oblivoirallowbreak}
 \newcommand\obclass{ob\-liv\-oir\oblivoirallowbreak}
@@ -89,23 +94,22 @@
 %%
 %\makeatother
 
-\IfpxlTeX*{p,x}
-{
+\ifx\ifPDFTeX\ifXeTeX\else
 	\usepackage[normalem]{ulem}
-}
+\fi
 
 \begin{document}
 
-\title{초간단 \obclass{} v3.0.1 사용법}
+\title{초간단 \obclass{} v3.1.5 사용법}
 
-\date{2021년 3월}
+\date{2022년 11월}
 
-\author{x-ob-liv-oir }
+\author{x-ob-liv-oir}
 
 \maketitle
 
 \begin{abstract}
-\obclass{} 클래스 3.0 버전은 그 동안 별도의 브랜치로 개발되어 오던
+\obclass{} 클래스는 그 동안 별도의 브랜치로 개발되어 오던
 \xobclass와 \obclass를 통합하여 완전히 동일한 클래스가 되었다.
 이 문서는 \obclass{} 즉 \xobclass를
 사용하는 방법을 간략히 기술한다.
@@ -1214,6 +1218,8 @@ ExternalLocation으로 호출할 수 있을 것이다. 리눅스에서는 모르
 % 참고로, bnm, cnm 등의 \obclass{} \oblivoirquote{괄호 명령}에도 별표(*)를 붙여 앞뒤 간격을
 % 줄여줄 수 있다. |\ccnm{테스트}|, |\ccnm*{테스트}|.
 
+\clearpage
+
 \section{그밖의 사항들}
 
 \subsection{판면 설정을 위한 fapapersize}
@@ -1254,7 +1260,53 @@ oblivoir에서 제공된다.
 \item [newmum] 신국판. (154mm$\times$225mm). 여백 25mm.
 \item [1in] \hologo{plainTeX}에서처럼 1in 오프셋을 설정한 판면. 여백 1in.
 \item [dbl4x6] 4$\times$6 배판. (190mm$\times$260mm). 여백 30mm.
+\item [a4] \texttt{a4paper} 용지에 \texttt{[1in]} 옵션과 같은 여백.
 \end{description}
+
+\bigskip
+
+\marginpar{v3.1}
+\texttt{geometry} 패키지의 \cs{newgeometry}, \cs{restoregeometry} 명령과 유사하게
+문서의 중간에 페이지 레이아웃을 변경하는 명령이 있다. 다음과 같이 사용한다.
+
+\begin{description}
+\item [\cs{definefageometry}] 페이지 레이아웃을 정의하고 저장한다.
+\begin{verbatim}
+\definefageometry{default}{20mm,*,25mm,*}
+\end{verbatim}
+첫 번째 인자는 이 페이지 레이아웃의 unique한 이름으로서 letter로 이루어진다.
+
+두 번째 mandatory 인자는 \verb|\fapapersize| 명령에서
+페이지 사이즈에 해당하는 부분을 제외한 네 개의 길이를 쉼표로 구분하여 제시한다.
+
+이 명령은 다음과 같이 쓸 수 있다.
+\begin{verbatim}
+\definefageometry{default}[before]{<layout>}[after]
+\end{verbatim}
+여기 before와 after 위치에는 레이아웃을 바꾸기 전과 후에 실행할
+토큰을 둘 수 있다.
+
+\item[\cs{selectfageometry}] 정의된 페이지 레이아웃을 적용한다. 
+레이아웃 변경의 효과는 반드시 새로운 페이지가 시작되어야 나타나기 때문에
+\cs{newpage} 또는 \cs{clearpage}를 직접 지정하여야 하나,
+이 명령에 별표를 붙이면 페이지 레이아웃을 정의하기 전에 \cs{clearpage}를 
+실행한다. 
+페이지 레이아웃이 define되어 있지 않으면 안 된다.
+
+\end{description}
+
+다음 한 페이지의 레이아웃을 바꾸어본다. 다음과 같이 정의한 레이아웃이다
+\begin{verbatim}
+\definefageometry{test}{15mm,25mm,35mm,*}[\pagecolor{cyan!15}]
+\end{verbatim}
+
+\bigskip
+
+\cs{evenmarginsameasodd}는 짝수쪽의 마진을 홀수쪽 마진과
+동일하게 설정하라는 명령이다. 페이지 레이아웃 디자인시에 필요할 수
+있어서 별도로 정의해두었다.
+
+\selectfageometry*{test}
 
 \subsection{enumerate}
 
@@ -1328,6 +1380,8 @@ png, jpg, pdf 그림을 잘 불러온다. %즉 \obclass가 알맞게 이 패키�
 \begin{minipage}{.45\textwidth}
 \hfill “소절 \myREF{sec:font}{sec:폰트}\를 보라.”
 \end{minipage}
+
+\selectfageometry*{default}
 
 \subsection{문장부호}
 
@@ -1433,6 +1487,15 @@ oblivoir에서 조금 확장했다. 기본인
 \item \cs{hchaptertitlehead}라는 명령이 사용된다. 이것은 특히 running heading과 관련이 있다.
 \end{itemize}
 
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{chapstyfig}
+\caption{oblivoir의 장 표제 스타일}\label{fig:chapsty}
+\end{figure}
+
+\fref{fig:chapsty}\는 \textsf{oblivoir}의 장 표제 스타일에서 사용되는
+매크로를 도시한 것이다.
+
 KTUG 사설 저장소를 통하여 설치할 수 있는\footnote{%
 	사설 저장소를 등록할 수 없는 상황이라면 직접 다운로드하라. 
 	\url{http://ftp.ktug.org/KTUG/texlive/tlnet/archive/}
@@ -1456,6 +1519,88 @@ oblivoir가 추가적으로 제공하는 페이지 스타일로 \texttt{hangul}�
 \begin{boxedverbatim}
 \trimKmark
 \end{boxedverbatim}
+
+\subsection{\cs{ReleaseMacros} 명령}
+
+여러 \LaTeX\ 패키지를 로드하여 쓰다 보면 어떤 명령이 이미 정의되었다는 에러를
+만날 때가 있다. 이럴 때는 해당 패키지를 로딩하기 전에
+\begin{boxedverbatim}
+\ReleaseMacros{\XeTeX,\XeLaTeX}
+\end{boxedverbatim}
+과 같이 선언하여 이미 정의된 매크로를 무력화하는 시도를 해볼 수 있다.
+둘 이상의 명령을 쉼표로 구분하여 지정할 수 있다.
+이 명령은 preamble에서만 쓰게 되어 있다.
+
+
+\subsection{oblivoirlist}
+
+나열 환경의 아이템 간 간격을 제어하기 위하여 \verb|\oblivoirlist|와 
+\verb|\oblivoirlists| 명령을 마련하였다. \verb|\oblivoirlists|는
+해당 선언 이후 모든 나열환경을 \verb|\oblivoirlist| 간격으로 만든다.
+
+\begin{itemize}\oblivoirlist
+\item 배
+\item 사과
+\item 복숭아
+\end{itemize}
+
+다음 보기와 비교하여 보아라.
+
+\begin{itemize}
+\item 배
+\item 사과
+\item 복숭아
+\end{itemize}
+
+\footnotesinmargin
+\textsf{memoir}의 \verb|\firmlist|와 \verb|\tightlist|는 여전히 동작한다.
+\stepcounter{footnote}
+\footnotetext{이 각주는 마진에 놓인다.} 
+\addtocounter{footnote}{-1}
+
+\subsection{sidefootnote와 footnotesinmargin}
+
+oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 고쳤다.\footnotemark
+
+\verb|\sidefootnote|에서 발생하던 문제점도 해결하였다.\sidefootnote{이 각주는 사이드 풋노트이다.}
+
+\footnotesatfoot
+\textsf{memoir} 설명서에 설명된 것과 동일하게 동작한다.\footnote{상세한 것은 memoir manual을 볼 것.}
+
+\subsection{[figtabcapt] 그림과 표의 캡션}
+
+클래스 옵션으로 \texttt{[figtabcapt]}를 지시하면 기본적으로 다음과 같은 모양으로 캡션이 바뀐다.
+
+\begin{boxedverbatim}
+\caption{그림과 표의 캡션}
+\end{boxedverbatim}
+\begin{minipage}{\linewidth}
+\centering
+<그림 1> \quad 그림과 표의 캡션
+\end{minipage}
+
+\medskip
+
+``그림 1'' 부분을 둘러싸는 delimiter를 다음 명령으로 바꿀 수 있다. 이 가운데
+\verb|\obCaptionFont|는 캡션 텍스트에 영향을 미치는 명령이 아니고 라벨의 delimiter를
+식자하는 데만 사용되는 폰트 명령이다.
+\begin{boxedverbatim}
+\renewcommand*\obCaptionnameOpen{[}
+\renewcommand*\obCaptionnameClose{]}
+\obCaptionFont{\sffamily\bfseries}
+\end{boxedverbatim}
+\renewcommand*\obCaptionnameOpen{[}
+\renewcommand*\obCaptionnameClose{]}
+\obCaptionFont{\sffamily}
+
+\begin{figure}[h]
+\caption{그림과 표의 캡션}
+\end{figure}
+
+이를 제외한 다른 부분, 이를테면 label과 caption text의 폰트를 바꾸는 것 등은 memoir의
+해당 명령을 이용한다. 즉, \verb|\captionnamefont|, \verb|\captiontitlefont| 등을 이용하라는 것이다.
+
+\section{보조 패키지}
 
 \subsection{chaptertoc}
 
@@ -1497,83 +1642,19 @@ oblivoir는 한국어 문서에 대하여 기본 행간을 넓혀서 조판하�
 # texdoc ob-mathleading
 \end{verbatim}
 
-\subsection{\cs{ReleaseMacros} 명령}
+\subsection{oblivoir-misc}
 
-여러 \LaTeX\ 패키지를 로드하여 쓰다 보면 어떤 명령이 이미 정의되었다는 에러를
-만날 때가 있다. 이럴 때는 해당 패키지를 로딩하기 전에
-\begin{boxedverbatim}
-\ReleaseMacros{\XeTeX,\XeLaTeX}
-\end{boxedverbatim}
-과 같이 선언하여 이미 정의된 매크로를 무력화하는 시도를 해볼 수 있다.
-둘 이상의 명령을 쉼표로 구분하여 지정할 수 있다.
-이 명령은 preamble에서만 쓰게 되어 있다.
+\marginpar{v3.1}
+시험적인 기능이나 그다지 중요하지 않은 명령을 포함하고 있는 
+부수 패키지이다. 현재 다음 두 가지 명령이 정의되어 있다.
 
-
-\subsection{oblivoirlist}
-
-나열 환경의 아이템 간 간격을 제어하기 위하여 \verb|\oblivoirlist|와 
-\verb|\oblivoirlists| 명령을 마련하였다. \verb|\oblivoirlists|는
-해당 선언 이후 모든 나열환경을 \verb|\oblivoirlist| 간격으로 만든다.
-
-\begin{itemize}\oblivoirlist
-\item 배
-\item 사과
-\item 복숭아
-\end{itemize}
-
-다음 보기와 비교하여 보아라.
-
-\begin{itemize}
-\item 배
-\item 사과
-\item 복숭아
-\end{itemize}
-
-\textsf{memoir}의 \verb|\firmlist|와 \verb|\tightlist|는 여전히 동작한다.
-
-\subsection{sidefootnote와 footnotesinmargin}
-
-\footnotesinmargin
-oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 고쳤다.\footnote{이 각주는 마진에 놓인다.} 
-
-\verb|\sidefootnote|에서 발생하던 문제점도 해결하였다.\sidefootnote{이 각주는 사이드 풋노트이다.}
-
-\footnotesatfoot
-\textsf{memoir} 설명서에 설명된 것과 동일하게 동작한다.\footnote{상세한 것은 memoir manual을 볼 것.}
-
-\subsection{[figtabcapt] 그림과 표의 캡션}
-
-클래스 옵션으로 \texttt{[figtabcapt]}를 지시하면 기본적으로 다음과 같은 모양으로 캡션이 바뀐다.
-
-\begin{boxedverbatim}
-\caption{그림과 표의 캡션}
-\end{boxedverbatim}
-\begin{minipage}{\linewidth}
-\centering
-<그림 1> \quad 그림과 표의 캡션
-\end{minipage}
-
-\medskip
-
-``그림 1'' 부분을 둘러싸는 delimiter를 다음 명령으로 바꿀 수 있다. 이 가운데
-\verb|\obCaptionFont|는 캡션 텍스트에 영향을 미치는 명령이 아니고 라벨의 delimiter를
-식자하는 데만 사용되는 폰트 명령이다.
-\begin{boxedverbatim}
-\renewcommand*\obCaptionnameOpen{[}
-\renewcommand*\obCaptionnameClose{]}
-\obCaptionFont{\sffamily\bfseries}
-\end{boxedverbatim}
-\renewcommand*\obCaptionnameOpen{[}
-\renewcommand*\obCaptionnameClose{]}
-\obCaptionFont{\sffamily}
-
-\begin{figure}[h]
-\caption{그림과 표의 캡션}
-\end{figure}
-
-
-이를 제외한 다른 부분, 이를테면 label과 caption text의 폰트를 바꾸는 것 등은 memoir의
-해당 명령을 이용한다. 즉, \verb|\captionnamefont|, \verb|\captiontitlefont| 등을 이용하라는 것이다.
+\begin{description}
+\item[tikz pagenode] \texttt{tikz}를 로드했을 때 \texttt{current page}
+노드가 memoir의 레이아웃과 미묘하게 엇갈리는 것을 보정해준다. 이것은 oblivoir-misc를 로드하면 (tikz가 불렸을 때) 자동으로 처리한다.
+\item[\cs{texthl}] 한글 문자에 \texthl{하이라이트}해준다. 실험적인 기능으로
+현재 \XeLaTeX 일 때에 정상 동작한다. 하이라이트할 색상은 \cs{obhlcolor}, 높이와
+위치는 \cs{obhlheight}, \cs{obhlraisedim}을 재정의하여 설정할 수 있다.
+\end{description}
 
 
 \section{HTML 제작}
@@ -1762,9 +1843,15 @@ Lua\TeX 과 \XeTeX 이라는 유니코드 텍 엔진의 등장은, 이러한 모
 
 \section{변경 이력}
 
+
+2022년의 3.1 버전은 fapapersize에 새로운 명령을 추가하고 약간의
+개선된 기능을 포함하였다. 
+
+\noindent
 2021년의 3.0 버전은 상당히 많은 버그와 의도와 다른 동작을 수정하고 새로운 
 기능을 추가하였다.
 
+\noindent
 2020년의 2.2 버전은 그 동안 알려진 몇 가지 버그를 수정하고 약간의 기능을
 추가하는 데 그쳤다.
 

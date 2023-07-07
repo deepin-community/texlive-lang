@@ -24,10 +24,10 @@
 %% Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %% 
 \ProvidesLanguage{french}
-         [2021/07/20 v3.5m French support from the babel system]
+         [2023/01/02 v3.5p French support from the babel system]
 %%
 %%  Babel package for LaTeX version 2e
-%%  Copyright © 1996-2021
+%%  Copyright © 1996-2022
 %%            by Daniel Flipo <daniel (dot) flipo (at) free (dot) fr>
 %%
 \LdfInit\CurrentOption{FBclean@on@exit}
@@ -199,8 +199,8 @@
     \ifFB@luatex@punct
       \edef\bbl@tempa{\detokenize\expandafter{\languagename}}%
       \edef\bbl@tempb{\detokenize{french}}%
-      \ifx\bbl@tempa\bbl@tempb \FB@dialect=0 \relax
-      \else                    \FB@dialect=1 \relax
+      \ifx\bbl@tempa\bbl@tempb \FB@dialect=\z@
+      \else                    \FB@dialect=\@ne
       \fi
       \ifdefined\FB@once\else
         \set@glue@table{colon}%
@@ -227,27 +227,22 @@
   }
 \fi
 \newif\ifFB@spacing \FB@spacingtrue
-\newcommand*{\FB@spacing@on}{%
-  \ifFB@luatex@punct
-    \FB@spacing=1 \relax
-  \else
-    \FB@spacingtrue
-  \fi}
-\newcommand*{\FB@spacing@off}{%
-  \ifFB@luatex@punct
-    \FB@spacing=0 \relax
-  \else
-    \FB@spacingfalse
-  \fi}
+\ifFB@luatex@punct
+  \newcommand*{\FB@spacing@on}{\FB@spacing=\@ne}
+  \newcommand*{\FB@spacing@off}{\FB@spacing=\z@}
+\else
+  \newcommand*{\FB@spacing@on}{\FB@spacingtrue}
+  \newcommand*{\FB@spacing@off}{\FB@spacingfalse}
+\fi
 \ifFB@luatex@punct
   \ifdefined\newluafunction\else
     \input ltluatex.tex
   \fi
-  \newattribute\FB@spacing      \FB@spacing=1 \relax
-  \newattribute\FB@addDPspace   \FB@addDPspace=1 \relax
-  \newattribute\FB@addGUILspace \FB@addGUILspace=0 \relax
-  \newattribute\FB@ucsNBSP      \FB@ucsNBSP=0 \relax
-  \newattribute\FB@dialect      \FB@dialect=0 \relax
+  \newattribute\FB@spacing      \FB@spacing=\@ne
+  \newattribute\FB@addDPspace   \FB@addDPspace=\@ne
+  \newattribute\FB@addGUILspace \FB@addGUILspace=\z@
+  \newattribute\FB@ucsNBSP      \FB@ucsNBSP=\z@
+  \newattribute\FB@dialect      \FB@dialect=\z@
   \ifLaTeXe
     \PackageInfo{french.ldf}{No need for active punctuation
                  characters\MessageBreak with this version
@@ -290,23 +285,6 @@
   }
 \fi
 \ifFB@luatex@punct
-  \newcommand*{\FB@luatex@punct@french}{%
-     \babel@save\shorthandon
-     \babel@save\shorthandoff
-     \def\shorthandoff##1{%
-        \ifx\PackageWarning\@undefined
-          \fb@warning{\noexpand\shorthandoff{;:!?} is helpless with
-           LuaTeX,\\ use \noexpand\NoAutoSpacing
-           *inside a group* instead.}%
-        \else
-          \PackageWarning{french.ldf}{\protect\shorthandoff{;:!?}
-            is helpless with LuaTeX,\MessageBreak
-            use \protect\NoAutoSpacing \space *inside a group*
-            instead;\MessageBreak reported}%
-        \fi}%
-     \def\shorthandon##1{}%
-  }
-  \addto\extrasfrench{\FB@luatex@punct@french}
   \def\activate@luatexpunct{%
     \directlua{%
       FR_fr = \the\l@french ; FR_ca = \the\l@acadian ;
@@ -347,25 +325,12 @@
      \x}
    \def\FB@charlist{"21,"3A,"3B,"3F,"AB,"BB,"28,"5B,"A0,"202F,%
                     "29,"5D,"7B,"7D,"2C,"2D,"2E,"22,"25,"27,"60,"2019}
+%% \changes{v3.5o}{2022/11/03}{\cs{shorthandon} and \cs{shorthandoff}
    \newcommand*{\FB@xetex@punct@french}{%
      \babel@savevariable{\XeTeXinterchartokenstate}%
-     \babel@save{\shorthandon}%
-     \babel@save{\shorthandoff}%
      \bbl@for\FB@char\FB@charlist
           {\FBsavevariable@loop{\XeTeXcharclass}{\FB@char}}%
-     \def\shorthandoff##1{%
-       \ifx\PackageWarning\@undefined
-         \fb@warning{\noexpand\shorthandoff{;:!?} is helpless with
-           XeTeX,\\ use \noexpand\NoAutoSpacing
-           *inside a group* instead.}%
-       \else
-         \PackageWarning{french.ldf}{\protect\shorthandoff{;:!?}
-           is helpless with XeTeX,\MessageBreak
-           use \protect\NoAutoSpacing\space *inside a group*
-           instead;\MessageBreak reported}%
-       \fi}%
-      \def\shorthandon##1{}%
-     \XeTeXinterchartokenstate=1
+     \XeTeXinterchartokenstate=\@ne
      \XeTeXcharclass `\: = \FB@punctthick
      \XeTeXinterchartoks \z@ \FB@punctthick = {%
            \ifFB@spacing\ifhmode\FDP@colonspace\fi\fi}%
@@ -490,11 +455,11 @@
 \fi
 \newif\ifFBAutoSpacePunctuation  \FBAutoSpacePunctuationtrue
 \def\autospace@beforeFDP{%
-  \ifFB@luatex@punct\FB@addDPspace=1 \fi
+  \ifFB@luatex@punct \FB@addDPspace=\@ne \fi
   \def\FDP@thinspace{\penalty\@M\FBthinspace}%
   \def\FDP@colonspace{\penalty\@M\FBcolonspace}}
 \def\noautospace@beforeFDP{%
-  \ifFB@luatex@punct\FB@addDPspace=0 \fi
+  \ifFB@luatex@punct \FB@addDPspace=\z@ \fi
   \let\FDP@thinspace\@empty
   \let\FDP@colonspace\@empty}
 \ifLaTeXe
@@ -542,11 +507,11 @@
 \newif\ifFBucsNBSP
 \ifFB@luatex@punct
   \DeclareRobustCommand*{\@FB@og}{\leavevmode
-          \bgroup\FB@spacing=0 \guillemotleft\egroup
+          \bgroup\FB@spacing=\z@ \guillemotleft\egroup
           \ifFBucsNBSP\FBgspchar\else\FB@guillspace\fi}
   \DeclareRobustCommand*{\@FB@fg}{\ifdim\lastskip>\z@\unskip\fi
           \ifFBucsNBSP\FBgspchar\else\FB@guillspace\fi
-          \bgroup\FB@spacing=0 \guillemotright\egroup}
+          \bgroup\FB@spacing=\z@ \guillemotright\egroup}
 \fi
 \ifFB@xetex@punct
   \DeclareRobustCommand*{\@FB@og}{\leavevmode
@@ -631,15 +596,15 @@
     \@ogi #1\@fgi
   \or
     \ifx\FBeverylineguill\FBguillopen
-      \def\FBeveryline@quote{\FB@addGUILspace=0 \guillemotleft
-                             \FB@guillspace}%
+      \def\FBeveryline@quote{\FB@addGUILspace=\z@
+                             \guillemotleft\FBguillspace}%
       \localleftbox{\FBeveryline@quote}%
       \let\FBeverypar@quote\relax
       \@ogi #1\ifFBcloseguill\@fgi\fi
     \else
       \ifx\FBeverylineguill\FBguillclose
-        \def\FBeveryline@quote{\FB@addGUILspace=0 \guillemotright
-                               \FB@guillspace}%
+        \def\FBeveryline@quote{\FB@addGUILspace=\z@
+                               \guillemotright\FBguillspace}%
         \localleftbox{\FBeveryline@quote}%
         \let\FBeverypar@quote\relax
         \@ogi #1\ifFBcloseguill\@fgi\fi
@@ -772,12 +737,16 @@
 \DeclareRobustCommand*{\nos}{%
     \texorpdfstring{n\up{os}\FBmedkern}{n\textdegree\space}}
 \ifLaTeXe
+  \DeclareRobustCommand*{\bname}[1]{%
+    \texorpdfstring{\leavevmode\begingroup\kern0pt #1\endgroup}{#1}%
+  }
   \DeclareRobustCommand*{\bsc}[1]{%
     \texorpdfstring{\leavevmode\begingroup\kern0pt \scshape #1\endgroup}%
                    {\textsc{#1}}%
   }
 \else
-  \newcommand*{\bsc}[1]{\leavevmode\begingroup\kern0pt #1\endgroup}
+  \newcommand*{\bname}[1]{\leavevmode\begingroup\kern0pt #1\endgroup}
+  \let\bsc\bname
 \fi
 \ifFBunicode
   \providecommand*{\textbackslash}{{\char"005C}}
@@ -846,16 +815,23 @@
   \newcommand*{\dec@math@comma}{\mathcode`\,=\dec@mcc}
   \newcommand*{\std@math@comma}{\mathcode`\,=\std@mcc}
 \fi
+\let\dec@m@c\relax
+\newif\if@FBpreamble \ifLaTeXe \@FBpreambletrue \fi
+\newif\if@preamble@DecimalMathComma
 \newcommand*{\DecimalMathComma}{%
-  \ifFB@icomma
-    \PackageWarning{french.ldf}{%
-      icomma package loaded, \protect\DecimalMathComma\MessageBreak
-      does nothing.  Reported}%
+  \if@FBpreamble \@preamble@DecimalMathCommatrue
   \else
-    \ifFBfrench
-      \dec@math@comma
-      \expandafter\addto\csname extras\languagename\endcsname
-        {\dec@math@comma}%
+    \ifFB@icomma
+      \PackageWarning{french.ldf}{%
+        icomma package loaded, \protect\DecimalMathComma\MessageBreak
+        does nothing.  Reported}%
+    \else
+      \ifFBfrench
+        \dec@math@comma
+        \let\dec@m@c\dec@math@comma
+        \expandafter\addto\csname extras\languagename\endcsname
+          {\dec@m@c}%
+      \fi
     \fi
   \fi
 }
@@ -865,19 +841,36 @@
       icomma package loaded, \protect\StandardMathComma\MessageBreak
       does nothing.  Reported}%
   \else
-    \std@math@comma
-    \expandafter\addto\csname extras\languagename\endcsname
-      {\std@math@comma}%
+    \ifFBfrench
+      \std@math@comma
+      \let\dec@m@c\relax
+    \fi
   \fi
 }
 \ifLaTeXe
-  \AtBeginDocument{\@ifpackageloaded{icomma}%
-                      {\FB@icommatrue}%
-                      {\addto\noextrasfrench{\std@math@comma}%
-                       \ifdefined\noextrasacadian
-                         \addto\noextrasacadian{\std@math@comma}%
-                       \fi
-                      }%
+  \AtBeginDocument{%
+    \@FBpreamblefalse
+    \@ifpackageloaded{icomma}%
+       {\FB@icommatrue
+        \if@preamble@DecimalMathComma
+          \PackageWarning{french.ldf}{%
+            icomma package loaded, \protect\DecimalMathComma%
+            \MessageBreak does nothing.  Reported}%
+        \fi
+       }%
+       {\if@preamble@DecimalMathComma
+          \ifFB@mainlanguage@FR \dec@math@comma \fi
+          \let\dec@m@c\dec@math@comma
+          \addto\extrasfrench{\dec@m@c}%
+          \ifdefined\extrasacadian
+            \addto\extrasacadian{\dec@m@c}%
+          \fi
+        \fi
+        \addto\noextrasfrench{\std@math@comma}%
+        \ifdefined\noextrasacadian
+           \addto\noextrasacadian{\std@math@comma}%
+        \fi
+       }%
   }
 \else
   \addto\noextrasfrench{\std@math@comma}
@@ -1176,8 +1169,6 @@
     \FBFrenchFootnotestrue
     \FBAutoSpaceFootnotestrue
     \FBCustomiseFigTabCaptionstrue
-  \else
-    \FBGlobalLayoutFrenchfalse
   \fi
   \RequirePackage{keyval}%
   \define@key{FB}{ShowOptions}[true]%
@@ -1187,7 +1178,7 @@
              \csname FBStandardLayout#1\endcsname
            \else
              \PackageWarning{french.ldf}%
-               {Option `StandardlLayout' skipped:\MessageBreak
+               {Option `StandardLayout' skipped:\MessageBreak
                 French is *not* babel's last option.\MessageBreak
                 Reported}%
            \fi
@@ -1199,7 +1190,6 @@
              \FBIndentFirstfalse
              \FBFrenchFootnotesfalse
              \FBAutoSpaceFootnotesfalse
-             \FBGlobalLayoutFrenchfalse
            \else
              \FBStandardListSpacingfalse
              \FBStandardItemizeEnvfalse
@@ -1359,7 +1349,7 @@
   \define@key{FB}{UnicodeNoBreakSpaces}[true]%
           {\ifFB@luatex@punct
              \csname FBucsNBSP#1\endcsname
-             \ifFBucsNBSP \FB@ucsNBSP=1 \fi
+             \ifFBucsNBSP \FB@ucsNBSP=\@ne \fi
            \else
              \FBWarning{Option `UnicodeNoBreakSpaces' skipped:%
                         \MessageBreak this option is for
@@ -1505,6 +1495,14 @@
   \def\FB@ufl{\update@frenchlists}
   \ifFB@mainlanguage@FR
     \update@frenchlists
+  \else
+    \ifFBStandardItemizeEnv
+    \else
+      \PackageWarning{french.ldf}%
+        {babel-french will not customize lists' layout\MessageBreak
+         when French is not the main language,\MessageBreak
+         reported}%
+    \fi
   \fi
   \ifFBAutoSpacePunctuation
     \autospace@beforeFDP
@@ -1658,7 +1656,7 @@
       \addtolength{\partopsep}{\@tempdima}%
 }
 \def\listFB#1#2{\listORI{#1}{\FB@listVsettings #2}}
-\let\endlistFB\endlist
+\let\endlistFB\endlistORI
 \newcommand*{\FrenchLabelItem}{\textemdash}
 \newcommand*{\Frlabelitemi}{\FrenchLabelItem}
 \newcommand*{\Frlabelitemii}{\FrenchLabelItem}
@@ -1775,7 +1773,7 @@
                 \itemindent=\descindentFB
               \else
                 \itemindent=-\leftmargin
-                \ifnum\@listdepth=1
+                \ifnum\@listdepth=\@ne
                   \ifdim\descindentFB=\z@
                     \ifdim\listindentFB>\z@
                       \leftmargini=\listindentFB
@@ -1814,22 +1812,13 @@
 }
 \addto\extrasfrench{\bbl@frenchlistlayout}
 \def\bbl@frenchindent{%
-  \ifFBGlobalLayoutFrench
-  \else
-    \babel@save\@afterindentfalse
-  \fi
+  \ifFBGlobalLayoutFrench\else\babel@save\@afterindentfalse\fi
   \ifFBIndentFirst
+    \ifFB@mainlanguage@FR\else\babel@save\@afterindentfalse\fi
     \let\@afterindentfalse\@afterindenttrue
     \@afterindenttrue
   \fi}
-\def\bbl@nonfrenchindent{%
-  \ifFBGlobalLayoutFrench
-    \ifFBIndentFirst
-      \@afterindenttrue
-    \fi
-  \fi}
 \addto\extrasfrench{\bbl@frenchindent}
-\addto\noextrasfrench{\bbl@nonfrenchindent}
 \AtBeginDocument{\@ifpackageloaded{bigfoot}%
                    {\PackageInfo{french.ldf}%
                      {bigfoot package in use.\MessageBreak
@@ -1955,23 +1944,6 @@
 \FBclean@on@exit
 \ldf@finish\CurrentOption
 \let\loadlocalcfg\FB@llc
-%%
-%% \CharacterTable
-%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
-%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
-%%   Digits        \0\1\2\3\4\5\6\7\8\9
-%%   Exclamation   \!     Double quote  \"     Hash (number) \#
-%%   Dollar        \$     Percent       \%     Ampersand     \&
-%%   Acute accent  \'     Left paren    \(     Right paren   \)
-%%   Asterisk      \*     Plus          \+     Comma         \,
-%%   Minus         \-     Point         \.     Solidus       \/
-%%   Colon         \:     Semicolon     \;     Less than     \<
-%%   Equals        \=     Greater than  \>     Question mark \?
-%%   Commercial at \@     Left bracket  \[     Backslash     \\
-%%   Right bracket \]     Circumflex    \^     Underscore    \_
-%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
-%%   Right brace   \}     Tilde         \~}
-%%
 \endinput
 %%
 %% End of file `french.ldf'.

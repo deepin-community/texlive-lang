@@ -2,7 +2,7 @@
 % !TeX program  = XeLaTeX
 % !TeX encoding = UTF-8
 %
-% Copyright (C) 2017--2020 by Xiangdong Zeng <xdzeng96@gmail.com>
+% Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either
@@ -21,7 +21,6 @@
 % This work consists of the files fduthesis.dtx,
 %                                 fduthesis-doc.dtx,
 %                                 fduthesis-logo.dtx,
-%                                 fduthesis-template.tex,
 %           and the derived files fduthesis.ins,
 %                                 fduthesis.cls,
 %                                 fduthesis-en.cls,
@@ -47,7 +46,7 @@
 The `fduthesis` Class
 =====================
 
-*LaTeX thesis template for Fudan University, v0.7e*
+*LaTeX thesis template for Fudan University, v0.8*
 
 Overview
 --------
@@ -67,7 +66,7 @@ The documentation can be found in
 [fduthesis-en.pdf](http://mirrors.ctan.org/macros/latex/contrib/fduthesis/fduthesis-en.pdf)
 (in English).
 
-GitHub re­pos­i­tory: <https://github.com/stone-zeng/fduthesis>.
+GitHub repository: <https://github.com/stone-zeng/fduthesis>.
 
 Installation
 ------------
@@ -124,7 +123,7 @@ version.
 
 -----
 
-Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
+Copyright (C) 2017&ndash;2022 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %</readme>
 %
 %<*internal>
@@ -136,13 +135,13 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %</internal>
 %
 %<*install>
-\input l3docstrip.tex
+\input docstrip.tex
 \keepsilent
 \askforoverwritefalse
 
 \preamble
 
-    Copyright (C) 2017--2020 by Xiangdong Zeng <xdzeng96@gmail.com>
+    Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
 
     This work may be distributed and/or modified under the
     conditions of the LaTeX Project Public License, either
@@ -161,7 +160,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     This work consists of the files fduthesis.dtx,
                                     fduthesis-doc.dtx,
                                     fduthesis-logo.dtx,
-                                    fduthesis-template.tex,
               and the derived files fduthesis.ins,
                                     fduthesis.cls,
                                     fduthesis-en.cls,
@@ -194,12 +192,10 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
                                 \from{\jobname-logo.dtx}{ex-logo}}
     \file{\jobname-cover.tex}  {\from{\jobname.dtx}{cover}
                                 \from{\jobname-logo.dtx}{cover}}
-%</install>
 %<*internal>
   \usedir{source/latex/fduthesis}
     \file{\jobname.ins}        {\from{\jobname.dtx}{install}}
 %</internal>
-%<*install>
   \usedir{doc/latex/fduthesis}
   \nopreamble\nopostamble
     \file{README.md}           {\from{\jobname.dtx}{readme}}
@@ -233,10 +229,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 \fi
 %</internal>
 %
-%<class|class-en|doc|logo>\NeedsTeXFormat{LaTeX2e}
-%<class|class-en|doc|logo>\RequirePackage{expl3}
+%<class|class-en|doc|logo>\NeedsTeXFormat{LaTeX2e}[2020/10/01]
 %<*!(driver|install|ex-logo|cover)>
-%<!readme>\GetIdInfo $Id: fduthesis.dtx 0.7e 2020-08-30 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
+%<!readme>\GetIdInfo $Id: fduthesis.dtx 0.8 2022-09-04 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
 %<class>  {Thesis template for Fudan University}
 %<class>\ProvidesExplClass{\ExplFileName}
 %<class-en>  {Thesis template for Fudan University (English version)}
@@ -252,7 +247,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %<*driver>
 % \PassOptionsToPackage{showframe}{geometry}
 \documentclass{fdudoc}
-\usepackage{multirow,xeCJKfntef,xpinyin}
+\usepackage{xeCJKfntef}
 \hypersetup{
   pdftitle  = {fduthesis: 复旦大学论文模板},
   pdfauthor = {曾祥东}}
@@ -274,16 +269,15 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \def\FSFW{{\xeCJKsetup{PunctStyle=banjiao}．}}
 %^^A!
 
-\title{\textcolor{MaterialIndigo800}{%
-  \textbf{fduthesis: 复旦大学论文\xpinyin[font=\sffamily,format=\color{MaterialIndigo800}]{模}{mu2}板}}}
+\title{\textcolor{MaterialIndigo800}{\textbf{fduthesis: 复旦大学论文模板}}}
 \author{曾祥东}
-\date{2020/08/30\quad v0.7e%
+\date{2022/09/04\quad v0.8%
   \thanks{\url{https://github.com/stone-zeng/fduthesis}.}}
 %^^A! \title{\textcolor{MaterialIndigo800}{%
 %^^A!   \textbf{The \textsf{fduthesis} Class \\
 %^^A!     \LaTeX{} Thesis Template for Fudan University}}}
 %^^A! \author{Xiangdong Zeng}
-%^^A! \date{2020/08/30\quad v0.7e%
+%^^A! \date{2022/09/04\quad v0.8%
 %^^A!   \thanks{\url{https://github.com/stone-zeng/fduthesis}.}}
 %^^A!
 
@@ -323,24 +317,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \changes{v0.7a}{2018/04/09}{更新文档，发布至 CTAN。}
 % \changes{v0.7b}{2018/04/29}{支持 \TeXLive{} 2018。}
 % \changes{v0.7b}{2018/05/06}{将校名、校徽图片添加至发行版。}
-%
-% \CheckSum{0}
-%
-% \CharacterTable
-%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
-%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
-%   Digits        \0\1\2\3\4\5\6\7\8\9
-%   Exclamation   \!     Double quote  \"     Hash (number) \#
-%   Dollar        \$     Percent       \%     Ampersand     \&
-%   Acute accent  \'     Left paren    \(     Right paren   \)
-%   Asterisk      \*     Plus          \+     Comma         \,
-%   Minus         \-     Point         \.     Solidus       \/
-%   Colon         \:     Semicolon     \;     Less than     \<
-%   Equals        \=     Greater than  \>     Question mark \?
-%   Commercial at \@     Left bracket  \[     Backslash     \\
-%   Right bracket \]     Circumflex    \^     Underscore    \_
-%   Grave accent  \`     Left brace    \{     Vertical bar  \|
-%   Right brace   \}     Tilde         \~}
 %
 %^^A 禁止使用 " 符号作为抄录文本缩略符
 % \DeleteShortVerb\"
@@ -389,28 +365,21 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \section{Introduction}
 %^^A!
 %
-% 目前，在网上可以找到的复旦大学 \LaTeX{} 论文模板主要有以下这些：
+% 本模板编写之初，可以找到的复旦大学 \LaTeX{} 论文模板有以下这些：
 % \begin{itemize}
-%   \item 数学科学学院 2001 级的何力同学和李湛同学在 2005 年根据
-%     学校要求所设计的 \cls{毕业论文格式 tex04 版}，以及 2008 年
-%     张越同学修改之后的 \cls{毕业论文格式 tex08 版}，这是专为
-%     数院本科生撰写毕业论文而设计的
-%     \scite{数院毕业论文格式,数院毕业论文格式更新}；
-%   \item Pandoxie 编写的 \cls{FDU-Thesis-Latex}
-%     \scite{pandoxie2014fduthesislatex}，基本满足了博士（硕士）
-%     毕业论文格式要求，使用人数较多；
-%   \item richarddzh 编写的硕士论文模板 \cls{fudan-thesis}
-%     \scite{richard2016fudanthesis}。
+%   \item 数学科学学院的本科毕业论文模版 \cite{数院本科毕业论文写作模板}，主要贡献者为 2001 级的
+%     何力同学、李湛同学和 2004 级的张越同学；
+%   \item Pandoxie 编写的 \cls{FDU-Thesis-Latex} \cite{pandoxie2014fduthesislatex}，基本满足了博士
+%     （硕士）毕业论文格式要求，在当时使用人数较多；
+%   \item richarddzh 编写的硕士论文模板 \cls{fudan-thesis} \cite{richard2016fudanthesis}。
 % \end{itemize}
-% 以上这些模板大都没有经过系统的设计，也鲜有后续维护。相比之下，
-% 清华大学 \scite{thuthesis}、重庆大学 \scite{cquthesis}、
-% 中国科学技术大学 \scite{ustcthesis} 中国科学院大学 \scite{ucasthesis}
-% 以及友校上海交通大学 \scite{sjtuthesis}等，都有成熟、
-% 稳定的解决方案，值得参考。
+% 以上模板大都没有经过系统的设计，也缺乏后续维护。相比之下，清华大学 \cite{thuthesis}、
+% 北京大学 \cite{pkuthss}、重庆大学 \cite{cquthesis}、中国科学技术大学 \cite{ustcthesis}、
+% 中国科学院大学 \cite{ucasthesis} 以及友校上海交通大学 \cite{sjtuthesis} 等，都有较为成熟、稳定
+% 的解决方案，也积累了广泛的用户基础，值得参考与借鉴。
 %
-% 本模板将借鉴前辈经验，重新设计，并使用 \LaTeX3
-% \scite{source3} 编写，以适应 \TeX{} 技术发展潮流；
-% 同时还将构建一套简洁的接口，方便用户使用。
+% 考虑到开发与持续维护的需要，本模板使用 \LaTeX3 \cite{source3} 语法编写。同时将构建一套简洁的
+% 接口，以方便用户使用。
 %^^A! \cls{fduthesis} is a thesis template for Fudan University.
 %^^A! This template is mostly written in \LaTeX3 syntax, and
 %^^A! provides a simple interface for users.
@@ -420,11 +389,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \subsection*{Getting started with \LaTeX{}}
 %^^A!
 %
-% 本文档并非是一份 \LaTeX{} 零基础教程。如果您是完完全全的新手，
-% 建议先阅读相关入门文档，如刘海洋编著的《\LaTeX{} 入门》
-% \scite{刘海洋2013latex入门} 第一章，或大名鼎鼎的“\pkg{lshort}”
-% \scite{lshort} 及其中文翻译版 \scite{lshort-zh-cn}。当然，
-% 网络上的入门教程多如牛毛，您可以自行选取。
+% 本文档不是一份 \LaTeX{} 零基础教程。如果缺乏使用 \LaTeX{} 的经验，建议先阅读有关入门文档，如
+% 刘海洋编著的《\LaTeX{} 入门》\cite{刘海洋2013latex入门} 第一章，或“\pkg{lshort}” \cite{lshort}
+% 及其中文翻译版 \cite{lshort-zh-cn}。当然，网络上的 \LaTeX{} 教程数量甚多，也可自行选取。
 %^^A! This documentation is \emph{not} a \LaTeX{} tutorial at
 %^^A! starter's level. If you are totally a newbie, please read some
 %^^A! introductions like the famous \pkg{lshort}. Of course, there
@@ -436,12 +403,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \subsection*{About this documentation}
 %^^A!
 %
-% 本文采用不同字体表示不同内容。无衬线字体表示宏包名称，如
-% \pkg{xeCJK} 宏包、\cls{fduthesis} 文档类等；等宽字体表示代码或
-% 文件名，如 \cs{fdusetup} 命令、\env{abstract} 环境、\TeX{} 文档
-% \file{thesis.tex} 等；带有尖括号的楷体（或西文斜体）表示命令参数，
-% 如 \meta{模板选项}、\meta{English title} 等。在使用时，参数两侧
-% 的尖括号不必输入。示例代码进行了语法高亮处理，以方便阅读。
+% 本文档采用不同字体表示不同内容。无衬线字体表示宏包名称，如 \pkg{xeCJK} 宏包、\cls{fduthesis}
+% 文档类等；等宽字体表示代码或文件名，如 \cs{fdusetup} 命令、\env{abstract} 环境、\TeX{} 文档
+% \file{thesis.tex} 等；带有尖括号的楷体（或西文斜体）表示命令参数，如 \meta{模板选项}、
+% \meta{English title} 等。在使用时，参数两侧的尖括号不必输入。示例代码进行了语法高亮处理，
+% 以方便阅读。
 %^^A! In this documentation, different typefaces are used to
 %^^A! represent different contents. Packages and classes are shown
 %^^A! in sans-serif font, e.g.\ \pkg{xeCJK} package and
@@ -454,9 +420,8 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! proper syntax highlighting so it will be much easier to read.
 %^^A!
 %
-% 在用户手册中，带有蓝色侧边线的为 \LaTeX{} 代码，而带有粉色侧边线
-% 的则为命令行代码，请注意区分。模板提供的选项、命令、环境等，
-% 均用横线框起，同时给出使用语法和相关说明。
+% 在用户手册中，带有蓝色侧边线的为 \LaTeX{} 代码，而带有粉色侧边线的则为命令行代码，请注意区分。
+% 模板提供的选项、命令、环境等，均列在左边栏并用横线框起，同时给出使用语法和相关说明。
 %^^A! \LaTeX{} code lines will have a blue line on their left, while
 %^^A! for command lines there will be a pink line. The options,
 %^^A! commands and environments in \cls{fduthesis} will be surrounded
@@ -466,12 +431,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % 本模板中的选项、命令或环境可以分为以下三类：
 % \begin{itemize}
-%   \item 名字后面带有 \rexptarget\rexpstar{} 的，表示只能在^^A
-%     \emph{中文模板}中使用；
-%   \item 名字后面带有 \exptarget\expstar{} 的，表示只能在^^A
-%     \emph{英文模板}中使用；
-%   \item 名字后面不带有特殊符号的，表示既可以在中文模板中使用，
-%     也可以在英文模板中使用。
+%   \item 名字后面带有 \rexptarget\rexpstar{} 的，表示只能在\emph{中文模板}中使用；
+%   \item 名字后面带有 \exptarget\expstar{} 的，表示只能在\emph{英文模板}中使用；
+%   \item 名字后面不带有特殊符号的，表示既可以在中文模板中使用，也可以在英文模板中使用。
 % \end{itemize}
 %^^A! The options, commands and environments in \cls{fduthesis} can be
 %^^A! divided into the following three types:
@@ -485,17 +447,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{itemize}
 %^^A!
 %
-% 代码实现主要面向对 \LaTeX{} 宏包开发感兴趣的用户。如果您有任何改进
-% 意见或者功能需求，欢迎前往 GitHub 仓库
-% \href{https://github.com/stone-zeng/fduthesis/issues}{提交 issue}。
-%^^A! If you want to read the implementation part, please turn to the
-%^^A! Chinese version. Any issues or feature requests can be submitted
-%^^A! in the \href{https://github.com/stone-zeng/fduthesis/issues}%
-%^^A! {GitHub repository}.
-%^^A!
-%
-% 文档的最后还提供了版本历史和代码索引，以供查阅。
-%
 % \section{安装}
 %^^A! \section{Installation}
 %^^A!
@@ -508,12 +459,17 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \subsubsection{Standard installation}
 %^^A!
 %
-% 如果没有特殊理由，始终建议您使用宏包管理器安装 \cls{fduthesis}。
-% 例如在 \TeXLive{} 中，执行（可能需要管理员权限）
+% 如果没有特殊理由，始终建议使用宏包管理器安装 \cls{fduthesis}。例如在 \TeXLive{} 中，执行（可能
+% 需要管理员权限）
 % \begin{shellexample}[morekeywords={tlmgr,install}]
 %   tlmgr install fduthesis
 % \end{shellexample}
-% 即可完成安装。
+% 即可完成安装。如果已经装有完整版的 \TeXLive{}，则 \cls{fduthesis} 应当已经包含在其中，此时即可
+% 直接使用，也可以执行
+% \begin{shellexample}[morekeywords={tlmgr,update},emph={--all}]
+%   tlmgr update --all
+% \end{shellexample}
+% 检查并更新全部宏包。
 %^^A! If there are no special reasons, it is always recommended to
 %^^A! install \cls{fduthesis} with a package manager. For example,
 %^^A! the following command will install the package in \TeXLive{}
@@ -523,8 +479,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{shellexample}
 %^^A!
 %
-% 在 \TeXLive{} 和 \MiKTeX{} 中，您还可以通过图形界面进行安装，
-% 此处不再赘述。
+% 在 \TeXLive{} 和 \MiKTeX{} 中，还可以通过图形界面进行安装和更新，此处不再赘述。
 %^^A! In \TeXLive{} and \MiKTeX{}, you can also install \cls{fduthesis}
 %^^A! through a graphical interface. It's rather simple and will not be
 %^^A! described here.
@@ -534,14 +489,12 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \subsubsection{Install manually}
 %^^A!
 %
-% 如果您需要从 CTAN 上自行下载并手动安装，较好的方法是使用 TDS
-% 安装包：
+% 如果需要从 CTAN 上自行下载并手动安装，可使用 TDS 安装包：
 % \begin{itemize}
 %   \item 从 CTAN 上下载 \cls{fduthesis} 的
-%     \href{http://mirror.ctan.org/install/macros/latex/contrib/fduthesis.tds.zip}{TDS 安装包}；
-%   \item 按目录结构将 \file{fduthesis.tds.zip} 中的文件复制到 \TeX{}
-%     发行版的本地 TDS 根目录；
-%   \item 执行 \bashcmd{mktexlsr} 刷新文件名数据库以完成安装。
+%     \href{https://mirror.ctan.org/install/macros/latex/contrib/fduthesis.tds.zip}{TDS 安装包}；
+%   \item 按目录结构将 \file{fduthesis.tds.zip} 中的文件复制到 \TeX{} 发行版的本地 TDS 根目录；
+%   \item 执行 \bashcmd{mktexlsr} 命令刷新文件名数据库以完成安装。
 % \end{itemize}
 %^^A! If you want to download the template from CTAN and install it
 %^^A! manually, the recommended way is to use the TDS ZIP file:
@@ -553,115 +506,86 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \item Run \bashcmd{mktexlsr} to update the ls-R database.
 %^^A! \end{itemize}
 %^^A
-% 您也可以从源代码直接生成模板（不推荐）：
+%
+% \subsubsection{开发版本}
+%^^A! \subsubsection{Development version}
+%^^A!
+%
+% CTAN 上仅提供了 \cls{fduthesis} 的稳定版，其更新可能较为滞后，一些 bug 常常不能得到及时修复。
+% 如果需要使用开发版（托管在 GitHub 上），可以使用模板提供的安装脚本：
 % \begin{itemize}
-%   \item 打开 \href{https://github.com/stone-zeng/fduthesis}^^A
-%     {项目主页}，点击“Clone or download”，并选择“Download ZIP”，
-%     下载 \file{fduthesis-master.zip}；如果您的电脑中安装有 git
-%     程序，也可通过以下命令直接克隆代码仓库：
-%     \begin{shellexample}[gobble=7,alsoletter={.},^^A
-%         morekeywords={git,clone}]
+%   \item 打开 \href{https://github.com/stone-zeng/fduthesis}{项目主页}，点击“Code”按钮，并选择
+%     “Download ZIP”，下载 \file{fduthesis-main.zip}；如果已经装有 Git 程序，也可通过以下命令直接
+%     克隆代码仓库：
+%     \begin{shellexample}[gobble=7,alsoletter={.},morekeywords={git,clone}]
 %       git clone https://github.com/stone-zeng/fduthesis.git
 %     \end{shellexample}
-%   \item 解压并进入到 \file{source} 文件夹，执行以下命令以生成
-%     模板的各组件：
-%     \begin{shellexample}[gobble=7,morekeywords={xetex}]
-%       xetex fduthesis.dtx
-%     \end{shellexample}
-%   \item 将生成的文档类（\file{.cls}）、宏包（\file{.sty}）以及
-%     参数配置文件（\file{.def}）复制到 \TeX{} 发行版本地 TDS 树
-%     的 \path{texmf-local/tex/latex/fduthesis/} 目录下，并执行
-%     \bashcmd{mktexlsr} 刷新文件名数据库，方可完成安装。
-%   \item 使用 \cls{fduthesis} 撰写论文时，您还需要从代码仓库下的
-%     \file{testfiles/support} 目录中复制 \file{fudan-name.pdf}
-%     文件至工作目录，以确保封面中的校名图片可以正确显示。
+%   \item 执行 \file{install-win.bat}（Windows 系统）或 \file{install-linux.sh}（Linux 或 macOS
+%     系统），所有需要的文件便会在 \file{thesis} 文件夹中生成。
 % \end{itemize}
-%^^A! Although not recommended, you may generate the whole template
-%^^A! from source code as well:
+%^^A! On CTAN, only the stable version of \cls{fduthesis} is provided, where new features and
+%^^A! bug fixes may not be included in time. To use the latest development version on GitHub,
+%^^A! you can use the install script:
 %^^A! \begin{itemize}
-%^^A!   \item Open the project's \href{https://github.com/stone-zeng/fduthesis}%
-%^^A!     {homepage}, click ``Clone or download'' and choose
-%^^A!     ``Download ZIP'' to download \file{fduthesis-master.zip}.
-%^^A!     If you have git program on your computer, you can also
-%^^A!     clone the repository directly:
-%^^A!     \begin{shellexample}[gobble=5,alsoletter={.},%
-%^^A!         morekeywords={git,clone}]
+%^^A!   \item Open the project's \href{https://github.com/stone-zeng/fduthesis}{homepage}, click
+%^^A!     ``Code'' button and choose ``Download ZIP'' to download \file{fduthesis-main.zip}.
+%^^A!     If you have git program on your computer, you can also clone the repository directly:
+%^^A!     \begin{shellexample}[gobble=5,alsoletter={.},morekeywords={git,clone}]
 %^^A!       git clone https://github.com/stone-zeng/fduthesis.git
 %^^A!     \end{shellexample}
-%^^A!   \item Extract files, and get into the \file{source} directory.
-%^^A!     Run the following command to generate all the components:
-%^^A!     \begin{shellexample}[gobble=5,morekeywords={xetex}]
-%^^A!       xetex fduthesis.dtx
-%^^A!     \end{shellexample}
-%^^A!   \item Copy the generated document classes (\file{.cls}),
-%^^A!     packages (\file{.sty}) and configuration files (\file{.def})
-%^^A!     into \path{texmf-local/tex/latex/fduthesis/} under the local
-%^^A!     TDS tree of \TeX{} distribution. Then run \bashcmd{mktexlsr}
-%^^A!     to update the ls-R database.
-%^^A!   \item When writing your thesis with \cls{fduthesis}, you need
-%^^A!     to copy the file \file{fudan-name.pdf} (can be found in the
-%^^A!     \file{testfiles/support} directory of the Git repository) to
-%^^A!     your working directory, to make sure that the logo in the
-%^^A!     cover can be displayed correctly.
+%^^A!   \item Run \file{install-win.bat} (on Windows) or \file{install-linux.sh} (on Linux),
+%^^A!     then all the necessary files will be found in the \file{thesis} folder.
 %^^A! \end{itemize}
 %^^A!
 %
-% \subsubsection{扁平化安装}
-%^^A! \subsubsection{\cls{fduthesis} on the fly}
+% \subsubsection{Overleaf}
+%^^A! \subsubsection{Overleaf}
 %^^A!
 %
-% 如果您不希望安装本模板，但需要立刻使用，也可以使用模板提供的安装脚本。
-% 从 GitHub 上获取代码仓库后，执行 \file{install-win.bat}（Windows 系统）
-% 或 \file{install-linux.sh}（Linux 系统），所有需要的文件便会在
-% \file{thesis} 文件夹中生成。
-%^^A! If you don't want to install \cls{fduthesis} but need to use it
-%^^A! at once, you can try the installation scripts. Download the
-%^^A! repository from GitHub, run \file{install-win.bat} (on Windows)
-%^^A! or \file{install-linux.sh} (on Linux), then all the necessary
-%^^A! files will be found in the \file{thesis} folder.
+% \cls{fduthesis} 也提供了 \href{https://www.overleaf.com/latex/templates/fduthesis-latex-thesis-template-for-fudan-university/svtdhhstkmkt}{Overleaf 的版本}，
+% 打开链接并登录后即可直接编辑。
+%^^A! \cls{fduthesis} also provides the \href{https://www.overleaf.com/latex/templates/fduthesis-latex-thesis-template-for-fudan-university/svtdhhstkmkt}{Overleaf version}.
+%^^A! You can follow the link and login to edit directly on the web.
 %^^A!
 %
 % \subsection{模板组成}
 %^^A! \subsection{Composition of the template}
 %^^A!
 %
-% 本模板主要包含核心文档类、配置文件、附属宏包以及用户文档等几个
-% 部分，其具体组成见表~\ref{tab:fduthesis-components}。
-%^^A! There are several parts in \cls{fduthesis}, including kernel
-%^^A! template classes, configuration files, affiliated packages and
-%^^A! user's guides. More details are listed in table~%
-%^^A! \ref{tab:fduthesis-components}.
+% 本模板主要包含核心文档类、配置文件、附属宏包以及用户文档等几个部分，其具体组成见
+% 表~\ref{tab:fduthesis-components}。
+%^^A! There are several parts in \cls{fduthesis}, including kernel template
+%^^A! classes, configuration files, affiliated packages and user's guides.
+%^^A! More details are listed in table~\ref{tab:fduthesis-components}.
 %^^A!
 %
 % \begin{table}[ht]
 %   \caption{\cls{fduthesis} 的主要组成部分}
 %   \label{tab:fduthesis-components}
 %   \centering
-%   \begin{tabular}{lp{20em}}
+%   \small
+%   \begin{tabular}{ll}
 %     \toprule
-%     \textbf{文件} & \textbf{功能说明} \\
+%       \textbf{文件} & \textbf{功能说明} \\
 %     \midrule
-%     \file{fduthesis.cls}          & 中文模板文档类 \\
-%     \file{fduthesis-en.cls}       & 英文模板文档类 \\
-%     \file{fduthesis.def}          & 参数配置文件，用于设定
-%       \cls{fduthesis} 的初始参数，不建议您自行改动 \\
-%     \file{fdudoc.cls}             & 用户手册文档类 \\
-%     \file{fdulogo.sty}            & 复旦大学视觉识别系统 \\
-%     \file{fudan-emblem.pdf}       & 校徽 \\
-%     \file{fudan-emblem-new.pdf}   & 校徽（重修版） \\
-%     \file{fudan-name.pdf}         & 校名图片 \\
-%     \file{README.md}              & 简要自述 \\
-%     \ifdefined\FDUCODEDOC
-%       \file{fduthesis.pdf}        & 中文用户手册 \\
-%       \file{fduthesis-en.pdf}     & 英文用户手册 \\
-%       \file{fduthesis-code.pdf}   & 模板实现代码（本文档） \\
-%     \else
-%       \file{fduthesis.pdf}        & 中文用户手册（本文档） \\
-%       \file{fduthesis-en.pdf}     & 英文用户手册 \\
-%       \file{fduthesis-code.pdf}   & 模板实现代码 \\
-%     \fi
-%     \file{fduthesis-template.tex} & 空白模板，可据此为基础完成论文
-%       撰写 \\
+%       \file{fduthesis.cls}          & 中文模板文档类 \\
+%       \file{fduthesis-en.cls}       & 英文模板文档类 \\
+%       \file{fduthesis.def}          & 参数配置文件，用于设定初始参数，不建议自行改动 \\
+%       \file{fdudoc.cls}             & 用户手册文档类 \\
+%       \file{fdulogo.sty}            & 复旦大学视觉识别系统 \\
+%       \file{fudan-emblem.pdf}       & 校徽 \\
+%       \file{fudan-emblem-new.pdf}   & 校徽（重修版） \\
+%       \file{fudan-name.pdf}         & 校名图片 \\
+%       \file{README.md}              & 简要自述 \\
+%       \ifdefined\FDUCODEDOC
+%         \file{fduthesis.pdf}        & 中文用户手册 \\
+%         \file{fduthesis-en.pdf}     & 英文用户手册 \\
+%         \file{fduthesis-code.pdf}   & 模板实现代码（本文档） \\
+%       \else
+%         \file{fduthesis.pdf}        & 中文用户手册（本文档） \\
+%         \file{fduthesis-en.pdf}     & 英文用户手册 \\
+%         \file{fduthesis-code.pdf}   & 模板实现代码 \\
+%       \fi
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
@@ -671,24 +595,22 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \centering
 %^^A!   \begin{tabular}{lp{24em}}
 %^^A!     \toprule
-%^^A!     \textbf{Files} & \textbf{Descriptions} \\
+%^^A!       \textbf{Files} & \textbf{Descriptions} \\
 %^^A!     \midrule
-%^^A!     \file{fduthesis.cls}          & Document class for Chinese thesis. \\
-%^^A!     \file{fduthesis-en.cls}       & Document class for English thesis.\\
-%^^A!     \file{fduthesis.def}          & Configuration parameters file
-%^^A!       for \cls{fduthesis}. Please do \emph{not} modify it. \\
-%^^A!     \file{fdudoc.cls}             & Document class for user guides. \\
-%^^A!     \file{fdulogo.sty}            & Fudan University's visual identity. \\
-%^^A!     \file{fudan-emblem.pdf}       & University emblem. \\
-%^^A!     \file{fudan-emblem-new.pdf}   & University emblem (revised version). \\
-%^^A!     \file{fudan-name.pdf}         & Figure of university name. \\
-%^^A!     \file{README.md}              & The brief introduction. \\
-%^^A!     \file{fduthesis.pdf}          & User's guide in Chinese. \\
-%^^A!     \file{fduthesis-en.pdf}       & User's guide in English (this
-%^^A!       document). \\
-%^^A!     \file{fduthesis-code.pdf}     & Code implementation. \\
-%^^A!     \file{fduthesis-template.tex} & An empty thesis template, and you can
-%^^A!       write your thesis based on it. \\
+%^^A!       \file{fduthesis.cls}          & Document class for Chinese thesis. \\
+%^^A!       \file{fduthesis-en.cls}       & Document class for English thesis.\\
+%^^A!       \file{fduthesis.def}          & Configuration parameters file
+%^^A!         for \cls{fduthesis}. Please do \emph{not} modify it. \\
+%^^A!       \file{fdudoc.cls}             & Document class for user guides. \\
+%^^A!       \file{fdulogo.sty}            & Fudan University's visual identity. \\
+%^^A!       \file{fudan-emblem.pdf}       & University emblem. \\
+%^^A!       \file{fudan-emblem-new.pdf}   & University emblem (revised version). \\
+%^^A!       \file{fudan-name.pdf}         & Figure of university name. \\
+%^^A!       \file{README.md}              & The brief introduction. \\
+%^^A!       \file{fduthesis.pdf}          & User's guide in Chinese. \\
+%^^A!       \file{fduthesis-en.pdf}       & User's guide in English (this
+%^^A!         document). \\
+%^^A!       \file{fduthesis-code.pdf}     & Code implementation. \\
 %^^A!     \bottomrule
 %^^A!   \end{tabular}
 %^^A! \end{table}
@@ -702,12 +624,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \subsection{Getting started}
 %^^A!
 %
-% 以下是一份简单的 \TeX{} 文档，它演示了 \cls{fduthesis}
-% 的最基本用法：
+% 以下是一份简单的 \TeX{} 文档，它演示了 \cls{fduthesis} 的最基本用法：
 %^^A! Here is a minimal \TeX{} file for \cls{fduthesis}:
 %^^A+
-% \begin{latexexample}[deletetexcs={\documentclass},%
-%     moretexcs={\chapter},morekeywords={\documentclass},%
+% \begin{latexexample}[deletetexcs={\documentclass},
+%     moretexcs={\chapter},morekeywords={\documentclass},
 %     emph={[2]document}]
 %   % thesis.tex
 %   \documentclass{fduthesis}
@@ -722,16 +643,16 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % 按照 \ref{subsec:编译方式}~小节中的方式编译该文档，您应当得到
 % 一篇 5 页的文章。当然，这篇文章的绝大部分都是空白的。
-%^^A! Compile this file under the instructions in subsection~%
-%^^A! \ref{subsec:compilation}, you will get a 5-page article.
+%^^A! Compile this file under the instructions in
+%^^A! subsection~\ref{subsec:compilation}, you will get a 5-page article.
 %^^A! Of course, most of it will be blank, as you may predicate.
 %^^A!
 %
 % 英文模板可以用类似的方式使用：
 %^^A! The English version can be used in the same way:
 %^^A+
-% \begin{latexexample}[deletetexcs={\documentclass},%
-%     moretexcs={\chapter},morekeywords={\documentclass},%
+% \begin{latexexample}[deletetexcs={\documentclass},
+%     moretexcs={\chapter},morekeywords={\documentclass},
 %     emph={[2]document}]
 %   % thesis-en.tex
 %   \documentclass{fduthesis-en}
@@ -811,14 +732,14 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!
 %
 % 所谓“模板选项”，指需要在引入文档类的时候指定的选项：
-% \begin{latexexample}[deletetexcs={\documentclass},%
+% \begin{latexexample}[deletetexcs={\documentclass},
 %     morekeywords={\documentclass}]
 %   \documentclass(*\oarg{模板选项}*){fduthesis}
 %   \documentclass(*\oarg{模板选项}*){fduthesis-en}
 % \end{latexexample}
 %^^A! You can specify some \emph{template options} when loading
 %^^A! \cls{fduthesis}:
-%^^A! \begin{latexexample}[deletetexcs={\documentclass},%
+%^^A! \begin{latexexample}[deletetexcs={\documentclass},
 %^^A!     morekeywords={\documentclass}]
 %^^A!   \documentclass(*\oarg{options}*){fduthesis}
 %^^A!   \documentclass(*\oarg{options}*){fduthesis-en}
@@ -966,9 +887,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % 选项通常是 \kvopt{\meta{key}}{\meta{value}} 的形式。部分选项的
 % \meta{value} 可以省略。对于同一项，后面的设置将会覆盖前面的设置。
 % 在下文的说明中，将用\textbf{粗体}表示默认值。
-%^^A! The argument of \cs{fdusetup} is a set of comma-separated option
-%^^A! list. The options usually have the form of \kvopt{\meta{key}}%
-%^^A! {\meta{value}} and in some cases \meta{value} can be omitted.
+%^^A! The argument of \cs{fdusetup} is a set of comma-separated option list.
+%^^A! The options usually have the form of \kvopt{\meta{key}}{\meta{value}}
+%^^A! and in some cases \meta{value} can be omitted.
 %^^A! For the same option, the values given later will override the
 %^^A! the previous ones. Default values are indicated in
 %^^A! \textbf{boldface} in the following descriptions.
@@ -984,7 +905,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!
 %
 % 与模板选项相同，布尔型的参数可以省略 \kvopt{\meta{选项}}{true}
-% 中的“|= true|”。
+% 中的“\kvopt{}{true}”。
 %^^A! Similar with template options, ``\kvopt{\meta{option}}{true}''
 %^^A! can be abbreviated to \opt{\meta{option}} for boolean type.
 %^^A!
@@ -995,7 +916,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! sub-options. They can be set by the following two equivalent
 %^^A! methods:
 %^^A+
-% \begin{latexexample}[morekeywords={\fdusetup},%
+% \begin{latexexample}[morekeywords={\fdusetup},
 %     emph={[1]style,cjk-font,font-size,info,title,title*,author,author*,department}]
 %   \fdusetup{
 %     style = {cjk-font = adobe, font-size = -4},
@@ -1012,7 +933,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % 或者
 %^^A! or
 %^^A+
-% \begin{latexexample}[morekeywords={\fdusetup},%
+% \begin{latexexample}[morekeywords={\fdusetup},
 %     emph={[1]style,cjk-font,font-size,info,title,title*,author,author*,department}]
 %   \fdusetup{
 %     style/cjk-font  = adobe,
@@ -1065,13 +986,14 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!
 %
 % \begin{table}[ht]
+% \centering
 % \begin{threeparttable}
 %   \caption{西文字体配置}
 %   \label{tab:font}
-%   \centering
+%   \small
 %   \begin{tabular}{ccccc}
 %     \toprule
-%       & \strong{正文字体} & \strong{无衬线字体} & \strong{等宽字体} & \strong{数学字体} \\
+%       & \textbf{正文字体} & \textbf{无衬线字体} & \textbf{等宽字体} & \textbf{数学字体} \\
 %     \midrule
 %       |garamond|        & EB Garamond         & Libertinus Sans & LM Mono\tnote{a} & Garamond Math   \\
 %       |libertinus|      & Libertinus Serif    & Libertinus Sans & LM Mono          & Libertinus Math \\
@@ -1085,7 +1007,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %     \item[a] “LM”是 Latin Modern 的缩写。
 %     \item[b] “TG”是 TeX Gyre 的缩写。
 %     \item[c] 本行中，Times New Roman、Arial 和 Courier New 是商业字体，
-%       在 Windows 和 macOS 系统上均默认安装。
+%       不包含在 \TeXLive{} 发行版中，但在 Windows 和 macOS 系统上均默认安装。
 %   \end{tablenotes}
 % \end{threeparttable}
 % \end{table}
@@ -1096,7 +1018,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \centering
 %^^A!   \begin{tabular}{ccccc}
 %^^A!     \toprule
-%^^A!       & \strong{Roman} & \strong{Sans-serif} & \strong{Monospaced} & \strong{Math} \\
+%^^A!       & \textbf{Roman} & \textbf{Sans-serif} & \textbf{Monospaced} & \textbf{Math} \\
 %^^A!     \midrule
 %^^A!       |garamond|        & EB Garamond         & Libertinus Sans & LM Mono\tnote{a} & Garamond Math   \\
 %^^A!       |libertinus|      & Libertinus Serif    & Libertinus Sans & LM Mono          & Libertinus Math \\
@@ -1132,24 +1054,18 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \caption{中文字体配置}
 %   \label{tab:cjk-font}
 %   \centering
-%   \begin{tabular}{cccc}
+%   \small
+%   \begin{tabular}{ccccc}
 %     \toprule
-%       & \strong{正文字体（宋体）} & \strong{无衬线字体（黑体）} & \strong{等宽字体（仿宋）} \\
+%       & \textbf{正文字体（宋体）} & \textbf{无衬线字体（黑体）} & \textbf{等宽字体（仿宋）} & \textbf{楷体} \\
 %     \midrule
-%       \multirow{2}*{|adobe|}     & Adobe 宋体          & Adobe  黑体        & Adobe  仿宋        \\
-%                                  & Adobe Song Std      & Adobe Heiti Std    & Adobe Fangsong Std \\
-%       \multirow{2}*{|fandol|}    & Fandol 宋体         & Fandol 黑体        & Fandol 仿宋        \\
-%                                  & FandolSong          & FandolHei          & FandolFang         \\
-%       \multirow{2}*{|founder|}   & 方正书宋            & 方正黑体           & 方正仿宋           \\
-%                                  & FZShuSong-Z01       & FZHei-B01          & FZFangSong-Z02     \\
-%       \multirow{2}*{|mac|}       & （华文）宋体-简     & （华文）黑体-简    & 华文仿宋           \\
-%                                  & Songti SC           & Heiti SC           & STFangsong         \\
-%       \multirow{2}*{|sinotype|}  & 华文宋体            & 华文黑体           & 华文仿宋           \\
-%                                  & STSong              & STHeiti            & STFangsong         \\
-%       \multirow{2}*{|sourcehan|} & 思源宋体            & 思源黑体           & ---                \\
-%                                  & Source Han Serif SC & Source Han Sans SC & ---                \\
-%       \multirow{2}*{|windows|}   & （中易）宋体        & （中易）黑体       & （中易）仿宋       \\
-%                                  & SimSun              & SimHei             & FangSong           \\
+%       |adobe|     & Adobe 宋体      & Adobe  黑体     & Adobe  仿宋  & Adobe 楷体      \\
+%       |fandol|    & Fandol 宋体     & Fandol 黑体     & Fandol 仿宋  & Fandol 楷体     \\
+%       |founder|   & 方正书宋        & 方正黑体        & 方正仿宋     & 方正楷体        \\
+%       |mac|       & （华文）宋体-简 & （华文）黑体-简 & 华文仿宋     & （华文）楷体-简 \\
+%       |sinotype|  & 华文宋体        & 华文黑体        & 华文仿宋     & 华文楷体        \\
+%       |sourcehan| & 思源宋体        & 思源黑体        & ---          & ---             \\
+%       |windows|   & （中易）宋体    & （中易）黑体    & （中易）仿宋 & （中易）楷体    \\
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
@@ -1159,7 +1075,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \centering
 %^^A!   \begin{tabular}{cccc}
 %^^A!     \toprule
-%^^A!       & \strong{Roman (song)} & \strong{Sans-serif (hei)} & \strong{Monospaced (fang)} \\
+%^^A!       & \textbf{Roman (song)} & \textbf{Sans-serif (hei)} & \textbf{Monospaced (fang)} \\
 %^^A!     \midrule
 %^^A!       |adobe|     & Adobe Song Std      & Adobe Heiti Std    & Adobe Fangsong Std \\
 %^^A!       |fandol|    & FandolSong          & FandolHei          & FandolFang         \\
@@ -1210,12 +1126,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{function}
 %^^A!
 %
-% 选择 \kvopt{fullwidth-stop}{catcode} 或 \opt{mapping} 后，都会实现
-% 上述效果。有所不同的是，在选择 \opt{catcode} 后，只有^^A
-% \emph{显式的}\FSID 会被替换为\FSFW；但在选择 \opt{mapping} 后，
-% \emph{所有的}\FSID 都会被替换。例如，如果您用宏保存了一些含有^^A
-% \FSID 的文字，那么在选择 \opt{catcode} 时，其中的\FSID 不会被
-% 替换为\FSFW。
+% 选择 \kvopt{fullwidth-stop}{catcode} 或 \opt{mapping} 后，都会实现上述效果。
+% 有所不同的是，在选择 \opt{catcode} 后，只有\emph{显式的}\FSID 会被替换
+% 为\FSFW；但在选择 \opt{mapping} 后，\emph{所有的}\FSID 都会被替换。例如，
+% 如果您用宏保存了一些含有\FSID 的文字，那么在选择 \opt{catcode} 时，其中
+% 的\FSID 不会将被替换为\FSFW。
 %^^A! If you choose \kvopt{fullwidth-stop}{catcode}, only
 %^^A! \emph{explicit} ``\FSID'' will be replaced by ``\FSFW''; when
 %^^A! choosing \kvopt{fullwidth-stop}{mapping}, however, \emph{all}
@@ -1228,8 +1143,8 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! with \LuaTeX{}, it is equivalent to \opt{catcode}.
 %^^A!
 %
-% 如果您在选择 \kvopt{fullwidth-stop}{mapping} 后仍需要临时显示^^A
-% \FSID，可以按如下方法操作：
+% 如果您在选择 \kvopt{fullwidth-stop}{mapping} 后仍需要临时显示\FSID，
+% 可以按如下方法操作：
 % \begin{latexexample}[moretexcs={\CJKfontspec},emph={[1]Mapping}]
 %   % 请使用 XeTeX 编译
 %   % 外侧的花括号表示分组
@@ -1247,12 +1162,12 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \begin{function}{style/footnote-style}
 %^^A 这里奇怪的东西是用来控制对齐的。fdusyntax 会吃掉开头的几个
-%^^A 空格，因此这里用 X 来占位。
+%^^A 空格，因此这里用 . 来占位。
 %   \begin{fdusyntax}[emph={[1]footnote-style}]
 %     footnote-style = (*<plain|\\
-%       XXXXXX\mbox{}~~~~~~~~~~~~~~~~~libertinus|libertinus*|libertinus-sans|\\
-%       XXXXXX\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
-%       XXXXXX\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
+%       ......\mbox{}~~~~~~~~~~~~~~~~~libertinus|libertinus*|libertinus-sans|\\
+%       ......\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
+%       ......\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
 %   \end{fdusyntax}
 %   设置脚注编号样式。西文字体设置会影响其默认取值（见
 %   表~\ref{tab:footnote-font}）。因此，要使得该选项生效，需将其
@@ -1262,9 +1177,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \begin{function}{style/footnote-style}
 %^^A!   \begin{fdusyntax}[emph={[1]footnote-style}]
 %^^A!     footnote-style = (*<plain|\\
-%^^A!       XXXX\mbox{}~~~~~~~~~~~~~~~~~libertinus|libertinus*|libertinus-sans|\\
-%^^A!       XXXX\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
-%^^A!       XXXX\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
+%^^A!       ....\mbox{}~~~~~~~~~~~~~~~~~libertinus|libertinus*|libertinus-sans|\\
+%^^A!       ....\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
+%^^A!       ....\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
 %^^A!   \end{fdusyntax}
 %^^A!   Set the style of footnote numbers. Note that western fonts
 %^^A!   will affect its default value (see table~\ref{tab:footnote-font}),
@@ -1278,13 +1193,14 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \caption{西文字体与脚注编号样式默认值的对应关系}
 %   \label{tab:footnote-font}
 %   \centering
+%   \small
 %   \begin{tabular}{ccccc}
 %     \toprule
-%     \textbf{西文字体设置} &
-%       |libertinus| & |lm|     & |palatino| & |times| \\
+%       \textbf{西文字体设置} &
+%         |libertinus| & |lm|     & |palatino| & |times| \\
 %     \midrule
-%     \textbf{脚注编号样式默认值} &
-%       |libertinus| & |pifont| & |pifont|   & |xits|  \\
+%       \textbf{脚注编号样式默认值} &
+%         |libertinus| & |pifont| & |pifont|   & |xits|  \\
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
@@ -1295,11 +1211,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \centering
 %^^A!   \begin{tabular}{ccccc}
 %^^A!     \toprule
-%^^A!     \textbf{Western fonts settings} &
-%^^A!       |libertinus| & |lm|     & |palatino| & |times| \\
+%^^A!       \textbf{Western fonts settings} &
+%^^A!         |libertinus| & |lm|     & |palatino| & |times| \\
 %^^A!     \midrule
-%^^A!     \textbf{Default value of footnote number style} &
-%^^A!       |libertinus| & |pifont| & |pifont|   & |xits|  \\
+%^^A!       \textbf{Default value of footnote number style} &
+%^^A!         |libertinus| & |pifont| & |pifont|   & |xits|  \\
 %^^A!     \bottomrule
 %^^A!   \end{tabular}
 %^^A! \end{table}
@@ -1322,18 +1238,16 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{function}
 %^^A!
 %
-% \begin{function}[added=2017-08-13,updated=2017-12-08]{style/hyperlink-color}
+% \begin{function}[added=2017-08-13,updated=2021-12-27]{style/hyperlink-color}
 %   \begin{fdusyntax}[emph={[1]hyperlink-color}]
-%     hyperlink-color = (*<(default)|classic|elegant|fantasy|material|\\
-%       XXXXXX\mbox{}~~~~~~~~~~~~~~~~~~business|science|summer|autumn|graylevel|prl>*)
+%     hyperlink-color = (*<(default)|classic|material|graylevel|prl>*)
 %   \end{fdusyntax}
 %   设置超链接颜色。该选项在 \kvopt{hyperlink}{none} 时无效。
 %   各选项所代表的颜色见表~\ref{tab:hyperlink-color}。
 % \end{function}
-%^^A! \begin{function}[added=2017-08-13,updated=2017-12-08]{style/hyperlink-color}
+%^^A! \begin{function}[added=2017-08-13,updated=2021-12-27]{style/hyperlink-color}
 %^^A!   \begin{fdusyntax}[emph={[1]hyperlink-color}]
-%^^A!     hyperlink-color = (*<(default)|classic|elegant|fantasy|material|\\
-%^^A!       XXXX\mbox{}~~~~~~~~~~~~~~~~~~business|science|summer|autumn|graylevel|prl>*)
+%^^A!     hyperlink-color = (*<(default)|classic|material|graylevel|prl>*)
 %^^A!   \end{fdusyntax}
 %^^A!   Set the color of hyperlinks. It is invalid if
 %^^A!   \kvopt{hyperlink}{none}. The related colors can be found
@@ -1344,11 +1258,12 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A+
 % \begin{table}[ht]
 % \centering
+% \small
 %^^A-
 % \newcommand\linkcolorexam[3]{^^A
 %   {\small 图~\textcolor[HTML]{#1}{1-2}，
 %     (\textcolor[HTML]{#1}{3.4})~式} &
-%   {\small \textcolor[HTML]{#2}{\texttt{http://g.cn}}} &
+%   {\small \textcolor[HTML]{#2}{\texttt{https://g.cn}}} &
 %   {\small 文献~[\textcolor[HTML]{#3}{1}]，
 %     (\textcolor[HTML]{#3}{Knuth~1986})}}
 %^^A! \newcommand\linkcolorexam[3]{%
@@ -1365,47 +1280,27 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \label{tab:hyperlink-color}
 % \begin{tabular}{c*{3}{>{\hspace{0.2cm}}c<{\hspace{0.2cm}}}}
 %   \toprule
-%   \textsf{选项} & \textsf{链接} & \textsf{URL} & \textsf{引用} \\
+%     \textbf{选项} & \textbf{链接} & \textbf{URL} & \textbf{引用} \\
 %^^A! \begin{tabular}{c*{3}{>{\hspace{0.2cm}}c<{\hspace{0.2cm}}}}
 %^^A!   \toprule
-%^^A!   \textsf{Options} & \textsf{Cross references} & \textsf{URL} & \textsf{Citation} \\
+%^^A!     \textbf{Options} & \textbf{Cross references} & \textbf{URL} & \textbf{Citation} \\
 %^^A+
 %   \midrule
-%   \opt{default}            & \linkcolorexam{990000}{0000B2}{007F00} \\
-%   \opt{classic}            & \linkcolorexam{FF0000}{0000FF}{00FF00} \\
-%   \opt{elegant}\tnote{a}   & \linkcolorexam{961212}{C31818}{9B764F} \\
-%   \opt{fantasy}\tnote{b}   & \linkcolorexam{FF4A19}{FF3F94}{934BA1} \\
-%   \opt{material}\tnote{c}  & \linkcolorexam{E91E63}{009688}{4CAF50} \\
-%   \opt{business}\tnote{d}  & \linkcolorexam{D14542}{295497}{1F6E43} \\
-%   \opt{science}\tnote{e}   & \linkcolorexam{CA0619}{389F9D}{FF8920} \\
-%   \opt{summer}\tnote{f}    & \linkcolorexam{00AFAF}{5F5FAF}{5F8700} \\
-%   \opt{autumn}\tnote{f}    & \linkcolorexam{D70000}{D75F00}{AF8700} \\
-%   \opt{graylevel}\tnote{c} & \linkcolorexam{616161}{616161}{616161} \\
-%   \opt{prl}\tnote{g}       & \linkcolorexam{2D3092}{2D3092}{2D3092} \\
+%     \opt{default}            & \linkcolorexam{990000}{0000B2}{007F00} \\
+%     \opt{classic}            & \linkcolorexam{FF0000}{0000FF}{00FF00} \\
+%     \opt{material}\tnote{a}  & \linkcolorexam{E91E63}{009688}{4CAF50} \\
+%     \opt{graylevel}\tnote{a} & \linkcolorexam{616161}{616161}{616161} \\
+%     \opt{prl}\tnote{b}       & \linkcolorexam{2D3092}{2D3092}{2D3092} \\
 %   \bottomrule
 % \end{tabular}
 % \begin{tablenotes}
 %^^A-
-%   \item[a] 来自 \href{https://tex.stackexchange.com/}^^A
-%     {\TeX{} - \LaTeX{} Stack Exchange 网站}。
-%   \item[b] Adobe CC 产品配色。
-%   \item[c] 取自 Material 色彩方案
+%   \item[a] 取自 Material 色彩方案
 %     （见 \url{https://material.io/guidelines/style/color.html}）。
-%   \item[d] Microsoft Office 2016 产品配色。
-%   \item[e] 来自 \href{https://www.wolfram.com/}{Wolfram Research 网站}。
-%   \item[f] 均取自 Solarized 色彩方案
-%     （见 \url{http://ethanschoonover.com/solarized}）。
-%   \item[g] \textit{Physical Review Letter} 杂志配色。
-%^^A!   \item[a] From \href{https://tex.stackexchange.com/}%
-%^^A!     {\TeX{} - \LaTeX{} Stack Exchange}.
-%^^A!   \item[b] Adobe CC.
-%^^A!   \item[c] Material Design color palette
+%   \item[b] \textit{Physical Review Letter} 杂志配色。
+%^^A!   \item[a] Material Design color palette
 %^^A!     (See \url{https://material.io/guidelines/style/color.html}).
-%^^A!   \item[d] Microsoft Office 2016.
-%^^A!   \item[e] From \href{https://www.wolfram.com/}{Wolfram Research website}.
-%^^A!   \item[f] Solarized color palette
-%^^A!     (See \url{http://ethanschoonover.com/solarized}).
-%^^A!   \item[g] \textit{Physical Review Letter} magazine.
+%^^A!   \item[b] \textit{Physical Review Letter} magazine.
 %^^A+
 % \end{tablenotes}
 % \end{threeparttable}
@@ -1430,20 +1325,18 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{function}
 %^^A!
 %
-% \begin{function}[added=2017-10-28,updated=2018-01-25]^^A
-%     {style/bib-style}
+% \begin{function}[added=2017-10-28,updated=2018-01-25]{style/bib-style}
 %   \begin{fdusyntax}[emph={[1]bib-style}]
 %     bib-style = (*<author-year|(numerical)|\meta{其他样式}>*)
 %   \end{fdusyntax}
 %   设置参考文献样式。\opt{author-year} 和 \opt{numerical} 分别对应
-%   国家标准 GB/T 7714--2015 \scite{gb-t-7714-2015} 中的著者—出版年制
-%   和顺序编码制。选择 \meta{其他样式} 时，如果 \kvopt{bib-backend}^^A
-%   {bibtex}，需保证相应的 \file{.bst} 格式文件能被调用；而如果
+%   国家标准 GB/T 7714--2015 \cite{gb-t-7714-2015} 中的著者—出版年制和
+%   顺序编码制。选择 \meta{其他样式} 时，如果 \kvopt{bib-backend}{bibtex}，
+%   需保证相应的 \file{.bst} 格式文件能被调用；而如果
 %   \kvopt{bib-backend}{biblatex}，则需保证相应的 \file{.bbx} 格式文件
 %   能被调用。
 % \end{function}
-%^^A! \begin{function}[added=2017-10-28,updated=2018-01-25]%
-%^^A!     {style/bib-style}
+%^^A! \begin{function}[added=2017-10-28,updated=2018-01-25]{style/bib-style}
 %^^A!   \begin{fdusyntax}[emph={[1]bib-style}]
 %^^A!     bib-style = (*<author-year|(numerical)|\meta{other style}>*)
 %^^A!   \end{fdusyntax}
@@ -1547,13 +1440,28 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{function}
 %^^A!
 %
+% \begin{function}[added=2021-09-21]{style/declaration-page}
+%   \begin{fdusyntax}[emph={[1]declaration-page}]
+%     declaration-page = (*\marg{文件}*)
+%   \end{fdusyntax}
+%   插入扫描版的声明页 PDF 文档。如果为空（默认），则使用模板预定义的声明页。
+% \end{function}
+%^^A! \begin{function}[added=2021-09-21]{style/declaration-page}
+%^^A!   \begin{fdusyntax}[emph={[1]declaration-page}]
+%^^A!     declaration-page = (*\marg{file}*)
+%^^A!   \end{fdusyntax}
+%^^A!   Insert the scanned declaration page PDF file. If empty (default),
+%^^A!   then the pre-defined declaration page will be inserted.
+%^^A! \end{function}
+%^^A!
+%
 % \begin{function}{\makecoveri,\makecoverii,\makecoveriii}
 %   用于手动生成论文封面、指导小组成员名单和声明页。这几个命令不能
 %   确保页码的正确编排，因此除非必要，您应当始终使用自动生成的封面。
 % \end{function}
 %^^A! \begin{function}{\makecoveri,\makecoverii,\makecoveriii}
 %^^A!   For generating thesis cover, list of instructors and
-%^^A!   declaration page manually. These commands cannot ensure
+%^^A!   declaration page manually. These commands cannot guarantee
 %^^A!   the correct page numbers, hence you should always use the
 %^^A!   auto-generated thesis cover unless necessary.
 %^^A! \end{function}
@@ -1610,7 +1518,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!     title  = (*\marg{title in Chinese}*)
 %^^A!     title* = (*\marg{title in English}*)
 %^^A!   \end{fdusyntax}
-%^^A!   Title of your thesis. The line width is about \SI{30}{em} by
+%^^A!   Title of your thesis. The line width is about \qty{30}{em} by
 %^^A!   default, but you may break it with |\\| manually.
 %^^A! \end{function}
 %^^A!
@@ -1810,13 +1718,30 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{function}
 %^^A!
 %
+% \begin{function}[added=2021-09-16]{info/jel}
+%   \begin{fdusyntax}[emph={[1]jel}]
+%     jel = (*\marg{分类号}*)
+%   \end{fdusyntax}
+%   JEL 分类号，仅适用于部分院系。当被指定时，英文摘要中将仅显示 JEL
+%   分类号，而不再显示中图分类号。
+% \end{function}
+%^^A! \begin{function}[added=2021-09-16]{info/jel}
+%^^A!   \begin{fdusyntax}[emph={[1]jel}]
+%^^A!     jel = (*\marg{classification codes}*)
+%^^A!   \end{fdusyntax}
+%^^A!   \textit{Journal of Economic Literature} (JEL) Classification
+%^^A!   Code. It's only mandatory for some departments. When specified,
+%^^A!   CLC code in the English abstract will be replaced by it.
+%^^A! \end{function}
+%^^A!
+%
 % \subsection{正文编写}
 %^^A! \subsection{Writing your thesis}
 %^^A!
 %
 % \begin{quotation}
-%   喬孟符（吉）博學多能，以樂府稱。嘗云：「作樂府亦有法，曰^^A
-%   \CJKunderdot{鳳頭、豬肚、豹尾}六字是也。」大概起要美麗，中要浩蕩，
+%   喬孟符（吉）博學多能，以樂府稱。嘗云：「作樂府亦有法，
+%   曰\CJKunderdot{鳳頭、豬肚、豹尾}六字是也。」大概起要美麗，中要浩蕩，
 %   結要響亮。尤貴在首尾貫穿，意思清新。苟能若是，斯可以言樂府矣。
 % \end{quotation}
 % \hfill ——陶宗儀《南村輟耕錄·作今樂府法》
@@ -1898,11 +1823,10 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A! \end{function}
 %^^A!
 %
-% 摘要的最后，会显示关键字列表以及中图分类号（CLC）。
-% 这两项可通过 \cs{fdusetup} 录入，具体
-% 请参阅 \ref{subsubsec:信息录入}~节。
+% 摘要的最后，会显示关键字列表以及中图分类号（CLC）或 JEL 分类号。这两项
+% 可通过 \cs{fdusetup} 录入，具体请参阅 \ref{subsubsec:信息录入}~节。
 %^^A! At the end of abstract (both Chinese and English, if available),
-%^^A! keywords list and CLC number will be shown. They can be
+%^^A! keywords list and CLC or JEL code will be shown. They can be
 %^^A! specified via command \cs{fdusetup} and you may refer to
 %^^A! subsubsection~\ref{subsubsec:information} for more details.
 %^^A!
@@ -1919,7 +1843,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \end{fdusyntax}
 %   符号表。可选参数 \meta{列格式说明}与 \LaTeX{} 中标准表格的列格
 %   式说明语法一致，默认值为“|lp{7.5cm}|”，即第一列宽度自动调整，
-%   第二列限宽 \SI{7.5}{cm}，两列均为左对齐。
+%   第二列限宽 \qty{7.5}{cm}，两列均为左对齐。
 % \end{function}
 %^^A! \begin{function}{notation}
 %^^A!   \begin{fdusyntax}[emph={[2]notation}]
@@ -1934,7 +1858,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   The optional argument \meta{column format} is the same as
 %^^A!   in a standard \LaTeX{} table. The default value is
 %^^A!   ``|lp{7.5cm}|'', which means auto-width for the first column
-%^^A!   and fix-width (\SI{7.5}{cm}) for the second; both columns will
+%^^A!   and fix-width (\qty{7.5}{cm}) for the second; both columns will
 %^^A!   be left-aligned.
 %^^A! \end{function}
 %^^A!
@@ -1960,23 +1884,247 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!
 %
 % \begin{function}[updated=2018-01-15]{\footnote}
-%   \begin{fdusyntax}[deletetexcs={\footnote},%
-%       morekeywords={\footnote}]
+%   \begin{fdusyntax}[deletetexcs={\footnote},morekeywords={\footnote}]
 %     \footnote(*\marg{脚注文字}*)
 %   \end{fdusyntax}
 %   插入脚注。脚注编号样式可利用 \opt{style/footnote-style} 选项控制，
 %   具体见 \ref{subsubsec:论文格式}~小节。
 % \end{function}
 %^^A! \begin{function}[updated=2018-01-15]{\footnote}
-%^^A!   \begin{fdusyntax}[deletetexcs={\footnote},%
-%^^A!       morekeywords={\footnote}]
+%^^A!   \begin{fdusyntax}[deletetexcs={\footnote},morekeywords={\footnote}]
 %^^A!     \footnote(*\marg{text}*)
 %^^A!   \end{fdusyntax}
 %^^A!   Insert a footnote. The style of footnote numbers can be set
-%^^A!   with option \opt{style/foot\-note\-style}. See subsubsection~%
-%^^A!   \ref{subsubsec:style-and-format} for more details.
+%^^A!   with option \opt{style/foot\-note\-style}. See
+%^^A!   subsubsection~\ref{subsubsec:style-and-format} for more details.
 %^^A! \end{function}
 %^^A!
+%
+% \begin{function}{\caption}
+%   \begin{fdusyntax}[deletetexcs={\caption},morekeywords={\caption}]
+%     \caption(*\marg{图表标题}*)
+%     \caption(*\oarg{短标题}\marg{长标题}*)
+%   \end{fdusyntax}
+%   插入图表标题。可选参数 \meta{短标题} 用于图表目录。在
+%   \meta{长标题} 中，您可以进行长达多段的叙述；但 \meta{短标题}
+%   和单独的 \meta{图表标题} 中则不允许分段。
+%   \cite{刘海洋2013latex入门}
+% \end{function}
+%^^A! \begin{function}{\caption}
+%^^A!   \begin{fdusyntax}[deletetexcs={\caption},morekeywords={\caption}]
+%^^A!     \caption(*\marg{caption}*)
+%^^A!     \caption(*\oarg{short caption}\marg{long caption}*)
+%^^A!   \end{fdusyntax}
+%^^A!   Insert the caption of figure or table. The optional argument
+%^^A!   \meta{short caption} will be shown in the list of figures/tables.
+%^^A!   In \meta{long caption}, you can write descriptions for several
+%^^A!   paragraphs, but \meta{short caption} and the single
+%^^A!   \meta{caption} will not allow multi-paragraph text (i.e.\
+%^^A!   text containing \tn{par}) inside.
+%^^A! \end{function}
+%^^A!
+%
+% 按照排版惯例，建议您将表格的标题放置在绘制表格的命令之前，
+% 而将图片的标题放置在绘图或插图的命令之后。另需注意，
+% \tn{caption} 命令必须放置在浮动体环境（如 \env{table} 和
+% \env{figure}）中。
+%^^A! By convention, caption of a table is usually put \emph{before}
+%^^A! the table itself, while for figure it's the opposite.
+%^^A! In addition, command \tn{caption} must be put inside float
+%^^A! environments (e.g.\ \env{table} and \env{figure}).
+%^^A!
+%
+% \paragraph{参考文献引用}
+%^^A! \paragraph{Citations}
+%
+% \begin{function}{\cite}
+%   \begin{fdusyntax}[deletetexcs={\cite},morekeywords={\cite}]
+%     \cite(*\marg{文献标签}*)
+%     \cite(*\oarg{页码}\marg{文献标签}*)
+%   \end{fdusyntax}
+%   插入所引用的文献。可选参数 \meta{页码} 可用来标注引文的页码。在不同的
+%   参考文献样式中，引用的样式也不尽相同。根据需要，模板还提供了更多的命令
+%   用来标记引用。顺序编码制和著者—出版年制下的各种引用方式见
+%   表~\ref{tab:citation-numerical} 和表~\ref{tab:citation-author-year}。
+% \end{function}
+%^^A! \begin{function}{\cite}
+%^^A!   \begin{fdusyntax}[deletetexcs={\cite},morekeywords={\cite}]
+%^^A!     \cite(*\marg{bib key}*)
+%^^A!     \cite(*\oarg{page number}\marg{bib key}*)
+%^^A!   \end{fdusyntax}
+%^^A!   Insert citations. The optional argument \meta{page number} can be
+%^^A!   used to indicate the page number of the citation. The citation style
+%^^A!   varies among different bibliography styles. More commands are also
+%^^A!   provided to mark the citations, which can be found in
+%^^A!   table~\ref{tab:citation-numerical} (numerical style) and
+%^^A!   \ref{tab:citation-author-year} (author-year style).
+%^^A! \end{function}
+%^^A!
+%
+%^^A+
+% \NewDocumentCommand\verbcite{O{cite}om}{^^A
+%   \IfNoValueTF{#2}{^^A
+%     \texttt{\textbackslash#1\{#3\}}^^A
+%   }{^^A
+%     \texttt{\textbackslash#1[#2]\{#3\}}^^A
+%   }}
+%^^A-
+%
+% \begin{table}[ht]
+%   \caption{顺序编码制下的引用样式} \label{tab:citation-numerical}
+%   \centering
+%   \small
+%   \begin{tabularx}{\textwidth}{cCll}
+%     \toprule
+%       \textbf{引用方式} &
+%       \textbf{排版效果} &
+%       \textbf{\kvopt{bib-backend}{bibtex}} &
+%       \textbf{\kvopt{bib-backend}{biblatex}} \\
+%     \midrule
+%     单篇文献 &
+%       引文\cite{texbook} &
+%       \verbcite{texbook} &
+%       同左 \\
+%     多篇文献 &
+%       引文\cite{texbook,companion} &
+%       \verbcite{texbook,companion} &
+%       同左 \\
+%     标注页码 &
+%       引文\cite[126--137]{texbook} &
+%       \verbcite[cite][126--137]{texbook} &
+%       同左 \\
+%     标注作者 &
+%       \citet{texbook}指出 &
+%       \verbcite[citet]{texbook} &
+%       \verbcite[authornumcite]{texbook} \\
+%     标注作者、页码 &
+%       \citet[42]{texbook}指出 &
+%       \verbcite[citet][42]{texbook} &
+%       \verbcite[authornumcite][42]{texbook} \\
+%     非上标 &
+%       引文{\citestyle{numbers}\cite{texbook}} &
+%       \verbcite[parencite]{texbook} &
+%       同左 \\
+%     \bottomrule
+%   \end{tabularx}
+% \end{table}
+%^^A! \begin{table}[ht]
+%^^A!   \caption{Citations in numerical style} \label{tab:citation-numerical}
+%^^A!   \centering
+%^^A!   \small
+%^^A!   \def\C#1{\textcolor{MaterialGreen}{#1}}
+%^^A!   \begin{tabularx}{\textwidth}{cCll}
+%^^A!     \toprule
+%^^A!       \textbf{Styles} &
+%^^A!       \textbf{Results} &
+%^^A!       \textbf{\kvopt{bib-backend}{bibtex}} &
+%^^A!       \textbf{\kvopt{bib-backend}{biblatex}} \\
+%^^A!     \midrule
+%^^A!     Single &
+%^^A!       Text\textsuperscript{[\C1]} &
+%^^A!       \verbcite{texbook} &
+%^^A!       Same as left \\
+%^^A!     Multiple &
+%^^A!       Text\textsuperscript{[\C1--\C2]} &
+%^^A!       \verbcite{texbook,companion} &
+%^^A!       Same as left \\
+%^^A!     With page &
+%^^A!       Text\textsuperscript{[\C1]126--137} &
+%^^A!       \verbcite[cite][126--137]{texbook} &
+%^^A!       Same as left \\
+%^^A!     With author &
+%^^A!       Knuth\textsuperscript{[\C1]} states &
+%^^A!       \verbcite[citet]{texbook} &
+%^^A!       \verbcite[authornumcite]{texbook} \\
+%^^A!     With page and author &
+%^^A!       Knuth\textsuperscript{[\C1]42} states &
+%^^A!       \verbcite[citet][42]{texbook} &
+%^^A!       \verbcite[authornumcite][42]{texbook} \\
+%^^A!     No superscript &
+%^^A!       Text [\C1] &
+%^^A!       \verbcite[parencite]{texbook} &
+%^^A!       Same as left \\
+%^^A!     \bottomrule
+%^^A!   \end{tabularx}
+%^^A! \end{table}
+%^^A!
+%
+% \begin{table}[ht]
+%   \caption{著者—出版年制下的引用样式} \label{tab:citation-author-year}
+%   \centering
+%   \small
+%   \def\!{\kern-1.5pt}
+%   \begin{tabularx}{\textwidth}{cCll}
+%     \toprule
+%       \textbf{引用方式} &
+%       \textbf{排版效果} &
+%       \textbf{\kvopt{bib-backend}{bibtex}} &
+%       \textbf{\kvopt{bib-backend}{biblatex}} \\
+%     \midrule
+%     单篇文献 &
+%       (\citeauthor{texbook}\!, \citeyear{texbook}\!) &
+%       \verbcite[citep]{texbook} &
+%       \verbcite{texbook} \\
+%     多篇文献 &
+%       (\citeauthor{texbook}\!, \citeyear{texbook}\!;
+%         \citeauthor{companion}\!, \citeyear{companion}\!) &
+%       \verbcite[citep]{texbook,companion} &
+%       \verbcite{texbook,companion} \\
+%     标注页码 &
+%       (\citeauthor{texbook}\!, \citeyear{texbook}\!)^^A
+%         \textsuperscript{126--137} &
+%       \verbcite[citep][126--137]{texbook} &
+%       \verbcite[cite][126--137]{texbook} \\
+%     标注作者 &
+%       \citeauthor{texbook}(\citeyear{texbook}\!) &
+%       \verbcite[citet]{texbook} &
+%       同左 \\
+%     标注作者、页码 &
+%       \citeauthor{texbook}(\citeyear{texbook}\!)\textsuperscript{42} &
+%       \verbcite[citet][42]{texbook} &
+%       同左 \\
+%     \bottomrule
+%   \end{tabularx}
+% \end{table}
+%^^A! \begin{table}[ht]
+%^^A!   \caption{Citations in author-year style} \label{tab:citation-author-year}
+%^^A!   \centering
+%^^A!   \small
+%^^A!   \def\C#1{\textcolor{MaterialGreen}{#1}}
+%^^A!   \begin{tabularx}{\textwidth}{cCll}
+%^^A!     \toprule
+%^^A!       \textbf{Styles} &
+%^^A!       \textbf{Results} &
+%^^A!       \textbf{\kvopt{bib-backend}{bibtex}} &
+%^^A!       \textbf{\kvopt{bib-backend}{biblatex}} \\
+%^^A!     \midrule
+%^^A!     Single &
+%^^A!       (\C{Knuth}, \C{1986}) &
+%^^A!       \verbcite[citep]{texbook} &
+%^^A!       \verbcite{texbook} \\
+%^^A!     Multiple &
+%^^A!       (\C{Knuth}, \C{1986}; \C{Mittelbach et al.}, \C{2004}) &
+%^^A!       \verbcite[citep]{texbook,companion} &
+%^^A!       \verbcite{texbook,companion} \\
+%^^A!     With page &
+%^^A!       (\C{Knuth}, \C{1986})\textsuperscript{126--137} &
+%^^A!       \verbcite[citep][126--137]{texbook} &
+%^^A!       \verbcite[cite][126--137]{texbook} \\
+%^^A!     With author &
+%^^A!       \C{Knuth} (\C{1986}) &
+%^^A!       \verbcite[citet]{texbook} &
+%^^A!       Same as left \\
+%^^A!     With page and author &
+%^^A!       \C{Knuth} (\C{1986})\textsuperscript{42} &
+%^^A!       \verbcite[citet][42]{texbook} &
+%^^A!       Same as left \\
+%^^A!     \bottomrule
+%^^A!   \end{tabularx}
+%^^A! \end{table}
+%^^A!
+%
+% \paragraph{定理类环境}
+%^^A! \paragraph{Theorem-like environments}
 %
 %^^A TODO: \DescribeEnv{proof}
 % \begin{function}{axiom,corollary,definition,example,lemma,
@@ -2002,15 +2150,16 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \begin{table}[ht]
 %   \caption{预定义的数学环境} \label{tab:theorem}
 %   \centering
-%   \begin{tabular}{cccccccc}
+%   \small
+%   \begin{tabular}{*{8}{c}}
 %     \toprule
-%     \textbf{名称} &
-%       \env{axiom}   & \env{corollary} & \env{definition} &
-%       \env{example} & \env{lemma}     & \env{proof}      &
-%       \env{theorem} \\
+%       \textbf{名称} &
+%         \env{axiom} & \env{corollary} & \env{definition} & \env{example} &
+%         \env{lemma} & \env{proof}     & \env{theorem} \\
 %     \midrule
-%     \textbf{含义} &
-%       公理 & 推论 & 定义 & 例 & 引理 & 证明 & 定理 \\
+%       \textbf{含义} &
+%         公理 & 推论 & 定义 & 例 &
+%         引理 & 证明 & 定理 \\
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
@@ -2137,9 +2286,8 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \begin{fdusyntax}[emph={[1]qed}]
 %     qed = (*\marg{符号}*)
 %   \end{fdusyntax}
-%   定理结束标记（即证毕符号）。如果用 \cs{newtheorem} 声明定理，
-%   则默认为空；用 \cs{newtheorem*} 声明，则默认为
-%   |\ensuremath{\QED}|，即“$\QED$”。
+%   定理结束标记（即证毕符号）。如果用 \cs{newtheorem} 声明定理，则默认为空；
+%   用 \cs{newtheorem*} 声明，则默认为 |\ensuremath{\QED}|，即“$\QED$”。
 % \end{function}
 %^^A! \begin{function}{theorem/qed}
 %^^A!   \begin{fdusyntax}[emph={[1]qed}]
@@ -2155,10 +2303,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \begin{fdusyntax}[emph={[1]counter}]
 %     counter = (*\marg{计数器}*)
 %   \end{fdusyntax}
-%   定理计数器，表示定理编号在 \meta{计数器} 的下一级，并会随
-%   \meta{计数器} 的变化而清零。\scite{刘海洋2013latex入门}
-%   默认为 |chapter|，表示按章编号。使用 \cs{newtheorem*} 时，
-%   该选项无效。
+%   定理计数器，表示定理编号在 \meta{计数器} 的下一级，并会随 \meta{计数器}
+%   的变化而清零。\cite{刘海洋2013latex入门}默认为 |chapter|，表示按章编号。
+%   使用 \cs{newtheorem*} 时，该选项无效。
 % \end{function}
 %^^A! \begin{function}{theorem/counter}
 %^^A!   \begin{fdusyntax}[emph={[1]counter}]
@@ -2169,40 +2316,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   each new \tn{chapter}, the enumeration begins again with 1.
 %^^A!   This option is invalid for \cs{newtheorem*}.
 %^^A! \end{function}
-%^^A!
-%
-% \begin{function}{\caption}
-%   \begin{fdusyntax}[deletetexcs={\caption},morekeywords={\caption}]
-%     \caption(*\marg{图表标题}*)
-%     \caption(*\oarg{短标题}\marg{长标题}*)
-%   \end{fdusyntax}
-%   插入图表标题。可选参数 \meta{短标题} 用于图表目录。在
-%   \meta{长标题} 中，您可以进行长达多段的叙述；但 \meta{短标题}
-%   和单独的 \meta{图表标题} 中则不允许分段。
-%   \scite{刘海洋2013latex入门}
-% \end{function}
-%^^A! \begin{function}{\caption}
-%^^A!   \begin{fdusyntax}[deletetexcs={\caption},morekeywords={\caption}]
-%^^A!     \caption(*\marg{caption}*)
-%^^A!     \caption(*\oarg{short caption}\marg{long caption}*)
-%^^A!   \end{fdusyntax}
-%^^A!   Insert the caption of figure or table. The optional argument
-%^^A!   \meta{short caption} will be shown in the list of figures/tables.
-%^^A!   In \meta{long caption}, you can write descriptions for several
-%^^A!   paragraphs, but \meta{short caption} and the single
-%^^A!   \meta{caption} will not allow multi-paragraph text (i.e.\
-%^^A!   text containing \tn{par}) inside.
-%^^A! \end{function}
-%^^A!
-%
-% 按照排版惯例，建议您将表格的标题放置在绘制表格的命令之前，
-% 而将图片的标题放置在绘图或插图的命令之后。另需注意，
-% \tn{caption} 命令必须放置在浮动体环境（如 \env{table} 和
-% \env{figure}）中。
-%^^A! By convention, caption of a table is usually put \emph{before}
-%^^A! the table itself, while for figure it's the opposite.
-%^^A! In addition, command \tn{caption} must be put inside float
-%^^A! environments (e.g.\ \env{table} and \env{figure}).
 %^^A!
 %
 % \subsubsection{豹尾}
@@ -2228,9 +2341,9 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   打印参考文献列表。如果 \kvopt{bib-backend}{bibtex}，则 \meta{选项}
 %   无效，相当于 \tn{bibliography} \texttt{\marg{文献数据库}}，其中的
 %   \meta{文献数据库} 可利用 \opt{style/bib-resource} 选项指定，具体见
-%   \ref{subsubsec:论文格式}~小节；而如果 \kvopt{bib-backend}^^A
-%   {biblatex}，则该命令由 \pkg{biblatex} 宏包直接提供，可用选项请
-%   参阅其文档 \cite{biblatex}。
+%   \ref{subsubsec:论文格式}~小节；而如果 \kvopt{bib-backend}{biblatex}，
+%   则该命令由 \pkg{biblatex} 宏包直接提供，可用选项请参阅其文档
+%   \cite{biblatex}。
 % \end{function}
 %^^A! \begin{function}[updated=2018-01-25]{\printbibliography}
 %^^A!   \begin{fdusyntax}[morekeywords={\printbibliography}]
@@ -2238,13 +2351,12 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \end{fdusyntax}
 %^^A!   Print the bibliography. When \kvopt{bib-backend}{bibtex}, then
 %^^A!   \meta{options} is invalid and this command is equivalent to
-%^^A!   \tn{bibliography} \texttt{\marg{bib files}}, where
-%^^A!   \meta{bib files} should be specified with option
-%^^A!   \opt{style/bib-resource} (see subsubsection~%
-%^^A!   \ref{subsubsec:style-and-format}). When \kvopt{bib-backend}%
-%^^A!   {bibtex}, then \tn{printbibliography} is provided by
-%^^A!   \pkg{biblatex} and the available options can be found in its
-%^^A!   documentation.
+%^^A!   \tn{bibliography} \texttt{\marg{bib files}}, where \meta{bib files}
+%^^A!   should be specified with option \opt{style/bib-resource} (see
+%^^A!   subsubsection~\ref{subsubsec:style-and-format}). When
+%^^A!   \kvopt{bib-backend}{bibtex}, then \tn{printbibliography} is
+%^^A!   provided by \pkg{biblatex} and the available options can be
+%^^A!   found in its documentation.
 %^^A! \end{function}
 %^^A!
 %
@@ -2258,12 +2370,10 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \item 在任何情况下，本模板都会\emph{显式}调用以下宏包
 %     （或文档类）：
 %     \begin{itemize}
-%       \item \pkg{expl3}、\pkg{xparse}、\pkg{xtemplate} 和
-%         \pkg{l3keys2e}，用于构建 \LaTeX3 编程环境
-%         \scite{source3}。它们分属 \pkg{l3kernel} 和
-%         \pkg{l3packages} 宏集。
+%       \item \pkg{xtemplate} 和 \pkg{l3keys2e}，用于扩展 \LaTeX3 编程环境。
+%         它们属于 \pkg{l3packages} 宏集。
 %       \item \cls{ctexbook}，提供中文排版的通用框架。属于 \CTeX{}
-%         宏集 \scite{CTeX}。
+%         宏集 \cite{CTeX}。
 %       \item \pkg{amsmath}，对 \LaTeX{} 的数学排版功能进行了
 %         全面扩展。属于 \AmSLaTeX{} 套件。
 %       \item \pkg{unicode-math}，负责处理 Unicode 编码的
@@ -2282,11 +2392,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %     \pkg{pifont} 宏包。它属于 \pkg{psnfss} 套件。
 %   \item 开启 \kvopt{style/bib-backend}{bibtex} 后，会调用
 %     \pkg{natbib} 宏包，并依赖 \BibTeX{} 程序。参考文献样式由
-%     \pkg{gbt7714} 宏包提供 \scite{natbib,gbt7714}。
+%     \pkg{gbt7714} 宏包提供 \cite{natbib,gbt7714}。
 %   \item 开启 \kvopt{style/bib-backend}{biblatex} 后，会调用
 %     \pkg{biblatex} 宏包，并依赖 \biber{} 程序。参考文献样式由
 %     \pkg{biblatex-gb7714-2015} 宏包提供
-%     \scite{biblatex,biblatex-gb7714-2015}。
+%     \cite{biblatex,biblatex-gb7714-2015}。
 % \end{itemize}
 %^^A! Different compilation methods and options will result in a
 %^^A! different packages dependency. Details are as follows:
@@ -2294,9 +2404,8 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %^^A!   \item In any case, \cls{fduthesis} will load the following
 %^^A!     packages \emph{explicitly}:
 %^^A!     \begin{itemize}
-%^^A!       \item \pkg{expl3}, \pkg{xparse}, \pkg{xtemplate} and
-%^^A!         \pkg{l3keys2e}, belong to \pkg{l3kernel} and
-%^^A!         \pkg{l3packages} bundles
+%^^A!       \item \pkg{xtemplate} and \pkg{l3keys2e}, belong to
+%^^A!         \pkg{l3packages} bundle
 %^^A!       \item \cls{ctexbook}, belongs to \CTeX{} bundle
 %^^A!       \item \pkg{amsmath}, belongs to \AmSLaTeX{} bundle
 %^^A!       \item \pkg{unicode-math}
@@ -2336,12 +2445,12 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \newcommand\urlprefix{\newline\hspace*{\fill}}
 % \let\OldUrl=\url
 % \renewcommand\url[2][]{{\small\textit{#1}~\OldUrl{#2}}}
-% \newcommand\CTANurl[2][]{{\small\textit{#1}~\href{http://mirror.ctan.org/#2}^^A
-%   {\ttfamily CTAN://#2}}}
+% \newcommand\CTANurl[2][]{{^^A
+%   \small\textit{#1}~\href{https://mirror.ctan.org/#2}{\texttt{CTAN://#2}}}}
 %
 % \subsection{图书}
 %
-% \bibitem{knuth1986texbook}
+% \bibitem[Knuth(1986)]{texbook}
 % \textsc{Knuth D E}.
 % \newblock \textit{The \TeX book: Computers \& Typesetting, volume A} [M].
 % \newblock Boston: Addison--Wesley Publishing Company, 1986
@@ -2349,47 +2458,48 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \footnote{此代码只可作为学习之用。未经 Knuth 本人同意，您不应当编译此文档。}：]^^A
 %   {systems/knuth/dist/tex/texbook.tex}
 %
-% \bibitem{mittelbach2004latexcompanion}
+% \bibitem[Mittelbach et~al.(2004)]{companion}
 % \textsc{Mittelbach F} and \textsc{Goossens M}.
 % \newblock \textit{The \LaTeX{} Companion} [M].
 % \newblock 2nd ed.
 % \newblock Boston: Addison--Wesley Publishing Company, 2004
 %
-% \bibitem{胡伟2017latex2e}
+% \bibitem[()]{胡伟2017latex2e}
 % 胡伟.
 % \newblock \textit{\LaTeXe{} 文类和宏包学习手册} [M].
 % \newblock 北京: 清华大学出版社, 2017
 %
-% \bibitem{刘海洋2013latex入门}
+% \bibitem[()]{刘海洋2013latex入门}
 % 刘海洋.
 % \newblock \textit{\LaTeX{} 入门} [M].
 % \newblock 北京: 电子工业出版社, 2013
 %
 % \subsection{标准、规范}
 %
-% \bibitem{gb-t-7713.1-2006}
+% \bibitem[()]{gb-t-7713.1-2006}
 % 国务院学位委员会办公室, 全国信息与文献标准化技术委员会.
 % \newblock \textit{学位论文编写规则: GB/T 7713.1--2006} [S].
 % \newblock 北京: 中国标准出版社, 2007
 %
-% \bibitem{gb-t-7714-2015}
+% \bibitem[()]{gb-t-7714-2015}
 % 全国信息与文献标准化技术委员会.
 % \newblock \textit{信息与文献\quad 参考文献著录规则: GB/T 7714--2015} [S].
 % \newblock 北京: 中国标准出版社, 2015
 %
-% \bibitem{gb-t-15834-2011}
+% \bibitem[()]{gb-t-15834-2011}
 % 教育部语言文字信息管理司.
 % \newblock \textit{标点符号用法: GB/T 15834--2011} [S/OL].
 % \newblock 北京: 中国标准出版社, 2012
 % \urlprefix\url{http://www.moe.gov.cn/ewebeditor/uploadfile/2015/01/13/20150113091548267.pdf}
 %
-% \bibitem{clreq}
+% \bibitem[()]{clreq}
 % W3C.
 % \newblock \textit{中文排版需求（Requirements for Chinese Text Layout）} [EB/OL].
-% \newblock (2020-08-17)
+% \newblock W3C Editor's Draft.
+% \newblock (2022-09-01)
 % \urlprefix\url{https://w3c.github.io/clreq/}
 %
-% \bibitem{复旦大学论文规范}
+% \bibitem[()]{复旦大学论文规范}
 % 复旦大学图书馆, 复旦大学研究生院.
 % \newblock \textit{复旦大学博士、硕士学位论文规范} [EB/OL].
 % \newblock 2017 年 3 月修订版.
@@ -2398,30 +2508,30 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \subsection{宏包、模版}
 %
-% \bibitem{source2e}
+% \bibitem[()]{source2e}
 % \textsc{Braams J}, \textsc{Carlisle D}, \textsc{Jeffrey A}, et al.
 % \newblock \textit{The \LaTeXe{} Sources} [CP/OL].
-% \newblock (2020-02-02)
+% \newblock (2022-06-01)
 % \urlprefix\url{https://ctan.org/pkg/latex}
 % \urlprefix\CTANurl[源代码：]{macros/latex/base/source2e.pdf}
 %
-% \bibitem{CTeX}
+% \bibitem[()]{CTeX}
 % \textsc{CTEX.ORG}.
 % \newblock \textit{\CTeX{} 宏集手册} [EB/OL].
-% \newblock version 2.5.4,
-% \newblock (2020-08-23)
+% \newblock version 2.5.10,
+% \newblock (2022-07-14)
 % \urlprefix\url{https://ctan.org/pkg/ctex}
 % \urlprefix\CTANurl[文档及源代码：]{language/chinese/ctex/ctex.pdf}
 %
-% \bibitem{xeCJK}
+% \bibitem[()]{xeCJK}
 % \textsc{CTEX.ORG}.
 % \newblock \textit{\pkg{xeCJK} 宏包} [EB/OL].
-% \newblock version 3.8.5,
-% \newblock (2020-08-23)
+% \newblock version 3.9.1,
+% \newblock (2022-08-05)
 % \urlprefix\url{https://ctan.org/pkg/xecjk}
 % \urlprefix\CTANurl[文档及源代码：]{macros/xetex/latex/xecjk/xeCJK.pdf}
 %
-% \bibitem{natbib}
+% \bibitem[()]{natbib}
 % \textsc{Daly P W}.
 % \newblock \textit{Natural Sciences Citations and References} [EB/OL].
 % \newblock version 8.31b,
@@ -2429,55 +2539,55 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \urlprefix\url{https://ctan.org/pkg/natbib}
 % \urlprefix\CTANurl[文档及源代码：]{macros/latex/contrib/natbib/natbib.pdf}
 %
-% \bibitem{source3}
+% \bibitem[()]{source3}
 % \textsc{The \LaTeX3 Project}.
 % \newblock \textit{The \LaTeX3 Sources} [CP/OL].
-% \newblock (2020-08-07)
+% \newblock (2022-08-30)
 % \urlprefix\url{https://ctan.org/pkg/l3kernel}
 % \urlprefix\CTANurl[源代码：]{macros/latex/contrib/l3kernel/source3.pdf}
 %
-% \bibitem{biblatex}
-% \textsc{Lehman P}, \textsc{Kime P}, \textsc{Boruvka A}, et al.
+% \bibitem[()]{biblatex}
+% \textsc{Kime P}, \textsc{Wemheuer M}, \textsc{Lehman P}.
 % \newblock \textit{The \pkg{biblatex} Package} [EB/OL].
-% \newblock version 3.15a,
-% \newblock (2020-08-23)
+% \newblock version 3.18b,
+% \newblock (2022-07-12)
 % \urlprefix\url{https://ctan.org/pkg/biblatex}
 % \urlprefix\CTANurl[文档：]{macros/latex/contrib/biblatex/doc/biblatex.pdf}
 %
-% \bibitem{lshort}
+% \bibitem[()]{lshort}
 % \textsc{Oetiker T}, \textsc{Partl H}, \textsc{Hyna I}, et al.
 % \newblock \textit{The Not So Short Introduction to \LaTeXe{}: Or \LaTeXe{} in 139 minutes} [EB/OL].
-% \newblock version 6.2,
-% \newblock (2018-02-28)
+% \newblock version 6.4,
+% \newblock (2021-03-09)
 % \urlprefix\url{https://ctan.org/pkg/lshort-english}
 % \urlprefix\CTANurl[文档：]{info/lshort/english/lshort.pdf}
 %
-% \bibitem{lshort-zh-cn}
+% \bibitem[()]{lshort-zh-cn}
 % \textsc{Oetiker T}, \textsc{Partl H}, \textsc{Hyna I}, et al.
-% \newblock \textit{一份（不太）简短的 \LaTeXe{} 介绍: 或 112 分钟了解 \LaTeXe{}} [EB/OL].
+% \newblock \textit{一份（不太）简短的 \LaTeXe{} 介绍: 或 111 分钟了解 \LaTeXe{}} [EB/OL].
 % \newblock \CTeX{} 开发小组, 译.
-% \newblock 原版版本 version 6.2, 中文版本 version 6.02,
-% \newblock (2020-08-03)
+% \newblock 原版版本 version 6.4, 中文版本 version 6.03,
+% \newblock (2021-11-20)
 % \urlprefix\url{https://ctan.org/pkg/lshort-zh-cn}
 % \urlprefix\CTANurl[文档：]{info/lshort/chinese/lshort-zh-cn.pdf}
 %
-% \bibitem{biblatex-gb7714-2015}
+% \bibitem[()]{biblatex-gb7714-2015}
 % 胡振震.
 % \newblock \textit{符合 GB/T 7714-2015 标准的 biblatex 参考文献样式} [EB/OL].
-% \newblock version 1.0v,
-% \newblock (2020-07-21)
+% \newblock version 1.1j,
+% \newblock (2022-08-29)
 % \urlprefix\url{https://ctan.org/pkg/biblatex-gb7714-2015}
 % \urlprefix\CTANurl[文档：]{biblatex-contrib/biblatex-gb7714-2015/biblatex-gb7714-2015.pdf}
 %
-% \bibitem{gbt7714}
+% \bibitem[()]{gbt7714}
 % 李泽平（\textsc{Zeping L}）.
 % \newblock \textit{GB/T 7714-2015 \BibTeX{} Style} [EB/OL].
-% \newblock version 2.0.2,
-% \newblock (2020-06-08)
+% \newblock version 2.1.4,
+% \newblock (2022-03-12)
 % \urlprefix\url{https://ctan.org/pkg/gbt7714}
 % \urlprefix\CTANurl[文档：]{biblio/bibtex/contrib/gbt7714/gbt7714.pdf}
 %
-% \bibitem{cquthesis}
+% \bibitem[()]{cquthesis}
 % 李振楠.
 % \newblock \textit{\textsc{CquThesis}：重庆大学毕业论文 \LaTeX{} 模板} [EB/OL].
 % \newblock version 1.50,
@@ -2485,70 +2595,74 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \urlprefix\url{https://ctan.org/pkg/cquthesis}
 % \urlprefix\CTANurl[文档及源代码：]{macros/latex/contrib/cquthesis/cquthesis.pdf}
 %
-% \bibitem{thuthesis}
+% \bibitem[()]{pkuthss}
+% Casper Ti. Vector.
+% \newblock \textit{北京大学学位论文模版：pkuthss} [EB/OL].
+% \newblock version 1.9.2,
+% \newblock (2022-05-05)
+% \urlprefix\url{https://ctan.org/pkg/pkuthss}
+% \urlprefix\CTANurl[文档及源代码：]{macros/latex/contrib/pkuthss/pkuthss.pdf}
+%
+% \bibitem[()]{thuthesis}
 % 清华大学 TUNA 协会.
 % \newblock \textit{\textsc{ThuThesis}：清华大学学位论文模板} [EB/OL].
-% \newblock version 6.1.3,
-% \newblock (2020-07-09)
+% \newblock version 7.3.0,
+% \newblock (2022-05-17)
 % \urlprefix\url{https://ctan.org/pkg/thuthesis}
 % \urlprefix\CTANurl[文档及源代码：]{macros/latex/contrib/thuthesis/thuthesis.pdf}
 %
 % \emph{以下模版未收录至 CTAN，但仍然保持活跃更新。}
 %
-% \bibitem{sjtuthesis}
+% \bibitem[()]{sjtuthesis}
 % \textsc{SJTUG}.
 % \newblock \textit{上海交通大学学位论文模板} [EB/OL].
-% \newblock version 1.0.0rc7,
-% \newblock (2020-07-31)
+% \newblock version 1.1.1,
+% \newblock (2022-08-04)
 % \urlprefix\url{https://github.com/sjtug/SJTUThesis}
 % \urlprefix\url[源代码仓库：]{https://github.com/sjtug/SJTUTeX}
 %
-% \bibitem{ustcthesis}
+% \bibitem[()]{ustcthesis}
 % \textsc{USTC \TeX{} User Group}.
 % \newblock \textit{中国科学技术大学学位论文 \LaTeX{} 模板} [EB/OL].
-% \newblock version 3.2.1,
-% \newblock (2020-04-03)
+% \newblock version 3.3.3,
+% \newblock (2022-05-17)
 % \urlprefix\url{https://github.com/ustctug/ustcthesis}
 %
-% \bibitem{ucasthesis}
+% \bibitem[()]{ucasthesis}
 % \textsc{mohuangrui}.
 % \newblock \textit{\pkg{ucasthesis} 国科大学位论文 \LaTeX{} 模板} [EB/OL].
-% \newblock (2020-07-28)
+% \newblock (2021-10-29)
 % \urlprefix\url{https://github.com/mohuangrui/ucasthesis}
 %
 % \emph{以下模版现已停止更新。}
 %
-% \bibitem{pandoxie2014fduthesislatex}
+% \bibitem[()]{pandoxie2014fduthesislatex}
 % \textsc{Pandoxie}.
 % \newblock \textit{Fudan University-Latex Template} [EB/OL].
 % \newblock (2014-06-07)
 % \urlprefix\url{https://github.com/Pandoxie/FDU-Thesis-Latex}
 %
-% \bibitem{richard2016fudanthesis}
+% \bibitem[()]{richard2016fudanthesis}
 % \textsc{richard}.
 % \newblock \textit{复旦大学硕士学位论文模板} [EB/OL].
 % \newblock (2016-01-31)
 % \urlprefix\url{https://github.com/richarddzh/fudan-thesis}
 %
-% \bibitem{数院毕业论文格式}
+% \bibitem{数院本科毕业论文写作模板}
 % 复旦大学数学科学学院.
-% \newblock \textit{毕业论文格式 tex 版和 word 版} [EB/OL].
-% \urlprefix\url{http://math.fudan.edu.cn/show.aspx?info_lb=664&flag=101&info_id=1816}
-%
-% \bibitem{数院毕业论文格式更新}
-% 复旦大学数学科学学院.
-% \newblock \textit{毕业论文格式: Word、\TeX{} 模板更新} [EB/OL].
-% \urlprefix\url{http://math.fudan.edu.cn/Show.aspx?info_lb=664&info_id=1855&flag=101}
+% \newblock \textit{2019 春季本科毕业论文写作模板} [EB/OL].
+% \newblock (2019-03-12)
+% \urlprefix\url{https://math.fudan.edu.cn/f3/e1/c30360a324577/page.htm}
 %
 % \subsection{其他}
 %
-% \bibitem{wright2009dtxfile}
+% \bibitem[()]{wright2009dtxfile}
 % \textsc{Wright J}.
 % \newblock \textit{A model dtx file} [EB/OL].
 % \newblock (2009-10-06)
 % \urlprefix\url{https://www.texdev.net/2009/10/06/a-model-dtx-file/}
 %
-% \bibitem{孔雀计划}
+% \bibitem[()]{孔雀计划}
 % 刘庆（\textsc{Eric Q L}）.
 % \newblock \textit{孔雀计划：中文字体排印的思路} [EB/OL].
 % \urlprefix\url{https://thetype.com/kongque/}
@@ -2585,11 +2699,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % 以下代码中有一些形如 \textcolor[HTML]{2E3191}{\textsf{<*class>}}
 % 的标记，这是 \pkg{DocStrip} 中的“guard”，用来选择性地提取文件。
 % “\textsf{*}”和“\textsf{/}”分别表示该部分的开始和结束。不含
-% “\textsf{*}”和“\textsf{/}”的 guard 出现在行号右侧，它们用来确定
+% “\textsf{*}”和“\textsf{/}”的 guard 出现在行号左侧，它们用来确定
 % 单独一行代码的归属。这些 guard 的颜色深浅不一，用以明确嵌套关系。
 %
 % 另有若干形如 \textcolor{MaterialPink}{\textsf{<@@=fdu>}} 的 guard，
-% 它们由 \pkg{l3docstrip} 定义，用来指示名字空间（模块）。
+% 它们用来指示名字空间（模块）。
 %
 % \subsection{准备}
 %
@@ -2598,14 +2712,13 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %<*class|class-en>
 %    \end{macrocode}
 %
+% \changes{v0.8}{2021/09/15}{同步 \LaTeX{} 2020/10/01，不再显式调用
+%   \pkg{expl3} 和 \pkg{xparse} 宏包。}
+% \changes{v0.8}{2022/02/17}{在使用前声明提示信息。}
+%
 % 检查 \LaTeX3 编程环境。
 %    \begin{macrocode}
-\RequirePackage { xparse, xtemplate, l3keys2e }
-\clist_map_inline:nn { expl3, xparse, xtemplate, l3keys2e }
-  {
-    \@ifpackagelater {#1} { 2018/05/12 }
-      { } { \msg_error:nnn { fduthesis } { l3-too-old } {#1} }
-  }
+\RequirePackage { xtemplate, l3keys2e }
 \msg_new:nnn { fduthesis } { l3-too-old }
   {
     Package~ "#1"~ is~ too~ old. \\\\
@@ -2613,10 +2726,21 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     "l3kernel"~ and~ "l3packages"~ using~ your~ TeX~ package \\
     manager~ or~ from~ CTAN.
   }
+\clist_map_inline:nn { xtemplate, l3keys2e }
+  {
+    \@ifpackagelater {#1} { 2020/07/17 }
+      { } { \msg_error:nnn { fduthesis } { l3-too-old } {#1} }
+  }
 %    \end{macrocode}
 %
 % 目前 \cls{fduthesis} 仅支持 \XeTeX{} 和 \LuaTeX{}。
 %    \begin{macrocode}
+\msg_new:nnn { fduthesis } { unsupported-engine }
+  {
+    The~ fduthesis~ class~ requires~ either~ XeTeX~ or~ LuaTeX. \\\\
+    "#1"~ is~ not~ supported~ at~ present.~ You~ must~ change \\
+    your~ typesetting~ engine~ to~ "xelatex"~ or~ "lualatex".
+  }
 \sys_if_engine_xetex:F
   {
     \sys_if_engine_luatex:F
@@ -2624,12 +2748,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
         \msg_fatal:nnx { fduthesis } { unsupported-engine }
           { \c_sys_engine_str }
       }
-  }
-\msg_new:nnn { fduthesis } { unsupported-engine }
-  {
-    The~ fduthesis~ class~ requires~ either~ XeTeX~ or~ LuaTeX. \\\\
-    "#1"~ is~ not~ supported~ at~ present.~ You~ must~ change \\
-    your~ typesetting~ engine~ to~ "xelatex"~ or~ "lualatex".
   }
 %    \end{macrocode}
 %
@@ -2694,19 +2812,17 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \subsubsection{内部函数}
 %
-% \begin{macro}{\cs_generate_variant:cn,
-%   \file_input:V,
+% \begin{macro}{\file_input:V,
 %   \int_to_arabic:v,
 %   \keys_define:nx,
 %   \tl_map_inline:xn}
 % \begin{macro}[TF]{\tl_if_eq:Vn}
 % \LaTeX3{} 函数变体。
 %    \begin{macrocode}
-\cs_generate_variant:Nn \cs_generate_variant:Nn { cn }
-\cs_generate_variant:Nn \file_input:n           { V  }
-\cs_generate_variant:Nn \int_to_arabic:n        { v  }
-\cs_generate_variant:Nn \keys_define:nn         { nx }
-\cs_generate_variant:Nn \tl_map_inline:nn       { xn }
+\cs_generate_variant:Nn \file_input:n     { V  }
+\cs_generate_variant:Nn \int_to_arabic:n  { v  }
+\cs_generate_variant:Nn \keys_define:nn   { nx }
+\cs_generate_variant:Nn \tl_map_inline:nn { xn }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { Vn } { T, TF }
 %    \end{macrocode}
 % \end{macro}
@@ -2756,6 +2872,18 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
+% \changes{v0.8}{2021/09/15}{统一使用 \LaTeX{} 2020/10/01 新的钩子机制。}
+%
+% \begin{macro}{\@@_gadd_ltxhook:nn}
+% 封装 \LaTeX{} 的钩子管理机制。本模板中的字体加载命令位于
+% |begindocument/before| 钩子中，需确保在 \pkg{xeCJK} 之前执行。
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_gadd_ltxhook:nn #1#2
+  { \hook_gput_code:nnn {#1} { . } {#2} }
+\hook_gset_rule:nnnn { begindocument/before } { . } { < } { xeCJK }
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\@@_patch_cmd:Nnn,\@@_appto_cmd:Nn}
 % 补丁工具，来自 \pkg{ctexpatch} 宏包。
 %    \begin{macrocode}
@@ -2783,7 +2911,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 \cs_new_protected:Npn \@@_define_fn_style:nn #1#2
   { \tl_const:cn { c_@@_fn_style_ #1 _tl } {#2} }
 \cs_new_protected:Npn \@@_define_punct:nn #1#2
-  { \tl_const:cn { c_@@_ #1 _tl } { \@@_symbol:n {#2} } }
+  { \tl_const:cn { c_@@_ #1 _tl } {#2} }
 % \cs_new_protected:Npn \@@_define_sep:nn #1#2
 %   { \tl_const:cn { c_@@_ #1 _sep_tl } {#2} }
 % \cs_new_protected:Npn \@@_define_format:nn #1#2
@@ -2799,7 +2927,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \end{macro}
 %
 % \begin{macro}{\@@_msg_new:nn,
-%   \@@_error:n,\@@_error:nn,\@@_error:nx,\@@_error:nnn,
+%   \@@_error:n,\@@_error:nn,\@@_error:nx,\@@_error:nnn,\@@_error:nnnn
 %   \@@_warning:n,\@@_warning:nn,\@@_warning:nxx,
 %   \@@_info:nx}
 % 各种信息函数的缩略形式。
@@ -2809,6 +2937,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 \cs_new:Npn \@@_error:nn    { \msg_error:nnn    { fduthesis } }
 \cs_new:Npn \@@_error:nx    { \msg_error:nnx    { fduthesis } }
 \cs_new:Npn \@@_error:nnn   { \msg_error:nnnn   { fduthesis } }
+\cs_new:Npn \@@_error:nnnn  { \msg_error:nnnnn  { fduthesis } }
 \cs_new:Npn \@@_warning:n   { \msg_warning:nn   { fduthesis } }
 \cs_new:Npn \@@_warning:nn  { \msg_warning:nnn  { fduthesis } }
 \cs_new:Npn \@@_warning:nxx { \msg_warning:nnxx { fduthesis } }
@@ -2889,7 +3018,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     unknown .code:n = { \@@_error:n { unknown-option } }
   }
 \@@_msg_new:nn { unknown-option }
-  { Class~ option~ "\l_keys_key_tl"~ is~ unknown. }
+  { Class~ option~ "\l_keys_key_str"~ is~ unknown. }
 %    \end{macrocode}
 %
 % 将文档类选项传给 |fdu/option|。
@@ -2900,13 +3029,13 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % 载入参数配置文件。
 %    \begin{macrocode}
 \file_input:n { fduthesis.def }
+\@@_msg_new:nn { load-config-file }
+  { You~ are~ loading~ config~ file~ "#1". }
 \tl_if_empty:NF \g_@@_config_tl
   {
-    \file_input:V \g_@@_config_tl
     \@@_info:nx { load-config-file } { \g_@@_config_tl }
+    \file_input:V \g_@@_config_tl
   }
-\@@_msg_new:nn { load-config-file }
-  { You~ are~ loading~ config~ file~ '#1'. }
 %    \end{macrocode}
 %
 % \subsection{载入宏包、文档类}
@@ -2942,17 +3071,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
   { \PassOptionsToPackage #1 }
 %    \end{macrocode}
 %
-% 本模板会在 \pkg{ctexhook} 提供的钩子 \cs{ctex_at_end_preamble:n}
-% 中调用 \pkg{biblatex}，而 \pkg{biblatex} 自身又会使用 \pkg{etoolbox}
-% 的钩子 \tn{AtEndPreamble}，因此需要在载入 \cls{ctexbook} 之前调用
-% \pkg{etoolbox}。钩子的顺序为：
-% \[ \text{\tn{CTEX@document@left@hook}}
-%    \prec \text{\tn{@endpreamblehook}}
-%    \prec \text{\texttt{\textbackslash begin\{document\}}}. \]
-%    \begin{macrocode}
-\RequirePackage { etoolbox }
-%    \end{macrocode}
-%
 % 载入 \cls{ctexbook} 文档类。
 % 在使用 \XeLaTeX{} 编译时，\cls{ctexbook} 的底层将调用 \pkg{xeCJK}
 % 宏包；而在使用 \LuaLaTeX{} 编译时，则将调用 \pkg{LuaTeX-ja} 宏包。
@@ -2980,40 +3098,43 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
   }
 %    \end{macrocode}
 %
-% \begin{macro}{\@@_check_package:nnn}
-% 检查过时宏包。
+% \changes{v0.8}{2021/09/16}{只检查 \cls{ctexbook} 和 \pkg{xeCJK} 的版本。}
+%
+% \begin{macro}{\@@_check_package:nnn,\@@_check_class:nnn}
+% 检查过时宏包和文档类。
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_check_package:nnn #1#2#3
   {
     \@ifpackagelater {#1} {#2}
-      { } { \@@_error:nnn { package-too-old } {#1} {#3} }
+      { } { \@@_error:nnnn { package-too-old } { Package } {#1} {#3} }
+  }
+\cs_new_protected:Npn \@@_check_class:nnn #1#2#3
+  {
+    \@ifclasslater {#1} {#2}
+      { } { \@@_error:nnnn { package-too-old } { Class } {#1} {#3} }
   }
 \@@_msg_new:nn { package-too-old }
   {
-    Package~ "#1"~ is~ too~ old. \\
-    The~ fduthesis~ class~ only~ supports~ "#1"~ with~ a~ version \\
-    higher~ than~ v#2. \\\\
-    Please~ update~ an~ up-to-date~ version~ of~ it~ using~ your \\
-    TeX~ package~ manager~ or~ from~ CTAN.
+    #1~ "#2"~ is~ too~ old. \\
+    The~ fduthesis~ class~ only~ supports~ "#2" \\
+    with~ a~ version~ higher~ than~ v#3. \\\\
+    Please~ update~ an~ up-to-date~ version~ of~ it \\
+    using~ your~ TeX~ package~ manager~ or~ from~ CTAN.
   }
 %    \end{macrocode}
 % \end{macro}
 %
 %    \begin{macrocode}
-\@@_check_package:nnn { ctex         } { 2017/08/07 } { 2.4.10 }
-\@@_check_package:nnn { fontspec     } { 2017/09/22 } { 2.6e   }
-\@@_check_package:nnn { unicode-math } { 2017/11/18 } { 0.8i   }
+\@@_check_class:nnn { ctexbook } { 2021/03/14 } { 2.5.6 }
 \sys_if_engine_xetex:T
-  { \@@_check_package:nnn { xeCJK          } { 2017/08/07 } { 3.5.0 } }
-\sys_if_engine_luatex:T
-  { \@@_check_package:nnn { xunicode-addon } { 2018/04/30 } { 3.7.1 } }
+  { \@@_check_package:nnn { xeCJK } { 2020/05/01 } { 3.8.3 } }
 %    \end{macrocode}
 %
 % \subsection{页面布局}
 %
 % 利用 \pkg{geometry} 宏包设置纸张大小、页面边距以及页眉高度。这里，
-% $\SI{2.54}{\centi\meter}=\SI{1}{in}$，
-% $\SI{3.18}{\centi\meter}=\SI{1.25}{in}$。
+% $\qty{2.54}{\centi\meter}=\qty{1}{in}$，
+% $\qty{3.18}{\centi\meter}=\qty{1.25}{in}$。
 %    \begin{macrocode}
 \geometry
   {
@@ -3024,7 +3145,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
   }
 %    \end{macrocode}
 %
-% 草稿模式下显示页面边框及页眉、页脚线 。
+% 草稿模式下显示页面边框及页眉、页脚线。
 %    \begin{macrocode}
 \bool_if:NT \g_@@_draft_bool { \geometry { showframe } }
 %    \end{macrocode}
@@ -3097,15 +3218,16 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \@@_setCJKmainfont:nn,
 %   \@@_setCJKsansfont:nn,
 %   \@@_setCJKmonofont:nn}
+% \changes{v0.8}{2021/09/15}{展开字体族名称。}
 % 用于设置中文字体的辅助函数，来源于 \pkg{xeCJK} 和 \pkg{ctex} 宏包。
 %    \begin{macrocode}
 %<*class>
 \cs_new_protected:Npn \@@_setCJKmainfont:nn #1#2
-  { \@@_set_family:nnn { \CJKrmdefault } {#2} {#1} }
+  { \@@_set_family:xnn { \CJKrmdefault } {#2} {#1} }
 \cs_new_protected:Npn \@@_setCJKsansfont:nn #1#2
-  { \@@_set_family:nnn { \CJKsfdefault } {#2} {#1} }
+  { \@@_set_family:xnn { \CJKsfdefault } {#2} {#1} }
 \cs_new_protected:Npn \@@_setCJKmonofont:nn #1#2
-  { \@@_set_family:nnn { \CJKttdefault } {#2} {#1} }
+  { \@@_set_family:xnn { \CJKttdefault } {#2} {#1} }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -3142,7 +3264,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_set_family:nnn,\@@_switch_family:n}
+% \begin{macro}{\@@_set_family:nnn,\@@_set_family:xnn,\@@_switch_family:n}
 % 封装 CJK 字体族的设定和切换命令。
 %    \begin{macrocode}
 \sys_if_engine_xetex:TF
@@ -3154,6 +3276,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     \cs_new_eq:NN \@@_set_family:nnn  \ctex_ltj_set_family:nnn
     \cs_new_eq:NN \@@_switch_family:n \ctex_ltj_switch_family:n
   }
+\cs_generate_variant:Nn \@@_set_family:nnn { x }
 %</class>
 %    \end{macrocode}
 % \end{macro}
@@ -3184,6 +3307,8 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \end{macro}
 %
 % \changes{v0.7e}{2019/04/10}{兼容 Libertinus 和 XITS 字体的文件名变动。}
+% \changes{v0.8}{2021/09/15}{判断 Libertinus Sans Bold Oblique 字体是否存在。}
+%
 % \begin{macro}{
 %   \g_@@_font_family_libertinus_serif_tl,
 %   \g_@@_font_family_libertinus_sans_tl,
@@ -3232,7 +3357,12 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     \tl_set:Nn \g_@@_font_style_libertinus_bf_tl     { Bold            }
     \tl_set:Nn \g_@@_font_style_libertinus_it_tl     { Italic          }
     \tl_set:Nn \g_@@_font_style_libertinus_bfit_tl   { BoldItalic      }
-    \tl_set:Nn \g_@@_font_style_libertinus_bfsl_tl   { BoldOblique     }
+%    \end{macrocode}
+% 较新版本中 Libertinus Sans Bold Oblique 字体被移除，需进行额外判断。
+%    \begin{macrocode}
+    \fontspec_font_if_exist:nTF { LibertinusSans-BoldOblique.otf }
+      { \tl_set:Nn \g_@@_font_style_libertinus_bfsl_tl { BoldOblique } }
+      { \tl_set:Nn \g_@@_font_style_libertinus_bfsl_tl { Bold        } }
   }
   {
     \tl_set:Nn \g_@@_font_family_libertinus_serif_tl { libertinusserif }
@@ -3569,7 +3699,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     \@@_warning:n { source-han }
   }
 \@@_msg_new:nn { source-han }
-  { Font~ set~ `sourcehan'~ does~ not~ contain~ kaiti~ and~ fangsong. }
+  { Font~ set~ "sourcehan"~ does~ not~ contain~ kaiti~ and~ fangsong. }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -3662,7 +3792,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
-% \subsubsection{句号}
+% \subsubsection{其他设置}
 %
 % \begin{macro}{style/fullwidth-stop}
 % \changes{v0.6}{2017/10/14}{支持类别码和 TECKit 映射两种机制。}
@@ -3702,7 +3832,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
   }
 %    \end{macrocode}
 % \end{macro}
-%
 % 提示信息。
 %    \begin{macrocode}
 \@@_msg_new:nn { mapping-not-available }
@@ -3713,16 +3842,33 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 %
 % \begin{macro}{\@@_set_fullwidth_stop_catcode:}
+% \changes{v0.8}{2021/09/16}{将类别码设置应用于预定义的文本中，并优化实现。}
 % 将\FSID 设置为活动符，并定义为句点\FSFW。
 %    \begin{macrocode}
 \cs_new:Npn \@@_set_fullwidth_stop_catcode:
   {
-    \char_set_active_eq:nN { "3002 } \c_@@_fwid_full_stop_tl
-    \char_set_catcode_active:n { "3002 }
+    \char_set_active_eq:NN ^^^^3002 \c_@@_fwid_full_stop_tl
+    \char_set_catcode_active:N ^^^^3002
+    \clist_map_inline:nn
+      { \c_@@_orig_decl_text_tl, \c_@@_auth_decl_text_tl }
+      { \tl_set_rescan:Nno ##1 { } {##1} }
   }
 %</class>
 %    \end{macrocode}
 % \end{macro}
+%
+% \changes{v0.8}{2021/09/15}{允许 \tn{emph} 对中文生效。}
+%
+% 声明 \tn{emph} 样式序列，使得中文强调以楷体显示。
+%    \begin{macrocode}
+%<*class>
+\DeclareEmphSequence
+  {
+    \itshape \fdu@kai,
+    \upshape \CJKfamily { \CJKfamilydefault },
+  }
+%</class>
+%    \end{macrocode}
 %
 % \changes{v0.6}{2017/10/28}{优化 \LuaTeX{} 下希腊字母、西里尔字母和带圈数字的
 %   显示（\pkg{ctex} v2.4.11 已默认进行处理）。}
@@ -3734,52 +3880,33 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 \fancyhf { }
 %    \end{macrocode}
 %
-% \begin{variable}{\l_@@_header_center_mark_tl}
-% 保存中间页眉的文字。正文中设置为空，目录、摘要、符号表等设置为相应标题。
+% \begin{macro}{\@@_fancy_head:nn}
+% 页眉样式。
 %    \begin{macrocode}
-\tl_new:N \l_@@_header_center_mark_tl
+\cs_new_protected:Npn \@@_fancy_head:nn #1#2
+  {
+    \fancyhead [#1]
+%<class>      { \small \fdu@kai \nouppercase {#2} }
+%<class-en>      { \small \itshape \nouppercase {#2} }
+  }
 %    \end{macrocode}
-% \end{variable}
+% \end{macro}
 %
 % 构建页眉，要在单面或双面下分别设置。
 %
-% \cs{fancyhead} 的选项中，\opt{E} 和 \opt{O} 分别表示偶数（even）
-% 和奇数（odd）， 而 \opt{L}、\opt{R} 和 \opt{C} 则分别表示左
-% （left）、右（right）和中间（center）。按照通常的排版规则，
-% 在双面模式下，偶数页的中间页眉文字在左，奇数页则在右。单面模式下，
-% 左右页眉都要显示。
+% \cs{fancyhead} 的选项中，\opt{E} 和 \opt{O} 分别表示偶数（even）和奇数（odd）， 而 \opt{L}、
+% \opt{R} 和 \opt{C} 则分别表示左（left）、右（right）和中间（center）。按照通常的排版规则，
+% 双面模式下，偶数页的中间页眉文字在左，奇数页则在右；单面模式下，左右页眉都会显示。
 %    \begin{macrocode}
 \bool_if:NTF \g_@@_twoside_bool
-%<*class>
   {
-    \fancyhead [ EL ] { \small \nouppercase { \fdu@kai \leftmark  } }
-    \fancyhead [ OR ] { \small \nouppercase { \fdu@kai \rightmark } }
+    \@@_fancy_head:nn { EL } { \leftmark  }
+    \@@_fancy_head:nn { OR } { \rightmark }
   }
   {
-    \fancyhead [ L ] { \small \nouppercase { \fdu@kai \leftmark  } }
-    \fancyhead [ R ] { \small \nouppercase { \fdu@kai \rightmark } }
-    \fancyhead [ C ]
-      {
-        \small \nouppercase
-          { \fdu@kai \l_@@_header_center_mark_tl }
-      }
+    \@@_fancy_head:nn { L  } { \leftmark  }
+    \@@_fancy_head:nn { R  } { \rightmark }
   }
-%</class>
-%<*class-en>
-  {
-    \fancyhead [ EL ] { \small \nouppercase { \itshape \leftmark  } }
-    \fancyhead [ OR ] { \small \nouppercase { \itshape \rightmark } }
-  }
-  {
-    \fancyhead [ L ] { \small \nouppercase { \itshape \leftmark  } }
-    \fancyhead [ R ] { \small \nouppercase { \itshape \rightmark } }
-    \fancyhead [ C ]
-      {
-        \small \nouppercase
-          { \itshape \l_@@_header_center_mark_tl }
-      }
-  }
-%</class-en>
 %    \end{macrocode}
 %
 % 构建页脚，用来显示页码。选项 \opt{C} 表示居中（center）。
@@ -3794,8 +3921,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \begin{macro}{\cleardoublepage}
 % 重定义 \tn{cleardoublepage}，使得偶数页面在没有内容时也不显示页眉页脚，见
-% \url{https://tex.stackexchange.com/a/1683}。最后清空中间页眉，确保正文部分
-% 页眉显示正确。
+% \url{https://tex.stackexchange.com/a/1683}。
 %    \begin{macrocode}
 \RenewDocumentCommand \cleardoublepage { }
   {
@@ -3805,7 +3931,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
         \int_if_odd:nF \c@page
           { \hbox:n { } \thispagestyle { empty } \newpage }
       }
-    \tl_gset:Nn \l_@@_header_center_mark_tl { }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -3891,16 +4016,15 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \end{macro}
 %
 % \begin{macro}{\@@_chapter_header:n}
-% 单页模式下，目录、摘要、符号表等的页眉中间为相应标题，左右为空。
+% \changes{v0.8}{2022/01/18}{简化单页模式下页眉的实现方式。}
+% 单页模式下，目录、摘要、符号表等的页眉中间为相应标题，左右为空。这里通过居中的
+% \tn{leftmark} 实现。
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_chapter_header:n #1
   {
     \bool_if:NTF \g_@@_twoside_bool
       { \markboth {#1} {#1} }
-      {
-        \markboth { } { }
-        \tl_gset:Nn \l_@@_header_center_mark_tl {#1}
-      }
+      { \markboth { \hfill #1 \hfill } { } }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -4159,7 +4283,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \begin{macro}[int]{\@makefntext}
 % \changes{v0.7}{2018/01/18}{简化实现，兼容 \pkg{fancyvrb} 宏包。
 %   不再使用悬挂缩进。}
-% 重定义内部脚注文字命令，使脚注编号不使用上标，宽度为 \SI{1.5}{em}。
+% 重定义内部脚注文字命令，使脚注编号不使用上标，宽度为 \qty{1.5}{em}。
 % 见 \url{http://tex.stackexchange.com/q/19844} 和
 % \url{https://www.zhihu.com/question/53030087}。
 %    \begin{macrocode}
@@ -4402,12 +4526,13 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \begin{macro}{\thefigure,\thetable}
 % \changes{v0.7}{2018/01/17}{改为可完全展开的命令。}
+% \changes{v0.8}{2021/03/10}{直接调用 \tn{thechapter} 使得附录中的图表编号正确显示。}
 % 重定义图表编号。
 %    \begin{macrocode}
 \cs_set:Npn \thefigure
-  { \@@_arabic:n { chapter } - \@@_arabic:n { figure } }
+  { \thechapter - \@@_arabic:n { figure } }
 \cs_set:Npn \thetable
-  { \@@_arabic:n { chapter } - \@@_arabic:n { table  } }
+  { \thechapter - \@@_arabic:n { table  } }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4424,6 +4549,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \l_@@_info_student_id_tl,
 %   \l_@@_info_school_id_tl,
 %   \l_@@_info_clc_tl,
+%   \l_@@_info_jel_tl,
 %   \l_@@_info_instructors_clist,
 %   \l_@@_info_keywords_clist}
 % 封面所需的一些字段。
@@ -4431,7 +4557,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 \clist_map_inline:nn
   {
     title, date, author, supervisor, department, major, student_id,
-    school_id, clc
+    school_id, clc, jel
   }
   { \tl_new:c { l_@@_info_ #1 _tl } }
 \clist_new:N \l_@@_info_instructors_clist
@@ -4554,10 +4680,13 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{info/clc}
-% 中图分类号。
+% \changes{v0.8}{2021/09/16}{新增 \opt{info/jel} 选项。}
+%
+% \begin{macro}{info/clc,info/jel}
+% 中图分类号和 JEL 分类号。
 %    \begin{macrocode}
-    clc         .tl_set:N    = \l_@@_info_clc_tl
+    clc         .tl_set:N    = \l_@@_info_clc_tl,
+    jel         .tl_set:N    = \l_@@_info_jel_tl
   }
 %    \end{macrocode}
 % \end{macro}
@@ -4846,11 +4975,20 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_cover_info:}
+% \begin{macro}{\@@_cover_info:,\l_@@_cover_info_left_width_tl}
+% \changes{v0.8}{2021/09/21}{调整专业学位的封面信息栏。}
 % 信息栏。
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_cover_info:
   {
+    \tl_set:Nx \l_@@_cover_info_left_width_tl
+      {
+        \int_case:nn { \l_@@_info_degree_type_int }
+          {
+            { 1 } { 6 em }
+            { 2 } { 9 em }
+          }
+      }
     \begin{minipage} [ c ] { \textwidth }
       \centering \zihao { 4 }
 %    \end{macrocode}
@@ -4859,7 +4997,11 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
       \clist_set:Nx \l_@@_tmpa_clist
         {
           \c_@@_name_department_tl,
-          \c_@@_name_major_tl,
+          \int_case:nn { \l_@@_info_degree_type_int }
+            {
+              { 1 } { \c_@@_name_major_tl              }
+              { 2 } { \c_@@_name_major_professional_tl }
+            },
           \c_@@_name_author_tl,
           \c_@@_name_supervisor_tl,
           \c_@@_name_date_tl,
@@ -4885,13 +5027,16 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
         {
           \clist_pop:NN \l_@@_tmpa_clist \l_@@_tmpa_tl
           \clist_pop:NN \l_@@_tmpb_clist \l_@@_tmpb_tl
-          \@@_spread_box:nn { 6 em } { \l_@@_tmpa_tl }
+          \@@_spread_box:nn
+            { \l_@@_cover_info_left_width_tl }
+            { \l_@@_tmpa_tl }
           \c_@@_fwid_colon_tl
           \@@_center_box:Vn \l_@@_tmpb_dim { \l_@@_tmpb_tl }
           \skip_vertical:n { 1 ex }
         }
     \end{minipage}
   }
+\tl_new:N \l_@@_cover_info_left_width_tl
 %    \end{macrocode}
 % \end{macro}
 %
@@ -5082,24 +5227,43 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \subsubsection{绘制封面}
 %
-% \begin{macro}{\makecoveri,\makecoverii,\makecoveriii}
-% 使用实例（instance）构建封一、封二、封三。
+% \begin{macro}{\makecoveri}
+% 论文封面（封一）。
 %    \begin{macrocode}
 \NewDocumentCommand \makecoveri { }
   {
     \thispagestyle { empty }
     \UseInstance { fdu / cover } { cover-i-default }
   }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\makecoverii}
+% \changes{v0.8}{2021/09/21}{\opt{info/instructors} 为空时不再显示指导小组
+%   成员名单。}
+% 指导小组成员名单（封二）。
+%    \begin{macrocode}
 \NewDocumentCommand \makecoverii { }
   {
     \thispagestyle { empty }
-    \UseInstance { fdu / cover } { cover-ii-default }
+    \clist_if_empty:NF \l_@@_info_instructors_clist
+      { \UseInstance { fdu / cover } { cover-ii-default } }
   }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\makecoveriii}
+% 声明页（封三）。
+%    \begin{macrocode}
 \NewDocumentCommand \makecoveriii { }
   {
     \cleardoublepage
-    \thispagestyle { empty }
-    \UseInstance { fdu / cover } { cover-iii-default }
+    \tl_if_empty:NTF \l_@@_declaration_page_tl
+      {
+        \thispagestyle { empty }
+        \UseInstance { fdu / cover } { cover-iii-default }
+      }
+      { \includepdf { \l_@@_declaration_page_tl } }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -5200,23 +5364,40 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
   }
 %    \end{macrocode}
 %
-% \begin{macro}{style/auto-make-cover}
-% \begin{variable}{\l_@@_auto_make_cover_bool}
-% 是否自动生成封面。
+% \begin{variable}{\l_@@_auto_make_cover_bool,\l_@@_declaration_page_tl}
 %    \begin{macrocode}
 \bool_new:N \l_@@_auto_make_cover_bool
-\keys_define:nn { fdu / style }
-  {
-    auto-make-cover .bool_set:N = \l_@@_auto_make_cover_bool,
-    auto-make-cover .default:n  = true
-  }
+\tl_new:N   \l_@@_declaration_page_tl
 %    \end{macrocode}
 % \end{variable}
+%
+% \begin{macro}{style/auto-make-cover}
+% 是否自动生成封面。
+%    \begin{macrocode}
+\keys_define:nn { fdu / style }
+  {
+    auto-make-cover  .bool_set:N = \l_@@_auto_make_cover_bool,
+    auto-make-cover  .default:n  = true,
+%    \end{macrocode}
+% \end{macro}
+%
+% \changes{v0.8}{2021/09/21}{新增 \opt{style/declaration-page} 选项。}
+%
+% \begin{macro}{style/declaration-page}
+% 设置扫描版的声明页 PDF 文档。
+%    \begin{macrocode}
+    declaration-page .code:n     =
+      {
+        \tl_set_eq:NN \l_@@_declaration_page_tl \l_keys_value_tl
+        \RequirePackage { pdfpages }
+      },
+  }
+%    \end{macrocode}
 % \end{macro}
 %
 % 在 \env{document} 开始位置添加封面以及指导小组成员名单。
 %    \begin{macrocode}
-\AtBeginDocument
+\ctex_after_end_preamble:n
   {
     \bool_if:NT \l_@@_auto_make_cover_bool
       {
@@ -5229,7 +5410,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % 在 \env{document} 结束位置添加声明页。
 %    \begin{macrocode}
-\AtEndDocument
+\@@_gadd_ltxhook:nn { enddocument }
   { \bool_if:NT \l_@@_auto_make_cover_bool { \makecoveriii } }
 %    \end{macrocode}
 %
@@ -5317,8 +5498,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \begin{environment}{abstract}
 % \begin{environment}{abstract*}
 % \changes{v0.7}{2018/03/05}{整理代码。}
-% 摘要环境。在中文模板定义了中英文双语摘要，但在英文模板中则没有
-% 定义中文摘要。
+% 摘要环境。在中文模板定义了中英文双语摘要，但在英文模板中则没有定义中文摘要。
 %    \begin{macrocode}
 \NewDocumentEnvironment { abstract  } { }
 %<class>  { \@@_abstract_begin:    } { \@@_abstract_end:      }
@@ -5344,9 +5524,10 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \end{macro}
 %
 % \changes{v0.7d}{2019/03/28}{优化关键字列表的显示。}
+% \changes{v0.8}{2021/12/22}{没有指定 CLC/JEL 分类号时不再显示。}
 %
-% \begin{macro}{\@@_abstract_end:,\@@_abstract_en_end:}
-% 摘要正文完成后，输出关键字列表和中图分类号（CLC）。
+% \begin{macro}{\@@_abstract_end:}
+% 摘要正文完成后，输出关键字列表和 CLC/JEL 分类号。
 %    \begin{macrocode}
 %<*class>
 \cs_new_protected:Npn \@@_abstract_end:
@@ -5354,25 +5535,45 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
     \@@_keywords:nNn
       { \sffamily \c_@@_name_keywords_tl \c_@@_fwid_colon_tl }
       \l_@@_info_keywords_clist { \c_@@_fwid_semicolon_tl }
-    \@@_clc:nn
-      { \sffamily \c_@@_name_clc_tl \c_@@_fwid_colon_tl }
-      { \l_@@_info_clc_tl }
+    \tl_if_empty:NF \l_@@_info_clc_tl
+      {
+        \@@_clc_jel:nn
+          { \sffamily \c_@@_name_clc_tl \c_@@_fwid_colon_tl }
+          { \l_@@_info_clc_tl }
+      }
   }
 %</class>
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_abstract_en_end:}
+% 英文摘要中，如果指定了 JEL 分类号，则 CLC 分类号不再显示。
+%    \begin{macrocode}
 \cs_new_protected:Npn \@@_abstract_en_end:
   {
     \@@_keywords:nNn
       { \bfseries \c_@@_name_keywords_en_tl \@@_quad: }
       \l_@@_info_keywords_en_clist { ; ~ }
-    \@@_clc:nn
-      { \bfseries \c_@@_name_clc_en_tl \@@_quad: }
-      { \l_@@_info_clc_tl }
+    \tl_if_empty:NTF \l_@@_info_jel_tl
+      {
+        \tl_if_empty:NF \l_@@_info_clc_tl
+          {
+            \@@_clc_jel:nn
+              { \bfseries \c_@@_name_clc_en_tl \@@_quad: }
+              { \l_@@_info_clc_tl }
+          }
+      }
+      {
+        \@@_clc_jel:nn
+          { \bfseries \c_@@_name_jel_en_tl \@@_quad: }
+          { \l_@@_info_jel_tl }
+      }
   }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_keywords:nNn,\@@_keywords_prevdepth:,\@@_clc:nn}
-% 关键字列表前要空一行，使用悬挂缩进；中图分类号不缩进。|\parbox| 之后的间距
+% \begin{macro}{\@@_keywords:nNn,\@@_keywords_prevdepth:,\@@_clc_jel:nn}
+% 关键字列表前要空一行，使用悬挂缩进；分类号不缩进。|\parbox| 之后的间距
 % 需要调整，见 \url{https://tex.stackexchange.com/a/34982}。
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_keywords:nNn #1#2#3
@@ -5386,7 +5587,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
         \cs_gset:Npx \@@_keywords_prevdepth: { \dim_use:N \tex_prevdepth:D }
       }
   }
-\cs_new_protected:Npn \@@_clc:nn #1#2
+\cs_new_protected:Npn \@@_clc_jel:nn #1#2
   {
     \par \tex_prevdepth:D \@@_keywords_prevdepth: \noindent
     \group_begin: #1 \group_end:
@@ -5442,8 +5643,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \subsection{参考文献著录与引用}
 %
-% \changes{v0.6}{2017/10/27}{支持 \BibTeX{}，以实现参考文献的著录
-%   与引用。}
+% \changes{v0.6}{2017/10/27}{支持 \BibTeX{}，以实现参考文献的著录与引用。}
 % \changes{v0.7}{2018/01/25}{支持 \biber{} 与 \pkg{biblatex}。}
 %
 % \begin{variable}{\l_@@_bibtex_bool}
@@ -5464,16 +5664,19 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{variable}
 %
-% \begin{variable}{\l_@@_bib_resource_tl}
+% \begin{variable}{\l_@@_bib_resource_clist}
+% \changes{v0.8}{2021/03/07}{改用 \texttt{clist} 型变量，允许在 \pkg{biblatex}
+%   下使用多个数据源。}
 % 保存参考文献数据库列表。
 %    \begin{macrocode}
-\tl_new:N \l_@@_bib_resource_tl
+\clist_new:N \l_@@_bib_resource_clist
 %    \end{macrocode}
 % \end{variable}
 %
 % \changes{v0.6}{2017/10/28}{新增 \opt{style/bib-style} 选项。}
-% \changes{v0.7}{2018/01/25}{新增 \opt{style/bib-backend}、\opt{style/cite-style}
-%   和 \opt{style/bib-resource} 选项。}
+% \changes{v0.7}{2018/01/25}{新增 \opt{style/bib-backend}、
+%   \opt{style/cite-style} 和 \opt{style/bib-resource} 选项。}
+% \changes{v0.8}{2021/09/20}{直接调用 \pkg{gbt7714} 宏包。}
 %
 %    \begin{macrocode}
 \keys_define:nn { fdu / style }
@@ -5506,40 +5709,56 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
         \tl_clear:N \l_@@_bib_style_tl
       },
     bib-style / unknown     .code:n =
-      { \tl_set_eq:NN \l_@@_bib_style_tl \l_keys_value_tl },
+      {
+        \tl_set_eq:NN \l_@@_bib_style_tl \l_keys_value_tl
+        \tl_clear:N   \l_@@_bib_gb_style_tl
+      },
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{style/cite-style}
+% \changes{v0.8}{2021/09/17}{允许在 \BibTeX{} 下使用。}
 % 引用样式。
 %    \begin{macrocode}
-    cite-style .code:n =
-      {
-        \bool_if:NTF \l_@@_bibtex_bool
-          { \@@_warning:n { cite-style-not-available } }
-          { \tl_set:Nn \l_@@_cite_style_tl {#1} }
-      },
+    cite-style .tl_set:N = \l_@@_cite_style_tl,
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{style/bib-resource}
 % 参考文献数据源。
 %    \begin{macrocode}
-    bib-resource .tl_set:N = \l_@@_bib_resource_tl
+    bib-resource .clist_set:N = \l_@@_bib_resource_clist
   }
-\@@_msg_new:nn { cite-style-not-available }
-  { Option~ "cite-style"~ is~ not~ available~ in~ BibTeX. }
 %    \end{macrocode}
 % \end{macro}
 %
-% 为了保证导言区中的设置能起作用，\pkg{natbib} 或 \pkg{biblatex} 宏包均需要在
-% 导言区末尾载入（仍在 \pkg{hyperref} 之前），并做相关设置。
+% \changes{v0.8}{2021/03/28}{正确使用导言区末尾钩子。}
+%
+% 为了保证导言区中的设置能起作用，\pkg{gbt774}、\pkg{natbib} 或 \pkg{biblatex}
+% 宏包均需要在导言区末尾载入（仍在 \pkg{hyperref} 之前），并做相关设置。
 %    \begin{macrocode}
 \ctex_at_end_preamble:n
   {
-    \bool_if:NTF \l_@@_bibtex_bool
+    \bool_if:NT \l_@@_bibtex_bool
       {
-        \RequirePackage [ sort & compress ] { natbib }
+        \tl_if_empty:NTF \l_@@_bib_style_tl
+          {
+            \RequirePackage [ sort & compress ] { gbt7714 }
+            \exp_args:No \bibliographystyle { gbt7714- \l_@@_bib_gb_style_tl }
+          }
+          {
+            \RequirePackage [ sort & compress ] { natbib }
+            \exp_args:NV \bibliographystyle \l_@@_bib_style_tl
+          }
         \@@_bibtex_setup:
       }
+  }
+%    \end{macrocode}
+% \pkg{biblatex} 会写入 |begindocument/before| 钩子，因此需在其之前通过
+% \texttt{env/document/\-begin} 钩子载入 \pkg{biblatex} 宏包。注意这个钩子仅
+% 适用于 |\begin{document}| 的写法，对于 |\document| 命令本身无效。
+%    \begin{macrocode}
+\@@_gadd_ltxhook:nn { env/document/begin }
+  {
+    \bool_if:NF \l_@@_bibtex_bool
       {
         \@@_biblatex_pre_setup:
         \RequirePackage { biblatex }
@@ -5552,29 +5771,36 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   生成参考文献列表。}
 % \changes{v0.7d}{2019/03/23}{使参考文献在目录中正常显示。}
 % \changes{v0.7e}{2020/08/30}{同步 \pkg{gbt7714} v2.0。}
+% \changes{v0.8}{2021/09/20}{新增不带上标的文内引用命令。}
 %
-% \begin{macro}{\@@_bibtex_setup:,\bibsection,\printbibliography}
+% \begin{macro}{\@@_bibtex_setup:,\parencite,\printbibliography}
 % \BibTeX{} 相关设置。
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_bibtex_setup:
   {
-    \tl_if_empty:NTF \l_@@_bib_style_tl
+%    \end{macrocode}
+% 行内引用命令。这里定义比较繁琐，是为了与 \tn{cite} 等命令保持一致。
+%    \begin{macrocode}
+    \tl_if_eq:VnTF \l_@@_bib_gb_style_tl { numerical }
       {
-        \tl_if_eq:VnTF \l_@@_bib_gb_style_tl { numerical }
-          {
-            \bibliographystyle { gbt7714-numerical }
-            \@@_set_cite_style_numerical:
-          }
-          {
-            \tl_if_eq:VnT \l_@@_bib_gb_style_tl { author-year }
-              {
-                \bibliographystyle { gbt7714-author-year }
-                \@@_set_cite_style_author_year:
-                \cs_set_eq:NN \cite \citep
-              }
-          }
+        \exp_args:NNx \DeclareRobustCommand \parencite
+          { \exp_args:No \exp_not:o { \cs:w cite ~ \cs_end: } }
+        \exp_args:Nc \ctex_patch_cmd:Nnn { parencite ~ }
+          { \begingroup }
+          { \begingroup \bibstyle@numbers }
       }
-      { \exp_args:NV \bibliographystyle \l_@@_bib_style_tl }
+      { \cs_set_eq:NN \parencite \cite }
+%    \end{macrocode}
+% 引用样式。
+%    \begin{macrocode}
+    \tl_if_empty:NF \l_@@_cite_style_tl
+      { \exp_args:NV \citestyle \l_@@_cite_style_tl }
+%    \end{macrocode}
+% 使用 \tn{textendash} “\textendash”作为数字间的连接号。
+%    \begin{macrocode}
+    \ctex_patch_cmd:Nnn \NAT@citexnum
+      { - \NAT@penalty }
+      { \textendash \NAT@penalty }
 %    \end{macrocode}
 % 修改参考文献标题。
 %    \begin{macrocode}
@@ -5584,7 +5810,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \begin{macrocode}
     \NewDocumentCommand \printbibliography { o }
       {
-        \exp_args:NV \bibliography \l_@@_bib_resource_tl
+        \exp_args:NV \bibliography \l_@@_bib_resource_clist
         \IfValueT {##1}
           { \@@_warning:nn { invalid-option-in-bibtex } {##1} }
       }
@@ -5594,38 +5820,58 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{
-%   \@@_biblatex_pre_setup:,
-%   \@@_biblatex_post_setup:,
-%   \@@_pass_options_to_biblatex:n}
+% \changes{v0.8}{2022/01/08}{补充定义 \tn{addbibresource} 命令以兼容 \pkg{biblatex} 的用法。}
+%
+% \begin{macro}{\addbibresource}
+% 由于 \pkg{biblatex} 在导言区后才载入，需要单独定义添加参考文献数据源的命令以实现兼容。
+% 该命令需要在载入宏包前取消定义。
+%    \begin{macrocode}
+\bool_if:NF \l_@@_bibtex_bool
+  {
+    \NewDocumentCommand \addbibresource { m }
+      { \clist_gput_right:Nn \l_@@_bib_resource_clist {#1} }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_biblatex_pre_setup:,\@@_biblatex_post_setup:}
 % \pkg{biblatex} 相关设置。
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_biblatex_pre_setup:
   {
+    \cs_undefine:N \addbibresource
+    \clist_new:N \l_@@_biblatex_options_clist
+    \clist_put_right:Nn \l_@@_biblatex_options_clist { hyperref = manual }
 %    \end{macrocode}
 % 参考文献样式。
 %    \begin{macrocode}
-    \tl_if_empty:NTF \l_@@_bib_style_tl
+    \clist_put_right:Nx \l_@@_biblatex_options_clist
       {
-        \tl_if_eq:VnTF \l_@@_bib_gb_style_tl { numerical }
-          { \@@_pass_options_to_biblatex:n { style = gb7714-2015 } }
+        style =
+        \tl_if_empty:NTF \l_@@_bib_style_tl
           {
-            \tl_if_eq:VnT \l_@@_bib_gb_style_tl { author-year }
-              { \@@_pass_options_to_biblatex:n { style = gb7714-2015ay } }
+            \str_if_eq:VnTF \l_@@_bib_gb_style_tl { numerical }
+              { gb7714-2015 } { gb7714-2015ay }
           }
+          { \l_@@_bib_style_tl }
       }
-      { \@@_pass_options_to_biblatex:n { style = \l_@@_bib_style_tl } }
 %    \end{macrocode}
 % 引用样式。
+% \changes{v0.8}{2021/03/09}{正确调用引用样式。}
 %    \begin{macrocode}
     \tl_if_empty:NF \l_@@_cite_style_tl
-      { \@@_pass_options_to_biblatex:n { citestyle = \l_@@_bib_style_tl } }
-    \@@_pass_options_to_biblatex:n { backend = biber, hyperref = manual, natbib }
+      {
+        \clist_put_right:Nx \l_@@_biblatex_options_clist
+          { citestyle = \l_@@_cite_style_tl }
+      }
+    \exp_args:NV \PassOptionsToPackage \l_@@_biblatex_options_clist
+      { biblatex }
   }
 \cs_new_protected:Npn \@@_biblatex_post_setup:
   {
-    \exp_args:NV \addbibresource \l_@@_bib_resource_tl
+    \clist_map_function:NN \l_@@_bib_resource_clist \addbibresource
     \@@_biblatex_allow_url_break:
+    \@@_biblatex_use_en_dash:
 %    \end{macrocode}
 % 修改参考文献标题。
 %    \begin{macrocode}
@@ -5635,8 +5881,6 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
       { bibliography = { \c_@@_name_bib_en_tl } }
 %</class-en>
   }
-\cs_new_protected:Npn \@@_pass_options_to_biblatex:n #1
-  { \PassOptionsToPackage {#1} { biblatex } }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -5652,38 +5896,28 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_set_cite_style_numerical:}
-% 顺序编码制下的引用样式。
+% \begin{macro}{\@@_biblatex_use_en_dash:}
+% 使用 \tn{textendash} “\textendash”作为数字间的连接号。
 %    \begin{macrocode}
-\cs_new:Npn \@@_set_cite_style_numerical:
+\cs_new:Npn \@@_biblatex_use_en_dash:
   {
-    \NAT@numberstrue \NAT@supertrue
-    \cs_set:Npn \NAT@open  { [  }
-    \cs_set:Npn \NAT@close { ]  }
-    \cs_set:Npn \NAT@sep   { ,~ }
-  }
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\@@_set_cite_style_author_year:}
-% 著者—出版年制下的引用样式。
-%    \begin{macrocode}
-\cs_new:Npn \@@_set_cite_style_author_year:
-  {
-    \NAT@numbersfalse
-%<*class>
-    \cs_set_eq:NN \NAT@open  \c_@@_fwid_left_paren_tl
-    \cs_set_eq:NN \NAT@close \c_@@_fwid_right_paren_tl
-    \cs_set_eq:NN \NAT@sep   \c_@@_fwid_semicolon_tl
-    \cs_set_eq:NN \NAT@aysep \c_@@_fwid_comma_tl
-    \cs_set_eq:NN \NAT@yrsep \c_@@_ideo_comma_tl
-%</class>
+    \DefineBibliographyExtras { english }
+      {
+        \cs_set_nopar:Npn \bibrangedash
+          { \textendash \penalty \hyphenpenalty }
+      }
+    \DefineBibliographyExtras { russian }
+      {
+        \cs_set_nopar:Npn \bibrangedash
+          { \textendash \penalty \hyphenpenalty }
+      }
   }
 %    \end{macrocode}
 % \end{macro}
 %
 % \changes{v0.7}{2018/01/25}{同步 \pkg{gbt7714} v1.0，移除有关超链接
 %   的额外设置。}
+% \changes{v0.8}{2021/09/20}{不再将著录用符号修改为中文标点符号。}
 %
 % \subsection{\pkg{hyperref} 相关配置}
 %
@@ -5743,34 +5977,31 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 %
 % \begin{macro}{style/hyperlink}
+% \changes{v0.8}{2021/12/27}{修复边框不显示的问题；不需要为 \opt{hidelinks} 选项传递参数。}
 % 超链接样式。
 %    \begin{macrocode}
     hyperlink .choice:,
     hyperlink .value_required:n = true,
-    hyperlink / border .code:n = { },
+    hyperlink / border .code:n =
+      { \fdu_hyperref_setup:n { colorlinks = false } },
     hyperlink / color  .code:n =
-      { \fdu_hyperref_setup:n { colorlinks = true } },
+      { \fdu_hyperref_setup:n { colorlinks = true  } },
     hyperlink / none   .code:n =
-      { \fdu_hyperref_setup:n { hidelinks  = true } },
+      { \fdu_hyperref_setup:n { hidelinks } },
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{style/hyperlink-color}
+% \changes{v0.8}{2021/12/27}{移除不常用的超链接颜色。}
 % 超链接颜色。
 %    \begin{macrocode}
     hyperlink-color .choice:,
     hyperlink-color .value_required:n = true,
     \clist_map_function:nN
       {
-        { autumn,    D70000, D75F00, AF8700 },
-        { business,  D14542, 295497, 1F6E43 },
         { classic,   FF0000, 0000FF, 00FF00 },
         { default,   990000, 0000B2, 007F00 },
-        { elegant,   961212, C31818, 9B764F },
-        { fantasy,   FF4A19, FF3F94, 934BA1 },
         { material,  E91E63, 009688, 4CAF50 },
-        { science,   CA0619, 389F9D, FF8920 },
-        { summer,    00AFAF, 5F5FAF, 5F8700 },
         { graylevel, 616161, 616161, 616161 },
         { prl,       2D3092, 2D3092, 2D3092 }
       }
@@ -5809,7 +6040,8 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \end{macrocode}
 % \end{variable}
 %
-% \changes{v0.7e}{2019/04/23}{处理 \pkg{hyperref} 与 \pkg{unicode-math} 的兼容性问题。}
+% \changes{v0.7e}{2019/04/23}{处理 \pkg{hyperref} 与 \pkg{unicode-math}
+%   的兼容性问题。}
 %
 % 在导言区末尾引入 \pkg{hyperref} 宏包。
 %    \begin{macrocode}
@@ -5841,8 +6073,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
         pdfcreator  = \c_@@_name_pdf_creator_tl
       }
 %    \end{macrocode}
-% 将导言区中通过 \cs{fdu_hyperref_setup:n} 进行的设置传入
-% \tn{hypersetup}。
+% 将导言区中通过 \cs{fdu_hyperref_setup:n} 进行的设置传入 \tn{hypersetup}。
 %    \begin{macrocode}
     \exp_args:NV \hypersetup \g_@@_to_hyperref_clist
 %    \end{macrocode}
@@ -5850,14 +6081,13 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \begin{macrocode}
     \fdu_allow_url_break:
 %    \end{macrocode}
-% 手动开启 \pkg{biblatex} 的 \pkg{hyperref} 支持。
+% 由于 \pkg{hyperref} 在 \pkg{biblatex} 之后调用，所以需要手动开启相关功能。
 %    \begin{macrocode}
     \bool_if:NF \l_@@_bibtex_bool { \BiblatexManualHyperrefOn }
   }
 %    \end{macrocode}
 %
-% 在 PDF 字符串中设置 \tn{fdu@kai} 命令为空，以抑制 \pkg{hyperref}
-% 的警告信息。
+% 在 PDF 字符串中设置 \tn{fdu@kai} 命令为空，以抑制 \pkg{hyperref} 的警告信息。
 %    \begin{macrocode}
 \ctex_at_end_package:nn { hyperref }
   {
@@ -5965,8 +6195,7 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %
 % \subsubsection{通用配置}
 %
-% \begin{variable}{\c_@@_name_simp_tl,\c_@@_name_trad_tl,
-%   \c_@@_name_en_tl}
+% \begin{variable}{\c_@@_name_simp_tl,\c_@@_name_trad_tl,\c_@@_name_en_tl}
 % 学校名称。
 %    \begin{macrocode}
 \tl_const:Nn \c_@@_name_simp_tl { 复旦大学          }
@@ -5979,14 +6208,14 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \begin{macrocode}
 \clist_map_inline:nn
   {
-    { ideo_comma       } { "3001 },
-    { ideo_full_stop   } { "3002 },
-    { fwid_comma       } { "FF0C },
-    { fwid_full_stop   } { "FF0E },
-    { fwid_colon       } { "FF1A },
-    { fwid_semicolon   } { "FF1B },
-    { fwid_left_paren  } { "FF08 },
-    { fwid_right_paren } { "FF09 }
+    { ideo_comma       } { ^^^^3001 },
+    { ideo_full_stop   } { ^^^^3002 },
+    { fwid_comma       } { ^^^^ff0c },
+    { fwid_full_stop   } { ^^^^ff0e },
+    { fwid_colon       } { ^^^^ff1a },
+    { fwid_semicolon   } { ^^^^ff1b },
+    { fwid_left_paren  } { ^^^^ff08 },
+    { fwid_right_paren } { ^^^^ff09 }
   }
   { \@@_define_punct:nn #1 }
 %    \end{macrocode}
@@ -5997,16 +6226,19 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %   \centering
 %   \begin{tabular}{cccc}
 %     \toprule
-%       \textbf{中文名称} & \textbf{英文名称} & \textbf{符号} & \textbf{Unicode} \\
+%       \textbf{中文名称} &
+%       \textbf{英文名称} &
+%       \textbf{符号} &
+%       \textbf{Unicode 码位} \\
 %     \midrule
-%       中文顿号     & Ideographic comma           & \symbol{"3001} & U+3001 \\
-%       中文句号     & Ideographic full stop       & \symbol{"3002} & U+3002 \\
-%       中文逗号     & Fullwidth comma             & \symbol{"FF0C} & U+FF0C \\
-%       全角西文句点 & Fullwidth full stop         & \symbol{"FF0E} & U+FF0E \\
-%       中文冒号     & Fullwidth colon             & \symbol{"FF1A} & U+FF1A \\
-%       中文分号     & Fullwidth semicolon         & \symbol{"FF1B} & U+FF1B \\
-%       中文左圆括号 & Fullwidth left parenthesis  & \symbol{"FF08} & U+FF08 \\
-%       中文右圆括号 & Fullwidth right parenthesis & \symbol{"FF09} & U+FF09 \\
+%       中文顿号     & Ideographic comma           & ^^^^3001 & U+3001 \\
+%       中文句号     & Ideographic full stop       & ^^^^3002 & U+3002 \\
+%       中文逗号     & Fullwidth comma             & ^^^^ff0c & U+FF0C \\
+%       全角西文句点 & Fullwidth full stop         & ^^^^ff0e & U+FF0E \\
+%       中文冒号     & Fullwidth colon             & ^^^^ff1a & U+FF1A \\
+%       中文分号     & Fullwidth semicolon         & ^^^^ff1b & U+FF1B \\
+%       中文左圆括号 & Fullwidth left parenthesis  & ^^^^ff08 & U+FF08 \\
+%       中文右圆括号 & Fullwidth right parenthesis & ^^^^ff09 & U+FF09 \\
 %     \bottomrule
 %   \end{tabular}
 % \end{table}
@@ -6014,10 +6246,10 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 % \begin{variable}{\c_@@_line_spread_fp}
 % 行距倍数。行距倍数 $k$ 由下式确定：
 % \begin{equation*}
-%   \num{1.2} \times k \times \SI{12}{bp} = \SI{20}{pt}.
+%   1.2 \times k \times \qty{12}{bp} = \qty{20}{pt}.
 % \end{equation*}
-% 式中，\num{1.2} 是基本行距与文字大小之比，\SI{12}{bp} 是小四号字
-% 的大小，\SI{20}{pt} 是行距固定值。
+% 式中，1.2 是基本行距与文字大小之比，\qty{12}{bp} 是小四号字的大小，
+% \qty{20}{pt} 是行距固定值。
 %    \begin{macrocode}
 \fp_const:Nn \c_@@_line_spread_fp
   { \dim_ratio:nn { 20 pt } { 12 bp } / 1.2 }
@@ -6087,33 +6319,35 @@ Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
 %    \begin{macrocode}
 \clist_map_inline:nn
   {
-    { secret_level    } { 密 \qquad 级                  },
-    { secret_star     } { \textrm { \bigstar }          },
-    { school_id       } { 学校代码                      },
-    { student_id      } { 学 \qquad 号                  },
-    { department      } { 院系                          },
-    { major           } { 专业                          },
-    { author          } { 姓名                          },
-    { supervisor      } { 指导教师                      },
-    { date            } { 完成日期                      },
-    { instructors     } { 指导小组成员                  },
-    { author_sign     } { 作者签名                      },
-    { supervisor_sign } { 导师签名                      },
-    { sign_date       } { 日期                          },
-    { toc             } { 目 \quad 录                   },
-    { lof             } { 插图目录                      },
-    { lot             } { 表格目录                      },
-    { bib_en          } { Bibliography                  },
-    { pdf_creator     } { LaTeX~ with~ fduthesis~ class },
-    { orig_decl       } { \c_@@_name_simp_tl \\ 学位论文独创性声明   },
-    { auth_decl       } { \c_@@_name_simp_tl \\ 学位论文使用授权声明 }
+    { secret_level       } { 密 \qquad 级                  },
+    { secret_star        } { \textrm { \bigstar }          },
+    { school_id          } { 学校代码                      },
+    { student_id         } { 学 \qquad 号                  },
+    { department         } { 院系                          },
+    { major              } { 专业                          },
+    { major_professional } { 专业学位类别（领域）          },
+    { author             } { 姓名                          },
+    { supervisor         } { 指导教师                      },
+    { date               } { 完成日期                      },
+    { instructors        } { 指导小组成员                  },
+    { author_sign        } { 作者签名                      },
+    { supervisor_sign    } { 导师签名                      },
+    { sign_date          } { 日期                          },
+    { toc                } { 目 \quad 录                   },
+    { lof                } { 插图目录                      },
+    { lot                } { 表格目录                      },
+    { bib_en             } { Bibliography                  },
+    { pdf_creator        } { LaTeX~ with~ fduthesis~ class },
+    { orig_decl          } { \c_@@_name_simp_tl \\ 学位论文独创性声明   },
+    { auth_decl          } { \c_@@_name_simp_tl \\ 学位论文使用授权声明 }
   }
   { \@@_define_name:nn #1 }
 \clist_map_inline:nn
   {
     { abstract } { 摘 \quad 要 } { Abstract          },
     { keywords } { 关键字      } { Keywords:         },
-    { clc      } { 中图分类号  } { CLC~ number:      },
+    { clc      } { 中图分类号  } { CLC~ code:        },
+    { jel      } { JEL 分类号  } { JEL~ code:        },
     { notation } { 符号表      } { List~ of~ Symbols }
   }
   { \@@_define_name:nnn #1 }

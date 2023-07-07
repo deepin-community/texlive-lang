@@ -10,14 +10,14 @@
 \preamble
 ------------------------------------------
 The Italian support for babel: italian.ldf.
-Copyright (C) 1990-2020 Claudio Beccari
+Copyright (C) 1990-2022 Claudio Beccari
 All rights reserved 
 
 License information appended.
 \endpreamble
 \postamble
 
-Copyright (C) 1990-2019 Claudio Beccari
+Copyright (C) 1990-2022 Claudio Beccari
 
  It may be distributed and/or modified under the
  conditions of the LaTeX Project Public License, either version 1.3c
@@ -60,7 +60,7 @@ This file is a self unpacking one.
 %</driver>
 %<code>\ProvidesLanguage{italian}
 %<*code>
-        [2020/05/21 v.1.4.04 Italian support for the babel system]
+        [2022/03/27 v.1.4.07 Italian support for the babel system]
 %</code>
 %%
 %% Please report errors to: claudio dot beccari at gmail dot com
@@ -78,7 +78,7 @@ This file is a self unpacking one.
 \title{The Italian support for babel}
 \date{\fileversion\space--- \filedate}
 \author{\makebox[\textwidth]{Claudio Beccari --- 
-mail: \texttt{claudio dot beccari at gmail dot com}}}
+email: \texttt{claudio dot beccari at gmail dot com}}}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{booktabs}
@@ -99,7 +99,7 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %</driver>
 %\fi
 %
-% \CheckSum{772}
+% \CheckSum{798}
 %
 % \changes{italian-0.99}{1990/07/11}{First version, from english.doc}
 % \changes{italian-1.0}{1991/04/23}{Modified for babel 3.0}
@@ -173,6 +173,13 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %   and the documentation modified accordingly.}
 % \changes{italian-1.4.04}{2020-05-21}{Added option for ordinal day~1 in
 %   \string\dateitalian.}
+% \changes{italian-1.4.05}{2022-03-18}{Modified the intelligent comma code
+%   in order to deal also with periodic fractional parts}
+% \changes{italian-1.4.06}{2022-03-23}{Eliminated several macros in the
+%   intelligent comma definition that made the whole group difficult to
+%   understand and maintain.}
+% \changes{italian-1.4.07}{2022-03-27}{Added the necessary code to have
+%   the intelligent comma work correctly with the |{,}| group}
 %
 %  \section{The Italian language}
 %    \textbf{Important notice}: This language description file relies on
@@ -322,7 +329,7 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    provided by both those packages; but I assume that
 %    if the user loads one of those packages, it prefers to use their
 %    functionality; in case one of those packages is loaded, this module
-%    excludes its intelligent comma functionality.
+%    excludes its own intelligent comma functionality.
 %    By default this functionality is turned \emph{off}, therefore the
 %    user should turn it on by means of the |\IntelligentComma| command;
 %    it can turn it off by means of |\NoIntelligentComma|. Please, read
@@ -868,8 +875,8 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    \texttt{kilo\string"\string|\"orsted} gets hyphenated correctly
 %    as \texttt{ki-lo-\"or-sted} The \verb="|= macro is necessary
 %    because, even with a suitable option specified to the |inputenc|
-%    package, the letter `\"o' does not have category code 11, as the ASCII
-%    letters do, because of the LICR (LaTeX Internal Character
+%    package, the letter `\"o' does not have category code 11, as the
+%    ASCII letters do, because of the LICR (LaTeX Internal Character
 %    Representation), i.e. the set of intermediate macros that have to be
 %    expanded in order to fetch the proper glyph in the output font.
 %
@@ -969,14 +976,15 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %
 %    We need to perform some tests that require some
 %    smart control-sequence handling; therefore we call the |etoolbox|
-%    package that allows us more testing functionality. There are no problems
-%    with this package that can be invoked also by other ones before or
-%    after |babel| is called; the |\RequirePackage| mechanism is sufficiently
-%    smart to avoid reloading the same package more than once. But we
-%    have to delay this call, because |italian.ldf| is being read while
-%    processing the options passed to |babel|, and while options are being
-%    scanned and processed it is forbidden to load packages; we
-%    delay it at the end of processing the |babel| package itself.
+%    package that allows us more testing functionality. There are no
+%    problems with this package that can be invoked also by other ones
+%    before or after |babel| is called; the |\RequirePackage| mechanism is
+%    sufficiently smart to avoid reloading the same package more than
+%    once. But we have to delay this call, because |italian.ldf| is being
+%    read while processing the options passed to |babel|, and while
+%    options are being scanned and processed it is forbidden to load
+%    packages; we delay it at the end of processing the |babel| package
+%    itself.
 %    \begin{macrocode}
 \AtEndOfPackage{\RequirePackage{etoolbox}}
 %    \end{macrocode}
@@ -989,16 +997,17 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    commands |\IntelligentComma| and |\NoIntelligentComma|. They operate
 %    by setting or resetting  the comma sign as an active character in
 %    mathematics. We defer the definition of the commands that turn on and
-%    off the intelligent comma feature at the end of the preamble, so as to
-%    avoid possible conflicts with other packages. It has already been
+%    off the intelligent comma feature at the end of the preamble, so as
+%    to avoid possible conflicts with other packages. It has already been
 %    pointed out that this procedure for setting up the active comma to
 %    behave intelligently in math mode, conflicts with the |dcolumn|
-%    package; therefore we assume these commands are defined when the final
-%    user typesets a document, but they will be possibly defined only at
-%    the end of the preamble when it will be known if the |dcolumn| package
-%    has been loaded. We do the same if packages |icomma| or |ncccomma|
-%    have been loaded, since that assumes that the user wants to use their
-%    functionality, not the functionality of this package.
+%    package; therefore we assume these commands are defined when the
+%    final user typesets a document, but they will be possibly defined
+%    only at the end of the preamble when it will be known if the
+%    |dcolumn| package has been loaded. We do the same if packages
+%    |icomma| or |ncccomma| have been loaded, since that assumes that the
+%    user wants to use their functionality, not the functionality of this
+%    package.
 %
 %    We need a command to set the comma as an active charter only in math
 %    mode; the special |\mathcode| that classifies an active character in
@@ -1006,8 +1015,8 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    punctuation type of comma, but we let |\IntelligentComma| and
 %    |\NoIntelligentComma| to |\relax| so that their use is forbidden when
 %    one of the named packages is loaded. In this way all known conflicts
-%    are avoided; should the user find out other conflicts, s/he is kindly
-%    required to notify it to the maintainer.
+%    are avoided; should the users find out other conflicts, they are
+%    kindly required to notify them to the maintainer.
 %    \begin{macrocode}
 \AtEndOfPackage{\AtEndPreamble{%
 \newcommand*\IntelligentComma{\mathcode`\,=\string"8000}% Active comma
@@ -1028,9 +1037,9 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
   }}}%
 }}
 %    \end{macrocode}
-%    These commands are defined only in the |babel| support for the Italian
-%    language (this file) and are not defined in the corresponding
-%    |polyglossia| support for the language.
+%    These commands are defined only in the |babel| support for the
+%    Italian language (this file) and are not defined in the
+%    corresponding |polyglossia| support for the language.
 %    In order to have this functionality work properly with pdfLaTeX,
 %    XeLaTeX, and LuaLaTeX, it is necessary to discover which engine
 %    is being used, or better, which language handling package is
@@ -1047,8 +1056,8 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    We need two kinds of comma, one that is a decimal separator, and 
 %    a second one that is a punctuation mark.
 %    \begin{macrocode}
- \DeclareMathSymbol{\virgola}{\mathpunct}{letters}{"3B}
  \DeclareMathSymbol{\virgoladecimale}{\mathord}{letters}{"3B}
+ \DeclareMathSymbol{\virgola}{\mathpunct}{letters}{"3B}
 %    \end{macrocode}
 %    \end{macro}
 %    \end{macro}
@@ -1059,32 +1068,34 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    Math comma activation is done only after the preamble has been
 %    completed, that is after the |\begin{document}| statement has been
 %    completely executed. Now we must give a definition to the active
-%    comma: probably it is not necessary to pass through an intermediate
-%    robust command, but certainly it is not wrong to do it.
+%    comma.
 %    \begin{macrocode}
-\DeclareRobustCommand*\it@comma@def{\futurelet\let@token\@@math@comma}%
-{\catcode `,=\active \gdef,{\it@comma@def}}%
+{\catcode`,\active \gdef,{\futurelet\tempB\?}}
 %    \end{macrocode}
-%    The real work shall be performed by |\it@comma@def|. In facts the
-%    above macro stores the token that immediately follows |\@@math@comma|
-%    into a temporary control sequence that behaves as an implicit
-%    character if that token is a single character, even a space, or
-%    behaves as an alias of a control sequence otherwise. Actually at the
-%    end of the preamble this macro shall be |\let| to be an alias for the
-%    real |\@math@comma|.
+%    In facts the above macro lets a temporary control sequence |\tempB|
+%    be an alias of the token that immediately follows |\?|; |\tempB| then
+%    behaves as an implicit character if that token is a single character,
+%    even a space (category cod~10) or a closed brace {category code~3}, 
+%    or an alias of a generic control sequence otherwise. 
 %
-%    Is is important to remark that |\@math@comma| must be a command that
+%    Is is important to remark that |\?| must be a command that
 %    does not require arguments; this makes it robust when it is followed
-%    by other characters that may play special r\^oles within the arguments
-%    of other macros or environments. Matter of fact the first version 
-%    of this file in version 1.3 did accept an argument; and the result was
-%    that the active comma would ``eat up'' the |&| in vertical math
+%    by other tokens that may play special r\^oles within the
+%    arguments of other macros or environments. Matter of fact the first
+%    version 1.3 of this file did accept an argument; and the result was
+%    that the active comma would ``gobble'' the |&| in vertical math
 %    alignments  and very nasty errors took place, especially within the
-%    |amsmath| defined ones. This macro |\@@math@comma| without arguments
-%    does not do any harm to the AMS environments and the actual
-%    intelligent comma work shall be executed by other macros.
+%    |amsmath| defined ones. This macro |\?| without arguments
+%    does not do any harm to the AMS environments and a part of the actual
+%    intelligent comma work is going to be executed by other macros that
+%    accept an argument in a safe way.
 %
-%    At this point the situation may become complicated:  the comma
+%    Since the intelligent comma is going to be used only in math mode,
+%    it must be intelligent enough to avoid problems with commands used
+%    in math mode; in particular with commands that operate on digits,
+%    such as |\bar| and |\overline|
+%
+%    At this point the situation may become complicated: the comma
 %    character in the input file may be followed by a real digit, by an
 %    analphabetic character of category 12 (other character), by an
 %    implicit digit, by a macro defined to be a digit, by a macro that is
@@ -1092,135 +1103,212 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    closed brace, an alignment command, et cetera); therefore it is
 %    necessary to distinguish all these situations; remember that an
 %    implicit digit cannot be used as a real digit, and a macro gets
-%    expanded when used with any |\if| clause, unless it is a |\ifx| one,
-%    or is prefixed with |noexpand|. The tests that are going to be made
-%    are therefore of different kinds, according to this scheme:
+%    expanded when used within any |\if| clause, except |\ifx|,
+%    or is prefixed with |\noexpand|. The tests that are going to be made
+%    hereafater are therefore of different kinds, according to this
+%    scheme:
 %    \begin{itemize}
+%    \item
+%    we test if the next character is a space (category code~10) and chose
+%    at once the puntuation comma;
+%    \item
+%    we test the the next character id a closed brace (category code~3)
+%    and chose immediately the decimal comma, assuming we are in a
+%    situation such as |$2,}619$|, just for backwards compatibility;
+%    such wrapping of the decimal comma was common when no intelligent
+%    comma macros or packages were available;
+%    \item
+%    we have to check if the next token is |bar| or |\overline| (or a
+%    |\periodo|, a new command added by this language description file));
+%    we assume that these commands are used to mark the digits of the
+%    periodic component of the fractional part of a rational number.
+%    May be this  assumption is not always correct, but it should be the
+%    most common situation when one of these commands is immediately
+%    preceded by a comma.
 %    \item 
-%    the |\let@token| is tested against an asterisk to see it it is of
-%    category 12; this is true if the token is a real digit, or an implicit
-%    digit, or an analphabetic character;
-%    \begin{itemize}
+%    the |\tempB| category is tested against an asterisk to see if
+%    it is of category 12; this is true if the token is a real digit, or
+%    an implicit digit, or an analphabetic character;
+%      \begin{itemize}
+%      \item 
+%      an implicit digit might be represented by a control sequence; so we
+%      check this feature; 
+%      \item 
+%      if that |\tempB| is a control sequence, we have to test its
+%      nature of a digit by testing if it represented one of the ten
+%      digits; of course it is strongly discouraged to let some control
+%      sequences be aliases of digits; 
+%      \item
+%      in all other cases, as it has category code~12, it is an
+%      analphabetic character.
+%      \end{itemize}
 %    \item 
-%    an implicit digit is represented by a control sequence; so we
-%    first check this feature; 
-%    \item 
-%    if it is a control sequence, we have to test its nature of a
-%    digit by testing if it represented one of the ten digits; 
-%    \item otherwise it is an analphabetic character.
-%    \end{itemize}
-%    \item 
-%    otherwise the |\let@token| is a special character or a
-%    macro/command; 
+%    otherwise the |\tempB| is a special character or a command; 
 %    \item 
 %    a test is made to see if it is a macro; in this case we check
 %    if has been defined to be a digit,
 %    \item 
-%    it is not a macro, it must be some other kind of token for
-%    example a space or another special character.
+%    if it is not a macro, it must be some other kind of token for
+%    example another special character.
 %    \end{itemize}
 %
 %    Notice that if the token is a macro, we do not test if it is defined
-%    to be a single digit or a string made up of more digits and/or other
-%    charters. If the macro represents one digit the test is correct,
-%    otherwise funny results may take place. For this reason it is always
-%    better to prefix any macro with a space, whatever its definition might
-%    be; if the macro represents a parameter defined to have a variable
-%    value in the range 0--9, then it may represent the fractional part of
-%    a (short) decimal value, and it is correct to avoid prefixing it with
-%    a space; but the user is warned not to make use of numeric strings in
-%    the definition of parameters, unless he knows what he is doing.
-%    The user may rather use a balanced brace comma group |{,}| in the
-%    input file so that the macro will not be considered by the expansion
-%    of the active comma. For example if |\x| is defined to be the
-%    numerical string |89|, the source input |$2{,}\x$| will be correctly
-%    typeset as 2,89; the input \verb*!$2, \x$! will be typeset as 2,\,89
-%    (with an unbreakable thin space after the comma) while |$2,\x$| will
-%    be typeset as 29,89, obviously wrong.
+%    to be a single digit or a string made up of several digits and/or
+%    other charters. If the macro represents one digit the test is
+%    correct, otherwise funny results may take place. For this reason it
+%    is always better to prefix any macro with a space, whatever its
+%    definition might be; if the macro represents a parameter defined to
+%    have a numeric value in the range 0--9, then it may represent the
+%    fractional part of a (single digit) decimal value, and it is correct
+%    to avoid prefixing it with a space; but the users are warned not to
+%    make use of numeric strings in the definition of parameters, unless
+%    they know exactly what they are doing.
 %
-%    So first we test if the comma must act intelligently; if the counter
-%    |\Virgola| contains zero, we assume that the comma must always perform
-%    as a punctuation mark; but if we want to distinguish if it must behave
-%    as a decimal separator, we have to perform more delicate tests; this
-%    latter task is demanded to other macros with arguments |\@math@@comma|
-%    and |\@@math@@comma|. In order to make the various tests robust we
-%    have to resort to the usual trick of the auxiliary macros
-%    |\@firstoftwo| and |\@secondoftwo| and various |\expandafter| commands 
-%    so as to be sure that every |\if| clause is correctly exited without
-%    leaving any trace behind.
+%    The users, if the intelligent comma is active, may use a
+%    balanced brace comma group |{,}| but we discourage it for new
+%    documents; in any case such a group works fine if the intelligent
+%    comma is not active, for example because a stretch of text in a
+%    different language is being typeset.
+%
+%    So first we test if the comma must act intelligently;  we have to
+%    perform delicate tests; as a last resource this task is demanded to
+%    another macro with arguments: |\@math@@comma|. In order to make the
+%    various tests robust we have to resort to the usual trick of the
+%    auxiliary macros |\@firstoftwo| and |\@secondoftwo| and various
+%    |\expandafter| commands so as to be sure that each |\if| clause is
+%    correctly exited without leaving any trace behind. Similarly the
+%    |\ifcsequal| compares two control sequence names and compares the
+%    equality  of their meanings, just as as |\ifx| does, but they are
+%    robust in the sense that they don't leave any trace after execution:
+%    the third argument code is executed if the test is true, and the
+%    fourth one if it is false.
+%    Notice that the tests with macros |\periodo|, |\bar|, and|\overline|
+%    are used to verify if the fractional part after the comma over lines
+%    its periodic component; users are suggested to use the |\periodo|
+%    macro that is capable of expanding its argument even if it is a macro
+%    (that contains digits); for example the division by~7  yields periods
+%    that contains the periodic sequence $142857$, starting with any digit
+%    of this sequence: $1/7=0{,}\overline{142857}$,
+%    $2/7=0{,}\overline{285714}$, $3/7=0{,}\overline{428571}$,\dots.
+%    Users might define six macros with mnemonic names (for example,
+%    |\oneoverseven|, |\twooverseven|,\dots) that contain the six digits
+%    in the proper order, and use such macros instead of the digit
+%    string, saving themselves possible typos; in math, everybody knows
+%    that typos are not allowed.
+%
+%    The |ifdigit| macros that is defined hereafter is a test made by
+%    using a \LaTeX\ kernel internal procedure that compares it only
+%    argument with one of the ten digits at a time; if the argument
+%    is a digit choses the decimal comma, otherwise the punctuation one;
+%    the test is similar but not identical to the one performed by the
+%    |nccomma| package; on the opposite the test against s space is
+%    performed with a test similar but not identical to the one done
+%    by the |icomma| package; all other tests are specific of this
+%    package.
 %    \begin{macrocode}
-\DeclareRobustCommand*\@math@comma{%
- \ifcat\noexpand\let@token*%
+
+\DeclareRobustCommand*\periodo[1]{\overline{#1}}
+
+\newcommand\ifdigit[1]{\def\tempC{\virgola}%
+\@tfor\@Cifra:=0123456789\do{%
+\if\@Cifra #1\relax\def\tempC{\virgoladecimale}%
+\@break@tfor\fi}\tempC}
+
+\DeclareRobustCommand*\?{%
+  \ifx\tempB\@sptoken
     \expandafter\@firstoftwo
- \else
+  \else
     \expandafter\@secondoftwo
- \fi{%  \let@token is of  category 12
-      \@math@@comma
-    }{% test if \let@token is a macro
-       \ifcat\noexpand\let@token\noexpand\relax
-          \expandafter\@firstoftwo
-       \else
-          \expandafter\@secondoftwo
-       \fi{% it is a macro 
-             \@@math@@comma
-          }{% it is something else. 
-             \virgola
-          }
-    }
+  \fi
+  {\virgola}%
+  {%
+    \ifcat\noexpand\tempB\noexpand\egroup
+      \expandafter\@firstoftwo
+    \else
+      \expandafter\@secondoftwo
+    \fi
+    {\virgoladecimale}%
+    {%
+      \ifcsequal{tempB}{periodo}{\virgoladecimale}%
+      {%
+        \ifcsequal{tempB}{bar}{\virgoladecimale}%
+        {%
+          \ifcsequal{tempB}{overline}{\virgoladecimale}%
+          {%
+            \ifcat\noexpand\tempB*%
+              \expandafter\@firstoftwo
+            \else
+              \expandafter\@secondoftwo
+            \fi
+            {%  \tempB is of  category 12; test if it is a digit
+              \ifdigit{\tempB}%
+            }%
+            {% test if tempB is a macro
+              \ifcat\noexpand\tempB\noexpand\relax
+                \expandafter\@firstoftwo
+              \else
+                \expandafter\@secondoftwo
+              \fi
+              {\virgola}% \tempB actually is a macro
+              {\@math@@comma}% \tempB is an alias of something else
+            }%
+          }%
+        }%
+      }%
+    }%
+  }%
 }
+
 %    \end{macrocode}
+%    
+%    In particular this macro starts testing if it is an alias for a
+%    space token (category 10); then tests if it is an alias
+%    of |\periodo|, or |\bar| or |\overline| and if it is the decimal
+%    separator should be a decimal comma (see below); otherwise other
+%    tests are carried on. This macro then tests if the argument has
+%    category code~12, that is ``other character'', not a letter, nor
+%    other special signs, as, for example,~|&|. In case if the category
+%    code is not~12, the comma must act as a punctuation mark; but if it
+%    is, it might be a digit, or another character, for example an 
+%    asterisk; so we have to test its digit nature; the simplest way that
+%    we found to test if a token is a digit, is to test if its ASCII code
+%    lays within the range delimited by the ASCII codes of~`0' (zero)
+%    and~`9'.
 %
-%    In particular this macro must test if the argument has category
-%    code 12, that is ``other character'', not a letter, nor other
-%    special signs, as |&| for example. In case the category code is
-%    not 12, the comma must act as a punctuation mark; but if it is,
-%    it might be a digit, or another character, an asterisk, for example;
-%    so we have to test its digit nature; the simplest that was found
-%    to test if a token is a digit, is to test its ASCII code against
-%    the ASCII codes of `0' (zero) and `9'.
-%    The typesetting engines give the backtick, |`|, the property that
+%    The typesetting engines give the back tick, |`|, the property that
 %    when a number is required, it yields the ASCII code if the following
-%    token in an explicit character or a macro argument; this is why we
-%    can't use the temporary implicit token we just tested, but we must
-%    examine the first non blank token that follows the |\@math@@comma|
-%    macro. Only if the token is a digit, we use the decimal comma,
-%    otherwise the punctuation mark. This is therefore the definition of
-%    the |\@math@@comma| macro which is not that simple, although the
-%    testing macros have clear meanings:
+%    token is an explicit character or a macro argument number; this is
+%    why we can't use the temporary implicit token we just tested, but we
+%    must examine the first non blank token that follows the
+%    |\@math@@comma| macro. Only if the token is a digit, we use the
+%    decimal comma, otherwise the punctuation mark. This is therefore the
+%    definition of the |\@math@@comma| macro which is not that simple,
+%    although the testing macros have clear meanings:
 %    \begin{macrocode}
-\DeclareRobustCommand*\@math@@comma[1]{% argument is certainly of category 12
-    \ifcsundef{\expandafter\@gobble\string #1}{% test if it is a real digit
-        \ifnumless{`#1}{`0}{\virgola}%
-          {\ifnumgreater{`#1}{`9}{\virgola}%
-             {\virgoladecimale}}%
-    }{% it's an implicit character of category 12
-      \let\@tempVirgola\virgola
-      \@tfor\@tempCifra:=0123456789\do{%
-        \expandafter\if\@tempCifra#1\let\@tempVirgola\virgoladecimale
-        \@break@tfor\fi}\@tempVirgola
-    }#1}
-    
-\DeclareRobustCommand*\@@math@@comma[1]{% argument is a macro
-   \let\@tempVirgola\virgola
-   \@tfor\@tempCifra:=0123456789\do{%
-   \if\@tempCifra#1\let\@tempVirgola\virgoladecimale
-   \@break@tfor\fi}\@tempVirgola#1
-}
+\DeclareRobustCommand*\@math@@comma[1]{% argument IS of category 12
+  \ifcsundef{\expandafter\@gobble\string #1}%
+  {% test if it is a digit
+      \ifnumless{`#1}{`0}{\virgola}%
+        {\ifnumgreater{`#1}{`9}{\virgola}%
+           {\virgoladecimale}}%
+  }%
+  {% it's an implicit character of category 12
+    \let\@tempVirgola\virgola
+    \@tfor\@tempCifra:=0123456789\do{%
+      \expandafter\if\@tempCifra#1\let\@tempVirgola\virgoladecimale
+      \@break@tfor\fi}\@tempVirgola
+  }#1}%
 %    \end{macrocode}
-%    The service macros |\ifcsundef|, |\ifnumless|, and |\ifnumgreater| are
-%    provided by the |etoolbox| package, that shall be read at most at the
-%    end of the |babel| package processing; therefore we must delay the
-%    code at ``end preamble'' time, since only at that time
+%    The service macros |\ifcsundef|, |\ifnumless|, and |\ifnumgreater|
+%    are provided by the |etoolbox| package, that shall be read at most at
+%    the end of the |babel| package processing; therefore we must delay
+%    the code at ``end preamble'' time, since only at that time
 %    it will be known if the main language is English, or any other one.
-%    This is why we have to perform such a baroque definition as the
-%    following one:
-%    \begin{macrocode}
-\AtEndOfPackage{\AtEndPreamble{\let\@@math@comma\@math@comma}}
-%    \end{macrocode}
+%
 %    This intelligent comma definition is pretty intelligent, but it
 %    requires some kind of information from the context; this context does
-%    not give enough bits of information to this `intelligence' in just one
-%    case: when the comma plays the r\^ole of a serial separator in
+%    not give enough bits of information to this `intelligence' in just
+%    one case: when the comma plays the r\^ole of a serial separator in
 %    expressions such as $i=1, 2, 3,\dots,\infty$, entered as 
 %    \verb*?$i=1, 2, 3,\dots,\infty$?. Only in this case  the comma must
 %    be followed by an explicit space; should this space be absent the
@@ -1231,9 +1319,9 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    do not represent digits, the macro inserts a punctuation mark,
 %    instead of a decimal separator.
 %
-%    Notice that this macro may appear to be inconsistent with the contents
-%    of a language description file. I don't agree: matter of facts even
-%    math is part of typesetting a text in a certain language.
+%    Notice that this macro may appear to be inconsistent with the
+%    contents of a language description file. I don't agree: matter of
+%    facts even math is part of typesetting a text in a certain language.
 %    Does this set of macros influence other language description files?
 %    May be, but I think that the clever use of macros |\IntelligentComma|
 %    and |\NoIntellingentComma| may solve any interference; they allow to
@@ -1246,27 +1334,40 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    using the decimal comma as the correct decimal separator; for
 %    example |SIunitx| defines a command |\num| that not only correctly
 %    spaces the decimal separator, but also can change the input glyph
-%    with another one, so that it is possible to copy and paste numbers
+%    with another one, so that it is possible to copy numbers
 %    from texts in English (with the decimal point)  and paste them
 %    into the argument of the |\num| macro in an Italian document where
 %    the decimal point is changed automatically into a decimal comma. Of
 %    course |SIunitx| does much more than that; if it's being loaded,
 %    then the default |\NoIntelligentComma| declaration disables the
 %    functionality defined in this language description file and the
-%    user can do what he desires with the many functionalities of that
+%    users can do what they desire with the many functionalities of that
 %    package.
 %
-%    Apparently a conflict with the active comma arises with the D column
-%    defined by the |dcolomn| package. Disabling the “Italian” active comma
-%    allows the D column operate correctly. Thanks to Giuseppe Toscano for
-%    telling me about this conflict.
+%    Apparently a conflict with the active comma arises with the~D column
+%    defined by the |dcolomn| package. Disabling the “Italian” active
+%    comma allows the~D column operate correctly. Thanks to Giuseppe
+%    Toscano for telling me about this conflict.
 %    \end{macro}
 %    \end{macro}
+%
+% \subsection*{Obsolete arrangements}
+%    In the following sections we describe some features that nowadays
+%    should be considered totally obsolete. We speak about OT! encoded
+%    fonts (who uses them today?); about the limitations of the Italian
+%    keyboard, that with modern operating systems may be overridden
+%    easily; with French double quotes, that are being used also in
+%    Italian, although without any space separating them from their
+%    contents (as it happen in French typography); and so on. Consider
+%    that this language description file initial versions are more than
+%    30 years old, and in these 30 plus years many legacy documents were
+%    created; the following sections describe what had to be done years
+%    ago and the information may be useful to upgrade those documents 
 %
 % \subsection*{Accents}\label{s:itkbd}
 %    Most of the other language description files introduce a number
 %    of shorthands for inserting accents and other language specific
-%    diacritical marks in a more comfortable way compared with the
+%    diacritical marks in a more comfortable way compared to the
 %    lengthy standard \TeX\ conventions. When an Italian keyboard is
 %    being used on a Windows based platform, it exhibits such
 %    limitations that to my best knowledge no convenient shorthands have
@@ -1275,7 +1376,7 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    compulsory on all accented vowels,  but, on the
 %    opposite, it carries the keys with all the accented \emph{lowercase}
 %    vowels \`a, \`e, \'e, \`i, \`o, \`u, bot no \emph{uppercase} accented
-%    vowels are directly avalaible from the keyboard; the keyboard lacks
+%    vowels are directly available from the keyboard; the keyboard lacks
 %    also the tie |~| (tilde) key, while the curly braces require pressing
 %    three keys simultaneously.
 %
@@ -1294,11 +1395,11 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    since its functionality has been introduced into the kernel of LaTeX
 %    2001/06/01}
 %
-%    For what concerns the missing backtick key,
+%    For what concerns the missing back tick key,
 %    which is used also for inputting the open quotes, it must be
 %    noticed that the shorthand |""| described above completely solves
 %    the problem for \textit{double} raised open quotes; besides this,
-%    a single open raised  quote may be input whit the little known
+%    a single open raised  quote may be input with the little known
 %    \LaTeX\ kernel command |\lq|; according to
 %    the traditions of particular publishing houses, since there are
 %    no  compulsory regulations on the matter, the guillemets
@@ -1330,7 +1431,7 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 % \changes{italian-1.2q}{2005/02/05}{Redefined the caporali machinery
 %     so as to avoid incompatibilities with the slides class, as there
 %     are no Cyrillic slides fonts as there are for Latin script}
-% \changes{italian-1.3}{2013/09/30}{The slide font fix up is not any
+% \changes{italian-1.3}{2013/09/30}{The slide font fix-up is not any
 %     more necessary with the new caporali handling method.}
 %
 %    In the previous versions of this language description file the
@@ -1353,7 +1454,7 @@ mail: \texttt{claudio dot beccari at gmail dot com}}}
 %    this feature is not so negligible. It's true that nowadays nobody
 %    should use the old OT1 encoding when typesetting in any language,
 %    English included, because independently form the document main
-%    language, it is very frequent to quote passages in other languages,
+%    language, it is very frequent to quote text in other languages,
 %    or to type foreign proper names of persons or places; nevertheless
 %    having in mind a minimum of backwards compatibility and hoping
 %    that the deliberate use of OT1 encoding (still necessary to typeset

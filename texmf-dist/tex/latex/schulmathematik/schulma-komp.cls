@@ -1,13 +1,12 @@
 % schulmathematik bundle: document class schulma-komp
-% Version 1.1
-% 13. März 2021
+% Version 1.3
+% 12. August 2022
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{schulma-komp}[2021-03-13 v1.1 Dokumentenklasse fuer Kompetenzlisten]
-\ProcessOptions\relax
+\ProvidesExplClass{schulma-komp}{2022-08-12}{1.3}{Dokumentenklasse fuer Kompetenzlisten}
 
-\LoadClass{schulma-ab}
+\ProcessOptions \relax
 
-\ExplSyntaxOn
+\LoadClass {schulma-ab}
 
 \dim_const:Nn \c_schulma_komp_abstand_dim {0.5em}
 \dim_new:N \g_schulma_komp_einrueckunga_dim
@@ -87,5 +86,3 @@
     \par
     \smallskip
   }
-
-\ExplSyntaxOff

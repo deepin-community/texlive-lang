@@ -1,3 +1,225 @@
+2021-10-18  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	* NEWS:
+	=== Version 0.7.3 ===
+
+2021-08-30  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Apply 'autoupdate' for autoconf 2.71
+
+	* configure.ac:
+	  - Parenthesize m4 strings in AC_INIT() parameters with brackets.
+	  - Replace deprecated AC_HELP_STRING() with AS_HELP_STRING().
+	  - Replace parameterized AC_OUTPUT() with AC_CONFIG_FILES()
+	    and parameter-less AC_OUTPUT.
+	  - Update AC_PREREQ() from 2.59 to 2.71.
+
+2021-06-22  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	LaTeX: Use 'norasij' family instead of 'norasi-OsF'.
+
+	'norasij' is tried for all of plain, tabular, and proportional
+	old style figures when used via fontaxes.sty.
+	nfssext-cfr is more complicated. Only plain old style figures
+	are supported for now.
+
+	* latex/Makefile.am,
+	  latex/lthnorasi-osf.fd -> latex/lthnorasij.fd:
+	  - Rename font description file.
+	* latex/lthnorasij.fd:
+	  - Replace 'norasi-OsF' family declarations with 'norasij'.
+	* latex/fonts-tlwg.sty:
+	  - Replace 'norasi-OsF' referrals with 'norasij'.
+	* latex/examples/Makefile.am,
+	  +latex/examples/digits-axes.tex,
+	  +latex/examples/digits-cfr.tex:
+	  - Add examples for fontaxes & nfssext-cfr usage.
+
+2021-06-17  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	LaTeX: Add old style figures demonstration doc.
+
+	* latex/examples/Makefile.am, +latex/examples/oldnum.tex:
+	  - Add example demonstrating the use of 'norasi-osf' option
+	    for using old style figures in the entire document.
+
+2021-06-13  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	LaTeX: Add Norasi old style figures test.
+
+	* latex/examples/teststd.tex:
+	  - Add test for Norasi old style figures.
+
+2021-06-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	LaTeX/Norasi: Add old style figures support.
+
+	* latex/Makefile.am,
+	  +latex/lthtlwg-osf.enc, +latex/lthtlwg-osf-sc.enc,
+	  +latex/thailigs-osf.enc, +latex/thailigs-osf-sc.enc:
+	  - Add OsF font variant re-encoding, along with small caps versions.
+	* latex/texfont.mk.am:
+	  - Add rules for creating TFMs and VFs for OsF font variants.
+	* latex/Makefile.am, +latex/lthnorasi-osf.fd:
+	  - Add "norasi-OsF" font definition, using fontaxes naming convention.
+	* latex/lthnorasi.fd:
+	  - Update file version to be the same as that of norasi-OsF (v2.0).
+	* latex/Makefile.am, +latex/lthnorj.fd, +latex/lthnorx.fd:
+	  - Add "norj" and "norx" font definitions, according to Karl Berry's
+	    font naming, to support nfssext-cfr.
+	  - "norj" is essentially the same as "norasi-OsF" and share TFM
+	    and VF files with it. And "norx" is the same as "norasi"
+	    in the same manner.
+	* nf/Makefile.am:
+	  - Add OsF synthetic fonts for Norasi.
+	* latex/fonts-tlwg.sty:
+	  - Add 'norasi-osf' and 'rmnorasi-osf' options for using
+	    old style figures by default.
+	  - Update the file version to v2.0.
+
+2021-06-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Revert wrong make rules.
+
+	* nectec/Makefile.am:
+	* nf/Makefile.am:
+	* sipa/Makefile.am:
+	* tlwg/Makefile.am:
+	  - Revert wrong "common generic rules". It's not shared by the
+	    targets. 'make all' happened to pass somehow when I tested it,
+	    probably by the help of kpathsea, but 'make install' fails
+	    due to the missing symlinks.
+
+2021-06-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	LaTeX: Add Norasi small caps test.
+
+	* latex/examples/teststd.tex:
+	  - Add test messages for Norasi small caps.
+
+2021-06-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Make make rules concise.
+
+	* latex/texfont.mk.am:
+	* nectec/Makefile.am:
+	* nf/Makefile.am:
+	* sipa/Makefile.am:
+	* tlwg/Makefile.am:
+	  - Use common generic rules for similar targets.
+
+2021-06-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	LaTeX/Norasi: Add small caps support.
+
+	* latex/Makefile.am, +latex/lthtlwg-sc.enc, +latex/thailigs-sc.enc:
+	  - Add small caps re-encoding version:
+	    - Replace lower-case letters with small cap glyphs.
+	    - Remove ligatures for ff, fi, fl, ffi, ffl,
+	      which are specific to lower-case letters.
+	* latex/texfont.mk.am:
+	  - Add rules for creating TFMs and VFs for small caps re-encoded
+	    fonts, assuming fonts to be synthesized as such are listed
+	    in SYNTH_FONTS variable.
+	* nf/Makefile.am:
+	  - List 'norasi*-sc' in SYNTH_FONTS.
+	* latex/lthnorasi.fd:
+	  - Add 'sc' shape declarations.
+
+2021-06-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Norasi: Unify DOTTED CIRCLE glyph name
+
+	* nf/Norasi-{Bold,BoldItalic,Oblique}.sfd:
+	  - Rename 'uni25CC' glyph to 'dottedcircle', to be consistent
+	    with other styles in the family.
+	* nf/Norasi*.sfd:
+	  - Bump font version to 006.003.
+
+2021-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Norasi: Add 'onum' and 'smcp'
+
+	* nf/Norasi*.sfd:
+	  - Add 'onum' and 'smcp' OpenType features.
+	  - Bump font version to 006.002.
+
+2021-05-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	TlwgTypewriter: Use default PANOSE
+
+	* tlwg/TlwgTypewriter*.sfd:
+	  - Clear manual PANOSE to use calculated values.
+	    This won't make its proportion Monospaced but other properties
+	    such as weight should match those of TlwgMono.
+	  - Bump font version to 003.003.
+
+2021-05-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	TlwgTypist: Use default PANOSE
+
+	* tlwg/TlwgTypist*.sfd:
+	  - Clear manual PANOSE to use calculated values.
+	    This won't make its proportion Monospaced but other properties
+	    such as weight should match those of TlwgTypo.
+	  - Bump font version to 003.004.
+
+2021-05-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	TlwgMono: Use default PANOSE
+
+	* tlwg/TlwgMono*.sfd:
+	  - Clear manual PANOSE to use calculated values.
+	    This makes its proportion Monospaced and should make it listed
+	    by gvim.
+	  - Bump font version to 002.003.
+
+2021-05-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	TlwgTypo: Use default PANOSE
+
+	* tlwg/TlwgTypo*.sfd:
+	  - Clear manual PANOSE to use calculated values.
+	    This makes its proportion Monospaced and should make it listed
+	    by gvim.
+	  - Bump font version to 004.004.
+
+	Thanks Chaiwat Suttipongsakul (@cwt) for the report via mastodon.in.th.
+
+2021-05-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	TlwgTypist: Fix uneven widths of several glyphs in bold faces
+
+	* tlwg/TlwgTypist-Bold*.sfd:
+	  - Set widths of several glyphs to 600.
+	* tlwg/TlwgTypist*.sfd:
+	  - Bump font version to 003.003.
+
+2021-05-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	TlwgTypo: Fix uneven widths of two glyphs in bold faces
+
+	* tlwg/TlwgTypo-Bold*.sfd:
+	  - Set widths of uni0E09.uline and uni0E17.uline to 600.
+	* tlwg/TlwgTypo*.sfd:
+	  - Bump font version to 004.003.
+
+2020-05-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Sawasdee: Set FSType to installable embedding.
+
+	* tlwg/Sawasdee*.sfd:
+	  - Set FSType to "Installable".
+	  - Bump font version to 003.005.
+
+2020-05-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Purisa: Set FSType to installable embedding.
+
+	* tlwg/Purisa*.sfd:
+	  - Set FSType to "Installable".
+	  - Bump font version to 004.004.
+
 2020-05-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	* NEWS:

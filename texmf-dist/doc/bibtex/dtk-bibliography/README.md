@@ -1,18 +1,19 @@
 # dtk-bibliography
 
-This package contains the bibliography for "Die TeXnische Komödie", 
-the journal of the German-speaking user group.
+This package contains the bibliography for "Die TeXnische Komödie", the journal
+of the German-speaking user group.
 
-It is updated on a quarterly basis, last update $2021-09-19 for issue 2021/03$
+It is updated on a quarterly basis, last update 2023-01-03: updated for issue
+2022-04
 
 # How to produce dtk-bibliography.pdf
 
 Run dtk-bibliography.tex through Arara or run the following commands manually:
 
-* pdflatex dtk-bibliography.tex
+* lualatex dtk-bibliography.tex
 * biber dtk-bibliography
-* pdflatex dtk-bibliography.tex
-* pdflatex dtk-bibliography.tex
+* lualatex dtk-bibliography.tex
+* lualatex dtk-bibliography.tex
 
 Note that dtk-authoryear.bbx and dtk-authoryear.dbx must be in the same directory
 respectively the (local) texmf tree.

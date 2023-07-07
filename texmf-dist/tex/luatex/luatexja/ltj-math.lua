@@ -14,8 +14,17 @@ local getfield = node.direct.getfield
 local getid = node.direct.getid
 local getsubtype = node.direct.getsubtype
 local getlist = node.direct.getlist
--- getlist cannot be used for sub_box nodes. Use instead λp. getfield(p, 'head')
 local getchar = node.direct.getchar
+local getnucleus = node.direct.getnucleus
+local getsup = node.direct.getsup
+local getsub = node.direct.getsub
+local getshift = node.direct.getshift
+local setnext = node.direct.setnext
+local setnucleus = node.direct.setnucleus
+local setsup = node.direct.setsup
+local setsub = node.direct.setsub
+local setlist = node.direct.setlist
+local setshift = node.direct.setshift
 
 local to_node = node.direct.tonode
 local to_direct = node.direct.todirect
@@ -24,10 +33,11 @@ local node_traverse = node.direct.traverse
 local node_new = node.direct.new
 local node_next = node.direct.getnext
 local node_remove = node.direct.remove
-local node_free = node.direct.free
-local has_attr = node.direct.has_attribute
+local node_free = node.direct.flush_node or node.direct.free
+local get_attr = node.direct.get_attribute
 local set_attr = node.direct.set_attribute
-local tex_getcount = tex.getcount
+local getcount = tex.getcount
+local cnt_stack = luatexbase.registernumber 'ltj@@stack'
 
 local attr_jchar_class = luatexbase.attributes['ltj@charclass']
 local attr_dir = luatexbase.attributes['ltj@dir']
@@ -66,33 +76,34 @@ local list_dir
 
 -- vcenter noad は軸に揃えるため，欧文ベースライン補正がかかる
 local function conv_vcenter(sb)
-   local h = getfield(sb, 'head'); local hd = getlist(h)
-   if getid(hd)==id_whatsit and getsubtype(hd)==sid_user 
+   local h = getlist(sb) ; local hd = getlist(h)
+   if getid(hd)==id_whatsit and getsubtype(hd)==sid_user
       and getfield(hd, 'user_id')==DIR then
       local d = node_next(hd)
-      if getid(d)==id_vlist and has_attr(d, attr_dir)>=dir_node_auto then
-         node_free(hd); setfield(h, 'head', nil); node_free(h)
-         setfield(sb, 'head', d);  set_attr(d, attr_icflag, 0)
+      if getid(d)==id_vlist and get_attr(d, attr_dir)>=dir_node_auto then
+         node_free(hd); setlist(h, nil); node_free(h)
+         setlist(sb, d);  set_attr(d, attr_icflag, 0)
       end
    end
    return sb
 end
 
 local cjhh_A
--- sty : 0 (display or text), 1 (script), >=2 (scriptscript)
+local max, min = math.max, math.min
+-- sty : -1 (display), 0 (text), 1 (script), >=2 (scriptscript)
 local function conv_jchar_to_hbox(head, sty)
    for p in node_traverse(head) do
       local pid = getid(p)
       if pid == id_simple or pid == id_accent then
          if getsubtype(p)==12 then
-            conv_vcenter(getfield(p, 'nucleus'))
+            conv_vcenter(getnucleus(p))
          else
-            setfield(p, 'nucleus', cjh_A(getfield(p, 'nucleus'), sty))
+            setnucleus(p, cjh_A(getnucleus(p), sty))
          end
-         setfield(p, 'sub', cjh_A(getfield(p, 'sub'), sty+1))
-         setfield(p, 'sup', cjh_A(getfield(p, 'sup'), sty+1))
+         setsub(p, cjh_A(getsub(p), max(sty+1,1)))
+         setsup(p, cjh_A(getsup(p), max(sty+1,1)))
       elseif pid == id_choice then
-         setfield(p, 'display', cjh_A(getfield(p, 'display'), 0))
+         setfield(p, 'display', cjh_A(getfield(p, 'display'), -1))
          setfield(p, 'text', cjh_A(getfield(p, 'text'), 0))
          setfield(p, 'script', cjh_A(getfield(p, 'script'), 1))
          setfield(p, 'scriptscript', cjh_A(getfield(p, 'scriptscript'), 2))
@@ -100,15 +111,17 @@ local function conv_jchar_to_hbox(head, sty)
          setfield(p, 'num', cjh_A(getfield(p, 'num'), sty+1))
          setfield(p, 'denom', cjh_A(getfield(p, 'denom'), sty+1))
       elseif pid == id_radical then
-         setfield(p, 'nucleus', cjh_A(getfield(p, 'nucleus'), sty))
-         setfield(p, 'sub', cjh_A(getfield(p, 'sub'), sty+1))
-         setfield(p, 'sup', cjh_A(getfield(p, 'sup'), sty+1))
+         setnucleus(p, cjh_A(getnucleus(p), sty))
+         setsub(p, cjh_A(getsub(p), max(sty+1,1)))
+         setsup(p, cjh_A(getsup(p), max(sty+1,1)))
          if getfield(p, 'degree') then
-            setfield(p, 'degree', cjh_A(getfield(p, 'degree'), sty + 1))
+            setfield(p, 'degree', cjh_A(getfield(p, 'degree'), 2))
          end
       elseif pid == id_style then
          local ps = getfield(p, 'style')
-         if ps == "display'" or  ps == 'display' or ps == "text'" or ps == 'text' then
+         if ps == "display'" or  ps == 'display' then
+            sty = -1
+         elseif ps == "text'" or ps == 'text' then
             sty = 0
          elseif  ps == "script'" or  ps == 'script' then
             sty = 1
@@ -124,47 +137,48 @@ local MJS  = luatexja.stack_table_index.MJS
 local MJSS = luatexja.stack_table_index.MJSS
 local capsule_glyph_math = ltjw.capsule_glyph_math
 local is_ucs_in_japanese_char = ltjc.is_ucs_in_japanese_char_direct
+local setfont = node.direct.setfont
+local setchar = node.direct.setchar
 
 cjh_A = function (p, sty)
    if not p then return nil
    else
       local pid = getid(p)
       if pid == id_sub_mlist then
-         if getfield(p, 'head') then
-            setfield(p, 'head', conv_jchar_to_hbox(getfield(p, 'head'), sty))
+         if getlist(p) then
+            setlist(p, conv_jchar_to_hbox(getlist(p), sty))
          end
       elseif pid == id_mchar then
-         local pc, fam = getchar (p), has_attr(p, attr_jfam) or -1
+         local pc, fam = getchar (p), get_attr(p, attr_jfam) or -1
          if (not is_math_letters[pc]) and is_ucs_in_japanese_char(p) and fam>=0 then
-            local f = ltjs.get_stack_table(MJT + 0x100 * sty + fam, -1, tex_getcount('ltj@@stack'))
+            local f = ltjs.get_stack_table(MJT + 0x100 * min(max(sty,0),2) + fam, -1, getcount(cnt_stack))
             if f ~= -1 then
                local q = node_new(id_sub_box)
-               local r = node_new(id_glyph); setfield(r, 'next', nil)
-               setfield(r, 'char', pc); setfield(r, 'font', f); setfield(r, 'subtype', 256)
-               local k = has_attr(r,attr_ykblshift) or 0; set_attr(r, attr_ykblshift, 0)
-               -- ltj-setwidth 内で実際の位置補正はおこなうので，補正量を退避
+               local r = node_new(id_glyph, 256); setnext(r, nil); setfont(r, f, pc)
                local met = ltjf_font_metric_table[f]
-               r = capsule_glyph_math(r, met, met.char_type[ltjf_find_char_class(pc, met)]);
-               setfield(q, 'head', r); node_free(p); p=q; set_attr(r, attr_yablshift, k)
+               r = capsule_glyph_math(
+                 r, met, met.char_type[ltjf_find_char_class(pc, met)], sty)
+               setlist(q, r); node_free(p); p=q;
             end
          end
-      elseif pid == id_sub_box and getfield(p, 'head') then
+      elseif pid == id_sub_box and getlist(p) then
          -- \hbox で直に与えられた内容は上下位置を補正する必要はない
-         local h = getfield(p, 'head'); h = ltjd_make_dir_whatsit(h, h, list_dir, 'math')
-         setfield(p, 'head', h); set_attr(h, attr_icflag, PROCESSED)
+         local h = getlist(p); h = ltjd_make_dir_whatsit(h, h, list_dir, 'math')
+         setlist(p, h); setshift(h, getshift(h)-get_attr(h, attr_yablshift))
+         --set_attr(h, attr_icflag, PROCESSED)
       end
    end
    return p
 end
 
 do
-  local function mlist_callback_ltja(n)
+  local function mlist_callback_ltja(n, display_type)
     local n = to_direct(n); list_dir = ltjd_get_dir_count()
     if getid(n)==id_whatsit and getsubtype(n)==sid_user and getfield(n, 'user_id') == DIR then
       local old_n = n; n = node_remove(n, n)
       node_free(old_n); if not n then return nil end
     end
-    return to_node(conv_jchar_to_hbox(n, 0))
+    return to_node(conv_jchar_to_hbox(n, (display_type=='display') and -1 or 0))
   end
   -- LaTeX 2020-02-02 seems to have pre_mlist_to_hlist_filter callback
   if luatexbase.callbacktypes['pre_mlist_to_hlist_filter'] then

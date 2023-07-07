@@ -1,7 +1,7 @@
 The `fduthesis` Class
 =====================
 
-*LaTeX thesis template for Fudan University, v0.7e*
+*LaTeX thesis template for Fudan University, v0.8*
 
 Overview
 --------
@@ -21,7 +21,7 @@ The documentation can be found in
 [fduthesis-en.pdf](http://mirrors.ctan.org/macros/latex/contrib/fduthesis/fduthesis-en.pdf)
 (in English).
 
-GitHub re­pos­i­tory: <https://github.com/stone-zeng/fduthesis>.
+GitHub repository: <https://github.com/stone-zeng/fduthesis>.
 
 Installation
 ------------
@@ -78,4 +78,4 @@ version.
 
 -----
 
-Copyright (C) 2017&ndash;2020 by Xiangdong Zeng <xdzeng96@gmail.com>.
+Copyright (C) 2017&ndash;2022 by Xiangdong Zeng <xdzeng96@gmail.com>.

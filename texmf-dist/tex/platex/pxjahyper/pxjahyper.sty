@@ -1,7 +1,7 @@
 %%
 %% This is file 'pxjahyper.sty'.
 %%
-%% Copyright (c) 2012-2021 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2012-2022 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{pxjahyper}[2021/06/06 v0.9c]
+\ProvidesPackage{pxjahyper}[2022/10/19 v1.2a]
 \def\pxhy@pkgname{pxjahyper}
 \providecommand{\bxDebug}[1]{}
 
@@ -24,6 +24,7 @@
 }
 
 %% packages
+\RequirePackage{keyval}\relax
 \RequirePackage{ltxcmds}[2011/08/22]% v1.21
 
 %% variables
@@ -31,13 +32,13 @@
 \newif\ifpxhy@uptex
 \newif\ifpxhy@etex
 \newif\ifpxhy@etoolbox
-\newif\ifpxhy@new@hook@system
+\chardef\pxhy@hook@system=0
 \newif\ifpxhy@tounicode
 \newif\ifpxhy@uniescape
 \newif\ifpxhy@bigcode
 \let\pxhy@bigcode@given\relax
 \newif\ifpxhy@papersize
-\newif\ifpxhy@textcmd
+\newif\ifpxhy@charcmds
 \chardef\pxhy@driver@none=0
 \chardef\pxhy@driver@dvipdfmx=1
 \chardef\pxhy@driver@dvips=2
@@ -48,6 +49,29 @@
 \newif\ifpxhy@otfutf
 \newif\ifpxhy@otfcid
 \newif\ifpxhy@otfmacros
+\newif\ifpxhy@Uchar@avail
+\newif\ifpxhy@ucs@avail
+\let\pxhy@jsclasses@name\relax
+\newif\ifpxhy@jlreq@cls
+\newif\ifpxhy@fallback@geta
+\newif\ifpxhy@extjis@map
+\newif\ifpxhy@extjis@use
+\newif\ifpxhy@ajhankaku@chars
+
+%%<*> \pxjahypersetup{<key>=<value>,...}
+\newcommand*\pxjahypersetup{%
+  \setkeys{\pxhy@pkgname}%
+}
+%% \pxhy@handle@key{<key>}{<value>}{<name>}
+\def\pxhy@handle@key#1#2#3{%
+  \expandafter\let\expandafter\pxhy@tmpa\csname pxhy@#3\endcsname
+  \ifx\pxhy@tmpa\relax
+    \PackageError\pxhy@pkgname
+     {Invalid value for key '#1':\MessageBreak\@spaces#2}%
+     {\@eha}%
+  \else \pxhy@tmpa
+  \fi
+}
 
 %--------------------------------------- Package options
 
@@ -64,13 +88,16 @@
 \DeclareOption{nodvidriver}{%
   \let\pxhy@driver\pxhy@driver@none
 }
-%% modes
-\DeclareOption{none}{%
-  \let\pxhy@driver\pxhy@driver@none %FIXME
+\DeclareOption{resetdvidriver}{%
+  \let\pxhy@driver\@undefined
 }
-\DeclareOption{auto}{%
-  \let\pxhy@driver\@undefined %FIXME
+\DeclareOption{autodvidriver}{%
+  \let\pxhy@driver\@undefined
 }
+\DeclareOption{auto}{% DEPRECATED
+  \let\pxhy@driver\@undefined
+}
+%% operation modes
 \DeclareOption{tounicode}{%
   \pxhy@tounicodetrue
 }
@@ -97,6 +124,12 @@
 }
 \DeclareOption{nopapersize}{%
   \pxhy@papersizefalse
+}
+\DeclareOption{charcmds}{%
+  \pxhy@charcmdstrue
+}
+\DeclareOption{nocharcmds}{%
+  \pxhy@charcmdsfalse
 }
 \pxhy@bigcodetrue
 \DeclareOption{bigcode}{%
@@ -138,12 +171,42 @@
 \DeclareOption{nootfmacros}{%
   \pxhy@otfmacrosfalse
 }
+\DeclareOption{fallback-geta}{%
+  \pxjahypersetup{fallback=geta}%
+}
+\DeclareOption{fallback-delete}{%
+  \pxjahypersetup{fallback=delete}%
+}
 \DeclareOption{force-unicode}{%
   \let\pxhy@force@unicode=t
 }
+\DeclareOption{disable-Ux}{% for debug
+  \let\pxhy@disable@Ux=t
+}
+%% key-value options
+\DeclareOption*{%
+  \expandafter\pxjahypersetup\expandafter{\CurrentOption}%
+}
+% 'fallback=geta|delete'
+\pxhy@fallback@getatrue
+\define@key{\pxhy@pkgname}{fallback}{%
+  \pxhy@handle@key{fallback}{#1}{kv@fallback@@#1}%
+}
+\let\pxhy@kv@fallback@@geta\pxhy@fallback@getatrue
+\let\pxhy@kv@fallback@@delete\pxhy@fallback@getafalse
+% 'extjis=<bool>'
+\pxhy@extjis@usetrue
+\define@key{\pxhy@pkgname}{extjis}[true]{%
+  \pxhy@handle@key{extjis}{#1}{extjis@use#1}%
+}
+% 'ajhankaku-chars=<bool>'
+\define@key{\pxhy@pkgname}{ajhankaku-chars}[true]{%
+  \pxhy@handle@key{ajhankaku-chars}{#1}{ajhankaku@chars#1}%
+}
 %% dispatch
 \ExecuteOptions{%
-  auto,tounicode,papersize,jacommentline,disablecmds,otfutf,otfcid%
+  resetdvidriver,tounicode,papersize,charcmds,jacommentline,%
+  disablecmds,otfutf,otfcid%
 }
 \ProcessOptions*
 
@@ -186,6 +249,10 @@
   \ifx\Hy@driver\pxhy@tmpa
     \let\pxhy@driver\pxhy@driver@dvips
   \fi
+  \ifnum\pxhy@driver=\pxhy@driver@none \ifx\Hy@driver\@undefined\else
+    \PackageWarningNoLine\pxhy@pkgname
+     {Unknown hyperref driver: \Hy@driver}
+  \fi\fi
 \fi
 
 %% Check the engine.
@@ -199,22 +266,55 @@
   \pxhy@etextrue
   \IfFileExists{etoolbox.sty}{\pxhy@etoolboxtrue}{}%
 }
-\pxhy@check\kanjiskip{\pxhy@ptextrue}
-\pxhy@check\forcecjktoken{\pxhy@uptextrue}
+\pxhy@check\kanjiskip{%
+  \pxhy@ptextrue
+  \pxhy@check\ucs{%
+    \pxhy@check\ptexversion{\pxhy@uptextrue}
+    \pxhy@check\kchardef{\pxhy@uptextrue}
+    \ifpxhy@uptex\else % upTeX v<0.10
+      \pxhy@error{This upTeX engine is too old}
+       {\pxhy@eh@fatal}
+      \endinput
+    \fi % only upTeX in Unicode is seen as upTeX
+    \ifnum\ucs"3000="3000 \else \pxhy@uptexfalse \fi
+  }
+}
 \ifpxhy@ptex\else
   \pxhy@error{Unknown engine used}%
    {\pxhy@eh@fatal}
   \expandafter\endinput
 \fi
 
+%% pxhy@Uchar@avail switch
+\pxhy@check\Uchar{\pxhy@Uchar@availtrue}
+%% pxhy@ucs@avail switch
+\pxhy@check\ucs{\pxhy@ucs@availtrue}
+
+%% pxhy@extjis@map switch
+% Note that 'tounicode' is necessary.
+\ifpxhy@etex \ifpxhy@uptex\else \ifpxhy@tounicode
+  \pxhy@extjis@maptrue
+\fi\fi\fi
+
+%% Check the document class.
+% jlreq
+\ifpxhy@etex
+  \ifx\jlreqsetup\@undefined\else \pxhy@jlreq@clstrue \fi
+\fi
+% jsclasses
+\@ifclassloaded{jsarticle}{\def\pxhy@jsclasses@name{jsarticle}}{}
+\@ifclassloaded{jsbook}{\def\pxhy@jsclasses@name{jsbook}}{}
+\ifx\bxjs@clsname\@undefined\else \let\pxhy@jsclasses@name\relax \fi
+\ifx\jsc@clsname\@undefined\else \let\pxhy@jsclasses@name\jsc@clsname \fi
+
 %% Check for the new hook system.
-\@ifl@t@r\fmtversion{2020/10/01}{\pxhy@new@hook@systemtrue}{}
+\@ifl@t@r\fmtversion{2021/11/15}{%
+  \chardef\pxhy@hook@system=2
+}{\@ifl@t@r\fmtversion{2020/02/02}{%
+  \chardef\pxhy@hook@system=1
+}{}}
 
 %% adjustment
-% upTeX not in unicode is not seen as upTeX.
-\ifnum\jis"2121="3000 \else
-  \pxhy@uptexfalse
-\fi
 % bigcode cannot be used without upTeX.
 \ifpxhy@bigcode \ifpxhy@uptex\else
   \pxhy@bigcodefalse
@@ -223,16 +323,6 @@
      {bigcode is invalid without upTeX}
   \fi
 \fi\fi
-%% pxhy@papersize switch
-\ifnum\pxhy@driver=\pxhy@driver@none
-  \pxhy@papersizefalse
-\fi
-%% pxhy@textcmd switch
-\ifnum\pxhy@driver=\pxhy@driver@none
-  \pxhy@textcmdfalse
-\else
-  \pxhy@textcmdtrue
-\fi
 %% pxhy@uniescape switch
 \ifnum\pxhy@driver=\pxhy@driver@dvips \ifx t\pxhy@nouniescape@given\else
   \pxhy@uniescapetrue
@@ -241,25 +331,14 @@
 % hyperref 'unicode' is allowed only on upLaTeX.
 \ifnum0\ifpxhy@hy@unicode\ifpxhy@uptex\else
     \ifx t\pxhy@force@unicode\else1\fi\fi\fi>\z@
-  \PackageError\pxhy@pkgname
-   {The hyperref 'unicode' mode is not supported\MessageBreak
-    on the pTeX engine}%
-   {\pxhy@eh@fatal}%
-  \expandafter\endinput
+  \PackageWarningNoLine\pxhy@pkgname
+   {The support for the hyperref 'unicode' mode\MessageBreak
+    on the pTeX engine is currently experimental}%
 \fi
 \ifpxhy@hy@unicode
   \pxhy@uniescapefalse
-  \pxhy@otfutftrue
+  %\pxhy@otfutftrue
 \fi
-% otfmacros requires upTeX or out2uni.
-\ifpxhy@uptex\else\ifpxhy@uniescape\else\ifpxhy@hy@unicode\else
-  \pxhy@otfmacrosfalse
-  \ifx t\pxhy@otfmacros@given
-    \PackageWarningNoLine\pxhy@pkgname
-     {Option 'otfmacros' is invalid\MessageBreak
-      unless upTeX is used or 'out2uni' is specified}
-  \fi
-\fi\fi\fi
 % otfcid requrires otfutf.
 \ifpxhy@otfutf \else \ifpxhy@otfcid
   \PackageInfo\pxhy@pkgname
@@ -275,19 +354,31 @@
   \pxhy@otfmacrosfalse
 \fi\fi
 
+%% in nodvidriver mode
+\ifnum\pxhy@driver=\pxhy@driver@none
+  \pxhy@papersizefalse
+  \pxhy@charcmdsfalse
+\fi
+
 \bxDebug{****pxjahyper env^^J%
 pxhy@ptex = \ifpxhy@ptex true\else false\fi^^J%
 pxhy@uptex = \ifpxhy@uptex true\else false\fi^^J%
 pxhy@etex = \ifpxhy@etex true\else false\fi^^J%
 pxhy@etoolbox = \ifpxhy@etoolbox true\else false\fi^^J%
-pxhy@new@hook@system = \ifpxhy@new@hook@system true\else false\fi^^J%
-ifpxhy@hy@unicode = \ifpxhy@hy@unicode true\else false\fi^^J%
-pxhy@bigcode = \ifpxhy@bigcode true\else false\fi^^J%
-pxhy@driver = \the\pxhy@driver^^J%
+pxhy@hook@system = \the\pxhy@hook@system^^J%
 pxhy@tounicode = \ifpxhy@tounicode true\else false\fi^^J%
 pxhy@uniescape = \ifpxhy@uniescape true\else false\fi^^J%
+pxhy@bigcode = \ifpxhy@bigcode true\else false\fi^^J%
 pxhy@papersize = \ifpxhy@papersize true\else false\fi^^J%
-pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
+pxhy@charcmds = \ifpxhy@charcmds true\else false\fi^^J%
+pxhy@driver = \the\pxhy@driver^^J%
+ifpxhy@hy@unicode = \ifpxhy@hy@unicode true\else false\fi^^J%
+pxhy@jacommentline = \ifpxhy@jacommentline true\else false\fi^^J%
+pxhy@disablecmds = \ifpxhy@disablecmds true\else false\fi^^J%
+pxhy@otfutf = \ifpxhy@otfutf true\else false\fi^^J%
+pxhy@otfcid = \ifpxhy@otfcid true\else false\fi^^J%
+pxhy@otfmacros = \ifpxhy@otfmacros true\else false\fi^^J%
+pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 }
 
 %--------------------------------------- Helpers
@@ -298,7 +389,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \let\pxhy@mk\indent % unexpandable
 
 %% \pxhy@begin@dvi@hook{<text>}
-\ifpxhy@new@hook@system
+\ifnum\pxhy@hook@system>0
   \def\pxhy@begin@dvi@hook#1{%
     \AddToHook{shipout/firstpage}{#1}%
   }
@@ -315,33 +406,51 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 % of the char code <num>.
 \def\pxhy@get@jchar#1{%
   \begingroup
-    \pxhy@forcecjktoken
+    \pxhy@forcecjktoken{#1}%
     \kansujichar\@ne=#1\relax
     \xdef\pxhy@jchar{\kansuji\@ne}%
   \endgroup
 }
 
-%% \pxhy@forcecjktoken
+%% \pxhy@let@jchar@jc\CS{<jis-code>}
+\def\pxhy@let@jchar@jc#1#2{%
+  \pxhy@get@jchar{\jis"#2}%
+  \let#1\pxhy@jchar
+}
+
+%% \pxhy@forcecjktoken{<code>}
 \ifpxhy@uptex
-  \let\pxhy@forcecjktoken\forcecjktoken
+  \ifx\forcecjktoken\@undefined
+    \def\pxhy@forcecjktoken#1{\kcatcode#1=18 }
+  \else \def\pxhy@forcecjktoken#1{\forcecjktoken}
+  \fi
 \else
-  \let\pxhy@forcecjktoken\relax
+  \def\pxhy@forcecjktoken#1{\relax}
 \fi
 
 %% \pxhy@geta : GETA MARK
 \pxhy@get@jchar{\jis"222E}
 \let\pxhy@geta\pxhy@jchar
 
+%% \pxhy@print@geta
+\def\pxhy@print@geta{%
+  \ifpxhy@fallback@geta \pxhy@geta \fi
+}
+
 %% \pxhy@hook@after@package{<package-name>}{<code>}
 \@onlypreamble\pxhy@hook@after@package
 \def\pxhy@hook@after@package#1#2{%
-  \ifpxhy@new@hook@system
+  \ifcase\pxhy@hook@system
+    \AtBeginDocument{%
+      \@ifpackageloaded{#1}{#2}{}%
+    }%
+  \or
     \@ifpackageloaded{#1}{#2}{%
       \AddToHook{package/after/#1}{#2}%
     }%
-  \else
-    \AtBeginDocument{%
-      \@ifpackageloaded{#1}{#2}{}%
+  \or
+    \@ifpackageloaded{#1}{#2}{%
+      \AddToHook{package/#1/after}{#2}%
     }%
   \fi
 }
@@ -349,6 +458,11 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 %% \pxhy@triexpandafter
 \def\pxhy@triexpandafter{%
   \expandafter\expandafter\expandafter
+}
+
+%% \pxhy@csletcs{<csname1>}{<csname2>}
+\def\pxhy@csletcs#1#2{%
+  \expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname
 }
 
 %% \pxhy@cond\ifXXX<arg>\fi{<true>}{<false>}
@@ -383,6 +497,12 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \def\pxhy@if@opt@a#1@[@#2#3\pxhy@mk{#2}
 \def\pxhy@if@opt@b#1#2]{#1{#2}}
 
+%% \pxhy@xdetokenize{<text>}
+\let\pxhy@xdetokenize\detokenize
+\pxhy@check\expanded{%
+  \def\pxhy@xdetokenize#1{\detokenize\expandafter{\expanded{#1}}}%
+}
+
 \fi
 %--------------------------------------- Load bxjatoucs
 
@@ -393,7 +513,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \let\pxhy@bxjatoucs@failure\relax
 
 %% \pxhy@try@load@bxjatoucs
-% Tries to load bxjatoucs. If it failed, then it sets the reason
+% Tries to load bxjatoucs. If that fails, then it sets the reason
 % message to \pxhy@bxjatoucs@failure.
 \@onlypreamble\pxhy@try@load@bxjatoucs
 \def\pxhy@try@load@bxjatoucs{%
@@ -452,7 +572,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 
 % When the magnification is in effect (i.e. \mag<>1000), hyperref
 % emits a papersize special with wrong value. (dvipdfmx interprets
-% the lengths in the special as 'true' length.) So here a papersize
+% the lengths in the special as 'true' lengths.) So here a papersize
 % special with adjusted values will be output.
 \ifnum\mag=1000 \else
   \expandafter\ifx\csname ifHy@setpagesize\expandafter\endcsname
@@ -460,8 +580,10 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
     \ifnum0<\mag \ifnum32768>\mag % \mag is in valid range
       \begingroup
         \@ifundefined{stockwidth}{}{%else
-          \paperwidth=\stockwidth
-          \paperheight=\stockheight
+          \ifdim\stockwidth>\z@ \ifdim\stockheight>\z@
+            \paperwidth=\stockwidth
+            \paperheight=\stockheight
+          \fi\fi
         }%
         \@tempcnta=\mag \advance\@tempcnta100000
         \def\pxhy@next1#1#2#3#4#5\relax{%
@@ -470,10 +592,12 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
         \expandafter\pxhy@next\the\@tempcnta\relax
         \paperwidth=\pxhy@tmpa\paperwidth
         \paperheight=\pxhy@tmpa\paperheight
-        \edef\pxhy@tmpa{%
-          \noexpand\pxhy@begin@dvi@hook{%
-            \special{papersize=\the\paperwidth,\the\paperheight}}%
-        }\pxhy@tmpa
+        \ifdim\paperwidth>\z@ \ifdim\paperheight>\z@
+          \edef\pxhy@tmpa{%
+            \noexpand\pxhy@begin@dvi@hook{%
+              \special{papersize=\the\paperwidth,\the\paperheight}}%
+          }\pxhy@tmpa
+        \fi\fi
       \endgroup
     \fi\fi
   \fi
@@ -642,6 +766,45 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
     \unichar{"#1}%
   }
 
+\else\ifpxhy@Uchar@avail           %<*Uchar>
+  \ifpxhy@uptex
+
+    %% \pxhy@Ux
+    \def\pxhy@Ux{\pxhy@uchex}
+    \pxhy@utfXVIfalse
+    \def\pxhy@uchex@out#1{\Uchar"#1 }
+
+  \else\ifpxhy@ucs@avail
+
+    %% \pxhy@Ux
+    \def\pxhy@Ux{\pxhy@uchex}
+    \pxhy@utfXVIfalse
+    \def\pxhy@uchex@out#1{%
+      \expandafter\pxhy@uchex@out@a\ucs"#1\pxhy@mk{#1}%
+    }
+    \chardef\pxhy@max@asc="7F
+    \def\pxhy@uchex@out@a#1\pxhy@mk#2{%
+      \ifnum#1<\z@
+        \ifnum"#2>\pxhy@max@asc
+          \ifpxhy@extjis@use
+            \expandafter\pxhy@uchex@out@b\csname
+                pxhy@uc/\number"#2\endcsname{#2}%
+          \else \pxhy@uchex@out@b\relax{#2}%
+          \fi
+        \else \Uchar"#2
+        \fi
+      \else \Uchar#1
+      \fi
+    }
+    \def\pxhy@uchex@out@b#1#2{%
+      \ifx#1\relax
+        \@nameuse{U+#2}%
+        \pxhy@print@geta
+      \else #1%
+      \fi
+    }
+
+  \fi\fi
 \else\ifpxhy@uptex              %<*upTeX>
 
   %% \pxhy@Ux
@@ -688,6 +851,11 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
   \expandafter\pxhy@next\pxhy@marker
   %END--
 
+\fi\fi\fi                       %</>
+
+\AtEndOfPackage{%
+\ifx\pxhy@posthook\@undefined\else
+  \bxDebug{add to \string\pdfstringdefPostHook}%
   % Add \pxhy@posthook to \pdfstringdefPostHook.
   \begingroup
     \toks@\expandafter{\pdfstringdefPostHook{#1}}
@@ -699,11 +867,12 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
     }%
     \pxhy@next
   \endgroup
-
-\fi\fi                          %</>
+\fi
+}
 
 \ifpxhy@uniescape               %<*uniescape>
 
+  \let\pxhy@posthook\@undefined
   %% \pxhy@Ux
   \def\pxhy@Ux{\pxhy@uchex}%
   % \pxhy@uchex converts to UTF-16
@@ -715,6 +884,12 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 
 \fi                             %</uniescape>
 
+%% 'disable-Ux' (for debug)
+\ifx t\pxhy@disable@Ux
+  \let\pxhy@Ux\@undefined
+  \let\pxhy@posthook\@undefined
+\fi
+
 %% Makes \Ux be the code input command in PDF strings.
 \ifx\pxhy@Ux\@undefined\else
   \pdfstringdefDisableCommands{%
@@ -725,6 +900,56 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
   }
 \fi
 
+%% \pxhy@let@jchar@uc\CS{<num>}
+\ifx\pxhy@Ux\@undefined
+  \def\pxhy@let@jchar@uc#1#2{%
+    \let#1\noindent % issue a warning
+  }
+\else
+  \def\pxhy@let@jchar@uc#1#2{%
+    \def#1{\pxhy@Ux{#2}}%
+  }
+\fi
+
+%--------------------------------------- Fix for high-byte protection
+\ifpxhy@etex
+\begingroup
+% Check for high-byte protection.
+\catcode"EF=\active \catcode`\^=7
+\global\let\pxhy@std@EF=^^ef
+\def\pxhy@next#1 #2\pxhy@end{%
+  \@tempswafalse
+  \def\pxhy@tmpa{#1}\edef\pxhy@tmpb{\string\protected}%
+  \ifx\pxhy@tmpa\pxhy@tmpb \@tempswatrue \fi
+}\expandafter\pxhy@next\meaning\pxhy@std@EF. \pxhy@end
+% Add a hook if protected.
+\if@tempswa
+
+  %% \pxhy@unprotect@high@bytes
+  \let\pxhy@unprotect@high@bytes\@empty
+  \def\pxhy@next#1#2{%
+    \expandafter\gdef\expandafter#1\expandafter{#2}%
+    \edef\pxhy@unprotect@high@bytes{%
+      \unexpanded\expandafter{\pxhy@unprotect@high@bytes}%
+      \unexpanded{\let#2#1}}%
+    \advance\@tempcnta\@ne
+  }
+  \@tempcnta="C2
+  \@whilenum{\@tempcnta<"F5}\do{%
+    \lccode"EF=\@tempcnta
+    \lowercase{\expandafter\pxhy@next\csname
+        pxhy@uhb/\string^^ef\endcsname^^ef}%
+  }
+  \xdef\pxhy@unprotect@high@bytes{%
+    \unexpanded{\ifx^^ef\pxhy@std@EF}%
+      \unexpanded\expandafter{\pxhy@unprotect@high@bytes}%
+    \unexpanded{\fi}%
+  }
+  \ltx@GlobalPrependToMacro\pdfstringdefPreHook{\pxhy@unprotect@high@bytes}
+
+\fi
+\endgroup
+\fi
 %--------------------------------------- Support for 'otfutf'
 \ifpxhy@otfutf
 
@@ -736,7 +961,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
   \pxhy@utfXVIfalse
   \def\pxhy@uchex@out#1{%
     \@nameuse{U+#1}% issue a warning
-    \pxhy@geta
+    \pxhy@print@geta
   }
 \else
   \let\pxhy@UTF\pxhy@Ux
@@ -775,7 +1000,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 %% \pxhy@CID{<cid>}
 \def\pxhy@CID#1{%
   \expandafter\expandafter\expandafter\pxhy@cid@aux
-      \bxjaCidToUcsHex{#1}\pxhy@mk{\detokenize{#1}}%
+      \bxjaCidToUcsHex{#1}\pxhy@mk{\pxhy@xdetokenize{#1}}%
 }
 %% \pxhy@fast@CID{<cid>}
 \def\pxhy@fast@CID#1{%
@@ -785,7 +1010,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \ifx\pxhy@Ux\@undefined
   \def\pxhy@cid@aux#1\pxhy@mk#2{%
     \@nameuse{CID+#2}% issue a warning
-    \pxhy@geta
+    \pxhy@print@geta
   }
 \else
 \def\pxhy@cid@aux#1\pxhy@mk#2{%
@@ -793,7 +1018,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
     \pxhy@Ux{#1}%
   \else
     \@nameuse{CID+#2}%
-    %\pxhy@geta %FIXME: future change
+    \pxhy@print@geta
   \fi
 }
 \fi
@@ -841,14 +1066,97 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \fi
 
 \fi
-%--------------------------------------- Redefine text commands for PD1
+%--------------------------------------- Extended JIS mapping
+\ifpxhy@extjis@map             %<*extjis-map>
+\begingroup
 
+\def\pxhy@next#1#2#3#4{%
+  \@tempcnta"#1\relax\@tempcntb#3\relax
+  \chardef\pxhy@tmpa\numexpr#4+1\relax
+  \@whilenum{\@tempcntb<\pxhy@tmpa}\do{%
+    \expandafter\xdef\csname pxhy@uc/\the\@tempcnta\endcsname{%
+      \unexpanded{#2}\the\@tempcntb}%
+    \advance\@tempcnta\@ne \advance\@tempcntb\@ne}%
+}
+
+%% add special mapping
+\ifnum \jis"2121="8140 % sjis
+  \pxhy@next{2460}{\207\10}{0}{7}
+  \pxhy@next{2468}{\207\11}{0}{7}
+  \pxhy@next{2470}{\207\12}{0}{3}
+  \pxhy@next{2160}{\207\12}{4}{7}
+  \pxhy@next{2164}{\207\13}{0}{5}
+  \pxhy@next{3349}{\207\13}{7}{7}
+  \pxhy@next{3314}{\207\14}{0}{0}
+  \pxhy@next{3322}{\207\14}{1}{1}
+  \pxhy@next{334D}{\207\14}{2}{2}
+  \pxhy@next{3318}{\207\14}{3}{3}
+  \pxhy@next{3327}{\207\14}{4}{4}
+  \pxhy@next{3303}{\207\14}{5}{5}
+  \pxhy@next{3336}{\207\14}{6}{6}
+  \pxhy@next{3351}{\207\14}{7}{7}
+  \pxhy@next{3357}{\207\15}{0}{0}
+  \pxhy@next{330D}{\207\15}{1}{1}
+  \pxhy@next{3326}{\207\15}{2}{2}
+  \pxhy@next{3323}{\207\15}{3}{3}
+  \pxhy@next{332B}{\207\15}{4}{4}
+  \pxhy@next{334A}{\207\15}{5}{5}
+  \pxhy@next{333B}{\207\15}{6}{6}
+  \pxhy@next{339C}{\207\15}{7}{7}
+  \pxhy@next{339D}{\207\16}{0}{1}
+  \pxhy@next{338E}{\207\16}{2}{3}
+  \pxhy@next{33C4}{\207\16}{4}{4}
+  \pxhy@next{33A1}{\207\16}{5}{5}
+  \pxhy@next{337B}{\207\17}{6}{6}
+  \pxhy@next{301D}{\207\20}{0}{0}
+  \pxhy@next{301F}{\207\20}{1}{1}
+  \pxhy@next{2116}{\207\20}{2}{2}
+  \pxhy@next{33CD}{\207\20}{3}{3}
+  \pxhy@next{2121}{\207\20}{4}{4}
+  \pxhy@next{32A4}{\207\20}{5}{7}
+  \pxhy@next{32A7}{\207\21}{0}{1}
+  \pxhy@next{3231}{\207\21}{2}{3}
+  \pxhy@next{3239}{\207\21}{4}{4}
+  \pxhy@next{337E}{\207\21}{5}{5}
+  \pxhy@next{337D}{\207\21}{6}{6}
+  \pxhy@next{337C}{\207\21}{7}{7}
+  \pxhy@next{222E}{\207\22}{3}{3}
+  \pxhy@next{2211}{\207\22}{4}{4}
+  \pxhy@next{221F}{\207\23}{0}{0}
+  \pxhy@next{22BF}{\207\23}{1}{1}
+  \pxhy@next{FF61}{\24}{1}{7}
+  \pxhy@next{FF68}{\25}{0}{7}
+  \pxhy@next{FF70}{\26}{0}{7}
+  \pxhy@next{FF78}{\27}{0}{7}
+  \pxhy@next{FF80}{\30}{0}{7}
+  \pxhy@next{FF88}{\31}{0}{7}
+  \pxhy@next{FF90}{\32}{0}{7}
+  \pxhy@next{FF98}{\33}{0}{7}
+\else\ifnum\jis"2121="A1A1 % euc
+  \pxhy@next{FF61}{\216\24}{1}{7}
+  \pxhy@next{FF68}{\216\25}{0}{7}
+  \pxhy@next{FF70}{\216\26}{0}{7}
+  \pxhy@next{FF78}{\216\27}{0}{7}
+  \pxhy@next{FF80}{\216\30}{0}{7}
+  \pxhy@next{FF88}{\216\31}{0}{7}
+  \pxhy@next{FF90}{\216\32}{0}{7}
+  \pxhy@next{FF98}{\216\33}{0}{7}
+\fi\fi
+
+%% \pxhy@hkcdot
+\global\pxhy@csletcs{pxhy@hkcdot}{pxhy@uc/\number"FF65}
+
+\endgroup
+\fi                             %</extjis-map>
+%--------------------------------------- Redefine text commands for PD1
+\ifpxhy@charcmds                %<*charcmds>
+
+%% \pxhy@cc@jis@only
+\chardef\pxhy@cc@jis@only=0
 %% \pxhy@pdfenc
 \edef\pxhy@pdfenc{%
   \ifpxhy@hy@unicode PU\else PD1\fi
 }
-
-\ifpxhy@textcmd                 %<*textcmd>
 
 %%<+> \pxDeclarePdfTextCommand{\CS}{<jis>}{<ucs>}
 \@onlypreamble\pxDeclarePdfTextCommand
@@ -865,15 +1173,6 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
    {\DeclareTextCompositeCommand{#1}{\pxhy@pdfenc}{#2}}%
    {\pxhy@revoke@pdf@tcc{#1}{#2}}%
 }
-
-\else                           %<*!textcmd>
-
-\@onlypreamble\pxDeclarePdfTextCommand
-\newcommand*\pxDeclarePdfTextCommand[3]{}
-\@onlypreamble\pxDeclarePdfTextComposite
-\newcommand*\pxDeclarePdfTextComposite[4]{}
-
-\fi                             %</textcmd>
 
 %% \pxhy@revoke@pdf@tc
 \@onlypreamble\pxhy@revoke@pdf@tc
@@ -902,7 +1201,8 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 %% \pxhy@decl@pdf@tc
 \@onlypreamble\pxhy@decl@pdf@tc
 \def\pxhy@decl@pdf@tc#1#2{%
-  \pxhy@get@body{#1}{#2}%
+  \edef\pxhy@next{{#1}{\ifx\pxhy@mt#2\pxhy@mt FFFD\else#2\fi}}%
+  \expandafter\pxhy@get@body\pxhy@next
   \ifx\pxhy@body\@undefined
     \let\pxhy@next\@secondoftwo
   \else
@@ -923,30 +1223,47 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
     \pxhy@get@jchar{\ucs"#2}%
     \let\pxhy@body\pxhy@jchar
   }%
-\else                           %<*!upTeX>
-  \ifpxhy@uniescape
+\else\ifpxhy@hy@unicode         %<*unicode>
+  \def\pxhy@get@body#1#2{%
+    \def\pxhy@body{\unichar{"#2}}%
+  }%
+\else\ifpxhy@uniescape          %<*uniescape>
     \def\pxhy@get@body#1#2{%
-      \ifx\pxhy@end#1\pxhy@end
+      \ifx\pxhy@mt#1\pxhy@mt
         \def\pxhy@body{\0x#2}%
       \else
         \pxhy@get@jchar{\jis"#1}%
         \let\pxhy@body\pxhy@jchar
       \fi
     }%
-  \else
+\else                           %<*!>
+  \chardef\pxhy@cc@jis@only=1
     \def\pxhy@get@body#1#2{%
-      \ifx\pxhy@end#1\pxhy@end
+      \ifx\pxhy@mt#1\pxhy@mt
         \let\pxhy@body\@undefined
       \else
         \pxhy@get@jchar{\jis"#1}%
         \let\pxhy@body\pxhy@jchar
       \fi
     }%
-  \fi
-\fi                             %</upTeX>
+\fi\fi\fi                       %</>
 
 %%%%%%%%%%%%%%%%%%%% the definitions
-\ifpxhy@hy@unicode\else         %<!*unicode>
+\ifpxhy@hy@unicode              %<*unicode>
+
+% The PU encoding has already done the job.
+% I supplement some definitions.
+\def\pxhy@next#1#2{%
+  \expandafter\ifx\csname PU\string#1\endcsname\relax
+    \DeclareTextCommand{#1}{PU}{#2}\fi}
+\pxhy@next{\guillemetleft}{\80\253}%00AB
+\pxhy@next{\guillemetright}{\80\273}%00BB
+\pxhy@next{\textborn}{\9046\005}%2605
+\pxhy@next{\textfinalsigma}{\83\302}%03C2
+\pxhy@next{\textxgeq}{\9042\145}%2265
+\pxhy@next{\textxleq}{\9042\144}%2264
+
+\else                           %<!*unicode>
 
 % JIS X 0213 does not distinguish the following pairs:
 %  - circumflex(U+02C6) and asciicircum(U+005E)
@@ -964,6 +1281,9 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \DeclareTextCommand{\ij}{PD1}{ij}% needed?
 \DeclareTextCommand{\textspace}{PD1}{\040}
 \DeclareTextCommand{\textquotesingle}{PD1}{\047}
+\DeclareTextCommand{\textasteriskcentered}{PD1}{*}
+\DeclareTextCommand{\textanoteleia}{PD1}{\textperiodcentered}
+\DeclareTextCommand{\texterotimatiko}{PD1}{;}
 
 %% Some adjustments on accents.
 \DeclareTextAccent{\H}{PD1}{\texthungarumlaut}
@@ -972,6 +1292,9 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \DeclareTextAccent{\u}{PD1}{\textasciibreve}
 \DeclareTextCompositeCommand{\u}{PD1}{\@empty}{\textasciibreve}
 \DeclareTextCompositeCommand{\u}{PD1}{\ }{\textasciibreve}
+\DeclareTextAccent{\U}{PD1}{\textasciibreve}
+\DeclareTextCompositeCommand{\U}{PD1}{\@empty}{\textasciibreve}
+\DeclareTextCompositeCommand{\U}{PD1}{\ }{\textasciibreve}
 \DeclareTextAccent{\k}{PD1}{\textogonek}
 \DeclareTextCompositeCommand{\k}{PD1}{\@empty}{\textogonek}
 \DeclareTextCompositeCommand{\k}{PD1}{\ }{\textogonek}
@@ -1215,10 +1538,12 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \pxDeclarePdfTextCommand{\CYRD}{2725}{0414}
 \pxDeclarePdfTextCommand{\CYRE}{2726}{0415}
 \pxDeclarePdfTextCommand{\CYRYO}{2727}{0401}
+\pxDeclarePdfTextComposite{\"}{\CYRE}{2727}{0401}
 \pxDeclarePdfTextCommand{\CYRZH}{2728}{0416}
 \pxDeclarePdfTextCommand{\CYRZ}{2729}{0417}
 \pxDeclarePdfTextCommand{\CYRI}{272A}{0418}
 \pxDeclarePdfTextCommand{\CYRISHRT}{272B}{0419}
+\pxDeclarePdfTextComposite{\U}{\CYRI}{272B}{0419}
 \pxDeclarePdfTextCommand{\CYRK}{272C}{041A}
 \pxDeclarePdfTextCommand{\CYRL}{272D}{041B}
 \pxDeclarePdfTextCommand{\CYRM}{272E}{041C}
@@ -1248,10 +1573,12 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 \pxDeclarePdfTextCommand{\cyrd}{2755}{0434}
 \pxDeclarePdfTextCommand{\cyre}{2756}{0435}
 \pxDeclarePdfTextCommand{\cyryo}{2757}{0451}
+\pxDeclarePdfTextComposite{\"}{\cyre}{2757}{0451}
 \pxDeclarePdfTextCommand{\cyrzh}{2758}{0436}
 \pxDeclarePdfTextCommand{\cyrz}{2759}{0437}
 \pxDeclarePdfTextCommand{\cyri}{275A}{0438}
 \pxDeclarePdfTextCommand{\cyrishrt}{275B}{0439}
+\pxDeclarePdfTextComposite{\U}{\cyri}{275B}{0439}
 \pxDeclarePdfTextCommand{\cyrk}{275C}{043A}
 \pxDeclarePdfTextCommand{\cyrl}{275D}{043B}
 \pxDeclarePdfTextCommand{\cyrm}{275E}{043C}
@@ -1338,18 +1665,19 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 % Give a substitute definition to characters that appear as
 % ligatures, since otherwise hyperref leaves some garbage in
 % output pdf-strings when such ligatures appear.
-\ifpxhy@uptex\else
-  \ifpxhy@uniescape\else
+\ifnum\pxhy@cc@jis@only>\z@
     \DeclareTextCommand{\textendash}{PD1}{--}
     \DeclareTextCommand{\textquestiondown}{PD1}{}% empty
     \DeclareTextCommand{\textexclamdown}{PD1}{}% empty
+\fi
+\ifnum\pxhy@cc@jis@only>\z@
+  \ifx\pxhy@hkcdot\@undefined\else
+    \DeclareTextCommand{\textperiodcentered}{PD1}{\pxhy@hkcdot}
   \fi
 \fi
 
 \fi                             %</unicode>
 %%%%%%%%%%%%%%%%%%%% done
-
-\ifpxhy@textcmd                 %<*textcmd>
 
   %% \pxhy@disable@tc@commands
   \def\pxhy@disable@tc@commands{%
@@ -1366,22 +1694,14 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
   %% register to 'disable' list
   \ltx@GlobalPrependToMacro\pdfstringdefPreHook{\pxhy@disable@tc@commands}
 
-  \ifpxhy@hy@unicode            %<*unicode>
+\else                           %<*!textcmd>
 
-    %% supplementary definitions
-    \def\pxhy@next#1#2{%
-      \expandafter\ifx\csname PU\string#1\endcsname\relax
-        \DeclareTextCommand{#1}{PU}{#2}\fi}
-    \pxhy@next{\guillemetleft}{\80\253}%00AB
-    \pxhy@next{\guillemetright}{\80\273}%00BB
-    \pxhy@next{\textborn}{\9046\005}%2605
-    \pxhy@next{\textfinalsigma}{\83\302}%03C2
-    \pxhy@next{\textxgeq}{\9042\145}%2265
-    \pxhy@next{\textxleq}{\9042\144}%2264
+\@onlypreamble\pxDeclarePdfTextCommand
+\newcommand*\pxDeclarePdfTextCommand[3]{}
+\@onlypreamble\pxDeclarePdfTextComposite
+\newcommand*\pxDeclarePdfTextComposite[4]{}
 
-  \fi                           %</unicode>
 \fi                             %</textcmd>
-
 %--------------------------------------- Enable hyperref unicode
 \ifpxhy@hy@unicode
 
@@ -1400,7 +1720,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 %--------------------------------------- 'jacommentline'
 \ifpxhy@jacommentline
 
-% The 'jacomemntline' feature outputs at the top of the
+% The 'jacommentline' feature outputs at the top of the
 % hyperref outline file (*.out) a comment line including
 % some Japanese characters.
 
@@ -1460,6 +1780,7 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
   \let\inhibitglue\@empty
   \let\noautospacing\@empty
   \let\noautoxspacing\@empty
+  \let\disinhibitglue\@empty
   % pLaTeX core
   \let\romanencoding\@gobble
   \let\kanjiencoding\@gobble
@@ -1495,6 +1816,58 @@ pxhy@textcmd = \ifpxhy@textcmd true\else false\fi^^J%
 % This registration should be of lower priority than others,
 % and thus is prepended to pdfstringdefPreHook.
 \ltx@GlobalPrependToMacro\pdfstringdefPreHook{\pxhy@disable@commands}
+
+%% additions for jsclasses
+\ifx\pxhy@jsclasses@name\relax\else
+  \g@addto@macro\pxhy@disable@commands{%
+    \let\HUGE\@empty
+    \pxhy@ifdef@let\maybeblue\@empty
+  }
+\fi
+
+%% additions for jlreq
+\ifpxhy@jlreq@cls
+  % characters
+  \pxhy@let@jchar@jc\pxhy@C@ZWSP{2121}
+  \pxhy@let@jchar@jc\pxhy@C@ZWQM{2129}
+  \pxhy@let@jchar@jc\pxhy@C@ZWEM{212A}
+  %% \pxhy@P@tatechuyoko*{<text>}
+  \def\pxhy@P@tatechuyoko{\pxhy@if@star\@firstofone\@firstofone}
+  %% \pxhy@P@jaspace{<name>}
+  \def\pxhy@P@jaspace#1{\@nameuse{jaspace(arg=#1)}}
+  \@namedef{jaspace(arg=zenkaku)}{\pxhy@C@ZWSP}
+  \@namedef{jaspace(arg=nibu)}{ }
+  \@namedef{jaspace(arg=shibu)}{}
+  % addition
+  \def\pxhy@next#1{%
+    \let\expandafter\noexpand\csname#1\endcsname\noexpand#1}
+  \edef\pxhy@disable@commands{%
+    \unexpanded\expandafter{\pxhy@disable@commands}%
+    \pxhy@next\pxhy@C@ZWSP
+    \pxhy@next\pxhy@C@ZWQM
+    \pxhy@next\pxhy@C@ZWEM
+    \unexpanded{%
+      \let\jafontsize\@gobbletwo
+      \let\jaspace\pxhy@P@jaspace
+      \let\tatechuyoko\pxhy@P@tatechuyoko
+      \let\jidori\@secondoftwo
+      \let\akigumi\@secondoftwo}%
+  }
+\fi
+
+%% additions for ascmac (experimental)
+\@onlypreamble\pxhy@dispatch@dc@ascmac
+\def\pxhy@dispatch@dc@ascmac{%
+  \pxhy@let@jchar@jc\pxhy@P@yen{216F}
+  \pxhy@let@jchar@uc\pxhy@P@return{23CE}
+  \g@addto@macro\pxhy@disable@commands{%
+    \let\keytop\@firstofone
+    \let\yen\pxhy@P@yen
+    \let\return\pxhy@P@return
+    \let\Return\pxhy@P@return
+  }%
+}
+\pxhy@hook@after@package{ascmac}{\pxhy@dispatch@dc@ascmac}
 
 \fi
 %--------------------------------------- All done

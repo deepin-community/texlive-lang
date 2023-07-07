@@ -40,24 +40,22 @@
 用于指定新命令所需的参数数目（最多 9 个）。如果缺省可选参数，默认就是 0，也就是新定义的命令不带任何参数。
 
 接下来的两个例子有助于理解。第一个例子定义了一个新的命令 \cmd{tnss}。
-这个命令是本手册英文名称 ``The Not So Short Introduction to \LaTeXe'' 的简写。
+这个命令是本手册英文名称“The Not So Short Introduction to \LaTeXe” 的简写。
 如果需要在文档中多次使用本手册的名称，那么使用这个命令是一个非常方便的办法。
 
 \begin{example}
-\newcommand{\tnss}{The not
-    so Short Introduction to
-    \LaTeXe}
-This is ``\tnss'' \ldots{}
-``\tnss''
+\newcommand{\tnss}{The not so Short
+  Introduction to \LaTeXe}
+This is ``\tnss'' \ldots{} ``\tnss''
 \end{example}
 
 第二个例子演示了如何定义一个带参数的命令。在命令的定义中，标记 \verb|#1|
 代表指定的参数。如果想使用多个参数，可以依次使用 \verb|#2|、……、\verb|#9| 等标记。
 
 \begin{example}
-\newcommand{\txsit}[1]
- {This is the \emph{#1} Short
-      Introduction to \LaTeXe}
+\newcommand{\txsit}[1]{This is the
+  \emph{#1} Short Introduction
+  to \LaTeXe}
 % in the document body:
 \begin{itemize}
 \item \txsit{not so}
@@ -66,24 +64,24 @@ This is ``\tnss'' \ldots{}
 \end{example}
 
 \cmdindex{renewcommand}
-\LaTeX{} 不允许使用 \cmd{newcommand} 定义一个与现有命令重名的命令。如果需要修改命令定义的话，使用 \cmd{re\-new\-comm\-and} 命令。它使用与命令 \cmd{new\-comm\-and}
-相同的语法。
+\LaTeX{} 不允许使用 \cmd{newcommand} 定义一个与现有命令重名的命令。如果需要修改命令定义的话，
+使用 \cmd{re\-new\-comm\-and} 命令。它使用与命令 \cmd{new\-comm\-and} 相同的语法。
 
 \cmdindex{providecommand}
-在某些情况之下，使用 \cmd{pro\-vide\-comm\-and} 命令是一种比较理想的方案。在命令未定义时，它相当于 \cmd{new\-comm\-and}
-；在命令已定义时，沿用已有的定义。
+在某些情况之下，使用 \cmd{providecommand} 命令是一种比较理想的方案：在命令未定义时，
+它相当于 \cmd{new\-comm\-and}；在命令已定义时，沿用已有的定义。
 
 \subsection{定义环境}\label{subsec:newenv}
 
 \cmdindex{newenvironment}
-与 \cmd{new\-comm\-and} 命令类似，有一个命令用于定义新的环境。这个命令是 \cmd{new\-environ\-ment}，它的语法如下所示：
+与 \cmd{new\-comm\-and} 命令类似，可以用 \cmd{new\-environ\-ment} 定义新的环境。它的语法如下所示：
 
 \begin{command}
 \cmd{newenvironment}\marg{name}\oarg{num}\marg{before}\marg{after}
 \end{command}
 
-同样地，\cmd{newenvironment} 命令有一个可选的参数。
-在 \Arg{before} 中的内容将在此环境包含的文本之前处理，而在 \Arg{after} 中的内容将在遇到 \cmd{end\marg{name}} 命令时处理。
+同样地，\cmd{newenvironment} 命令有一个可选的参数。在 \Arg{before} 中的内容将在此环境包含
+的文本之前处理，而在 \Arg{after} 中的内容将在遇到 \cmd{end\marg{name}} 命令时处理。
 
 下面的例子演示了 \cmd{newenvironment} 命令的用法：
 \begin{example}
@@ -103,14 +101,141 @@ My humble subjects \ldots
 不会不小心新建重名的环境。如果你确实希望改变一个现有的环境，你可以使用命令
  \cmd{re\-new\-environ\-ment}，它使用和命令 \cmd{new\-environ\-ment} 相同的语法。
 
+\subsection{\pkg{xparse} 宏包简介}\label{subsec:xparse}
+
+\pkgindex{xparse}
+\cmdindex[xparse]{NewDocumentCommand,NewDocumentEnvironment}
+通过 \cmd{newcommand} 和 \cmd{newenvironment} 定义的命令或环境格式比较固定。如果需要定义带有多个
+可选参数、或者带星号的命令或环境，可以使用 \pkg{xparse} 宏包%
+\footnote{\LaTeX{} 2020-10-01 版本之后，\pkg{xparse} 宏包已集成在了格式之中，不需要显式调用。}。
+它提供了 \cmd{New\-Document\-Command} 和 \cmd{New\-Document\-Environment} 等命令，具体语法如下：
+
+\begin{command}
+\cmd{NewDocumentCommand}\cmd{\Arg{name}}\marg{arg spec}\marg{definition} \\
+\cmd{NewDocumentEnvironment}\marg{name}\marg{arg spec}\marg{before}\marg{after}
+\end{command}
+
+相比 \cmd{newcommand} 和 \cmd{newenvironment}，\pkg{xparse} 通过 \marg{arg spec} 来指定参数的个数
+和格式。基本的参数格式见表~\ref{tbl:xparse-arg-spec}。注意 \marg{arg spec} 中的空格可以忽略。
+
+\begin{table}[htp]
+\centering
+\caption{\pkg{xparse} 参数格式}\label{tbl:xparse-arg-spec}
+\begin{tabular}{cl}
+ \toprule
+ \textbf{参数格式} & \textbf{说明} \\
+ \midrule
+ \verb|m|               & 必选参数，由 \verb|{...}| 给出 \\
+ \verb|o|               & 可选参数，由 \verb|[...]| 给出；未给出时返回 \verb|-NoValue-| 标记 \\
+ \verb|O|\marg{default} & 可选参数，但在未给出时则返回默认值 \Arg{default} \\
+ \verb|s|               & 可选的星号 \verb|*| \\
+ \verb|+|               & 修饰后面的 \verb|m|、\verb|o| 等，表示允许在参数中分段 \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+不同输入值在解析后的结果可以见表~\ref{tbl:xparse-arg-input} 中的示例。
+
+\begin{table}[htp]
+\centering
+\caption{\pkg{xparse} 参数示例}\label{tbl:xparse-arg-input}
+\begin{tabular}{ccccc}
+ \toprule
+ \textbf{参数格式} & \textbf{输入值} & \verb|#1| & \verb|#2| & \verb|#3| \\
+ \midrule
+ \verb|m m|            & \verb|{foo}{bar}|  & \verb|foo|         & \verb|bar|       &                \\
+ \verb|o m|            & \verb|{foo}|       & \verb|-NoValue-|   & \verb|foo|       &                \\
+ \verb|o o m|          & \verb|[foo]{bar}|  & \verb|foo|         & \verb|-NoValue-| & \verb|bar|     \\
+ \verb|m O{default}|   & \verb|{foo}|       & \verb|foo|         & \verb|default|   &                \\
+ \verb|m O{default}|   & \verb|{foo}[bar]|  & \verb|foo|         & \verb|bar|       &                \\
+ \verb|m O{default}|   & \verb|[bar]|       & 报错               &                  &                \\
+ \verb|s o m|          & \verb|*[foo]{bar}| & \cmd{BooleanTrue}  & \verb|foo|       & \verb|bar|     \\
+ \verb|s m O{default}| & \verb|{foo}|       & \cmd{BooleanFalse} & \verb|foo|       & \verb|default| \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+\cmdindex[xparse]{IfNoValueTF,IfNoValueT,IfNoValueF}
+\verb|-NoValue-| 标记可以用 \cmd{IfNoValueTF} 等命令来判断：
+
+\begin{command}
+\cmd{IfNoValueTF}\marg{argument}\marg{true code}\marg{false code} \\
+\cmd{IfNoValueT}\marg{argument}\marg{true code} \\
+\cmd{IfNoValueF}\marg{argument}\marg{false code}
+\end{command}
+
+举例如下：
+
+\begin{example}
+% 百分号用于注释掉不必要的空格和换行符
+\NewDocumentCommand\hello{om}
+  {%
+    \IfNoValueTF{#1}%
+      {Hello, #2!}%
+      {Hello, #1 and #2!}%
+  }
+\hello{Alice}
+\hello[Bob]{Alice}
+\end{example}
+
+\cmdindex[xparse]{BooleanTrue,BooleanFalse,IfBooleanTF,IfBooleanT,IfBooleanF}
+\cmd{BooleanTrue} 和 \cmd{BooleanFalse} 则可以用 \cmd{IfBooleanTF} 等命令来判断：
+
+\begin{command}
+\cmd{IfBooleanTF}\marg{argument}\marg{true code}\marg{false code} \\
+\cmd{IfBooleanT}\marg{argument}\marg{true code} \\
+\cmd{IfBooleanF}\marg{argument}\marg{false code}
+\end{command}
+
+举例如下：
+
+\begin{example}
+\NewDocumentCommand\hereis{sm}
+  {Here is \IfBooleanTF{#1}{an}{a} #2.}
+\hereis{banana}
+\hereis*{apple}
+\end{example}
+
+需要注意的是，与命令不同，环境在定义时名字里面可以包含 \verb|*|：
+\begin{verbatim}
+\NewDocumentEnvironment {mytabular}  { o +m } {...} {...}
+\NewDocumentEnvironment {mytabular*} { m o +m } {...} {...}
+\end{verbatim}
+用 \verb|s| 标记的 \verb|*| 则应该放在 \cmd{begin}\marg{env} 的后面：
+\begin{verbatim}
+\NewDocumentEnvironment { envstar } { s }
+  {\IfBooleanTF {#1} {star} {no star}} {}
+\begin{envstar}*
+\end{envstar}
+\end{verbatim}
+
+\cmdindex[xparse]{RenewDocumentCommand,ProvideDocumentCommand,DeclareDocumentCommand}
+\cmdindex[xparse]{RenewDocumentEnvironment,ProvideDocumentEnvironment,DeclareDocumentEnvironment}
+与 \cmd{renewcommand}、\cmd{providecommand} 等命令类似，\pkg{xparse} 宏包也允许在命令或环境
+已有定义时做出相应的处理，具体见表~\ref{tbl:xparse-renew}。
+
+\begin{table}[htp]
+\centering
+\caption{\pkg{xparse} 提供的其他命令}\label{tbl:xparse-renew}
+\begin{tabular}{cccc}
+ \toprule
+ \textbf{定义命令} & \textbf{定义环境} & \textbf{已定义} & \textbf{未定义} \\
+ \midrule
+ \cmd{NewDocumentCommand}     & \cmd{NewDocumentEnvironment}     & 报错       & 给出定义 \\
+ \cmd{RenewDocumentCommand}   & \cmd{RenewDocumentEnvironment}   & 重新定义   & 报错     \\
+ \cmd{ProvideDocumentCommand} & \cmd{ProvideDocumentEnvironment} & 什么也不做 & 给出定义 \\
+ \cmd{DeclareDocumentCommand} & \cmd{DeclareDocumentEnvironment} & 重新定义   & 给出定义 \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
 \section{编写自己的宏包和文档类}\label{sec:packages}
 
 \subsection{编写简单的宏包}\label{subsec:provide-pkg}
 
 \cmdindex{usepackage}
-如果你定义了很多新的环境和命令，你的文档的导言区将变得相当长，在这种情况下，好的方式是
-建立一个新的 \LaTeX{} 宏包来存放所有你自己定义的命令和环境，
-然后在你的文档中使用 \cmd{use\-package} 命令来调用自定义的宏包。
+如果定义了很多新的环境和命令，文档的导言区将变得很长，在这种情况下，可以建立一个新的 \LaTeX{} 宏包
+来存放所有你自己定义的命令和环境，然后在文档中使用 \cmd{use\-package} 命令来调用自定义的宏包。
 
 \begin{sourcecode}[htp]
 \begin{Verbatim}
@@ -237,11 +362,11 @@ My humble subjects \ldots
         而计数器 part 是独立的。
   \item 有序列表 \env{enumerate} 的各级计数器为 enumi, enumii, enumiii, enumiv，也有上下级的关系。
   \item 图表浮动体的计数器就是 table 和 figure；公式的计数器为 equation。
-        这些计数器在 \cls{article} 文档类中是独立的，而在 \cls{book} 和 \cls{report} 中以 chapter 为上级计数器。
+        这些计数器在 \cls{article} 文档类中是独立的，而在 \cls{report} 和 \cls{book} 中以 chapter 为上级计数器。
   \item 页码、脚注的计数器分别是 page 和 footnote。
 \end{itemize}
 
-我们可以利用前面介绍过的命令，修改计数器的样式以达到想要的效果，比如把页码修改成大写罗马字母，左右加横线，或是给脚注加上方括号：
+我们可以利用前面介绍过的命令，修改计数器的样式以达到想要的效果，比如把页码修改成大写罗马数字，左右加横线，或是给脚注加上方括号：
 \begin{verbatim}
 \renewcommand\thepage{--~\Roman{page}~--}
 \renewcommand\thefootnote{[\arabic{footnote}]}
@@ -259,7 +384,7 @@ My humble subjects \ldots
 \LaTeX{} 标准文档类对章节划分了层级：
 \begin{itemize}
   \item 在 \cls{article} 文档类里 part 为 0，section 为 1，依此类推；
-  \item 在 \cls{report}/\cls{book} 文档类里 part 为 -1，chapter 为 0，section 为 1，等等。
+  \item 在 \cls{report} / \cls{book} 文档类里 part 为 -1，chapter 为 0，section 为 1，等等。
 \end{itemize}
 
 secnumdepth 计数器控制章节编号的深度，如果章节的层级大于 secnumdepth，那么章节的标题、在目录和页眉页脚的标题都不编号
@@ -269,7 +394,7 @@ secnumdepth 计数器控制章节编号的深度，如果章节的层级大于 s
 如设置为 4 令 \cmd{paragraph} 也编号；或者设置一个较小的数以取消编号，如设置为 -1 令 \cmd{chapter} 不编号。
 后者是生成不编号的章节的一个妙招，免去了手动使用 \cmd{add\-contents\-line} 和 \cmd{mark\-both} 的麻烦。
 
-secnumdepth 计数器在 \cls{article} 文档类里默认为 3 （subsubsection 一级）；在 \cls{report} 和 \cls{book} 文档类里默认为 2 （subsection 一级）。
+secnumdepth 计数器在 \cls{article} 文档类里默认为 3（subsubsection 一级）；在 \cls{report} 和 \cls{book} 文档类里默认为 2（subsection 一级）。
 
 \subsubsection{tocdepth}
 
@@ -285,7 +410,7 @@ tocdepth 计数器控制目录的深度，如果章节的层级大于 tocdepth�
 \begin{itemize}
   \item 标题名称/前后缀等。表 \ref{tbl:latex-settings-names} 列出了标准文档类里可定制的项目，
   表中所有的 \LaTeX{} 命令都可以用 \cmd{re\-new\-comm\-and} 来修改。
-  \item 长度。前文在叙述各种排版元素时已经涉及到一些，现归纳于表 \ref{tbl:latex-settings-lengths}。
+  \item 长度。前文在叙述各种排版元素时已经介绍过一些，现归纳于表 \ref{tbl:latex-settings-lengths}。
   表中所有的长度命令可用 \cmd{setlength} 来修改。
   大多数控制页面尺寸的长度参数在图 \ref{fig:layouts} 给出，此处不再赘述。
 \end{itemize}
@@ -310,7 +435,7 @@ tocdepth 计数器控制目录的深度，如果章节的层级大于 tocdepth�
  \cmd{refname}        & References      & \env{thebibliography} 环境或 \cmd{biblio\-graphy}
                                           命令生成的参考文献标题（\cls{article} 文档类） \\
  \cmd{bibname}        & Bibliography    & \env{thebibliography} 环境或 \cmd{biblio\-graphy}
-                                          命令生成的参考文献标题（\cls{book / report} 文档类）\\
+                                          命令生成的参考文献标题（\cls{report} / \cls{book} 文档类）\\
  \cmd{indexname}      & Index           & \cmd{printindex} 命令生成的索引标题 \\
  \hline
 \end{tabular}
@@ -330,19 +455,20 @@ tocdepth 计数器控制目录的深度，如果章节的层级大于 tocdepth�
  \hline
  \cmd{fboxrule}     & 0.4pt & \cmd{fbox} 或 \cmd{framebox} 等带框盒子的线宽 \\
  \cmd{fboxsep}      & 3pt   & \cmd{fbox} 或 \cmd{framebox} 等带框盒子的内边距 \\[1ex]
- \cmd{arraycolsep}  & 5pt   & \env{array} 环境的表格项前后的间距 \\
- \cmd{tabcolsep}    & 6pt   & \env{tabular} 环境的表格项前后的间距 \\
+ \cmd{arraycolsep}  & 5pt   & \env{array} 环境的表格项前后的间距\textsuperscript{注 1} \\
+ \cmd{tabcolsep}    & 6pt   & \env{tabular} 环境的表格项前后的间距\textsuperscript{注 1} \\
  \cmd{arrayrulewidth}     &  0.4pt  & 表格线宽 \\
  \cmd{doublerulesep}      &  2pt    & 连续两根表格线之间的间距 \\[1ex]
- \cmd{abovecaptionskip}   &  10pt   & \cmd{caption} 命令位于图表下方时，与上方图表的间距 \\
- \cmd{belowcaptionskip}   &  0pt    & \cmd{caption} 命令位于图表上方时，与下方图表的间距 \\[1ex]
+ \cmd{abovecaptionskip}   &  10pt   & \cmd{caption} 命令上方的间距\textsuperscript{注 2} \\
+ \cmd{belowcaptionskip}   &  0pt    & \cmd{caption} 命令下方的间距\textsuperscript{注 2} \\[1ex]
  \cmd{columnsep}          &  10pt   & 双栏排版下两栏的间距 \\
  \cmd{columnseprule}      &  0pt    & 双栏排版下两栏之间竖线的宽度 \\
  \hline
 \end{tabular}
 \begin{quotation}\footnotesize%
-注：\cmd{arraycolsep} 和 \cmd{tabcolsep} 是每个表格项本身前后的间距（表格线前后无间距；\texttt{@} 列格式会消除与前后表格项的间距）。
-两个表格项之间的间距相当于 2\cmd{arraycolsep} 或 2\cmd{tabcolsep}。
+注 1：\cmd{arraycolsep} 和 \cmd{tabcolsep} 是每个表格项本身前后的间距（表格线前后无间距；\texttt{@} 列格式会消除与前后表格项的间距）。
+两个表格项之间的间距相当于 2\cmd{arraycolsep} 或 2\cmd{tabcolsep}。\par
+注 2：在默认设置下，\cmd{caption} 命令和位于它下方的图表之间无间距。宏包 \pkg{caption} 改善了这个问题。
 \end{quotation}
 \end{table}
 

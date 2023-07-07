@@ -126,7 +126,7 @@ He likes {\LARGE large and
 
 幸好大部分时候，许多字体宏包为我们完成了整套配置，我们可以在调用宏包之后，照常使用 \cmd{bfseries} 或 \cmd{ttfamily} 等我们熟悉的命令。
 表 \ref{tbl:font-pkgs} 列出了较为常用的字体宏包，其中相当多的宏包还配置了数学字体，或者文本、数学字体兼而有之。
-更多的的字体配置参考 \cite{survey,fontcatalogue}。
+更多的字体配置参考 \cite{survey,fontcatalogue}。
 
 \subsection{字体编码}\label{subsec:font-encs}
 
@@ -154,7 +154,7 @@ He likes {\LARGE large and
 \caption{常见的 \LaTeX{} 字体宏包}\label{tbl:font-pkgs}
 \begin{tabular}{lp{30em}}
  \hline
- \multicolumn{2}{c}{\textbf{文本 / 数学字体搭配的宏包}} \\
+ \multicolumn{2}{c}{\textbf{文本/数学字体搭配的宏包}} \\
  \hline
  \pkg{lmodern}     & Latin Modern 字体，对 Computer Modern 字体的扩展  \\
  \pkg{cmbright}    & 仿 Computer Modern 风格的无衬线字体 \\
@@ -167,8 +167,8 @@ He likes {\LARGE large and
  \pkg{newpxtext},\pkg{newpxmath}  & \pkg{pxfonts} 的改进版本，分别设置文本和数学字体  \\
  \pkg{mathptmx}    & \pkg{psnfss} 字体宏集之一，Times 风格，较为陈旧，不推荐使用  \\
  \pkg{mathpazo}    & \pkg{psnfss} 字体宏集之一，Palatino 风格，较为陈旧，不推荐使用  \\
- \pkg{fourier}     & fourier 风格数学字体，配合 Utopia 正文字体 \\
- \pkg{fouriernc}   & fourier 风格数学字体，配合 New Century Schoolbook 正文字体 \\
+ \pkg{fourier}     & Fourier 风格数学字体，配合 Utopia 正文字体 \\
+ \pkg{fouriernc}   & Fourier 风格数学字体，配合 New Century Schoolbook 正文字体 \\
  \pkg{arev}        & Arev 无衬线字体宏包，Vera Sans 风格 \\
  \pkg{mathdesign}  & 配合 Charter / Garamond / Utopia 正文字体的数学字体宏包 \\
  \hline
@@ -212,14 +212,15 @@ He likes {\LARGE large and
 \cmd{setsansfont}\marg{font name}\oarg{font features} \\
 \cmd{setmonofont}\marg{font name}\oarg{font features}
 \end{command}
-其中 \Arg{font name} 使用字体的文件名（带扩展名）或者字体的英文名称。\Arg{font features} 用来手动配置对应的粗体或斜体
-，比如为 Windows 下的无衬线字体 Arial 配置粗体和斜体（通常情况下自动检测并设置对应的粗体和斜体，无需手动指定）：
+其中 \Arg{font name} 使用字体的文件名（带扩展名）或者字体的英文名称。\Arg{font features} 用来
+手动配置对应的粗体或斜体，比如为 Windows 下的无衬线字体 Arial 配置粗体和斜体（通常情况下自动检测
+并设置对应的粗体和斜体，无需手动指定）：
 \begin{verbatim}
-\setsansfont[BoldFont={Arial Bold}, ItalicFont={Arial Italic}]{Arial}
+\setsansfont{Arial}[BoldFont={Arial Bold}, ItalicFont={Arial Italic}]
 \end{verbatim}
 \Arg{font features} 还能配置字体本身的各种特性，这里不再赘述，感兴趣的读者请参考 \pkg{fontspec} 宏包的帮助文档。
 
-需要注意的是：\pkg{fontspec} 宏包会覆盖数学字体设置。需要调用表 \ref{tbl:font-pkgs} 中列出的一些数学字体宏包时，
+需要注意的是，\pkg{fontspec} 宏包会覆盖数学字体设置。需要调用表 \ref{tbl:font-pkgs} 中列出的一些数学字体宏包时，
 应当在调用 \pkg{fontspec} 宏包时指定 \texttt{no-math} 选项。\pkg{fontspec} 宏包可能被其它宏包或文档类（如 \pkg{ctex} 文档类）自动调用时，
 则在文档开头的 \cmd{document\-class} 命令里指定 \texttt{no-math} 选项。
 
@@ -253,9 +254,7 @@ Unicode 数学字体是一类 OpenType 字体，包含了 Unicode 字符集中�
 \cmd{setmathfont}\marg{font name}\oarg{font features}
 \end{command}
 
-绝大多数时候，只需要给定字体名称 \Arg{font name} 即可。由于篇幅所限，在此不介绍可选参数 \Arg{font feature} 涉及的配置，有兴趣的读者请参考宏包的帮助文档。
-
-Unicode 数学字体相比于正文字体的选择余地不多。表 \ref{tbl:uni-math-fonts} 给出了较为常用的 Unicode 数学字体。
+绝大多数时候，只需要给定字体名称 \Arg{font name} 即可。由于篇幅所限，在此不介绍可选参数 \Arg{font feature} 涉及的配置，有兴趣的读者请参考宏包的帮助文档。Unicode 数学字体相比于正文字体的选择余地不多。表 \ref{tbl:uni-math-fonts} 给出了较为常用的 Unicode 数学字体。
 
 \begin{table}[htp]
 \centering\small
@@ -263,26 +262,30 @@ Unicode 数学字体相比于正文字体的选择余地不多。表 \ref{tbl:un
 \label{tbl:uni-math-fonts}
 \begin{tabular}{llp{20em}}
 \hline
-\textbf{数学字体名称} & \textbf{配套正文字体名称} & \textbf{备注}\\
+\textbf{数学字体名称} & \textbf{配套正文字体名称} & \textbf{备注} \\
 \hline
 \multicolumn{3}{c}{开源字体，发布于 CTAN} \\
 \hline
-\texttt{Latin Modern Math}       & \texttt{Latin Modern}         & 基于 Computer Modern 风格 \\
-\texttt{STIX Math}               & \texttt{STIX}                 & Times 风格 \\
-\texttt{XITS Math}               & \texttt{XITS}                 & 基于 STIX，Times 风格，有粗体 XITS Math Bold 可用 \\
-\texttt{TeX Gyre Pagella Math}   & \texttt{TeX Gyre Pagella}     & Palatino 风格 \\
-\texttt{TeX Gyre Termes Math}    & \texttt{TeX Gyre Termes}      & Times 风格 \\
-\texttt{Libertinus Math}         & \texttt{Libertinus}           & Linux Libertine 风格 \\
-\texttt{Fira Math}               & \texttt{Fira Sans}            & 无衬线数学字体 \\
+Latin Modern Math     & Latin Modern     & 基于 Computer Modern 风格 \\
+STIX Math             & STIX             & Times 风格 \\
+XITS Math             & XITS             & 基于 STIX，Times 风格，有粗体 XITS Math Bold 可用 \\
+TeX Gyre Pagella Math & TeX Gyre Pagella & Palatino 风格 \\
+TeX Gyre Termes Math  & TeX Gyre Termes  & Times 风格 \\
+TeX Gyre DejaVu Math  & DejaVu Serif     & DejaVu 风格 \\
+Libertinus Math       & Libertinus       & Linux Libertine 风格 \\
+Garamond Math         & EB Garamond      & Garamond 风格 \\
+Fira Math             & Fira Sans        & 无衬线数学字体 \\
 \hline
 \multicolumn{3}{c}{商业字体} \\
 \hline
-\texttt{Cambria Math}            & \texttt{Cambria}              & 较新版本的微软 Office 预装数学字体 \\
-\texttt{Lucida Bright Math OT}   & \texttt{Lucida Bright OT}     & 须购买商业授权 \\
-\texttt{Minion Math}             & \texttt{Minion Pro}           & 须购买商业授权 \\
+Cambria Math          & Cambria          & 微软 Office 预装的数学字体 \\
+Lucida Bright Math OT & Lucida Bright OT & 须购买商业授权 \\
+Minion Math           & Minion Pro       & 须购买商业授权 \\
 \hline
 \end{tabular}
 \end{table}
+
+\pkg{unicode-math} 宏包与传统数学字体、符号包并不兼容，但其本身已经提供了大量的符号和字体样式。实际上，\ref{subsec:math-alpha} 和 \ref{subsec:math-bold} 小节中介绍的内容均已被 \pkg{unicode-math} 所涵盖，无需调用其他宏包就可以获得覆盖完整、风格较为统一的字体样式。具体使用方法请参考宏包帮助文档。
 
 \section{文字装饰和强调}\label{sec:emphasize}
 
@@ -552,52 +555,55 @@ but it also breaks the line.
 
 \pkgindex{geometry}
 \pinyinindex{xuanxiang}{选项（宏包/文档类）}
-\pkg{geometry} 宏包的调用方式类似于 \pkg{graphicx}，在 \texttt{latex} + \texttt{dvipdfmx} 命令下需要指定选项 \texttt{dvipdfm}
-（注意这里不是 \texttt{dvipdfmx}）；\texttt{pdflatex} 和 \texttt{xelatex} 编译命令下不需要。
+\pkg{geometry} 宏包的调用方式类似于 \pkg{graphicx}，在 \texttt{latex} + \texttt{dvipdfmx} 命令下
+需要指定选项 \texttt{dvipdfm} 或 \texttt{dvipdfmx}%
+\footnote{早期版本的 \pkg{geometry} 宏包仅支持 \texttt{dvipdfm} 选项。}；
+\texttt{pdflatex} 和 \texttt{xelatex} 编译命令下不需要。
 
 \cmdindex[geometry]{geometry}
-你既可以调用 \pkg{geometry} 宏包然后用其提供的 \cmd{geometry} 命令设置页面参数：
+既可以调用 \pkg{geometry} 宏包，然后用其提供的 \cmd{geometry} 命令设置页面参数：
 \begin{command}
 \cmd{usepackage}\marg*{geometry} \\
 \cmd{geometry}\marg{geometry-settings}
 \end{command}
-
-也可以将参数指定为宏包的选项：
+也可以直接在宏包选项中设置：
 \begin{command}
 \cmd{usepackage}\oarg{geometry-settings}\marg*{geometry}
 \end{command}
-
 其中 \Arg{geometry-settings} 多以 \Arg{key}=\Arg{value} 的形式组织。
 
-比如，符合 Microsoft Word 习惯的页面设定是 A4 纸张，上下边距 1 英寸，左右边距 1.25 英寸，于是我们可以通过如下两种等效的方式之一设定页边距：
+比如，符合 Microsoft Word 习惯的页面设定是 A4 纸张，上下边距 1 英寸，左右边距 1.25 英寸，于是我们
+可以通过如下两种等效的方式之一设定页边距：
 \begin{verbatim}
-\usepackage[left=1.25in,right=1.25in,%
-  top=1in,bottom=1in]{geometry}
+\geometry{a4paper,left=1.25in,right=1.25in,top=1in,bottom=1in}
 % or like this:
-\usepackage[hmargin=1.25in,vmargin=1in]{geometry}
+\geometry{a4paper,hmargin=1.25in,vmargin=1in}
 \end{verbatim}
 
-又比如，需要设定周围的边距一致为1.25英寸，可以用更简单的语法：
+又比如，需要设定周围的边距一致为 1.25 英寸，可以用更简单的语法：
 \begin{verbatim}
-\usepackage[margin=1.25in]{geometry}
+\geometry{margin=1.25in}
 \end{verbatim}
 
-对于书籍等双面文档，习惯上奇数页右边、偶数页左边留出较多的页边距，而书脊一侧的奇数页左边、偶数页右边页边距较少。我们可以这样设定：
+对于书籍等双面文档，习惯上奇数页右边、偶数页左边留出较大的页边距，而靠近书脊一侧的奇数页左边、
+偶数页右边页边距较小。我们可以这样设定：
 \begin{verbatim}
-\usepackage[inner=1in,outer=1.25in]{geometry}
+\geometry{inner=1in,outer=1.25in}
 \end{verbatim}
 
-\pkg{geometry} 宏包本身也能够修改纸张大小、页眉页脚高度、边注宽度等等参数。更详细的用法不再赘述，
-感兴趣的用户可查阅 \pkg{geometry} 宏包的帮助文档。
+需要指出的是，通过 \pkg{geometry} 宏包设置的纸张大小是输出 PDF 文件的真实大小，而在文档类选项中
+设置的参数（见 \ref{subsec:classes} 小节）实际上只影响输出区域。\pkg{geometry} 宏包还能够修改
+页眉页脚高度、边注宽度等参数，并且能比较好地处理各参数之间的依赖关系。更详细的用法不再赘述，感兴趣
+的用户可查阅其帮助文档。
 
 \subsection{页面内容的垂直对齐}\label{subsec:raggedbottom}
 
-\LaTeX{} 默认将页面内容在垂直方向分散对齐。对于有大量图表的文档，许多时候想要做到排版匀称的页面很困难，
-垂直分散对齐会造成某些页面的垂直间距过宽，还可能报大量的 \texttt{Underfull} \cmd{vbox} 消息。
+\LaTeX{} 默认将页面内容在垂直方向分散对齐。对于有大量图表的文档，许多时候想要做到排版匀称的页面
+很困难，垂直分散对齐会造成某些页面的垂直间距过宽，还可能报大量的 \verb|Underfull \vbox| 警告。
 \LaTeX{} 还提供了另一种策略：将页面内容向顶部对齐，给底部留出高度不一的空白。
 
 \cmdindex{raggedbottom, flushbottom}
-以下命令分别令页面在垂直方向向顶部对齐 / 分散对齐：
+以下命令分别令页面在垂直方向向顶部对齐/分散对齐：
 \begin{command}
 \cmd{raggedbottom} \\
 \cmd{flushbottom}
@@ -678,8 +684,8 @@ but it also breaks the line.
 \begin{description}
   \item[\cls{article} 文档类，\texttt{twoside} 选项] 偶数页为页码和节标题，奇数页为小节标题和页码；
   \item[\cls{article} 文档类，\texttt{oneside} 选项] 页眉为节标题和页码；
-  \item[\cls{book/report} 文档类，\texttt{twoside} 选项] 偶数页为页码和章标题，奇数页为节标题和页码；
-  \item[\cls{book/report} 文档类，\texttt{oneside} 选项] 页眉为章标题和页码。
+  \item[\cls{report} / \cls{book} 文档类，\texttt{twoside} 选项] 偶数页为页码和章标题，奇数页为节标题和页码；
+  \item[\cls{report} / \cls{book} 文档类，\texttt{oneside} 选项] 页眉为章标题和页码。
 \end{description}
 
 \cmdindex{pagenumbering}
@@ -718,7 +724,7 @@ but it also breaks the line.
   \markright{\thesection\quad #1}}
 \end{verbatim}
 
-其中 \cmd{thechapter}、\cmd{thesection} 等命令为章节计数器的数值（详见 \ref{sec:counters} 节）。以上代码适用于 \cls{report/book} 文档类。
+其中 \cmd{thechapter}、\cmd{thesection} 等命令为章节计数器的数值（详见 \ref{sec:counters} 节）。以上代码适用于 \cls{report} / \cls{book} 文档类。
 对于 \cls{article} 文档类，与两个页眉相关的命令分别为 \cmd{sec\-tion\-mark} 和 \cmd{sub\-sec\-tion\-mark}。
 
 \subsection{\pkg{fancyhdr} 宏包}\label{subsec:fancyhdr}
@@ -734,7 +740,7 @@ but it also breaks the line.
 \cmd{fancyhead}\oarg{position}\marg*{\ldots}\\
 \cmd{fancyfoot}\oarg{position}\marg*{\ldots}
 \end{command}
-其中 \Arg{position} 为 L（左）/C（中）/R（右） 以及与 O（奇数页）/E（偶数页）字母的组合。\cmd{fancyhf} 用于同时定义页眉和页脚，
+其中 \Arg{position} 为 L（左）/C（中）/R（右）以及与 O（奇数页）/E（偶数页）字母的组合。\cmd{fancyhf} 用于同时定义页眉和页脚，
 习惯上使用 \cmd{fancyhf}\marg*{} 来清空页眉页脚的设置。
 
 源代码 \ref{code:fancyhdr} 给出了 \pkg{fancyhdr} 基础用法的一个示例，效果为将章节标题放在和 headings 一致的位置，但使用加粗格式；

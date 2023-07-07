@@ -5,7 +5,7 @@
 %<*readme>
 ____________________
 The XePersian package
-v23.1
+v24.8
 
 The xepersian package provides a convenient interface for 
 typesetting Persian and English texts in LaTeX, using XeTeX 
@@ -16,15 +16,26 @@ documentation, or ask for any new features, or suggest any
 improvements, or ask any questions about the package, then 
 please use the issue tracker:
 
-  <https://github.com/persiantex/xepersian/issues>
+  <https://github.com/kvafa/xepersian/issues>
   
 In doing so, please always explain your issue well enough, and always
 include a minimal working example showing the issue.
-  
 
-Current version release date: 2020/05/17
+You may also have conversations, ask questions and post answers
+without opening issues using the Discussions space:
+
+  <https://github.com/kvafa/xepersian/discussions>
+  
+The announcements for the new releases of the package will
+also appear in the Discussions space under the Announcements
+category.
+  
+  
+Current version release date: 2022/10/30
 ___________________________________________
-Copyright (c) Vafa Khalighi 2008--2020
+Vafa Khalighi
+
+Copyright (c) Vafa Khalighi 2008--2022
 Copyright (c) bidi-tex GitHub Organization 2018--2020
 
 Distributed under the LaTeX Project Public License
@@ -46,7 +57,9 @@ by Vafa Khalighi.
 \preamble
 
   __________________________________________________
-  Copyright (c) 2008--2020  Vafa Khalighi 
+  Vafa Khalighi
+
+  Copyright (c) 2008--2022  Vafa Khalighi 
   Copyright (c) 2018--2020 bidi-tex GitHub Organization
 
   It may be distributed and/or modified under the LaTeX Project Public License,
@@ -70,6 +83,8 @@ by Vafa Khalighi.
 \generate{\file{artikel2-xepersian.def}{\from{\jobname.dtx}{table,artikel2-xepersian.def}}}
 \generate{\file{artikel3-xepersian.def}{\from{\jobname.dtx}{table,artikel3-xepersian.def}}}
 \generate{\file{backref-xepersian.def}{\from{\jobname.dtx}{table,backref-xepersian.def}}}
+\generate{\file{beamer-xepersian.def}{\from{\jobname.dtx}{table,beamer-xepersian.def}}}
+\generate{\file{beamerbasetranslator-xepersian.def}{\from{\jobname.dtx}{table,beamerbasetranslator-xepersian.def}}}
 \generate{\file{bidituftesidenote-xepersian.def}{\from{\jobname.dtx}{table,bidituftesidenote-xepersian.def}}}
 \generate{\file{bidimoderncv-xepersian.def}{\from{\jobname.dtx}{table,bidimoderncv-xepersian.def}}}
 \generate{\file{boek3-xepersian.def}{\from{\jobname.dtx}{table,boek3-xepersian.def}}}
@@ -104,6 +119,7 @@ by Vafa Khalighi.
 \generate{\file{latex-localise-misc-xepersian.def}{\from{\jobname.dtx}{table,latex-localise-misc-xepersian.def}}}
 \generate{\file{natbib-xepersian.def}{\from{\jobname.dtx}{table,natbib-xepersian.def}}}
 \generate{\file{packages-localise-xepersian.def}{\from{\jobname.dtx}{table,packages-localise-xepersian.def}}}
+\generate{\file{url-xepersian.def}{\from{\jobname.dtx}{table,url-xepersian.def}}}
 \def\MetaPrefix{;;}
 \def\mapping@postamble{%
   \MetaPrefix ^^J%
@@ -111,6 +127,7 @@ by Vafa Khalighi.
 }
 \usepostamble\mapping@postamble
 \generate{\file{persian-tex-text.map}{\from{\jobname.dtx}{persian-tex-text.map}}}
+\generate{\file{persian-tex-text-nonumbers.map}{\from{\jobname.dtx}{persian-tex-text-nonumbers.map}}}
 \let\MetaPrefix\DoubleperCent
 \usepostamble\org@postamble
 \generate{\file{rapport1-xepersian.def}{\from{\jobname.dtx}{table,rapport1-xepersian.def}}}
@@ -121,13 +138,12 @@ by Vafa Khalighi.
 \generate{\file{scrbook-xepersian.def}{\from{\jobname.dtx}{table,scrbook-xepersian.def}}}
 \generate{\file{scrreprt-xepersian.def}{\from{\jobname.dtx}{table,scrreprt-xepersian.def}}}
 \generate{\file{soul-xepersian.def}{\from{\jobname.dtx}{table,soul-xepersian.def}}}
-\generate{\file{tikz.code-xepersian.def}{\from{\jobname.dtx}{table,tikz.code-xepersian.def}}}
 \generate{\file{tkz-linknodes-xepersian.def}{\from{\jobname.dtx}{table,tkz-linknodes-xepersian.def}}}
 \generate{\file{tocloft-xepersian.def}{\from{\jobname.dtx}{table,tocloft-xepersian.def}}}
 \generate{\file{varioref-xepersian.def}{\from{\jobname.dtx}{table,varioref-xepersian.def}}}
 \generate{\file{xepersian.sty}{\from{\jobname.dtx}{table,xepersian.sty}}}
 \generate{\file{xepersian-magazine.cls}{\from{\jobname.dtx}{table,xepersian-magazine.cls}}}
-\generate{\file{xepersian-mathsdigitspec.sty}{\from{\jobname.dtx}{table,xepersian-mathsdigitspec.sty}}}
+\generate{\file{xepersian-mathdigitspec.sty}{\from{\jobname.dtx}{table,xepersian-mathdigitspec.sty}}}
 \generate{\file{xepersian-multiplechoice.sty}{\from{\jobname.dtx}{table,xepersian-multiplechoice.sty}}}
 \generate{\file{xepersian-persiancal.sty}{\from{\jobname.dtx}{table,xepersian-persiancal.sty}}}
 %</batchfile>
@@ -152,7 +168,7 @@ by Vafa Khalighi.
 \documentclass{ltxdoc}
 \input{xepersian-doc-preamble.ltx}
 \hypersetup{%
-  pdftitle={Source documentation for version 23.1 of the XePersian
+  pdftitle={Source documentation for version 24.8 of the XePersian
                 package}%
 }
 \EnableCrossrefs
@@ -171,7 +187,7 @@ by Vafa Khalighi.
 % \GetFileInfo{\jobname.dtx}
 % \title{\textcolor{blue!65!black}{\Huge The \textsf{\XePersian} \textit{Package}}\\
 %\LARGE Persian for \LaTeXe, using {\XeTeX} engine\\[5pt]
-%\large Source documentation for \textcolor{blue!65!black}{version 23.1}}
+%\large Source documentation for \textcolor{blue!65!black}{version 24.8}}
 % \author{Vafa Khalighi\thanks{Thanks to the bidi-tex GitHub organization consisted of David Carlisle and other members of the  {\LaTeX} team to maintain the package in the period 2018--2020.}}
 %\setcounter{page}{0}
 %\thispagestyle{empty}
@@ -181,7 +197,7 @@ by Vafa Khalighi.
 %\textcolor{blue!65!black}{\Huge The \textsf{\XePersian} \textit{Package}}
 %
 %\Large
-%Source documentation for \textcolor{blue!65!black}{version 23.1}}
+%Source documentation for \textcolor{blue!65!black}{version 24.8}}
 %
 %\vskip 0pt plus 3fill
 %\textit{\large to my Master, \textbf{Ferdowsi The Great}}
@@ -192,17 +208,29 @@ by Vafa Khalighi.
 %or ask for any new features, or suggest any improvements, or ask any questions about the package, then please use the issue tracker:
 %
 %\medskip
-%  \centerline{\url{https://github.com/persiantex/xepersian/issues}}
+%  \centerline{\url{https://github.com/kvafa/xepersian/issues}}
 %
 %\medskip
 %In doing so, please always explain your issue well enough, and always include
 %a minimal working example showing the issue. 
+%
+%\bigskip
+%You may also have conversations, ask questions and post answers
+%without opening issues using the Discussions space:
+%
+%\medskip
+%  \centerline{\url{https://github.com/kvafa/xepersian/discussions}}
+%
+%\medskip
+%The announcements for the new releases of the package will
+%also appear in the Discussions space under the Announcements
+%category.
 %\end{minipage}
 %}}
 %
 %\vskip 0pt plus 3fill
 %
-%Copyright (c) 2008--2020 Vafa Khalighi
+%Copyright (c) 2008--2022 Vafa Khalighi
 %
 %Copyright (c) 2018--2020 bidi-tex GitHub Organization
 %
@@ -217,7 +245,7 @@ by Vafa Khalighi.
 %\iffalse
 %<*table>
 %\fi
-%% \CheckSum{10882}
+%% \CheckSum{11192}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -390,6 +418,49 @@ by Vafa Khalighi.
 %    \end{macrocode}
 % \iffalse
 %</backref-xepersian.def>
+%<*beamer-xepersian.def>
+%\fi
+% \section{File \texttt{beamer-xepersian.def}}
+%    \begin{macrocode}
+\ProvidesFile{beamer-xepersian.def}[2022/06/27 v0.2 xepersian changes to beamer class]
+\usefonttheme[stillsansserifmath]{serif}
+
+\renewcommand*{\bidi@beamer@today}{%
+\the\persianyear-\ifnum\persianmonth<10\relax0\fi\the\persianmonth-\ifnum\persianday<10\relax0\fi\the\persianday}
+
+
+%    \end{macrocode}
+% \iffalse
+%</beamer-xepersian.def>
+%<*beamerbasetranslator-xepersian.def>
+%\fi
+% \section{File \texttt{beamerbasetranslator-xepersian.def}}
+%    \begin{macrocode}
+\ProvidesFile{beamerbasetranslator-xepersian.def}[2022/06/27 v0.3 xepersian changes to beamerbasetranslator package]
+\newcommand*{\ProvidePersianTranslation}[2]{%
+  \providetranslation{#1}{\ifRtoL{#2}{#1}}%
+}
+
+\ProvidePersianTranslation{Corollary}{نتیجه}
+\ProvidePersianTranslation{Definition}{تعریف}
+\ProvidePersianTranslation{Definitions}{تعریف‌ها}
+\ProvidePersianTranslation{Example}{مثال}
+\ProvidePersianTranslation{Examples}{مثال‌ها}
+\ProvidePersianTranslation{Fact}{حقیقت}
+\ProvidePersianTranslation{From?}{از}
+\ProvidePersianTranslation{Lemma}{لما}
+\ProvidePersianTranslation{Problem}{مساله}
+\ProvidePersianTranslation{Section}{قسمت}
+\ProvidePersianTranslation{Solution}{راه‌حل}
+\ProvidePersianTranslation{Subsection}{زیرقسمت}
+\ProvidePersianTranslation{Theorem}{قضیه}
+\ProvidePersianTranslation{When?}{زمان}
+\ProvidePersianTranslation{Who?}{ارایه‌دهنده}
+
+
+%    \end{macrocode}
+% \iffalse
+%</beamerbasetranslator-xepersian.def>
 %<*bidituftesidenote-xepersian.def>
 %\fi
 % \section{File \texttt{bidituftesidenote-xepersian.def}}
@@ -1505,8 +1576,8 @@ by Vafa Khalighi.
 %    \begin{macrocode}
 \ProvidesFile{xepersian-localise-commands-xepersian.def}[2012/07/25 v0.2 Persian localisation of XePersian commands]
 \eqcommand{خط‌زیرنویس‌خودکار}{autofootnoterule}
-\eqcommand{اعدادفرمولهاخودکار}{AutoMathsDigits}
-\eqcommand{اعدادفرمولهالاتین}{DefaultMathsDigits}
+\eqcommand{اعدادفرمولهاخودکار}{AutoMathDigits}
+\eqcommand{اعدادفرمولهالاتین}{DefaultMathDigits}
 \eqcommand{معادل@کلید}{keyval@eq@alias@key}
 \eqcommand{تعریف‌قلم‌لاتین}{deflatinfont}
 \eqcommand{تعریف‌قلم‌پارسی}{defpersianfont}
@@ -1524,7 +1595,7 @@ by Vafa Khalighi.
 \eqcommand{پانویس‌عنوان}{LTRthanks}
 \eqcommand{روزپارسی}{persianday}
 \eqcommand{قلم‌پارسی}{persianfont}
-\eqcommand{اعدادفرمولهاپارسی}{PersianMathsDigits}
+\eqcommand{اعدادفرمولهاپارسی}{PersianMathDigits}
 \eqcommand{ماه‌پارسی}{persianmonth}
 \eqcommand{سال‌پارسی}{persianyear}
 \eqcommand{علامت‌چپ‌نقل‌قول‌پارسی}{plq}
@@ -1612,14 +1683,14 @@ by Vafa Khalighi.
 %\fi
 % \section{File \texttt{latex-localise-environments-xepersian.def}}
 %    \begin{macrocode}
-\ProvidesFile{latex-localise-environments-xepersian.def}[2010/07/25 v0.2 Persian localisation of LaTeX2e environments]
+\ProvidesFile{latex-localise-environments-xepersian.def}[2022/06/06 v0.3 Persian localisation of LaTeX2e environments]
 \eqenvironment{چکیده}{abstract}
 \eqenvironment{پیوست}{appendix}
 \eqenvironment{آرایه}{array}
 \eqenvironment{وسط‌چین}{center}
 \eqenvironment{توضیح}{description}
 \eqenvironment{ریاضی‌نمایشی}{displaymath}
-\eqenvironment{نوشتار}{document}
+\EqEnvironment{نوشتار}{document}
 \eqenvironment{شمارش}{enumerate}
 \eqenvironment{شکل}{figure}
 \eqenvironment{شکل*}{figure*}
@@ -1950,7 +2021,7 @@ by Vafa Khalighi.
 %\fi
 % \section{File \texttt{hyperref-xepersian.def}}
 %    \begin{macrocode}
-\ProvidesFile{hyperref-xepersian.def}[2015/02/02 v0.6 bilingual captions for hyperref package]
+\ProvidesFile{hyperref-xepersian.def}[2022/10/30 v0.8 xepersian adaptations for hyperref package]
   \def\equationautorefname{\if@RTL معادله\else Equation\fi}%
   \def\footnoteautorefname{\if@RTL زیرنویس\else footnote\fi}%
   \def\itemautorefname{\if@RTL فقره\else item\fi}%
@@ -1967,20 +2038,22 @@ by Vafa Khalighi.
   \def\FancyVerbLineautorefname{\if@RTL سطر\else line\fi}%
   \def\theoremautorefname{\if@RTL قضیه\else Theorem\fi}%
   \def\pageautorefname{\if@RTL صفحه\else page\fi}%
-\AtBeginDocument{%
-\let\HyOrg@appendix\appendix
-\def\appendix{%
-  \ltx@IfUndefined{chapter}%
-    {\gdef\theHsection{\Alph{section}}}%
-    {\gdef\theHchapter{\Alph{chapter}}}%
-  \xdef\Hy@chapapp{\Hy@appendixstring}%
-  \HyOrg@appendix
-}
-}
+\ifHy@implicit
+  \AtBeginDocument{%
+    \let\HyOrg@appendix\appendix
+      \def\appendix{%
+        \ltx@IfUndefined{chapter}%
+          {\gdef\theHsection{\Alph{section}}}%
+          {\gdef\theHchapter{\Alph{chapter}}}%
+        \xdef\Hy@chapapp{\Hy@appendixstring}%
+        \HyOrg@appendix
+      }%
+    }%
+\fi
 \pdfstringdefDisableCommands{%
-\let\lr\@firstofone
-\let\rl\@firstofone
-\def\XePersian{XePersian}
+  \let\lr\@firstofone
+  \let\rl\@firstofone
+  \def\XePersian{XePersian}%
 }
 \ltx@IfUndefined{@resets@pp}{%
 }{%
@@ -2158,11 +2231,16 @@ by Vafa Khalighi.
 %\fi
 % \section{File \texttt{localise-xepersian.def}}
 %    \begin{macrocode}
-\ProvidesFile{localise-xepersian.def}[2014/07/10 v0.2b Persian localisation of LaTeX2e]
+\ProvidesFile{localise-xepersian.def}[2022/06/06 v0.2c Persian localisation of LaTeX2e]
 \newcommand{\makezwnjletter}{\catcode`‌=11\relax}
 \makezwnjletter
 \newcommand*{\eqcommand}[2]{\if@bidi@csprimitive{#2}{\bidi@csletcs{#1}{#2}}{\bidi@csdefcs{#1}{#2}}}
-\newcommand*{\eqenvironment}[2]{\newenvironment{#1}{\csname#2\endcsname}{\csname end#2\endcsname}}
+\newcommand*{\eqenvironment}[2]{\newenvironment{#1}{%
+\if@bidi@csdef{verbatim@}{\let\verbatim@\xepersian@localize@verbatim@}{}\csname#2\endcsname}{\csname end#2\endcsname}}
+\newcommand*{\EqEnvironment}[2]{%
+  \expandafter\let\csname #1\expandafter\endcsname\csname #2\endcsname
+  \expandafter\let\csname end#1\expandafter\endcsname\csname end#2\endcsname
+}
 \@ifpackageloaded{keyval}{%
 \newcommand*\keyval@eq@alias@key[4][KV]{%
   \bidi@csletcs{#1@#2@#3}{#1@#2@#4}%
@@ -3039,6 +3117,19 @@ by Vafa Khalighi.
 %    \end{macrocode}
 % \iffalse
 %</packages-localise-xepersian.def>
+%<*url-xepersian.def>
+%\fi
+% \section{File \texttt{url-xepersian.def}}
+%    \begin{macrocode}
+\ProvidesFile{url-xepersian.def}[2022/02/18 v0.1 adaptations for url package]
+\begingroup
+ \lccode`+=`\% \lccode`\~=`\%
+  \lowercase {\long\gdef\Url@actpercent{\Url@Edit\Url@String{+}{~}%
+    \ifnum\Umathcodenum`\%<32768 \def~{\%}\fi}}%
+\endgroup%
+%    \end{macrocode}
+% \iffalse
+%</url-xepersian.def>
 %<*persian-tex-text.map>
 %\fi
 % \section{File \texttt{persian-tex-text.map}}
@@ -3084,6 +3175,39 @@ U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
 %    \end{macrocode}
 % \iffalse
 %</persian-tex-text.map>
+%<*persian-tex-text-nonumbers.map>
+%\fi
+% \section{File \texttt{persian-tex-text-nonumbers.map}}
+%    \begin{macrocode}
+LHSName "persian-TeX-text-nonumbers"
+RHSName "Unicode"
+
+pass(Unicode)
+U+002C <> U+060C ; comma ­> arabic comma
+U+003F <> U+061F ; question mark -> arabic qm
+U+003B <> U+061B ; semicolon -> arabic semicolon
+
+; ligatures from Knuth's original CMR fonts
+U+002D U+002D <> U+2013 ; -- -> en dash
+U+002D U+002D U+002D <> U+2014 ; --- -> em dash
+
+U+0027 <> U+2019 ; ' -> right single quote
+U+0027 U+0027 <> U+201D ; '' -> right double quote
+U+0022  > U+201D ; " -> right double quote
+
+U+0060 <> U+2018 ; ` -> left single quote
+U+0060 U+0060 <> U+201C ; `` -> left double quote
+
+U+0021 U+0060 <> U+00A1 ; !` -> inverted exclam
+U+003F U+0060 <> U+00BF ; ?` -> inverted question
+
+; additions supported in T1 encoding
+U+002C U+002C <> U+201E ; ,, -> DOUBLE LOW-9 QUOTATION MARK
+U+003C U+003C <> U+00AB ; << -> LEFT POINTING GUILLEMET
+U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
+%    \end{macrocode}
+% \iffalse
+%</persian-tex-text-nonumbers.map>
 %<*rapport1-xepersian.def>
 %\fi
 % \section{File \texttt{rapport1-xepersian.def}}
@@ -3146,14 +3270,36 @@ U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
 %\fi
 % \section{File \texttt{scrartcl-xepersian.def}}
 %    \begin{macrocode}
-\ProvidesFile{scrartcl-xepersian.def}[2010/07/25 v0.2 adaptations for scrartcl class]
+\ProvidesFile{scrartcl-xepersian.def}[2022/05/22 v0.3 adaptations for scrartcl class]
 \renewcommand*{\thepart}{\@tartibi\c@part}
-\renewcommand*\appendix{\par%
+\renewcommand*\appendix{%
+  \Ifstr{\@currenvir}{appendix}{%
+    \ClassWarning{\KOMAClassName}{%
+      You are using
+      `\string\begin{appendix}...\string\end{appendix}'.\MessageBreak
+      You should note, that `\string\appendix' is a mostly
+      globally\MessageBreak
+      working command not an enviroment with only local\MessageBreak
+      effects. Therefore `\string\end{appendix}' will neither\MessageBreak
+      switch back to normal section numbering nor finish\MessageBreak
+      every other effect of `\string\begin{appendix}'.\MessageBreak
+      Nevertheless, some effects may end with\MessageBreak
+      `\string\end{appendix}' and the document may become\MessageBreak
+      inconsistent.\MessageBreak
+      Because of this, you should remove `\string\end{appendix}'\MessageBreak
+      and replace `\string\begin{appendix}' by command\MessageBreak
+      `\string\appendix'%
+    }%
+  }{}%
+  \par
   \setcounter{section}{0}%
   \setcounter{subsection}{0}%
   \gdef\thesection{\@harfi\c@section}%
-  \csname appendixmore\endcsname
 }
+\IfLTXAtLeastTF{2020/10/01}{%
+  \g@addto@macro{\appendix}{\UseOneTimeHook{\KOMAClassName/appendix}}%
+}{}
+\g@addto@macro{\appendix}{\csname appendixmore\endcsname}
 \renewcommand*{\@@maybeautodot}[1]{%
   \ifx #1\@stop\let\@@maybeautodot\relax
   \else
@@ -3182,19 +3328,41 @@ U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
 %\fi
 % \section{File \texttt{scrbook-xepersian.def}}
 %    \begin{macrocode}
-\ProvidesFile{scrbook-xepersian.def}[2010/07/25 v0.2 adaptations for scrbook class]
+\ProvidesFile{scrbook-xepersian.def}[2022/05/22 v0.3 adaptations for scrbook class]
 \renewcommand*\frontmatter{%
   \if@twoside\cleardoubleoddpage\else\clearpage\fi
   \@mainmatterfalse\pagenumbering{harfi}%
 }
 \renewcommand*{\thepart}{\@tartibi\c@part}
-\renewcommand*\appendix{\par%
+\renewcommand*\appendix{%
+  \Ifstr{\@currenvir}{appendix}{%
+    \ClassWarning{\KOMAClassName}{%
+      You are using
+      `\string\begin{appendix}...\string\end{appendix}'.\MessageBreak
+      You should note, that `\string\appendix' is a mostly
+      globally\MessageBreak
+      working command not an enviroment with only local\MessageBreak
+      effects. Therefore `\string\end{appendix}' will neither\MessageBreak
+      switch back to normal section numbering nor finish\MessageBreak
+      every other effect of `\string\begin{appendix}'.\MessageBreak
+      Nevertheless, some effects may end with\MessageBreak
+      `\string\end{appendix}' and the document may become\MessageBreak
+      inconsistent.\MessageBreak
+      Because of this, you should remove `\string\end{appendix}'\MessageBreak
+      and replace `\string\begin{appendix}' by command\MessageBreak
+      `\string\appendix'%
+    }%
+  }{}%
+  \par
   \setcounter{chapter}{0}%
   \setcounter{section}{0}%
   \gdef\@chapapp{\appendixname}%
   \gdef\thechapter{\@harfi\c@chapter}%
-  \csname appendixmore\endcsname
 }
+\IfLTXAtLeastTF{2020/10/01}{%
+  \g@addto@macro{\appendix}{\UseOneTimeHook{\KOMAClassName/appendix}}%
+}{}
+\g@addto@macro{\appendix}{\csname appendixmore\endcsname}
 \renewcommand*{\@@maybeautodot}[1]{%
   \ifx #1\@stop\let\@@maybeautodot\relax
   \else
@@ -3223,15 +3391,37 @@ U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
 %\fi
 % \section{File \texttt{scrreprt-xepersian.def}}
 %    \begin{macrocode}
-\ProvidesFile{scrreprt-xepersian.def}[2010/07/25 v0.2 adaptations for scrreprt class]
+\ProvidesFile{scrreprt-xepersian.def}[2022/05/22 v0.3 adaptations for scrreprt class]
 \renewcommand*{\thepart}{\@tartibi\c@part}
-\renewcommand*\appendix{\par%
+\renewcommand*\appendix{%
+  \Ifstr{\@currenvir}{appendix}{%
+    \ClassWarning{\KOMAClassName}{%
+      You are using
+      `\string\begin{appendix}...\string\end{appendix}'.\MessageBreak
+      You should note, that `\string\appendix' is a mostly
+      globally\MessageBreak
+      working command not an enviroment with only local\MessageBreak
+      effects. Therefore `\string\end{appendix}' will neither\MessageBreak
+      switch back to normal section numbering nor finish\MessageBreak
+      every other effect of `\string\begin{appendix}'.\MessageBreak
+      Nevertheless, some effects may end with\MessageBreak
+      `\string\end{appendix}' and the document may become\MessageBreak
+      inconsistent.\MessageBreak
+      Because of this, you should remove `\string\end{appendix}'\MessageBreak
+      and replace `\string\begin{appendix}' by command\MessageBreak
+      `\string\appendix'%
+    }%
+  }{}%
+  \par
   \setcounter{chapter}{0}%
   \setcounter{section}{0}%
   \gdef\@chapapp{\appendixname}%
   \gdef\thechapter{\@harfi\c@chapter}%
-  \csname appendixmore\endcsname
 }
+\IfLTXAtLeastTF{2020/10/01}{%
+  \g@addto@macro{\appendix}{\UseOneTimeHook{\KOMAClassName/appendix}}%
+}{}
+\g@addto@macro{\appendix}{\csname appendixmore\endcsname}
 \renewcommand*{\@@maybeautodot}[1]{%
   \ifx #1\@stop\let\@@maybeautodot\relax
   \else
@@ -3281,20 +3471,6 @@ U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
 %    \end{macrocode}
 % \iffalse
 %</soul-xepersian.def>
-%<*tikz.code-xepersian.def>
-%\fi
-% \section{File \texttt{tikz.code-xepersian.def}}
-%    \begin{macrocode}
-\ProvidesFile{tikz.code-xepersian.def}[2020/05/17 v0.2 adaptations for tikz.code.tex file]
-\bidi@patchcmd\tikz@finish{%
-  \tikz@preactions%
-}{%
-  \@@textdigitfont@onfalse%
-  \tikz@preactions%
-}{}{}
-%    \end{macrocode}
-% \iffalse
-%</tikz.code-xepersian.def>
 %<*tkz-linknodes-xepersian.def>
 %\fi
 % \section{File \texttt{tkz-linknodes-xepersian.def}}
@@ -3416,13 +3592,16 @@ U+003E U+003E <> U+00BB ; >> -> RIGHT POINTING GUILLEMET
 % \section{File \texttt{xepersian.sty}}
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\def\xepersian@version{23.1}
-\def\xepersiandate{2020/05/17}
-\ProvidesPackage{xepersian}[\xepersiandate\space v\xepersian@version\space 
+\def\xepersian@version{24.8}
+\def\xepersiandate{2022/10/30}
+\def\xepersian@releasename{Women, Life, and Freedom}
+\def\xepersian@persian@@releasename{زن، زندگی، و آزادی}
+\newcommand*{\xepersianreleasename}{\if@RTL\xepersian@persian@@releasename\else\xepersian@releasename\fi}
+\ProvidesPackage{xepersian}[\xepersiandate\space v\xepersian@version\space (Release \xepersian@releasename)\space
 Persian typesetting in XeLaTeX]
 \RequirePackage{fontspec}
 \RequirePackage{xepersian-persiancal}
-\RequirePackage{xepersian-mathsdigitspec}
+\RequirePackage{xepersian-mathdigitspec}
 \RequirePackage{bidi}
 \edef\@xepersian@info{****************************************************^^J%
 * ^^J%
@@ -3432,17 +3611,19 @@ Persian typesetting in XeLaTeX]
 * typesetting, using fonts provided in the^^J%
 * distribution.^^J%
 * ^^J%
-* Copyright (c) 2008--2020 Vafa Khalighi^^J%
+* Copyright (c) 2008--2022 Vafa Khalighi^^J%
 * Copyright (c) 2018--2020 bidi-tex GitHub Organization^^J%
 * ^^J%
-* v\xepersian@version, \xepersiandate^^J%
+* v\xepersian@version\space (Release \xepersian@releasename), \xepersiandate^^J%
 * ^^J%
 * License: LaTeX Project Public License, version^^J% 
 * 1.3c or higher (your choice)^^J%
 * ^^J%
 * Location on CTAN: /macros/xetex/latex/xepersian^^J%
 * ^^J%
-* Issue tracker: https://github.com/persiantex/xepersian/issues^^J%
+* Issue tracker: https://github.com/kvafa/xepersian/issues^^J%
+* ^^J%
+* Discussions: https://github.com/kvafa/xepersian/discussions^^J%
 * ^^J%
 * Primary author of xepersian package: Vafa Khalighi.^^J%
 * ^^J%
@@ -3515,6 +3696,21 @@ Persian typesetting in XeLaTeX]
      \tl_set:Nn \l__fontspec_mapping_tl { persian-tex-text }
    }
  }
+ 
+\keys_define:nn {fontspec-opentype}
+  {
+    Ligatures / PersianTeXNoNumbers .code:n = { \tl_set:Nn \l__fontspec_mapping_tl {persian-tex-text-nonumbers} },
+    Ligatures / PersianTeXNoNumbersOff .code:n = { \tl_clear:N \l__fontspec_mapping_tl },
+    Ligatures / PersianTeXNoNumbersReset .code:n = { \tl_clear:N \l__fontspec_mapping_tl },
+  }
+
+\keys_define:nn {fontspec-aat}
+ {
+  Ligatures / PersianTeXNoNumbers .code:n =
+   {
+     \tl_set:Nn \l__fontspec_mapping_tl { persian-tex-text-nonumbers }
+   }
+ }
 
 \DeclareDocumentCommand \settextfont { O{} m O{} }
   {
@@ -3523,12 +3719,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_settextfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_persianfont_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \rmdefault \l__xepersian_persianfont_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_persianfont_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \rmdefault \l__fontspec_persianfont_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \persianfont }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_persianfont_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_persianfont_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3547,12 +3743,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_settextdigitfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_textdigitfont_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
+  \fontspec_set_family:Nnn \l__fontspec_textdigitfont_family_tl {Ligatures=PersianTeX,#1} {#2}
   \use:x
    {
     \exp_not:n { \DeclareRobustCommand \xepersian@textdigitfont }
      {
-      \exp_not:N \fontfamily { \l__xepersian_textdigitfont_family_tl }
+      \exp_not:N \fontfamily { \l__fontspec_textdigitfont_family_tl }
       \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
       \exp_not:N \selectfont
      }
@@ -3576,8 +3772,8 @@ Persian typesetting in XeLaTeX]
    }
  }
  
-\newcommand*{\xepersian@@start@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\bgroup\xepersian@textdigitfont\else\fi\fi\fi}
-\newcommand*{\xepersian@@stop@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\egroup\else\fi\fi\fi} 
+\newcommand*{\xepersian@@start@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\let\xepersian@save@@f@family\f@family\xepersian@textdigitfont\else\fi\fi\fi}
+\newcommand*{\xepersian@@stop@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\let\f@family\xepersian@save@@f@family\selectfont\else\fi\fi\fi} 
  
 \cs_set_eq:NN \__xepersian_settextdigitfont_hook:nn   \use_none:nn
  
@@ -3596,11 +3792,11 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setlatintextfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_latinfont_family_tl {Ligatures=TeX,#1} {#2}
+  \fontspec_set_family:Nnn \l__fontspec_latinfont_family_tl {Ligatures=TeX,#1} {#2}
   \use:x { \exp_not:n { \DeclareRobustCommand \latinfont }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_latinfont_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_latinfont_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3627,12 +3823,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_defpersianfont:NnnN
  {
-  \fontspec_set_family:cnn { l__xepersian_ \cs_to_str:N #1 _family_tl } {Script=Persian,Ligatures=PersianTeX,#2} {#3}
+  \fontspec_set_family:cnn { l__fontspec_ \cs_to_str:N #1 _family_tl } {RawFeature={script=arab},Ligatures=PersianTeX,#2} {#3}
   \use:x
    {
     \exp_not:N #4 \exp_not:N #1 {}
      {
-      \exp_not:N \fontfamily { \use:c {l__xepersian_ \cs_to_str:N #1 _family_tl } }
+      \exp_not:N \fontfamily { \use:c {l__fontspec_ \cs_to_str:N #1 _family_tl } }
       \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
       \exp_not:N \selectfont
      }
@@ -3651,12 +3847,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_deflatinfont:NnnN
  {
-  \fontspec_set_family:cnn { l__xepersian_ \cs_to_str:N #1 _family_tl } {Ligatures=TeX,#2} {#3}
+  \fontspec_set_family:cnn { l__fontspec_ \cs_to_str:N #1 _family_tl } {Ligatures=TeX,#2} {#3}
   \use:x
    {
     \exp_not:N #4 \exp_not:N #1 {}
      {
-      \exp_not:N \fontfamily { \use:c {l__xepersian_ \cs_to_str:N #1 _family_tl } }
+      \exp_not:N \fontfamily { \use:c {l__fontspec_ \cs_to_str:N #1 _family_tl } }
       \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
       \exp_not:N \selectfont
      }
@@ -3701,12 +3897,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setpersiansansfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_persiansffamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \persiansfdefault \l__xepersian_persiansffamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_persiansffamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \persiansfdefault \l__fontspec_persiansffamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \persiansffamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_persiansffamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_persiansffamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3725,12 +3921,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setpersianmonofont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_persianttfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \persianttdefault \l__xepersian_persianttfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_persianttfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \persianttdefault \l__fontspec_persianttfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \persianttfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_persianttfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_persianttfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3749,12 +3945,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setnavarfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_navarfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \navardefault \l__xepersian_navarfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_navarfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \navardefault \l__fontspec_navarfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \navarfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_navarfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_navarfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3773,12 +3969,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setpookfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_pookfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \pookdefault \l__xepersian_pookfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_pookfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \pookdefault \l__fontspec_pookfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \pookfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_pookfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_pookfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3797,12 +3993,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setsayehfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_sayehfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \sayehdefault \l__xepersian_sayehfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_sayehfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \sayehdefault \l__fontspec_sayehfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \sayehfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_sayehfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_sayehfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -3821,12 +4017,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setiranicfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_iranicfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \iranicdefault \l__xepersian_iranicfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_iranicfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \iranicdefault \l__fontspec_iranicfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \iranicfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_iranicfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_iranicfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -4244,12 +4440,12 @@ Persian typesetting in XeLaTeX]
   \textsf{\XePersian}\quad\@bidi@logo{xepersian-logo.pdf}}}
 
 \renewcommand*{\@bidi@pdfcreator}{%
-  The xepersian package, v\xepersian@version, \xepersiandate
+  The xepersian package, v\xepersian@version\space (Release \xepersian@releasename), \xepersiandate
 }
 
 \newcommand*{\@xepersian@pdfcustomproperties}{%
-  This is the xepersian package, Version \xepersian@version,
-  Released May 17, 2020. 
+  This is the xepersian package, Version \xepersian@version\space (Release \xepersian@releasename),
+  Released October 30, 2022. 
 }
 
 \newcommand\twocolumnstableofcontents{%
@@ -4261,25 +4457,27 @@ Persian typesetting in XeLaTeX]
   \end{multicols}}}
 \bidi@newrobustcmd*{\XePersian}{\leavevmode$\smash{\hbox{X\lower.5ex
   \hbox{\kern-.125em\bidi@reflect@box{E}}Persian}}$}
-\def\figurename{\if@RTL شکل\else Figure\fi}
-\def\tablename{\if@RTL جدول\else Table\fi}
-\def\contentsname{\if@RTL فهرست مطالب\else Contents\fi}
-\def\listfigurename{\if@RTL فهرست تصاویر\else List of Figures\fi}
-\def\listtablename{\if@RTL فهرست جداول\else List of Tables\fi}
-\def\appendixname{\if@RTL پیوست\else Appendix\fi}
-\def\indexname{\if@RTL نمایه\else Index\fi}
-\def\refname{\if@RTL مراجع\else References\fi}
-\def\abstractname{\if@RTL چکیده\else Abstract\fi}
-\def\partname{\if@RTL بخش\else Part\fi}
-\def\datename{\if@RTL تاریخ:\else Date:\fi}
-\def\@@and{\if@RTL و\else and\fi}
-\def\bibname{\if@RTL کتاب‌نامه\else Bibliography\fi}
-\def\chaptername{\if@RTL فصل\else Chapter\fi}
-\def\ccname{\if@RTL رونوشت\else cc\fi}
-\def\enclname{\if@RTL پیوست\else encl\fi}
-\def\pagename{\if@RTL صفحه\else Page\fi}
-\def\headtoname{\if@RTL به\else To\fi}
-\def\proofname{\if@RTL اثبات\else Proof\fi}
+\AtBeginDocument{%
+  \def\figurename{\if@RTL شکل\else Figure\fi}%
+  \def\tablename{\if@RTL جدول\else Table\fi}%
+  \def\contentsname{\if@RTL فهرست مطالب\else Contents\fi}%
+  \def\listfigurename{\if@RTL فهرست تصاویر\else List of Figures\fi}%
+  \def\listtablename{\if@RTL فهرست جداول\else List of Tables\fi}%
+  \def\appendixname{\if@RTL پیوست\else Appendix\fi}%
+  \def\indexname{\if@RTL نمایه\else Index\fi}%
+  \def\refname{\if@RTL مراجع\else References\fi}%
+  \def\abstractname{\if@RTL چکیده\else Abstract\fi}%
+  \def\partname{\if@RTL بخش\else Part\fi}%
+  \def\datename{\if@RTL تاریخ:\else Date:\fi}%
+  \def\@@and{\if@RTL و\else and\fi}%
+  \def\bibname{\if@RTL کتاب‌نامه\else Bibliography\fi}%
+  \def\chaptername{\if@RTL فصل\else Chapter\fi}%
+  \def\ccname{\if@RTL رونوشت\else cc\fi}%
+  \def\enclname{\if@RTL پیوست\else encl\fi}%
+  \def\pagename{\if@RTL صفحه\else Page\fi}%
+  \def\headtoname{\if@RTL به\else To\fi}%
+  \def\proofname{\if@RTL اثبات\else Proof\fi}%
+}
 \def\@Abjad#1{%
   \ifcase#1\or آ\or ب\or ج\or د%
            \or ه\or و\or ز\or ح\or ط%
@@ -4568,6 +4766,7 @@ number is 999,999,999.}%
 \@ifpackageloaded{algorithmic}{\input{algorithmic-xepersian.def}}{}
 \@ifpackageloaded{algorithm}{\input{algorithm-xepersian.def}}{}
 \@ifpackageloaded{backref}{\input{backref-xepersian.def}}{}
+\@ifpackageloaded{beamerbasetranslator}{\input{beamerbasetranslator-xepersian.def}}{}
 \@ifpackageloaded{fancyref}{\input{fancyref-xepersian.def}}{}
 \@ifpackageloaded{bidituftesidenote}{\input{bidituftesidenote-xepersian.def}}{}
 \@ifpackageloaded{breqn}{\input{breqn-xepersian.def}}{}
@@ -4579,9 +4778,9 @@ number is 999,999,999.}%
 \@ifpackageloaded{minitoc}{\input{minitoc-xepersian.def}}{}
 \@ifpackageloaded{natbib}{\input{natbib-xepersian.def}}{}
 \@ifpackageloaded{soul}{\input{soul-xepersian.def}}{}
-\@ifpackageloaded{tikz}{\input{tikz.code-xepersian.def}}{}
 \@ifpackageloaded{tkz-linknodes}{\input{tkz-linknodes-xepersian.def}}{}
 \@ifpackageloaded{tocloft}{\@ifclassloaded{memoir}{}{\input{tocloft-xepersian.def}}}{}
+\@ifpackageloaded{url}{\input{url-xepersian.def}}{}
 \@ifpackageloaded{varioref}{\input{varioref-xepersian.def}}{}
 \@ifclassloaded{article}{\input{article-xepersian.def}}{}
 \@ifclassloaded{extarticle}{\input{extarticle-xepersian.def}}{}
@@ -4589,6 +4788,7 @@ number is 999,999,999.}%
 \@ifclassloaded{artikel2}{\input{artikel2-xepersian.def}}{}
 \@ifclassloaded{artikel3}{\input{artikel3-xepersian.def}}{}
 \@ifclassloaded{amsart}{\input{amsart-xepersian.def}}{}
+\@ifclassloaded{beamer}{\input{beamer-xepersian.def}}{}
 \@ifclassloaded{bidimoderncv}{\input{bidimoderncv-xepersian.def}}{}
 \@ifclassloaded{report}{\input{report-xepersian.def}}{}
 \@ifclassloaded{extreport}{\input{extreport-xepersian.def}}{}
@@ -4623,27 +4823,27 @@ number is 999,999,999.}%
 
 \define@choicekey{xepersian.sty}{mathdigits}[\xepersian@tempa\xepersian@tempb]{automatic,default,persian}{%
   \ifcase\xepersian@tempb\relax
-    \AutoMathsDigits
+    \AutoMathDigits
   \or
-    \DefaultMathsDigits
+    \DefaultMathDigits
   \or
-    \PersianMathsDigits
+    \PersianMathDigits
   \fi}
 \define@choicekey{xepersian.sty}{inlinemathdigits}[\xepersian@tempa\xepersian@tempb]{automatic,default,persian}{%
   \ifcase\xepersian@tempb\relax
-    \AutoInlineMathsDigits
+    \AutoInlineMathDigits
   \or
-    \DefaultInlineMathsDigits
+    \DefaultInlineMathDigits
   \or
-    \PersianInlineMathsDigits
+    \PersianInlineMathDigits
   \fi}
 \define@choicekey{xepersian.sty}{displaymathdigits}[\xepersian@tempa\xepersian@tempb]{automatic,default,persian}{%
   \ifcase\xepersian@tempb\relax
-    \AutoDisplayMathsDigits
+    \AutoDisplayMathDigits
   \or
-    \DefaultDisplayMathsDigits
+    \DefaultDisplayMathDigits
   \or
-    \PersianDisplayMathsDigits
+    \PersianDisplayMathDigits
   \fi}
 \define@choicekey{xepersian.sty}{RTLdocument}[\xepersian@tempa\xepersian@tempb]{on,off}[on]{%
   \ifcase\xepersian@tempb\relax
@@ -5806,13 +6006,13 @@ indexblock environment may only appear inside frontpage environment.
 %    \end{macrocode}
 % \iffalse
 %</xepersian-magazine.cls>
-%<*xepersian-mathsdigitspec.sty>
+%<*xepersian-mathdigitspec.sty>
 %\fi
-% \section{File \texttt{xepersian-mathsdigitspec.sty}}
+% \section{File \texttt{xepersian-mathdigitspec.sty}}
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{xepersian-mathsdigitspec}
-  [2018/12/16 v1.1.7 Unicode Persian maths digits in XeLaTeX]
+\ProvidesPackage{xepersian-mathdigitspec}
+  [2022/05/20 v1.2.0 Unicode Persian math digits in XeLaTeX]
 \def\new@mathgroup{\alloc@8\mathgroup\chardef\@cclvi}
 \let\newfam\new@mathgroup
 \def\select@group#1#2#3#4{%
@@ -5887,7 +6087,7 @@ indexblock environment may only appear inside frontpage environment.
   \tl_remove_once:Nn \@preamblecmds {\do#1}
  }
 \ExplSyntaxOff
-\newcommand\xepersian@PackageInfo[1]{\PackageInfo{xepersian-mathsdigitspec}{#1}}
+\newcommand\xepersian@PackageInfo[1]{\PackageInfo{xepersian-mathdigitspec}{#1}}
 \newcommand\SetMathCode[4]{%
   \Umathcode#1="\mathchar@type#2 \csname sym#3\endcsname #4\relax}
 \newcommand\SetMathCharDef[4]{%
@@ -5898,9 +6098,10 @@ indexblock environment may only appear inside frontpage environment.
 \cs_new_eq:NN \orig_mathrm:n \mathrm
 \cs_new_eq:NN \orig_mathsf:n \mathsf
 \cs_new_eq:NN \orig_mathtt:n \mathtt
+%\int_const:Nn \c_one_int { 1 }
 \NewDocumentCommand \new@mathbf { m } {
  \orig_mathbf:n {
-   \int_step_inline:nnnn { `0 } { \c_one } { `9 } {
+   \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
      \mathcode ##1 = \numexpr "100 * \symnew@mathbf@font@digits + ##1 \relax
    }
    #1
@@ -5908,7 +6109,7 @@ indexblock environment may only appear inside frontpage environment.
 }
 \NewDocumentCommand \new@mathit { m } {
  \orig_mathit:n {
-   \int_step_inline:nnnn { `0 } { \c_one } { `9 } {
+   \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
      \mathcode ##1 = \numexpr "100 * \symnew@mathit@font@digits + ##1 \relax
    }
    #1
@@ -5916,7 +6117,7 @@ indexblock environment may only appear inside frontpage environment.
 }
 \NewDocumentCommand \new@mathrm { m } {
  \orig_mathrm:n {
-   \int_step_inline:nnnn { `0 } { \c_one } { `9 } {
+   \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
      \mathcode ##1 = \numexpr "100 * \symnew@mathrm@font@digits + ##1 \relax
    }
    #1
@@ -5924,7 +6125,7 @@ indexblock environment may only appear inside frontpage environment.
 }
 \NewDocumentCommand \new@mathsf{ m } {
  \orig_mathsf:n {
-   \int_step_inline:nnnn { `0 } { \c_one } { `9 } {
+   \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
      \mathcode ##1 = \numexpr "100 * \symnew@mathsf@font@digits + ##1 \relax
    }
    #1
@@ -5932,18 +6133,18 @@ indexblock environment may only appear inside frontpage environment.
 }
 \NewDocumentCommand \new@mathtt{ m } {
  \orig_mathtt:n {
-   \int_step_inline:nnnn { `0 } { \c_one } { `9 } {
+   \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
      \mathcode ##1 = \numexpr "100 * \symnew@mathtt@font@digits + ##1 \relax
    }
    #1
  }
 }
 
-\cs_new:Npn \__xepersian_mathsdigitspec_error:nxx    { \msg_error:nnxx    {xepersian-mathsdigitspec} }
-\cs_new:Nn \__xepersian_mathsdigitspec_msg_new:nnnn
+\cs_new:Npn \__xepersian_mathdigitspec_error:nxx    { \msg_error:nnxx    {xepersian-mathdigitspec} }
+\cs_new:Nn \__xepersian_mathdigitspec_msg_new:nnnn
   { \msg_new:nnxx {#1} {#2} { \tl_trim_spaces:n {#3} } { \tl_trim_spaces:n {#4} } }
 \char_set_catcode_space:n {32}
-\__xepersian_mathsdigitspec_msg_new:nnnn {xepersian-mathsdigitspec} {char-not-exist}
+\__xepersian_mathdigitspec_msg_new:nnnn {xepersian-mathdigitspec} {char-not-exist}
  {
   The font "#1" does not contain U+#2.
  }
@@ -5952,44 +6153,45 @@ indexblock environment may only appear inside frontpage environment.
  }
 \char_set_catcode_ignore:n {32}
 
-\prg_new_conditional:Nnn \__xepersian_mathsdigitspec_primitive_font_char_if_exist:n {p,TF,T,F}
+%\__kernel_primitive:NN \iffontchar            \tex_iffontchar:D
+\prg_new_conditional:Nnn \__xepersian_mathdigitspec_primitive_font_char_if_exist:n {p,TF,T,F}
   {
-    \etex_iffontchar:D \l_fontspec_font "#1 \scan_stop:
+    \tex_iffontchar:D \l_fontspec_font "#1 \scan_stop:
       \prg_return_true:
     \else:
       \prg_return_false:
     \fi:
   }
   
-\clist_new:N \l_xepersian_mathsdigitspec_char_clist
+\clist_new:N \l_xepersian_mathdigitspec_char_clist
 
-\cs_new:Nn \__xepersian_mathsdigitspec_char_set_not_exist_error:nn
+\cs_new:Nn \__xepersian_mathdigitspec_char_set_not_exist_error:nn
  {
-    \clist_set:Nn \l_xepersian_mathsdigitspec_char_clist { #1 }
-    \clist_map_inline:Nn \l_xepersian_mathsdigitspec_char_clist {
-      \__xepersian_mathsdigitspec_primitive_font_char_if_exist:nF { ##1 }{ \__xepersian_mathsdigitspec_error:nxx {char-not-exist} { #2 } { ##1 } }
+    \clist_set:Nn \l_xepersian_mathdigitspec_char_clist { #1 }
+    \clist_map_inline:Nn \l_xepersian_mathdigitspec_char_clist {
+      \__xepersian_mathdigitspec_primitive_font_char_if_exist:nF { ##1 }{ \__xepersian_mathdigitspec_error:nxx {char-not-exist} { #2 } { ##1 } }
     }
  }
  
-\cs_new:Nn \__xepersian_mathsdigitspec_char_prepend_not_exist_error:nn
+\cs_new:Nn \__xepersian_mathdigitspec_char_prepend_not_exist_error:nn
  {
-    \clist_put_left:Nn \l_xepersian_mathsdigitspec_char_clist { #1 }
-    \clist_map_inline:Nn \l_xepersian_mathsdigitspec_char_clist {
-      \__xepersian_mathsdigitspec_primitive_font_char_if_exist:nF { ##1 }{ \__xepersian_mathsdigitspec_error:nxx {char-not-exist} { #2 } { ##1 } }
+    \clist_put_left:Nn \l_xepersian_mathdigitspec_char_clist { #1 }
+    \clist_map_inline:Nn \l_xepersian_mathdigitspec_char_clist {
+      \__xepersian_mathdigitspec_primitive_font_char_if_exist:nF { ##1 }{ \__xepersian_mathdigitspec_error:nxx {char-not-exist} { #2 } { ##1 } }
     }
  }
  
-\cs_new:Nn \__xepersian_mathsdigitspec_char_append_not_exist_error:nn
+\cs_new:Nn \__xepersian_mathdigitspec_char_append_not_exist_error:nn
  {
-    \clist_put_right:Nn \l_xepersian_mathsdigitspec_char_clist { #1 }
-    \clist_map_inline:Nn \l_xepersian_mathsdigitspec_char_clist {
-      \__xepersian_mathsdigitspec_primitive_font_char_if_exist:nF { ##1 }{ \__xepersian_mathsdigitspec_error:nxx {char-not-exist} { #2 } { ##1 } }
+    \clist_put_right:Nn \l_xepersian_mathdigitspec_char_clist { #1 }
+    \clist_map_inline:Nn \l_xepersian_mathdigitspec_char_clist {
+      \__xepersian_mathdigitspec_primitive_font_char_if_exist:nF { ##1 }{ \__xepersian_mathdigitspec_error:nxx {char-not-exist} { #2 } { ##1 } }
     }
  } 
   
-\cs_new:Nn \__xepersian_mathsdigitspec_char_not_exist_error:n
+\cs_new:Nn \__xepersian_mathdigitspec_char_not_exist_error:n
  {
-    \__xepersian_mathsdigitspec_char_set_not_exist_error:nn { 
+    \__xepersian_mathdigitspec_char_set_not_exist_error:nn { 
       06F0 , 06F1 , 06F2 , 06F3 , 06F4 , 06F5 , 06F6 , 06F7 , 06F8 ,
       06F9 , 066A , 066B
     } { #1 }                         
@@ -6004,13 +6206,13 @@ indexblock environment may only appear inside frontpage environment.
   \let\glb@currsize\relax
   \fontspec_set_family:Nnn \g__xepersian_mathdigitsfamily_tl {Ligatures=PersianTeX,#1} {#2}
   \__xepersian_setmathdigitfont_hook:nn {#1} {#2}
-    \xepersian@PackageInfo{Defining the default Persian maths digits font as '#2'}
+    \xepersian@PackageInfo{Defining the default Persian math digits font as '#2'}
   \DeclareSymbolFont{OPERATORS}   {\g_fontspec_encoding_tl}{\g__xepersian_mathdigitsfamily_tl} {m}{n}
   \DeclareSymbolFont{new@mathbf@font@digits}{\g_fontspec_encoding_tl}{\g__xepersian_mathdigitsfamily_tl}{bx}{n}
   \DeclareSymbolFont{new@mathit@font@digits}{\g_fontspec_encoding_tl}{\g__xepersian_mathdigitsfamily_tl}{m}{it}
   \DeclareSymbolFont{new@mathrm@font@digits}{\g_fontspec_encoding_tl}{\g__xepersian_mathdigitsfamily_tl}{m}{n}
-  \__xepersian_mathsdigitspec_char_not_exist_error:n { #2 }
-  \def\persianmathsdigits{%
+  \__xepersian_mathdigitspec_char_not_exist_error:n { #2 }
+  \def\persianmathdigits{%
   \SetMathCode{`0}{\mathalpha}{OPERATORS}{`0}
   \SetMathCode{`1}{\mathalpha}{OPERATORS}{`1}
   \SetMathCode{`2}{\mathalpha}{OPERATORS}{`2}
@@ -6022,7 +6224,7 @@ indexblock environment may only appear inside frontpage environment.
   \SetMathCode{`8}{\mathalpha}{OPERATORS}{`8}
   \SetMathCode{`9}{\mathalpha}{OPERATORS}{`9}
   \SetMathCode{`\%}{\mathbin}{OPERATORS}{`٪}
-  \SetMathCharDef{\decimalseparator}{\mathord}{OPERATORS}{"066B}
+  \SetMathCharDef{\persiandecimalseparator}{\mathord}{OPERATORS}{"066B}
   \tl_set_eq:NN \mathbf \new@mathbf
   \tl_set_eq:NN \mathit \new@mathit
   \tl_set_eq:NN \mathrm \new@mathrm}
@@ -6039,7 +6241,7 @@ indexblock environment may only appear inside frontpage environment.
   \fontspec_set_family:Nnn \g__xepersian_mathsfdigitfamily_tl {Ligatures=PersianTeX,#1} {#2}
   \__xepersian_setmathsfdigitfont_hook:nn {#1} {#2}
       \DeclareSymbolFont{new@mathsf@font@digits}{\g_fontspec_encoding_tl}{\g__xepersian_mathsfdigitfamily_tl}{m}{n}
-      \__xepersian_mathsdigitspec_char_not_exist_error:n { #2 }
+      \__xepersian_mathdigitspec_char_not_exist_error:n { #2 }
     \def\persianmathsfdigits{\tl_set_eq:NN \mathsf \new@mathsf}
  }
 
@@ -6054,33 +6256,38 @@ indexblock environment may only appear inside frontpage environment.
   \fontspec_set_family:Nnn \g__xepersian_mathttdigitfamily_tl {Ligatures=PersianTeX,#1} {#2}
   \__xepersian_setmathttdigitfont_hook:nn {#1} {#2}
       \DeclareSymbolFont{new@mathtt@font@digits}{\g_fontspec_encoding_tl}{\g__xepersian_mathttdigitfamily_tl}{m}{n}
-      \__xepersian_mathsdigitspec_char_not_exist_error:n { #2 }
+      \__xepersian_mathdigitspec_char_not_exist_error:n { #2 }
     \def\persianmathttdigits{\tl_set_eq:NN \mathtt \new@mathtt}
  }
 
 \cs_set_eq:NN \__xepersian_setmathttdigitfont_hook:nn     \use_none:nn
 
 \ExplSyntaxOff
-\ifx\newcommand\undefined\else
-  \newcommand{\ZifferAn}{}
-\fi
-\mathchardef\ziffer@DotOri="013A
-{\ZifferAn
- \catcode`\.=\active\gdef.{\begingroup\obeyspaces\futurelet\n\ziffer@dcheck}}
-\def\ziffer@dcheck{\ziffer@check\ZifferLeer\ziffer@DotOri}
-\def\ziffer@check#1#2{%
-  \ifx\n1\endgroup#1\else
-    \ifx\n2\endgroup#1\else
-      \ifx\n3\endgroup#1\else
-        \ifx\n4\endgroup#1\else
-          \ifx\n5\endgroup#1\else
-            \ifx\n6\endgroup#1\else
-              \ifx\n7\endgroup#1\else
-                \ifx\n8\endgroup#1\else
-                  \ifx\n9\endgroup#1\else
-                    \ifx\n0\endgroup#1\else
-                     \ifx\n\overline\endgroup#1\else
-                      \endgroup#2%
+\mathchardef\decimalseparator@point="013A
+%{%
+% \catcode`\.=\active
+% \gdef.{\begingroup\obeyspaces\futurelet\@let@token\decimalseparator@pointcheck}}
+\bgroup
+  \uccode`\~`\.%
+  \uppercase{%
+\egroup
+  \def~}{\begingroup\obeyspaces\futurelet\@let@token\decimalseparator@pointcheck}
+\def\decimalseparator@pointcheck{\decimalseparator@check\MathDecimalSeparator\decimalseparator@point}
+\def\decimalseparator@check#1#2{%
+  \ifx\@let@token1\endgroup#1\else
+    \ifx\@let@token2\endgroup#1\else
+      \ifx\@let@token3\endgroup#1\else
+        \ifx\@let@token4\endgroup#1\else
+          \ifx\@let@token5\endgroup#1\else
+            \ifx\@let@token6\endgroup#1\else
+              \ifx\@let@token7\endgroup#1\else
+                \ifx\@let@token8\endgroup#1\else
+                  \ifx\@let@token9\endgroup#1\else
+                    \ifx\@let@token0\endgroup#1\else
+                     \ifx\@let@token\dot\endgroup#1\else
+                       \ifx\@let@token\overline\endgroup#1\else
+                         \endgroup#2%
+                       \fi
                     \fi
                   \fi
                 \fi
@@ -6093,48 +6300,79 @@ indexblock environment may only appear inside frontpage environment.
    \fi
  \fi}
 \mathcode`.="8000\relax
-\def\ZifferLeer{\ifx\decimalseparator\undefined .\else \decimalseparator\fi}
-\def\DefaultInlineMathsDigits{\def\SetInlineMathsDigits{}}
-\def\DefaultDisplayMathsDigits{\def\SetDisplayMathsDigits{}}
-\def\DefaultMathsDigits{%
-  \DefaultInlineMathsDigits%
-  \DefaultDisplayMathsDigits%
+\def\MathDecimalSeparator{\ifx\persiandecimalseparator\undefined .\else \persiandecimalseparator\fi}
+\def\DefaultMathDecimalSeparator{.}
+\def\DefaultInlineMathDigits{\def\SetInlineMathDigits{}}
+\def\DefaultDisplayMathDigits{\def\SetDisplayMathDigits{}}
+\def\DefaultMathDigits{%
+  \DefaultInlineMathDigits%
+  \DefaultDisplayMathDigits%
 }
-\def\PersianInlineMathsDigits{\def\SetInlineMathsDigits{%
-\ifx\persianmathsdigits\undefined\else\persianmathsdigits\fi%
+\def\PersianInlineMathDigits{\def\SetInlineMathDigits{%
+\ifx\persianmathdigits\undefined\else\persianmathdigits\fi%
 \ifx\persianmathsfdigits\undefined\else\persianmathsfdigits\fi%
 \ifx\persianmathttdigits\undefined\else\persianmathttdigits\fi}}
-\def\PersianDisplayMathsDigits{\def\SetDisplayMathsDigits{%
-\ifx\persianmathsdigits\undefined\else\persianmathsdigits\fi%
+\def\PersianDisplayMathDigits{\def\SetDisplayMathDigits{%
+\ifx\persianmathdigits\undefined\else\persianmathdigits\fi%
 \ifx\persianmathsfdigits\undefined\else\persianmathsfdigits\fi%
 \ifx\persianmathttdigits\undefined\else\persianmathttdigits\fi}}
-\def\PersianMathsDigits{%
-  \PersianInlineMathsDigits%
-  \PersianDisplayMathsDigits%
+\def\PersianMathDigits{%
+  \PersianInlineMathDigits%
+  \PersianDisplayMathDigits%
 }
-\def\AutoInlineMathsDigits{\def\SetInlineMathsDigits{%
-\ifx\persianmathsdigits\undefined\else\if@nonlatin\persianmathsdigits\fi\fi%
+\def\AutoInlineMathDigits{\def\SetInlineMathDigits{%
+\ifx\persianmathdigits\undefined\else\if@nonlatin\persianmathdigits\fi\fi%
 \ifx\persianmathsfdigits\undefined\else\if@nonlatin\persianmathsfdigits\fi\fi%
 \ifx\persianmathttdigits\undefined\else\if@nonlatin\persianmathttdigits\fi\fi}}
-\def\AutoDisplayMathsDigits{\def\SetDisplayMathsDigits{%
-\ifx\persianmathsdigits\undefined\else\if@nonlatin\persianmathsdigits\fi\fi%
+\def\AutoDisplayMathDigits{\def\SetDisplayMathDigits{%
+\ifx\persianmathdigits\undefined\else\if@nonlatin\persianmathdigits\fi\fi%
 \ifx\persianmathsfdigits\undefined\else\if@nonlatin\persianmathsfdigits\fi\fi%
 \ifx\persianmathttdigits\undefined\else\if@nonlatin\persianmathttdigits\fi\fi}}
-\def\AutoMathsDigits{%
-  \AutoInlineMathsDigits%
-  \AutoDisplayMathsDigits%
+\def\AutoMathDigits{%
+  \AutoInlineMathDigits%
+  \AutoDisplayMathDigits%
 }
-\AutoMathsDigits
-\everymath\expandafter{\the\everymath\SetInlineMathsDigits%
-  \let\SetDisplayMathsDigits\relax%
+\AutoMathDigits
+\everymath\expandafter{\the\everymath\SetInlineMathDigits%
+  \let\SetDisplayMathDigits\relax%
 }
 \everydisplay\expandafter{%
-  \the\everydisplay\SetDisplayMathsDigits%
-  \let\SetInlineMathsDigits\relax%
+  \the\everydisplay\SetDisplayMathDigits%
+  \let\SetInlineMathDigits\relax%
 }
+
+\ExplSyntaxOn
+\cs_new_eq:NN \orig_MathDecimalSeparator \MathDecimalSeparator
+
+\NewDocumentCommand \SwitchToDefaultMathDigits {  } {
+  \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
+    \SetMathCode{##1}{\mathalpha}{operators}{##1}
+  }
+  \SetMathCode{`\%}{\mathbin}{operators}{`\%}
+  \tl_set_eq:NN \MathDecimalSeparator \DefaultMathDecimalSeparator
+  \tl_set_eq:NN \mathbf \orig_mathbf:n
+  \tl_set_eq:NN \mathit \orig_mathit:n
+  \tl_set_eq:NN \mathrm \orig_mathrm:n
+  \tl_set_eq:NN \mathsf \orig_mathsf:n
+  \tl_set_eq:NN \mathtt \orig_mathtt:n
+}
+
+\NewDocumentCommand \SwitchToPersianMathDigits {  } {
+  \int_step_inline:nnnn { `0 } { \c_one_int } { `9 } {
+    \SetMathCode{##1}{\mathalpha}{OPERATORS}{##1}
+  }
+  \SetMathCode{`\%}{\mathbin}{OPERATORS}{`٪}
+  \tl_set_eq:NN \MathDecimalSeparator \orig_MathDecimalSeparator
+  \tl_set_eq:NN \mathbf \new@mathbf
+  \tl_set_eq:NN \mathit \new@mathit
+  \tl_set_eq:NN \mathrm \new@mathrm
+  \tl_set_eq:NN \mathsf \new@mathsf
+  \tl_set_eq:NN \mathtt \new@mathtt
+}
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
-%</xepersian-mathsdigitspec.sty>
+%</xepersian-mathdigitspec.sty>
 %<*xepersian-multiplechoice.sty>
 %\fi
 % \section{File \texttt{xepersian-multiplechoice.sty}}

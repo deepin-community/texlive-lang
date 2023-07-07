@@ -1,3 +1,4 @@
+
 % Usar XeLaTeX ou LuaLaTeX
 % acento nao sobrevive no arquivo temporario de showexpl
 % Use diretamente do arquivo externo, ou use XeLaTeX/LuaLaTeX
@@ -33,6 +34,16 @@
 %  \renewcommand{\@iffont@firstfont}{MS Mincho}
 %\makeatother
   
+%\ifXeTeX
+%  \ifx \IfFontExistsTF\undefined
+%    \let\IfFontExistsTF\iffontexists
+%  \fi
+%\else\ifLuaTeX
+  \ifx \IfFontExistsTF\undefined
+    \PackageError{\jobname}{fontspec is old}{Install updated fontspec package}
+  \fi
+%\fi\fi
+
 %\ifLuaTeX 
 
 % patch on iffont
@@ -89,16 +100,6 @@
 
 % versao antiga (2016) do fontspec ainda nao tem \IfFontExistsTF
 % precisa atualizar o fontspec
-
-%\ifXeTeX
-%  \ifx \IfFontExistsTF\undefined
-%    \let\IfFontExistsTF\iffontexists
-%  \fi
-%\else\ifLuaTeX
-  \ifx \IfFontExistsTF\undefined
-    \PackageError{\jobname}{fontspec is old}{Install updated fontspec package}
-  \fi
-%\fi\fi
 
 \IfFontExistsTF{\jafont}{}{\PackageError{\jobname}{Fonte japonês Mincho (\jafont) não encontrada.}{Instale um dos seguintes: Noto Serif CJK JP, MS Mincho, TakaoMincho, IPAexMincho, IPAMincho, Hiragino Mincho Pro}}
 \IfFontExistsTF{\jagothic}{}{\PackageError{\jobname}{Fonte japonês Gothic não encontrada.}{Instale um dos seguintes: Noto Sans CJK JP, MS Gothic, TakaoGothic, IPAexGothic, IPAGothic, Hiragino Maru Gothic Pro}}
@@ -184,6 +185,8 @@
 \usepackage{keyval}
 
 \usepackage{showexpl} % ele carrega listings
+% \usepackage{algorithmicx}
+\usepackage{algpseudocode} %  arquivo de estilo de algorithmicx
 
 %%% pacotes usados nos exemplos correspondentes
 %
@@ -234,6 +237,11 @@
 
 %% caixa colorida usada para exemplo de certificado.
 % \usepacakge{tcolorbox}
+
+%  Opção 'H' e criar float personalizado.
+%\usepackage{float} 
+%\newfloat{algorithm}{tbp}{loa}[chapter]
+% \floatname{algorithm}{Algorítimo}
 
 % bug no titlesec 2.10.1 remove enumeracao da secao (corrigido em 2.10.2 de 21/03/2016).
 % O Usuario de ubuntu 16.04 devem atualizar o titlesec
@@ -331,6 +339,7 @@
       @inbook,@incollectedbook,@incollection,@injournal,@inproceedings,%
       @manual,@mastersthesis,@misc,@patent,@periodical,@phdthesis,@preamble,%
       @proceedings,@standard,@string,@techreport,@unpublished%
+      % author, editor, publisher, year, url, urldate
       },
    comment=[l][\itshape]{@comment},
    sensitive=false,
@@ -877,7 +886,7 @@
 \providecommand{\square}{\openbox}
 
 % lmusrrache/rmustache não tem no Latin Modern Math
-% unicode math redfine no comeco do documento.
+% unicode math redefine no comeco do documento.
 % Portanto, deve redefinir no comeco do documento (não no preambulo)
 % usando \AtBeginDocument
 \DeclareSymbolFont{largesymbolsoriginal}{OMX}{cmex}{m}{n}  
@@ -948,10 +957,12 @@
 % Terceira atualização (0.5.3): junho de 2018.
 % Quarta atualização (0.5.4): agosto de 2019
 % Quinta atualização (0.5.6): dezembro de 2019 
-\date{Versão 0.5.7, 17 de julho de 2021}
+% Sexta atualização (0.5.7): julho de 2021 
+\date{Versão 0.5.8, 17 de maio de 2022}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
-% Docuemt start here
+% Documet start here
 \pagestyle{empty}
 \begin{document}
 
@@ -959,7 +970,7 @@
 
 \thispagestyle{empty}
 
-Copyright \textcopyright 2018--2021 por Sadao Massago. 
+Copyright \textcopyright 2018--2022 por Sadao Massago. 
 Todos os direitos reservados.
 Este documento é software livre; podendo ser redistribuído e/ou modificado de acordo com os termos da Licença Pública da GNU como publicado pela Free Software Foundation; versão 2 da Licença, ou (se for sua opção) qualquer versão posterior. 
 Veja \url{https://opensource.org/licenses/gpl-license}.
@@ -1047,8 +1058,8 @@ Apêndice~G descreve alguns aplicativos livres interessantes que auxilia os usu�
 % Sorocaba, junho de 2018.
 % Sorocaba, agosto de 2019.
 % Sorocaba, dezembro de 2019.
-Sorocaba, julho de 2021.
-
+% Sorocaba, julho de 2021.
+Sorocaba, maio de 2022.
 
 \
 
@@ -4418,11 +4429,12 @@ Muitas vezes, um contador está vinculado no outro e quando outro for incrementa
 Além disso, contadores vinculados aos outros imprimem dois valores (contador do outro mais dele).
 
 Este vínculo pode ser criado pelo comando
-\verb+\numberwithin{<contador>}{<pai>}+\index{numberwithin@\verb+\numberwithin+}. 
+\verb+\counterwithin{<contador>}{<pai>}+\index{counterwithin@\verb+\counterwithin+}. 
 Quando o \verb+<pai>+ for incrementado, o \verb+<contador>+ é reinicializado. 
-Por exemplo, para que a enumeração da equação seja da forma \texttt{<no. do capítulo>.<no da equação>}, basta colocar \verb+\numberwithin{equation}{chapter}+ no \texttt{preamble} do documento.
+Por exemplo, para que a enumeração da equação seja da forma \texttt{<no. do capítulo>.<no da equação>}, basta colocar \verb+\counterwithin{equation}{chapter}+ no \texttt{preamble} do documento.
+Observando que, para \LaTeX{} versão anterior a  2018/04/01, requer o pacote \texttt{chngcntr}.
 
-Para eliminar um vínculo, usa-se o comando \verb+\@removefromreset+\index{arrobaremovefromreset@\arrobasymbforindex\verb+removefromreset+}. Por exemplo, pare remover o vínculo do contador da equação com o contador da seção, coloque o código
+Para eliminar um vínculo, usa-se o comando \verb+\@removefromreset+\index{arrobaremovefromreset@\arrobasymbforindex\verb+removefromreset+}. Por exemplo, para remover o vínculo do contador da equação com o contador da seção, coloque o código
 
 \begin{singlespacing}
 \begin{lstlisting}
@@ -6274,6 +6286,58 @@ Veja o Exemplo~\ref{ex15:pdflscape}.
 %
 %rotating (sideways,sidewaysfigure,sidewaystable) ou lscape/pdflscape? OK
 
+\section{Criando ambientes tipo figuras e tabelas}
+
+O pacote \texttt{float}\index{float} permite criar elemento flutuante do tipo figuras e tabelas.
+O novo elemento flutuante é crido pelo comando \verb+\newfloat+\index{newfloat@\verb+\newfloat+}.
+O código
+\begin{singlespacing}
+%\begin{lstlisting}[caption={ex11-06.tex, parte d},label=ex:11-06:d]
+\begin{lstlisting}
+\newfloat{algorithm}{tbp}{loa}%[section]
+\floatname{algorithm}{Algorítmo}
+\end{lstlisting}
+\end{singlespacing}
+cria o ambiente \texttt{algorithm} que auto posiciona e aceita \verb+\caption+ dentro dele para enumerar e colocar o título. Veja o exemplo~\ref{ex15:newfloat}.
+
+\begin{singlespacing}
+%\begin{lstlisting}[caption={ex11-06.tex, parte d},label=ex:11-06:d]
+\begin{lstlisting}[caption={ex15-newfloat.tex},label=ex15:newfloat]
+\begin{algorithm}
+\caption{Primeiro algorítimo}
+Algorítimo aqui.
+\end{algorithm}
+\end{lstlisting}
+\end{singlespacing}
+%
+\begin{ltxlistingout}
+\begin{center}Algorítmo 1: Primeiro algorítimo\end{center}
+Algorítimo aqui.
+\end{ltxlistingout}
+
+A lista do novo elemento flutuante é criado pelo comando \verb+\listof+. Para listar algorítmos criados acima, usa-se o comando \verb+\listof{algorithm}{Lista de algorítmos}+
+
+Note que o elemento flutuante não pode dividir em páginas, sendo recomendado para figuras ou elementos menores. No caso do exemplo, o algorítimo pode ser maior, sendo recomendado dividir em páginas, como ocorre com a tabela longa. Para criar o ambiente do estilo \texttt{longtable} (tabela longa) na qual pode quebrar entre páginas, mas ficam enumeradas como os elementos flutuantes, usa-se o pacote \texttt{caption}\index{caption} que permite controlar capítulos dos elementos flutuantes e similares.
+O código
+%
+\begin{singlespacing}
+%\begin{lstlisting}[caption={ex11-06.tex, parte d},label=ex:11-06:d]
+\begin{lstlisting}
+% definindo o tipo algorítimo
+\DeclareCaptionType{algorithmtype}[Algorítimo][Lista de algorítimos]
+% ambiente algorítmo configura o caption para tipo algorítimo
+\newenvironment{algorithm}{\captionsetup{type=algorithmtype}}{}
+%{\captionsetup{type=algorithmtype,justification=centering}}{}
+% atalho para lista de algoritmos
+\newcommand\listofalgorithms\listofalgorithmtypes
+% contador subordinado a capítulo
+\usepackage{chngcntr} % não e necessário a partir de  2018/04/01
+\counterwithin{algorithmtype}{chapter}
+\end{lstlisting}
+\end{singlespacing}
+%
+Cria o ambiente \texttt{algorithm} similar a \texttt{longtable}.
+
 \section{Escrevendo medidas internacionais}
 
 Para escrever medidas, requer alguns cuidados tais como usar letra romana reta (por ser abreviatura da palavra), ter pequeno espaço entre valor e medida, entre outros.
@@ -6390,7 +6454,7 @@ A configuração geral de formatação pode ser feito pela opção do pacote ou 
 %\end{LTXexample}
 %\end{singlespacing}
 
-\section{Enfeites e código fontes}
+\section{Moldura, enumeração das linhas e marca d'água}
 Para enfeitar o documento, como colocar moldura nos elementos, usamos os pacotes adicionais, exceto molduras simples fornecidos pelo \verb+\fbox+\index{fbox@\verb+\fbox+}.
 
 O pacote \texttt{fancybox}\index{fancybox} oferece caixas com molduras extras tais como \verb+\shadowbox+\index{shadowbox@\verb+\shadowbox+} (com sombra), \verb+doublebox+\index{doublebox@\verb+\doublebox+} (moldura dupla) e \verb+\ovalbox+\index{ovalbox@\verb+\ovalbox+} (moldura com quinas arredondadas).
@@ -6628,9 +6692,92 @@ Para limpar o fundo, usa-se o \verb+\ClearShipoutPictureBG+\index{ClearShipoutPi
 
 Os comandos do \texttt{eso-pic} tem a versão ``BG'' para atrás da página como marca d'agua e versão ``FG'' para colocar na frente da página. Por exemplo, \verb+\AddToShipoutPictureFG+\index{AddToShipoutPictureFG@\verb+\AddToShipoutPictureFG+} coloca na frente em vez de trás da página.
 
-Para colocar código fonte de um programa, costuma usar o pacote \texttt{listings}\index{listings} que implementa o ambiente \texttt{lstlisting}\index{lstlisting} na qual formata o código de acordo com a linguagem de programação escolhida.
+\section{Algorítmo e código fonte}
 
-Ele já vem com configurações para diversas idiomas,  tais como \texttt{Ada}, \texttt{Algol}, \texttt{Assember}, \texttt{awk}, \texttt{bash}, \texttt{Basic}, \texttt{C\#}, \texttt{C++}, \texttt{C}, \texttt{Cobol}, \texttt{Delphi}, \texttt{Fortran}, \texttt{Gnuplot}, \texttt{HTML}, \texttt{Java}, \texttt{Lisp}, \texttt{Logo}, \texttt{Lua}, \texttt{Make}, \texttt{Mathematica}, \texttt{Matlab}, \texttt{Metapost}, \texttt{Modula-2}, \texttt{Objective C}, \texttt{Octave}, \texttt{Pascal}, \texttt{Perl}, \texttt{PHP}, \texttt{Prolog}, \texttt{Python}, \texttt{R}, \texttt{Ruby}, \texttt{SAS}, \texttt{Scilab}, \texttt{sh}, \texttt{SQL}, \texttt{TeX}, \texttt{XML}, entre vários outros.
+Para algoritmos, poderá usar o pacote \texttt{algorithmicx}\index{algorithmicx} que destaca entre pacotes com mesma finalidade, por poder configurar a forma como será exibido. Para usar, carrege o pacote \texttt{algpseudocode}\index{algpseudocode} que carregará o pacote \texttt{algoritmicx} e define estilo para pseudo código.
+%
+%Para que algoritmos sejam tratados como elemento flutuante, poderá criar o ambiente usando o pacote \texttt{float}\index{float}, colocando o código similar a que segue, no preambulo.
+%
+%\begin{singlespacing}
+%\begin{lstlisting}
+%\usepackage{float}
+%% criando algoritmo flutuante
+%\newfloat{algorithm}{tbp}{loa}[section]
+%\floatname{algorithm}{Algorítmmo}
+%\end{lstlisting}
+%\end{singlespacing}
+%%
+%Assim, o ambiente criado \texttt{algorithmm} ficam auto posicionadas e enumeradas. Para listar os algorítmmos, use o comando \verb+\listof{algorithm}{Lista de algorítimos}+.
+%Nte que, colocar como elemento flutuante não é recomendável para código mais longo.
+%
+%Para código maais longo, use o pacote \texttt{caption}
+%para colocar titulo e enumeração com \textt{captionof}.
+%
+Veja o Exemplo~\ref{ex15:alg}
+%\begin{singlespacing}
+\begin{ltxlisting}[caption={ex15-alg.tex},label=ex15:alg]
+  \begin{algorithmic}[1] % iniciar enumeração das linhas
+     \Procedure{DotProd}{$u,v$} \Comment{Produto interno de u e v}
+       \State $p\gets 0$ \Comment{Inicializa como 0}
+       \For{$i\gets 1,\ldots, n$}
+         \State $p \gets p + u_i*v_i$
+       \EndFor
+       \State \textbf{return} $p$\Comment{retorna o valor}
+     \EndProcedure
+   \end{algorithmic}
+\end{ltxlisting}
+%\end{singlespacing}
+%
+%\begin{ltxlistingout}
+%  \begin{center}Algorítmo 1.1: produto interno\end{center}
+%  \begin{algorithmic}[1] % iniciar enumeração das linhas
+%     \Procedure{DotProd}{$u,v$} \Comment{Produto interno de u e v}
+%       \State $p\gets 0$ \Comment{Inicializa como 0}
+%       \For{$i\gets 1,\ldots, n$}
+%         \State $p \gets p + u_i*v_i$
+%       \EndFor
+%       \State \textbf{return} $p$\Comment{retorna o valor}
+%     \EndProcedure
+%   \end{algorithmic}
+%\end{ltxlistingout}
+%
+Como o pacote usa a palavra-chave em inglês, pode querer traduzir para português. Para isso, use o comando \verb+\algrenewcommand+\index{algrenewcommand@\verb+\algrenewcommand+} para redefinir palavra-chaves no preambulo do documento.
+
+Por exemplo, o código
+%
+\begin{singlespacing}
+\begin{lstlisting}
+\usepackage{algpseudocode}
+% traduzindo a palavras-chave
+\algrenewcommand\algorithmicprocedure{\textbf{procedimento}}
+\algrenewcommand\algorithmicfor{\textbf{para}}
+\algrenewcommand\algorithmicdo{\textbf{faça}}
+\algrenewcommand\algorithmicend{\textbf{fim}}
+\end{lstlisting}
+\end{singlespacing}
+%
+traduzirá a palavra-chaves do algoritmo anterior para português brasileiro. Ajustando o ``return'' para ``retorne'', terá a saída
+\begin{singlespacing}
+\algrenewcommand\algorithmicprocedure{\textbf{procedimento}}
+\algrenewcommand\algorithmicfor{\textbf{para}}
+\algrenewcommand\algorithmicdo{\textbf{faça}}
+\algrenewcommand\algorithmicend{\textbf{fim}}
+\begin{ltxlistingout}
+  \begin{algorithmic}[1] % iniciar enumeração das linhas
+     \Procedure{DotProd}{$u,v$} \Comment{Produto interno de u e v}
+       \State $p\gets 0$ \Comment{Inicializa como 0}
+       \For{$i\gets 1,\ldots, n$}
+         \State $p \gets p + u_i*v_i$
+       \EndFor
+       \State \textbf{retorne} $p$\Comment{retorna o valor}
+     \EndProcedure
+   \end{algorithmic}
+\end{ltxlistingout}
+\end{singlespacing} 
+
+O Pacote \texttt{algorithmicx} vem com mais dois estilos que são para linguagem Pascal e C, mas para colocar código fonte de um programa, costuma usar o pacote \texttt{listings}\index{listings} que implementa o ambiente \texttt{lstlisting}\index{lstlisting} na qual formata o código de acordo com a linguagem de programação escolhida.
+
+Ele já vem com configurações para diversas idiomas,  tais como \texttt{Ada}, \texttt{Algol}, \texttt{Assember}, \texttt{awk}, \texttt{bash}, \texttt{Basic}, \texttt{C\#}, \texttt{C++}, \texttt{C}, \texttt{Cobol}, \texttt{Delphi}, \texttt{Fortran}, \texttt{Gnuplot}, \texttt{HTML}, \texttt{Java}, \texttt{Lisp}, \texttt{Logo}, \texttt{Lua}, \texttt{Make}, \texttt{Mathematica}, \texttt{Matlab}, \texttt{Metapost}, \texttt{Modula-2}, \texttt{Objective C}, \texttt{Octave}, \texttt{Pascal}, \texttt{Perl}, \texttt{PHP}, \texttt{Prolog}, \texttt{Python}, \texttt{GNU R}, \texttt{Ruby}, \texttt{SAS}, \texttt{Scilab}, \texttt{sh}, \texttt{SQL}, \texttt{TeX}, \texttt{XML}, entre vários outros.
 Se a linguagem pretendida não estiver na lista, poderá definir novos idiomas.
  
 Para o seu uso, costuma efetuar configurações iniciais no \texttt{preamble} com o comando \verb+\lstset+\index{lstset@\verb+\lstset+} e no ambiente de \texttt{lstlisting}, efetuar mais alguns ajustes se necessário.
@@ -7486,6 +7633,26 @@ Veja Exemplo~\ref{ex16:tikz:pintar}.
 %\end{LTXexample}
 %\end{singlespacing}
 
+Para traçar grades, existe o comando \texttt{grid}\index{grid}. O Exemplo~\ref{ex16:tikz:grid} ilustra o seu uso para produzir papel milimetrado, cuja saída será omitida.
+%
+\begin{singlespacing}
+\begin{lstlisting}[caption={ex16-tikz-grid.tex}, label=ex16:tikz:grid]
+\begin{center}
+\documentclass[a4paper]{article} 
+% A4: 21cmx29.7cm
+\usepackage[a4paper,lmargin=0.5cm,textheight=28.05cm,textwidth=19.05cm]{geometry}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}
+\draw [black!20, very thin, step=0.1cm] (0,0) grid (19,28);
+\draw [black!20, step=0.5cm] (0,0) grid (19,28);
+\draw [black!20, step=1.0cm, thick] (0,0) grid (19,28);
+\end{tikzpicture}
+\end{document}
+\end{center}
+\end{lstlisting}
+\end{singlespacing}
+%
 Na matriz do \texttt{tikz}, podemos desenhar sobre ele.
 Veja Exemplo~\ref{ex16:tikz:matriz}.
 
@@ -8307,7 +8474,7 @@ A sua saída será omitida aqui.
 % Desabilitando ou redefinindo comandos que causa erros no bookmark do PDF
 \pdfstringdefDisableCommands{%
   \let\MakeUppercase\relax% desabilitando
-  \def\\{ }%quebra de linha será substituído pelo espaço
+  % \\ e \and já é tratada adequadamente em ABNT2
 }
 \usepackage{pdfpages} % para incluir documento PDF (ex.: folha de aprovação)
 \usepackage{indentfirst} % se quer que o primeiro parágrafo seja indentada
@@ -8414,9 +8581,8 @@ Resumo em língua estrangeira (obrigatório no ABNT).
 % CONTEÚDO PRINCIPAL
 \clearpage\thispagestyle{empty}\cleardoublepage
 \mainmatter % ou \textual
-\phantomsection%\pdfbookmark[chapter]{Prefácio}{prefacio}
-\addcontentsline{toc}{chapter}{\MakeUppercase{Prefácio}}
-\chapter*{Prefácio} % % prefácio (ou apresentação) é opcional no ABNT
+% Como já é conteúdo textual, capítulos serão enumerados.
+\chapter{Prefácio} % % prefácio (ou apresentação) é opcional no ABNT
 Prefácio aqui. Se preferir, pode incorporar na introdução.
 \clearpage\thispagestyle{empty}\cleardoublepage
 \chapter{Introdução}
@@ -11857,13 +12023,13 @@ Assim, não foi incluído detalhes sobre caixas e similares.
 Para quem pretende criar comandos e ambientes complexos ou desenvolver pacotes, o conhecimento sobre caixas é importante. 
 Para este assunto, recomendo a leitura de outro material tais como \cite{book:oeticker:2018} e \cite{book:wikibook:latex}.
 
-Neste texto, foram apresentados pacotes e classes mais utilizados, mas vários pacotes e classes populares foram omitidos.
+Neste texto, foram apresentados alguns dos pacotes e classes mais utilizados, mas vários pacotes e classes populares foram omitidos.
 
 Por exemplo, quem trabalha com fórmulas complexas, é recomendável que considere o uso do pacote \texttt{mathtools}\index{mathtools} que resolve algumas deficiências do pacote \texttt{amsmath}.
 Para criar ficha catalográfica, é interessante colocar o número total de páginas usando o pacote \texttt{lastpage}\index{lastpage}.
 Para inserir uma ou mais páginas diretamente no documento em vez de inserir como figuras, usa-se o pacote \texttt{pdfpages}.
 Quem trabalha com tabelas, pode precisar do pacote \texttt{multirow}\index{multirow} para mesclar linhas, além de vários pacotes específicos para tabelas omitidos neste documento.
-%Para elaborar livros: koma script, memoir, tufte-latex, bookest, willowtreebook, octavo, ElegantBook (templates), ycbook, nostarch, simplivre
+%Para elaborar livros: koma script, memoir, tufte-latex, bookest, willowtreebook, octavo, ElegantBook (templates), ycbook, nostarch, simplivre (multilingue), beaulivre (multilingue, colorido)
 Ainda existem pacotes específicos para xadrez, diagrama química, música, etc, além dos pacotes destinados para cada tipo de ajustes.
 
 %A lista dos pacotes interessantes são longas.

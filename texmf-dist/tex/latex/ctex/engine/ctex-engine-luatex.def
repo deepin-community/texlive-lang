@@ -6,7 +6,7 @@
 %%
 %% ctex.dtx  (with options: `luatex')
 %% 
-%%     Copyright (C) 2003--2021
+%%     Copyright (C) 2003--2022
 %%     CTEX.ORG and any individual authors listed in the documentation.
 %% ---------------------------------------------------------------------
 %% 
@@ -24,10 +24,10 @@
 %% 
 %% ---------------------------------------------------------------------
 %% 
-\GetIdInfo$Id: ctex.dtx 6604451 2021-06-20 17:08:49 +0800 Qing Lee <sobenlee@gmail.com> $
+\GetIdInfo$Id: ctex.dtx 13a2256 2022-07-14 18:54:09 +0800 Qing Lee <sobenlee@gmail.com> $
   {LuaLaTeX adapter (CTEX)}
 \ProvidesExplFile{ctex-engine-luatex.def}
-  {\ExplFileDate}{2.5.7}{\ExplFileDescription}
+  {\ExplFileDate}{2.5.10}{\ExplFileDescription}
 \msg_new:nnn { ctex } { luatexja-loaded }
   {
     Package~`luatexja'~can~not~be~loaded~before~`ctex'.\\
@@ -37,9 +37,9 @@
   { \msg_critical:nnx { ctex } { luatexja-loaded } { \g_file_curr_name_str } }
   {
     \ctex_at_begin_package:nn { luatexja }
-      { \msg_redirect_name:nnn { ctex } { disable-package } { info } }
+      { \msg_redirect_name:nnn { ctexhook } { disable-package } { info } }
     \ctex_at_end_package:nn { luatexja }
-      { \msg_redirect_name:nnn { ctex } { disable-package } { } }
+      { \msg_redirect_name:nnn { ctexhook } { disable-package } { } }
     \ctex_disable_package:n { ltj-latex }
   }
 \RequirePackage { luatexja }
@@ -168,20 +168,30 @@
 \char_set_catcode_space:n { 32 }
 \lua_now:e
   {
-    local func = lua.get_functions_table()
+    ctex = ctex or { }
+    local ctex = ctex
+    local functions = lua.get_functions_table()
+    local new_luafunction = luatexbase.new_luafunction
+    local create, set_lua = token.create, token.set_lua
+    local lua_cmds = {
+      lua_call            = true ,
+      lua_expandable_call = true ,
+    }
+    local newluacmd = function (name, func, ...)
+      local tok = create(name)
+      local id = lua_cmds[tok.cmdname] and tok.index
+      local id = id or new_luafunction(name)
+      set_lua(name, id, ...)
+      functions[id] = func
+    end
+    ctex.newluacmd = newluacmd
     local ltjfont = luatexja.jfont
     local getattribute = tex.getattribute
-    local set_lua = token.set_lua
+    local tex_set, sprint = tex.set, tex.sprint
     local scan_int, scan_arg = token.scan_int, token.scan_argument
-    local new_luafunction = luatexbase.new_luafunction
-    local id = new_luafunction("ctex")
-    func[id] = ltjfont.add_kyenc_list
-    set_lua("ctex_ltj_add_kyenc:n", id, "global", "protected")
-    local id = new_luafunction("ctex")
-    func[id] = ltjfont.is_kenc
-    set_lua("ctex_ltj_is_kenc:n", id, "global")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    newluacmd("ctex_ltj_add_kyenc:n", ltjfont.add_kyenc_list, "global", "protected")
+    newluacmd("ctex_ltj_is_kenc:n", ltjfont.is_kenc, "global")
+    newluacmd("ctex_ltj_patch_external_font:n", function ()
       local s = scan_arg()
       local is_braced, is_quoted
       if s:sub(1,1) == '{' and s:sub(-1)=='}' then
@@ -194,57 +204,34 @@
       if     is_braced then s = '{'..s..'}'
       elseif is_quoted then s = '"'..s..'"'
       end
-      tex.sprint(-2, s)
-    end
-    set_lua("ctex_ltj_patch_external_font:n", id, "global")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
-      font.current(getattribute("ltj@curjfnt"))
-    end
-    set_lua("ctex_ltj_use_jfont:", id, "global", "protected")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+      sprint(-2, s)
+    end, "global")
+    newluacmd("ctex_ltj_set_alt_font:nnnn", function ()
       local b = tonumber(scan_arg())
       local e = tonumber(scan_arg())
       local alt  = scan_arg()
       local base = scan_arg()
       ltjfont.set_alt_font_latex(b, e, alt, base)
-    end
-    set_lua("ctex_ltj_set_alt_font:nnnn", id, "global", "protected")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    end, "global", "protected")
+    newluacmd("ctex_ltj_clear_alt_font:n", function ()
       local base = scan_arg()
       ltjfont.clear_alt_font_latex(base)
-    end
-    set_lua("ctex_ltj_clear_alt_font:n", id, "global", "protected")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    end, "global", "protected")
+    newluacmd("ctex_ltj_pickup_alt_font:nn", function ()
       local base = scan_arg()
       local size = scan_arg()
       ltjfont.output_alt_font_cmd("y", base)
       ltjfont.pickup_alt_font_a(size)
-    end
-    set_lua("ctex_ltj_pickup_alt_font:nn", id, "global", "protected")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
+    end, "global", "protected")
+    newluacmd("__ctex_ltj_pickup_alt_font:Nn", function ()
       local num  = scan_int()
       local base = scan_arg()
       ltjfont.pickup_alt_font_b(num, base)
-    end
-    set_lua("__ctex_ltj_pickup_alt_font:Nn", id, "global", "protected")
-    local id = new_luafunction("ctex")
-    func[id] = \LuaTeXjaversion > 20200412.0
-      and ltjfont.does_alt_set
-      or  function ()
-            local base = scan_arg()
-            ltjfont.does_alt_set(base)
-          end
-    set_lua("__ctex_ltj_if_alt_set:nT", id, "global")
-    local id = new_luafunction("ctex")
-    func[id] = function ()
-      tex.set("globaldefs", 0)
-    end
-    set_lua("ctex_ltj_zero_globaldefs:", id, "global", "protected")
+    end, "global", "protected")
+    newluacmd("__ctex_ltj_if_alt_set:nT", ltjfont.does_alt_set, "global")
+    newluacmd("ctex_ltj_zero_globaldefs:", function ()
+      tex_set("globaldefs", 0)
+    end, "global", "protected")
   }
 \group_end:
 \cs_new_protected:Npn \ctex_ltj_select_font:
@@ -262,7 +249,8 @@
     \group_begin:
       \tl_set_eq:NN \f@encoding \CJK@encoding
       \tl_set_eq:NN \f@family \CJK@family
-      \__ctex_ltj_push_fontname:n { \use:c { \curr@fontshape / \f@size } }
+      \cs_set_eq:NN \pickup@font \ctex_ltj_pickup_font:
+      \__ctex_ltj_push_fontname:n { \curr@fontshape / \f@size }
       \ctex_ltj_pickup_font:
     \group_end:
     \font@name
@@ -273,12 +261,12 @@
 \cs_new_protected:Npn \__ctex_ltj_push_fontname:n #1
   {
     \seq_gpush:No \g__ctex_ltj_fontname_seq { \font@name }
-    \cs_gset_nopar:Npx \font@name {#1}
+    \tl_gset:Nx \font@name { \exp_not:c {#1} }
   }
 \cs_new_protected:Npn \__ctex_ltj_pop_fontname:
   {
     \seq_gpop:NNT \g__ctex_ltj_fontname_seq \l__ctex_ltj_tmp_tl
-      { \cs_gset_eq:NN \font@name \l__ctex_ltj_tmp_tl }
+      { \tl_gset_eq:NN \font@name \l__ctex_ltj_tmp_tl }
   }
 \seq_new:N \g__ctex_ltj_fontname_seq
 \cs_new_protected:Npn \ctex_ltj_pickup_font:
@@ -307,6 +295,8 @@
     \use:c { \f@encoding + \f@family }
     \use:c { \curr@fontshape }
   }
+\cs_new_protected_nopar:Npn \ctex_ltj_use_jfont:
+  { \tex_setfontid:D \ltj@curjfnt }
 \cs_new_protected_nopar:Npn \ctex_ltj_subst_font:
   {
     \ctex_ltj_if_alternate_shape_exist:nF { \curr@fontshape }
@@ -351,7 +341,7 @@
       {
         \group_begin:
           \use:e { \exp_not:N \split@name #1 / \f@size } \@nil
-          \__ctex_ltj_push_fontname:n { \use:c { \curr@fontshape / \f@size } }
+          \__ctex_ltj_push_fontname:n { \curr@fontshape / \f@size }
           \ctex_ltj_pickup_font:
         \group_end:
         \__ctex_ltj_pop_fontname:
@@ -365,7 +355,7 @@
 \cs_new:Npn \ctex_ltj_if_jfont:nTF #1
   {
     \ctex_ltj_is_kenc:n { \__ctex_ltj_ltj_if_jfont:w #1 / \q_stop }
-    \ifin@ \exp_after:wN \use_i:nn \else: \exp_after:wN \use_ii:nn \fi:
+    \legacy_if:nTF { in@ }
   }
 \cs_new:Npn \__ctex_ltj_ltj_if_jfont:w #1 / #2 \q_stop
   {#1}
@@ -440,15 +430,27 @@
           \__um_input_math_symbol_table:
       }
   }
-\cs_new_protected:Npn \ctex_mono_jfm:n #1
+\cs_new_protected:Npn \ctex_set_jfm:n #1
   {
-    \str_if_eq:nnTF {#1} { plain }
-      { \tl_set:Nn \l__ctex_ltj_jfm_tl { mono } }
+    \prop_get:NnNF \l__ctex_ltj_redirect_jfm_prop {#1} \l__ctex_ltj_jfm_tl
       { \tl_set:Nn \l__ctex_ltj_jfm_tl {#1} }
   }
+\cs_generate_variant:Nn \ctex_set_jfm:n { o }
+\prop_new:N \l__ctex_ltj_redirect_jfm_prop
+\prop_set_from_keyval:Nn \l__ctex_ltj_redirect_jfm_prop
+  {
+    plain    = mono ,
+    quanjiao = zh_CN / quanjiao ,
+    banjiao  = zh_CN / banjiao ,
+    kaiming  = zh_CN / kaiming
+  }
+\keys_define:nn { ctex_ltj / fontspec }
+  {
+    JFM           .code:n = \ctex_set_jfm:n {#1} ,
+    JFM .value_required:n = true
+  }
 \tl_new:N \l__ctex_ltj_jfm_tl
-\cs_generate_variant:Nn \ctex_mono_jfm:n { o }
-\ctex_mono_jfm:o { \l__ctex_punct_tl }
+\ctex_set_jfm:o { \l__ctex_punct_tl }
 \tl_const:Nn \CJK@encoding { LTJY3 }
 \DeclareFontEncoding { \CJK@encoding } { } { }
 \use:e
@@ -1178,40 +1180,43 @@
       { \exp_not:o { \CTEX@selectfont@hook #1 } }
   }
 \cs_new_eq:NN \CTEX@selectfont@hook \prg_do_nothing:
-\if_bool:N \c__ctex_everysel_loaded_bool
-  \if_cs_exist:N \@EverySelectfont@Init
-    \group_begin:
-      \cs_set:Npn \__ctex_tmp:N #1
-        {
-          \tl_set:Nn \l__ctex_tmp_tl {#1}
-          \cs_new_eq:NN \CTEX@selectfont@save #1
-          \cs_new_protected:Npn \__ctex_restore_selectfont:
-            {
-              \cs_if_free:NF \scr@new@selectfont
-                {
-                  \cs_set_eq:NN \scr@new@selectfont #1
-                  \cs_set_eq:NN \CTEX@selectfont@save \scr@selectfont
-                }
-              \tl_put_left:Nn \@EverySelectfont@Init
-                { \cs_set_eq:NN #1 \CTEX@selectfont@save }
-              \cs_undefine:N \__ctex_restore_selectfont:
-            }
-        }
-      \ctex_parse_name:NN \__ctex_tmp:N \selectfont
-    \exp_last_unbraced:NNo \group_end:
-    \ctex_patch_cmd_once:NnnnTF { \l__ctex_tmp_tl }
-      { \ExplSyntaxOff }
-      { \size@update }
-      { \CTEX@selectfont@hook \size@update }
-      { \__ctex_restore_selectfont: }
-      { \ctex_patch_failure:N \selectfont }
-  \fi:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \EverySelectfont }
-\else:
-  \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
-    { \ctex_gadd_ltxhook:nn { selectfont } }
-\fi:
+\bool_if:NTF \c__ctex_everysel_loaded_bool
+  {
+    \cs_if_free:NF \@EverySelectfont@Init
+      {
+        \group_begin:
+        \cs_set:Npn \__ctex_tmp:N #1
+          {
+            \tl_set:Nn \l__ctex_tmp_tl {#1}
+            \cs_new_eq:NN \CTEX@selectfont@save #1
+            \cs_new_protected:Npn \__ctex_restore_selectfont:
+              {
+                \cs_if_free:NF \scr@new@selectfont
+                  {
+                    \cs_set_eq:NN \scr@new@selectfont #1
+                    \cs_set_eq:NN \CTEX@selectfont@save \scr@selectfont
+                  }
+                \tl_put_left:Nn \@EverySelectfont@Init
+                  { \cs_set_eq:NN #1 \CTEX@selectfont@save }
+                \cs_undefine:N \__ctex_restore_selectfont:
+              }
+          }
+        \ctex_parse_name:NN \__ctex_tmp:N \selectfont
+      \exp_last_unbraced:NNo \group_end:
+      \ctex_patch_cmd_once:NnnnTF { \l__ctex_tmp_tl }
+        { \ExplSyntaxOff }
+        { \size@update }
+        { \CTEX@selectfont@hook \size@update }
+        { \__ctex_restore_selectfont: }
+        { \ctex_patch_failure:N \selectfont }
+      }
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \EverySelectfont }
+  }
+  {
+    \cs_new_protected:Npn \ctex_gadd_selectfont_hook:n
+      { \ctex_gadd_ltxhook:nn { selectfont } }
+  }
 \ctex_gadd_selectfont_hook:n { \CTEX@selectfont@hook }
 \ctex_add_to_selectfont:n
   {
@@ -1247,17 +1252,14 @@
     local fmt = luatexja.jfont.font_metric_table
     local getattribute = tex.getattribute
     local setdimen = tex.setdimen
-    local func = lua.get_functions_table()
-    local id = luatexbase.new_luafunction("ctex")
-    func[id] = function ()
+    ctex.newluacmd("ctex_update_kanjisize:", function ()
       local ft = fmt[getattribute("ltj@curjfnt")] or nulltable
       local ft = ft and ft.char_type or nulltable
       local fk = ft and ft[0] or nulltable
       setdimen("cht", fk.height or 0)
       setdimen("cdp", fk.depth or 0)
       setdimen("cwd", fk.width or ft.zw or 0)
-    end
-    token.set_lua("ctex_update_kanjisize:", id, "global", "protected")
+    end, "global", "protected")
   }
 \group_end:
 \ctex_add_to_selectfont:n { \ctex_update_kanjisize: }
@@ -1271,7 +1273,7 @@
     punct .code:n =
       {
         \tl_set:Nx \l__ctex_punct_tl {#1}
-        \ctex_mono_jfm:o { \l__ctex_punct_tl }
+        \ctex_set_jfm:o { \l__ctex_punct_tl }
       } ,
     punct .default:n = { quanjiao } ,
   }

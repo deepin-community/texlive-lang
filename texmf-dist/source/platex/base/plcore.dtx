@@ -3,7 +3,7 @@
 %
 %  Copyright 1994-2001 ASCII Corporation.
 %  Copyright (c) 2010 ASCII MEDIA WORKS
-%  Copyright (c) 2016-2021 Japanese TeX Development Community
+%  Copyright (c) 2016-2022 Japanese TeX Development Community
 %
 %  This file is part of the pLaTeX2e system (community edition).
 %  -------------------------------------------------------------
@@ -81,14 +81,14 @@
 %    ように\cs{language}を設定(sync with ltmiscen.dtx 2017/03/09 v1.1m)}
 % \changes{v1.2n}{2017/04/23}{ドキュメントの追加}
 % \changes{v1.2o}{2017/05/03}{行頭禁則文字の直前でも改行するようにした}
-% \changes{v1.2p}{2017/07/21}{tabular環境のセル内のJFMグル―を削除}
+% \changes{v1.2p}{2017/07/21}{tabular環境のセル内のJFMグルーを削除}
 % \changes{v1.2q}{2017/08/25}{\cs{nolinebreak}の場合に\cs{(x)kanjiskip}が
 %    入らなくなっていたのを修正}
 % \changes{v1.2r}{2017/09/26}{tabular環境の右揃え(r)で罫線がずれるように
 %    なっていたバグを修正}
 % \changes{v1.2s}{2017/09/27}{相互参照のスペースファクターを補正}
 % \changes{v1.2s}{2017/09/27}{\cs{verb}の冒頭の半角空白を保持}
-% \changes{v1.2s}{2017/09/27}{tabbing環境の行冒頭のJFMグル―を削除}
+% \changes{v1.2s}{2017/09/27}{tabbing環境の行冒頭のJFMグルーを削除}
 % \changes{v1.2t}{2017/10/31}{v1.2sの変更に伴い、\cs{ref}が数式モードで
 %    エラーになっていたのを修正}
 % \changes{v1.2u}{2017/11/04}{emathの\cs{marusuuref}対策}
@@ -135,15 +135,18 @@
 % \changes{v1.3i}{2021/03/25}{\cs{@outputpage}, \cs{@vtryfc}での、非横組時における
 %    \cs{@outputbox}の寸法補正のコードを別命令として切り出した}
 % \changes{v1.3j}{2021/06/03}{巻戻しコードのエラー修正}
+% \changes{v1.3k}{2021/06/28}{内部Unicodeの時のみを検出}
+% \changes{v1.3l}{2021/12/08}{\LaTeXe~2021-11-15に伴う修正}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plcore.dtx}[2021/06/03 v1.3j pLaTeX core file]
+\ProvidesFile{plcore.dtx}[2021/12/08 v1.3l pLaTeX core file]
 % \iffalse
-\documentclass{jltxdoc}
+\RequirePackage{plautopatch}
+\documentclass[dvipdfmx,a4paper]{jltxdoc}
 \GetFileInfo{plcore.dtx}
 \title{p\LaTeXe{}の拡張\space\fileversion}
 \author{Ken Nakano \& Hideaki Togashi}
@@ -268,6 +271,7 @@
 % が得られます（最初の\verb+\removejfmglue+は結果的に何もしていません）。
 % \changes{v1.2x}{2018/03/01}{JFMグルーノードを削除するマクロ追加}
 % \changes{v1.3}{2018/09/02}{\cs{removejfmglue}の挙動を明文化}
+% \changes{v1.3k}{2021/06/28}{内部Unicodeの時のみを検出}
 %    \begin{macrocode}
 %<platexrelease>\plIncludeInRelease{2018/03/09}%
 %<platexrelease>                   {\removejfmglue}{Macro added}%
@@ -278,7 +282,7 @@
   \let\removejfmglue\@undefined
 \else
   \setbox0\hbox{%
-    \ifdefined\ucs %% upTeX check
+    \ifnum\jis"2121="3000 %% upTeX check
       \jfont\tenmin=upjisr-h at 9.62216pt
     \else
       \jfont\tenmin=min10
@@ -372,7 +376,7 @@
 % もし|\null|の代わりに|\hskip\z@|を挿入すれば、\LaTeX{}と同様に
 % Underfull警告を出すことができます。
 % ただし、|\null|を挿入した場合と異なり、強制改行後の行頭に
-% JFMグル―が入らなくなります。これはむしろ、奥村さんのjsclassesで
+% JFMグルーが入らなくなります。これはむしろ、奥村さんのjsclassesで
 % 行頭を天ツキに直しているのと同じですが、p\LaTeX{}としては挙動が
 % 変化してしまいますので、現時点では|\null|→|\hskip\z@|への変更を
 % 見送っています。
@@ -396,7 +400,7 @@
 % \LaTeX{}の定義のままではマクロによるペナルティ$-10000$と
 % 行頭文字のペナルティ$10000$が加算されてしまうため、
 % |\hskip\z@\relax|を入れておきます。なお、|\linebreak|を発行して
-% 行分割が起きた場合、新しい行頭のJFMグル―は消えるという従来の
+% 行分割が起きた場合、新しい行頭のJFMグルーは消えるという従来の
 % p\LaTeX{}の挙動も維持しています。
 % \changes{v1.2o}{2017/05/03}{行頭禁則文字の直前でも改行するようにした}
 %
@@ -1894,9 +1898,11 @@
 % \changes{v1.0a}{1995/04/07}{組方向の判定をボックスの外でするようにした}
 % \changes{v1.3h}{2021/03/14}{\LaTeXe~2021-06-01では\cs{par}が入る
 %    (sync with ltfloat.dtx 2021/02/10 v1.2e)}
+% \changes{v1.3l}{2021/12/08}{\LaTeXe~2021-11-15では\cs{@currentcounter}を
+%    明示的に設定する(sync with ltfloat.dtx 2021/10/14 v1.2g)}
 %    \begin{macrocode}
-%<platexrelease>\plIncludeInRelease{2021/06/01}{\@footnotetext}
-%<platexrelease>                   {Adapt to ltfloat.dtx (2021-03-03 v1.2f)}%
+%<platexrelease>\plIncludeInRelease{2021/11/15}{\@footnotetext}
+%<platexrelease>                   {Adapt to ltfloat.dtx (2021-10-14 v1.2g)}%
 %<*plcore|platexrelease>
 %    \end{macrocode}
 %    \begin{macrocode}
@@ -1908,6 +1914,7 @@
     \splittopskip\footnotesep
     \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
     \hsize\columnwidth \@parboxrestore
+    \def\@currentcounter{footnote}%
     \protected@edef\@currentlabel{%
        \csname p@footnote\endcsname\@thefnmark
     }%
@@ -1936,6 +1943,29 @@
 %    \end{macrocode}
 %    \begin{macrocode}
 %</plcore|platexrelease>
+%<platexrelease>\plEndIncludeInRelease
+%<platexrelease>\plIncludeInRelease{2021/06/01}{\@footnotetext}
+%<platexrelease>                   {Adapt to ltfloat.dtx (2021-03-03 v1.2f)}%
+%<platexrelease>\long\def\@footnotetext#1{%
+%<platexrelease>  \ifydir\def\@tempa{\yoko}\else\def\@tempa{\tate}\fi
+%<platexrelease>  \insert\footins{\@tempa%
+%<platexrelease>    \reset@font\footnotesize
+%<platexrelease>    \interlinepenalty\interfootnotelinepenalty
+%<platexrelease>    \splittopskip\footnotesep
+%<platexrelease>    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+%<platexrelease>    \hsize\columnwidth \@parboxrestore
+%<platexrelease>    \protected@edef\@currentlabel{%
+%<platexrelease>       \csname p@footnote\endcsname\@thefnmark
+%<platexrelease>    }%
+%<platexrelease>    \color@begingroup
+%<platexrelease>      \@makefntext{%
+%<platexrelease>        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
+%<platexrelease>    \par
+%<platexrelease>    \color@endgroup}\ifhmode\null\fi
+%<platexrelease>    \ifnum\pltx@foot@penalty=\z@\else
+%<platexrelease>      \penalty\pltx@foot@penalty
+%<platexrelease>      \pltx@foot@penalty\z@
+%<platexrelease>    \fi}
 %<platexrelease>\plEndIncludeInRelease
 %<platexrelease>\plIncludeInRelease{2016/09/08}{\@footnotetext}
 %<platexrelease>                   {Allow break after \footnote (more fix)}%
@@ -2201,7 +2231,7 @@
 % \begin{macro}{\@startline}
 % tabbing環境の行で、中身が始め括弧類などで始まる場合、
 % 最初の項目だけJFMグルーが消えない現象に対処します。
-% \changes{v1.2s}{2017/09/27}{tabbing環境の行冒頭のJFMグル―を削除}
+% \changes{v1.2s}{2017/09/27}{tabbing環境の行冒頭のJFMグルーを削除}
 %    \begin{macrocode}
 %</plcore>
 %<platexrelease>\plIncludeInRelease{2017/10/28}{\@startline}
@@ -2295,7 +2325,7 @@
 % 2018/03/09の修正では「|\removejfmglue|マクロが定義されている場合は
 % 最初に|\inhibitglue|を発行し、最後に|\removejfmglue|を発行する」という
 % 方針にします。こうすれば少々\LaTeX{}との互換性が向上します。
-% \changes{v1.2p}{2017/07/21}{tabular環境のセル内のJFMグル―を削除}
+% \changes{v1.2p}{2017/07/21}{tabular環境のセル内のJFMグルーを削除}
 % \changes{v1.2r}{2017/09/26}{tabular環境の右揃え(r)で罫線がずれるように
 %    なっていたバグを修正}
 % \changes{v1.2x}{2018/03/01}{\cs{removejfmglue}があれば利用するようにした}
@@ -2462,7 +2492,7 @@
 %\end{verbatim}
 % ここでは、2017/07/29の修正から方針を改め、|\everypar|内に|\inhibitglue|を
 % 仕込むという方針で対応します。
-% \changes{v1.2p}{2017/07/21}{tabular環境のセル内のJFMグル―を削除}
+% \changes{v1.2p}{2017/07/21}{tabular環境のセル内のJFMグルーを削除}
 % \changes{v1.2x}{2018/03/01}{セル最初の\cs{par}で空行が入らないようにした}
 %    \begin{macrocode}
 %<platexrelease>\plIncludeInRelease{2018/03/09}{\@classv}

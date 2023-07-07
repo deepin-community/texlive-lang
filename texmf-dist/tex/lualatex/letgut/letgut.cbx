@@ -1,0 +1,16 @@
+\ProvidesFile{letgut.cbx}[2023-01-14 v0.9.6 letgut base citation style]
+\RequireCitationStyle{numeric}
+\DeclareFieldFormat[bookreview]{title}{\textbf{\emph{#1}}}
+\renewbibmacro*{title}{%
+  \ifboolexpr{
+    test {\iffieldundef{title}}
+    and
+    test {\iffieldundef{subtitle}}
+  }
+  {}
+  {\printtext[title]{%
+      \printfield[titlecase]{title}%
+      \setunit{\subtitlepunct}}%
+    \printfield[emph]{subtitle}%
+    \newunit}%
+  \printfield{titleaddon}}

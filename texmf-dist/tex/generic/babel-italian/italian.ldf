@@ -7,12 +7,12 @@
 %% italian.dtx  (with options: `code')
 %% ------------------------------------------
 %% The Italian support for babel: italian.ldf.
-%% Copyright (C) 1990-2020 Claudio Beccari
+%% Copyright (C) 1990-2022 Claudio Beccari
 %% All rights reserved
 %% 
 %% License information appended.
 \ProvidesLanguage{italian}
-        [2020/05/21 v.1.4.04 Italian support for the babel system]
+        [2022/03/27 v.1.4.07 Italian support for the babel system]
 %%
 %% Please report errors to: claudio dot beccari at gmail dot com
 %%
@@ -190,48 +190,75 @@
       }%
   }}}%
 }}
- \DeclareMathSymbol{\virgola}{\mathpunct}{letters}{"3B}
  \DeclareMathSymbol{\virgoladecimale}{\mathord}{letters}{"3B}
-\DeclareRobustCommand*\it@comma@def{\futurelet\let@token\@@math@comma}%
-{\catcode `,=\active \gdef,{\it@comma@def}}%
-\DeclareRobustCommand*\@math@comma{%
- \ifcat\noexpand\let@token*%
-    \expandafter\@firstoftwo
- \else
-    \expandafter\@secondoftwo
- \fi{%  \let@token is of  category 12
-      \@math@@comma
-    }{% test if \let@token is a macro
-       \ifcat\noexpand\let@token\noexpand\relax
-          \expandafter\@firstoftwo
-       \else
-          \expandafter\@secondoftwo
-       \fi{% it is a macro
-             \@@math@@comma
-          }{% it is something else.
-             \virgola
-          }
-    }
-}
-\DeclareRobustCommand*\@math@@comma[1]{% argument is certainly of category 12
-    \ifcsundef{\expandafter\@gobble\string #1}{% test if it is a real digit
-        \ifnumless{`#1}{`0}{\virgola}%
-          {\ifnumgreater{`#1}{`9}{\virgola}%
-             {\virgoladecimale}}%
-    }{% it's an implicit character of category 12
-      \let\@tempVirgola\virgola
-      \@tfor\@tempCifra:=0123456789\do{%
-        \expandafter\if\@tempCifra#1\let\@tempVirgola\virgoladecimale
-        \@break@tfor\fi}\@tempVirgola
-    }#1}
+ \DeclareMathSymbol{\virgola}{\mathpunct}{letters}{"3B}
+{\catcode`,\active \gdef,{\futurelet\tempB\?}}
 
-\DeclareRobustCommand*\@@math@@comma[1]{% argument is a macro
-   \let\@tempVirgola\virgola
-   \@tfor\@tempCifra:=0123456789\do{%
-   \if\@tempCifra#1\let\@tempVirgola\virgoladecimale
-   \@break@tfor\fi}\@tempVirgola#1
+\DeclareRobustCommand*\periodo[1]{\overline{#1}}
+
+\newcommand\ifdigit[1]{\def\tempC{\virgola}%
+\@tfor\@Cifra:=0123456789\do{%
+\if\@Cifra #1\relax\def\tempC{\virgoladecimale}%
+\@break@tfor\fi}\tempC}
+
+\DeclareRobustCommand*\?{%
+  \ifx\tempB\@sptoken
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+  {\virgola}%
+  {%
+    \ifcat\noexpand\tempB\noexpand\egroup
+      \expandafter\@firstoftwo
+    \else
+      \expandafter\@secondoftwo
+    \fi
+    {\virgoladecimale}%
+    {%
+      \ifcsequal{tempB}{periodo}{\virgoladecimale}%
+      {%
+        \ifcsequal{tempB}{bar}{\virgoladecimale}%
+        {%
+          \ifcsequal{tempB}{overline}{\virgoladecimale}%
+          {%
+            \ifcat\noexpand\tempB*%
+              \expandafter\@firstoftwo
+            \else
+              \expandafter\@secondoftwo
+            \fi
+            {%  \tempB is of  category 12; test if it is a digit
+              \ifdigit{\tempB}%
+            }%
+            {% test if tempB is a macro
+              \ifcat\noexpand\tempB\noexpand\relax
+                \expandafter\@firstoftwo
+              \else
+                \expandafter\@secondoftwo
+              \fi
+              {\virgola}% \tempB actually is a macro
+              {\@math@@comma}% \tempB is an alias of something else
+            }%
+          }%
+        }%
+      }%
+    }%
+  }%
 }
-\AtEndOfPackage{\AtEndPreamble{\let\@@math@comma\@math@comma}}
+
+\DeclareRobustCommand*\@math@@comma[1]{% argument IS of category 12
+  \ifcsundef{\expandafter\@gobble\string #1}%
+  {% test if it is a digit
+      \ifnumless{`#1}{`0}{\virgola}%
+        {\ifnumgreater{`#1}{`9}{\virgola}%
+           {\virgoladecimale}}%
+  }%
+  {% it's an implicit character of category 12
+    \let\@tempVirgola\virgola
+    \@tfor\@tempCifra:=0123456789\do{%
+      \expandafter\if\@tempCifra#1\let\@tempVirgola\virgoladecimale
+      \@break@tfor\fi}\@tempVirgola
+  }#1}%
 \def\LtxSymbCaporali{%
      \DeclareRobustCommand*{\it@ocap}{\mbox{%
         \fontencoding{U}\fontfamily{lasy}\selectfont(\kern-0.20em(}%
@@ -289,7 +316,7 @@
 %%
 %% \endinput
 %% 
-%% Copyright (C) 1990-2019 Claudio Beccari
+%% Copyright (C) 1990-2022 Claudio Beccari
 %% 
 %%  It may be distributed and/or modified under the
 %%  conditions of the LaTeX Project Public License, either version 1.3c

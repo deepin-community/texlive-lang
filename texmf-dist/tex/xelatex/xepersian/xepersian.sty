@@ -7,7 +7,9 @@
 %% xepersian.dtx  (with options: `table,xepersian.sty')
 %% 
 %%   __________________________________________________
-%%   Copyright (c) 2008--2020  Vafa Khalighi
+%%   Vafa Khalighi
+%% 
+%%   Copyright (c) 2008--2022  Vafa Khalighi
 %%   Copyright (c) 2018--2020 bidi-tex GitHub Organization
 %% 
 %%   It may be distributed and/or modified under the LaTeX Project Public License,
@@ -18,7 +20,7 @@
 %%   by Vafa Khalighi.
 %% 
 %% 
-%% \CheckSum{10882}
+%% \CheckSum{11192}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -36,13 +38,16 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\xepersian@version{23.1}
-\def\xepersiandate{2020/05/17}
-\ProvidesPackage{xepersian}[\xepersiandate\space v\xepersian@version\space
+\def\xepersian@version{24.8}
+\def\xepersiandate{2022/10/30}
+\def\xepersian@releasename{Women, Life, and Freedom}
+\def\xepersian@persian@@releasename{زن، زندگی، و آزادی}
+\newcommand*{\xepersianreleasename}{\if@RTL\xepersian@persian@@releasename\else\xepersian@releasename\fi}
+\ProvidesPackage{xepersian}[\xepersiandate\space v\xepersian@version\space (Release \xepersian@releasename)\space
 Persian typesetting in XeLaTeX]
 \RequirePackage{fontspec}
 \RequirePackage{xepersian-persiancal}
-\RequirePackage{xepersian-mathsdigitspec}
+\RequirePackage{xepersian-mathdigitspec}
 \RequirePackage{bidi}
 \edef\@xepersian@info{****************************************************^^J%
 * ^^J%
@@ -52,17 +57,19 @@ Persian typesetting in XeLaTeX]
 * typesetting, using fonts provided in the^^J%
 * distribution.^^J%
 * ^^J%
-* Copyright (c) 2008--2020 Vafa Khalighi^^J%
+* Copyright (c) 2008--2022 Vafa Khalighi^^J%
 * Copyright (c) 2018--2020 bidi-tex GitHub Organization^^J%
 * ^^J%
-* v\xepersian@version, \xepersiandate^^J%
+* v\xepersian@version\space (Release \xepersian@releasename), \xepersiandate^^J%
 * ^^J%
 * License: LaTeX Project Public License, version^^J%
 * 1.3c or higher (your choice)^^J%
 * ^^J%
 * Location on CTAN: /macros/xetex/latex/xepersian^^J%
 * ^^J%
-* Issue tracker: https://github.com/persiantex/xepersian/issues^^J%
+* Issue tracker: https://github.com/kvafa/xepersian/issues^^J%
+* ^^J%
+* Discussions: https://github.com/kvafa/xepersian/discussions^^J%
 * ^^J%
 * Primary author of xepersian package: Vafa Khalighi.^^J%
 * ^^J%
@@ -136,6 +143,21 @@ Persian typesetting in XeLaTeX]
    }
  }
 
+\keys_define:nn {fontspec-opentype}
+  {
+    Ligatures / PersianTeXNoNumbers .code:n = { \tl_set:Nn \l__fontspec_mapping_tl {persian-tex-text-nonumbers} },
+    Ligatures / PersianTeXNoNumbersOff .code:n = { \tl_clear:N \l__fontspec_mapping_tl },
+    Ligatures / PersianTeXNoNumbersReset .code:n = { \tl_clear:N \l__fontspec_mapping_tl },
+  }
+
+\keys_define:nn {fontspec-aat}
+ {
+  Ligatures / PersianTeXNoNumbers .code:n =
+   {
+     \tl_set:Nn \l__fontspec_mapping_tl { persian-tex-text-nonumbers }
+   }
+ }
+
 \DeclareDocumentCommand \settextfont { O{} m O{} }
   {
     \__xepersian_main_settextfont:nn {#1,#3} {#2}
@@ -143,12 +165,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_settextfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_persianfont_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \rmdefault \l__xepersian_persianfont_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_persianfont_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \rmdefault \l__fontspec_persianfont_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \persianfont }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_persianfont_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_persianfont_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -167,12 +189,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_settextdigitfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_textdigitfont_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
+  \fontspec_set_family:Nnn \l__fontspec_textdigitfont_family_tl {Ligatures=PersianTeX,#1} {#2}
   \use:x
    {
     \exp_not:n { \DeclareRobustCommand \xepersian@textdigitfont }
      {
-      \exp_not:N \fontfamily { \l__xepersian_textdigitfont_family_tl }
+      \exp_not:N \fontfamily { \l__fontspec_textdigitfont_family_tl }
       \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
       \exp_not:N \selectfont
      }
@@ -196,8 +218,8 @@ Persian typesetting in XeLaTeX]
    }
  }
 
-\newcommand*{\xepersian@@start@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\bgroup\xepersian@textdigitfont\else\fi\fi\fi}
-\newcommand*{\xepersian@@stop@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\egroup\else\fi\fi\fi}
+\newcommand*{\xepersian@@start@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\let\xepersian@save@@f@family\f@family\xepersian@textdigitfont\else\fi\fi\fi}
+\newcommand*{\xepersian@@stop@switch@textdigitfont}{\ifx\f@family\ttdefault\else\if@nonlatin\if@@textdigitfont@on\let\f@family\xepersian@save@@f@family\selectfont\else\fi\fi\fi}
 
 \cs_set_eq:NN \__xepersian_settextdigitfont_hook:nn   \use_none:nn
 
@@ -215,11 +237,11 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setlatintextfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_latinfont_family_tl {Ligatures=TeX,#1} {#2}
+  \fontspec_set_family:Nnn \l__fontspec_latinfont_family_tl {Ligatures=TeX,#1} {#2}
   \use:x { \exp_not:n { \DeclareRobustCommand \latinfont }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_latinfont_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_latinfont_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -246,12 +268,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_defpersianfont:NnnN
  {
-  \fontspec_set_family:cnn { l__xepersian_ \cs_to_str:N #1 _family_tl } {Script=Persian,Ligatures=PersianTeX,#2} {#3}
+  \fontspec_set_family:cnn { l__fontspec_ \cs_to_str:N #1 _family_tl } {RawFeature={script=arab},Ligatures=PersianTeX,#2} {#3}
   \use:x
    {
     \exp_not:N #4 \exp_not:N #1 {}
      {
-      \exp_not:N \fontfamily { \use:c {l__xepersian_ \cs_to_str:N #1 _family_tl } }
+      \exp_not:N \fontfamily { \use:c {l__fontspec_ \cs_to_str:N #1 _family_tl } }
       \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
       \exp_not:N \selectfont
      }
@@ -270,12 +292,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_deflatinfont:NnnN
  {
-  \fontspec_set_family:cnn { l__xepersian_ \cs_to_str:N #1 _family_tl } {Ligatures=TeX,#2} {#3}
+  \fontspec_set_family:cnn { l__fontspec_ \cs_to_str:N #1 _family_tl } {Ligatures=TeX,#2} {#3}
   \use:x
    {
     \exp_not:N #4 \exp_not:N #1 {}
      {
-      \exp_not:N \fontfamily { \use:c {l__xepersian_ \cs_to_str:N #1 _family_tl } }
+      \exp_not:N \fontfamily { \use:c {l__fontspec_ \cs_to_str:N #1 _family_tl } }
       \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
       \exp_not:N \selectfont
      }
@@ -320,12 +342,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setpersiansansfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_persiansffamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \persiansfdefault \l__xepersian_persiansffamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_persiansffamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \persiansfdefault \l__fontspec_persiansffamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \persiansffamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_persiansffamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_persiansffamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -344,12 +366,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setpersianmonofont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_persianttfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \persianttdefault \l__xepersian_persianttfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_persianttfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \persianttdefault \l__fontspec_persianttfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \persianttfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_persianttfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_persianttfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -368,12 +390,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setnavarfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_navarfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \navardefault \l__xepersian_navarfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_navarfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \navardefault \l__fontspec_navarfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \navarfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_navarfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_navarfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -392,12 +414,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setpookfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_pookfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \pookdefault \l__xepersian_pookfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_pookfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \pookdefault \l__fontspec_pookfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \pookfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_pookfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_pookfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -416,12 +438,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setsayehfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_sayehfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \sayehdefault \l__xepersian_sayehfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_sayehfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \sayehdefault \l__fontspec_sayehfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \sayehfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_sayehfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_sayehfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -440,12 +462,12 @@ Persian typesetting in XeLaTeX]
   }
 \cs_new:Nn \__xepersian_main_setiranicfont:nn
  {
-  \fontspec_set_family:Nnn \l__xepersian_iranicfamily_family_tl {Script=Persian,Ligatures=PersianTeX,#1} {#2}
-  \tl_set_eq:NN \iranicdefault \l__xepersian_iranicfamily_family_tl
+  \fontspec_set_family:Nnn \l__fontspec_iranicfamily_family_tl {RawFeature={script=arab},Ligatures=PersianTeX,#1} {#2}
+  \tl_set_eq:NN \iranicdefault \l__fontspec_iranicfamily_family_tl
   \use:x { \exp_not:n { \DeclareRobustCommand \iranicfamily }
    {
     \exp_not:N \fontencoding { \g__fontspec_nfss_enc_tl }
-    \exp_not:N \fontfamily { \l__xepersian_iranicfamily_family_tl }
+    \exp_not:N \fontfamily { \l__fontspec_iranicfamily_family_tl }
     \exp_not:N \selectfont
    }
   }
@@ -857,12 +879,12 @@ Persian typesetting in XeLaTeX]
   \textsf{\XePersian}\quad\@bidi@logo{xepersian-logo.pdf}}}
 
 \renewcommand*{\@bidi@pdfcreator}{%
-  The xepersian package, v\xepersian@version, \xepersiandate
+  The xepersian package, v\xepersian@version\space (Release \xepersian@releasename), \xepersiandate
 }
 
 \newcommand*{\@xepersian@pdfcustomproperties}{%
-  This is the xepersian package, Version \xepersian@version,
-  Released May 17, 2020.
+  This is the xepersian package, Version \xepersian@version\space (Release \xepersian@releasename),
+  Released October 30, 2022.
 }
 
 \newcommand\twocolumnstableofcontents{%
@@ -874,25 +896,27 @@ Persian typesetting in XeLaTeX]
   \end{multicols}}}
 \bidi@newrobustcmd*{\XePersian}{\leavevmode$\smash{\hbox{X\lower.5ex
   \hbox{\kern-.125em\bidi@reflect@box{E}}Persian}}$}
-\def\figurename{\if@RTL شکل\else Figure\fi}
-\def\tablename{\if@RTL جدول\else Table\fi}
-\def\contentsname{\if@RTL فهرست مطالب\else Contents\fi}
-\def\listfigurename{\if@RTL فهرست تصاویر\else List of Figures\fi}
-\def\listtablename{\if@RTL فهرست جداول\else List of Tables\fi}
-\def\appendixname{\if@RTL پیوست\else Appendix\fi}
-\def\indexname{\if@RTL نمایه\else Index\fi}
-\def\refname{\if@RTL مراجع\else References\fi}
-\def\abstractname{\if@RTL چکیده\else Abstract\fi}
-\def\partname{\if@RTL بخش\else Part\fi}
-\def\datename{\if@RTL تاریخ:\else Date:\fi}
-\def\@@and{\if@RTL و\else and\fi}
-\def\bibname{\if@RTL کتاب‌نامه\else Bibliography\fi}
-\def\chaptername{\if@RTL فصل\else Chapter\fi}
-\def\ccname{\if@RTL رونوشت\else cc\fi}
-\def\enclname{\if@RTL پیوست\else encl\fi}
-\def\pagename{\if@RTL صفحه\else Page\fi}
-\def\headtoname{\if@RTL به\else To\fi}
-\def\proofname{\if@RTL اثبات\else Proof\fi}
+\AtBeginDocument{%
+  \def\figurename{\if@RTL شکل\else Figure\fi}%
+  \def\tablename{\if@RTL جدول\else Table\fi}%
+  \def\contentsname{\if@RTL فهرست مطالب\else Contents\fi}%
+  \def\listfigurename{\if@RTL فهرست تصاویر\else List of Figures\fi}%
+  \def\listtablename{\if@RTL فهرست جداول\else List of Tables\fi}%
+  \def\appendixname{\if@RTL پیوست\else Appendix\fi}%
+  \def\indexname{\if@RTL نمایه\else Index\fi}%
+  \def\refname{\if@RTL مراجع\else References\fi}%
+  \def\abstractname{\if@RTL چکیده\else Abstract\fi}%
+  \def\partname{\if@RTL بخش\else Part\fi}%
+  \def\datename{\if@RTL تاریخ:\else Date:\fi}%
+  \def\@@and{\if@RTL و\else and\fi}%
+  \def\bibname{\if@RTL کتاب‌نامه\else Bibliography\fi}%
+  \def\chaptername{\if@RTL فصل\else Chapter\fi}%
+  \def\ccname{\if@RTL رونوشت\else cc\fi}%
+  \def\enclname{\if@RTL پیوست\else encl\fi}%
+  \def\pagename{\if@RTL صفحه\else Page\fi}%
+  \def\headtoname{\if@RTL به\else To\fi}%
+  \def\proofname{\if@RTL اثبات\else Proof\fi}%
+}
 \def\@Abjad#1{%
   \ifcase#1\or آ\or ب\or ج\or د%
            \or ه\or و\or ز\or ح\or ط%
@@ -1181,6 +1205,7 @@ number is 999,999,999.}%
 \@ifpackageloaded{algorithmic}{\input{algorithmic-xepersian.def}}{}
 \@ifpackageloaded{algorithm}{\input{algorithm-xepersian.def}}{}
 \@ifpackageloaded{backref}{\input{backref-xepersian.def}}{}
+\@ifpackageloaded{beamerbasetranslator}{\input{beamerbasetranslator-xepersian.def}}{}
 \@ifpackageloaded{fancyref}{\input{fancyref-xepersian.def}}{}
 \@ifpackageloaded{bidituftesidenote}{\input{bidituftesidenote-xepersian.def}}{}
 \@ifpackageloaded{breqn}{\input{breqn-xepersian.def}}{}
@@ -1192,9 +1217,9 @@ number is 999,999,999.}%
 \@ifpackageloaded{minitoc}{\input{minitoc-xepersian.def}}{}
 \@ifpackageloaded{natbib}{\input{natbib-xepersian.def}}{}
 \@ifpackageloaded{soul}{\input{soul-xepersian.def}}{}
-\@ifpackageloaded{tikz}{\input{tikz.code-xepersian.def}}{}
 \@ifpackageloaded{tkz-linknodes}{\input{tkz-linknodes-xepersian.def}}{}
 \@ifpackageloaded{tocloft}{\@ifclassloaded{memoir}{}{\input{tocloft-xepersian.def}}}{}
+\@ifpackageloaded{url}{\input{url-xepersian.def}}{}
 \@ifpackageloaded{varioref}{\input{varioref-xepersian.def}}{}
 \@ifclassloaded{article}{\input{article-xepersian.def}}{}
 \@ifclassloaded{extarticle}{\input{extarticle-xepersian.def}}{}
@@ -1202,6 +1227,7 @@ number is 999,999,999.}%
 \@ifclassloaded{artikel2}{\input{artikel2-xepersian.def}}{}
 \@ifclassloaded{artikel3}{\input{artikel3-xepersian.def}}{}
 \@ifclassloaded{amsart}{\input{amsart-xepersian.def}}{}
+\@ifclassloaded{beamer}{\input{beamer-xepersian.def}}{}
 \@ifclassloaded{bidimoderncv}{\input{bidimoderncv-xepersian.def}}{}
 \@ifclassloaded{report}{\input{report-xepersian.def}}{}
 \@ifclassloaded{extreport}{\input{extreport-xepersian.def}}{}
@@ -1235,27 +1261,27 @@ number is 999,999,999.}%
 
 \define@choicekey{xepersian.sty}{mathdigits}[\xepersian@tempa\xepersian@tempb]{automatic,default,persian}{%
   \ifcase\xepersian@tempb\relax
-    \AutoMathsDigits
+    \AutoMathDigits
   \or
-    \DefaultMathsDigits
+    \DefaultMathDigits
   \or
-    \PersianMathsDigits
+    \PersianMathDigits
   \fi}
 \define@choicekey{xepersian.sty}{inlinemathdigits}[\xepersian@tempa\xepersian@tempb]{automatic,default,persian}{%
   \ifcase\xepersian@tempb\relax
-    \AutoInlineMathsDigits
+    \AutoInlineMathDigits
   \or
-    \DefaultInlineMathsDigits
+    \DefaultInlineMathDigits
   \or
-    \PersianInlineMathsDigits
+    \PersianInlineMathDigits
   \fi}
 \define@choicekey{xepersian.sty}{displaymathdigits}[\xepersian@tempa\xepersian@tempb]{automatic,default,persian}{%
   \ifcase\xepersian@tempb\relax
-    \AutoDisplayMathsDigits
+    \AutoDisplayMathDigits
   \or
-    \DefaultDisplayMathsDigits
+    \DefaultDisplayMathDigits
   \or
-    \PersianDisplayMathsDigits
+    \PersianDisplayMathDigits
   \fi}
 \define@choicekey{xepersian.sty}{RTLdocument}[\xepersian@tempa\xepersian@tempb]{on,off}[on]{%
   \ifcase\xepersian@tempb\relax

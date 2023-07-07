@@ -1,6 +1,6 @@
 %% xob-font.sty
 %%
-%% Copyright (c) 2014-2021 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2014-2022 Kangsoo Kim <karnes at ktug org>
 %% Copyright (c) 2017-2020 Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the
@@ -15,7 +15,7 @@
 %%  oblivoir hangul/hanja font setting.
 %%  part of oblivoir
 %%
-\ProvidesPackage{xob-font}[2021/03/15 v0.9.1 select hangul/hanja fonts for oblivoir]
+\ProvidesPackage{xob-font}[2022/04/11 v0.9.6 select hangul/hanja fonts for oblivoir]
 
 %%% obsolete options: retain \if@.. conditions for backward compatibility
 \newif\if@nowin\@nowinfalse
@@ -62,6 +62,7 @@
 \if@oldhangul \bool_set_true:N  \hangulscript_bool \else \bool_set_false:N \hangulscript_bool \fi
 
 \bool_new:N \opt_mainfontdeclared_bool
+\bool_new:N \opt_mathfontdeclared_bool
 
 \bool_set_false:N \bold_prov_bool
 \bool_set_false:N \in_hanja_mode
@@ -666,6 +667,7 @@
 
 %%% \setmainhangulfont
 \pretocmd{\setmainhangulfont}{\bool_set_true:N \opt_mainfontdeclared_bool}{}{}
+\pretocmd{\setmathhangulfont}{\bool_set_true:N \opt_mathfontdeclared_bool}{}{}
 
 \AddToHook{env/document/before}{%
 	\bool_if:NF \opt_mainfontdeclared_bool
@@ -678,18 +680,27 @@
         	\fi
         	\setkosansfont(NanumGothic)(*Bold)(*)
         	\setkomonofont(NanumGothic)
+			\tl_set:Nn \ko_regu_font_name { NanumMyeongjo }
         \else
         %%% [hcr] adds [Script=Hangul] feature automatically.
         \if@hcrfonts
         	\setkomainfont(HCRBatangLVT)(HCRBatangLVT-Bold)(HCRBatangLVT)
         	\setkosansfont(HCRDotumLVT)(HCRDotumLVT-Bold)(HCRDotumLVT)
         	\setkomonofont(HCRDotumLVT)
+			\tl_set:Nn \ko_regu_font_name { HCRBatangLVT }
         \else
         %%% 2020/03/03: Now UnFonts is set to default
         \RequirePackage{ob-unfontsdefault}
+        \tl_set:Nn \ko_regu_font_name { UnBatang }
         \fi
         \fi
     }
+    \bool_if:NF \opt_mathfontdeclared_bool
+    {
+    	\tl_if_exist:NT \ko_regu_font_name {
+	    	\setmathhangulfont{\ko_regu_font_name}
+		}
+	}
 }
 %\setkomainfont(UnBatang.ttf)(UnBatangBold.ttf)(UnGraphic.ttf)
 %\fi\fi
@@ -700,6 +711,8 @@
 
 %%% end of file `xob-font.sty`
 %% CHANGES
+%% v0.9.6 : \setmathhangulfont problem fixed (reported by Progress)
+%% v0.9.5 : \setmathhangulfont, default (requested by ischo)
 %% v0.9 : unfontsxe introduced
 %% v0.8.1 : minor bug fix
 %% v0.8 : suport fontspec’s FontFace feature.

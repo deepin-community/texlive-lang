@@ -22,15 +22,16 @@
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{bxjsbook}
-  [2021/05/18 v2.5a BXJS document classes]
+  [2022/04/10 v2.7a BXJS document classes]
 %% このファイルは日本語文字を含みます.
 \def\bxjs@clsname{bxjsbook}
 \newif\ifjsc@needsp@tch
 \jsc@needsp@tchfalse
 \RequirePackage{calc}
 \RequirePackage{keyval}
+\def\jsAtEndOfClass{%
+  \expandafter\g@addto@macro\csname\bxjs@clsname.cls-h@@k\endcsname}
 \IfFileExists{bxjscompat.sty}{%
-  \let\jsAtEndOfClass\@gobble
   \RequirePackage{bxjscompat}%
 }{}
 \let\jsArticle=a
@@ -87,6 +88,8 @@
 \let\PackageWarningNoLine\bxjs@tmpa
 \@nameuse{RevokeOldLuaTeXBehavior}
 \let\ifjsInPdfMode\ifpdf
+\newif\ifbxjs@explIII
+\@ifl@t@r\fmtversion{2020/02/02}{\bxjs@explIIItrue}{}
 \newif\ifbxjs@TUenc
 \def\bxjs@tmpa{TU}\edef\bxjs@tmpb{\f@encoding}
 \ifx\bxjs@tmpa\bxjs@tmpb
@@ -94,6 +97,11 @@
 \fi
 \newif\ifbxjs@old@hook@system
 \@ifl@t@r\fmtversion{2020/10/01}{}{\bxjs@old@hook@systemtrue}
+\@ifl@t@r\fmtversion{2021/11/15}{%
+  \def\bxjs@CGHN#1{#1}%
+}{%else
+  \def\bxjs@CGHN#1{\bxjs@CGHN@a#1//}%
+  \def\bxjs@CGHN@a#1/#2/#3//{#1/#3/#2}}
 \@gobbletwo\if\if \def\bxjs@cond#1\fi{%
   #1\expandafter\@firstoftwo
   \else\expandafter\@secondoftwo
@@ -105,6 +113,21 @@
 \def\bxjs@catopt#1#2{%
   #1\if\relax#1\relax\else\if\relax#2\relax\else,\fi\fi#2}
 \def\bxjs@ifplus#1{\@ifnextchar+{\@firstoftwo{#1}}}
+\def\bxjs@trim#1{\expandafter\bxjs@trim@a#1\@nil#1}
+\def\bxjs@trim@a{\futurelet\bxjs@tmpb\bxjs@trim@b}
+\def\bxjs@trim@b{\bxjs@cond\ifx\bxjs@tmpb\@sptoken\fi
+  {\bxjs@trim@c\bxjs@trim@a}{\bxjs@trim@d}}
+\def\bxjs@trim@c#1 {#1}
+\def\bxjs@trim@d#1\@nil{\bxjs@trim@e#1\@nil: \@nil\@nnil}
+\def\bxjs@trim@e#1 \@nil#2\@nnil{\bxjs@cond\ifx\@nnil#2\@nnil\fi
+  {\bxjs@trim@f#1\@nnil}{\bxjs@trim@e#1\@nil: \@nil\@nnil}}
+\def\bxjs@trim@f#1\@nil#2\@nnil#3{\def#3{#1}}
+\def\bxjs@set@array@from@clist#1#2{%
+  \@tempcnta\z@
+  \@for\bxjs@tmpa:=\@empty#2\do{%
+     \bxjs@trim\bxjs@tmpa \bxjs@cslet{#1/\the\@tempcnta}\bxjs@tmpa
+     \advance\@tempcnta\@ne}
+  \bxjs@cslet{#1/\the\@tempcnta}\relax}
 \let\c@bxjs@tempcnta\@tempcnta
 \def\bxjs@gset@tempcnta{\setcounter{bxjs@tempcnta}}
 \def\jsSetQHLength#1#2{%
@@ -143,31 +166,33 @@
     \fi
   \fi}
   \def\bxjs@unit@Q{0.25mm}\let\bxjs@unit@H\bxjs@unit@Q
+\newif\ifbxjs@after@preamble
 \@onlypreamble\bxjs@begin@document@hook
-\let\bxjs@begin@document@hook\@empty
+\def\bxjs@begin@document@hook{\bxjs@after@preambletrue}
 \AtBeginDocument{\bxjs@begin@document@hook}
 \@onlypreamble\bxjs@post@option@hook
 \let\bxjs@post@option@hook\@empty
 \@onlypreamble\bxjs@pre@jadriver@hook
 \let\bxjs@pre@jadriver@hook\@empty
-\def\jsAtEndOfClass{%
-  \expandafter\g@addto@macro\csname\bxjs@clsname.cls-h@@k\endcsname}
 \@onlypreamble\bxjs@tmpdo
 \@onlypreamble\bxjs@tmpdo@a
 \@onlypreamble\bxjs@tmpdo@b
 \@onlypreamble\bxjs@tmpdo@c
 \@onlypreamble\bxjs@tmpdo@d
-\if l\jsEngine
-\def\bxjs@tmpdo#1{%
-  \xdef\bxjs@pre@jadriver@hook{%
-    \bxjs@pre@jadriver@hook
-    \catcode`#1=\the\catcode`#1\relax}%
-  \catcode`#1=11\relax}
-\@tfor\bxjs@tmpa:=和西暦\do
-  {\expandafter\bxjs@tmpdo\bxjs@tmpa}
-\fi
 \bxjs@robust@def\jsInhibitGlue{%
   \ifx\inhibitglue\@undefined\else \inhibitglue \fi}
+\@tempswatrue
+\if x\jsEngine
+  \ifdim\the\XeTeXversion\XeTeXrevision\p@<0.997\p@
+    \@tempswafalse \fi
+\fi
+\if@tempswa \expandafter\@gobble
+\else
+  \ClassError\bxjs@clsname
+   {The engine in use is all too old}
+   {It's a fatal error. I'll quit right now.}
+  \expandafter\@firstofone
+\fi{\endinput\@@end}
 \if@compatibility
   \ClassError\bxjs@clsname
    {Something went chaotic!\MessageBreak
@@ -445,6 +470,9 @@
 \DeclareOption{nodvidriver}{%
   \def\bxjs@driver@opt{nodvidriver}%
   \let\bxjs@driver@given\bxjs@driver@@none}
+\DeclareOption{nodvidriver*}{%
+  \def\bxjs@driver@opt{nodvidriver*}%
+  \let\bxjs@driver@given\bxjs@driver@@none}
 \DeclareOption{pdftex}{%
   \def\bxjs@driver@opt{pdftex}%
   \let\bxjs@driver@given\bxjs@driver@@pdfmode}
@@ -584,6 +612,7 @@
 \let\bxjs@dvidriver@@dviout=\bxjs@driver@@dvimode
 \let\bxjs@dvidriver@@xdvi=\bxjs@driver@@dvimode
 \let\bxjs@dvidriver@@nodvidriver=\bxjs@driver@@none
+\bxjs@cslet{bxjs@dvidriver@@nodvidriver*}\bxjs@driver@@none
 \define@key{bxjs}{dvi}{%
   \bxjs@csletcs{bxjs@tmpa}{bxjs@dvidriver@@#1}%
   \ifx\bxjs@tmpa\relax
@@ -739,10 +768,17 @@
 \else \@tempswatrue
 \fi\fi\fi
 \if@tempswa
-  \ifx\bxjs@driver@opt\@undefined \ifx\bxjs@jadriver@opt\@undefined\else
-    \ClassWarningNoLine\bxjs@clsname
-    {No driver option is given}
-  \fi\fi
+  \ifx\bxjs@driver@opt\@undefined
+    \if \ifbxjs@explIII T\else\ifx\bxjs@jadriver@opt\@undefined F\else T\fi\fi T%
+      \ClassWarningNoLine\bxjs@clsname
+       {A driver option is MISSING!!\MessageBreak
+        You should properly specify one of the valid\MessageBreak
+        driver options according to the DVI driver\MessageBreak
+        that is in use:\MessageBreak
+        \@spaces dvips, dvipdfmx, dviout, xdvi,\MessageBreak
+        \@spaces nodvidriver}
+    \fi
+  \fi
   \ifbxjs@dvi@opt
     \edef\bxjs@next{%
       \let\noexpand\bxjs@driver@given
@@ -763,9 +799,12 @@
   \bxjs@papersizefalse
 \fi
 \def\bxjs@@minimal{minimal}
+\def\bxjs@@standard{standard}
+\def\bxjs@@pandoc{pandoc}
+\def\bxjs@@modern{modern}
 \ifx\bxjs@jadriver\relax
   \ifx j\jsEngine
-    \def\bxjs@jadriver{standard}
+    \let\bxjs@jadriver\bxjs@@standard
   \else
     \ClassWarningNoLine\bxjs@clsname
      {The option 'ja' is MISSING!!\MessageBreak
@@ -776,7 +815,6 @@
     \let\bxjs@jadriver\bxjs@@minimal
   \fi
 \fi
-\def\bxjs@@pandoc{pandoc}
 \ifx\bxjs@jadriver\bxjs@@pandoc \ifx\bxjs@plautopatch@given\@undefined
     \ifjsWitheTeX
   \bxjs@plautopatchtrue
@@ -1214,7 +1252,6 @@
 \else
   \PassOptionsToPackage{driver=none}{geometry}
 \fi
-\bxjs@apply@bd@pre@geometry@hook
 \bxjs@apply@bd@pre@geometry@hook{\bxjs@bd@pre@geometry@hook}
 \bxjs@apply@bd@pre@geometry@hook{\ImposeOldLuaTeXBehavior}
 \bxjs@preproc@layout
@@ -1305,6 +1342,12 @@
   \fi\fi}
 \let\pltx@cleartorightpage\pltx@cleartooddpage
 \let\pltx@cleartoleftpage\pltx@cleartoevenpage
+\ifdim\vsize=\z@
+\begingroup
+\toks@\expandafter{\clearpage}
+\xdef\clearpage{\noexpand\ifbxjs@after@preamble\the\toks@\noexpand\fi}
+\endgroup
+\fi
 \if@openleft
   \let\cleardoublepage\pltx@cleartoleftpage
 \else\if@openright
@@ -2473,7 +2516,7 @@
     \global\let\bxjs@wareki@used\@empty
     \ClassWarning\bxjs@clsname
      {Wareki mode is not supported, since\MessageBreak
-      'bxwareki' is unavailable, found}}
+      'bxwareki' is unavailable, reported}}
   \g@addto@macro\bxjs@begin@document@hook{%
     \let\bxjs@wareki@used\@empty}
 \fi

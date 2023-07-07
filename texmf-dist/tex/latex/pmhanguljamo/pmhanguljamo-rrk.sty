@@ -1,30 +1,67 @@
 %
-% subroutine of pmhanguljamo.sty
-%.  v0.3.2 (2020/02/05)
-%.  v0.3.3 (2020/03/09)
-%.  v0.3.4 (2020/03/15)
+% subroutines of pmhanguljamo.sty
+%  v0.3.2 (2020/02/05)
+%  v0.3.3 (2020/03/09)
+%  v0.3.4 (2020/03/15)
+%  v0.4   (2021/11/28)
+%  v0.5   (2022/09/02)
+%  v0.5.1 (2022/09/06)
+%  v0.5.2 (2022/09/07)
 %
 \seq_new:N \l_textjm_seq
 
 \NewDocumentEnvironment { jamotext } { +b }
 {
 	\seq_set_split:Nnn \l_textjm_seq {\par} { #1 }
-	\seq_indexed_map_inline:Nn \l_textjm_seq
-	{
-		\jamoword { ##2 }
-		\int_compare:nT { ##1 < \seq_count:N \l_textjm_seq }
-		{
-			\par
-		}
-	}
+	\seq_map_indexed_function:NN \l_textjm_seq \jamo_word_rrk:nn
 }{}
+
+\cs_new:Npn \jamo_word_rrk:nn #1 #2
+{
+%	\jamoword { #2 }
+	\seq_set_split:Nnn \l_inparpar_seq { ~ } { #2 }
+	
+	\seq_map_indexed_inline:Nn \l_inparpar_seq
+	{
+		\regex_match:nnTF { ^\!\{ } { ##2 }
+		{
+			\tl_set:Nn \l_tmpa_tl { ##2 }
+			\regex_match:nnTF { ^\!\{(.+?)\}$ } { ##2 }
+			{
+				\regex_replace_once:nnN { ^\!\{(.+?)\}$ } { \1 } \l_tmpa_tl
+				\l_tmpa_tl 
+			}
+			{
+				\tl_set_eq:NN \l_tmpb_tl \l_tmpa_tl
+				\regex_replace_once:nnN { ^\!\{(.+?)\}(.*)$ } { \1 } \l_tmpa_tl
+				\l_tmpa_tl 
+				\regex_replace_once:nnN { ^\!\{(.+?)\}(.*)$ } { \2 } \l_tmpb_tl
+				\exp_args:No \jamoword { \l_tmpb_tl }
+			}	
+		}
+		{
+			\jamoword{ ##2 }
+		}
+		
+		\int_compare:nT { ##1 < \seq_count:N \l_inparpar_seq }
+		{ \space }
+	}
+
+	\int_compare:nT { #1 < \seq_count:N \l_textjm_seq }
+	{ \par }
+}
+
 
 \tl_new:N \l_tmpz_tl
 
 \NewDocumentCommand \jamoword { m }
 {
+  \group_begin:
+  \bool_if:NT \opt_usepmfont_bool
+  { \pm_hangulfontspec [\opt_pmfontfeature_tl] {\opt_pmfont_tl } }
+  
 	\seq_set_split:Nnn \l_tmpa_seq { ~ } { #1 }
-	\seq_indexed_map_inline:Nn \l_tmpa_seq
+	\seq_map_indexed_inline:Nn \l_tmpa_seq
 	{
 		\tl_set:Nn \l_tmpz_tl { ##2 }
 		\exp_args:No \str_if_in:nnT { \l_tmpz_tl } { - }
@@ -69,6 +106,7 @@
 			\space
 		}
 	}
+	\group_end:
 }
 
 \cs_new:Npn \rrk_fn_outer:n #1
@@ -137,9 +175,20 @@
 		{ h } { \insert_out:n { ᄒ } \restore_c: \restore_b: }
 		{ x } { \insert_out:n { ᄋ } \restore_c: \restore_b: }
 
-		{ s } { \exp_args:No \str_if_eq:nnTF { \l_tmpb_tl } { s }
-				{ \insert_out:n { ᄊ } \restore_c: }
-				{ \insert_out:n { ᄉ  } \restore_c: \restore_b: } }
+%		{ s } { \exp_args:No \str_if_eq:nnTF { \l_tmpb_tl } { s }
+%				{ \insert_out:n { ᄊ } \restore_c: }
+%				{ \insert_out:n { ᄉ  } \restore_c: \restore_b: } }
+		{ s } {
+			\str_case_e:nnF { \l_tmpb_tl } 
+			{
+				{ s } { \insert_out:n { ᄊ } \restore_c: }
+				{ g } { \insert_out:n { ᄭ } \restore_c: }
+				{ d } { \insert_out:n { ᄯ } \restore_c: }
+				{ b } { \insert_out:n { ᄲ } \restore_c: }
+				{ j } { \insert_out:n { ᄶ } \restore_c: }
+			}
+			{ \insert_out:n { ᄉ } \restore_c: \restore_b: }
+		}
 		{ j } { \exp_args:No \str_if_eq:nnTF { \l_tmpb_tl } { j }
 				{ \insert_out:n { ᄍ } \restore_c: }
 				{ \insert_out:n { ᄌ  } \restore_c: \restore_b: } }
@@ -307,10 +356,12 @@
 		{ lh } { \insert_out:n { ᆶ } }
 		{ l }  { \insert_out:n { ᆯ } }
 		{ m }  { \insert_out:n { ᆷ } }
+		{ mg } { \insert_out:n { ᇚ } }	%% v0.4
 		{ bs } { \insert_out:n { ᆹ } }
 		{ b }  { \insert_out:n { ᆸ } }
 		{ ss } { \insert_out:n { ᆻ } }
 		{ s }  { \insert_out:n { ᆺ } }
+		{ sg } { \insert_out:n { ᇧ } }  %% v0.4
 		{ ng } { \insert_out:n { ᆼ } }
 		{ j }  { \insert_out:n { ᆽ } }
 		{ ch } { \insert_out:n { ᆾ } }

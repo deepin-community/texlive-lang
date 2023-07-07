@@ -1,0 +1,2051 @@
+\documentclass{letgut}
+
+% On compose la présente documentation en Kp-Fonts, sauf en ce qui concerne la
+% fonte à chasse fixe qui n'est pas ce qu'il y a de plus réussi chez elle.
+\setmainfont{KpRoman}
+\setsansfont{KpSans}
+% \setmonofont{TeX Gyre Cursor}
+\setmonofont[Scale = MatchLowercase]{RobotoMono}
+
+% On ne veut pas d'éditorial dans cette « Lettre » et on veut que sa couleur de
+% fond ne soit pas la couleur ivoire par défaut, mais du blanc.
+\letgutsetup{
+  , editorial=false
+  , pagecolor= {1,1,1}
+  % ,final
+}
+
+% Bibliographie
+\addbibresource{letgut.bib}
+
+% On définit quelques commandes (utiles seulement pour la présente
+% documentation), par exemple celle permettant d'accéder à la couleur de fond du
+% papier lorsque l'option `paper' n'est pas employée.
+\ExplSyntaxOn
+\NewDocumentCommand { \letgutdefaultpagecolor } {  } {
+  \c__letgut_default_pagecolor_screen_clist
+}
+\definecolor{letgutdefaultpagecolor}{rgb}{\c__letgut_default_pagecolor_screen_clist}
+
+\NewDocumentCommand { \letgutalertboxdefaultcolor } {  } {
+  \c__letgut_default_alert_box_color_tl
+}
+
+\NewDocumentCommand { \letgutallcolorslinks } {  } {
+  \c__letgut_default_allcolors_links_color_tl
+}
+
+\NewDocumentCommand { \docker } { s } {
+  \IfBooleanTF{#1}%
+  {\software{docker}}%
+  {\software[https://docs.docker.com/]{Docker}}%
+}
+
+\pdfstringdefDisableCommands{%
+  \def\docker{Docker}
+}
+\ExplSyntaxOff
+
+% Acronymes
+\letgutacro[tag=thisdocument]{LD}{\LaTeX{} dépendant}
+\letgutacro[tag=thisdocument]{CD}{Compact Disc}[]
+\letgutacro[tag=thisdocument]{TLMGR}{\TeX~Live Manager}[gestionnaire \TeX~Live]
+\letgutacro[tag=thisdocument,short=no-op,short-format=\upshape] % Désactive les petites capitales
+{NOOP}
+{No Operation}
+[instruction nulle]
+\letgutacro{CPGÉ}{Classes Préparatoires aux Grandes Écoles}
+
+% Éléments du titre
+\title{%
+  Documentation de la
+  \texorpdfstring{%
+    \letgutcls%
+  }{%
+    classe letgut%
+  }%
+}
+\author{Association GUTenberg}
+\date{%
+  Version 0.9.6 en date du \today%
+  \texorpdfstring{%
+    \\
+    \url{https://framagit.org/gutenberg/letgut}%
+  }{%
+  }%
+}
+
+% \tcbset{index command name=\jobname-commands}
+% \makeindex[name=\jobname-commands,title=Index des commandes,extout=odx,extin=ond,columnseprule]
+% \makeindex[title=Index des concepts,extout=pdx,extin=pnd,columnseprule]
+\begin{document}
+
+\syntaxhl{%
+  LaTeX,%
+  acro,%
+  babel-french,%
+  biblatex,%
+  biolinum,%
+  % classes,%
+  csquotes,%
+  % graphicx,%
+  hologo,%
+  hyperref,%
+  letgut,%
+  listings,%
+  tcolorbox,%
+  varioref,%
+}
+
+\title{Introduction}
+\label{sec:introduction}
+L'association \gutenberg{} publie la \lettregut{}, son bulletin irrégulomestriel,
+depuis février 1993 \autocite{AssociationGUTenbergLettreGUTenberg}.
+
+Pour ce faire, une classe \hologo{(La)TeX} dédiée, maison, a peu à peu vu le
+jour\footnote{Notamment grâce au concours de \person{André, Jacques},
+  \person{Flipo, Daniel} et \person{Chupin, Maxime}.} mais, au gré des
+nouveaux besoins et des personnes qui ont assuré la publication de la \lettre{},
+son développement a été quelque peu erratique ; il n'aurait notamment pas été
+possible de publier son code en l'état. En outre, sa documentation était
+inexistante.
+
+Le \ca{} de l'association élu en novembre 2020 a souhaité fournir une classe
+mieux structurée, davantage pérenne et documentée, à même d'être publiée sur le
+\ctan{}. C'est désormais chose faite avec la présente \letgutcls\footnote{À
+  cette occasion, la classe a été légèrement renommée de \class[]{let-gut} en
+  \letgut{}.}.
+
+\title{Usage de la classe \letgut}
+\label{sec:usage-de-la}
+
+\section{Compilation}
+\label{sec:compilation}
+
+\begin{dbwarning}{\hologo{LuaLaTeX} (récent) et UTF-8 nécessaires}{lualatex-recent}
+  Les documents recourant à la \letgutcls{} doivent :
+  \begin{itemize}
+  \item être compilés avec le moteur \hologo{LuaLaTeX}\footnote{Dans une version
+      au minimum \texttt{1.13.2}, le format \software{lualatex} devant être dans
+      une version au minimum \texttt{2021.6.6}.} ;
+  \item avoir (de ce fait) comme codage d'entrée l'UTF-8\footnote{Y compris les
+      fichiers sources auxiliaires tels que les \file{.bib}.}.
+  \end{itemize}
+\end{dbwarning}
+
+La section \enquote{\nameref{recours-docker}}, \vpageref{recours-docker},
+détaille un moyen de de disposer d'une telle version de \hologo{LuaLaTeX} sans
+risque de perturber une installation de \hologo{(La)TeX} déjà existante.
+
+\section{Options}
+\label{sec:options}
+
+\subsection{Options de la \class*{article}}
+\label{sec:options-de-la}
+
+La \letgutcls{} est basée sur la \class*{article}, chargée avec les options
+\docAuxKey{twoside} et \docAuxKey{11pt} qui ne peuvent donc être
+surchargées. Les autres options peuvent être employées mais sont déconseillées
+par souci d'homogénéité de la mise en page des numéros successifs de la
+\lettregut{}.
+
+\subsection{Options de la \letgutcls}
+\label{sec:options-de-la}
+
+\subsubsection{Spécification}
+\label{sec:specification}
+
+Les options de la \letgutcls{} peuvent être spécifiées de deux façons :
+\begin{enumerate}
+\item en argument de la commande dédiée \refCom{letgutsetup} ;
+\item à la compilation, au moyen de la commande (à lancer dans un terminal) :
+\begingroup
+\lstset{basicstyle=\ttfamily\small}
+\terminal{lualatex '\PassOptionsToClass{£\meta{options}£}{letgut} \input{£\meta{fichier}£}'}{}
+\endgroup
+\end{enumerate}
+
+\begin{dbwarning}{Options de \letgut{} : pas en argument optionnel
+    de \docAuxCommand{documentclass}}{}
+  On évitera de passer les options de la \letgutcls{} en argument optionnel de
+  la commande \docAuxCommand{documentclass} et ce, de sorte à éviter les
+  conflits d'options avec les différents packages chargés.
+\end{dbwarning}
+
+\begin{docCommand}{letgutsetup}{\marg{options}}
+  \index{configuration}%
+  Cette commande permet de spécifier les \meta{options} de la \letgutcls{}.
+\end{docCommand}
+
+\subsubsection{Liste des options}
+\label{sec:liste-des-options}
+
+\begin{docKeys}
+  {
+    {
+      doc name = for-readers,
+      doc description = {\valinitdef[\docValue*{true}][\docValue*{true}]},
+    },
+    {
+      doc name = for-authors,
+      doc description = {\valinitdef[\docValue*{false}][\docValue*{true}]},
+    },
+  }%
+  %
+  Ces clés booléennes, contraires l'une de l'autre, activent les versions
+  respectivement \enquote{pour lecteurs} (par défaut) et \enquote{pour auteurs}
+  de la \lettre{}. Celles-ci mettent en page la \lettre{} respectivement :
+  \begin{itemize}
+  \item telle que les lecteurs finaux la liront ;
+  \item telle que les auteurs d'articles de la \lettre{} peuvent le souhaiter au
+    cours de leur rédaction, notamment sans :
+    \begin{itemize}
+    \item titre ;
+    \item (r)appel à cotisation (cf. clé \refKey{membership-reminder}) ;
+    \item éditorial\footnote{Ou avertissement s'il n'est pas trouvé.} (cf. clé
+      \refKey{editorial}) ;
+    \item informations sur \gut{}\footnote{Ou avertissement si elles ne sont pas
+        trouvées.}  (cf. clé \refKey{informations}) ;
+    \item fichiers attachés au \pdf{} produit (cf. clé
+      \refKey{reverse-files-attachement}).
+    \end{itemize}
+  \end{itemize}
+\end{docKeys}
+
+\begin{docKeys}
+  {
+    {
+      doc name = draft,
+      doc description = {\valinitdef[\docValue*{true}][\docValue*{true}]},
+    },
+    {
+      doc name = final,
+      doc description = {\valinitdef[\docValue*{false}][\docValue*{true}]},
+    },
+  }%
+  %
+  Ces clés booléennes, contraires l'une de l'autre, activent les versions
+  respectivement \enquote{brouillon} (par défaut) et \enquote{final} de la
+  \lettre{}.
+
+  En version \enquote{brouillon}, et seulement dans cette version% \footnote{Avec
+    % la version actuelle, une conséquence supplémentaire mais temporaire est
+    % que }
+  :
+  \begin{enumerate}
+  \item le \package*{lua-typo} est chargé\footnote{En fait, cela est
+      momentanément désactivé car le \package*{luacolor}, chargé en sous-main
+      par \package{lua-typo}, ne fonctionne actuellement pas bien avec une
+      fonctionnalité du noyau \hologo{LaTeX} utilisée par la classe (plus de
+      détails
+      \href{https://github.com/ho-tex/luacolor/issues/4}{ici}.)}. Celui-ci met
+    en lumière, par un changement de couleur, les lignes typographiquement
+    imparfaites d’un fichier \pdf*{} produit par \hologo{LuaLaTeX} ;
+  \item le mot \enquote{Brouillon} figure en filigrane sur chaque page ;
+  \item les boîtes trop pleines (\foreignloc{Overfull \docAuxCommand*{hbox}})
+    sont mises en évidence comme avec les classes standards.
+  \end{enumerate}
+\end{docKeys}
+
+\begin{docKeys}
+  {
+    {
+      doc name = screen,
+      doc description = {\valinitdef[\docValue*{true}][\docValue*{true}]},
+    },
+    {
+      doc name = paper,
+      doc description = {\valinitdef[\docValue*{false}][\docValue*{true}]},
+    },
+  }%
+  %
+  Ces clés booléennes, contraires l'une de l'autre, activent les formats de
+  sortie respectivement \enquote{écran} (par défaut) et \enquote{papier} de la
+  \lettre{}.
+
+  En version \enquote{écran}, et seulement dans cette version, la couleur de
+  fond du papier est par défaut non pas le blanc mais celle spécifiée (et
+  modifiable) par \refKey{pagecolor}.
+\end{docKeys}
+
+\begin{docKey}{number}{=\meta{numéro}}{\valinitdef}
+  Cette clé permet de spécifier le \meta{numéro} de la \lettre{}.
+\end{docKey}
+
+{%
+  % \tcbset{before lower=\vspace*{.5\baselineskip}\par}
+  \begin{docKey}{date}{=\meta{année}\texttt{-}\meta{mois} ou \meta{texte}}{\valinitdef[année et mois en cours]}
+    Cette clé permet de spécifier la date de la \lettre{}. Celle-ci est affichée sous
+    la forme :
+    \begin{itemize}
+    \item \enquote{\meta{Mois} \meta{année}} dans les cas où l'option :
+      \begin{itemize}
+      \item n'est pas employée (les mois et année en cours sont alors
+        utilisés) ;
+      \item est employée sous la forme \refKey*{date}™=™\meta{année}™-™\meta{mois}
+        où \meta{année} et \meta{mois} doivent être des nombres entiers
+        positifs. Les garde-fous suivants sont mis en place :
+        \begin{itemize}
+        \item si \meta{année} n'est pas celle en cours ou la suivante, elle est
+          remplacée par l'année en cours ;
+        \item si \meta{mois} n'est pas entre $1$ et $12$, il est remplacé par le
+          mois en cours ;
+        \end{itemize}
+      \end{itemize}
+    \item \enquote{\meta{texte}} si l'option est employée sous la forme
+      \refKey*{date}™=™\meta{texte}.
+    \end{itemize}
+  \end{docKey}
+}
+
+\begin{docKey}{pagecolor}{=\marg{couleur}}{\valinitdef[\docValue*{letgut_pagecolor}]}
+  Cette clé permet, si (et seulement) l'option \refKey{paper} \emph{n'}est
+  \emph{pas} employée, de spécifier (selon le modèle \enquote{rgb}) une
+  \meta{couleur} de fond du papier autre que celle appliquée par
+  défaut\footnote{C'est-à-dire \colorbox{letgutdefaultpagecolor}{celle-ci}% , dont
+    % la valeur \enquote{rgb} est \docValue*{\letgutdefaultpagecolor}
+    .}.
+\end{docKey}
+
+\begin{docKey}{allcolorslinks}{=\meta{couleur}}{\valinitdef[\docValue*{letgut_allcolors_links}]}
+  Cette clé permet de spécifier (selon le modèle \enquote{\foreignloc{named}})
+  une \meta{couleur} pour (tous) les liens hypertextes autre que celle
+  \docColor{letgut_allcolors_links} par défaut\footnote{C'est-à-dire
+    \textcolor{letgut_allcolors_links}{celle-ci}% , égale
+    % à \docValue*{\letgutallcolorslinks}
+    .}.
+\end{docKey}
+
+\begin{docKey}{membership-reminder}{}{\valinitdef[\docValue*{true}][\docValue*{true}]}
+  Cette clé booléenne affiche automatiquement un (r)appel à cotisation en bas de
+  1\iere{} page de la \lettre{}.
+\end{docKey}
+
+\begin{docKey}{editorial}{}{\valinitdef[\docValue*{true}][\docValue*{true}]}
+  Cette clé booléenne importe automatiquement en tout début de la \lettre{}
+  (néanmoins après le titre et le sommaire) le \file*{editorial.tex} contenant
+  l'éditorial. Si aucun \file*{editorial.tex} n'est trouvé, un avertissement est
+  émis lors de la compilation et une boîte d'alerte est affichée en 1\iere{}
+  page.
+\end{docKey}
+
+\begin{docKey}{informations}{}{\valinitdef[\docValue*{true}][\docValue*{true}]}
+  Cette clé booléenne importe automatiquement en dernière page de la \lettre{}
+  le \file*{informations-gut.tex} contenant toutes les informations sur
+  \gut{}. Si aucun \file*{informations-gut.tex} n'est trouvé, un avertissement
+  est émis lors de la compilation et une boîte d'alerte est affichée en dernière
+  page.
+\end{docKey}
+
+\begin{docKey}{detailedtoc}{}{\valinitdef[\docValue*{false}][\docValue*{true}]}
+  Par défaut, la table des matières automatiquement insérée en début de document
+  a pour niveau de profondeur celui des titres (saisis via la \refCom{title}),
+  et seulement les titres des articles. La clé booléenne \refKey{detailedtoc}
+  a pour effet que cette table des matières est détaillée au maximum (son niveau
+  de profondeur allant jusqu'aux sous-paragraphes), ce qui peut être utile lors
+  de la conception d'un numéro de la \lettre{}.
+
+  \begin{dbremark}{Tables des matières locales}{}
+    Chaque article peut contenir une table des matières locale, affichée au
+    moyen de la commande \docAuxCommand{localtableofcontents} (fournie par le
+    \package*{etoc} chargé en sous-main par la \letgutcls{}). Le niveau de
+    profondeur est par défaut celui des sections mais cela peut être modifié en
+    la faisant précéder de la commande \docAuxCommand{etocsetnexttocdepth} (dont
+    l'argument est par exemple ™subsection™).
+  \end{dbremark}
+\end{docKey}
+
+\begin{docKey}{reverse-files-attachement}{}{\valinitdef[pas de valeur]}
+  Si, et seulement si, la \lettre{} est à la fois en version pour les lecteurs
+  (cf. \refKey{for-readers}) et en sortie écran (cf. \refKey{screen}), chacun
+  des fichiers nécessaires (et suffisants) à la compilation d'un de ses articles
+  est :
+  \begin{itemize}
+  \item attaché au \pdf{} produit ;
+  \item accessible en cliquant sur l'hyperlien correspondant en forme de
+    trombone : \noattachfile[icon=Paperclip] ;
+  \end{itemize}
+  L'option \refKey{reverse-files-attachement} inverse ce comportement par
+  défaut.
+\end{docKey}
+
+\subsection{Options autres}
+\label{sec:options-autres}
+
+D'autres options peuvent être passées à la \letgutcls{}. Il est ainsi possible
+de faire usage de langues du \package*{babel}, autres que le français et
+l'anglais déjà chargées par \letgut{}, en les stipulant en option de
+\docAuxCommand{documentclass} et en les employant selon la syntaxe de ce
+package.
+
+\section{Titre et titres courants}
+\label{sec:titre}
+Si la commande \docAuxCommand{title}\marg{titre} est
+\begin{description}
+\item[\emph{non} utilisée :] le titre du document est construit à partir du
+  \meta{numéro} et de la \meta{date} spécifiés (cf. clés \refKey{number} et
+  \refKey{date}). Il figure alors automatiquement en 1\iere{} page sous la forme
+  \enquote{Numéro \meta{numéro} -- \meta{date}}. Le titre courant est alors
+  \enquote{La \lettregut{}, \meta{date}} ;
+\item[\phantom{\emph{non}} utilisée\footnotemark{} :]\footnotetext{Ainsi que les
+    habituelles commandes \docAuxCommand{author} et \docAuxCommand{date}.}  et
+  ce, \emph{avant \lstinline+\\begin\{document\}+}, le \meta{titre} du document
+  figure alors automatiquement en 1\iere{} page sous sa forme habituelle et est
+  suivie d'un changement de page. Le titre courant est alors
+  \enquote{\meta{titre}, \meta{date}}.
+\end{description}
+
+\begin{dbwarning}{\docAuxCommand{title} et \docAuxCommand{author}
+    $\neq$ avant et après \lstinline+\\begin\{document\}+}{}
+  Les commandes \docAuxCommand{title} et \docAuxCommand{author} ne se comportent
+  pas de la même façon avant et après ™\begin{document}™ (cf. sections
+    \nameref{sec:structuration} \vpageref{sec:structuration} et
+    \nameref{sec:sign-des-articl} \vpageref{sec:sign-des-articl}).
+\end{dbwarning}
+
+\begin{dbwarning}{Commande \docAuxCommand{maketitle} à \emph{ne pas} employer}{}
+  La commande \docAuxCommand{maketitle} est à \emph{ne pas} employer car elle
+  l'est en sous-main par la classe.
+\end{dbwarning}
+
+\section{Importation d'articles}
+\label{sec:import-dart}
+
+\begin{dbwarning}{Importation de fichiers d'articles}{}
+  Si le contenu d'un article est stocké dans un \meta{fichier enfant}\file{.tex},
+  on l'importera dans un fichier parent recourant à la \letgutcls{} :
+  \begin{itemize}
+  \item \emph{non pas} au moyen de la commande ordinaire \docAuxCommand{input} ;
+  \item \emph{mais}  au moyen de la commande \refCom{inputarticle}.
+  \end{itemize}
+\end{dbwarning}
+
+\begin{docCommands}
+  {
+    {
+      doc name = inputarticle,
+      doc parameter = \marg{fichier enfant},
+    },
+    {
+      doc name = inputarticle*,
+      doc parameter = \marg{fichier enfant},
+    },
+  }
+  Cette commande permet d'importer le contenu d'un article stocké dans un
+  \meta{fichier enfant}\file{.tex}.
+
+  En version étoilée, les fichiers nécessaires (et suffisants) à la compilation
+  de l'article ne sont pas attachés au \pdf{} produit (cf. clé
+  \refKey{reverse-files-attachement}).
+
+  En plus de l'importation proprement dite, cette commande procède à un certain
+  nombre de réinitialisations.
+\end{docCommands}
+
+\begin{docCommand}{inputarticle}{\marg{fichier enfant}}
+\end{docCommand}
+
+\section{Structuration}
+\label{sec:structuration}
+
+\begin{docCommands}[
+  doc parameter = \oarg{intitulé alternatif}\marg{intitulé}
+  ]
+  {
+    { doc name = title },
+    { doc name = subtitle },
+    { doc name = section },
+    { doc name = subsection },
+    { doc name = subsubsection },
+    { doc name = paragraph },
+    { doc name = subparagraph },
+  }
+  %
+  Ces commandes permettent de structurer le contenu de la \lettre{} :
+  \begin{itemize}
+  \item \refCom{title} est celle de plus haut niveau, introduisant
+    l'\meta{intitulé} de chaque article (automatiquement composé en grandes
+    capitales et précédé de l'ornement \aldineleft) ;
+  \item \refCom{subtitle}, de niveau suivant et facultative, introduisant un
+    \meta{intitulé} d'éventuel sous-titre d'article (automatiquement composé en
+    grandes capitales). Ceci peut être utile par exemple pour distinguer des
+    parties indépendantes d'un même article ;
+  \item celles de niveaux suivants sont les habituelles commandes de
+    structuration fournies par la \class*{article}.
+  \end{itemize}
+\end{docCommands}
+
+\begin{dbremark}{Structure non numérotée}{}
+  Les titres, sous-titres, sections, sous-sections, etc. de la \lettre{} ne sont
+  pas numérotés. Aussi pourra-t-on, pour faire référence à l'une de ces
+  rubriques, recourir aux commandes :
+  \begin{itemize}
+  \item \docAuxCommand{nameref} pour en citer l'\meta{intitulé} ;
+  \item \docAuxCommand{vpageref} pour en citer la page ;
+  \item \docAuxCommand{enquote} pour, le cas échéant, faire figurer
+    l'\meta{intitulé} entre guillemets ;
+  % \item \docAuxCommand{namecref} (fournie par le \package*{cleveref}, chargé par
+  %   \letgut{}) pour en citer la nature (le cas échéant).
+  \end{itemize}
+  ces trois commandes étant directement utilisables puisque fournies par les
+  packages respectivement \package{hyperref}, \package{varioref} et
+  \package{csquotes}, chargés en sous-main par la \letgutcls{}.
+\end{dbremark}
+
+\begin{ltx-code-result}[title addon=références croisées aux rubriques,listing options app={deletekeywords={[3]{nameref,section}}}]
+On lira avec intérêt la section \enquote{\nameref{sec:acronymes}}
+\vpageref{sec:acronymes}.
+\end{ltx-code-result}
+
+\section[Personnes et auteurs]{Noms de personnes et d'auteurs d'articles}
+\label{sec:sign-des-articl}
+
+% Les prénom, nom et titre d'une personne peuvent être affichés au moyen de la
+% commande \refCom{person} suivante.
+
+\begin{docCommands}[
+  doc name = person,
+  doc name = author,
+  ]
+  {
+    {
+      doc name = person,
+      doc parameter = \marg{données}
+    },
+    {
+      doc name = person,
+      doc parameter = \brackets{\meta{données$_1$} and \meta{données$_2$}[ and ...]}
+    },
+    {
+      doc name = person*,
+      doc parameter = \brackets{\meta{données$_1$} and \meta{données$_2$}[ and ...]}
+    },
+    {
+      doc name = author,
+      doc parameter = \marg{données}
+    },
+    {
+      doc name = author,
+      doc parameter = \brackets{\meta{données$_1$} and \meta{données$_2$}[ and ...]}
+    },
+    {
+      doc name = author*,
+      doc parameter = \brackets{\meta{données$_1$} and \meta{données$_2$}[ and ...]}
+    },
+  }
+  \index{auteur}
+  \index{personne}
+  %
+  Ces commandes affichent\footnote{Au fer à droite pour \refCom{author}.} les
+  \meta{données} (noms et éventuels prénoms et titres) d'une ou plusieurs
+  personnes ou d'un ou plusieurs auteurs d'articles, ces \meta{données}
+  étant spécifiées :
+  \begin{description}
+  \item[pour un individu unique] selon l'un des formats suivants :
+    \begin{itemize}
+    \item \meta{nom}
+    \item \meta{nom}™, ™\meta{prénom}
+    \item \meta{nom}™, ™\meta{prénom}™, ™\meta{titre}
+    \end{itemize}
+  \item[pour des individus multiples :]\leavevmode
+    \begin{itemize}
+    \item selon le même schéma que pour un individu unique ;
+    \item les \meta{données} de chacun des individus étant séparées par le mot clé
+      ™and™.
+    \end{itemize}
+  \end{description}
+  Les version étoilées de ces commandes trient alphabétiquement les listes de
+  personnes ou d'auteurs.
+\end{docCommands}
+
+Indépendamment de la casse utilisée en entrée, pour chaque \meta{nom} et
+\meta{prénom}, chacune des initiales et des premières lettres après un espace ou
+un tiret est affiché en grande capitale.
+
+\begin{ltx-code-result}[title addon=personnes]
+On peut dire merci à
+\person{Knuth, Donald E., dieu and Lamport, Leslie} !
+\end{ltx-code-result}
+
+\begin{ltx-code-result}[title addon=auteur,listing options app={deletekeywords={[3]{author}}}]
+\begin{displayquote} % Fourni par `csquotes' chargé par `letgut'
+  Wait, wait, I never said that.
+  \author{knuth, dONALD e.}
+\end{displayquote}
+\end{ltx-code-result}
+
+\section{Aide à la saisie et homogénéisation de la mise en forme}
+\label{sec:aide-la-saisie}
+
+Les articles de la \lettre{} sont émaillés de concepts (packages ou classes
+\hologo{(La)TeX}, logiciels, etc.) et de termes et expressions
+(\enquote{\gut{}}, \enquote{\lettre{}}, etc.) employés de façon
+récurrente. Aussi des commandes spécifiques sont-elles prévues de façon à en
+faciliter la saisie et à en homogénéiser la mise en forme.
+
+\subsection{Packages et classes, logiciels, fichiers, locutions étrangères,
+  points de code Unicode}
+\label{sec:classes-packages-et}
+
+\begin{docCommands}
+  {
+    {
+      doc name = package,
+      doc parameter = \oarg{URL}\marg{nom},
+    },
+    {
+      doc name = package*,
+      doc parameter = \oarg{URL}\marg{nom}\oarg{préfixe},
+    },
+    {
+      doc name = class,
+      doc parameter = \oarg{URL}\marg{nom},
+    },
+    {
+      doc name = class*,
+      doc parameter = \oarg{URL}\marg{nom}\oarg{préfixe},
+    },
+  }
+  %
+  Ces commandes affichent le \meta{nom} d'un package ou d'une classe
+  \hologo{(La)TeX}. Le \meta{nom} affiché est un lien hypertexte si et seulement
+  si l'argument optionnel est :
+  \begin{description}
+  \item[\emph{non} employé] la cible étant alors
+    \url{https://ctan.org/pkg/}\meta{nom} ;
+  \item[\phantom{\emph{non}} employé] mais non vide, la cible étant alors
+    \meta{URL}.
+  \end{description}
+  Pour que le \meta{nom} affiché ne soit pas un lien hypertexte, il suffit
+  d'employer un argument optionnel vide.
+
+  Les versions étoilées font précéder le \meta{nom} d'un \meta{préfixe} qui, par
+  défaut, est respectivement \enquote{package} et \enquote{classe}.
+\end{docCommands}
+
+\begin{ltx-code-result}[title addon=packages et classes,listing options app={deletekeywords={[4]{tables}}}]
+La \class*{letgut} s'appuie entre autres sur le \package*{etoc}
+(qui permet de personnaliser les tables des matières).
+
+Une des classes s'appuyant sur le \package*[]{etoc} est
+\class[https://framagit.org/gutenberg/letgut/]{letgut}.
+\end{ltx-code-result}
+
+\begin{docCommands}
+  {
+    {
+      doc name = software,
+      doc parameter = \oarg{URL}\marg{nom},
+    },
+    {
+      doc name = software*,
+      doc parameter = \oarg{URL}\marg{nom}\oarg{préfixe},
+    },
+  }
+  %
+  Ces commandes affichent le \meta{nom} d'un logiciel qui est optionnellement un
+  lien hypertexte vers \meta{URL}.  La version étoilée fait précéder le
+  \meta{nom} d'un \meta{préfixe} qui, par défaut, est \enquote{logiciel}.
+\end{docCommands}
+
+\begin{docCommands}
+  {
+    {
+      doc name = file,
+      doc parameter = \marg{nom},
+    },
+    {
+      doc name = file*,
+      doc parameter = \marg{nom}\oarg{préfixe},
+    },
+  }
+  %
+  Ces commandes affichent le \meta{nom} d'un fichier.  La version étoilée fait
+  précéder le \meta{nom} d'un \meta{préfixe} qui, par défaut, est
+  \enquote{fichier}.
+\end{docCommands}
+
+\begin{ltx-code-result}[title addon=logiciels et fichiers,listing options app={deletekeywords={[3]{file,plus,l,tex}}}]
+Le \file*{test.tex} a été ouvert dans le
+\software*[https://www.gnu.org/software/emacs/]{Emacs}, plus
+précisément dans \software*{Emacs}[l'éditeur de texte].
+\end{ltx-code-result}
+
+\begin{dbwarning}{Commandes pas toutes bienvenues en \docAuxCommand{title} et
+    \docAuxCommand{subtitle}}{}
+  Lorsqu'elles sont employées en argument des commandes \refCom{title} et
+  \refCom{subtitle}, les versions étoilées de ces commandes ont des effets
+  indésirables (préfixes pas en grandes capitales et signets non conformes).
+\end{dbwarning}
+
+\begin{docCommand}{foreignloc}{\marg{locution}}
+  Cette commande est conçue pour afficher une \meta{locution} étrangère.
+\end{docCommand}
+
+\begin{docCommand}{latinloc}{\marg{locution}}
+  Cette commande est conçue pour afficher une \meta{locution} latine.
+\end{docCommand}
+
+\begin{ltx-code-result}[title addon=locutions étrangères,listing options app={deletekeywords={[3]{options}}}]
+Attention aux \foreignloc{load-time options} !
+Mais... \latinloc{errare humanum est}.
+\end{ltx-code-result}
+
+\begin{docCommand}{Ucode}{\oarg{nom}\marg{point de code}}
+  Cette commande est conçue pour afficher le \meta{point de code} et
+  éventuellement le \meta{nom} d'un caractère Unicode sous la forme
+  \enquote{U+\meta{point de code} (\meta{\textsc{nom}})}.
+\end{docCommand}
+
+\begin{ltx-code-result}[title addon=Point de code d'un caractère Unicode,listing options app={deletekeywords={[3]{options}}}]
+Unicode a prévu le caractère \Ucode[symbole numéro]{2116}.
+\end{ltx-code-result}
+
+\subsection{Termes et expressions}
+\label{sec:termes}
+
+\begin{docCommands}
+  {
+    { doc name = gutenberg },
+    { doc name = gut },
+    { doc name = assogut },
+    { doc name = Assogut },
+    { doc name = lettres },
+    { doc name = lettresgut },
+    { doc name = cahier },
+    { doc name = cahiers },
+    { doc name = cahiergut },
+    { doc name = cahiersgut },
+    { doc name = letgut },
+    { doc name = letgutcls },
+    { doc name = knuth },
+    { doc name = lamport },
+    { doc name = tl },
+    { doc name = tugboat },
+    { doc name = linux },
+    { doc name = macos },
+    { doc name = windows },
+  }
+  %
+  Ce que ces commandes affichent est répertorié dans le \vref{tab:raccourcis}.
+\end{docCommands}
+
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    \refCom{gutenberg}  & \gutenberg  \\
+    \refCom{gut}        & \gut        \\
+    \refCom{assogut}    & \assogut    \\
+    \refCom{Assogut}    & \Assogut    \\
+    \refCom{lettres}    & \lettres    \\
+    \refCom{lettresgut} & \lettresgut \\
+    \refCom{cahier}     & \cahier     \\
+    \refCom{cahiergut}  & \cahiergut  \\
+    \refCom{cahiers}    & \cahiers    \\
+    \refCom{cahiersgut} & \cahiersgut \\ \midrule
+    \refCom{letgut}     & \letgut     \\
+    \refCom{letgutcls}  & \letgutcls  \\ \midrule
+    \refCom{knuth}      & \knuth      \\
+    \refCom{lamport}    & \lamport    \\
+    \refCom{tl}         & \tl         \\
+    \refCom{tugboat}    & \tugboat    \\ \midrule
+    \refCom{linux}      & \linux      \\
+    \refCom{macos}      & \macos      \\
+    \refCom{windows}    & \windows    \\ \bottomrule
+  \end{tabular}
+  \caption{Effet des commandes de raccourcis}
+  \label{tab:raccourcis}
+\end{table}
+
+Par homogénéité avec les commandes \refCom{class} et \refCom{class*}, on aurait
+pu souhaiter que les terme et expression \enquote{\letgut} et
+\enquote{\letgutcls} soient produits par \refCom{letgut} et
+\docAuxCommand*{letgut*}. Mais cette dernière commande, étoilée, a dû être
+remplacée par une commande non étoilée (\refCom{letgutcls}), sans quoi un
+problème technique aurait empêché l'utilisation de \refCom{letgut} en argument
+de \docAuxCommand{section}%
+\footnote{Plus de détails
+  \href{https://tex.stackexchange.com/q/493017/18401}{ici}.}.
+
+\begin{dbwarning}{Commande \refCom{letgutcls} pas bienvenue en \docAuxCommand{title} et
+    \docAuxCommand{subtitle}}{}
+  Lorsqu'elle est employée en argument des commandes \refCom{title} et
+  \refCom{subtitle}, la commande \refCom{letgutcls} a un effet indésirable
+  (préfixe pas en grandes capitales).
+\end{dbwarning}
+
+\begin{docCommands}[
+    doc new=2022-10-03,
+    doc name=lettrenumber,
+    doc parameter = \oarg{entier relatif signé}
+  ]
+  {
+    { },
+    { doc name=lettrenumber* },
+  }
+  \index{configuration}%
+  Cette commande affiche le numéro de la \lettre{} :
+  \begin{description}
+  \item[en cours] si l'argument optionnel n'est pas employé ;
+  \item[décalé de celui en cours] de l'\meta{entier relatif
+      signé}\footnote{\label{entier-signe}C.-à-d. un \enquote{plus} ou un
+      \enquote{moins} (\lstinline|+| ou \lstinline|-|) suivi d'un nombre
+      entier.} spécifié sinon.
+  \end{description}
+  En version étoilée, la chaîne \enquote{\no{}} précède ce numéro.
+\end{docCommands}
+
+\ExplSyntaxOn
+\int_gset:Nn \g__letgut_number_int {46}
+\ExplSyntaxOff
+
+\begin{ltx-code-result}[title addon=emploi de la commande \refCom{lettrenumber},listing options app={deletekeywords={[6]{cours,lettre}}}]
+Si le numéro de la \lettre{} en cours est 46,
+celui de la \lettre :
+\begin{enumerate}
+\item en cours est \lettrenumber ;
+\item en cours est le \lettrenumber* ;
+\item suivante est \lettrenumber[+1] ;
+\item précédente est le \lettrenumber*[-1].
+\end{enumerate}
+\end{ltx-code-result}
+
+\begin{docCommands}[]
+  {
+    { doc name = lettre },
+    { doc name = lettre,  doc new=2022-10-03, doc parameter = \oarg{argument optionnel} },
+    { doc name = lettre*, doc new=2022-10-03, doc parameter = \oarg{argument optionnel} },
+    { doc name = lettregut },
+    { doc name = lettregut,  doc new=2022-10-03, doc parameter = \oarg{argument optionnel} },
+    { doc name = lettregut*, doc new=2022-10-03, doc parameter = \oarg{argument optionnel} },
+  }
+  %
+  Ces commandes affichent les chaînes de caractères respectivement
+  \enquote{\lettre} et \enquote{\lettregut}, le cas échéant suivies du numéro
+  de la \lettre{} :
+  \begin{description}
+  \item[en cours] si l'\meta{argument optionnel} est un point (™.™) ;
+  \item[décalé de celui en cours] de ce qui est spécifié si l'\meta{argument optionnel} est un
+    entier relatif signé\footref{entier-signe} ;
+  \item[spécifié] si l'\meta{argument optionnel} est autre.
+  \end{description}
+  En version étoilée, la chaîne \enquote{\no{}} précède le numéro (seulement si
+  l'\meta{argument optionnel} est employé).
+\end{docCommands}
+
+\begin{ltx-code-result}[title addon=emplois des commandes \refCom{lettre} et \refCom{lettregut},listing options app={deletekeywords={[6]{cours,lettre}}}]
+Si le numéro de la \lettre{} en cours est 46, on a :
+\begin{enumerate}
+\item \lettre
+\item \lettre[.]
+\item \lettre[+10]
+\item \lettre[-10]
+\item \lettre[43]
+\item \lettre[coucou]
+\item \lettre*[.]
+\item \lettre*[+10]
+\item \lettre*[-10]
+\item \lettre*[43]
+\item \lettre*
+\end{enumerate}
+On fait usage de ces commandes dans la \lettregut*[.].
+\end{ltx-code-result}
+
+\subsection{Touches de clavier}
+\label{sec:touches-de-clavier}
+
+Afin de disposer d'un moyen simple, riche et élégant pour composer des touches
+de clavier, la \letgutcls{} s'appuie sur le \package*{biolinum} et notamment sa
+commande ™\LKey™. Cette dernière a été légèrement étendue de façon à faciliter
+la saisie pour toutes les touches des diacritiques utilisés en français.
+
+\begin{ltx-code-result}[title addon=touches de clavier]
+% De base (échantillon) :
+\LKey{A} \LKey{Z} \LKey{0} \LKey{9}
+
+\LKeyF{1} \LKeyF{12}
+
+\LKeyCtrl \LKeyAlt \LKeyAltGr \LKeyShift \LKeyEnter \LKeyTab
+
+\LKeyCtrlX{A} \LKeyShiftX{A} \LKeyAltX{A} \LKeyAltGrX{A}
+
+\LKeyAt \LKeyScreenUp \LKeyScreenDown \LKeyCommand \LKeyOptionKey
+
+\LMouseN \LMouseL \LMouseM \LMouseR
+
+\LKey{exclam} \LKey{numbersign} \LKey{percent} \LKey{backslash}
+
+% Ajoutés par la classe `letgut`
+\LKey{à} \LKey{À} \LKey{â} \LKey{Â} \LKey{é} \LKey{É}
+\LKey{è} \LKey{È} \LKey{ê} \LKey{Ê} \LKey{ë} \LKey{Ë}
+\LKey{î} \LKey{Î} \LKey{ï} \LKey{Ï}
+\LKey{ô} \LKey{Ô}
+\LKey{ù} \LKey{Ù} \LKey{û} \LKey{Û} \LKey{ü} \LKey{Ü}
+\LKey{ÿ} \LKey{Ÿ} \LKey{ç} \LKey{Ç}
+\end{ltx-code-result}
+
+\begin{dbwarning}{Touche de clavier du symbole € manquant}{}
+  La touche de clavier du symbole € n'est pas fournie par le
+  \package*{biolinum}.
+\end{dbwarning}
+
+\section{Codes informatiques}
+\label{sec:code-informatique}
+
+Cette section est consacrée aux outils spécifiques à la \letgutcls{} permettant
+de faire figurer du code informatique dans la \lettre{}.
+
+\subsection{Codes \hologo{(La)TeX}}
+\label{sec:exemples-de-codes}
+
+\subsubsection{Exemples de codes \hologo{(La)TeX}, possiblement avec résultats}
+\label{sec:listings-}
+
+Afin de présenter aisément et de façon homogène les exemples de codes
+\hologo{(La)TeX}, possiblement avec leurs résultats, la \letgutcls{} fournit les
+environnements \enquote{verbatim} suivants.
+
+\begin{docEnvironments}[
+  doc parameter = \oarg{options},
+  doclang/environment content = code,
+  ]{
+    {
+      doc name = ltx-code,
+      % doc description = code (seulement),
+    },
+    {
+      doc name = ltx-code-result,
+      % doc description = % code
+      % $+$ résultat (interne),
+    },
+    {
+      doc name = ltx-code-external-result,
+      doc parameter = \oarg{options}\marg{fichier},
+      % doc description = % code
+      % $+$ résultat (externe),
+    },
+  }
+  Ces environnements affichent le \meta{code} \hologo{(La)TeX} qui y est inséré et
+  pour :
+  \begin{description}
+  \item[\refEnv{ltx-code}] seulement ce \meta{code} ;
+  \item[\refEnv{ltx-code-result}] également le résultat, compilé en même temps
+    que la \lettre{} ;
+  \item[\refEnv{ltx-code-external-result}] également le résultat, compilé
+    indépendamment de la \lettre{} et dont le \meta{fichier} image est spécifié.
+  \end{description}
+\end{docEnvironments}
+
+\begin{dbremark}{Mise en page des exemples de codes}{}
+  \begin{enumerate}
+  \item Les exemples de codes (avec ou sans résultats) sont par défaut
+    automatiquement coupés en frontière de page.
+  \item Les exemples de codes avec résultats (environnements
+    \refEnv{ltx-code-result} et \refEnv{ltx-code-external-result}), présentent
+    ces codes et résulats :
+    \begin{itemize}
+    \item l'un sous l'autre par défaut ;
+    \item l'un à gauche de l'autre si l'option ™sidebyside™ est
+      employée.
+    \end{itemize}
+  \end{enumerate}
+\end{dbremark}
+
+\begin{dbwarning}{Exemples de codes avec résultats : possiblement
+    flottants}{exemples-flottants}
+  Si l'option ™sidebyside™ est passée à l'un ou l'autre des
+  environnements \refEnv{ltx-code-result} et \refEnv{ltx-code-external-result},
+  l'exemple :
+  \begin{itemize}
+  \item présente ses code et résultat en regard ce qui rend impossible sa
+    coupure en frontière de page ;
+  \item est alors automatiquement flottant.
+  \end{itemize}
+  Dans le cas où cet exemple (\no\meta{n}) s'avère se trouver sur une page
+  (\meta{q}) autre que celle (\meta{p}) de son point d'insertion, deux
+  références croisées sont automatiquement insérées :
+  \begin{description}
+  \item[une \enquote{avant} :] au point d'insertion de l'exemple pour indiquer
+    qu'il est à consulter plus loin ; son texte, \emph{par défaut}
+    \enquote{Cf. exemple \meta{n} page \meta{q}.}, peut être surchargé au moyen
+    de l'option \refKey{reference text} ;
+  \item[une \enquote{arrière} :] à la fin du titre de l'exemple ; son texte est
+    \enquote{ (cf. page \meta{p})}.
+  \end{description}
+\end{dbwarning}
+
+Ces trois environnements admettent des \meta{options} :
+\begin{itemize}
+\item (toutes) celles acceptées par l'environnement
+  \docAuxEnvironment{tcblisting} et la commande \docAuxCommand{newtcblisting}
+  fournis par la bibliothèque ™listings™ du
+  \package*{tcolorbox}\footnote{Et, aussi, les commandes
+    \docAuxCommand{DeclareTCBListing} et assimilées fournies par la bibliothèque
+    \lstinline+xparse+ de ce package.}. Elles permettent notamment de surcharger
+  les réglages par défaut, par exemple :
+  \begin{itemize}
+  \item de faire figurer l'éventuel résultat, non pas sous le code comme c'est
+    le cas par défaut, mais en regard (à droite) au moyen de l'option
+    ™sidebyside™ ;
+  \item de supprimer les numéros de ligne au moyen de l'option
+\begin{ltx-code}
+listing options={numbers=none}
+\end{ltx-code}
+  \end{itemize}
+\item trois spécifiques à ces environnements :
+  \begin{docKey}{title addon}{=\meta{supplément}}{\valinitdef}
+    Cette option permet d'adjoindre au titre de ces exemples, qui sont par
+    défaut et automatiquement \enquote{Exemple \meta{n}}, un \meta{supplément}.
+  \end{docKey}
+  \begin{docKey}{result width}{=\meta{longueur}}{\valinitdef[\docAuxCommand*{linewidth}]}
+    Cette option, utile seulement pour l'environnement
+    \refEnv{ltx-code-external-result}, permet de spécifier une largeur autre que
+    celle initiale pour le fichier image du résultat, compilé indépendamment de
+    la \lettre{}.
+  \end{docKey}
+  \begin{docKey}{reference text}{=\meta{texte}}{\valinitdef[Cf. exemple \meta{n} page \meta{q}.]}
+    Cette option n'a d'effet que :
+    \begin{itemize}
+    \item avec l'un ou l'autre des environnements \refEnv{ltx-code-result} et
+      \refEnv{ltx-code-external-result} ;
+    \item lorsque l'option ™sidebyside™ leur est passée ;
+    \item lorsque l'exemple s'avère se trouver sur une page autre que
+      celle de son point d'insertion.
+    \end{itemize}
+    Elle permet alors de surcharger le texte \enquote{Cf. exemple \meta{n} page
+      \meta{q}.} automatiquement inséré au point d'insertion de l'exemple
+    (cf.~\vref{wa-exemples-flottants})\footnote{Il est par exemple possible de
+      s'affranchir de ce texte en recourant à \lstinline+reference text=\{\}+.}.
+    \begin{dbwarning}{\refKey{reference text} avant \lstinline+sidebyside+}{}
+      Pour qu'elle soit prise en compte, l'option \refKey{reference text} doit
+      être passée \emph{avant} l'option ™sidebyside™.
+    \end{dbwarning}
+  \end{docKey}
+\end{itemize}
+
+\subsubsection{Coloration syntaxique}
+\label{sec:coloration}
+
+Par défaut, en début de document et de chaque fichier importé au moyen de
+\refCom{inputarticle}, le langage supposé dans ces exemples de codes est
+\hologo{TeX}, chargé (seulement) avec ses \enquote{dialectes} :
+\begin{itemize}
+\item ™primitive™, ™common™, ™plain™, ™LaTeX™, ™AlLaTeX™ fournis par le
+  \package*{listings} ;
+\item ™classes™ fourni par \letgutcls{} (répertoriant les classes disponibles
+  sur le \ctan{}).
+\end{itemize}
+Une conséquence notable est la suivante :
+\begin{dbwarning}{Coloration syntaxique réduite par défaut}{}
+  La coloration syntaxique dans les exemples de codes n'est par défaut active
+  que pour le langage \hologo{TeX} et ses dialectes ™primitive™, ™common™,
+  ™plain™, ™LaTeX™, ™AlLaTeX™ et ™classes™.
+\end{dbwarning}
+
+Il est néanmoins possible de spécifier d'autres langages et dialectes au moyen
+de la commande \refCom{syntaxhl} suivante, à insérer avant le début de l'exemple
+de code concerné.
+
+\begin{docCommands}[
+doc name = syntaxhl,
+doc parameter = \marg{liste de dialectes},
+]
+{
+  { },
+  { doc parameter = \oarg{langage}\marg{liste de dialectes} },
+}
+Cette comande permet de spécifier :
+\begin{itemize}
+\item un \meta{langage} (par défaut \hologo{TeX}) ;
+\item une \meta{liste de dialectes}, séparés par des virgules ;
+\end{itemize}
+auxquels on souhaite que s'applique la coloration syntaxique.
+\end{docCommands}
+
+\begin{dbwarning}{Dialectes colorés syntaxiquement seulement si définis}{}
+  Ceci suppose que ces langages et dialectes sont définis (et saisis selon la
+  syntaxe du \package*{listings}) dans le \file*{letgut-lstlang.sty} situé :
+  \begin{itemize}
+  \item soit dans le dossier de la \lettre{} en cours ;
+  \item soit dans le dossier parent de celui de la \lettre{} en cours ;
+  \item soit  dans un dossier de la \tds{}
+  \end{itemize}
+\end{dbwarning}
+
+Pour le langage \hologo{TeX}, ces dialectes sont essentiellement les classes et
+les packages \hologo{(La)TeX} et un exemple de déclaration de tel dialecte est
+fourni section~\enquote{\nameref{sec:exemple-de-decl}},
+\vpageref{sec:exemple-de-decl}.
+
+\subsection{Entrées et sorties dans un terminal}
+\label{sec:entrees-sorties}
+
+Afin de présenter aisément et de façon homogène des exemples de commandes
+entrées et éventuellement de leurs sorties correspondantes, la \letgutcls{}
+fournit la commande à arguments \enquote{verbatim} suivante.
+
+\begin{docCommand}{terminal}{\oarg{prompt}\oarg{options}\marg{stdin}\marg{stdout}}
+  %
+  Cette commande affiche les codes en entrée (\meta{stdin}) et en sortie
+  (\meta{stdout}), chacun des deux étant possiblement vide.
+
+  Le \meta{prompt}, ou \enquote{invite de commande}, est par défaut le symbole
+  \texttt{\$} affiché en rouge.
+
+  Il est possible de surcharger les réglages par défaut de cette commande au
+  moyen d'\meta{options} qui sont (toutes) celles acceptées par l'environnement
+  \docAuxEnvironment{tcblisting} et la commande \docAuxCommand{newtcblisting}
+  fournis par la bibliothèque ™listings™ du \package*{tcolorbox}\footnote{Et,
+    aussi, les commandes \docAuxCommand{DeclareTCBListing} et assimilées
+    fournies par la bibliothèque \lstinline+xparse+ de ce package.}.
+\end{docCommand}
+
+Ainsi le code suivant :
+\begingroup
+\lstset{basicstyle=\ttfamily\scriptsize}
+\begin{ltx-code}[listing options app={%
+  deletekeywords={[3]{latex,width,height,string,label,by,example,system,tex}},%
+  deletetexcs={edef,rlap,smash,expandafter,string}%
+}]
+\terminal{time rg foobar -g "*.sty" "/home/bitouze/texlive/2022"}{
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/skeyval/skeyval.sty
+445:%       \usepackage[option1,option2]{foobar}
+447:%       \expandafter\show\csname foobar.sty.poxkeys\endcsname
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/thmtools/thm-restate.sty
+197:%%% support for keyval-style: restate=foobar
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/pinlabel/pinlabel.sty
+284:\edef\foobar{[width=\@p@swidth sp,height=\@p@sheight sp]{\@p@dffile}}%
+286:\@message{\string\@includegraphics@\foobar}%
+287:\rlap{\smash{\expandafter\@includegraphics@\foobar}}%
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/theoremref/theoremref.sty
+129:    its label by ``\thlabel{foobar}''. For example,
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/qrbill/qrbill.sty
+12:%%   Marei Peischl (peiTeX) and Alex Antener (foobar LLC).
+rg     -g  0,25s user 0,23s system 320% cpu 0,150 total
+}
+\end{ltx-code}
+
+donne-t-il :
+
+\terminal{time rg foobar -g "*.sty" "/home/bitouze/texlive/2022"}{
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/skeyval/skeyval.sty
+445:%       \usepackage[option1,option2]{foobar}
+447:%       \expandafter\show\csname foobar.sty.poxkeys\endcsname
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/thmtools/thm-restate.sty
+197:%%% support for keyval-style: restate=foobar
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/pinlabel/pinlabel.sty
+284:\edef\foobar{[width=\@p@swidth sp,height=\@p@sheight sp]{\@p@dffile}}%
+286:\@message{\string\@includegraphics@\foobar}%
+287:\rlap{\smash{\expandafter\@includegraphics@\foobar}}%
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/theoremref/theoremref.sty
+129:    its label by ``\thlabel{foobar}''. For example,
+
+/home/bitouze/texlive/2022/texmf-dist/tex/latex/qrbill/qrbill.sty
+12:%%   Marei Peischl (peiTeX) and Alex Antener (foobar LLC).
+rg     -g  0,25s user 0,23s system 320% cpu 0,150 total
+}
+\endgroup
+
+\subsection{Caractères d'échappement et de raccourci pour les
+  extraits de code}
+\label{sec:caract-dech-et}
+
+\begin{dbwarning}{Caractère d'échappement des listings}{}
+  \lstset{escapechar=}%
+  La \letgutcls{} définit ™£™ comme caractère d'échappement dans \LaTeX{} au
+  sein d'un listing.
+\end{dbwarning}
+
+Au besoin, on pourra désactiver ce caractère actif au moyen de
+\begin{ltx-code}
+\lstset{escapechar=}
+\end{ltx-code}
+
+\begin{dbwarning}{Équivalent court de \docAuxCommand{lstinline}}{}
+  Les extraits de code peuvent être saisis au moyen de la commande
+  \docAuxCommand{lstinline} du \package*{listings} mais, pour
+  simplifier la tâche, la \letgutcls{} définit comme équivalent court
+  de \docAuxCommand{lstinline} le caractère unicode %
+  \lstDeleteShortInline™%
+  \texttt{™} %
+  \lstMakeShortInline™%
+  (\Ucode{2122})\footnote{Peu susceptible d'être utilisé dans du texte
+    ordinaire.}.
+\end{dbwarning}
+
+Autrement dit, la \letgutcls{} contient l'instruction\footnote{À peu
+  de choses près.} :
+  \lstDeleteShortInline™
+\begin{ltx-code}
+\lstMakeShortInline£\texttt{™}£
+\end{ltx-code}
+
+  Au besoin, on pourra désactiver ce caractère actif au moyen de :
+\begin{ltx-code}
+\lstDeleteShortInline£\texttt{™}£
+\end{ltx-code}
+
+\begin{dbremark}{Obtention du caractère \texttt{™}}{}
+Le caractère %
+\texttt{™} %
+s'obtient :
+\begin{itemize}
+\item sous \linux{} : \LKeyShiftAltGrX{8}\footnote{Touche \LKey{8} du clavier
+    principal.} ;
+\item sous \macos{} : à l'aide du visualiseur de caractères\footnote{Et
+    possiblement de raccourcis claviers personnels.} ;
+\item sous \windows{} : \LKeyAltX{0}+\LKey{1}+\LKey{5}+\LKey{3}.
+\end{itemize}
+\end{dbremark}
+  \lstMakeShortInline™%
+
+\section{Nouveautés apparues sur le \ctan}
+\label{sec:rubr-cons-aux}
+
+Afin de pouvoir plus aisément lister les nouveautés (packages et classes
+\hologo{(La)TeX}, etc.) apparues sur le \ctan{}, la \letgutcls{} fournit le
+nouvel environnement de liste \refEnv{ctannews}, similaire à l'environnement
+\docAuxEnvironment{description}.
+%
+\begin{docEnvironment}[doclang/environment content=liste des nouveautés]{ctannews}{}
+  Cet environnement permet de dresser la \meta{liste des nouveautés} apparues
+  sur le \ctan{}.
+\end{docEnvironment}
+%
+Chaque \meta{nouveauté} est introduite au moyen de la commande \refCom{item}
+suivante.
+\begin{docCommands}[
+  doc parameter = \oarg{nom},
+  ]
+  {
+    { doc name = item },
+    { doc name = item* },
+  }
+  %
+  Cette commande affiche le \meta{nom} de la \meta{nouveauté} comme ce serait le
+  cas pour le \enquote{label} d'une liste de description, ce qui permet ensuite
+  de décrire la \meta{nouveauté} en question. Le \meta{nom} est en outre un lien
+  hypertexte vers sa page sur le \ctan{}
+  (\url{https://ctan.org/pkg/}\meta{nom}).
+
+  La version étoilée \refCom{item*} est dédiée aux nouveautés œuvres de
+  contributeurs francophones et le logo de la francophonie, alors
+  automatiquement situé en regard dans la marge, les signale comme telles.
+\end{docCommands}
+
+\begin{ltx-code-external-result}[title addon=nouveautés,listing options app={deletekeywords={[6]{hologo,matapli}}}]{exemple-nouveautes}
+\begin{ctannews}
+\item[nl-interval] vise à simplifier le processus de
+  représentation graphique des intervalles de l'axe réel.
+\item*[matapli] classe \hologo{LaTeX} destinée à la composition
+  de la revue Matapli (conçue par \person{Chupin, Maxime},
+  secrétaire adjoint de \gutenberg{}).
+\end{ctannews}
+\end{ltx-code-external-result}
+
+\begin{docCommand}{francophony}{}
+  Cette commande affiche le logo de la francophonie, ainsi : \francophony.
+\end{docCommand}
+
+\section{Fiches de lecture}
+\label{sec:fiches-de-lecture}
+
+Les fiches de lecture d'un livre sont créées au moyen de l'environnement
+\refEnv{bookreview} suivant.
+
+\begin{docEnvironment}[doclang/environment content=fiche de lecture]{bookreview}{\marg{caractéristiques}}
+  Cet environnement permet de mettre en page une \meta{fiche de lecture}
+  caractérisée par les \meta{caractéristiques} suivantes qui sont, selon les
+  cas :
+  \begin{description}
+  \item[obligatoires :]
+    \begin{docKey}{title}{=\meta{titre}}{\valinitdef}
+      Cette clé permet de spécifier le \meta{titre} introductif de la fiche.
+    \end{docKey}
+    \begin{docKey}{reviewer}{=\meta{rapporteur}}{\valinitdef}
+      Cette clé permet de spécifier le \meta{rapporteur} de la fiche, à spécifier
+      selon la syntaxe de la commande \refCom{author}.
+    \end{docKey}
+    \begin{docKey}{bibkey}{=\meta{clé}}{\valinitdef}
+      Cette clé permet de spécifier la \meta{clé} identifiant l'entrée d'un
+      \file*{.bib} contenant les données bibliographiques du document rapporté.
+      \begin{dbwarning}{Fichier de bibliographie}{}
+        Ces données bibliographiques doivent se trouver dans un fichier
+        \meta{bibliographie}\file{.bib}, structurées selon le format du
+        \package*{biblatex} et chargées en préambule (par exemple dans le
+        fichier local de configuration, cf. \vpageref{sec:fichier-local-de}) au
+        moyen de la commande :
+\begin{ltx-code}
+\addbibressource{£\meta{bibliographie}£.bib}
+\end{ltx-code}
+      \end{dbwarning}
+    \end{docKey}
+  \item[fortement conseillée :]
+    \begin{docKey}{frontcover}{=\meta{fichier}}{\valinitdef}
+      Cette clé permet de spécifier le \meta{fichier} image de la couverture du
+      document rapporté.
+    \end{docKey}
+  \item[facultative :]
+    \begin{docKey}{price}{=\meta{prix}}{\valinitdef}
+      Cette clé permet le cas échéant de spécifier le \meta{prix} du document rapporté.
+    \end{docKey}
+  \end{description}
+\end{docEnvironment}
+
+\section{Acronymes}
+\label{sec:acronymes}
+
+Nombreux sont les articles de la \lettre{} susceptibles de contenir des
+acronymes peut-être pas connus de tous. Aussi est-il opportun que, lors de leur
+première occurrence, ceux-ci soient explicités.
+
+Pour automatiser cela, la \letgutcls{} s'appuie sur le \package*{acro} ;
+toutefois, pour à la fois simplifier la création desdits acronymes et étendre
+(légèrement) les fonctionnalités offertes par \package{acro}, elle fournit la
+commande dédiée \refCom{letgutacro}.
+
+\begin{docCommand}{letgutacro}{\oarg{options}\marg{COURT}\marg{long}\oarg{traduction
+      française}}
+  \index{acronyme}%
+  Cette commande permet de créer un nouvel acronyme en spécifiant :
+  \begin{itemize}
+  \item sa forme courte \meta{COURT}, \emph{obligatoirement en grandes
+      capitales} ;
+  \item sa forme longue \meta{long}.
+  \end{itemize}
+  En outre, le 1\ier{} et 2\ieme{} arguments \emph{optionnels} permettent de,
+  respectivement :
+  \begin{itemize}
+  \item passer à la commande \docAuxCommand{DeclareAcronym} (de création
+    d'acronymes du \package*{acro} agissant en sous-main) des \meta{options} qui
+    lui sont propres, permettant ainsi de surcharger les options par défaut
+    passées à cette commande par \refCom{letgutacro} ;
+  \item signaler que l'acronyme provient de l'anglais et d'en spécifier la
+    \meta{traduction française} (éventuellement vide si celle-ci n'est pas
+    pertinente).
+  \end{itemize}
+
+  L'acronyme ainsi créé a pour identifiant \meta{court}, c'est-à-dire
+  la version \emph{en bas de casse} de \meta{COURT}, et peut donc
+  être employé au moyen des commandes fournies par le \package*{acro}, par
+  exemple :
+  \begin{itemize}
+  \item ™\ac{™\meta{court}™}™\footnote{Acronyme automatiquement affiché sous sa
+      forme complète à sa 1\iere{} occurrence, sous sa forme courte à ses
+      occurrences suivantes.} ;
+  \item ™\acs{™\meta{court}™}™\footnote{Acronyme affiché sous sa forme courte
+      seulement.}.
+  \end{itemize}
+  Toutefois, pour simplifier l'usage de ces acronymes, la \letgutcls{} crée
+  alors automatiquement une commande \docAuxCommand{\meta{court}}%
+  \footnote{%
+    Sauf si elle existe déjà, auquel cas la création d'une telle commande est
+    silencieusement escamotée. Ainsi par exemple, l'acronyme
+    %
+    \lstinline+\\letgutacro[...]\{TIKZ\}\{...\}[...]+
+    %
+    fourni par \letgut{} (cf. \vpageref{liste-acronymes}) ne surcharge-t-il
+    pas la commande \docAuxCommand{tikz} fournie notamment par le
+    \package*{tikz}.%
+  }
+  %
+  qui agit comme :
+  \begin{itemize}
+  \item ™\ac{™\meta{court}™}™ en version non étoilée ;
+  \item ™\acs{™\meta{court}™}™ en version étoilée.
+  \end{itemize}
+\end{docCommand}
+Ainsi, l'acronyme utilisé via \docAuxCommand{\meta{court}} figure, pour ses
+occurrences :
+\begin{description}
+\item[première :] sous la forme \meta{\textsc{court}}\footnote{C'est-à-dire
+    \meta{court} en petites capitales.} suivi d'une note de bas de
+  page contenant \enquote{\meta{long}.} ;
+\item[suivantes :] sous la forme \meta{\textsc{court}}.
+\end{description}
+
+En outre :
+\begin{itemize}
+\item cette commande peut être utilisée sans restriction en argument des
+  commandes \refCom{title}, \refCom{subtitle}, \refCom{section},
+  \refCom{subsection}, etc. et l'acronyme figure sous sa forme \meta{COURT} dans
+  les \foreignloc{bookmarks} (signets) ;
+\item un copié de \meta{\textsc{court}} colle \meta{COURT}.
+\end{itemize}
+
+\begin{dbwarning}{\refCom{letgutacro} : uniquement en préambule}{}
+  La définition d'acronymes au moyen de \refCom{letgutacro} ne peut se faire
+  qu'en préambule.
+\end{dbwarning}
+
+Ainsi, avec les définitions suivantes en préambule :
+
+\begin{ltx-code}[title addon=définition d'acronymes,listing options app={deletekeywords={[3]{TeX,LaTeX,emph,n,no}}}]
+% Acronyme français
+\letgutacro{LD}{\LaTeX{} dépendant}
+
+% Acronyme anglais avec traduction française
+\letgutacro{TLMGR}{\TeX~Live Manager}[gestionnaire \TeX~Live]
+
+% Acronyme anglais sans traduction française
+\letgutacro{CD}{Compact Disc}[]
+
+% Acronyme anglais avec surcharge :
+% - `short=no-op` : l'acronyme est « no-op » (en bas de casse)
+%   et le nom de la commande sous-jacente ne peut être \no-op
+%   (tiret interdit)
+% - `short-format=\upshape` : les petites capitales sont
+%   désactivées
+\letgutacro[short=no-op,short-format=\upshape]
+{NOOP}
+{No Operation}
+[instruction nulle]
+
+% Acronyme en allemand :
+\letgutacro[
+  short=\emph{Ti\emph{k}Z},
+  short-format=\em,
+  foreign-babel=german,
+  foreign-locale=allemand]
+{TIKZ}
+{Ti\emph{k}Z ist \emph{kein} Zeichenprogramm}
+[Ti\emph{k}Z \emph{n'}est \emph{pas} un programme de dessin]
+\end{ltx-code}
+
+a-t-on :
+
+\begin{ltx-code-result}[title addon=utilisation d'acronymes,listing options app={deletekeywords={cd},deletekeywords={[3]{cd,tikz,LaTeX,on}},deletekeywords={[6]{cd}},deletekeywords={itemize},morekeywords={[2]{itemize}}}]
+On dispose désormais pour \enquote{\LaTeX{} dépendant}
+d'un acronyme qu'on peut utiliser par exemple
+\begin{itemize}
+\item ainsi : \ac{ld} ou \acs{ld} ;
+\item ou bien ainsi : \ld{} ou \ld*{}.
+\end{itemize}
+
+On peut également employer les acronymes :
+\begin{itemize}
+\item \cd{}, \cd{} ;
+\item \tlmgr{}, \tlmgr{} ;
+\item \noop{}, \noop{} ;
+\item \ac{tikz}, \ac{tikz}. % Noter le non emploi de `\tikz'
+\end{itemize}
+\end{ltx-code-result}
+
+Les noms des commandes sous-jacentes ne doivent contenir que des lettres, mais
+celles-ci peuvent être accentuées. Ainsi, avec la définition suivante en
+préambule :
+
+\begin{ltx-code}[title addon=définition d'acronyme avec lettres
+  accentuées,drop lifted shadow]
+\letgutacro{CPGÉ}{Classes Préparatoires aux Grandes Écoles}
+\end{ltx-code}
+
+a-t-on :
+
+\begin{ltx-code-result}[title addon=utilisation d'acronyme avec lettres accentuées,listing options app={deletekeywords={[3]{l}}}]
+On peut également employer l'acronyme \cpgé{}, \cpgé{}.
+\end{ltx-code-result}
+
+La \letgutcls{} fournit un \file*{letgut-acronyms.tex} dans lequel sont définis
+plusieurs acronymes anglais et français, directement utilisables. Ceux-ci sont
+répertoriés \vpageref{liste-acronymes}.
+
+\section{Séparateurs}
+\label{sec:filets}
+
+Il est parfois utile d'accentuer la séparation entre les articles de la
+\lettre. Ceci peut se faire au moyen de la commande \refCom{separator} qui
+insère un filet horizontal.
+
+\begin{docCommand}{separator}{}
+  \index{séparateur}%
+  Cette commande permet d'accentuer la séparation entre deux articles.
+\end{docCommand}
+
+\section{Annonces}
+\label{sec:annonces}
+
+Afin de présenter aisément et de façon homogène les annonces à paraître dans la
+\lettre{}, la \letgutcls{} fournit l'environnement \refEnv{announcement}.
+
+\begin{docEnvironment}[doclang/environment content=annonce]{announcement}{\oarg{couleur}\marg{titre}}
+  Cet environnement est dédié aux \meta{annonce}s. La spécification :
+  \begin{itemize}
+  \item d'un \meta{titre} (pouvant toutefois être vide) est obligatoire ;
+  \item d'une \meta{couleur} (du tire et des ornements) autre que celle (noire)
+    par défaut est possible.
+  \end{itemize}
+\end{docEnvironment}
+
+\begin{ltx-code-result}[title addon=annonces]
+\begin{announcement}[red!35!black]{Convocation \acs{ag} ordinaire}
+  Les adhérents de l'\assogut{} sont invités à participer à
+  l'\textbf{assemblée générale \emph{ordinaire}} de l'association
+  le \textbf{dimanche 11 décembre 2022}.
+\end{announcement}
+\end{ltx-code-result}
+
+\section{Rébus}
+\label{sec:rebus}
+
+\tcbstartrecording\relax
+Afin de présenter aisément et de façon homogène les rébus à paraître dans la
+\lettre{}, la \letgutcls{} fournit l'environnement \refEnv{rebus}.
+
+\begin{docEnvironment}[doclang/environment content=rébus]{rebus}{\oarg{options}}
+  Cet environnement affiche un \meta{rébus} et s'emploie différemment selon que
+  la solution est prévue de figurer dans la \lettre{} :
+  \begin{description}
+  \item[en cours :] le rébus et sa solution doivent alors être séparées par
+    la commande \refCom{solution} ;
+  \item[suivante :] l'option \refKey{no solution} doit alors être employée.
+  \end{description}
+  La boîte contenant le rébus mentionne que sa solution se trouve,
+  respectivement :
+  \begin{itemize}
+  \item \enquote{page \meta{n}} ou \enquote{ci-dessous} ;
+  \item \enquote{dans la prochaine \lettre{}}.
+  \end{itemize}
+
+  La commande séparant le rébus et sa solution prévue de figurer dans la
+  \lettre{} en cours est :
+  \begin{docCommand}{solution}{}
+    Cette commande débute la solution d'un rébus à l'intérieur d'un environment
+    \refEnv{rebus}.
+  \end{docCommand}
+
+  En outre, cet environnement admet des \meta{options} :
+  \begin{itemize}
+  \item (toutes) celles acceptées par les environnements \refAux{tcolorbox} et
+    assimilés du \package*{tcolorbox}, destinées à, le cas échéant, modifier la
+    mise en forme par défaut de la boîte contenant le rébus ;
+  \item deux qui lui sont propres :
+    \begin{docKey}{title addon}{=\meta{supplément}}{\valinitdef}
+      Cette option permet d'adjoindre au titre d'un rébus, qui est par défaut et
+      automatiquement \enquote{Rébus}, un \meta{supplément} alors en italique et
+      entre parenthèses.
+    \end{docKey}
+    \begin{docKey}{no solution}{}{\valinitdef[\docValue*{false}][\docValue*{true}]}
+      Cette option est à spécifier pour un rébus dont la solution ne doit figurer
+      que dans la prochaine \lettre{}.
+    \end{docKey}
+  \end{itemize}
+\end{docEnvironment}
+
+Ainsi le code :
+
+\begin{ltx-code}[title addon=rébus]
+\begin{rebus}[no solution]
+  Rébus \emph{sans} solution dans le présent numéro.
+\end{rebus}
+\begin{rebus}
+  Rébus \emph{avec} solution dans le présent numéro.
+  \solution
+  Solution du rébus.
+\end{rebus}
+\end{ltx-code}
+
+donne-t-il les résultats suivants\footnote{Éventuellement pas immédiatement à la
+  suite car les boîtes contenant les rébus sont flottantes.}.
+
+\begin{rebus}[no solution,nofloat]
+  Rébus \emph{sans} solution dans le présent numéro.
+\end{rebus}
+\begin{rebus}[nofloat]
+  Rébus \emph{avec} solution dans le présent numéro.
+  \solution
+  Solution du rébus.
+\end{rebus}
+
+La \letgutcls{} fournit bien sûr le moyen d'afficher les solutions des rébus de
+la \lettre{}
+soit en cours, soit précédente.
+
+\begin{docCommand}{rebussolution}{\oarg{solution}\oarg{numéro}\oarg{options}}
+  Cette commande affiche la ou les solutions du ou des rébus qui figurent dans
+  la \lettre{} :
+  \begin{description}
+  \item[en cours :] (commande \refCom{solution}) si ses 1\ier{} et
+    2\ieme{} arguments optionnels \meta{solution} et \meta{numéro} sont
+    inutilisés ;
+  \item[précédente :] si son 1\ier{} argument optionnel \meta{solution} est
+    utilisé. Selon que 2\ieme{} argument optionnel \meta{numéro} est spécifié ou
+    pas, il est indiqué que la \meta{solution} est celle d'un rébus figurant
+    dans la \lettre{} :
+    \begin{itemize}
+    \item \meta{numéro} ;
+    \item précédente.
+    \end{itemize}
+  \end{description}
+  Cette commande admet comme \meta{options} (toutes) celles acceptées par les
+  environnements \refAux{tcolorbox} et assimilés du \package*{tcolorbox},
+  destinées à, le cas échéant, modifier la mise en forme par défaut de la boîte
+  contenant la solution du rébus.
+\end{docCommand}
+
+Ainsi le code :
+
+\begin{ltx-code}[title addon=solution de rébus]
+\rebussolution
+\rebussolution[Solution du rébus]
+\rebussolution[Solution du rébus][49]
+\end{ltx-code}
+
+donne-t-il donne-t-il les résultats suivants\footnote{Éventuellement pas
+  immédiatement à la suite car les boîtes contenant les solutions des rébus sont
+  flottantes.}.
+
+\rebussolution
+\rebussolution[Solution du rébus]
+\rebussolution[Solution du rébus][49]
+
+\section{Boîtes d'alertes}
+\label{sec:boites-dalertes}
+
+\begin{docCommand}{alertbox}{ \oarg{couleur}\marg{texte} }
+  \index{alerte}%
+  Cette commande insère une boîte d'alerte :
+  \begin{itemize}
+  \item optionnellement de \meta{couleur} de fond (à spécifier selon le modèle
+    \enquote{\foreignloc{named}}) autre que celle par défaut\footnote{C'est-à-dire
+      \colorbox{letgut_default_alert_box_color}{celle-ci}% , nommée
+      % \docColor{letgut_default_alert_box_color} et égale
+      % à \docValue*{\letgutalertboxdefaultcolor}
+      .} ;
+  \item contenant le \meta{texte} (qui peut contenir plusieurs paragraphes).
+  \end{itemize}
+\end{docCommand}
+
+\begin{ltx-code-result}[title addon=boîtes d'alertes]
+\alertbox{%
+  Adhérez, adhérez, il en restera toujours quelque chose !%
+}
+\alertbox[yellow]{%
+  Adhérez, adhérez !
+
+  Il en restera toujours quelque chose...%
+}
+\end{ltx-code-result}
+
+\section{Fichier local de configuration}
+\label{sec:fichier-local-de}
+
+Chaque numéro de la \lettre{} nécessite certaines configurations locales :
+configuration dédiée au numéro en question, packages particuliers utilisés dans
+les articles, configurations propres du \package*{listings}, etc. Afin de ne pas
+encombrer le \file*{.tex} principal de la \lettre{}, un fichier de configuration
+locale nommé
+%
+\ExplSyntaxOn
+\file{
+  \tl_use:N \c__letgut_local_config_file_tl.tex
+}~
+\ExplSyntaxOff
+%
+est, si présent dans le répertoire courant, automatiquement inclus à la fin
+du préambule.
+
+\title{Aspects de la 1\iere{} page}
+\label{sec:mise-en-page}
+
+La première page de la \lettre{} comporte :
+\begin{itemize}
+\item une bannière sous forme d'un très grand \enquote{L} en noir sur lequel
+  figurent de la couleur de fond de la page, en gras, dans sa partie :
+  \begin{itemize}
+  \item verticale, \enquote{La} puis, chacune sur une ligne, les lettres du mot
+    \enquote{Lettre} en grandes capitales ;
+  \item horizontale, \enquote{\gut}.
+  \end{itemize}
+\item un très grand \enquote{g}, en filigrane et en gris clair.
+\end{itemize}
+La fonte de ces deux éléments est la principale utilisée (spécifiée au moyen de
+\docAuxCommand{setmainfont}).
+
+Pour ce faire, la classe charge le package maison \package{letgut-banner} qui
+n'est pas décrit ici.
+
+\title{Les dinosaures, leur écosystème et \letgut}
+\label{recours-docker}
+
+Pour à la fois :
+\begin{itemize}
+\item disposer d'une version suffisamment récente de \hologo{LuaLaTeX}
+  pour la présente \letgutcls{} (cf. \vref{wa-lualatex-recent}) ;
+\item éviter de perturber une installation existante de \hologo{(La)TeX} ;
+\end{itemize}
+on pourra recourir à \docker{}\footnote{Cerise sur le gâteau : un temps de
+  compilation éventuellement réduit de façon significative. Ainsi, celui de la
+  présente documentation est-il sur la machine de \person{Bitouzé, Denis} d'un
+  peu plus de \SI{13}{\s} avec \docker{} et de plus de \SI{30}{\s} par le biais
+  habituel.} dont cette section est un mode d'emploi :
+\begin{itemize}
+\item express ;
+\item axé sur Linux, mais qui devant s'appliquer au moins en partie aux autres
+  systèmes d'exploitation ;
+\item axé sur la \tl{}.
+\end{itemize}
+
+\begin{dbwarning}{Commande \software{sudo} peut-être nécessaire}{}
+  Les commandes \docker*{} ci-après ne sont pas précédées de \software{sudo}
+  mais, selon les systèmes d'exploitation, elles peuvent devoir l'être.
+\end{dbwarning}
+
+On commence par installer \docker*{} puis à lancer le service
+\docker*\footnote{Pour Ubuntu, cf. par exemple
+  \href{https://doc.ubuntu-fr.org/docker}{ce guide}.}.
+
+Ensuite, par exemple depuis un dossier où se trouve un \file*{mon-fichier.tex} (disons
+à compiler avec \hologo{LuaLaTeX}), on lance la longue commande suivante
+(\emph{qui doit être sur une seule ligne}\footnote{%
+  Pour la copier d'un seul bloc, il devrait suffire de \emph{copier} (et non de
+  \emph{cliquer sur}) l'icône suivante
+% \marginpar{%
+  \BeginAccSupp{method=plain,ActualText={%
+      docker run -i --rm --name latex -v "$PWD":/usr/src/app -w /usr/src/app registry.gitlab.com/islandoftex/images/texlive:latest-with-cache lualatex mon-fichier
+    }%
+  }%
+  \faCopy[regular]%$$
+  \EndAccSupp{}%
+% }%
+}) :
+
+\terminal{docker run -i --rm --name latex -v "$PWD":/usr/src/app -w /usr/src/app registry.gitlab.com/islandoftex/images/texlive:latest-with-cache lualatex mon-fichier}{}%$
+
+La toute première fois, cela provoque le téléchargement de plusieurs fichiers,
+dont celui assez lourd de l'image d'une version allégée de la \tl{}~2021
+(délestée des sources et des documentations) puis lance la compilation
+demandée.
+
+Pour simplifier les compilations ultérieures, on aura intérêt à créer dans son
+\file*{.bashrc} (ou \file{.zshrc}, etc.) un ou plusieurs alias de la forme :
+
+\begin{tcblisting}{listing only,breakable,listing options={style=tcblatex,language=bash}}
+alias docker-texlive='docker run -i --rm --name latex -v "$PWD":/usr/src/app -w /usr/src/app registry.gitlab.com/islandoftex/images/texlive:latest-with-cache'
+alias docker-pdflatex='docker-texlive pdflatex'
+alias docker-xelatex='docker-texlive xelatex'
+alias docker-lualatex='docker-texlive lualatex'
+alias docker-biber='docker-texlive biber'
+alias docker-makeglossaries='docker-texlive makeglossaries'
+alias docker-latexmk-pdf='docker-texlive latexmk -pdf'
+alias docker-latexmk-xe='docker-texlive latexmk -pdfxe'
+alias docker-latexmk-lua='docker-texlive latexmk -pdflua'
+\end{tcblisting}
+
+pour pouvoir compiler au moyen de seulement\footnote{En lançant préalablement
+  \lstinline[language=bash]+source ~/.bashrc+ (ou assimilé) afin de pouvoir en
+  bénéficier dans un terminal déjà ouvert.} :
+
+\terminal{docker-latexmk-lua mon-fichier}{}
+
+\title{Packages chargés par \letgut{}}
+\label{sec:packages-charges-par}
+
+La \letgutcls{} charge en sous-main un certain nombre de packages utiles, voire
+nécessaires, à son codage. Elle en charge également certains pas indispensables,
+mais considérés comme \enquote{incontournables} pour que les auteurs de la
+\lettre{} puissent (aisément) composer un \enquote{joli} document. Nous en
+dressons ci-après la liste en les regroupant selon ces deux catégories.
+
+\section{Packages utiles aux auteurs de la \lettre{}}
+\label{sec:utiles-aux-auteurs}
+
+\begin{ctannews}
+\item[fontspec] fontes \otf{}.
+\item[microtype] raffinements subliminaux vers la perfection typographique.
+  \begin{description}
+  \item[Options :] \docAuxKey*{stretch=30}, \docAuxKey*{shrink=25},
+    \docAuxKey*{letterspace=150}.
+  \end{description}
+\item[graphicx] prise en charge améliorée des graphiques.
+\item[array] extension des environnements \docAuxEnvironment*{array} et
+  \docAuxEnvironment*{tabular}.
+\item[fancyvrb] notamment pour permettre l'usage de commandes \enquote{verbatim}
+  dans les notes de bas de page.
+\item[booktabs] tableaux de qualité.
+\item[csquotes] facilités de citations, en ligne et hors-texte, sensibles au
+  contexte.
+\item[amsmath] nombreux outils utiles pour la composition mathématique.
+\item[mathtools] étend les fonctionnalités et corrige certaines déficiences
+  d'\package{amsmath} et de \hologo{LaTeX}.
+  \begin{description}
+  \item[Option :] \docAuxKey*{fleqn}.
+  \end{description}
+\item[siunitx] aide à la saisie et à l'affichage cohérent des nombres, unités et
+  quantités.
+  \begin{description}
+  \item[Options :] \docAuxKey*{locale=FR}, \docAuxKey*{mode=text}.
+  \end{description}
+\item[hologo] collection de logos habituels (\hologo{LaTeX}, \hologo{LaTeX2e},
+  etc.) avec support pour les signets.
+\item[xcolor] accès facile, indépendant du pilote, à plusieurs types de teintes,
+  de nuances, de tons et de mélanges de couleurs arbitraires.
+  \begin{description}
+  \item[Option :] \docAuxKey*{table}.
+  \end{description}
+\item[ninecolors] sélection de couleurs avec contraste \wcag{} approprié.
+\item[tabularray] mise en page de tableaux et de matrices offrant une séparation
+  complète des contenus et styles. Ce package très récent (sorti le 14 mai 2021)
+  est utilisé dans le code de la classe pour la création de boîtes d'alertes
+  \enquote{légères}, c.-à-d. ne nécessitant notamment pas le chargement
+  (indirect) du package \ac{tikz} qui augmente significativement le temps de
+  compilation ; mais il pourrait (devrait) être utile également aux auteurs de
+  la \lettre{}.
+\item[babel] support multilingue.
+  \begin{description}
+  \item[Options :] \docAuxKey*{english}, \docAuxKey*{french} ;
+  \item[Configuration] ™\renewcommand*\frenchtablename{Tableau}™.
+  \end{description}
+\item[varioref] références de pages intelligentes.
+  \begin{description}
+  \item[Options :] \docAuxKey*{nospace}, \docAuxKey*{french}.
+  \end{description}
+\item[eurosym] symbole et montants en \euro{}.
+  \begin{description}
+  \item[Option :] \docAuxKey*{right}.
+  \end{description}
+\item[listings] composition des listings informatiques.
+  \begin{description}
+  \item[Options :] \docAuxKey*{basicstyle=\ttfamily}, \docAuxKey*{frame=single},
+    \docAuxKey*{belowskip=0pt}\footnote{Cette dernière option du fait
+      d'\href{https://github.com/FrankMittelbach/fmitex-parskip/issues/3}{un
+        problème actuel} impliquant les packages \package{parskip} et
+      \package{listings}.}.
+  \end{description}
+\item[floatrow] nombreuses possibilités de personnalisation de la disposition
+  des flottants.
+  \begin{description}
+  \item[Options :]\leavevmode{}
+    \begin{itemize}
+    \item \docAuxKey*{objectset=justified} ;
+    \item \docAuxKey*{style=__letgut_ruled}\footnote{Style propre à la classe.}
+      et \docAuxKey*{margins=hangleft} pour les figures ;
+    \item \docAuxKey*{capposition=top} pour les tableaux.
+    \end{itemize}
+  \end{description}
+\item[biblatex] bibliographies sophistiquées.
+  \begin{description}
+  \item[Option :] \docAuxKey*{sorting=none}.
+  \end{description}
+\item[acro] création simple d'acronymes\footnote{Pour la gestion des acronymes,
+    il était initialement prévu de recourir au \package*{glossaries-extra} mais
+    celui-ci augmente significativement le temps de compilation.}.
+  \begin{description}
+  \item[Options :]\leavevmode{}
+    \begin{itemize}
+    \item \docAuxKey*{first-style=footnote} ;
+    \item \docAuxKey*{format/short=}™\scshape™ ;
+    \item \docAuxKey*{format/foreign=}™\em™ ;
+    \item \docAuxKey*{foreign/display} ;
+    \item \docAuxKey*{locale/display} ;
+    \item \docAuxKey*{locale/format=}™\upshape™.
+    \end{itemize}
+  \end{description}
+\item[hyperref] prise en charge étendue de l'hypertexte.
+  \begin{description}
+  \item[Options :]\leavevmode{}
+    \begin{itemize}
+    \item \docAuxKey*{draft} si l'option de classe \refKey{paper} est utilisée ;
+    \item \docAuxKey*{colorlinks}, \docAuxKey*{allcolors={letgut_allcolors_links}}
+      sinon.
+    \end{itemize}
+  \end{description}
+\item[hypcap] ajustement des ancres des légendes.
+  \begin{description}
+  \item[Option :] \docAuxKey*{all}.
+  \end{description}
+\item[cleveref] détermination automatique du format des références en fonction
+  du type de référence.
+  \begin{description}
+  \item[Option :] \docAuxKey*{french}.
+  \end{description}
+\item[lua-typo] mise en lumière, par un changement de couleur, des lignes
+  typographiquement imparfaites avec \hologo{LuaLaTeX}.
+  \begin{description}
+  \item[Option :] \docAuxKey*{All}.
+  \end{description}
+\end{ctannews}
+
+\section{Packages utiles au codage de la classe \letgut}
+\label{sec:utiles-au-codage}
+
+\begin{ctannews}
+\item[l3keys2e] traitement \hologo{LaTeX2e} des options de classe en utilisant
+  les clés \hologo{LaTeX3}.
+\item[parskip] mise en page de paragraphes séparés par un blanc vertical au lieu
+  (ou en plus) d'un retrait.
+\item[fancyhdr] contrôle étendu des en-têtes et des pieds de page.
+\item[geometry] interface flexible et complète pour les dimensions des
+  documents.
+  \begin{description}
+  \item[Options :] \docAuxKey*{a4paper}, \docAuxKey*{asymmetric}.
+  \end{description}
+\item[etoc] tables des matières entièrement personnalisables.
+\item[enumitem] contrôle de la mise en page de \docAuxEnvironment*{itemize},
+  \docAuxEnvironment*{enumerate}, \docAuxEnvironment*{description} et permet de
+  cloner les environnements standards et créer de nouveaux
+  environnements. Utilisé pour la création de l'environnement \refEnv{ctannews}.
+\item[titlesec] personnalisation aisée des titres de sections, etc.
+\item[placeins] contrôle du placement des flottants permettant de s'assurer que
+  ceux d'une section (donc d'un article dans le cas de la \lettre{})
+  apparaissent avant la commande \docAuxCommand*{section} suivante.
+  \begin{description}
+  \item[Options :] \docAuxKey*{section}, \docAuxKey*{above}.
+  \end{description}
+\item[accsupp] notamment remplacement de texte lors des copiés-collés, utilisé
+  en particulier pour que les acronymes, composés en petites capitales par
+  \letgut{}, une fois copiés, soient collés en grandes capitales.
+\item[letgut-banner] bannière de la 1\iere{} page de la \lettre{}.
+\end{ctannews}
+
+\section{Exemple de déclaration de dialecte du langage \hologo{TeX}}
+\label{sec:exemple-de-decl}
+
+Nous fournissons ci-dessous un exemple de déclaration de dialecte (ici le
+package \hologo{(La)TeX} \package{graphicx}) du langage \hologo{TeX}
+(cf. section~\enquote{\nameref{sec:coloration}}, \vpageref{sec:coloration}).
+
+\begin{ltx-code}[listing options app={deletekeywords={[3]{
+  ,draft
+  ,final
+  ,setpagesize
+  ,dvips
+  ,dvipdfm
+  ,dvipdfmx
+  ,xetex
+  ,pdftex
+  ,dvipsone
+  ,dviwindo
+  ,textures
+  ,vtex
+  ,alt
+  ,width
+  ,height
+  ,totalheight
+  ,scale
+  ,clip
+  ,draft
+  ,type
+  ,command
+  ,page
+}}},
+listing options app={deletekeywords={[4]{
+  ,draft
+  ,final
+  ,dvips
+  ,dvipdfm
+  ,dvipdfmx
+  ,xetex
+  ,pdftex
+  ,luatex
+  ,vtex
+  ,scale
+  ,true
+  ,false
+}}}]
+\lst@definelanguage[graphicx]{TeX}[LaTeX]{TeX}{%
+  % Control sequences names
+  moretexcs={%
+    DeclareGraphicsExtensions,DeclareGraphicsRule,graphicspath,%
+    includegraphics*,includegraphics,reflectbox,resizebox*,%
+    resizebox,rotatebox,scalebox,%
+  },%
+  % Keywords of class 1 : keywords that contain other characters
+  % (since of the same class as the ones specified as
+  % 'otherkeywords')
+  morekeywords={%
+  },%
+  % Keywords of class 2 : environments names
+  morekeywords=[2]{%
+  },%
+  % Keywords of class 3 : mandatory arguments (not environments)
+  % & optional arguments which are keys (in key=value)
+  morekeywords=[3]{%
+    draft,final,hiresbb,demo,setpagesize,nosetpagesize,dvips,xdvi,%
+    dvipdf,dvipdfm,dvipdfmx,xetex,pdftex,luatex,dvisvgm,dvipsone,%
+    dviwindo,emtex,dviwin,oztex,textures,pctexps,pctexwin,pctexhp,%
+    pctex32,truetex,tcidvi,vtex,debugshow,hiderotate,hidescale,%
+    alt,%
+    %
+    bb,bbllx,bblly,bburx,bbury,natwidth,natheight,hiresbb,pagebox,%
+    viewport,trim,angle,origin,width,height,totalheight,%
+    keepaspectratio,scale,clip,type,ext,read,command,quiet,page,%
+    interpolate,decodearray,origin,x,y,units,%
+  },%
+  % Keywords of class 4 : values of keys (in key=value)
+  morekeywords=[4]{%
+    mediabox,cropbox,bleedbox,trimbox,artbox,true,false,%
+  },%
+  % Keywords of class 5 : arguments specifications (after ":"
+  % in expl3 syntax)
+  morekeywords=[5]{%
+  },%
+  % Keywords of class 6 : current package name (and possibly
+  % derived packages)
+  morekeywords=[6]{%
+    graphicx,%
+  },%
+  % otherkeywords={},%
+  alsoletter={23},%
+  % alsodigit={},%
+  sensitive,%
+}[keywords,tex,comments]%
+\end{ltx-code}
+
+\printacronyms[
+, heading=title
+% , template=longtable
+, preamble={\label{liste-acronymes}}
+, display=all
+, exclude=thisdocument
+, name={Liste des acronymes prédéfinis par \letgut}
+]
+
+\printbibliography[heading=title]
+
+% \listoffigures
+% \listoftables
+\tcblistof[\title]{dbwarninglist}{Table des avertissements}%
+% \tcblistof[\title]{dbremarklist}{Table des remarques}%
+%
+\phantomsection
+\indexprologue{%
+  Afin de différencier leurs natures, les entrées de cet index sont affichées
+  en couleurs (variées) lorsqu'elles correspondent à des :
+  \begin{itemize}
+  \item commandes ;
+  \item environnements ;
+  \item clés ;
+  \item valeurs de clé.
+  \end{itemize}
+}%
+% \renewcommand{\indexname}{Index des commandes}
+% \printindex[\jobname-commands]
+% %
+% \phantomsection
+% \indexprologue{%
+%   Dans cet index, un numéro de page :
+%   \begin{description}
+%   \item[en gras] indique une page contenant une information importante sur
+%     l'entrée correspondante, par exemple sa définition ;
+%   \item[en italique] indique une page contenant un exemple qui illustre
+%     l'entrée correspondante.
+%   \end{description}
+% }%
+% \renewcommand{\indexname}{Index des concepts}
+\printindex
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: luatex
+%%% TeX-master: t
+%%% End:

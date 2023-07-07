@@ -1,7 +1,7 @@
 --[[
    File `frenchb.lua’ generated from frenchb.dtx
-         [2021/07/20 v3.5m French support from the babel system]
-   Copyright © 2014-2021 Daniel Flipo
+         [2023/01/02 v3.5p French support from the babel system]
+   Copyright © 2014-2022 Daniel Flipo
    <daniel (dot) flipo (at) free (dot) fr>
    License LPPL: see french.ldf.
 --]]
@@ -248,9 +248,22 @@ local function french_punctuation (head)
              if next then
                 next_id = next.id
                 next_subtype = next.subtype
-                if next_id == GLYPH then
-                   next_char = next.char
-                elseif next_id == KERN then
+                if next_id == PENALTY then
+                   nextnext = next.next
+                   if nextnext and nextnext.id == GLUE then
+                      head = remove_node(head,nextnext,true)
+                      head = remove_node(head,next,true)
+                      next = item.next
+                      if next then
+                         next_id = next.id
+                         next_subtype = next.subtype
+                         if next_id == GLYPH then
+                            next_char = next.char
+                         end
+                     end
+                   end
+                end
+                if next_id == KERN then
                    kern_wd = next.kern
                    if kern_wd == 0 then
                       nextnext = next.next
@@ -258,11 +271,23 @@ local function french_punctuation (head)
                          next = nextnext
                          next_id = nextnext.id
                          next_subtype = nextnext.subtype
-                         if next_id == GLYPH then
-                            next_char = nextnext.char
+                         if next_id == PENALTY then
+                            nextnext = next.next
+                            if nextnext and nextnext.id == GLUE then
+                               head = remove_node(head,next,true)
+                               head = remove_node(head,nextnext,true)
+                               next = item.next
+                               if next then
+                                  next_id = next.id
+                                  next_subtype = next.subtype
+                               end
+                            end
                          end
                       end
                    end
+                end
+                if next_id == GLYPH then
+                   next_char = next.char
                 end
              end
              local is_glue = next_id == GLUE

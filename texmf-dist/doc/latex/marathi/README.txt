@@ -6,12 +6,12 @@ readers an English description is provided at the end.
 --------------------------------------------------------------------------
 आज्ञासंच:      marathi
 लेखक:       निरंजन
-आवृत्ती:       १.६.५ (१८ जून, २०२१)
+आवृत्ती:       १.७ (१६ डिसेंबर, २०२१)
 माहिती:       लुआलाटेक् व झीलाटेक् ह्यांच्यासह मराठीचा सुलभ वापर करण्यासाठी. इथून पुढे लाटेक्-वरील
             मराठीच्या स्थानिकीकरणाचे काम ह्या आज्ञासंचामार्फत केले जाईल. तूर्त expex व
             blindtext ह्या आज्ञासंचांचे स्थानिकीकरण ह्या आज्ञासंचामार्फत पुरवले आहे.
-संग्राहिका:     https://gitlab.com/niruvt/marathi
-अडचणी:     https://gitlab.com/niruvt/marathi/-/issues
+संग्राहिका:     https://git.gnu.org.ua/marathi.git
+अडचणी:     https://puszcza.gnu.org.ua/bugs/?group=marathi
 परवाने:      आज्ञालेखांकरिता आलोक नित्यमुक्त परवाना (आवृत्ती १.०+) आणि ग्नू पब्लिक परवाना
            (आवृत्ती ३.०+). केवळ हस्तपुस्तिकेकरिता ग्नू फ्री डॉक्युमेन्टेशन परवाना (१.३+)
            दुवे:
@@ -30,14 +30,14 @@ readers an English description is provided at the end.
 --------------------------------------------------------------------------
 Package:        marathi
 Author:         Niranjan
-Version:        1.6.5 (18 June, 2021)
+Version:        1.7 (16 December, 2021)
 Description:    For conveniently typesetting Marathi
                 language with LuaLaTeX and XeLaTeX. This package
                 will now onwards host localizations needed for Marathi
                 language. Currently the package localizes package
                 blindtext and package expex.
-Repository:     https://gitlab.com/niruvt/marathi
-Bug tracker:    https://gitlab.com/niruvt/marathi/-/issues
+Repository:     https://git.gnu.org.ua/marathi.git
+Bug tracker:    https://puszcza.gnu.org.ua/bugs/?group=marathi
 License:        `आलोक' copyleft license v1.0+ and GPL v3.0+ for the code.
                 GFDL v1.3+ only for the documentation.
                 Links:

@@ -1,0 +1,726 @@
+\documentclass{report}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage[colorlinks]{hyperref}
+\setcounter{secnumdepth}{-1}
+\begin{document}
+\title{\TeX Live Accessibility Conformance Report\\
+  (International Edition)\\
+(Based upon VPAT\textsuperscript{\textregistered} version~2.4)}
+\author{\TeX\ Users Group}
+\date{Version 2.1, June 2022}
+\maketitle
+
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+\section{Name of Product/Version}
+\label{sec:name}
+
+\TeX Live 2022.
+
+
+\section{Report Date}
+\label{sec:date}
+
+June 2022.
+
+
+\section{Product Description}
+\label{sec:description}
+
+\TeX Live is the reference distribution of \TeX\ and related software
+supported by \TeX\ Users Group, a membership-based not-for-profit
+organization dedicated to support, promotion and advocacy of \TeX\
+typesetting system created by Donald Knuth and maintained by the
+international community of developers.  As of 2022 \TeX Live contains
+more than 470~programs and more than 7600~software packages.
+
+\section{Contact Information}
+\label{sec:contact_info}
+
+  \begin{description}
+  \item[Website:]  \url{https://tug.org}
+  \item[Address:] \leavevmode\\
+    Robin Laakso, executive director,\\
+    \TeX\ Users Group,\\
+    PO Box 2311,\\
+    Portland, OR~97208-2311,\\
+    USA
+  \item[Phone:] +1 503-223-9994
+  \item[Fax:] +1 815-301-3568
+  \item[Administrative email:] \href{mailto:office@tug.org}{office@tug.org}
+  \item[Board of directors:] \href{mailto:board@tug.org}{board@tug.org}
+  \item[President:] \href{mailto:president@tug.org}{president@tug.org}
+  \end{description}
+
+\newpage
+
+\section{Notes}
+\label{sec:note}
+
+  
+\TeX Live is a complex software suite, intended to the produce typeset
+products in various formats (PDF, HTML, DVI, XML to name a few).  In
+all case it takes an \emph{input code} written in a machine-readable
+form and translates it to an \emph{output format,} suitable to
+publication in the traditional (hard copy) or electronic form.
+
+This document covers only the software used to convert the input code
+to the output format.  The creation of the input code is outside the
+scope of this document, since it is done by third party software.
+\TeX Live software can accept as input text files created in any
+authoring tool.  \TeX\ Users group is aware about fully accessible
+authoring tools, and promotes them on its web pages and publications.
+
+A separate issue is the accessibility of the \emph{output documents}
+created with \TeX Live software.  The accessibility features of these
+documents depend on the settings in the input code and the packages
+used, and thus is not covered by this document.  \TeX\ Users Group
+strives to make the creation of full accessible documents using its
+tool as simple as possible, and to make the accessibility features the
+default settings of our software.  This is an ongoing effort,
+involving many developers.  \TeX\ Users Group welcomes any help in
+this work.
+
+The tools provided by \TeX Live are accompanied by technical
+documentation, both included in \TeX Live itself, and separate: there
+are many books, courses and other materials about \TeX.  Many of the
+latter a fully accessible.  The main documentation of \TeX Live,
+supported by \TeX Live team, is accessible as well.  Most of the
+documentation for several thousand software packages in \TeX Live is
+provided in PDF or text format.  By requiring machine readable textual
+sources of all documentation provided by \TeX Live packages, we ensure
+a certain level of accessibility for all documentation.  However, the
+full audit of the documentation for all 7300+ packages created by many
+thousands of volunteers is not feasible at this time.  \TeX\ Users
+group supports the efforts of making all \TeX\ documentation fully
+accessible.
+
+\section{Evaluation methods used}
+\label{sec:methods}
+
+The testing was based on the knowledge of the general product
+knowledge.
+
+\section{Applicable standards and guidelines}
+\label{sec:standards}
+
+{\centering
+\begin{tabularx}{\textwidth}{Xc}
+  \toprule
+  Standard/Guideline  & Included in the report\\
+  \midrule
+  \href{http://www.w3.org/TR/2008/REC-WCAG20-20081211}{Web Content
+  Accessibility Guidelines 2.0} & Level A (Yes) \\
+                      & Level AA (Yes)\\
+                      & Level AAA (Yes)\\
+  \href{https://www.w3.org/TR/WCAG21}{Web Content Accessibility
+  Guidelines 2.1} & Level A (Yes) \\
+                      & Level AA (Yes)\\
+                      & Level AAA (Yes)\\
+  \href{https://www.access-board.gov/guidelines-and-standards/communications-and-it/about-the-ict-refresh/final-rule/text-of-the-standards-and-guidelines}{Revised Section 508 standards published January 18, 2017 and
+  corrected January 22, 2018} & Yes\\
+  \href{https://www.etsi.org/deliver/etsi_en/301500_301599/301549/03.01.01_60/en_301549v030101p.pdf}{EN
+  301 549 Accessibility requirements suitable for public procurement
+  of ICT products and services in Europe, - V3.1.1 (2019-11)} & Yes\\
+  \bottomrule
+\end{tabularx}
+\par}
+
+\section{Terms}
+\label{sec:terms}
+
+The terms used in the Conformance Level information are defined as follows:
+\begin{description}
+\item[Supports:] The functionality of the product has at least one
+  method that meets the criterion without known defects or meets with
+  equivalent facilitation.
+\item[Partially Supports:] Some functionality of the product does not
+  meet the criterion.
+\item[Does Not Support:] The majority of product functionality does
+  not meet the criterion.
+\item[Not Applicable:] The criterion is not relevant to the product.
+\item[Not Evaluated:] The product has not been evaluated against the
+  criterion. This can be used only in WCAG 2.0 Level AAA.
+
+\end{description}
+
+
+\clearpage
+\section{WCAG~2.x Report}
+\label{sec:wcag}
+
+Tables~1 and~2 also document conformance with:
+\begin{itemize}
+\item EN 301 549:  Chapter 9 - Web, Sections 10.1-10.4 of Chapter 10 - Non-Web documents, and Sections 11.1-11.4 and 11.8.2 of Chapter 11 - Non-Web Software (open and closed functionality), and Sections 12.1.2 and 12.2.4 of Chapter 12 – Documentation
+\item Revised Section 508: Chapter 5 – 501.1 Scope, 504.2 Content
+  Creation or Editing, and Chapter 6 – 602.3 Electronic Support
+  Documentation.
+\end{itemize}
+
+\begin{description}
+\item[Note:] When reporting on conformance with the WCAG 2.x Success
+  Criteria, they are scoped for full pages, complete processes, and
+  accessibility-supported ways of using technology as documented in
+  the WCAG 2.0 Conformance Requirements.
+\end{description}
+
+\subsection{Introduction}
+\label{sec:wcag-intro}
+
+This section of the report describes the documentation for \TeX Live.
+
+There are several ways to define ``the full documentation for \TeX\
+and friends software''.  In one meaning of these words it comprises
+all books on \TeX, \LaTeX, Con\TeX t and other systems included in
+\TeX Live, all issues of the journals published by \TeX\ Users Group
+and other users produced documentation.  Of course it would be
+impossible to estimate the accessibility of all this documentation,
+comprising hundreds thousands of pages written over three decades.
+
+Another way is to count only the documentation for the packages
+included in \TeX Live.  This includes documentation for 7300+
+packages, which makes the full audit rather impractical.
+
+In this document we discuss only the main manual for the system,
+available with the installation and at
+\url{https://tug.org/texlive/doc/texlive-en/texlive-en.html}.  We
+note, however, that documentation for all \TeX Live packages is
+available as source text files, and thus is highly accessible.  
+
+
+In the tables below the success criteria apply to \emph{Web} and
+\emph{Electronic Docs} paragraphs of VPAT.
+
+\clearpage
+\subsection{Table~1:  Success Criteria, Level A}
+\label{sec:WCAG-A}
+\begin{longtable}{p{0.55\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+	\href{https://www.w3.org/TR/WCAG20/#text-equiv-all}{1.1.1
+  Non-text Content} (Level~A) & Supports \\
+        \href{https://www.w3.org/TR/WCAG20/#media-equiv-av-only-alt}{1.2.1
+  Audio-only and Video only (Prerecorded)} (Level~A) & Not Applicable\\
+  \href{https://www.w3.org/TR/WCAG20/#media-equiv-captions}{1.2.2
+  Captions Prerecorded} (Level~A) & Not Applicable\\
+        \href{http://www.w3.org/TR/WCAG20/#media-equiv-audio-desc}{1.2.3
+                                    Audio Description or Media
+                                    Alternative (Prerecorded)}
+                               & Not Applicable\\
+        \href{http://www.w3.org/TR/WCAG20/#content-structure-separation-programmatic}{1.3.1
+  Info and Relationships} (Level~A) & Supports \\
+    \href{http://www.w3.org/TR/WCAG20/#content-structure-separation-programmatic}{1.3.2
+  Meaningful Sequence} (Level~A) & Supports \\
+  \href{http://www.w3.org/TR/WCAG20/#content-structure-separation-understanding}{1.3.3
+  Sensory Characteristics} (Level~A) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-without-color}{1.4.1
+  Use of Color} (Level~A) & Supports \\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-dis-audio}{1.4.2
+  Audio Control} (Level~A) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#keyboard-operation-keyboard-operable}{2.1.1
+  Keyboard} (Level~A) & Supports \\
+  \href{http://www.w3.org/TR/WCAG20/#keyboard-operation-trapping}{2.1.2
+  No Keyboard Trap} (Level~A) & Supports \\
+  \href{https://www.w3.org/TR/WCAG21/#character-key-shortcuts}{2.1.4
+  Character Key Shortcuts} (Level~A~2.1 only) & Supports \\
+        \href{http://www.w3.org/TR/WCAG20/#time-limits-required-behaviors}{2.2.1
+  Timing Adjustable} & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#time-limits-pause}{2.2.2 Pause, Stop,
+  Hide} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#seizure-does-not-violate}{2.3.1
+  Three Flashes or Below Threshold} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-skip}{2.4.1
+  Bypass Blocks} & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-title}{2.4.2 Page Titled} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-focus-order}{2.4.3 Focus Order} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-refs}{2.4.4 Link Purpose (In Context)} (Level~A) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#pointer-gestures}{2.5.1 Pointer Gestures} (Level~A~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#pointer-cancellation}{2.5.2
+  Pointer Cancellation} (Level~A~2.1 only) &  Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#label-in-name}{2.5.3 Label in Name} (Level~A~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#motion-actuation}{2.5.4 Motion Actuation} (Level~A~2.1 only) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#meaning-doc-lang-id}{3.1.1 Language of Page} & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#consistent-behavior-receive-focus}{3.2.1 On Focus} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#consistent-behavior-unpredictable-change}{3.2.2 On Input} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#minimize-error-identified}{3.3.1 Error Identification} (Level~A) & Supports\\
+        \href{http://www.w3.org/TR/WCAG20/#minimize-error-cues}{3.3.2 Labels or Instructions} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#ensure-compat-parses}{4.1.1 Parsing} (Level~A) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#ensure-compat-rsv}{4.1.2 Name,
+  Role, Value} (Level~A) & Supports\\
+\end{longtable}
+
+\subsection{Table~2:  Success Criteria, Level~AA}
+\label{sec:WCAG-AA}
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \href{http://www.w3.org/TR/WCAG20/#media-equiv-real-time-captions}{1.2.4
+  Captions (Live)} (Level~AA) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#media-equiv-audio-desc-only}{1.2.5
+  Audio Description (Prerecorded)} (Level~AA) & Not Applicable\\
+  \href{https://www.w3.org/TR/WCAG21/#orientation}{1.3.4 Orientation}
+  (Level~AA~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#identify-input-purpose}{1.3.5
+  Identify Input Purpose} (Level~AA~2.1 only) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast}{1.4.3
+  Contrast (Minimum)} (Level~AA) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#resize-text}{1.4.4 Resize text}
+  (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-text-presentation}{1.4.5
+  Images of Text} (Level~AA) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#reflow}{1.4.10 Reflow} (Level~AA
+  2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#non-text-contrast}{1.4.11
+  Non-text Contrast} (Level~AA~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#text-spacing}{1.4.12 Text
+  Spacing} (Level~AA~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#text-spacing}{1.4.12 Text
+  Spacing} (Level~AA~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#content-on-hover-or-focus}{1.4.13
+  Content on Hover or Focus} (Level~AA~2.1 only) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-mult-loc}{2.4.5
+  Multiple Ways} (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-descriptive}{2.4.6
+  Headings and Labels} (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-focus-visible}{2.4.7
+  Focus Visible} (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#meaning-other-lang-id}{3.1.2
+  Language of Parts} (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#consistent-behavior-consistent-locations}{3.2.3
+  Consistent Navigation} (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#consistent-behavior-consistent-functionality}{3.2.4
+  Consistent Identification} (Level~AA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#minimize-error-suggestions}{3.3.3
+  Error Suggestion} (Level~AA) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#minimize-error-reversible}{3.3.4
+  Error Prevention (Legal, Financial, Data)} (Level~AA) & Not
+                                                          Applicable\\
+  \href{https://www.w3.org/TR/WCAG21/#status-messages}{4.1.3 Status
+  Messages} (Level~AA~2.1 only) & Supports\\
+\end{longtable}
+
+\subsection{Table~3:  Success Criteria, Level~AAA}
+\label{sec:WCAG-AAA}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \href{http://www.w3.org/TR/WCAG20/#media-equiv-sign}{1.2.6 Sign
+  Language (Prerecorded)} (Level~AAA) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#media-equiv-extended-ad}{1.2.7
+  Extended Audio Description (Prerecorded)} (Level~AAA) & Not
+                                                          Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#media-equiv-text-doc}{1.2.8 Media
+  Alternative (Prerecorded)} (Level~AAA) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#media-equiv-live-audio-only}{1.2.9
+  Audio-only (Live)} (Level~AAA) & Not Applicable\\
+  \href{https://www.w3.org/TR/WCAG21/#identify-purpose}{1.3.6 Identify
+  Purpose} (Level~AAA~2.1 only) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast7}{1.4.6
+  Contrast (Enhanced)} (Level~AAA) & Supprts\\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-noaudio}{1.4.7
+  Low or No Background Audio} (Level~AAA) & Supports \\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-visual-presentation}{1.4.8
+  Visual Presentation} (Level~AAA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#visual-audio-contrast-text-images}{1.4.9
+  Images of Text (No Exception)} (Level~AAA) & Supports & Images of
+                                                          GUI screens are used
+                                                          only when
+                                                          essential to
+                                                          the information being conveyed.\\
+  \href{http://www.w3.org/TR/WCAG20/#keyboard-operation-all-funcs}{2.1.3
+  Keyboard (No Exception)} (Level~AAA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#time-limits-no-exceptions}{2.2.3
+  No Timing} (Level~AAA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#time-limits-postponed}{2.2.4
+  Interruptions} (Level~AAA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#time-limits-server-timeout}{2.2.5
+  Re-authenticating} (Level~AAA) & Not Applicable \\
+  \href{https://www.w3.org/TR/WCAG21/#timeouts}{2.2.6 Timeouts}
+  (Level~AAA~2.1 only) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#seizure-three-times}{2.3.2 Three
+  Flashes} (Level~AAA) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#animation-from-interactions}{2.3.3
+  Animation from Interactions} (Level~AAA~2.1 only) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-location}{2.4.8
+  Location} (Level~AAA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-link}{2.4.9
+  Link Purpose (Link Only)} (Level~AAA) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#navigation-mechanisms-headings}{2.4.10
+  Section Headings} (Level~AAA) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#target-size}{2.5.5 Target Size}
+  (Level~AAA~2.1 only) & Supports\\
+  \href{https://www.w3.org/TR/WCAG21/#concurrent-input-mechanisms}{2.5.6
+  Concurrent Input Mechanisms} (Level~AAA~2.1 only) & Supports\\
+  \href{http://www.w3.org/TR/WCAG20/#meaning-idioms}{3.1.3 Unusual
+  Words} (Level~AAA) & Does Not Support\\
+  \href{http://www.w3.org/TR/WCAG20/#meaning-located}{3.1.4
+  Abbreviations} (Level~AAA) & Does Not Support\\
+  \href{http://www.w3.org/TR/WCAG20/#meaning-supplements}{3.1.5
+  Reading Level} (Level~AAA) & Does Not Support\\
+  \href{http://www.w3.org/TR/WCAG20/#meaning-pronunciation}{3.1.6
+  Pronunciation} (Level~AAA) & Not Applicable\\
+  \href{http://www.w3.org/TR/WCAG20/#consistent-behavior-no-extreme-changes-context}{3.2.5
+  Change on Request} (Level~AAA) & Supports \\
+  \href{http://www.w3.org/TR/WCAG20/#minimize-error-context-help}{3.3.5
+  Help} (Level~AAA) & Does Not Support\\
+  \href{http://www.w3.org/TR/WCAG20/#minimize-error-reversible-all}{3.3.6
+  Error Prevention (All)} (Level~AAA) & Not Applicable\\
+\end{longtable}
+
+\begin{description}
+\item[Note:] Neither \nameref{sec:sec508} nor \nameref{sec:EN301} requiure
+  AAA~level compliance.
+\end{description}
+
+\clearpage
+\section{Revised Section~508 Report}
+\label{sec:sec508}
+
+\subsection{Chapter 3: Functional Performance Criteria (FPC)}
+\label{sec:508-3}
+
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  302.1 Without Vision
+           & Supports \\ 
+  302.2 With Limited Vision & Supports\\
+  302.3 Without Perception of Color & Supports\\
+  302.4 Without Hearing & Supports\\
+  302.5 With Limited Hearing & Supports\\
+  302.6 Without Speech & Supports\\
+  302.7 With Limited Manipulation & Supports\\
+  302.8 With Limited Reach and Strength & Supports\\
+  302.9 With Limited Language, Cognitive, and Learning Abilities
+           &
+             Does Not Support\\                                                                   
+\end{longtable}
+
+
+\subsection{Chapter 4: Hardware}
+\label{sec:508-4}
+
+
+Does Not Apply.
+
+\subsection{Chapter 5: Software}
+\label{sec:508-5}
+
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  501.1 Scope---Incorporation of WCAG 2.0 AA & Supports & See
+                                                          \nameref{sec:WCAG-AA}\\
+  \multicolumn{3}{c}{\bfseries
+  502 Interoperability with Assistive Technology}\\*
+  502.2.1 User Control of Accessibility Features & Supports\\
+  502.2.2 No Disruption of Accessibility Features & Supports\\
+  \multicolumn{3}{c}{\bfseries 502.3 Accessibility Services}\\*
+  502.3.1 Object Information & Supports\\
+  502.3.2 Modification of Object Information & Supports\\
+  502.3.3 Row, Column, and Headers & Not Applicable\\
+  502.3.4 Values & Supports\\
+  502.3.5 Modification of Values & Supports\\
+  502.3.6 Label Relationships & Not Applicable\\
+  502.3.7 Hierarchical Relationships & Not Applicable\\
+  502.3.8 Text & Supports\\
+  502.3.9 Modification of Text & Supports\\
+  502.3.10 List of Actions & Supports\\
+  502.3.11 Actions on Objects & Supports\\
+  502.3.12 Focus Cursor & Supports\\
+  502.3.13 Modification of Focus Cursor & Supports\\
+  502.3.14 Event Notification & Supports\\
+  502.4 Platform Accessibility Features & Supports\\
+  \multicolumn{3}{c}{\bfseries 503 Applications}\\*
+  503.2 User Preferences & Supports\\
+  503.3 Alternative User Interfaces & Supports\\
+  503.4 User Controls for Captions and Audio Description & Not
+                                                           Applicable\\ 
+  503.4.1 Caption Controls & Not applicable\\
+  503.4.2 Audio Description Controls & Not Applicalbe\\
+  \multicolumn{3}{c}{\bfseries 504 Authoring Tools}\\*
+  504.2 Content Creation or Editing (if not authoring tool, enter
+  ``not applicable'') & Not Applicable\\
+  504.2.1 Preservation of Information Provided for Accessibility in
+  Format Conversion & Not Applicable\\
+  504.2.2 PDF Export & Not Applicable\\
+  504.3 Prompts & Not Applicable\\
+  504.4 Templates & Not Applicable\\
+\end{longtable}
+
+\subsection{Chapter 6: Support Documentation and Services}
+\label{sec:508-6}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+\multicolumn{3}{c}{\bfseries 601.1 Scope}\\*
+  \multicolumn{3}{c}{\itshape 602 Support Documentation}\\*
+  602.2 Accessibility and Compatibility Features & Supports\\
+  602.3 Electronic Support Documentation & Supports & See
+                                                      \nameref{sec:wcag} \\
+  602.4 Alternate Formats for Non-Electronic Support Documentation &
+                                                                     Not
+                                                                     Applicable
+  \\ 
+  \multicolumn{3}{c}{\itshape 603 Support Services}\\*
+  603.2 Information on Accessibility and Compatibility Features & Not
+                                                                  Applicable\\ 
+  603.3 Accommodation of Communication Needs & Not Applicable\\
+\end{longtable}
+
+
+\clearpage
+\section{EN 301 549 Report}
+\label{sec:EN301}
+
+\subsection{Chapter 4: Functional Performance Statements (FPS)}
+\label{sec:EN301-3}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  4.2.1 Usage without vision & Supports\\
+  4.2.2 Usage with limited vision & Supports\\
+  4.2.3 Usage without perception of colour & Supports\\
+  4.2.4 Usage without hearing & Supports \\
+  4.2.5 Usage with limited hearing & Supports\\
+  4.2.6 Usage with no or limited vocal capability & Supports \\
+  4.2.7 Usage with limited manipulation or strength & Supports \\ 
+  4.2.8 Usage with limited reach & Supports \\ 
+  4.2.9 Minimize photosensitive seizure triggers & Supports \\
+  4.2.10 Usage with limited cognition, language or learning & Does not
+                                                              support \\
+  4.2.11 Privacy & Supports\\
+\end{longtable}
+
+\subsection{Chapter~5: Generic Requirements}
+\label{sec:EN301-5}
+
+\begin{description}
+\item[Note:] EN~301~549 defines ``closed functionality'' as
+  ``functionality that is limited by characteristics that prevent a
+  user from attaching, installing or using assistive technology''.
+  Since \TeX Live utilities do not prevent users from attaching,
+  installing or using assistive technology, most of requirements in
+  this chapter are not applicable to them.
+\end{description}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \multicolumn{3}{c}{\bfseries 5.1 Closed functionality}\\*
+  \multicolumn{3}{c}{\itshape 5.1.2 General}\\*
+  5.1.2.1 Closed functionality & Not Applicable\\
+  5.1.2.2 Assistive technology & Not Applicable \\
+  \multicolumn{3}{c}{\itshape 5.1.3 Non-visual access}\\*
+  5.1.3.1 Audio output of visual information & Not Applicable\\
+  5.1.3.2 Auditory output delivery including speech & Not Applicable\\
+  5.1.3.3 Auditory output correlation & Not Applicable\\
+  5.1.3.4 Speech output user control & Not Applicable\\
+  5.1.3.5 Speech output automatic interruption & Not Applicable\\
+  5.1.3.6 Speech output for non-text content & Not Applicable\\
+  5.1.3.7 Speech output for video information & Not Applicable\\
+  5.1.3.8 Masked entry & Not Applicable\\
+  5.1.3.9 Private access to personal data & Not Applicable\\
+  5.1.3.10 Non-interfering audio output & Not Applicable\\
+  5.1.3.11 Private listening volume & Not Applicable\\
+  5.1.3.12 Speaker volume & Not Applicable\\
+  5.1.3.13 Volume reset & Not Applicable\\
+  5.1.3.14 Spoken languages & Not Applicable\\
+  5.1.3.15 Non-visual error identification & Not Applicable\\
+  5.1.3.16 Receipts, tickets, and transactional outputs & Not Applicable\\
+  5.1.4 Functionality closed to text enlargement & Not Applicable\\
+  5.1.5 Visual output for auditory information & Not Applicable\\
+  \multicolumn{3}{c}{\itshape 5.1.6 Operation without keyboard
+  interface}\\*
+  5.1.6.2 Input focus & Not Applicable\\
+  5.1.7 Access without speech & Not Applicable\\
+  5.2 Activation of accessibility features & Not Applicable\\
+  5.3 Biometrics & Not Applicable\\
+  5.4 Preservation of accessibility information during conversion &
+                                                                    Not Applicable\\
+  \multicolumn{3}{c}{\bfseries 5.5 Operable parts}\\*
+  5.5.1 Means of operation & Not Applicable\\
+  5.5.2 Operable parts discernibility & Not Applicable\\
+  \multicolumn{3}{c}{\bfseries 5.6 Locking or toggle controls}\\*
+  5.6.1 Tactile or auditory status & Not Applicable\\
+  5.6.2 Visual status & Not Applicable\\
+  5.7 Key repeat & Not Applicable\\
+  5.8 Double-strike key acceptance & Not Applicable\\
+  5.9 Simultaneous user actions & Not Applicable\\
+\end{longtable}
+
+\subsection{Chapter~6: ICT with Two-Way Voice Communication }
+\label{sec:EN301-6}
+
+Not Applicable.
+
+\subsection{Chapter~7: ICT with Video Capabilities }
+\label{sec:EN301-7}
+
+Not Applicable.
+
+
+\subsection{Chapter~8: Hardware}
+\label{sec:EN301-8}
+
+Not Applicable.
+
+\subsection{Chapter 9: Web}
+\label{sec:EN301-9}
+
+See \nameref{sec:wcag}.
+
+\subsection{Chapter~10: Non-Web Software}
+\label{sec:EN301-10}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \multicolumn{3}{c}{\bfseries 10.0 General (informative)}\\*
+  10.1.1.1 through 10.4.1.3 & Supports & See \nameref{sec:wcag}\\
+  10.5 Caption positioning & Not Appicable\\
+  10.6 Audio description timing & Not Applicable\\
+\end{longtable}
+
+\subsection{Chapter~11: Software}
+\label{sec:EN301-11}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \multicolumn{3}{c}{\bfseries 11.0 General (informative)}\\*
+  11.1.1.1 through 11.4.1.3 & Supports & See \nameref{sec:wcag}\\
+  \multicolumn{3}{c}{\bfseries 11.5 Interoperability with assistive
+  technology} \\*
+  \multicolumn{3}{c}{\itshape 11.5.1 Closed functionality}\\*
+  \multicolumn{3}{c}{\itshape 11.5.2 Accessibility services}\\*
+  11.5.2.1 Platform accessibility service support for software that
+  provides a user interface & Supports & See information in 11.5.2.5
+                                         through 11.5.2.17\\  
+  11.5.2.2 Platform accessibility service support for assistive
+  technologies & Supports & See information in 11.5.2.5 through 11.5.2.17\\
+  11.5.2.3 Use of accessibility services & Not Applicable\\
+  11.5.2.4 Assistive technology & Not Applicable\\
+  11.5.2.5 Object information & Not Applicable\\
+  11.5.2.6 Row, column, and headers & Not Applicable \\
+  11.5.2.7 Values & Not Applicable\\
+  11.5.2.8 Label relationships & Not Applicable \\
+  11.5.2.9 Parent-child relationships & Not Applicable\\
+  11.5.2.10 Text & Supports \\
+  11.5.2.11 List of available actions & Supports \\
+  11.5.2.12 Execution of available actions & Supports\\
+  11.5.2.13 Tracking of focus and selection attributes & Not
+                                                         Applicable \\
+  11.5.2.14 Modification of focus and selection attributes & Not
+                                                             Applicable \\
+  11.5.2.15 Change notification & Supports\\
+  11.5.2.16 Modifications of states and properties & Supports\\
+  11.5.2.17 Modifications of values and text & Supports\\
+  \multicolumn{3}{c}{\bfseries 11.6 Documented accessibility usage}\\*
+  11.6.1 User control of accessibility features & Not Applicable\\
+  11.6.2 No disruption of accessibility features & Supports\\
+  11.7 User preferences & Not Applicable\\
+  \multicolumn{3}{c}{\bfseries 11.8 Authoring tools}\\*
+  \multicolumn{3}{c}{\itshape 11.8.1 Content technology}\\*
+  11.8.2 Accessible content creation & Not Applicable\\
+  11.8.3 Preservation of accessibility information in transformations
+           & Not Applicable\\
+  11.8.4 Repair assistance & Not Applicable\\
+  11.8.5 Templates & Not Applicable\\
+\end{longtable}
+
+\subsection{Chapter~12: Documentation and Support Services}
+\label{sec:EN301-12}
+
+\begin{longtable}{p{0.6\textwidth}<{\RaggedRight}p{0.2\textwidth}<{\RaggedRight}p{0.15\textwidth}<{\RaggedRight}}
+  \toprule
+  Criteria & Conformance Level & Remarks and Explanations \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \multicolumn{3}{c}{\bfseries 12.1 Product documentation}\\*
+  12.1.1 Accessibility and compatibility features & Not Applicable\\
+  12.1.2 Accessible documentation & Supports & See \nameref{sec:wcag}\\
+  \multicolumn{3}{c}{\bfseries 12.2 Support Services}\\*
+  12.2.2 Information on accessibility and compatibility features & Not Applicable\\
+  12.2.3 Effective communication & Not Applicable\\
+  12.2.4 Accessible documentation & Not Applicable\\
+\end{longtable}
+
+\subsection{Chapter~13: ICT Providing Relay or Emergency Service
+  Access}
+\label{sec:EN301-13}
+
+Not Applicable.
+
+
+\clearpage
+
+\section{Legal Disclaimer}
+\label{sec:legal}
+
+While all efforts were made to provide an accurate description of the
+software, \TeX\ Users Group cannot make any guarantee, explicit of
+implied, of the accuracy of this report.  This report is provided ``As
+Is'' and for information purposes only.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

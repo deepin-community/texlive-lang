@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="generator" content="Docutils 0.17b.dev: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.17b2.dev: http://docutils.sourceforge.net/" />
 <title>tuenc-greek.def</title>
 <meta name="dcterms.rights" content="© 2013 Günter Milde" />
 <link rel="schema.dcterms" href="http://purl.org/dc/terms/"/>
@@ -39,7 +39,8 @@
 .align-bottom { vertical-align: bottom; }
 
 /* titles */
-h1.title, p.subtitle {
+h1.title,
+p.subtitle {
   text-align: center;
 }
 p.topic-title,
@@ -49,21 +50,18 @@ p.admonition-title,
 p.system-message-title {
   font-weight: bold;
 }
-h1 + p.subtitle,
-h2 + p.section-subtitle {
+h1 + p.subtitle {
   font-size: 1.6em;
 }
-h3 + p.section-subtitle { 
-  font-size: 1.28em;
+h2 + p.section-subtitle,
+p.sidebar-title {
+  font-size: 1.2em;
 }
 p.subtitle,
 p.section-subtitle,
 p.sidebar-subtitle {
   font-weight: bold;
   margin-top: -0.5em;
-}
-p.sidebar-title {
-  font-size: larger;
 }
 p.rubric {
   font-size: larger;
@@ -156,7 +154,10 @@ dl.docinfo > dt:after {
 }
 
 /* Bibliographic Fields (docinfo) */
-pre.address { font: inherit; }
+pre.address { 
+  font: inherit; 
+  margin: 0.5em 0;
+}
 dd.authors > p { margin: 0; }
 
 /* Option Lists */
@@ -167,7 +168,7 @@ span.option { white-space: nowrap; }
 /* Footnotes and Citations  */
 dl.footnote.superscript > dd {margin-left: 1em; }
 dl.footnote.brackets > dd {margin-left: 2em; }
-dl > dt.label { font-weight: normal; }
+dl.footnote > dt { font-weight: normal; }
 a.footnote-reference.brackets:before,
 dt.label > span.brackets:before { content: "["; }
 a.footnote-reference.brackets:after,
@@ -175,18 +176,10 @@ dt.label > span.brackets:after { content: "]"; }
 a.footnote-reference.superscript,
 dl.footnote.superscript > dt.label {
   vertical-align: super;
-  font-size: smaller;
+  font-size: small;
 }
 dt.label > span.fn-backref { margin-left: 0.2em; }
 dt.label > span.fn-backref > a { font-style: italic; }
-
-/* Line Blocks */
-div.line-block { display: block; }
-div.line-block div.line-block {
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 40px;
-}
 
 /* Figures, Images, and Tables */
 .figure.align-left,
@@ -234,15 +227,17 @@ aside.sidebar {
 blockquote,
 div.topic,
 div.admonition,
-div.system-message,
-pre.literal-block,
-pre.doctest-block,
-pre.math,
-pre.code {
-  margin-left: 1.5em;
-  margin-right: 1.5em;
+div.system-message {
+  margin-left: 2em;
+  margin-right: 2em;
 }
+div.line-block { display: block; }
+div.line-block div.line-block {
+  margin: 0 0 0 2em;
+}
+pre { margin-left: 2em; }
 pre.code .ln { color: gray; } /* line numbers */
+
 
 /* Tables */
 table { border-collapse: collapse; }
@@ -257,7 +252,11 @@ td > p, th > p { margin-bottom: 0; }
 
 table > caption {
   text-align: left;
-  margin-bottom: 0.25em
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+table.captionbelow {
+  caption-side: bottom;
 }
 
 table.borderless td, table.borderless th {
@@ -278,12 +277,13 @@ header, section, footer, aside, nav, main, article, figure {
 </style>
 <style type="text/css">
 
-/* CSS31_ style sheet for the output of Docutils HTML writers.             */
-/* Rules for easy reading and pre-defined style variants.                  */
+/* CSS3_ style sheet for the output of Docutils HTML writers.              */
+/* Generic responsive design for all screen sizes.                         */
 /*                                                                         */
-/* :Author: Günter Milde, based on html4css1.css by David Goodger          */
+/* :Author: Günter Milde                                                   */
+/*                                                                         */
 /* :Id: $Id$                                                               */
-/* :Copyright: © 2015 Günter Milde.                                        */
+/* :Copyright: © 2021 Günter Milde.                                        */
 /* :License: Released under the terms of the `2-Clause BSD license`_,      */
 /*    in short:                                                            */
 /*                                                                         */
@@ -297,153 +297,193 @@ header, section, footer, aside, nav, main, article, figure {
 /* .. _CSS3: http://www.w3.org/TR/CSS3                                     */
 
 
-/* Document Structure */
-/* ****************** */
+/* General Settings */
+/* ================ */
 
-/* "page layout" */
+/* Suited for all screen sizes or special to small ones (mobile first).    */
+/* For adaption to larger screens see media queries below 	 	   */
+@viewport {
+  zoom: 1.0;
+  width: extend-to-zoom;
+}
+
 body {
-  margin: 0;
-  background-color: #dbdbdb;
-}
-div.document,
-main {
-  line-height:1.3;
-  counter-reset: table figure;
-  /* avoid long lines --> better reading */
-  /* optimum is 45…75 characters/line <http://webtypography.net/2.1.2> */ 
-  /* OTOH: lines should not be too short because of missing hyphenation, */
-  max-width: 50em; 
-  padding: 1px 2%; /* 1px on top avoids grey bar above title (mozilla) */
+  background-color: #fafaf6;
+/*   background-color: #fefdfb; */
+  font-size: larger;
+  line-height: 1.4;
   margin: auto;
-  background-color: white;
+}
+main {
+  counter-reset: figure table;
+}
+main, header, footer {
+  padding: 0.5em 5%;
+  background-color: #fefefc;
+  max-width: 66em;
 }
 
-/* Sections */
-
-/* Transitions */
-
-hr.docutils {
-  width: 80%;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  clear: both;
+main > *, section > * {
+  max-width: 55em; /* ca. 90…100 characters */
+}
+main > section, section > section {
+  max-width: 100%;
 }
 
-/* Paragraphs */
-/* ========== */
-
-/* vertical space (parskip) */
-p, ol, ul, dl, li, dd,
+/* Vertical Space (Parskip) */
+p, ol, ul, dl, li,
 div.line-block,
 div.topic,
 table {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-p:first-child { margin-top: 0; }
-/* (:last-child is new in CSS 3) */
-p:last-child  { margin-bottom: 0; }
-
 h1, h2, h3, h4, h5, h6,
 dl > dd {
   margin-bottom: 0.5em;
 }
-
-/* Lists */
-/* ===== */
-
-/* Separate list entries in compound lists */
-dl > dd, ol > li,
-
-/* Definition Lists */
-/* Indent lists nested in definition lists */
-/* (:only-child is new in CSS 3)           */
-dd > ul:only-child, dd > ol:only-child { padding-left: 1em; }
-
-/* Description Lists */
-/* styled like in most dictionaries, encyclopedias etc. */
-dl.description > dt {
-  font-weight: bold;
-  clear: left;
-  float: left;
-  margin: 0;
-  padding: 0;
-  padding-right: 0.5em;
+/* exceptions */
+p:first-child {
+  margin-top: 0;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+blockquote > table,
+div.topic > table {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-/* Field Lists */
+/* Indented Blocks */
+blockquote,
+figure,
+div.topic {
+  /* background-color: Honeydew; */
+  margin: 0.5em 2%;
+  padding-left: 1em;
+}
+div.line-block div.line-block,
+dl.option-list,
+.literal-block,
+pre {
+  /* background-color: LightCyan; */
+  margin-left: calc(2% + 1em);
+}
 
-/* example for custom field-name width */
-dl.field-list.narrow > dd {
-  margin-left: 5em;
+/* Object styling */
+/* ============== */
+
+footer > *, header > *,
+aside.sidebar > *, .marginal > * {
+  font-size: smaller;
+}
+
+/* Frontmatter */
+blockquote.dedication,
+div.topic.dedication {
+  padding: 0;
+  margin-left: 0;
+  font-style: italic;
+  font-size: larger;
+}
+/* div.abstract p.topic-title, */
+div.dedication p.topic-title {
+  display: none;
+}
+
+blockquote p.attribution,
+div.topic p.attribution {
+  text-align: right;
+}
+
+/* Table of Contents */
+div.topic.contents {
+  padding: 0;
+}
+ul.auto-toc > li > p {
+  padding-left: 1em;
+  text-indent: -1em;
+}
+div.topic.contents ul {
+  padding-left: 1em;
+}
+
+/* Transitions */
+hr {
+  margin: 1em 10%;
+}
+
+/* Lists */
+
+/* Smaller indent on small screens */
+ul, ol {
+  padding-left: 1.1em;
+}
+dd {
+  margin-left: 1.5em;
+}
+dl.field-list > dd {
+  margin-left: 4em;
+}
+dl.field-list.narrow > dd,
+dl.docinfo > dd,
+dl.option-list > dd {
+  margin-left: 2.4em;
 }
 /* run-in: start field-body on same line after long field names */
 dl.field-list.run-in > dd p {
   display: block;
 }
 
-/* Bibliographic Fields */
-
-/* generally, bibliographic fields use special definition list dl.docinfo */
-/* but dedication and abstract are placed into "topic" divs */
-div.abstract p.topic-title {
-  text-align: center;
-}
-div.dedication {
-  margin: 2em 5em;
-  text-align: center;
-  font-style: italic;
-}
-div.dedication p.topic-title {
-  font-style: normal;
-}
-
-/* Citations */
-dl.citation dt.label {
+/* "description style" like in most dictionaries, encyclopedias etc. */
+dl.description > dt {
+  clear: left;
+  float: left;
+  margin: 0;
+  padding: 0;
+  padding-right: 0.5em;
   font-weight: bold;
 }
-span.fn-backref {
-  font-weight: normal;
+dl.description > dd:after {
+  display: block;
+  content: "";
+  clear: both;
+}
+/* start lists nested in description/field lists on new line */
+dd > dl:first-child,
+dd > ul:first-child,
+dd > ol:first-child {
+    clear: left;
+}
+/* Footnotes and Citations */
+/* TODO: use <aside> */
+dl.footnote {
+  font-size: smaller;
+  padding-left: 0.5em;
+/*   text-indent: -0.5em; */
+  border-left: solid;
+  border-left-width: thin;
 }
 
-/* Text Blocks */
-/* =========== */
-
-/* Literal Blocks */
-
-pre.literal-block,
-pre.doctest-block,
-pre.math,
-pre.code {
-  font-family: monospace;
+/* Images, Figures, and Tables */
+img {
+  display: block;
+}
+p > img, p > a > img,
+figure > img, figure > a > img {
+  display: inline;
 }
 
-/* Block Quotes */
-
-blockquote > table,
-div.topic > table {
-  margin-top: 0;
-  margin-bottom: 0;
+table tr {
+  text-align: left;
 }
-blockquote p.attribution,
-div.topic p.attribution {
-  text-align: right;
-  margin-left: 20%;
-}
-
-/* Tables */
-/* ====== */
 
 /* th { vertical-align: bottom; } */
-
-table tr { text-align: left; }
-
 /* "booktabs" style (no vertical lines) */
 table.booktabs {
-  border: 0;
   border-top: 2px solid;
   border-bottom: 2px solid;
-  border-collapse: collapse;
 }
 table.booktabs * {
   border: 0;
@@ -452,101 +492,59 @@ table.booktabs th {
   border-bottom: thin solid;
 }
 
-/* numbered tables (counter defined in div.document) */
-table.numbered > caption:before {
-  counter-increment: table;
-  content: "Table " counter(table) ": ";
-  font-weight: bold;
+figcaption,
+table > caption {
+  /*   font-size: smaller; */
+  font-style: italic;
+}
+figcaption > .legend {
+  font-size: smaller;
+  font-style: initial;
 }
 
-/* Explicit Markup Blocks */
-/* ====================== */
-
-/* Footnotes and Citations */
-/* ----------------------- */
-
-/* line on the left */
-dl.footnote {
-  padding-left: 1ex;
-  border-left: solid;
-  border-left-width: thin;
-}
-
-/* Directives */
-/* ---------- */
-
-/* Body Elements */
-/* ~~~~~~~~~~~~~ */
-
-/* Images and Figures */
-
-/* let content flow to the side of aligned images and figures */
-.figure.align-left,
-figure.align-left,
-img.align-left,
-object.align-left {
-  display: block;
-  clear: left;
-  float: left;
-  margin-right: 1em;
-}
-.figure.align-right,
-figure.align-right,
-img.align-right,
-object.align-right {
-  display: block;
-  clear: right;
-  float: right;
-  margin-left: 1em;
-}
-/* Stop floating sidebars, images and figures at section level 1,2,3 */
-h1, h2, h3, h4 { clear: both; }
-
-/* Numbered figures */
 figure.numbered > figcaption > p:before {
   counter-increment: figure;
   content: "Figure " counter(figure) ": ";
   font-weight: bold;
+  font-style: initial;
 }
-
+table.numbered > caption:before {
+  counter-increment: table;
+  content: "Table " counter(table) ": ";
+  font-weight: bold;
+  font-style: initial;
+}
 
 /* Admonitions and System Messages */
-
 div.admonition,
-div.system-message,
-aside.sidebar {
-  border: medium outset;
-  margin: 1em 1.5em;
-  padding: 0.5em 1em;
+div.system-message {
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: silver;
+  border-width: thin;
+  margin: 1em 2%;
+  padding: 0.5em;
 }
-
 div.caution p.admonition-title,
 div.attention p.admonition-title,
 div.danger p.admonition-title,
-div.error p.admonition-title,
 div.warning p.admonition-title,
 div.error {
-  color: red;
+  color: maroon;
+}
+div.system-message > p > span.literal {
+  overflow-wrap: break-word;
+}
+
+/* Literal and Code */
+pre {
+  /* font-family: Consolas, "Liberation Mono", Menlo, monospace; */
+  /* font-size: 0.9em; */
+  overflow: auto;
+  margin-right: -5%;
 }
 
 
-/* Sidebar */
-
-/* Move right. In a layout with fixed margins, */
-/* it can be moved into the margin.            */
-div.sidebar,
-aside.sidebar {
-  width: 30%;
-  max-width: 26em;
-  margin-left: 1em;
-  margin-right: -2%;
-  background-color: #ffffee;
-}
-
-/* Code */
-
-pre.code { padding: 0.7ex }
-pre.code, code { background-color: #eeeeee }
 pre.code .ln { color: gray; } /* line numbers */
 /* basic highlighting: for a complete scheme, see */
 /* http://docutils.sourceforge.net/sandbox/stylesheets/ */
@@ -557,52 +555,160 @@ pre.code .name.builtin, code .name.builtin { color: #352B84 }
 pre.code .deleted, code .deleted { background-color: #DEB0A1}
 pre.code .inserted, code .inserted { background-color: #A3D289}
 
-/* Math */
-/* styled separately (see math.css for math-output=HTML) */
 
-/* Epigraph           */
-/* Highlights         */
-/* Pull-Quote         */
-/* Compound Paragraph */
-/* Container          */
 
-/* Document Header and Footer */
-
-footer, header {
-  font-size: smaller;
-  clear: both;
-  padding: 0.5em 2%;
-  background-color: #ebebee;
-  border: none;
+.sans {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Lucida Sans", "Noto Sans", sans-serif;
+    letter-spacing: .02em;
 }
 
-/* Inline Markup */
-/* ============= */
-
-/* Emphasis           */
-/*   em               */
-/* Strong Emphasis    */
-/*   strong           */
-/* Interpreted Text   */
-/*   span.interpreted */
-/* Title Reference    */
-/*   cite             */
-
-/* Inline Literals                                          */
-/* possible values: normal, nowrap, pre, pre-wrap, pre-line */
-/*   span.docutils.literal { white-space: pre-wrap; }       */
-
 /* Hyperlink References */
-a { text-decoration: none; }
+/* underline that clears descenders */
+a {
+  text-decoration: none;
+  text-decoration-skip-ink: auto; /* nonstandard selector */
+}
+a:link{
+  overflow-wrap: break-word;
+}
+/* undecorated links */
+a[href^="#system-message"],
+.contents a, a.toc-backref, a.image-reference,
+a.footnote-reference, a.fn-backref, .fn-backref a,
+a.citation-reference {
+  color: inherit;
+}
+a:link:hover {
+  text-decoration: underline;
+}
 
-/* External Targets       */
-/*   span.target.external */
-/* Internal Targets       */
-/*   span.target.internal */
-/* Footnote References    */
-/*   a.footnote-reference */
-/* Citation References    */
-/*   a.citation-reference */
+
+/* Block Alignment */
+/* Let content flow to the side of aligned images and figures */
+
+/* no floats around this elements */
+dl.footnote, dl.citation, /* errors with internal floats */
+footer, header, hr, 
+h1, h2, h3, .contents > p.topic-title {
+  clear: both;
+}
+
+img.align-left,
+figure.align-left,
+table.align-left {
+  margin-left: 0;
+  padding-left: 0;
+  margin-right: 0.5em;
+  clear: left;
+  float: left;
+}
+img.align-right,
+figure.align-right,
+table.align-right {
+  margin-left: 0.5em;
+  clear: right;
+  float: right;
+}
+
+/* Margin Elements */
+/* see below for screen size dependent rules */
+aside.sidebar {
+/* overwrite minimal.css */
+  width: auto;
+  max-width: 100%;
+/*   float: none; */
+}
+aside.sidebar,
+.marginal,
+.admonition.marginal,
+.topic.marginal {
+  background-color: #efefea;
+  box-sizing: border-box;
+  margin: 0.5em 0;
+  padding: 0.5em;
+  clear: right;
+}
+
+/* Adaptive page layout */
+
+/* larger margins and floating elements moderately small screens */
+/* main text more than around 40 characters/line */
+@media (min-width: 35em) {
+  /* wider margins */
+  main, header, footer {
+    padding: 0.5em calc(20% - 5rem);
+    line-height: 1.6
+  }
+  pre {
+    margin-right: calc(5rem - 20%);
+  }
+  /* floating margin elements */
+  aside.sidebar,
+  .marginal,
+  .admonition.marginal,
+  .topic.marginal {
+    max-width: min(45%, 18em);
+    margin-left: 1em;
+    clear: right;
+    float: right;
+  }
+  /* more indent for field-list values */
+  dl.field-list > dd,
+  dl.docinfo > dd {
+    margin-left: 6.4em;
+  }
+  dl.option-list > dd {
+    margin-left: 5em;
+  }
+}
+
+@media (min-width: 65em) {
+  /* 2 column layout with wide margin */
+  main, header, footer {
+    padding: 0.5em 15%;
+  }
+  aside.sidebar,
+  .marginal,
+  .admonition.marginal,
+  .topic.marginal {
+    background-color: inherit;
+    /*  background-color: lavender; */
+    margin-right: -18%;
+    padding: 0;
+  }
+  .admonition.marginal { padding: 0.5em; }
+}
+
+/* Move ToC to the left */
+@media (min-width: 100em) {
+  main, header, footer {
+    padding-left: min(30%, 36em);
+  }
+  main > div.topic.contents {
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: min(25%, 28em);
+    height: 100vh;
+    margin: 0;
+    background-color: #fafaf6;
+    padding: 5.5em 2%;
+    overflow: auto;
+  }
+  main > div.topic.contents > * {
+    padding-left: 0;
+  }
+  
+/* marginal elements outside of main text */
+@media (min-width: 126em) {
+  aside.sidebar,
+  figure.marginal,
+  .topic.marginal,
+  p.marginal { 
+   width: min(45%, 18em);
+ }
+}
 
 </style>
 </head>

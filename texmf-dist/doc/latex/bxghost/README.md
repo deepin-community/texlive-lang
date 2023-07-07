@@ -2,12 +2,13 @@
 
 LaTeX: ghost insertion for proper xkanjiskip
 
-## System requirements
+## Requirements
 
 * TeX format: LaTeX
 * TeX engine: LuaTeX, XeTeX, pTeX, upTeX, and ApTeX (pTeX-ng)
+* LuaTeX-ja is required in LuaTeX
 
-Since this package is intended to be used for creating documents in Japanese, it assumes appropriate classes and/or packages are loaded in some engines (e.g., LuaTeX-ja for LuaTeX and bxjscls for XeTeX). BXghost does not load any external packages automatically.
+Since this package is intended to be used for creating documents in Japanese, it assumes appropriate classes and/or packages are loaded in some engines (e.g., LuaTeX-ja for LuaTeX and bxjscls for XeTeX).
 
 ## Usage
 
@@ -16,9 +17,20 @@ This package provides following commands:
 * `\eghostguarded{<text>}` inserts *European ghost* (invisible and zero-width alphabets) before and after the `<text>`. In math mode, it outputs only `<text>` without the ghosts.
 * `\jghostguarded{<text>}` inserts *Japanese ghost* (invisible and zero-width Japanese characters) before and after the `<text>`. In math mode, it outputs only `<text>` without the ghosts.
 
-In addition, the following package option is available:
+In addition, the following package options are available:
 
 * `verb` patches the `\verb` command of LaTeX to be guarded by European ghost.
+* `noverb` disables the `verb` feature. (default)
+
+### For package authors
+
+To use the function of this package in your package, a library version is available:
+
+```tex
+\RequirePackage{bxghost-lib}
+```
+
+This provides all the commands defined in the package but does not have any package option to prevent the problem of option clashes.
 
 ## Acknowledgements
 
@@ -30,6 +42,11 @@ This package is distributed under [the MIT license](./LICENSE).
 
 ## Revision History
 
+* Version 0.5.0  ‹2022/05/20›
+  * Provide `bxghost-lib` for internal use from other packages
+* Version 0.4.0  ‹2022/02/12›
+  * More general implementation for `\jghostguarded`
+  * Add the `noverb` option
 * Version 0.3.0  ‹2020/01/31›
   * Add the `verb` option
 * Version 0.2.0  ‹2019/09/17›

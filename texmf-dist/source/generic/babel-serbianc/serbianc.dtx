@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-%Copyright 2019--2021 Uroš Stefanović,
+%Copyright 2019--2022 Uroš Stefanović,
 %2002--2019 Filip Brčić
 %All rights reserved.
 % 
@@ -32,7 +32,7 @@
 %<code>\ProvidesLanguage{serbianc}
 %\fi
 %\ProvidesFile{serbianc.dtx}
-        [2021/04/10 3.1 Serbian Cyrillic support for the Babel system]
+        [2022/09/30 3.2a Serbian Cyrillic support for the Babel system]
 %\iffalse
 %% File `serbianc.dtx'
 %
@@ -96,7 +96,9 @@
 %    If you prefer to use `јуни' and `јули' instead of default `јун' and `јул',
 %    use the \Lopt{datei} attribute. Also, the |\today*| macro prints the date without dot after the year
 %    (used when after the date is the punctuation mark, such as comma).
-%     Alternatively, the commands |\todayRoman| and |\todayRoman*| print the current date using Roman numerals for months.
+%    Alternatively, the commands |\todayRoman| and |\todayRoman*| prints the current date using Roman numerals for months;
+%    |\todayGen| and |\todayGen*| prints the current month name in the genitive case,
+%    and |\todayArabic| and |\todayArabic*| prints the current month as a number.
 %
 %    The alphabetical enumerations in texts use the Cyrillic alphabet and alphabetic order (all 30 letters of the Serbian language are used).
 %    Also, the Serbian language allows enumeration with the Latin alphabet.
@@ -426,6 +428,7 @@
 %    \end{macrocode}
 %
 %    The macro |\dateserbianc| redefines the commands |\today|, |\today*|, |\todayRoman| and |\todayRoman*| to produce Serbian dates.
+%    Also, the commands |\todayGen|, |\todayGen*|, |\todayArabic| and |\todayArabic*| are provided.
 %
 %    \begin{macrocode}
 \if@srbc@uni@ode
@@ -443,8 +446,23 @@
     октобар\or
     новембар\or
     децембар\fi}%
+   \def\month@serbianc@gen{\ifcase\month\or
+    јануара\or
+    фебруара\or
+    марта\or
+    априла\or
+    маја\or
+    јуна\or
+    јула\or
+    августа\or
+    септембра\or
+    октобра\or
+    новембра\or
+    децембра\fi}%
     \def\today{\number\day.~\month@serbianc\ \number\year\@ifstar{}{.}}%
-    \def\todayRoman{\number\day.~\@Roman\month~\number\year\@ifstar{}{.}}}
+    \def\todayRoman{\number\day.~\@Roman\month~\number\year\@ifstar{}{.}}%
+    \def\todayGen{\number\day.~\month@serbianc@gen\ \number\year\@ifstar{}{.}}%
+    \def\todayArabic{\number\day.~\number\month.~\number\year\@ifstar{}{.}}}
   \let\dateserbianc@datei=\dateserbianc
   \addto\dateserbianc@datei{%
     \def\month@serbianc@datei{\ifnum\month=6 јуни%
@@ -465,8 +483,23 @@
     \cyro\cyrk\cyrt\cyro\cyrb\cyra\cyrr\or
     \cyrn\cyro\cyrv\cyre\cyrm\cyrb\cyra\cyrr\or
     \cyrd\cyre\cyrc\cyre\cyrm\cyrb\cyra\cyrr\fi}%
+   \def\month@serbianc@gen{\ifcase\month\or
+    \cyrje\cyra\cyrn\cyru\cyra\cyrr\cyra\or
+    \cyrf\cyre\cyrb\cyrr\cyru\cyra\cyrr\cyra\or
+    \cyrm\cyra\cyrr\cyrt\cyra\or
+    \cyra\cyrp\cyrr\cyri\cyrl\cyra\or
+    \cyrm\cyra\cyrje\cyra\or
+    \cyrje\cyru\cyrn\cyra\or
+    \cyrje\cyru\cyrl\cyra\or
+    \cyra\cyrv\cyrg\cyru\cyrs\cyrt\cyra\or
+    \cyrs\cyre\cyrp\cyrt\cyre\cyrm\cyrb\cyrr\cyra\or
+    \cyro\cyrk\cyrt\cyro\cyrb\cyrr\cyra\or
+    \cyrn\cyro\cyrv\cyre\cyrm\cyrb\cyrr\cyra\or
+    \cyrd\cyre\cyrc\cyre\cyrm\cyrb\cyrr\cyra\fi}%
     \def\today{\number\day.~\month@serbianc\ \number\year\@ifstar{}{.}}%
-    \def\todayRoman{\number\day.~\@Roman\month~\number\year\@ifstar{}{.}}}
+    \def\todayRoman{\number\day.~\@Roman\month~\number\year\@ifstar{}{.}}%
+    \def\todayGen{\number\day.~\month@serbianc@gen\ \number\year\@ifstar{}{.}}%
+    \def\todayArabic{\number\day.~\number\month.~\number\year\@ifstar{}{.}}}
   \let\dateserbianc@datei=\dateserbianc
   \addto\dateserbianc@datei{%
     \def\month@serbianc@datei{\ifnum\month=6\cyrje\cyru\cyrn\cyri%
@@ -578,9 +611,9 @@
     w\or x\or y\or z\else\@ctrerr\fi
 \fi}%
 \addto\extrasserbianc{%
-  \babel@save\enumEng \def\enumEng{\srbc@lettering=\tw@}
-  \babel@save\enumLat \def\enumLat{\srbc@lettering=\@ne}
-  \babel@save\enumCyr \def\enumCyr{\srbc@lettering=\z@}
+  \babel@save\enumEng\def\enumEng{\srbc@lettering=\tw@}%
+  \babel@save\enumLat\def\enumLat{\srbc@lettering=\@ne}%
+  \babel@save\enumCyr\def\enumCyr{\srbc@lettering=\z@}%
 }%
 %    \end{macrocode}
 %
@@ -641,15 +674,15 @@
   \babel@save\nzs \babel@save\nzd
   \babel@save\NZS \babel@save\NZD
   \if@srbc@uni@ode
-    \def\nzs{\mathop{\mathrm{нзс}}\nolimits}
-    \def\nzd{\mathop{\mathrm{нзд}}\nolimits}
-    \def\NZS{\mathop{\mathrm{НЗС}}\nolimits}
-    \def\NZD{\mathop{\mathrm{НЗД}}\nolimits}
+    \def\nzs{\mathop{\mathrm{нзс}}\nolimits}%
+    \def\nzd{\mathop{\mathrm{нзд}}\nolimits}%
+    \def\NZS{\mathop{\mathrm{НЗС}}\nolimits}%
+    \def\NZD{\mathop{\mathrm{НЗД}}\nolimits}%
   \else
-    \def\nzs{\mathop{\textnormal{\cyrn\cyrz\cyrs}}\nolimits}
-    \def\nzd{\mathop{\textnormal{\cyrn\cyrz\cyrd}}\nolimits}
-    \def\NZS{\mathop{\textnormal{\CYRN\CYRZ\CYRS}}\nolimits}
-    \def\NZD{\mathop{\textnormal{\CYRN\CYRZ\CYRD}}\nolimits}
+    \def\nzs{\mathop{\textnormal{\cyrn\cyrz\cyrs}}\nolimits}%
+    \def\nzd{\mathop{\textnormal{\cyrn\cyrz\cyrd}}\nolimits}%
+    \def\NZS{\mathop{\textnormal{\CYRN\CYRZ\CYRS}}\nolimits}%
+    \def\NZD{\mathop{\textnormal{\CYRN\CYRZ\CYRD}}\nolimits}%
   \fi}
 %    \end{macrocode}
 %

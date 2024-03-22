@@ -1,6 +1,6 @@
 %% File `memucs-setspace.sty`
 %%
-%% Copyright (c) 2007-2021 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2024 Kangsoo Kim <modviv2k15@gmail.com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -19,7 +19,7 @@
 %% 불린다. 다른 용도로는 사용할 수 없음.
 %%
 %% This style is a modified version of SETSTYLE ver 6.7 by Erica M. S. Harris
-%% modified by Karnes Kim
+%% by Karnes Kim
 %%
 %% FEATURES:
 %%    all the features of setstyle package
@@ -50,11 +50,11 @@
 
 \NeedsTeXFormat {LaTeX2e}[1994/12/09]
 \def \filename {memucs-setspace.sty}
-\def \filedate {2021/03/03}
-\def \fileversion {6.7-mu9}
+\def \filedate {2024/02/01}
+\def \fileversion {6.7-mu10}
 \ProvidesPackage {memucs-setspace}[\filedate\space\fileversion\space
   Contributed and Supported LaTeX2e package]
-\typeout {Package: `memucs-setspace', a modified version of `setspace', \fileversion\space <\filedate>}
+%\typeout {Package: `memucs-setspace', a modified version of `setspace', \fileversion\space <\filedate>}
 
 % BP: add nodisplayskipstretch option and \setdisplayskipstretch command.
 
@@ -237,7 +237,7 @@
 \if@adjustverbatim
 \SetHangulVerbatimSpace{\setspace@hangulfspace}%
 \else
-\SetHangulVerbatimSpace{1.0}
+\SetHangulVerbatimSpace{1}
 \fi
 
 % ** Modification of the LaTeX command \@setsize.
@@ -584,10 +584,11 @@
   }%
   {\altindentfalse} 
 
-\def\@verbatim{\the\every@verbatim
-	\trivlist
+%%% hack \@verbatim (verbatim.sty)
+\def\@verbatim{%
+  \the\every@verbatim
   \if@adjustverbatim\hangulverbspacing\else\fi%
-  \item \relax
+  \trivlist \item \relax
   \if@minipage\else\vskip\parskip\fi
   \@beginparpenalty \predisplaypenalty
   \leftskip\@totalleftmargin\rightskip\z@
@@ -604,8 +605,30 @@
   \obeylines
   \let\do\@makeother \dospecials
   \verbatim@font
-  \everypar \expandafter{\the\everypar \unpenalty}%
-  \wrapright\the\afterevery@verbatim}
+  \everypar \expandafter{\the\everypar \unpenalty}}
+%%%
+%%%\def\@verbatim{\the\every@verbatim
+%%%	\trivlist
+%%%  \if@adjustverbatim\hangulverbspacing\else\fi%
+%%%  \item \relax
+%%%  \if@minipage\else\vskip\parskip\fi
+%%%  \@beginparpenalty \predisplaypenalty
+%%%  \leftskip\@totalleftmargin\rightskip\z@
+%%%  \parindent\z@\parfillskip\@flushglue\parskip\z@
+%%%  \@@par
+%%%  \def\par{%
+%%%    \if@tempswa
+%%%      \leavevmode\null\@@par\penalty\interlinepenalty
+%%%    \else
+%%%      \@tempswatrue
+%%%      \ifhmode\@@par\penalty\interlinepenalty\fi
+%%%    \fi}%
+%%%  \def\@noitemerr{\@warning{No verbatim text}}%
+%%%  \obeylines
+%%%  \let\do\@makeother \dospecials
+%%%  \verbatim@font
+%%%  \everypar \expandafter{\the\everypar \unpenalty}%
+%%%  \wrapright\the\afterevery@verbatim}
 
 %% Karnes : epigraph
 \providecommand\epigraphspacinghook{\setstretch{1.0}}
@@ -660,3 +683,5 @@
 \endinput
 
 %%% EOF.
+%% change log.
+%% 2024/02/01. fix issues concerning verbatim 

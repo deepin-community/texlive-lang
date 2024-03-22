@@ -1,0 +1,122 @@
+%%%
+% Tables Addition-Multiplication
+%%%
+\setKVdefault[Tables]{Addition=false,Soustraction=false,Multiplication,Seul=false,Debut=0,Fin=10,Couleur=white}
+
+% pour m\'emoire
+\newcommand\TableMultiplicationComplete{%
+  \xdef\NbColTabMul{\fpeval{\useKV[Tables]{Fin}+1-\useKV[Tables]{Debut}}}%
+  \begin{tabular}{|>{\columncolor{gray!15}\centering\arraybackslash}p{1.5em}|*{\NbColTabMul}{>{\centering\arraybackslash}p{1.5em}|}}%
+    \hline
+    $\times$\xintFor* ##1 in {\xintSeq {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{%
+    &\cellcolor{gray!15}\fpeval{##1}
+      }
+    \\
+    \hline
+    \xintFor* ##1 in {\xintSeq {0}{10}}\do{%
+    ##1\xintFor* ##2 in {\xintSeq {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{%
+    &\fpeval{##2*##1}
+      }
+    \\
+    \hline
+    }
+  \end{tabular}%
+}
+%%%%
+
+\newcommand\TableMultiplicationCompleteColore{%
+  \xdef\NbColTabMul{\fpeval{\useKV[Tables]{Fin}+1-\useKV[Tables]{Debut}}}%
+  \begin{tabular}{|>{\columncolor{gray!15}\centering}p{15pt}|*{\NbColTabMul}{>{\centering\arraybackslash}p{15pt}|}}%
+    \hline
+    $\times$\xintFor* ##1 in {\xintSeq {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{%
+    &\cellcolor{gray!15}\fpeval{##1}%
+      }
+    \\
+    \hline
+    \xintFor* ##1 in {\xintSeq {0}{10}}\do{%
+    ##1\xintFor* ##2 in {\xintSeq {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{%
+    &\xintifboolexpr{##2<##1}{\cellcolor{\useKV[Tables]{Couleur}!\fpeval{##1*10}}}{\xintifboolexpr{##2>##1}{\cellcolor{\useKV[Tables]{Couleur}!\fpeval{##2*10}}}{}}\fpeval{##2*##1}%
+      }%
+    \\
+    \hline
+    }%
+  \end{tabular}%
+}%
+
+\newcommand\TableAdditionComplete{%
+  \xdef\NbColTabMul{\fpeval{\useKV[Tables]{Fin}+1-\useKV[Tables]{Debut}}}%
+  \begin{tabular}{|>{\columncolor{gray!15}\centering}p{15pt}|*{\NbColTabMul}{>{\centering\arraybackslash}p{15pt}|}}%
+    \hline
+    $+$\xintFor* ##1 in {\xintSeq {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{%
+    &\cellcolor{gray!15}\fpeval{##1}
+      }
+    \\
+    \hline
+    \xintFor* ##1 in {\xintSeq {0}{10}}\do{%
+    ##1\xintFor* ##2 in {\xintSeq {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{%
+    &\fpeval{##2+##1}
+      }
+    \\
+    \hline
+    }
+  \end{tabular}%
+}
+
+\newcommand\TableMultiplicationSeule[1]{%
+  \ensuremath{%
+    \begin{array}{ccccc}%
+      \xintFor* ##1 in {\xintSeq
+      {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{
+      ##1&\times&#1&=&\fpeval{##1*#1}\\
+      }
+    \end{array}
+  }%
+}%
+
+\newcommand\TableAdditionSeule[1]{%
+  \ensuremath{%
+    \begin{array}{ccccc}
+      \xintFor* ##1 in {\xintSeq
+      {\useKV[Tables]{Debut}}{\useKV[Tables]{Fin}}}\do{
+      ##1&+&#1&=&\fpeval{##1+#1}\\
+      }
+    \end{array}
+  }%
+}%
+
+\newcommand\TableSoustractionSeule[1]{%
+  \ensuremath{%
+    \begin{array}{ccccc}
+      \xintFor* ##1 in {\xintSeq
+      {\fpeval{#1+\useKV[Tables]{Debut}}}{\fpeval{#1+\useKV[Tables]{Fin}}}}\do{
+      ##1&-&#1&=&\fpeval{##1-#1}\\
+      }
+    \end{array}
+  }%
+}%
+
+\newcommand\Tables[2][]{%
+  \useKVdefault[Tables]%
+  \setKV[Tables]{#1}%
+  \ifboolKV[Tables]{Seul}{%
+    \ifboolKV[Tables]{Soustraction}{%
+      \TableSoustractionSeule{#2}%
+    }{%
+      \ifboolKV[Tables]{Addition}{%
+        \TableAdditionSeule{#2}%
+      }{%
+        \TableMultiplicationSeule{#2}%
+      }%
+    }%
+  }{%
+    \ifboolKV[Tables]{Soustraction}{%
+      La clé Soustraction n'est pas disponible ici.%
+    }{%
+      \ifboolKV[Tables]{Addition}{%
+        \TableAdditionComplete%
+      }{%
+        \TableMultiplicationCompleteColore%
+      }%
+    }%
+  }%
+}%

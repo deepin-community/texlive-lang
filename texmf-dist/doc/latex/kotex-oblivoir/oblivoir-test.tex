@@ -1,7 +1,11 @@
+%!TEX program = SpiX
 %!TEX encoding = UTF-8 Unicode
 % arara: xelatex
 % arara: texindy: { language: Korean, codepage: utf8 }
 % arara: xelatex
+%$ xelatex -synctex=1 $texname
+%$ texindy -C utf8 -L korean $basename.idx
+%$ xelatex -synctex=1 $texname
 %%
 %% 이 파일은 oblivoir 패키지 문서의 일부로서, oblivoir 클래스의 여러 기능을
 %% 테스트하기 위한 목적으로 제공합니다. 일부 기능은 테스트 목적으로 과장되어 있습니다.
@@ -32,6 +36,29 @@
 
 \usepackage{ob-mathleading}
 
+\makeatletter
+%\def\@verbatim{\def\baselinestretch{1}
+%  \the\every@verbatim
+%  \trivlist \item \relax
+%  \if@minipage\else\vskip\parskip\fi
+%  \@beginparpenalty \predisplaypenalty
+%  \leftskip\@totalleftmargin\rightskip\z@
+%  \parindent\z@\parfillskip\@flushglue\parskip\z@
+%  \@@par
+%  \def\par{%
+%    \if@tempswa
+%      \leavevmode\null\@@par\penalty\interlinepenalty
+%    \else
+%      \@tempswatrue
+%      \ifhmode\@@par\penalty\interlinepenalty\fi
+%    \fi}%
+%  \def\@noitemerr{\@warning{No verbatim text}}%
+%  \obeylines
+%  \let\do\@makeother \dospecials
+%  \verbatim@font
+%  \everypar \expandafter{\the\everypar \unpenalty}}
+\makeatother
+
 % 폰트 설정
 \ifPDFTeX
 	\usepackage{mathpazo}
@@ -39,8 +66,8 @@
 	\setmainfont{TeX Gyre Pagella}
  	\setsansfont[Scale=.95]{TeX Gyre Heros}
 %% \setkomain/sansfont : see oblivoir-simpledoc.
-	\setkomainfont(HCRBatangLVT)(*-Bold)(UnGraphic)
-	\setkosansfont[NanumGothic]()[](HCRDotumLVT)
+	\setkomainfont(Noto Serif CJK KR)(* Bold)(UnGraphic)
+	\setkosansfont[NanumGothic]()[](Noto Sans CJK KR)
 %% 수학 폰트
 %	\usepackage{unicode-math}
 %	\setmathfont{Asana-Math.otf}

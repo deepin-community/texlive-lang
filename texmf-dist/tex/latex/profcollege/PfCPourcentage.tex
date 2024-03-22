@@ -1,0 +1,67 @@
+%%%
+% Application : pourcentage
+%%%
+\setKVdefault[ClesPourcentage]{Appliquer,Calculer=false,Augmenter=false,Reduire=false,Fractionnaire=false,Decimal,Formule=false,Concret=false,GrandeurA=Grandeur A,GrandeurB=Total,Largeur=1cm,MotReduction=diminution,AideTableau=false,ColorFill=white,CouleurTab=gray!15}
+\defKV[ClesPourcentage]{Unite=\setKV[ClesPourcentage]{Concret}}
+\newcommand\Pourcentage[3][]{%
+  \useKVdefault[ClesPourcentage]%
+  \setKV[ClesPourcentage]{#1}%
+  \ifboolKV[ClesPourcentage]{Reduire}{%
+    \ifboolKV[ClesPourcentage]{Formule}{%
+        R\'eduire une quantit\'e de \num{#2}~\%, cela revient \`a multiplier cette quantit\'e par $1-\dfrac{\num{#2}}{100}$. Par cons\'equent, si on r\'eduit \num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{} de \num{#2}~\%, cela donne :
+        \[\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\times\left(1-\frac{\num{#2}}{100}\right)=\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\times(1-\num{\fpeval{#2/100}})=\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\times\num{\fpeval{(1-#2/100)}}=\num{\fpeval{#3*(1-#2/100)}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\]
+      }{%
+        Calculons ce que repr\'esente la \useKV[ClesPourcentage]{MotReduction} de \num{#2}~\%.
+        \ifboolKV[ClesPourcentage]{AideTableau}{%
+          \xdef\NomA{\useKV[ClesPourcentage]{GrandeurA}}%
+          \xdef\NomB{\useKV[ClesPourcentage]{GrandeurB}}%
+          \xdef\NomCouleurTab{\useKV[ClesPourcentage]{CouleurTab}}%
+          \xdef\NomLargeurTab{\useKV[ClesPourcentage]{Largeur}}%
+          \begin{center}
+            \Propor[Math,GrandeurA=\NomA,GrandeurB=\NomB,CouleurTab=\NomCouleurTab,Largeur=\NomLargeurTab]{/\num{#3},\num{#2}/100}
+          \end{center}
+          \FlecheCoefInv{\tiny$\times\num{\fpeval{#2/100}}$}%
+          On obtient une \useKV[ClesPourcentage]{MotReduction} de $\num{\fpeval{#2/100}}\times\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\num{\fpeval{#3*#2/100}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}. Donc un total de $\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}-\num{\fpeval{#3*#2/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\num{\fpeval{#3*(1-#2/100)}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.%
+        }{Pour calculer \num{#2}~\% de \num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}, on effectue le calcul :
+        \[\ifboolKV[ClesPourcentage]{Fractionnaire}{\frac{\num{#2}}{100}}{\num{\fpeval{#2/100}}}\times\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\ifboolKV[ClesPourcentage]{Fractionnaire}{\frac{\num{\fpeval{#2*#3}}}{100}}{\num{\fpeval{#2*#3/100}}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\ifboolKV[ClesPourcentage]{Fractionnaire}{=\num{\fpeval{#2*#3/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}}{}\]%
+       On obtient une \useKV[ClesPourcentage]{MotReduction} de $\num{\fpeval{#3*#2/100}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.\\Donc un total de $\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}-\num{\fpeval{#3*#2/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\num{\fpeval{#3*(1-#2/100)}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.}
+      }
+  }{%
+    \ifboolKV[ClesPourcentage]{Augmenter}{%
+      \ifboolKV[ClesPourcentage]{Formule}{%
+        Augmenter de \num{#2}~\% une quantit\'e, cela revient \`a multiplier cette quantit\'e par $1+\dfrac{\num{#2}}{100}$. Par cons\'equent, si on augmente \num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{} de \num{#2}~\%, cela donne :
+        \[\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\times\left(1+\frac{\num{#2}}{100}\right)=\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\times(1+\num{\fpeval{#2/100}})=\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\times\num{\fpeval{(1+#2/100)}}=\num{\fpeval{#3*(1+#2/100)}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\]
+      }{%
+        Calculons ce que repr\'esente l'augmentation de \num{#2}~\%. %
+        \ifboolKV[ClesPourcentage]{AideTableau}{%
+          \xdef\NomA{\useKV[ClesPourcentage]{GrandeurA}}%
+          \xdef\NomB{\useKV[ClesPourcentage]{GrandeurB}}%
+          \xdef\NomCouleurTab{\useKV[ClesPourcentage]{CouleurTab}}%
+          \xdef\NomLargeurTab{\useKV[ClesPourcentage]{Largeur}}%
+          \begin{center}%
+            \Propor[Math,GrandeurA=\NomA,GrandeurB=\NomB,CouleurTab=\NomCouleurTab,Largeur=\NomLargeurTab]{/\num{#3},\num{#2}/100}%
+          \end{center}%
+          \FlecheCoefInv{\tiny$\times\num{\fpeval{#2/100}}$}%
+          On obtient une augmentation de $\num{\fpeval{#2/100}}\times\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\num{\fpeval{#3*#2/100}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.\\Donc un total de $\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}+\num{\fpeval{#3*#2/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\num{\fpeval{#3*(1+#2/100)}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.%
+        }{Pour calculer \num{#2}~\% de \num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}, on effectue le calcul :
+          \[\ifboolKV[ClesPourcentage]{Fractionnaire}{\frac{\num{#2}}{100}}{\num{\fpeval{#2/100}}}\times\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\ifboolKV[ClesPourcentage]{Fractionnaire}{\frac{\num{\fpeval{#2*#3}}}{100}}{\num{\fpeval{#2*#3/100}}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\ifboolKV[ClesPourcentage]{Fractionnaire}{=\num{\fpeval{#2*#3/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}}{}\]%
+          On obtient une augmentation de $\num{\fpeval{#3*#2/100}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.\\Donc un total de $\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}+\num{\fpeval{#3*#2/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\num{\fpeval{#3*(1+#2/100)}}$\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}.}
+      }
+    }{%
+      \ifboolKV[ClesPourcentage]{Calculer}{%
+        \xdef\NomA{\useKV[ClesPourcentage]{GrandeurA}}%
+        \xdef\NomB{\useKV[ClesPourcentage]{GrandeurB}}%
+        \xdef\NomCouleurTab{\useKV[ClesPourcentage]{CouleurTab}}%
+        \xdef\NomLargeurTab{\useKV[ClesPourcentage]{Largeur}}%
+        \Propor[Math,GrandeurA=\NomA,GrandeurB=\NomB,CouleurTab=\NomCouleurTab,Largeur=\NomLargeurTab]{\num{#2}/\num{#3},/100}%
+        \xdef\colorfill{\useKV[ClesPourcentage]{ColorFill}}%
+        \FlechesPB{2}{1}{\scriptsize$\times\num{\fpeval{#3/100}}$}%
+        \FlechesPH{1}{2}{\scriptsize$\div\num{\fpeval{#3/100}}$}%
+        \xdef\ResultatPourcentage{\fpeval{#2*100/#3}}%
+      }{%
+        Pour calculer \num{#2}~\% de \num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\useKV[ClesPourcentage]{Unite}}{}, on effectue le calcul :%
+        \[\ifboolKV[ClesPourcentage]{Fractionnaire}{\frac{\num{#2}}{100}}{\num{\fpeval{#2/100}}}\times\num{#3}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}=\ifboolKV[ClesPourcentage]{Fractionnaire}{\frac{\num{\fpeval{#2*#3}}}{100}}{\num{\fpeval{#2*#3/100}}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}\ifboolKV[ClesPourcentage]{Fractionnaire}{=\num{\fpeval{#2*#3/100}}\ifboolKV[ClesPourcentage]{Concret}{~\text{\useKV[ClesPourcentage]{Unite}}}{}}{}\]%
+      }%
+    }%
+  }%
+}%

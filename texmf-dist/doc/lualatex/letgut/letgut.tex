@@ -12,6 +12,7 @@
 \letgutsetup{
   , editorial=false
   , pagecolor= {1,1,1}
+  , detailedtoc = subsection
   % ,final
 }
 
@@ -67,7 +68,7 @@
 }
 \author{Association GUTenberg}
 \date{%
-  Version 0.9.6 en date du \today%
+  Version 0.9.7 en date du \today%
   \texorpdfstring{%
     \\
     \url{https://framagit.org/gutenberg/letgut}%
@@ -337,13 +338,20 @@ Les options de la \letgutcls{} peuvent être spécifiées de deux façons :
   page.
 \end{docKey}
 
-\begin{docKey}{detailedtoc}{}{\valinitdef[\docValue*{false}][\docValue*{true}]}
-  Par défaut, la table des matières automatiquement insérée en début de document
-  a pour niveau de profondeur celui des titres (saisis via la \refCom{title}),
-  et seulement les titres des articles. La clé booléenne \refKey{detailedtoc}
-  a pour effet que cette table des matières est détaillée au maximum (son niveau
-  de profondeur allant jusqu'aux sous-paragraphes), ce qui peut être utile lors
-  de la conception d'un numéro de la \lettre{}.
+\tcbset{before lower=\vspace*{.5\baselineskip}\par}
+%
+\begin{docKey}[][doc updated={2023-01-19}]{detailedtoc}{=\docValue{section}\textbar\docValue{subsection}\textbar\docValue{subsubsection}\textbar\docValue{paragraph}\textbar\docValue{subparagraph}}{\valinitdef[\docValue*{title}][\docValue*{all}]}
+  Par défaut, une table des matières est automatiquement insérée en début de
+  document, avec comme niveau de profondeur celui des titres des articles
+  (saisis via la \refCom{title}), et seulement eux.  La clé \refKey{detailedtoc}
+  permet de modifier le \enquote{niveau de profondeur} de cette table des
+  matières, respectivement jusqu'aux sections, sous-sections,
+  sous-sous-sections, paragraphes, sous-paragraphes. Sont également acceptées
+  les valeurs spéciales :
+  \begin{itemize}
+  \item \docValue{all} (alias de \docValue{subparagraph}) ;
+  \item \docValue{none} qui inhibe l'affichage de la table des matières.
+  \end{itemize}
 
   \begin{dbremark}{Tables des matières locales}{}
     Chaque article peut contenir une table des matières locale, affichée au
@@ -351,11 +359,11 @@ Les options de la \letgutcls{} peuvent être spécifiées de deux façons :
     \package*{etoc} chargé en sous-main par la \letgutcls{}). Le niveau de
     profondeur est par défaut celui des sections mais cela peut être modifié en
     la faisant précéder de la commande \docAuxCommand{etocsetnexttocdepth} (dont
-    l'argument est par exemple ™subsection™).
+    l'argument est l'une des valeurs possibles de la clé \refKey{detailedtoc}).
   \end{dbremark}
 \end{docKey}
 
-\begin{docKey}{reverse-files-attachement}{}{\valinitdef[pas de valeur]}
+\begin{docKey}[][doc new={2023-01-14}]{reverse-files-attachement}{}{\valinitdef[pas de valeur]}
   Si, et seulement si, la \lettre{} est à la fois en version pour les lecteurs
   (cf. \refKey{for-readers}) et en sortie écran (cf. \refKey{screen}), chacun
   des fichiers nécessaires (et suffisants) à la compilation d'un de ses articles
@@ -583,8 +591,7 @@ Les articles de la \lettre{} sont émaillés de concepts (packages ou classes
 récurrente. Aussi des commandes spécifiques sont-elles prévues de façon à en
 faciliter la saisie et à en homogénéiser la mise en forme.
 
-\subsection{Packages et classes, logiciels, fichiers, locutions étrangères,
-  points de code Unicode}
+\subsection{Packages et classes, logiciels, fichiers}
 \label{sec:classes-packages-et}
 
 \begin{docCommands}
@@ -678,6 +685,8 @@ précisément dans \software*{Emacs}[l'éditeur de texte].
   indésirables (préfixes pas en grandes capitales et signets non conformes).
 \end{dbwarning}
 
+\subsection{Locutions étrangères, points de code Unicode}
+
 \begin{docCommand}{foreignloc}{\marg{locution}}
   Cette commande est conçue pour afficher une \meta{locution} étrangère.
 \end{docCommand}
@@ -701,17 +710,17 @@ Mais... \latinloc{errare humanum est}.
 Unicode a prévu le caractère \Ucode[symbole numéro]{2116}.
 \end{ltx-code-result}
 
-\subsection{Termes et expressions}
+\subsection{Termes et expressions (figés)}
 \label{sec:termes}
 
 \begin{docCommands}
   {
     { doc name = gutenberg },
     { doc name = gut },
-    { doc name = assogut },
-    { doc name = Assogut },
-    { doc name = lettres },
-    { doc name = lettresgut },
+    { doc name = assogut, doc new={2023-01-14} },
+    { doc name = Assogut, doc new={2023-01-14} },
+    { doc name = lettresn doc new={2023-01-14} },
+    { doc name = lettresgut, doc new={2023-01-14} },
     { doc name = cahier },
     { doc name = cahiers },
     { doc name = cahiergut },
@@ -1476,17 +1485,33 @@ insère un filet horizontal.
 Afin de présenter aisément et de façon homogène les annonces à paraître dans la
 \lettre{}, la \letgutcls{} fournit l'environnement \refEnv{announcement}.
 
-\begin{docEnvironment}[doclang/environment content=annonce]{announcement}{\oarg{couleur}\marg{titre}}
-  Cet environnement est dédié aux \meta{annonce}s. La spécification :
+\begin{docEnvironment}[doclang/environment content=annonce,doc new and updated={2023-01-14}{2023-05-21}]{announcement}{\oarg{options}\marg{titre}}
+  % \tcbdocmarginnote{\color{red}\faExclamationTriangle{} Compatibilité ascendante cassée le
+  %   2023-05-21}
+  Cet environnement est dédié aux \meta{annonce}s. La spécification d'un
+  \meta{titre} (pouvant toutefois être vide) est obligatoire. S'il n'est pas
+  vide, il figure alors par défaut dans la table des matières et dans les
+  signets au même niveau que celui des titres d'articles.
+
+  Cet environnement admet des \meta{options} :
   \begin{itemize}
-  \item d'un \meta{titre} (pouvant toutefois être vide) est obligatoire ;
-  \item d'une \meta{couleur} (du tire et des ornements) autre que celle (noire)
-    par défaut est possible.
+  \item (toutes) celles acceptées par les environnements \refAux{tcolorbox} et
+    assimilés du \package*{tcolorbox}, destinées à, le cas échéant, modifier la
+    mise en forme par défaut de l'annonce ;
+  \item deux qui lui sont propres :
+    \begin{docKey}[][doc new={2023-05-21}]{toc title}{=\meta{titre alternatif}}{\valinitdef}
+      Cette clé permet de remplacer dans la table des matières et dans les
+      signets le \meta{titre} par un \meta{titre alternatif}.
+    \end{docKey}
+    \begin{docKey}[][doc new={2023-05-21}]{color}{=\meta{couleur}}{\valinitdef[\docValue*{black}]}
+      Cette clé permet une \meta{couleur} d'ornement et de titre autre que celle
+      appliquée par défaut.
+    \end{docKey}
   \end{itemize}
 \end{docEnvironment}
 
 \begin{ltx-code-result}[title addon=annonces]
-\begin{announcement}[red!35!black]{Convocation \acs{ag} ordinaire}
+\begin{announcement}[toc title={Exemple d'annonce},color=red!35!black]{Convocation \acs{ag} ordinaire}
   Les adhérents de l'\assogut{} sont invités à participer à
   l'\textbf{assemblée générale \emph{ordinaire}} de l'association
   le \textbf{dimanche 11 décembre 2022}.
@@ -1500,7 +1525,7 @@ Afin de présenter aisément et de façon homogène les annonces à paraître da
 Afin de présenter aisément et de façon homogène les rébus à paraître dans la
 \lettre{}, la \letgutcls{} fournit l'environnement \refEnv{rebus}.
 
-\begin{docEnvironment}[doclang/environment content=rébus]{rebus}{\oarg{options}}
+\begin{docEnvironment}[doclang/environment content=rébus,doc new={2023-01-14}]{rebus}{\oarg{options}}
   Cet environnement affiche un \meta{rébus} et s'emploie différemment selon que
   la solution est prévue de figurer dans la \lettre{} :
   \begin{description}
@@ -1517,7 +1542,7 @@ Afin de présenter aisément et de façon homogène les rébus à paraître dans
 
   La commande séparant le rébus et sa solution prévue de figurer dans la
   \lettre{} en cours est :
-  \begin{docCommand}{solution}{}
+  \begin{docCommand}[doc new={2023-01-14}]{solution}{}
     Cette commande débute la solution d'un rébus à l'intérieur d'un environment
     \refEnv{rebus}.
   \end{docCommand}
@@ -1528,12 +1553,12 @@ Afin de présenter aisément et de façon homogène les rébus à paraître dans
     assimilés du \package*{tcolorbox}, destinées à, le cas échéant, modifier la
     mise en forme par défaut de la boîte contenant le rébus ;
   \item deux qui lui sont propres :
-    \begin{docKey}{title addon}{=\meta{supplément}}{\valinitdef}
+    \begin{docKey}[][doc new={2023-01-14}]{title addon}{=\meta{supplément}}{\valinitdef}
       Cette option permet d'adjoindre au titre d'un rébus, qui est par défaut et
       automatiquement \enquote{Rébus}, un \meta{supplément} alors en italique et
       entre parenthèses.
     \end{docKey}
-    \begin{docKey}{no solution}{}{\valinitdef[\docValue*{false}][\docValue*{true}]}
+    \begin{docKey}[][doc new={2023-01-14}]{no solution}{}{\valinitdef[\docValue*{false}][\docValue*{true}]}
       Cette option est à spécifier pour un rébus dont la solution ne doit figurer
       que dans la prochaine \lettre{}.
     \end{docKey}
@@ -1569,7 +1594,7 @@ La \letgutcls{} fournit bien sûr le moyen d'afficher les solutions des rébus d
 la \lettre{}
 soit en cours, soit précédente.
 
-\begin{docCommand}{rebussolution}{\oarg{solution}\oarg{numéro}\oarg{options}}
+\begin{docCommand}[doc new={2023-01-14}]{rebussolution}{\oarg{solution}\oarg{numéro}\oarg{options}}
   Cette commande affiche la ou les solutions du ou des rébus qui figurent dans
   la \lettre{} :
   \begin{description}

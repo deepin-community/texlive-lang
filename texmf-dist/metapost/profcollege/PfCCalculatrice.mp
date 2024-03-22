@@ -30,6 +30,9 @@ nblignes:=0;
 boolean print;
 print:=false;
 
+color coulprint;
+coulprint=0.8white;
+
 color CouleurEcran;
 CouleurEcran=(107/255,148/255,107/255);
 
@@ -38,10 +41,10 @@ Math=true;
 
 decahoriz:=0;
 
-vardef Test(expr cptk,cptnt)=
+vardef Test(expr cptk)(text cptnt)=
   pair Decalage;
-  if nblignes mod 2=0:
-    Decalage:=u*((20-length(cptnt)+cptk)*6,-8*(nblignes-1));
+  if nblignes>1:
+    Decalage:=u*((LargeurEcran,-8*(nblignes-1))-6*(length(cptnt)-cptk,0));
   else:
     Decalage:=u*(decahoriz,-8*(nblignes-1));
     decahoriz:=decahoriz+6;
@@ -168,6 +171,7 @@ vardef Test(expr cptk,cptnt)=
     elseif substring(cptk,cptk+1) of cptnt="&":draw Affichage("00000100001100011100110001000000000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="$":draw Affichage("00000000000000100001000010000111111") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="^":draw Affichage("00100010101000100000000000000000000") shifted(Decalage);
+    elseif substring(cptk,cptk+1) of cptnt="_":draw Affichage("11111111111111111111111111111111111") shifted(Decalage);
     fi;
 enddef;
 
@@ -175,27 +179,48 @@ vardef LCD(text nt)(text rep)(expr NB)=
   decahoriz:=0;
   nblignes:=nblignes+1;
   path Ecran;
-  Ecran:=(u*(0,-1)--u*(120,-1)--u*(120,7)--u*(0,7)--cycle) shifted(u*(0,-8*(nblignes-1)));
-  fill Ecran withcolor if print=true:0.8white else:CouleurEcran fi;
-  draw Ecran withcolor if print=true:0.8white else:CouleurEcran fi;
+  Ecran:=(u*(0,-1)--u*(LargeurEcran,-1)--u*(LargeurEcran,7)--u*(0,7)--cycle) shifted(u*(0,-8*(nblignes-1)));
+  fill Ecran withcolor if print=true:coulprint else:CouleurEcran fi;
+  draw Ecran withcolor if print=true:coulprint else:CouleurEcran fi;
+  if length(nt)>0:
   for k=0 upto length(nt)-1:
     BlocAffichage;
     Test(k,nt);
   endfor;
+  fi;
   for k=1 upto NB:
-    nblignes:=nblignes+1;
-    Ecran:=(u*(0,-1)--u*(120,-1)--u*(120,7)--u*(0,7)--cycle) shifted(u*(0,-8*(nblignes-1)));
-    fill Ecran withcolor if print=true:0.8white else:CouleurEcran fi;
-    draw Ecran withcolor if print=true:0.8white else:CouleurEcran fi;
+    Ecran:=(u*(0,-1)--u*(LargeurEcran,-1)--u*(LargeurEcran,7)--u*(0,7)--cycle) shifted(u*(0,-8*(k+nblignes-1)));
+    fill Ecran withcolor if print=true:coulprint else:CouleurEcran fi;
+    draw Ecran withcolor if print=true:coulprint else:CouleurEcran fi;
   endfor;
-  nblignes:=nblignes+1;
-  Ecran:=(u*(0,-1)--u*(120,-1)--u*(120,7)--u*(0,7)--cycle) shifted(u*(0,-8*(nblignes-1)));
-  fill Ecran withcolor if print=true:0.8white else:CouleurEcran fi;
-  draw Ecran withcolor if print=true:0.8white else:CouleurEcran fi;
+  nblignes:=nblignes+NB+1;
+  Ecran:=(u*(0,-1)--u*(LargeurEcran,-1)--u*(LargeurEcran,7)--u*(0,7)--cycle) shifted(u*(0,-8*(nblignes-1)));
+  fill Ecran withcolor if print=true:coulprint else:CouleurEcran fi;
+  draw Ecran withcolor if print=true:coulprint else:CouleurEcran fi;
+  if Calcul:
+    string toto;
+    toto=decimal(rep);
+    for k=0 upto length(toto)-1:
+      Test(k,toto);
+    endfor;
+    else:
   for k=0 upto length(rep)-1:
-    BlocAffichage;
     Test(k,rep);
   endfor;
+  fi;
+enddef;
+
+def tand(expr nbang)=sind(nbang)/cosd(nbang)enddef;
+
+vardef arcsind(expr x)=%Définition mathématique en degré
+  angle((sqrt(1-x**2),x))
+enddef;
+
+vardef arccosd(expr x)=%Définition mathématique en degré
+  angle((x,sqrt(1-x**2)))
+enddef;
+
+vardef arctand(expr x)=arcsind(x/(1++x))
 enddef;
 
 endinput;

@@ -100,9 +100,9 @@
 
 \begin{document}
 
-\title{초간단 \obclass{} v3.1.5 사용법}
+\title{초간단 \obclass{} v3.2 사용법}
 
-\date{2022년 11월}
+\date{2023년 2월}
 
 \author{x-ob-liv-oir}
 
@@ -1388,7 +1388,8 @@ png, jpg, pdf 그림을 잘 불러온다. %즉 \obclass가 알맞게 이 패키�
 이 패키지가 제공하는 문장부호는 다음과 같은 것이 있다.
 
 \begin{itemize}
-\item \verb|\bnm|, \verb|\snm|, \verb|\cnm|, \verb|\ccnm|. 각각 \bnm{제목}, \snm{제목}, \cnm{제목}, \ccnm{제목}과 같이 식자된다.
+\item \verb|\bnm|, \verb|\snm|, \verb|\cnm|, \verb|\ccnm|. 각각 \bnm{제목}, \snm{제목}, \cnm{제목}, \ccnm{제목}과 같이 식자된다.\footnote{만약 \LuaTeX 에서 이 부호들이
+전각문자로 나타난다면 \cs{compressbnms}를 선언하라.}
 \item \verb|\obldots|. \verb|\obellipsis|. 각각 \obldots, \obellipsis와 같이 식자된다. 한글 패키지 \koTeX 이 로드되면 \verb|\ldots|의 모양이 \ldots와 같이 바뀌기 때문에 영문서의 \verb|\ldots|는 \verb|\obldots|로 식자할 \obldots 수 있다. \verb|\obellipsis|는 행이 나뉘어지지 않는 여섯 개의 점으로 이루어진 말출임표이다.
 \item \verb|\cntrdot|, \verb|\cntrdots|. 각각 \cntrdot, \cntrdots로 식자한다.
 \item \verb|\expldash|, \verb|\explpunc|. 이것은 설명을 위하여 삽입하는 괘선\expldash 을 표현하기 위한 매크로이다. \verb|\explpunc|의 사용법이 조금 특별하므로 주의하라. \verb*|\explpunc.some text.\ | \explpunc.some text.\ 와 같이 입력한다. 이 사용법이 복잡하다면 \verb|\expldash|를 두 번 쓰는 방법이 있다.
@@ -1600,6 +1601,23 @@ oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 �
 이를 제외한 다른 부분, 이를테면 label과 caption text의 폰트를 바꾸는 것 등은 memoir의
 해당 명령을 이용한다. 즉, \verb|\captionnamefont|, \verb|\captiontitlefont| 등을 이용하라는 것이다.
 
+\subsection{부록의 조판}
+
+\textsf{oblivoir}의 부록 만들기와 관련하여 알아두어야 하는 매크로는 다음과 같다.
+\begin{description}
+\item [\cs{AppendixTitleToToc}] `부록'이라는 표제명을 toc에도 붙인다.
+\item [\cs{AttachAppendixTitleToSecnum}] `부록'이라는 표제명을 section number에 붙인다.
+\item [\cs{AppendixTitle}] \cs{appendixname}을 식자한다.
+\end{description}
+
+부록은 보통 chapter가 있는 문서에서 만드는 것이므로 장 표제(\texttt{chapter} 옵션의 유무와 관련없이)처럼 식자한다.
+이 동작을 바꾸고 싶다면 chapterstyle과 section heading을 자신에게
+필요한 대로 설정할 수 있을 것이다. 위의 몇 가지 매크로는 다른 설정 없이
+\texttt{default} 스타일에서 나타나게 하기 위한 것이다.
+
+부록과 관련하여 스타일이나 페이지를 디자인할 때 유념해야 할 것은, \cs{appendix} 또는 \texttt{appendices} 환경의 선언 이후로는
+chapter와 section 등 장절표제 명령의 카운터에 \verb|APP|가 붙는다는 점이다. 부록 chapter의 카운터는 \texttt{APPchapter}, section 카운터는 \texttt{APPsection}이다.\footnote{\texttt{[nokorean]} 옵션이 주어진 경우는 그러하지 않다.}
+
 \section{보조 패키지}
 
 \subsection{chaptertoc}
@@ -1651,8 +1669,11 @@ oblivoir는 한국어 문서에 대하여 기본 행간을 넓혀서 조판하�
 \begin{description}
 \item[tikz pagenode] \texttt{tikz}를 로드했을 때 \texttt{current page}
 노드가 memoir의 레이아웃과 미묘하게 엇갈리는 것을 보정해준다. 이것은 oblivoir-misc를 로드하면 (tikz가 불렸을 때) 자동으로 처리한다.
-\item[\cs{texthl}] 한글 문자에 \texthl{하이라이트}해준다. 실험적인 기능으로
-현재 \XeLaTeX 일 때에 정상 동작한다. 하이라이트할 색상은 \cs{obhlcolor}, 높이와
+\item[tikzpagenodes] tikzpagenodes 패키지가 로드되었을 때에 일부 마진 길이를
+잘못 측정하는 문제를 해결해준다.
+\item[\cs{texthl}] 한글 문자에 \texthl{하이라이트}해준다. 실험적인 기능이다.
+%현재 \XeLaTeX 일 때에 정상 동작한다. 
+하이라이트할 색상은 \cs{obhlcolor}, 높이와
 위치는 \cs{obhlheight}, \cs{obhlraisedim}을 재정의하여 설정할 수 있다.
 \end{description}
 
@@ -1843,7 +1864,11 @@ Lua\TeX 과 \XeTeX 이라는 유니코드 텍 엔진의 등장은, 이러한 모
 
 \section{변경 이력}
 
+\noindent
+2023년의 3.2 버전은 부분적인 수정에 그쳤다. 3.1에서 발생했던 대부분의
+문제들은 해결되었다.
 
+\noindent
 2022년의 3.1 버전은 fapapersize에 새로운 명령을 추가하고 약간의
 개선된 기능을 포함하였다. 
 

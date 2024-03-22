@@ -1,16 +1,19 @@
 % schulmathematik bundle: document class schulma-klausur
-% Version 1.3
-% 12. August 2022
+% Version 1.6
+% 30. Dezember 2023
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-klausur}{2022-08-12}{1.3}{Dokumentenklasse fuer Klausuren}
+\ProvidesExplClass{schulma-klausur}{2023-12-30}{1.6}{Dokumentenklasse fuer Klausuren}
 
 \RequirePackage {etoolbox}
 
 \str_new:N \g_schulma_klausur_datum_str
+\str_new:N \g_schulma_klausur_loesungsdatum_str
 \str_new:N \g_schulma_klausur_titel_str
 \str_new:N \g_schulma_klausur_teiltitel_str
 \str_new:N \g_schulma_klausur_bearbeitungszeit_str
+\str_new:N \g_schulma_klausur_formeldokumentseiten_str
 
+\tl_new:N \g_schulma_klausur_musterloesungstitel_tl
 \tl_new:N \g_schulma_klausur_kurs_tl
 \tl_new:N \g_schulma_klausur_nummer_tl
 \tl_new:N \g_schulma_klausur_untertitel_tl
@@ -20,12 +23,13 @@
 \bool_new:N \g_schulma_klausur_oesterreich_bool
 \bool_new:N \g_schulma_klausur_afuenfquer_bool
 \bool_new:N \g_schulma_klausur_schriftliche_lernkontrolle_bool
-\bool_new:N \g_schulma_klausur_zwei_gruppen_bool
 \bool_new:N \g_schulma_klausur_gruppe_a_bool
+\bool_new:N \g_schulma_klausur_gruppe_b_bool
 \bool_new:N \g_schulma_klausur_pqformel_bool
 \bool_new:N \g_schulma_klausur_differenzenquotient_bool
 \bool_new:N \g_schulma_klausur_differentialquotient_bool
 \bool_new:N \g_schulma_klausur_musterloesung_bool
+\bool_new:N \g_schulma_klausur_praesentation_bool
 \bool_new:N \l_schulma_klausur_loesung_bool
 
 \int_new:N \g_schulma_klausur_anzahl_hilfen_int
@@ -51,6 +55,14 @@
     Differentialquotient:
     \[ f' ( x\sb{0} ) = \lim \sb { x \rightarrow x\sb{0} }
     \frac {f(x)-f(x\sb{0})} {x-x\sb{0}} \]
+  }
+
+\msg_new:nnn {schulma-klausur} {Gruppe fehlt}
+  {
+    In~Zeile~ \msg_line_number: \c_space_tl
+    wird~der~Befehl~ \Gruppen \c_space_tl
+    verwendet.~Es~wurde~aber~keine~der~Klassenoptionen~GruppeA~und~GruppeB~
+    gesetzt.~Ausgegeben~wird~der~Text~für~Gruppe~A.
   }
 
 \msg_new:nnn {schulma-klausur} {Aufgabennachricht}
@@ -79,8 +91,6 @@
   }
 
 \tl_set:Nn \l_schulma_klausur_aufgabentitel_tl {Aufgabe}
-
-\bool_gset_true:N \g_schulma_klausur_gruppe_a_bool
 
 \DeclareOption {SLK}
   {
@@ -118,18 +128,26 @@
 
 \DeclareOption {GruppeA}
   {
-    \bool_gset_true:N \g_schulma_klausur_zwei_gruppen_bool
+    \bool_gset_true:N \g_schulma_klausur_gruppe_a_bool
+    \bool_gset_false:N \g_schulma_klausur_gruppe_b_bool
   }
 
 \DeclareOption {GruppeB}
   {
-    \bool_gset_true:N \g_schulma_klausur_zwei_gruppen_bool
+    \bool_gset_true:N \g_schulma_klausur_gruppe_b_bool
     \bool_gset_false:N \g_schulma_klausur_gruppe_a_bool
   }
 
 \DeclareOption {Musterloesung}
   {
     \bool_gset_true:N \g_schulma_klausur_musterloesung_bool
+    \bool_gset_true:N \g_schulma_klausur_praesentation_bool
+  }
+
+\DeclareOption {MusterloesungD}
+  {
+    \bool_gset_true:N \g_schulma_klausur_musterloesung_bool
+    \bool_gset_false:N \g_schulma_klausur_praesentation_bool
   }
 
 \DeclareOption*
@@ -148,11 +166,47 @@
     \str_gset:Nn \g_schulma_klausur_titel_str {Klausur}
   }
 
-\PassOptionsToPackage {override} {xcolor}
+\tl_gset:Nn \g_schulma_klausur_musterloesungstitel_tl
+  {
+    Musterl\"osung~der~
+    \tl_if_empty:NF \g_schulma_klausur_nummer_tl
+      {
+        \g_schulma_klausur_nummer_tl.~
+      }
+    \bool_if:NTF \g_schulma_klausur_schriftliche_lernkontrolle_bool
+      {
+        schriftlichen~Lernkontrolle
+      }
+      {
+        \g_schulma_klausur_titel_str
+      }
+    \str_if_empty:NF \g_schulma_klausur_datum_str
+      {
+        \c_space_tl
+        \mbox { vom~ \DTMdate { \g_schulma_klausur_datum_str } }
+      }
+    \str_if_empty:NF \g_schulma_klausur_teiltitel_str
+      {
+        \\ [1ex]
+        \textit { \g_schulma_klausur_teiltitel_str }
+      }
+  }
+
+% \PassOptionsToPackage {override} {xcolor} % verursacht seit 17. Nov. 2023 Fehlermeldung
 
 \NewDocumentCommand \Nr {m}
   {
     \tl_gset:Nn \g_schulma_klausur_nummer_tl {#1}
+  }
+
+\NewDocumentCommand \Loesungsdatum {m}
+  {
+    \str_gset:Nn \g_schulma_klausur_loesungsdatum_str {#1}
+  }
+
+\NewDocumentCommand \Formeldokument {m}
+  {
+    \str_gset:Nn \g_schulma_klausur_formeldokumentseiten_str {#1}
   }
 
 \newcounter {Aufgabe}
@@ -167,36 +221,24 @@
 \RequirePackage {schulma}
 \RequirePackage {schulma-physik}
 
-\bool_if:NTF \g_schulma_klausur_musterloesung_bool
+\bool_if:NTF \g_schulma_klausur_praesentation_bool
   {
     \LoadClass [t] {schulma-praes}
 
+    \date
+      {
+        \str_if_empty:NTF \g_schulma_klausur_loesungsdatum_str
+          {
+            \today
+          }
+          {
+            \printdate { \g_schulma_klausur_loesungsdatum_str } % isodate-Befehl
+          }
+      }
+
     \tl_set:Nn \g_schulma_praes_nummer_tl
       {
-        Musterl\"osung~der~
-        \tl_if_empty:NF \g_schulma_klausur_nummer_tl
-          {
-            \g_schulma_klausur_nummer_tl.~
-          }
-        \bool_if:NTF \g_schulma_klausur_schriftliche_lernkontrolle_bool
-          {
-            schriftlichen~Lernkontrolle
-          }
-          {
-            \g_schulma_klausur_titel_str
-          }
-        \DTMifsaveddate {g_schulma_klausur_klausurdatum}
-          {
-            \c_space_tl
-            vom~
-            \DTMusedate {g_schulma_klausur_klausurdatum}
-          }
-          {} % \DTMifsaveddate hat drei Argumente
-        \str_if_empty:NF \g_schulma_klausur_teiltitel_str
-          {
-            \\ [1ex]
-            \textit { \g_schulma_klausur_teiltitel_str }
-          }
+        \g_schulma_klausur_musterloesungstitel_tl
       }
 
     \resetcounteronoverlays {Aufgabe}
@@ -214,6 +256,30 @@
         \FarbeAufgabe
       }
 
+    \NewDocumentCommand \Gruppen {smm}
+      {
+        \bool_if:nTF \g_schulma_klausur_gruppe_a_bool {#2}
+          {
+            \bool_if:nTF \g_schulma_klausur_gruppe_b_bool {#3}
+              {
+                \IfBooleanTF {#1}
+                  {
+                    \fbox { \textbf{A} } \nobreakspace #2
+                    \c_space_tl
+                    \fbox { \textbf{B} } \nobreakspace #3
+                  }
+                  {
+                    \par
+                    \medskip
+                    \fbox { \textbf {A} } \c_space_tl #2
+                    \par
+                    \medskip
+                    \fbox { \textbf {B} } \c_space_tl #3
+                  }
+              }
+          }
+      }
+
     \resetcounteronoverlays {Teilaufgabe}
 
     \NewDocumentEnvironment {Teilaufgaben} { }
@@ -225,8 +291,8 @@
             \alph {Teilaufgabe} )
           }
           {
-            \setlength \topsep {\Teilaufgabenabstand}
-            \setlength \itemsep {\Teilaufgabenabstand}
+            \setlength \topsep { \Teilaufgabenabstand }
+            \setlength \itemsep { \Teilaufgabenabstand }
             \bool_if:NF \l_schulma_klausur_loesung_bool
               {
                 \FarbeAufgabe
@@ -237,20 +303,9 @@
         \end {list}
       }
 
-    \NewDocumentEnvironment {Lsg} {s}
-    % Stern: Lösung beginnt mit einer Gleichung, kein Abstand erforderlich
-      {
-        \IfBooleanF {#1} { \par \medskip }
-        \bool_gset_true:N \l_schulma_klausur_loesung_bool
-        \FarbeLoesung
-      }
-      {
-        \bool_gset_false:N \l_schulma_klausur_loesung_bool
-      }  
-
     \RenewDocumentCommand \Datum {m}
       {
-        \DTMsavedate {g_schulma_klausur_klausurdatum} {#1}
+        \str_gset:Nn \g_schulma_klausur_datum_str {#1}
       }
   }
   {
@@ -263,6 +318,24 @@
         \label{LastPage}
       }
 
+    \bool_if:NT \g_schulma_klausur_musterloesung_bool
+      {
+        \bool_if:NTF \g_schulma_klausur_oesterreich_bool
+          {
+            \RequirePackage [naustrian] {isodate}
+          }
+          {
+            \RequirePackage [ngerman] {isodate}
+          }
+
+        % isodate: Monat ggf. einstellig anzeigen:
+        \numdate[arabic]
+        % isodate: Tag ggf. einstellig anzeigen:
+        \isotwodigitdayfalse
+        % isodate: Abstand zwischen Monat und Jahr im numerischen Format:
+        \monthyearsepgerman{\,}{\,}
+      }
+
     \NewDocumentCommand \Kurs {m}
       {
         \tl_gset:Nn \g_schulma_klausur_kurs_tl {#1}
@@ -270,7 +343,7 @@
 
     \NewDocumentCommand \Datum {m}
       {
-        \str_set:Nn \g_schulma_klausur_datum_str {#1}
+        \str_gset:Nn \g_schulma_klausur_datum_str {#1}
       }
 
     \NewDocumentEnvironment {Teilaufgaben} { }
@@ -279,8 +352,8 @@
 
         \begin {list} { \stepcounter {Teilaufgabe} \alph {Teilaufgabe} ) }
           {
-            \setlength \topsep {\Teilaufgabenabstand}
-            \setlength \itemsep {\Teilaufgabenabstand}
+            \setlength \topsep { \Teilaufgabenabstand }
+            \setlength \itemsep { \Teilaufgabenabstand }
           }
       }
       {
@@ -293,26 +366,29 @@
           {
             \setlength \leftmargin {0pt}
             \setlength \partopsep {0pt}
-            \setlength \topsep {0.75\Aufgabenabstand}
-            \setlength \itemsep {\Aufgabenabstand}
+            \setlength \topsep { 0.75 \Aufgabenabstand }
+            \setlength \itemsep { \Aufgabenabstand }
           }
         % innerhalb der Liste Originalwert verwenden
         \setlength \topsep {9pt plus3pt minus5pt}
       }
 
-    \AtBeginDocument {\schulma_klausur_kopf:}
+    \AtBeginDocument { \schulma_klausur_kopf: }
 
-    \pretocmd {\enddocument}
+    \RequirePackage {pdfpages}
+    \RequirePackage {comment}
+
+    \pretocmd { \enddocument }
       {
         \end {list}
-        \par  
-        \int_compare:nNnT {\g_schulma_klausur_anzahl_hilfen_int} > {1}
+        \par
+        \int_compare:nNnT { \g_schulma_klausur_anzahl_hilfen_int } > {1}
           {
             \vfill
             \noindent
             \textsl {Hilfen:}
             \begin {itemize}
-    
+
             \bool_if:NT \g_schulma_klausur_pqformel_bool
               {
                 \item
@@ -328,15 +404,15 @@
                 \item
                 \c_schulma_klausur_differentialquotient_tl
               }
-    
+
             \end {itemize}
           }
-        \int_compare:nNnT {\g_schulma_klausur_anzahl_hilfen_int} = {1}
+        \int_compare:nNnT { \g_schulma_klausur_anzahl_hilfen_int } = {1}
           {
             \vfill
             \noindent
             \textsl {Hilfe:} ~
-    
+
             \bool_if:NT \g_schulma_klausur_pqformel_bool
               {
                 \c_schulma_klausur_pqformel_tl
@@ -348,6 +424,13 @@
             \bool_if:NT \g_schulma_klausur_differentialquotient_bool
               {
                 \c_schulma_klausur_differentialquotient_tl
+              }
+          }
+        \str_if_empty:NF \g_schulma_klausur_formeldokumentseiten_str
+          {
+            \includepdf [ pages = \g_schulma_klausur_formeldokumentseiten_str ]
+              {
+                M_Dokument_mit_mathematischen_Formeln
               }
           }
       }{}{} % pretocmd hat vier Argumente
@@ -379,7 +462,19 @@
           }
         \IfBooleanF {#1} {.}
         \group_end:
-        \peek_catcode:NF \c_space_token {\c_space_tl}
+        \peek_catcode:NF \c_space_token { \c_space_tl }
+      }
+
+    \NewDocumentCommand \Gruppen {smm}
+      {
+        \bool_if:NTF \g_schulma_klausur_gruppe_a_bool {#2}
+          {
+            \bool_if:NTF \g_schulma_klausur_gruppe_b_bool {#3}
+              {
+                \msg_warning:nn {schulma-klausur} {Gruppe fehlt}
+                #2
+              }
+          }
       }
 
     \bool_if:NTF \g_schulma_klausur_afuenfquer_bool
@@ -391,13 +486,18 @@
         \RequirePackage [top=2.7cm, hmargin=2.5cm] {geometry}
       }
 
-    \addtokomafont {pagefoot} {\slshape}
-    \addtokomafont {pagenumber} {\slshape}
-    \rohead { Name:~ \raisebox {-1mm} { \rule {7cm} {0,4pt} } }
-    \cfoot { Seite~ \pagemark \c_space_tl von~ \pageref {LastPage} }
+    \addtokomafont {pagefoot} { \slshape }
+    \addtokomafont {pagenumber} { \slshape }
 
-    \RequirePackage {comment}
-    \excludecomment {Lsg}
+    \bool_if:NF \g_schulma_klausur_musterloesung_bool
+      {
+        \rohead { Name:~ \raisebox {-1mm} { \rule {7cm} {0,4pt} } }
+        \excludecomment {Lsg}
+      }
+
+    \cfoot { Seite~ \pagemark \c_space_tl von~ \pageref {LastPage} }
+    \ofoot { }
+
     \RequirePackage {beamerarticle}
     \RequirePackage {tasks}
 
@@ -435,7 +535,7 @@
                   \int_incr:N \l_tmpa_int
                 }
             }
-          \int_compare:nNnF {\l_tmpa_int} = {0} {\int_use:N \l_tmpa_int}
+          \int_compare:nNnF { \l_tmpa_int } = {0} { \int_use:N \l_tmpa_int }
           \int_compare:nNnF {##1} = {6} {&}
         }
       \end {tabular}
@@ -468,7 +568,7 @@
                   \int_incr:N \l_tmpa_int
                 }
             }
-          \int_compare:nNnF {\l_tmpa_int} = {0} {\int_use:N \l_tmpa_int}
+          \int_compare:nNnF { \l_tmpa_int } = {0} { \int_use:N \l_tmpa_int }
           \int_compare:nNnF {##1} = {0} {&}
         }
       \end {tabular}
@@ -509,17 +609,6 @@
     \tl_gset:Nn \g_schulma_klausur_hilfsmittel_tl {#1}
   }
 
-\NewDocumentCommand \Loesungsdatum {m}
-  {
-    % \date { \DTMdate {#1} }
-    \date { \printdate {#1} } % isodate-Befehl
-  }
-
-\NewDocumentCommand \Gruppen {mm}
-  {
-    \bool_if:NTF \g_schulma_klausur_gruppe_a_bool {#1} {#2}
-  }
-
 \DeclareDocumentCommand \Aufgabentitel {m}
   {
     \tl_set:Nn \l_schulma_klausur_aufgabentitel_tl {#1}
@@ -544,8 +633,8 @@
     \bool_if:NT \g_schulma_klausur_musterloesung_bool
       {
         \begin {frame}
-        \begin {center}
         \frametitle {Notenspiegel}
+        \begin {center}
         \large
         \schulma_klausur_notenpunkttabelle:n {#1}
         \end {center}
@@ -556,30 +645,42 @@
 \cs_set:Npn \schulma_klausur_kopf:
   {
     \noindent
-    \parbox [t] {5cm} {\g_schulma_klausur_kurs_tl}
+    \parbox [t] {5cm} { \g_schulma_klausur_kurs_tl }
     \hfill
-    \str_if_empty:NF \g_schulma_klausur_datum_str
+    \bool_if:NTF \g_schulma_klausur_musterloesung_bool
       {
-        \DTMdate {\g_schulma_klausur_datum_str}
+        \str_if_empty:NF \g_schulma_klausur_loesungsdatum_str
+          {
+            \printdate { \g_schulma_klausur_loesungsdatum_str } % isodate-Befehl
+          }
+      }
+      {
+        \str_if_empty:NF \g_schulma_klausur_datum_str
+          {
+            \DTMdate { \g_schulma_klausur_datum_str }
+          }
       }
 
     \begin {center}
     \sffamily
     \bfseries
     \Large
-    \g_schulma_klausur_titel_str
-    \tl_if_empty:NF \g_schulma_klausur_nummer_tl
+    \bool_if:NTF \g_schulma_klausur_musterloesung_bool
       {
-        \c_space_tl
-        Nr.~
-        \g_schulma_klausur_nummer_tl
+        \g_schulma_klausur_musterloesungstitel_tl
+      }
+      {
+        \g_schulma_klausur_titel_str
+        \tl_if_empty:NF \g_schulma_klausur_nummer_tl
+          {
+            \c_space_tl
+            Nr.~
+            \g_schulma_klausur_nummer_tl
+          }
       }
 
-    \bool_if:NT \g_schulma_klausur_zwei_gruppen_bool
-      {
-        \c_space_tl
-        \bool_if:NTF \g_schulma_klausur_gruppe_a_bool {(A)} {(B)}
-      }
+    \bool_if:NT \g_schulma_klausur_gruppe_a_bool { \c_space_tl (A) }
+    \bool_if:NT \g_schulma_klausur_gruppe_b_bool { \c_space_tl (B) }
 
     \tl_if_empty:NF \g_schulma_klausur_untertitel_tl
       {
@@ -592,7 +693,7 @@
       {
         \par \vspace {3ex}
         \large
-        \textit {\g_schulma_klausur_teiltitel_str}
+        \textit { \g_schulma_klausur_teiltitel_str }
       }
 
     \str_if_empty:NF \g_schulma_klausur_bearbeitungszeit_str
@@ -636,4 +737,18 @@
 \NewDocumentCommand \NurLoesung {+m}
   {
     \bool_if:NT \g_schulma_klausur_musterloesung_bool {#1}
+  }
+
+\bool_if:NT \g_schulma_klausur_musterloesung_bool
+  {
+    \NewDocumentEnvironment {Lsg} {s}
+    % Stern: Lösung beginnt mit einer Gleichung, kein Abstand erforderlich
+      {
+        \IfBooleanF {#1} { \par \medskip }
+        \bool_gset_true:N \l_schulma_klausur_loesung_bool
+        \FarbeLoesung
+      }
+      {
+        \bool_gset_false:N \l_schulma_klausur_loesung_bool
+      }
   }

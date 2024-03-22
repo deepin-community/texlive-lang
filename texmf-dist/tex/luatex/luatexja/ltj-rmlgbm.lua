@@ -3,9 +3,19 @@
 --
 luatexja.load_module 'base';      local ltjb = luatexja.base
 
+local get_modtime
+do
+   local find_file = kpse.find_file
+   local lfs = require"lfs"
+   local file_attributes = lfs.attributes
+   get_modtime = function (f)
+      f = f and find_file(f, 'cmap files')
+      return f and file_attributes(f, 'modification')
+   end
+end
 local cidfont_data = {}
 local cache_chars = {}
-local cache_ver = 11
+local cache_ver = 13
 local identifiers = fonts.hashes.identifiers
 
 local cid_reg, cid_order, cid_supp, cid_name
@@ -28,7 +38,7 @@ local cid_replace = {
                              return 327680 -- 655360/2
                           end
                        end},
-   ["Adobe-GB1"]    = {"UniGB-UTF32",  30283, 5,
+   ["Adobe-GB1"]    = {"UniGB-UTF32",  30571, 6,
                        function (i)
                           if (814<=i and i<=939) or (i==7716)
                              or (22355<=i and i<=22357) then
@@ -213,7 +223,11 @@ do
         k.characters[46].width = math.floor(655360/14);
       end
       ltjb.save_cache("ltj-cid-auto-" .. string.lower(cid_name),
-                      {version = cache_ver, k})
+        {version = cache_ver,
+         cid2ucs_modtime = get_modtime(cid_name..'-UCS2'),
+         ucs2cid = kx[1]..'-H',
+         ucs2cid_modtime = get_modtime(kx[1]..'-H'),
+         k})
       k.shared.rawdata.resources=k.resources
       k.shared.rawdata.descriptions=k.descriptions
    end
@@ -222,7 +236,7 @@ end
 --
 local cidf_vert_processor
 do
-   local traverse_id, is_node = node.direct.traverse_id, node.is_node
+   local traverse_glyph, is_node = node.direct.traverse_glyph, node.is_node
    local to_direct = node.direct.todirect
    local id_glyph = node.id 'glyph'
    local getfont = node.direct.getfont
@@ -235,10 +249,9 @@ do
          if head and luatexja.jfont.font_metric_table[fnum] and luatexja.jfont.font_metric_table[fnum].vert_activated then
             local vt = fontdata.ltj_vert_table
             local nh = is_node(head) and to_direct(head) or head
-            for n in traverse_id(id_glyph, head) do
-               if getfont(n)==fnum then
-                 local c = getchar(n); setchar(n, vt[c] or c)
-               end
+            for n in traverse_glyph(head) do
+               local c = getchar(n)
+               if getfont(n)==fnum then setchar(n, vt[c] or c) end
             end
             return head, false
          end
@@ -249,7 +262,11 @@ end
 local dummy_vht, dummy_vorg = {}, {}
 setmetatable(dummy_vht, {__index = function () return 1 end } )
 setmetatable(dummy_vorg, {__index = function () return 0.88 end } )
-local function cid_cache_outdated(t) return t.version~=cache_ver end
+local function cid_cache_outdated(t)
+  return (t.version~=cache_ver)
+    or (t.cid2ucs_modtime ~= get_modtime(cid_name..'-UCS2'))
+    or (t.ucs2cid_modtime ~= get_modtime(t.ucs2cid))
+end
 local function read_cid_font()
    local dat = ltjb.load_cache("ltj-cid-auto-" .. string.lower(cid_name),
                                cid_cache_outdated)

@@ -19,7 +19,6 @@
 \def\testAleB #1#2#3\relax #4#5#6\relax{%
    \ifnum `#2<`#5 \_AleBtrue \else \_AleBfalse \fi
 }
-
 \catcode`<=13
 \def<#1>{{\def\_dsp { }\iindex{:#1}\iis {:#1} {$\langle\hbox{\it#1}\rangle$}}%
    $\def\,{\hskip1.5pt plus.3pt minus1.2pt}\,\langle\hbox{\it#1}\rangle\,$}
@@ -422,7 +421,8 @@ command working only in horizontal mode or a character itself ---
 then the main processor switches to \ii horizontal/mode,@ {\em horizontal mode}: it opens 
 an unlimited horizontal data row for
 typesetting material and puts material next to each other. For example
-\i hbox `\hbox{a}\hbox{b}\hbox{c}` creates abc in horizontal mode.
+\i hbox `a\hbox{b}\hbox{c}` opens horizontal mode due to \"a character
+itself" `a` and creates abc in horizontal mode.
 
 When an empty line is scanned, the tokenizer creates a \i par `\par` token here and
 if the main processor is in horizontal mode, the `\par` command finalizes the
@@ -801,6 +801,9 @@ The rule \"everything must be balanced" is applied to separated parameters
 too. It means that `\Test AB{C..DEF G}.. H` from the example above reads
 `B{C..DEF G}` to the `#2` parameter and the `#3` parameter is empty 
 because the space (the delimiter of `#3` parameter) immediately follows two dots.
+If the real parameter is in the form `{...}` then the outer
+braces are removed from the parameter. For example `\Test A{C..DEF G}.. H`
+reads `C..DEF G` to the `#2`.
 
 The separated parameter can bring a potential problem if the user forgets the
 delimiter or the delimiter is specified incorrectly. Then \TeX/ reports an
@@ -823,7 +826,7 @@ then the number of `#` must be doubled for inner declaration. Example:
 
 \begtt
 \def\defmacro#1#2{%
-   \def#1##1 ##2 {##1 says: #1 ##2.}%
+   \def#1##1 ##2 {##1 says: #2 ##2.}%
 }
 \defmacro \hello   {hello} % expands to \def\hello#1 #2 {#1 says: hello #2.}
 \defmacro \goodbye {good bye}
@@ -895,7 +898,8 @@ All typographical traditions of math typesetting were taken into account.
 There are three chapters about math typesetting in his \TeX/book. Moreover,
 there is the detailed appendix G containing the exact specification of generating math
 formulae. This topic is unfortunately out of the scope of this short
-text.
+text. More about it can be found in
+\ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]{Typesetting Math with \OpTeX/}
 
 There is a good a piece of news: all formats (including \LaTeX/) take the default \TeX/
 syntax for `<math text>`. So, \LaTeX/ manuals or \LaTeX/ documents
@@ -1228,6 +1232,12 @@ detail).
   These spaces are inserted above and below a formula generated in math display
   mode.
 
+* \y`\thinmuskip=3mu`,
+  \y`\medmuskip=4mu plus 2mu minus 4mu`, 
+  \y`\thickmuskip=5mu plus 5mu`.
+  These spaces are inserted after comma, around binary operators, and around
+  relations in math mode. The special math unit {\tt 1mu} is $(1/18)${\tt em}.
+  
 * \y`\tabskip=0pt` is used by the `\halign` primitive command for creating tables.
 
 * \y`\output={\plainoutput}`, \y`\everypar={}`, \y`\everymath={}`
@@ -1308,17 +1318,21 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 \endtt
 
 * \i expandafter \z`\expandafter|<token 1><token 2>;` does the transformation
-  \z`<token 1><expanded token2>`. The token processor will expand \z`<token 1>`
-  after such a transformation. The \z`<expanded token2>` is only the first level of
+  \z`<token 1><expanded token 2>`. Then \TeX/ processes `<token 1>` followed by
+  `<expanded token 2>`. 
+  If `<token 2>` isn't expandable then `\expandafter` silently does nothing.
+  The \z`<expanded token2>` is only the first level of
   expansion. For example, a macro is transformed to its `<replacement text>`
   but without expansion of `<replacement text>` at this time.
   Or the `\csname...\endcsname` pair creates a control sequence but does not
   expand it at this time.
 
-  If \z`<token 2>` is not expandable then \x`\expandafter` silently does
-  nothing.
+%  If \z`<token 2>` is not expandable then \x`\expandafter` silently does
+%  nothing.
 
-  The example above (the `\keyval` macro) shows the usage of \x`\expandafter`.
+  A typical usage: the `<token 1>` is a macro or a \TeX/
+  primitive which needs `<expanded token 2>` as its parameter.
+  The example above (the `\keyval` macro) shows this case.
   We need not define `\csname` by `\def`; we want to define 
   a `\dict:key`. The \x`\expandafter` helps here.
 
@@ -1479,7 +1493,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   {\em do something} and it gets a \x`\chardef`-ed control sequence, it prints
   the character with Unicode (ASCII code) `<number>` to the typesetting output. 
   If it gets a \x`\mathchardef`-ed control sequence, it prints a math object (it works
-  only in math mode, not documented here).
+  only in math mode).
 
 * \i countdef `\countdef|<control sequence>;=<number>` declares `<control sequence>` as
   an equivalent to the `\count<number>` which is a register of counter type. 
@@ -1773,6 +1787,14 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   number type then the result is truncated.
 * See \*`\numexpr` and \*`\dimexpr`, expandable primitives documented in
   sections~\ref[reg] and~\ref[expand].
+* \*\*\i pdfuniformdeviate `\pdfuniformdeviate<number>` expands to a random
+  number uniformly distributed in the range 0 (inclusive) to
+  `<number>` (exclusive). Normal distribution between $-65536$ and $65536$
+  can be reached by \*\*\i pdfnormaldeviate `\pdfnormaldeviate`.
+  The generator is initialized by time of the compilation, or you can use
+  \*\*\i pdfsetrandomseed `\pdfsetrandomseed<number>` to do fixed
+  initialization, `<number>` is an integer less than 1,000,999,999.
+  Luatex supports the same primitives but without `\pdf` prefix.
 \enditems
 
 \noindent {\bf Internal codes}
@@ -2038,13 +2060,16 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   This feature is supported by pdf\TeX/ only.
 \enditems
 
-\noindent {\bf Commands used in math mode}
+\goodbreak\noindent {\bf Commands used in math mode}
 
 \begitems
 * \x`\displaystyle`, \x`\textstyle`, \x`\scriptstyle`, \x`\scriptscriptstyle`
-  switch to the specified style.
+  are `<style primitive>`\kern-2pts. They switch to the specified style.
+  \i mathchoice `\mathchoice{<D>}{<T>}{<S>}{<SS>}` prints only one its
+  agrument dependent on the current math style.
 * \x`\mathord`, \x`\mathop`, \x`\mathbin`, \x`\mathrel`, \x`\mathopen`, \x`\mathclose`,
-  \x`\mathpunct` followed by `{<math list>}` create a math object of the given type.
+  \x`\mathpunct` followed by `{<math list>}` create a math object of the given
+  class.
 * \i over `{<numerator>\over<denominator>}` creates a fraction.
   The primitive commands \x`\atop` (without fraction rule), 
   \i above `\above<dimen>` (fraction rule with given thickness) should be used in the same
@@ -2067,6 +2092,102 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 * \i eqno `$$<formula>\eqno<mark>$$` puts the `<mark>` to the right
   margin as `\llap{$<mark>$}`. Analogously, 
   \i leqno `$$<formula>\leqno<mark>$$` puts it to the left margin.
+\enditems
+
+\noindent {\bf Commands for setting math codes and math-family fonts}\par\nobreak\medskip
+
+Each character used in math mode must have its {\em math-code}. It includes
+{\em class} of the character and how the glyph of the character should be printed.
+The class is one of this: 0=Ord, 1=Op, 2=Bin, 3=Rel, 4=Open, 5=Close, 6=Punct,
+and it affects spacing between objects, super/sub/script behavior etc.
+The glyph for printing the character is saved in a {\em math-family font} at
+its {\em slot}. Each math-family font has an assigned number using
+`\textfont`, `\scriptfont` and `\scriptscriptfont` primitives.
+When old 7bit \TeX/ fonts are
+used, then the whole set of math characters is divided to more math-family
+fonts, each of them has its own number. When Unicode math is used
+then all math characters are stored in a single font and we (almost) never
+need to use more than single math-family font with a single number.
+The format must specify the math-code (i.e. class, math-family font number
+and slot) for all characters used in math mode by following primitives.
+
+The `<math-code>` mentioned below is a single 15bit number mostly used in hexadecimal
+form with four digits: `"<d1><d2><d3><d4>`, where `<d1>` is the class, `<d2>` is
+the math-family font number and `<d3><d4>` is the slot.
+
+\begitems
+* \i mathcode `\mathcode <num>=<math-code>` sets the math-code for the character given
+  by its <num> ASCII code. The `<num>` is 8bit number.
+* \i mathchardef `\mathchardef <sequence>=<math-code>` declares math-code for
+  given `<sequence>`. When the `<sequence>` is used in math mode then it behaves
+  as a single object equal to a real single character with its `<math-code>`.
+* \i textfont `\textfont<num>=<font>` declares math-family font `<num>` as
+  `<font>` for normal size characters. The `<font>` is a font selector given
+  previously by `\font` primitive.
+* \i scriptfont `\scriptfont<num>=<font>` declares math-family font `<num>` as
+  `<font>` for script size.
+* \i scriptscriptfont `\scriptscriptfont<num>=<font>` declares math-family font `<num>` as
+  `<font>` for script-in-script size.
+\enditems
+
+Unicode values can be set in \XeTeX/ and \LuaTeX/:
+
+\begitems
+* \*\*\*\i Umathcode `\Umathcode<num>=<class><math-family><slot>` sets
+  the math-code for a character given by its Unicode <num>. The math-code is
+  presented by three independent numbers.
+* \*\*\*\i Umathchardef `\Umathchardef<sequence>=<class><math-family><slot>`
+  declares `<sequence>` as a math object with the given math-code.
+\enditems
+
+The scalable parentheses used after `\left`, `\right`, `\middle` must have
+its delimiter-code `<del-code>`. It is a
+24bit number. When the hexadecimal form `"<d1><d2><d3><d4><d5><d6>` of this
+number is used then it gives
+math-family font number `<d1>` and slot `<d2><d3>` for basic size (typically
+a normal text font) and
+math-family font number `<d4>` and slot `<d5><d6>` for the first successor of
+\"parentheses chain" implemented in the font (typically a special font).
+
+\begitems
+* \i delcode `\delcode<num>=<del-code>` sets the delimiter-code for the
+  ASCII character `<num>`.
+* \*\*\*\i Udelcode `\Udelcode<num>=<math-family><slot>` sets the
+  delimiter-code for the Unicode character `<num>` when a Unicode math font is
+  loaded. The font must implement the \"parentheses chain" at the `<slot>`
+  directly, we needn't to distinguish the basic size and the first
+  successor.
+\enditems
+
+\noindent{\bf Commands for using math-codes directly in math mode}
+
+\begitems
+* \i mathchar `\mathchar<math-code>` prints a math object given by math-code.
+* \*\*\*\i Umathchar `\Umathchar<class><math-family><slot>`
+  prints a math object given by math-code.
+* \i mathaccent `\mathaccent<math-code><object>` prints an accent above
+  `<object>` given by its math-code. The `<object>` can be single math
+  object or `{<math formula>}`.
+* \*\*\*\i Umathaccent `\Umathaccent<keyword><class><math-family><slot><object>`
+  creates an accent over `<object>` given by its math-code. The accent is
+  stretchable (relative to the width of the `<object>`) by default and if
+  the font implements the \"accents chain" at the `<slot>`. The optional
+  `<keyword>` is `fixed` (do not stretch the accent) or `bottom` (place
+  the accent to the bottom of the `<object>`).
+* \i delimiter `\delimiter<del-code>` prints a given delimiter, can be used after
+  `\left`, `\right`, `\middle`. The `<del-code>` can have seven hexadecimal
+  digits, first of them is class, others give normal `<del-code>`. The class
+  is used if the `\delimiter` doesn't follow `\left`, `\right`, `\middle`.
+* \*\*\*\i Udelimiter `\Udelimiter<class><math-family><slot>` behaves as
+  a character with given delimiter-code (after `\left`, `\right`) or as
+  a normal math character with its `<class>` (in other cases).
+* \i radical `\radical<radical-code><object>` creates radical symbol over
+  `<object>`. The `<radical-code>` is interpreted as `<del-code>`, i.e.\ the
+  first font must include the basic size and the second font must implement
+  the \"radicals chain".
+* \*\*\*\i Uradical `\Uradical<math-family><slot><object>` creates radical
+  symbol over `<object>`. The Unicode math font must implement the
+  \"radicals chain" at the `<slot>`.
 \enditems
 
 \sec[plain] Summary of plain \TeX/ macros
@@ -2092,7 +2213,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   `\ifsoemthing` which behaves like other `\if`\code{*} primitive commands.
 \enditems
 
-\noindent{\bf Vertical skips}
+\goodbreak\noindent{\bf Vertical skips}
 
 \begitems
 * \x`\bigskip` does \x`\vskip` by one line, \x`\medskip` does `\vskip` by
@@ -2190,10 +2311,18 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 
 * \x`\raggedright` sets the paragraph shape with the ragged right margin.
   \x`\raggedbottom` sets the page-setting shape with the ragged bottoms.
+
+* \i phantom `\phantom{<text>}` prints empty box with dimensions like
+  `\hbox{<text>}`. \i vphantom `\vphantom{<text>}`, \i hphantom
+  `\hphantom{<text>}` does the same but the result of `\vphantom` sets its
+  width to zero, the result of `\hphantom` sets its height plus depth to zero.
+  \i smash `\smash{<text>}` prints `\hbox{<text>}` but height plus depth is
+  set to zero. In math mode, these commands keep the current math style.
+
 \enditems
 
 \noindent{\bf Floating objects}
-
+\par\nobreak\medskip\nobreak
 \begitems
 * \i footnote `\footnote{<mark>}`\z`{<text>}` creates a footnote with given
   `<mark>` and \z`<text>`.
@@ -2258,6 +2387,10 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   \x`\leqalignno` does the same as `\eqalignno` but `<mark>` is put to the
   left margin.  
 }
+* \i mathpalette `\mathpalette\macro{<text>}` runs
+  `\macro<style primitive>{<text>}`. Your `\macro` can re-set current math
+  style using its `#1` parameter. Example: `\def\macro#1#2{\hbox{$#1#2$}}`.
+
 \enditems
 
 \raggedbottom
@@ -2297,7 +2430,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 \noindent
 Petr Olšák {\tt petr@olsak.net}\nl
 Czech Technical University in Prague\nl
-Version of the text: 0.8 (\the\year-\thed\month-\thed\day)
+Version of the text: 0.9 (\the\year-\thed\month-\thed\day)
 
 \break
 

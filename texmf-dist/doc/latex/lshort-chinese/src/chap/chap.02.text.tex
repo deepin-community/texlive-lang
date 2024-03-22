@@ -45,7 +45,7 @@ Unicode 是一个多国字符的集合，覆盖了几乎全球范围内的语言
 一个字符由一个到四个字节编码，其中单字节字符的编码与 ASCII 编码兼容。
 
 现行版本的 \LaTeX{} 使用 UTF-8 作为默认编码%
-\footnote{在 2018 年 4 月之前，需要调用 \pkg{inputenc} 宏包并指定 \texttt{utf8} 选项才能使用 UTF-8 编码。}。
+\footnote{\LaTeX{} 2018-04-01 版本之前，需要调用 \pkg{inputenc} 宏包并指定 \texttt{utf8} 选项才能使用 UTF-8 编码。}。
 将使用拉丁字母的文档保存为 UTF-8 编码后，可以用 \texttt{pdflatex} 直接编译，比如：
 
 \begin{verbatim}
@@ -67,13 +67,16 @@ Français Português Español Føroyskt
 
 \pkgindex{xeCJK,luatexja}
 用 \LaTeX{} 排版中文需要解决两方面问题，一方面是对中文字体的支持，另一方面是对中文排版中的一些细节的处理，包括在汉字之间控制断行、标点符号的禁则（如句号、逗号不允许出现在行首）、中英文之间插入间距等。\pkg{CJK} 宏包对中文字体的支持比较麻烦，已经不再推荐直接使用。
-\hologo{XeTeX} 和 \hologo{LuaTeX} 除了直接支持 UTF-8 编码外，还支持直接调用 TrueType / OpenType 格式的字体。\pkg{xeCJK} 及 \pkg{luatexja} 宏包则在此基础上封装了对汉字排版细节的处理功能。
+\hologo{XeTeX} 和 \hologo{LuaTeX} 除了直接支持 UTF-8 编码外，还支持直接调用 TrueType/OpenType 格式的字体。\pkg{xeCJK} 及 \pkg{luatexja} 宏包则在此基础上封装了对汉字排版细节的处理功能。
 
 \pkgindex{ctex}
 \clsindex{ctexart,ctexrep,ctexbook}
 \pkg{ctex} 宏包和文档类\footnote{\hologo{CTeX} 还经常用来指一个过时的 \TeX{} 发行版，注意与这里的 \pkg{ctex} 宏包和文档类区分。}%
-进一步封装了 \pkg{CJK}、\pkg{xeCJK}、\pkg{luatexja} 等宏包，使得用户在排版中文时不用再考虑排版引擎等细节。\pkg{ctex} 宏包本身用于配合各种文档类排版中文，而 \pkg{ctex} 文档类对 \LaTeX{} 的标准文档类进行了封装，对一些排版根据中文排版习惯做了调整，包括 \cls{ctexart} / \cls{ctexrep} / \cls{ctexbook}。
-\pkg{ctex} 宏包和文档类能够识别操作系统和 \TeX{} 发行版中安装的中文字体，因此基本无需额外配置即可排版中文文档。下面举一个使用 \pkg{ctex} 文档类排版中文的最简例子：
+进一步封装了 \pkg{CJK}、\pkg{xeCJK}、\pkg{luatexja} 等宏包，使得用户在排版中文时不用再考虑排版引擎等细节。
+\pkg{ctex} 宏包本身用于配合各种文档类排版中文，而 \pkg{ctex} 文档类对 \LaTeX{} 的标准文档类进行了封装，
+对一些排版根据中文排版习惯做了调整，包括 \cls{ctexart}、\cls{ctexrep}、\cls{ctexbook} 等。
+\pkg{ctex} 宏包和文档类能够识别操作系统和 \TeX{} 发行版中安装的中文字体，因此基本无需额外配置即可排版中文文档。
+下面举一个使用 \pkg{ctex} 文档类排版中文的最简例子：
 
 \begin{verbatim}
 \documentclass{ctexart}
@@ -89,7 +92,7 @@ Français Português Español Føroyskt
 \index{lualatex@\texttt{lualatex} 命令}
 注意源代码须保存为 UTF-8 编码，并使用 \texttt{xelatex} 或 \texttt{lualatex} 命令编译。
 虽然 \pkg{ctex} 宏包和文档类保留了对 GBK 编码以及 \texttt{latex} 和 \texttt{pdflatex} 编译命令的兼容，
-笔者建议在使用 \pkg{ctex} 宏包和文档类时总是将源代码保存为 UTF-8 编码，用 \texttt{xelatex} 或 \texttt{lualatex} 命令编译。
+但我们并不推荐这样做。
 
 \section{\LaTeX{} 中的字符}\label{sec:text-symbols}
 
@@ -146,7 +149,7 @@ ak a word.
 
 \subsection{连字}\label{subsec:ligatures}
 
-西文排版中经常会出现连字（ligatures），常见的有 ff / fi / fl / ffi / ffl{}。
+西文排版中经常会出现连字（ligatures），常见的有 ff/fi/fl/ffi/ffl{}。
 \begin{example}
 It's difficult to find \ldots\\
 It's dif{}f{}icult to f{}ind \ldots
@@ -194,13 +197,15 @@ yes---or no?
 \LaTeX{} 提供了 \cmd{ldots} 命令表示省略号，相对于直接输入三个点的方式更为合理。
 \cmd{dots} 与 \cmd{ldots} 命令等效。
 \begin{example}
-one, two, three, \ldots one hundred.
+one, two, three, \ldots{} one hundred.
 \end{example}
 
 \subsubsection{波浪号}
 
 我们在 \ref{subsec:special-chars} 小节中了解了 \cmd{\textasciitilde} 命令，它可以用来输入波浪号，
-但位置靠顶端（\cmd{\textasciitilde} 命令主要用作重音，参考下一小节）。西文中较少将波浪号作为标点符号使用，在中文环境中一般直接使用全角波浪号（～）。
+但位置靠顶端（\cmd{\textasciitilde} 命令主要用作重音，参考下一小节）。西文中较少将波浪号作为标点符号使用，
+% HACK: fix full width tilde position for FandolSong
+在中文环境中一般直接使用全角波浪号（\!\raisebox{-0.75ex}{～}\!）。
 
 \subsection{拉丁文扩展与重音}\label{subsec:accents}
 

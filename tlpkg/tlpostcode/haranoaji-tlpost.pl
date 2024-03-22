@@ -39,7 +39,7 @@ use Encode;
 
 my $verbose = 0;
 
-if (win32 ()) {
+if (wndws ()) {
     # These packages are not necessarily available on non-Windows, so
     # read them at runtime instead of compile time.
     require Encode::Locale;
@@ -282,7 +282,7 @@ sub remove_snippet {
 }
 
 # Check Windows environment
-sub win32 { return ($^O=~/^MSWin(32|64)$/i); }
+sub wndws { return ($^O=~/^MSWin(32|64)$/i); }
 
 # Log
 sub my_log {

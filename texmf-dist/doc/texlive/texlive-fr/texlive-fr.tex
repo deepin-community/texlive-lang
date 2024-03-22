@@ -6,6 +6,7 @@
 %
 % Change history (started May 18th 2002)
 %
+% 2023/03/03: synced with 2023 English version, by Denis Bitouzé
 % 2022/04/18: corrections by Patrick Bideault
 % 2022/03/20: synced with 2022 English version, by Denis Bitouzé
 % 2021/02/28: synced with 2021 English version, by Denis Bitouzé
@@ -41,7 +42,9 @@
 
 \usepackage{tex-live}
 \ifpdf
-\usepackage{hyperref}
+\usepackage{tocloft}
+\addtolength{\cftsubsubsecnumwidth}{5pt}
+\usepackage[breaklinks]{hyperref}
 \usepackage[all]{hypcap}
 \fi
 
@@ -72,7 +75,7 @@
 \begin{document}
 
 \title{%
-  \huge \emph{Guide pratique de \TL 2022}%
+  \huge \emph{Guide pratique de \TL 2023}%
 }
 
 \author{
@@ -101,7 +104,7 @@
 %   Hervé Vigier,
 %   Arnaud Schmittbuhl
 
-\date{Avril 2022}
+\date{Mars 2023}
 
 \maketitle
 
@@ -112,10 +115,10 @@
 \section{Introduction}
 \label{sec:intro}
 
-\subsection{\protect\TeX\ Live et \protect\TeX\ Collection}
+\subsection{\protect\TL{} et \protect\TeX\ Collection}
 
 Ce document décrit les principales caractéristiques de la distribution \TL{},
-une distribution complète de \TeX{} pour Linux et autres Unix, \MacOSX{} et
+une distribution complète de \TeX{} pour Linux et autres Unix, \macOS{} et
 systèmes Windows.
 
 Cette distribution peut être obtenue par téléchargement, sur le \DVD{} \TK{}
@@ -144,20 +147,17 @@ cette année.
 \label{sec:os-support}
 
 \TL{} contient les exécutables pour les principales architectures Unix, dont
-\GNU/Linux, \MacOSX et Cygwin. Les sources inclus dans la distribution devraient
+\GNU/Linux, \macOS et Cygwin. Les sources inclus dans la distribution devraient
 être compilables sur des plateformes pour lesquelles nous ne fournissons pas
 d'exécutables.
 
 Concernant Windows, les versions~7 et ultérieures sont prises en charge.
 Windows Vista \emph{peut} probablement fonctionner en bonne partie, mais \TL{} ne
 saurait dorénavant être installée sur XP ou versions antérieures.  La \TL{}
-n'inclut pas d'exécutables 64~bits pour Windows, mais les exécutables 32~bits
-devraient fonctionner sur les systèmes 64~bits. Cf. néanmoins
-\url{https://tug.org/texlive/windows.html} pour les options permettant d'ajouter
-des binaires 64~bits.
+inclut des exécutables 64~bit pour Windows.
 
 Consulter la section~\ref{sec:tl-coll-dists} pour des solutions alternatives
-sous Windows et \MacOSX.
+sous Windows et \macOS.
 
 \subsection{Installation élémentaire de \protect\TL{}}
 \label{sec:basic}
@@ -179,7 +179,7 @@ d'installation est décrite en détail dans les sections suivantes
 \item Sous Unix, le script d'installation est \filename{install-tl}.  Sous
   Windows, il faut plutôt invoquer \filename{install-tl-windows}.
   L'installateur fonctionnera en mode graphique avec l'option \code{-gui}
-  (par défaut pour Windows et \MacOSX) ou en mode texte avec l'option
+  (par défaut pour Windows) ou en mode texte avec l'option
   \code{-gui=text} (par défaut pour tout le reste).
 
 \item Ce script installe en particulier le programme « \TL\ Manager » appelé
@@ -256,7 +256,7 @@ lecteur PDF favori, ou pour qu'elle affiche automatiquement les documentations
 en français (si elles ont été traduites).
 
 Car voilà : l'intégralité de la documentation des innombrables composants de
-\TL{} n'est pas encore disponible en français, loin s'en faut.
+\TL{} n'est pas encore disponible en français, tant s'en faut.
 
 Fort heureusement, des ressources francophones de qualité existent.  La
 documentation de \LaTeXe{} est traduite : elle est accessible via la commande
@@ -431,33 +431,32 @@ Il vous est possible d'apporter une aide précieuse aux autres utilisateurs :
 
 Nous décrivons ici le contenu de \TK{} qui est un sur-ensemble de \TL.
 
-\subsection {\protect\TK{} : \protect\TL, pro\protect\TeX{}t, Mac\protect\TeX}
+\subsection {\protect\TK{} : \protect\TL, Mac\protect\TeX, MiK\protect\TeX,
+  CTAN}
 \label{sec:tl-coll-dists}
 
 Le \DVD{} \TK{} contient les éléments suivants :
 
 \begin{description}
 
-\item[\TL{}] -- un système \TeX{} complet à installer. Page web :
-  \url{https://tug.org/texlive/}.
+\item[\TL{}] -- Un système multiplateforme complet \TeX{} à installer sur
+  disque. Page web : \url{https://tug.org/texlive/}.
 
-\item[Mac\TeX] -- un système \TeX\ pour \MacOSX\ (actuellement nommé par Apple,
-  mais nous continuons à utiliser l'ancien nom dans le présent document), qui
-  ajoute à \TL un installateur spécifique à \MacOSX{} et quelques applications
-  propres au système Mac.  Page web : \url{https://tug.org/mactex/}.
+\item[Mac\TeX] -- pour \macOS. Cela ajoute un installateur natif pour \macOS\ et
+  d'autres applications Mac à \TL{}.  Page web : \url{https://tug.org/mactex/}.
 
-\item[pro\TeX{}t] -- une extension du système \MIKTEX\ pour Windows qui en
-  facilite l'installation et ajoute quelques outils. Cette distribution est
-  totalement indépendante de \TL{}, elle nécessite un mode d'installation
-  spécifique.  Page web : \url{https://tug.org/protext}.
+\item [\MIKTEX] Une autre distribution complète et multiplateforme \TeX\ pour
+  Windows, GNU/Linux et \macOS\ (mais seuls les binaires Windows sont inclus
+  dans le DVD). Elle dispose d'un gestionnaire de paquets intégré qui, si
+  nécessaire, installe les composants manquants à partir d'Internet. Page
+  web : \url{https://miktex.org/}.
 
-\item[CTAN] -- une image du site d'archives \CTAN (\url{https://ctan.org/}).
+\item[CTAN] -- une image du site d'archives \CTAN{} (\url{https://ctan.org/}).
+  \CTAN{} ne suit pas les mêmes conditions de copie que \TL{}, pensez à lire les
+  licences si vous envisagez de modifier ou de redistribuer certains de ces
+  fichiers.
 
 \end{description}
-
-Les droits d'utilisation des fichiers présents dans \CTAN\ et \ProTeXt{}
-diffèrent de ceux de \TL{}, pensez à lire les licences si vous envisagez de
-modifier ou de redistribuer certains de ces fichiers.
 
 \subsection{Répertoires situés à la racine de \protect\TL{}}
 \label{sec:tld}
@@ -505,6 +504,7 @@ langues :
 \begin{itemize*}
 \item{anglais :} \OnCD{texmf-dist/doc/texlive/texlive-en},
 \item{allemand :} \OnCD{texmf-dist/doc/texlive/texlive-de},
+\item{espagnol :} \OnCD{texmf-dist/doc/texlive/texlive-es},
 \item{chinois (simplifié) :} \OnCD{texmf-dist/doc/texlive/texlive-zh-cn},
 \item{français :} \OnCD{texmf-dist/doc/texlive/texlive-fr},
 \item{italien :} \OnCD{texmf-dist/doc/texlive/texlive-it}
@@ -558,7 +558,7 @@ la liste outrepassent les précédentes.
   \cmdname{updmap-sys} et \cmdname{fmtutil-sys} recherchent leurs fichiers de
   configuration (personnelles) en priorité.
 \item[TEXMFCACHE] -- arborescence(s) utilisée(s) par \ConTeXt\ MkIV et LuaLaTeX\
-  pour stocker des (versions de cache de) fichiers de travails. Par défaut,
+  pour stocker des (versions de cache de) fichiers de travail. Par défaut,
   utilise \code{TEXMFSYSVAR} ou, s'il n'est pas possible d'y écrire,
   \code{TEXMFVAR}.
 \end{ttdescription}
@@ -569,16 +569,16 @@ La structure de l'arborescence \TL{} est par défaut la suivante :
   Unix, \verb|D:\texlive| sous Windows,\dots) qui contient éventuellement
   plusieurs distributions :
   \begin{ttdescription}
-  \item[2021] -- une distribution précédente,
-  \item[2022] -- la distribution actuelle,
+  \item[2022] -- une distribution précédente,
+  \item[2023] -- la distribution actuelle,
     \begin{ttdescription}
     \item[bin] ~
       \begin{ttdescription}
-      \item[i386-linux] -- exécutables Linux (32 bits),
+      \item[i386-linux] -- exécutables Linux (32~bit),
       \item[...]
-      \item [universal-darwin] -- exécutables \MacOSX,
-      \item [x86\_64-linux] -- exécutables \GNU/Linux (64 bits),
-      \item[win32] -- exécutables Windows,
+      \item [universal-darwin] -- exécutables \macOS,
+      \item [x86\_64-linux] -- exécutables \GNU/Linux (64~bit),
+      \item[windows] -- exécutables Windows (64~bit),
       \end{ttdescription}
     \item[texmf-dist] -- correspond à \envname{TEXMFDIST} et
       \envname{TEXMFMAIN},
@@ -591,9 +591,9 @@ La structure de l'arborescence \TL{} est par défaut la suivante :
 \item[répertoire personnel de l'utilisateur] \dirname{$HOME} %$
   ou |%USERPROFILE%| :
   \begin{ttdescription}
-  \item[.texlive2021] -- fichiers propres à l'utilisateur générés
-    automatiquement pour une distribution \TL{} précédente,
   \item[.texlive2022] -- fichiers propres à l'utilisateur générés
+    automatiquement pour une distribution \TL{} précédente,
+  \item[.texlive2023] -- fichiers propres à l'utilisateur générés
     automatiquement pour la distribution \TL{} actuelle,
     \begin{ttdescription}
     \item[texmf-var] -- correspond à \envname{TEXMFVAR}, \envname{TEXMFCACHE},
@@ -617,7 +617,7 @@ changera pas autant dans un futur prévisible. \TL contient plusieurs variantes
 
 \item [\eTeX{}] \label{text:etex} ajoute un jeu de nouvelles primitives et les
   extensions \TeXXeT{} pour l'écriture de droite à gauche ; \eTeX{} est, en mode
-  normal, 100\% compatible avec \TeX{} standard.  Pour plus de détails consulter
+  normal, 100\% compatible avec \TeX{} standard.  Pour plus de détails, consulter
   le fichier \OnCD{texmf-dist/doc/etex/base/etex_man.pdf} du \DVD{}.
 
 \item[pdf\TeX{}] inclut les extensions \eTeX{} et produit, au choix, des
@@ -647,8 +647,8 @@ changera pas autant dans un futur prévisible. \TL contient plusieurs variantes
   standard tierces. Voir \url{https://tug.org/xetex}.
 
 \item[\OMEGA{} (Omega)] fonctionne en utilisant Unicode et des caractères 16
-  bits, ce qui lui permet de travailler directement et simultanément avec
-  presque toutes les écritures du monde.  L'extension supporte aussi le
+  bit, ce qui lui permet de travailler directement et simultanément avec
+  presque toutes les écritures du monde.  L'extension prend en charge aussi le
   chargement dynamique d'OTP (\OMEGA{} \emph{Translation Processes}) qui permet
   à l'utilisateur d'appliquer sur des flux d'entrée quelconques des
   transformations complexes qu'il aura lui-même définies. \TL n'inclut plus
@@ -683,7 +683,7 @@ Voici quelques autres programmes couramment utilisés et présents dans \TL{} :
 
 \item[pdfjam, pdfjoin, \ldots] -- utilitaires PDF.
 
-\item[context, mtxrun] -- processeurs Con\TeX{}t et PDF.
+\item[context, mtxrun] -- processeurs \ConTeXt{} et PDF.
 
 \item [htlatex, \ldots] \cmdname{tex4ht} : \AllTeX{} vers HTML (et XML et DocX
   et autres).
@@ -708,7 +708,7 @@ différentes façons d'obtenir le logiciel.
   \url{https://mirror.ctan.org/systems/texlive/tlnet/} devrait vous rediriger vers
   le serveur d'archive le plus proche de chez vous.  Deux versions sont
   disponibles, \filename{install-tl.zip} utilisable sous Unix et Windows, et
-  \filename{install-unx.tar.gz} pour Unix seulement (y compris \MacOSX). Après
+  \filename{install-unx.tar.gz} pour Unix seulement (y compris \macOS). Après
   décompression de l'un de ces deux fichiers, les scripts \filename{install-tl}
   et \filename{install-tl-windows.bat} se trouveront dans le sous-répertoire
   \dirname{install-tl}.
@@ -800,14 +800,14 @@ système pour plus de précisions.
 compatibles Unix, Cygwin ne comprend pas par défaut tous les programmes requis
 pour faire fonctionner l'installateur \TL. Voir la section~\ref{sec:cygwin}.
 
-\subsubsection{Installation sous \MacOSX}
+\subsubsection{Installation sous \macOS}
 \label{sec:macosx}
 
 Une distribution spécifique, Mac\TeX\ (\url{https://tug.org/mactex}), a été mise
-au point pour \MacOSX.  Nous recommandons d'utiliser son installateur natif,
+au point pour \macOS.  Nous recommandons d'utiliser son installateur natif,
 plutôt que d'installer la distribution \TL{} en suivant la procédure indiquée
 pour Unix. En effet, Mac\TeX{} comprend des ajustements spécifiques pour le
-système \MacOSX{} et facilite la cohabitation entre plusieurs distributions
+système \macOS{} et facilite la cohabitation entre plusieurs distributions
 \TeX{} (Mac\TeX, Fink, MacPorts, etc.).
 
 Mac\TeX\ est fortement basée sur \TL et les arborescences principales et les
@@ -853,7 +853,7 @@ moins que vous n'ayez mis en miroir le répertoire \dirname{tlnet} localement).
 \begin{figure}[tb]
   \centering
 \begin{boxedverbatim}
-Installing TeX Live 2022 from: ...
+Installing TeX Live 2023 from: ...
 Platform: x86_64-linux => 'GNU/Linux on x86_64'
 Distribution: inst (compressed)
 Directory for temporary files: /tmp
@@ -865,11 +865,11 @@ Directory for temporary files: /tmp
  <S> set installation scheme (scheme-full)
 
  <C> customizing installation collections
-     40 collections out of 41, disk space required: 7239 MB
+     40 collections out of 41, disk space required: 7620 MB (free: 138718 MB)
 
  <D> directories:
    TEXDIR (the main TeX directory):
-     /usr/local/texlive/2022
+     /usr/local/texlive/2023
    ...
 
  <O> options:
@@ -930,7 +930,7 @@ les champs d'entrée avec la touche tabulation. Tapez une des lettres proposées
 (en respectant la casse) suivie de « entrée » (retour chariot) et l'écran se
 mettra automatiquement à jour.
 
-L'interface en mode texte est volontairement rudimentaire afin qu'ele fonctionne
+L'interface en mode texte est volontairement rudimentaire afin qu'elle fonctionne
 sur le plus grand nombre possible de systèmes --- même avec des versions très
 minimales de Perl.
 
@@ -968,22 +968,21 @@ quelques précisions.
 \begin{boxedverbatim}
 Available platforms:
 ===============================================================================
-   a [ ] Cygwin on Intel x86 (i386-cygwin)
-   b [ ] Cygwin on x86_64 (x86_64-cygwin)
-   c [ ] MacOSX current (10.14-) on x86_64 (x86_64-darwin)
-   d [ ] MacOSX legacy (10.6-) on x86_64 (x86_64-darwinlegacy)
-   e [ ] FreeBSD on x86_64 (amd64-freebsd)
-   f [ ] FreeBSD on Intel x86 (i386-freebsd)
-   g [ ] GNU/Linux on ARM64 (aarch64-linux)
-   h [ ] GNU/Linux on ARMv6/RPi (armhf-linux)
-   i [ ] GNU/Linux on Intel x86 (i386-linux)
-   j [X] GNU/Linux on x86_64 (x86_64-linux)
-   k [ ] GNU/Linux on x86_64 with musl (x86_64-linuxmusl)
-   l [ ] NetBSD on x86_64 (amd64-netbsd)
-   m [ ] NetBSD on Intel x86 (i386-netbsd)
-   o [ ] Solaris on Intel x86 (i386-solaris)
-   p [ ] Solaris on x86_64 (x86_64-solaris)
-   s [ ] Windows (win32)
+   a [ ] Cygwin on x86_64 (x86_64-cygwin)
+   b [ ] MacOSX current (10.14-) on ARM/x86_64 (universal-darwin)
+   c [ ] MacOSX legacy (10.6-) on x86_64 (x86_64-darwinlegacy)
+   d [ ] FreeBSD on x86_64 (amd64-freebsd)
+   e [ ] FreeBSD on Intel x86 (i386-freebsd)
+   f [ ] GNU/Linux on ARM64 (aarch64-linux)
+   g [ ] GNU/Linux on RPi(32-bit) and ARMv7 (armhf-linux)
+   h [ ] GNU/Linux on Intel x86 (i386-linux)
+   i [X] GNU/Linux on x86_64 (x86_64-linux)
+   j [ ] GNU/Linux on x86_64 with musl (x86_64-linuxmusl)
+   k [ ] NetBSD on x86_64 (amd64-netbsd)
+   l [ ] NetBSD on Intel x86 (i386-netbsd)
+   m [ ] Solaris on Intel x86 (i386-solaris)
+   o [ ] Solaris on x86_64 (x86_64-solaris)
+   p [ ] Windows (64-bit) (windows)
 \end{boxedverbatim}
   \vskip-.5\baselineskip
   \caption{Menu pour le choix des binaires}\label{fig:bin-text}
@@ -1008,11 +1007,12 @@ Select scheme:
  c [ ] small scheme (basic + xetex, metapost, a few languages)
  d [ ] basic scheme (plain and latex)
  e [ ] minimal scheme (plain only)
- f [ ] ConTeXt scheme
- g [ ] GUST TeX Live scheme
- h [ ] infrastructure-only scheme (no TeX at all)
- i [ ] teTeX scheme (more than medium, but nowhere near full)
- j [ ] custom selection of collections
+ f [ ] infrastructure-only scheme (no TeX at all)
+ g [ ] book publishing scheme (core LaTeX and add-ons)
+ h [ ] ConTeXt scheme
+ i [ ] GUST TeX Live scheme
+ j [ ] teTeX scheme (more than medium, but nowhere near full)
+ k [ ] custom selection of collections
 \end{boxedverbatim}
   \vskip-.5\baselineskip
   \caption{Menu « Scheme »}\label{fig:scheme-text}
@@ -1039,7 +1039,7 @@ Une fois un schéma choisi, vous pouvez affiner votre sélection avec le menu
 graphique pour changer).
 
 Il est possible de raffiner encore les choix : pour ce faire, il faudra recourir
-ultérieurement au gestionnaire de paquets TeX Live (\prog{tlmgr}) --- voir la
+ultérieurement au gestionnaire de paquets \TL{} (\prog{tlmgr}) --- voir la
 section~\ref{sec:tlmgr}.
 
 \subsubsection{Répertoires d'installation}
@@ -1047,8 +1047,8 @@ section~\ref{sec:tlmgr}.
 
 La disposition par défaut des différents répertoires est donnée à la
 section~\ref{sec:texmftrees}, page~\pageref{sec:texmftrees}.  Le répertoire
-d'installation par défaut est \dirname{/usr/local/texlive/2022} sous Unix et
-|%SystemDrive%\texlive\2022|
+d'installation par défaut est \dirname{/usr/local/texlive/2023} sous Unix et
+|%SystemDrive%\texlive\2023|
 sous Windows. Cela permet d'avoir en parallèle plusieurs installations \TL{},
 par exemple une par version (typiquement par année, comme ici) et vous pouvez
 basculer de l'une à l'autre simplement en modifiant votre chemin de recherche
@@ -1071,7 +1071,7 @@ super-utilisateur \eng{root} ou « Administrateur » ; il suffit d'avoir les
 droits en écriture sur le répertoire \dirname{TEXDIR}.
 
 Sous Windows, vous n'avez normalement pas besoin d'être un administrateur pour
-créer |C:\texlive\2022| (ou, plus généralement, |%SystemDrive%\texlive\2022|).
+créer |C:\texlive\2023| (ou, plus généralement, |%SystemDrive%\texlive\2023|).
 
 Les répertoires d'installation peuvent aussi être modifiés en configurant
 différentes variables d'environnement avant de lancer l'installateur
@@ -1083,7 +1083,7 @@ plus de détails.
 
 Une alternative raisonnable est d'installer \TL{} dans votre répertoire
 personnel, surtout si vous prévoyez d'en être le seul utilisateur. Vous pouvez
-utiliser |~| à cet effet, par exemple |~/texlive/2022|.
+utiliser |~| à cet effet, par exemple |~/texlive/2023|.
 
 Dans tous les cas, il est recommandé d'inclure l'année dans le chemin afin de
 pouvoir conserver plusieurs versions de \TL{} en parallèle.  Rien n'empêche
@@ -1164,7 +1164,7 @@ lequel voici quelques précisions.
   %   engendrer des incompatibilités.
 
 \item[install font/macro \ldots\ tree] -- ces options permettent d'installer les
-  fichiers de documentation et les fichier source présents dans la plupart des
+  fichiers de documentation et les fichiers source présents dans la plupart des
   paquets. Décocher cette option n'est pas recommandé.
 
 \item[create symlinks in standard directories] -- cette option (pour Unix
@@ -1175,7 +1175,7 @@ lequel voici quelques précisions.
   répertoires standard tels que \dirname{/usr/local/bin} qui ne contiennent pas
   déjà de fichiers \TeX. Veillez à ne pas écraser de fichiers existants sur
   votre système avec cette option, par exemple en spécifiant des répertoires
-  systèmes. L'approche la plus sûre et recommandée est de laisser cette option
+  système. L'approche la plus sûre et recommandée est de laisser cette option
   décochée.
   \begin{description}
   \item[Note du traducteur.] Le traducteur (Denis Bitouzé) est d'un avis
@@ -1198,18 +1198,18 @@ lequel voici quelques précisions.
 > tlmgr path add
 \end{alltt}
     \item[Installations multiples :] supposons par exemple que vous conserviez
-      la \TL{} 2020 à côté de la \TL{} 2021 pour le cas où un document qui
+      la \TL{} 2022 à côté de la \TL{} 2023 pour le cas où un document qui
       compilait avec la 1\iere{} ne compile plus avec la 2\ieme{}. Pour basculer
-      de la 2021 à 2020, il suffit de lancer\footnote{En supposant que
+      de la 2023 à 2022, il suffit de lancer\footnote{En supposant que
         ces \TL{} ont été installées dans le dossier
         \dirname{/usr/local/texlive/}, sous-dossiers respectivement
-        \dirname{2020} et \dirname{2021}.} :
+        \dirname{2022} et \dirname{2023}.} :
 \begin{alltt}
-> /usr/local/texlive/2020/bin/x86_64-linux/tlmgr path add
+> /usr/local/texlive/2022/bin/x86_64-linux/tlmgr path add
 \end{alltt}
-      puis, pour revenir à la \TL{} 2021 :
+      puis, pour revenir à la \TL{} 2023 :
 \begin{alltt}
-> /usr/local/texlive/2021/bin/x86_64-linux/tlmgr path add
+> /usr/local/texlive/2023/bin/x86_64-linux/tlmgr path add
 \end{alltt}
     \item[Liens symboliques morts :] à la suite de l'installation de multiples
       \TL{}, il se peut que certains liens symboliques morts se trouvent dans le
@@ -1270,11 +1270,11 @@ pour obtenir la liste de toutes les options disponibles. Vous pouvez utiliser
 
 \begin{ttdescription}
 \item[-gui] : exécution en mode \GUI{} si possible. Ceci nécessite Tcl/Tk
-  version 8.5 ou plus. Il était distribué avec \MacOSX, jusqu'à Monterey ; après
-  cela, vous devrez installer Tcl/Tk vous-même, si vous ne si vous ne choisissez
-  pas d'utiliser l'installateur MacTeX. Tcl/Tk est distribué avec \TL{} sous
-  Windows. Les anciennes options \texttt{-gui=perltk} et \texttt{-gui=wizard}
-  sont toujours disponibles et requièrent le module Perl/Tk
+  version 8.5 ou plus. Il était distribué avec \macOS ; pour Big Sur et
+  suivants, vous devrez installer Tcl/Tk vous-même, si vous ne si vous ne
+  choisissez pas d'utiliser l'installateur MacTeX. Tcl/Tk est distribué avec
+  \TL{} sous Windows. Les anciennes options \texttt{-gui=perltk} et
+  \texttt{-gui=wizard} sont toujours disponibles et requièrent le module Perl/Tk
   (\url{https://tug.org/texlive/distro.html#perltk}) avec support de XFT ; au
   cas où ni Tcl/Tk, ni Perl/Tk ne sont disponible, l'installation se poursuit en
   mode texte.
@@ -1374,9 +1374,9 @@ défaut \TL\ à titre d'exemple), le fichier à éditer peut être
 à ajouter sont de la forme suivante :
 
 \begin{sverbatim}
-PATH=/usr/local/texlive/2022/bin/x86_64-linux:$PATH; export PATH
-MANPATH=/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH; export MANPATH
-INFOPATH=/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH; export INFOPATH
+PATH=/usr/local/texlive/2023/bin/x86_64-linux:$PATH; export PATH
+MANPATH=/usr/local/texlive/2023/texmf-dist/doc/man:$MANPATH; export MANPATH
+INFOPATH=/usr/local/texlive/2023/texmf-dist/doc/info:$INFOPATH; export INFOPATH
 \end{sverbatim}
 % stopzone $
 
@@ -1384,9 +1384,9 @@ Pour les \textit{shells} \prog{csh} ou \prog{tcsh}, le fichier à éditer est en
 principe \filename{$HOME/.cshrc} %$
 et les lignes à ajouter sont de la forme suivante :
 \begin{sverbatim}
-setenv PATH /usr/local/texlive/2022/bin/x86_64-linux:$PATH
-setenv MANPATH /usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH
-setenv INFOPATH /usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH
+setenv PATH /usr/local/texlive/2023/bin/x86_64-linux:$PATH
+setenv MANPATH /usr/local/texlive/2023/texmf-dist/doc/man:$MANPATH
+setenv INFOPATH /usr/local/texlive/2023/texmf-dist/doc/info:$INFOPATH
 \end{sverbatim}
 % $
 
@@ -1410,8 +1410,8 @@ faire sont trop différentes d'un système à l'autre pour être présentées ic
 Voici quelques pistes : pour \envname{MANPATH} chercher un fichier
 \filename{/etc/manpath.config}, s'il est présent lui ajouter des lignes comme
 \begin{sverbatim}
-MANPATH_MAP /usr/local/texlive/2022/bin/i386-linux \
-            /usr/local/texlive/2022/texmf-dist/doc/man
+MANPATH_MAP /usr/local/texlive/2023/bin/i386-linux \
+            /usr/local/texlive/2023/texmf-dist/doc/man
 \end{sverbatim}
 Pour les deux autres, chercher un fichier\filename{/etc/environment}, il est
 éventuellement possible d'y définir les valeurs des variables d'environnement
@@ -1419,7 +1419,7 @@ telles que \envname{PATH} et \envname{INFOPATH}.
 
 Nous créons aussi à l'installation un lien symbolique nommé \code{man} dans les
 répertoires des binaires Unix. Certains programmes \code{man}, comme celui livré
-en standard sur \MacOSX{}, l'utilisent pour trouver automatiquement les pages de
+en standard sur \macOS{}, l'utilisent pour trouver automatiquement les pages de
 \code{man}, rendant inutile tout réglage de \envname{MANPATH}.
 
 \subsubsection{Mises à jour par Internet après une installation par le
@@ -1450,69 +1450,97 @@ pouvez en sélectionner un en particulier depuis la liste disponible en
 \subsection{Configuration des fontes pour \protect\XeTeX\ et Lua\protect\TeX}
 \label{sec:font-conf-sys}
 
-\XeTeX\ et Lua\TeX\ peuvent utiliser toutes les polices installées au niveau du
-système et pas seulement celles des arborescences \TeX. Pour cela, ils utilisent
-des méthodes différentes, mais pas tout à fait indépendantes.
+\XeTeX\ et Lua\TeX\ peuvent utiliser n'importe quelle police installée sur le
+système, et pas seulement celles des arborescences \TeX. Ces polices système
+(qui ne font pas partie de \TL) sont généralement accessibles en donnant le nom
+de la police, par exemple `\code{Liberation Serif}', bien que le nom de fichier
+système puisse être également utilisé.
 
-Sous Windows, les fontes livrées avec \TL\ sont automatiquement rendues
-utilisables par \XeTeX, mais si vous avez installé le paquet \pkgname{xetex} sur
-un système de type Unix, vous avez besoin de le configurer un peu pour que
-\XeTeX{} puisse trouver les fontes installées par \TL{} par leur nom sans être
-obligé d'utiliser le nom du fichier.
+Une question connexe consiste à rendre les polices de la distribution \TL\
+disponibles en tant que polices système, ce qui les rendra à leur tour
+accessibles par leur nom.
 
-Pour faciliter ce réglage, lorsque le paquet \pkgname{xetex} est installé, un
-fichier de configuration adéquat est créé :
-\filename{TEXMFSYSVAR/fonts/conf/texlive-fontconfig.conf}.
+\begin{description}
+\item[Pour Lua\TeX :] pour l'accès par nom de police, il n'y a rien de spécial
+  à faire. Toutes les polices de la distribution \TL\ devraient être également
+  accessibles par nom de police ou par nom de fichier pour Lua\TeX, via le
+  paquet \pkgname{luaotfload} qui prend en charge à la fois \LaTeX\ et plain
+  \TeX{}. L'index des noms de police \pkgname{luaotfload} peut avoir besoin
+  d'être reconstruit pour les nouvelles polices ; ceci est déclenché
+  automatiquement lors de la tentative de chargement d'une police qui n'est pas
+  encore connue.
+\item[Pour \XeTeX :] sous :
+  \begin{description}
+  \item[Windows :] les polices livrées avec \TL\ sont automatiquement mises
+    à disposition (en exécutant le programme \cmdname{fc-cache} fourni pour
+    Windows par la \TL) ;
+  \item[\macOS{} :] vous devrez consulter d'autres documents ;
+  \item[systèmes Unix autres que \macOS{} :] la procédure est la suivante :
+    lorsque le paquetage \pkgname{xetex} est installé (lors de l'installation
+    initiale ou ultérieurement), le fichier de configuration nécessaire est créé
+    dans \filename{TEXMFSYSVAR/fonts/conf/texlive-fontconfig.conf}. Pour rendre
+    les polices \TL\ disponibles en tant que polices système :
+    \begin{enumerate*}
+    \item Copiez le fichier \filename{texlive-fontconfig.conf} dans
+      (généralement) \dirname{/etc/fonts/conf.d/09-texlive.conf}.
+    \item Exécutez \Ucom{fc-cache -fsv}.
+    \end{enumerate*}
+    Si vous n'avez pas les privilèges suffisants pour utiliser la méthode
+    ci-dessus, ou si vous préférez rendre les polices disponibles seulement pour
+    l'utilisateur en cours, vous pouvez procéder comme suit :
+    \begin{enumerate*}
+    \item copiez le fichier \filename{texlive-fontconfig.conf} dans
+      (généralement) \filename{~/.fonts.conf.d/09-texlive.conf}, où \filename{~}
+      représente votre répertoire personnel.
+    \item exécutez \Ucom{fc-cache -fv}.
+    \end{enumerate*}
+  \end{description}
+\end{description}
 
-Pour permettre à votre système l'accès aux polices \TL, si vous avez les
-privilèges suffisants, vous pouvez procéder ainsi :
-\begin{enumerate*}
-\item Copiez le fichier \filename{texlive-fontconfig.conf} dans
-  \dirname{/etc/fonts/conf.d/09-texlive.conf}.
-\item Exécutez \Ucom{fc-cache -fsv}.
-\end{enumerate*}
+Vous pouvez exécuter \code{fc-list} pour afficher les noms des polices système
+disponibles. L'incantation \code{fc-list : family style file spacing} (tous ces
+arguments sont des chaînes littérales) affiche des informations généralement
+intéressantes.
 
-Si vous n'avez pas les privilèges suffisants pour utiliser la méthode ci-dessus,
-ou si vous préférez rendre les polices disponibles seulement pour l'utilisateur
-en cours, vous pouvez procéder comme suit.
-\begin{enumerate*}
-\item Copiez le fichier \filename{texlive-fontconfig.conf} vers
-  \filename{~/.fonts.conf}, où \filename{~} représente votre répertoire
-  personnel.
-\item Exécutez \Ucom{fc-cache -fv}.
-\end{enumerate*}
-
-Vous pouvez utiliser \code{fc-list} pour voir les noms des polices du système.
-L'incantation \code{fc-list : family style file spacing} (avec ces arguments
-tels quels) donne en général quelques informations utiles.
-
-\subsubsection{\protect\ConTeXt{} Mark IV}
+\subsubsection{\protect\ConTeXt{} LMTX et Mark IV}
 \label{sec:context-mkiv}
 
-La \enquote{vieille} version de \ConTeXt{} (Mark II) ainsi que la
-\enquote{nouvelle} version (Mark IV) devraient fonctionner directement après
+Les \enquote{vieilles} versions de \ConTeXt{} (Mark II et Mark IV) ainsi que la
+\enquote{nouvelle} version (LMTX) devraient fonctionner directement après
 l'installation de \TL et ne réclamer aucune action particulière tant que vous
 n'utilisez que \code{tlmgr} pour les mises à jour.
 
-Cependant, comme \ConTeXt{} MkIV n'utilise pas la bibliothèque kpathsea, il
+Cependant, comme \ConTeXt{} n'utilise pas la bibliothèque kpathsea, il
 faudra mettre à jour manuellement le cache de fichiers de \ConTeXt{} si jamais
 vous installez des nouveaux fichiers manuellement (c'est-à-dire sans utiliser
 \code{tlmgr}). Pour cela, et après chaque installation manuelle, exécutez :
+\begin{description}
+\item[pour LMTX :]\leavevmode{}
 \begin{sverbatim}
 context --generate
 \end{sverbatim}
+\item[pour Mark IV :]\leavevmode{}
+\begin{sverbatim}
+context --luatex --generate
+\end{sverbatim}
+\end{description}
+afin de rafraîchir les données \ConTeXt{} du cache du disque.
+
 Les fichiers résultants de l'exécution de cette commande sont stockés dans
 \code{TEXMFCACHE}, dont la valeur par défaut sous \TL{} est
 \envname{TEXMFSYSVAR;TEXMFVAR}.
 
-\ConTeXt\ MkIV lira les fichiers de toutes les arborescences mentionnées dans
+\ConTeXt\ lira les fichiers de toutes les arborescences mentionnées dans
 \envname{TEXMFCACHE} et les écrira dans le premier de ces répertoires
 accessibles en écriture. Lors de la lecture, les dernières informations lues
 sont prises en compte de façon prioritaire par rapport à celles lues
 précédemment, dans le cas où certaines données de cache seraient dupliquées.
 
-Pour plus d'informations, voir
-\url{https://wiki.contextgarden.net/Running_Mark_IV}.
+Pour plus d'informations, voir :
+\begin{itemize}
+\item \url{https://wiki.contextgarden.net/LMTX} ;
+\item \url{https://wiki.contextgarden.net/Running_Mark_IV}.
+\end{itemize}
 
 
 \subsubsection{Ajout de fichiers locaux ou personnels}
@@ -1537,7 +1565,7 @@ trouvée que si elle est dans \dirname{TEXMFLOCAL/tex/latex} ou
 Enfin, si les ajouts ont été faits sous \dirname{TEXMFLOCAL}, il y a lieu de
 régénérer les bases de données \filename{ls-R} (commande \cmdname{mktexlsr} ou,
 en mode graphique, bouton « Mettre à jour l'index de fichiers » dans l'onglet
-« Actions ».
+« Actions ») de l'interface graphique du \TL{} « Manager ».
 
 L'emplacement des répertoires \dirname{TEXMFLOCAL} et \dirname{TEXMFHOME} est
 fixe (il ne change pas d'une version à l'autre de \TL{}). Leur contenu est pris
@@ -1567,10 +1595,10 @@ donc ne vous y attardez pas à moins que vous souhaitiez vous plonger dans les
 arcanes d'une installation \TeX{}.
 
 De nombreuses polices étant déjà intégrées à \TL, nous vous conseillons de
-d'abord vérifier si ce que vous cherchez ne s'y trouve pas : les pages de
-\url{https://tug.org/FontCatalogue} listent, classées de différentes façons, la
-quasi-totalité des polices de texte incluses dans les principales distributions
-\TeX.
+vérifier en premier lieu si ce que vous cherchez ne s'y trouve pas : les pages
+de \url{https://tug.org/FontCatalogue} listent, classées de différentes façons,
+la quasi-totalité des polices de texte incluses dans les principales
+distributions \TeX.
 
 Si vous voulez toutefois installer vos propres polices, vous pouvez consulter le
 document :
@@ -1603,7 +1631,7 @@ d'entre eux sont listés à la section suivante (cf. aussi
 convient : il n'est pas requis qu'il soit spécifique à \TeX{}.
 
 Le reste de cette section donne quelques procédures de base pour vérifier que le
-nouveau système est opérationnel. On les décrit pour Unix ; pour \MacOSX{} ou
+nouveau système est opérationnel. On les décrit pour Unix ; pour \macOS{} ou
 Windows, il vaut mieux tester au travers d'une interface graphique, mais les
 principes sont les mêmes.
 
@@ -1633,7 +1661,7 @@ Output written on sample2e.pdf (3 pages, 142120 bytes).
 Transcript written on sample2e.log.
 \end{alltt}
 Si le fichier \filename{sample2e.tex} ou d'autres ne sont pas trouvés, il est
-possibles qu'il y ait des interférences avec vos anciennes variables
+possible qu'il y ait des interférences avec vos anciennes variables
 d'environnement ou fichiers de configuration. Pour analyser en détail votre
 problème, vous pouvez demander à \TeX{} de dire exactement ce qu'il cherche et
 trouve ; voir la section~\ref{sec:debugging} page~\pageref{sec:debugging}.
@@ -1643,7 +1671,7 @@ trouve ; voir la section~\ref{sec:debugging} page~\pageref{sec:debugging}.
 > \Ucom{xpdf sample2e.pdf}
 \end{alltt}
 Vous devriez voir une nouvelle fenêtre avec un joli document expliquant
-certaines des les bases de \LaTeX{}.  (Au fait, ça vaut la peine de lire si
+certaines des bases de \LaTeX{}.  (Au fait, ça vaut la peine de lire si
 vous êtes nouveau à \TeX.)
 
 Bien sûr, il existe de nombreux autres lecteurs de PDF ; sur les systèmes Unix,
@@ -1673,7 +1701,7 @@ correcte et vous obtiendrez l'erreur \samp{Can't open display}.
 > \Ucom{dvips sample2e.dvi -o sample2e.ps}
 \end{alltt}
 
-\item Ou pour créer un fichier PDF à partir du \dvi{}, un méthode alternative
+\item Ou pour créer un fichier PDF à partir du \dvi{}, une méthode alternative
   à l'utilisation pdf\TeX\ (ou Xe\TeX\ ou Lua\TeX) qui peut parfois être utile :
 \begin{alltt}
 > \Ucom{dvipdfmx sample2e.dvi -o sample2e.pdf}
@@ -1716,15 +1744,16 @@ section~\ref{sec:font-conf-sys}.
 \subsection{Désinstaller la \TL}
 \label{sec:uninstall}
 
-Pour désinstaller \TL\ (après une installation réussie) :
+Pour désinstaller \TL\ (après une installation réussie ; pour Windows, voir
+ci-dessous) :
 
 \begin{alltt}
 > \Ucom{tlmgr uninstall --all}
 \end{alltt}
 
-Une confirmation vous sera demandée, sinon rien ne sera fait.
-(Sans \code{-{}-all}, l'action \code{uninstall} est utilisée pour supprimer des
-les packages individuellement).
+Une confirmation vous sera demandée, sinon rien ne sera fait.  (Sans
+\code{-{}-all}, l'action \code{uninstall} est utilisée pour supprimer les
+packages individuellement).
 
 Ceci ne supprime pas les répertoires spécifiques à l'utilisateur, à savoir (voir
 aussi section~\ref{sec:texmftrees}) :
@@ -1793,7 +1822,7 @@ Voici quelques liens vers d'autres outils qui peuvent être utiles à installer.
   \item \cmdname{TeXstudio} était au départ un \eng{fork} de \cmdname{Texmaker}
     avec des fonctionnalités supplémentaires : \url{https://texstudio.org/}.
   \item \cmdname{TeXnicCenter} est disponible sur
-    \url{https://www.texniccenter.org} et dans la distribution pro\TeX{}t
+    \url{https://www.texniccenter.org}.
   \item \cmdname{TeXworks} est disponible sur \url{https://tug.org/texworks} et
     inclus dans \TL sur Windows (seulement).
   \item \cmdname{Vim} est disponible sur \url{https://www.vim.org}.
@@ -1902,7 +1931,7 @@ offrant quelques actions communes, comme dans cette capture d'écran :
 % Bien sûr vous pouvez aussi graver votre image \ISO\ sur une \DVD, si cela vous
 % est utile.
 %
-% Les systèmes \GNU/Linux et autres Unix de bureau, y compris \MacOSX, sont
+% Les systèmes \GNU/Linux et autres Unix de bureau, y compris \macOS, sont
 % capables de monter une image \ISO. Windows 8 est la première (!) version de
 % Windows qui peut le faire. À part ce montage, rien de change par rapport à une
 % installation normale sur le disque dur, voir la section~\ref{sec:env}.
@@ -1923,7 +1952,7 @@ offrant quelques actions communes, comme dans cette capture d'écran :
 % à l'adresse \url{https://tug.org/texlive/w32client.html} ; il fonctionne aussi
 % bien pour une image \ISO\ que pour une installation partagée par le réseau.
 %
-% Sous \MacOSX, TeXShop peut utiliser une telle installation si un lien
+% Sous \macOS, TeXShop peut utiliser une telle installation si un lien
 % symbolique \filename{/usr/texbin} existe et pointe vers le bon répertoire, par
 % exemple
 % \begin{verbatim}
@@ -1942,8 +1971,8 @@ offrant quelques actions communes, comme dans cette capture d'écran :
 \label{sec:tlmgr}
 
 \begin{figure}[tb]
-  \def\figdesc{\GUI{} \prog{tlshell}, montrant le menu Actions (\MacOSX)}
-  \tlpng{tlshell-macos}{\linewidth}{\figdesc}
+  \def\figdesc{\GUI{} \prog{tlshell}, montrant le menu Actions (\GNU/Linux)}
+  \tlpng{tlshell-linux}{\linewidth}{\figdesc}
   \caption{\figdesc}
   \label{fig:tlshell}
 \end{figure}
@@ -1986,7 +2015,7 @@ continuons à distribuer et maintenir ce dernier pour le confort de ceux habitu�
 sont :
 \begin{enumerate}
 \item \cmdname{tlshell} (figure~\ref{fig:tlshell}) qui est écrit en Tcl/Tk et
-  fonctionne d'emblée sous Windows et \MacOSX ;
+  fonctionne d'emblée sous Windows ;
 \item \prog{tlcockpit} (figure~\ref{fig:tlcockpit}) qui nécessite Java version~8
   ou supérieure et JavaFX.
 \end{enumerate}
@@ -2035,12 +2064,12 @@ running post install action for xetex
 install: xetex-def
 ...
 running mktexlsr
-mktexlsr: Updating /usr/local/texlive/2022/texmf-dist/ls-R...
+mktexlsr: Updating /usr/local/texlive/2023/texmf-dist/ls-R...
 ...
 running fmtutil-sys --missing
 ...
 Transcript written on xelatex.log.
-fmtutil: /usr/local/texlive/2022/texmf-var/web2c/xetex/xelatex.fmt installed.
+fmtutil: /usr/local/texlive/2023/texmf-var/web2c/xetex/xelatex.fmt installed.
 \end{fverbatim}
 Comme vous pouvez le constater, \prog{tlmgr} prend en compte les dépendances et
 effectue automatiquement toutes les opérations nécessaires, comme la mise à jour
@@ -2100,7 +2129,7 @@ supplémentaires :
 
 \item[Support PostScript] -- pour les fichiers PostScript, un type de fichier
   PSviewer convertit désormais PostScript en un PDF temporaire, qui est ensuite
-  affiché par le visualiseur PDF par défaut. Ppour la conversion en EPS, une
+  affiché par le visualiseur PDF par défaut. Pour la conversion en EPS, une
   entrée \cmdname{bitmap2eps} est ajoutée à l'entrée « Ouvrir avec... » du menu
   contextuel pour de nombreux formats d'images bitmap, laissant
   \cmdname{sam2p} ou \cmdname{bmeps} faire le vrai travail.
@@ -2128,14 +2157,16 @@ Pour être complète, une installation \TL a besoin de quelques utilitaires qui 
 sont pas présents en général sur les machines Windows. \TL fournit donc les
 outils suivants (installés sur Windows seulement).
 \begin{description}
-\item[Perl, Tcl/Tk et Ghostscript] -- en raison de l'importance de Perl et de
-  Ghostscript, et parce que les \GUI{} de l'installateur et de tlshell sont
-  écrits en Tcl/Tk, \TL{} inclut des copies « cachées » de ces programmes. Les
-  programmes \TL{} qui en ont besoin savent où les trouver, mais ils ne
-  trahissent pas leur présence par des variables d'environnement ou des
-  paramètres de registre. Ce ne sont pas des installations complètes, et elles
-  ne devraient pas interférer avec les installations système de Perl, Tcl/Tk ou
-  Ghostscript.
+\item [Perl, Tcl/Tk et Ghostscript]-- en  raison de l'importance de Perl et de
+  Ghostscript, et parce que l'installateur et les \GUI{} de tlshell sont écrits
+  en Tcl/Tk, \TL{} inclut des copies `cachées' de ces programmes. Les programmes
+  \TL{} qui en ont besoin savent où les trouver, mais ils ne trahissent pas leur
+  présence par des variables d'environnement ou des paramètres de registre. Il
+  ne s'agit pas d'installations complètes (sauf pour Ghostscript), et elles ne
+  devraient pas interférer avec les installations système de Perl, Tcl/Tk ou
+  Ghostscript. Voir la sous-section \ref{sec:externalwndws} pour savoir comment
+  indiquer à \TL{} que vous souhaitez utiliser vos propres installations
+  externes pour les scripts contribués dans \TL.
 
 \item[dviout] -- lecteur de DVI. La première fois que vous visualisez un fichier
   avec \prog{dviout}, il va créer des polices, car les versions des fontes pour
@@ -2155,10 +2186,48 @@ outils suivants (installés sur Windows seulement).
   inclus. Une option est l'afficheur Sumatra PDF disponible
   à \url{https://www.sumatrapdfreader.org/}.
 \item[\prog{fc-list}, \prog{fc-cache}, etc.] -- outils de la bibliothèque
-  fontconfig permettant à \XeTeX{} d'accéder aux polices système sous
+  \pkgname{fontconfig} permettant à \XeTeX{} d'accéder aux polices système sous
   Windows. Vous pouvez utiliser \prog{fc-list} pour connaître la liste des noms
   de police utilisables avec la commande \cs{font} de \XeTeX.
 \end{description}
+
+\subsection{Utilisation d'installations externes de Perl, Tcl/Tk et Ghostscript}
+\label{sec:externalwndws}
+
+Normalement, \TL{} utilise ses installations intégrées Perl, Tcl/Tk et
+Ghostscript également pour les scripts contribués dans \TL. Si vous souhaitez
+utiliser vos propres versions externes, vous pouvez le configurer dans le
+fichier \file{texmf.cnf} \emph{à la racine de l'installation}.
+
+Pour Perl, vous devez ajouter une ligne
+\begin{verbatim}
+TEXLIVE_WINDOWS_TRY_EXTERNAL_PERL = 1
+\end{verbatim}
+\TL{} (plus précisément, \file{bin/windows/runscript.tlu}) recherchera alors
+\file{perl.exe} sur le chemin de recherche, sauf pour les scripts qui
+appartiennent à l'infrastructure \TL{}. Il s'agit du paramètre le plus
+susceptible d'être utile ; bien que l'infrastructure \TL{} Perl inclut de
+nombreux modules supplémentaires, il ne peut pas prendre en charge tous les
+scripts tiers.
+
+De même, pour Tcl/Tk, vous avez besoin d'une ligne
+\begin{verbatim}
+TEXLIVE_WINDOWS_TRY_EXTERNAL_TCL = 1
+\end{verbatim}
+\TL{} recherchera alors les fichiers \file{tclkit.exe}, \file{wish.exe},
+\file{wish85.exe}, \file{wish86.exe} et \file{wish87.exe} sur le chemin de
+recherche.
+
+Ghostscript est traité différemment, dans la mesure où vous devez spécifier le
+nom de fichier ou le chemin complet de votre Ghostscript en ligne de commande :
+\begin{alltt}
+TEXLIVE_WINDOWS_EXTERNAL_GS = \var{chemin de la ligne de commande ghostscript}
+\end{alltt}
+Une autre différence est que le Ghostscript fourni avec \TL\ est complet, seuls
+la documentation et les pilotes d'imprimante étant omis.  Il est donc peu
+probable que vous ayez besoin de le remplacer.
+
+Voir également la section \ref{sec:configfiles} à propos du fichier \file{texmf.cnf}.
 
 \subsection{Répertoire personnel}
 \label{sec:winhome}
@@ -2273,8 +2342,8 @@ travail, assisté par des dizaines de contributeurs et en 1997 il passa le relai
 
 % NdT% ci-dessous, "sources originales", on ne pense pas au /fichiers/ source.
 % (enfin, je crois... (mpg))
-Le système \Webc{} fonctionne sur Unix, sur les systèmes Windows 32 bits, sur
-\MacOSX{} et sur de nombreux autres systèmes d'exploitation.  Il utilise les
+Le système \Webc{} fonctionne sur Unix, sur les systèmes Windows, sur
+\macOS{} et sur de nombreux autres systèmes d'exploitation.  Il utilise les
 sources originales de Knuth pour \TeX{} et les autres programmes de base écrits
 en \web{} (système de programmation documentée) qui sont tous traduits en
 langage C. Les composants du noyau de \TeX{} issus de ce processus sont :
@@ -2355,7 +2424,7 @@ est un préfixe de \var{p}. Si oui, la spécification du chemin est comparée av
 le contenu de la base de données.
 
 Bien que l'élément de chemin le plus simple et le plus fréquent soit un nom de
-répertoire, \KPS{} supporte d'autres types d'éléments dans les chemins de
+répertoire, \KPS{} prend en charge d'autres types d'éléments dans les chemins de
 recherche : des valeurs par défaut différentes pour chaque programme, des noms
 de variables d'environnement, des valeurs de fichiers de configuration, les
 répertoires de l'utilisateur et la recherche récursive de sous-répertoires. Nous
@@ -2395,6 +2464,7 @@ lequel \KPS\ les utilise.
 en utilisant l'option de débogage (voir page~\pageref{sec:debugging}).
 
 \subsubsection{Fichiers de configuration}
+\label{sec:configfiles}
 
 \KPS{} lit les chemins de recherche et d'autres définitions dans des
 \emph{fichiers de configuration à l'exécution} nommés \file{texmf.cnf}. Le
@@ -2402,11 +2472,11 @@ chemin \envname{TEXMFCNF} est utilisé pour rechercher ces fichiers, mais nous n
 recommandons pas de définir cette variable d'environnement (ou toute autre) pour
 passer outre les répertoires du système.
 
-À la place, un fichier \file{\dots/2022/texmf.cnf} est créé à la suite d'une
+À la place, un fichier \file{\dots/2023/texmf.cnf} est créé à la suite d'une
 installation normale. Si vous devez changer les valeurs par défaut de certaines
 variables (ce qui n'est en général pas nécessaire), c'est le bon endroit pour le
 faire. Le fichier de configuration principal est dans
-\file{\dots/2022/texmf-dist/web2c/texmf.cnf}. Vous ne devriez jamais éditer ce
+\file{\dots/2023/texmf-dist/web2c/texmf.cnf}. Vous ne devriez jamais éditer ce
 fichier car vos changements seraient alors perdus lors de futures mises à jour
 de la distribution.
 
@@ -2462,7 +2532,7 @@ exemple, si les fichiers \file{texmf.cnf} sont cherchés dans le chemin
   ne peuvent pas être utilisés dans les noms de répertoires.
 
   Un \samp{;} dans \var{value} est traduit par \samp{:} s'il est exécuté sous
-  Unix, afin de disposer d'un seul \file{texmf.cnf} qui puisse supporter à la
+  Unix, afin de disposer d'un seul \file{texmf.cnf} qui puisse prendre en charge à la
   fois les systèmes Unix et Windows. Cette traduction se produit pour toute
   valeur, et pas seulement pour les chemins de recherche mais, heureusement, en
   pratique, le \samp{;} n'est pas nécessaire dans d'autres valeurs.
@@ -3207,7 +3277,7 @@ Berry.  Voici la liste des principaux contributeurs :
 
 \item Olaf Weber, pour son patient assemblage de \Webc\ les années précédentes.
 
-\item Gerben Wierda, qui a créé et maintenu initialement la partie \MacOSX{}.
+\item Gerben Wierda, qui a créé et maintenu initialement la partie \macOS{}.
 
 \item Graham Williams, l'auteur original du catalogue \TeX.
 
@@ -3222,12 +3292,12 @@ Les binaires ont été compilés par :
 \begin{itemize}
 \item Marc Baudoin (\pkgname{amd64-netbsd}, \pkgname{i386-netbsd}) ;
 \item Karl Berry (\pkgname{i386-linux}) ;
-\item Ken Brown (\pkgname{i386-cygwin}, \pkgname{x86\_64-cygwin}) ;
+\item Ken Brown (\pkgname{x86\_64-cygwin}) ;
 \item Simon Dales (\pkgname{armhf-linux}) ;
 \item Johannes Hielscher (\pkgname{aarch64-linux}) ;
-\item Akira Kakuto (\pkgname{win32}) ;
+\item Akira Kakuto (\pkgname{windows}) ;
 \item Dick Koch (\pkgname{universal-darwin}) ;
-\item Mojca Miklavec (\pkgname{amd64-freebsd},
+\item Mojca Miklavec (\pkgname{amd64-freebsd}, \pkgname{armhf-linux},
   \pkgname{i386-freebsd}, \pkgname{x86\_64-darwinlegacy},
   \pkgname{i386-solaris}, \pkgname{x86\_64-solaris}, \pkgname{sparc-solaris}), ;
 \item Norbert Preining (\pkgname{i386-linux}, \pkgname{x86\_64-linux},
@@ -3311,7 +3381,7 @@ réorganisées, aussi le choix d'une langue installe non seulement les macros, l
 fontes, etc., mais prépare également un fichier \file{language.dat} adéquat.
 
 La septième édition (mai 2002) a comme ajout majeur une installation pour
-\MacOSX{} et l'habituelle myriade de mises à jour de composants et de
+\macOS{} et l'habituelle myriade de mises à jour de composants et de
 programmes. Un objectif important a été de fusionner à nouveau les sources avec
 ceux de \teTeX{}, alors que les versions 5 et 6 s'en étaient éloignées.
 
@@ -3338,11 +3408,11 @@ ailleurs :
 \item Les fichiers \emph{font map} utilisés par \cmdname{dvips},
   \cmdname{dvipdfm} et \cmdname{pdftex} sont maintenant générés par le nouveau
   programme \cmdname{updmap} et installés dans \dirname{texmf/fonts/map}.
-\item Dorénavant, \TeX{}, \MF{} et \MP{} écrivent les caractères 8 bits
+\item Dorénavant, \TeX{}, \MF{} et \MP{} écrivent les caractères 8 bit
   présentés en entrée sans modification et non pas avec la notation \verb|^^|,
   que ce soit dans des fichiers (par la commande \verb|write|), dans les
   fichiers de trace (\verb|.log|) ou sur le terminal.  Dans le \TL{}~7,
-  l'écriture de ces caractères 8 bits était influencée par les paramètres de
+  l'écriture de ces caractères 8 bit était influencée par les paramètres de
   localisation du système; maintenant ces paramètres n'influent plus du tout sur
   le comportement des programmes \TeX{}. Si pour quelque raison que ce soit,
   vous avez besoin de la notation \verb|^^| en sortie, renommez le fichier
@@ -3411,16 +3481,16 @@ versions précédentes) :
   ainsi que les tabulations et les changements de page (caractères 9 à 11). Les
   formats faisant exception sont plain \TeX\ (seuls les caractères 32 à 127 sont
   déclarés imprimables), \ConTeXt{} (0 à 255 imprimables) et les formats basés
-  sur \OMEGA.  Il y a peu de différence avec le comportement de \TL\,2003, mais
+  sur \OMEGA.  Il y a peu de différence avec le comportement de \TL\ 2003, mais
   la mise en œuvre est plus propre et plus facilement configurable.  Voir
   \OnCD{texmf-dist/doc/web2c/web2c.html\#TCX-files}.  Noter que l'utilisation du
   codage Unicode en entrée peut provoquer des affichages défectueux en sortie
   (TeX code sur un seul octet).
 
-\item Tous les formats, sauf plain \TeX, font appel au moteur \textsf{pdfetex}
+\item Tous les formats, sauf plain \TeX, font appel au moteur \pkgname{pdfetex}
   (qui produit bien sûr par défaut des fichiers DVI lorsque le format choisi est
   \LaTeX). Ceci permet aux formats \LaTeX, \ConTeXt, etc., d'avoir accès aux
-  fonctionnalités microtypographiques de pdf\TeX{} (alignement optique des
+  fonctionnalités microtypographiques de \pkgname{pdftex} (alignement optique des
   marges par exemple) et aux fonctionnalités de \eTeX{}
   (\OnCD{texmf-dist/doc/etex/base/}).
 
@@ -3471,7 +3541,7 @@ versions précédentes) :
 \item Un nouveau moteur combinant les fonctionnalités de \eTeX\ et d'\OMEGA,
   appelé Aleph, est disponible. \OnCD{texmf-dist/doc/aleph/base} et
   \url{https://texfaq.org/FAQ-enginedev} fournissent une information
-  succincte. Le format \LaTeX{} utilisant Aleph s'appelle \textsf{lamed}.
+  succincte. Le format \LaTeX{} utilisant Aleph s'appelle \pkgname{lamed}.
 
 \item La licence LPPL de \LaTeX\ (version décembre 2003) a changé, elle est
   désormais compatible avec les prescriptions Debian.  Les autres changements
@@ -3488,7 +3558,7 @@ versions précédentes) :
   fontes \pkgname{cbgreek} est disponible sur CTAN
   (\url{https://ctan.org/pkg/cbgreek-complete}).
 
-\item La commande \cmdname{oxdvi} a été supprimée, il suffit utiliser
+\item La commande \cmdname{oxdvi} a été supprimée, il suffit d'utiliser
   \cmdname{xdvi} à la place.
 
 \item Les commandes \cmdname{initex}, \cmdname{virtex} et leurs homologues pour
@@ -3497,15 +3567,15 @@ versions précédentes) :
   maintenant, par l'option \optname{-ini} (\cmdname{tex} \optname{-ini} pour
   \cmdname{initex} et \cmdname{virtex}).
 
-\item Les binaires pour l'architecture \textsf{i386-openbsd} ont été supprimés
+\item Les binaires pour l'architecture \pkgname{i386-openbsd} ont été supprimés
   par manque de volontaires pour les compiler.
 
-  Sur \textsf{sparc-solaris} (au moins) il sera probablement nécessaire de
+  Sur \pkgname{sparc-solaris} (au moins) il sera probablement nécessaire de
   positionner la variable d'environnement \envname{LD\_LIBRARY\_PATH} pour
   utiliser les programmes de la famille \pkgname{t1utils}.  Ceci vient du fait
   qu'ils sont compilés en C++ et que l'emplacement des bibliothèques dynamiques
   est variable.  Ce n'est pas une nouveauté 2004, mais ce point n'était pas
-  documenté précédemment. De même, sur \textsf{mips-irix}, les bibliothèques
+  documenté précédemment. De même, sur \pkgname{mips-irix}, les bibliothèques
   dynamiques MIPSpro 7.4 sont nécessaires.
 
 \end{itemize}
@@ -3554,7 +3624,7 @@ programmes. L'infrastructure est restée relativement stable par rapport à 2004
   en plain \TeX.
 
 \item L'an dernier, nous avions fait en sorte que la plupart des formats
-  impriment dans les sorties \file{.log} des caractères 8 bits lisibles à la
+  impriment dans les sorties \file{.log} des caractères 8 bit lisibles à la
   place des notations hexadécimales \verb|^^| (voir section précédente).  Le
   nouveau fichier TCX \filename{empty.tcx} permet de revenir facilement à la
   notation traditionnelle \verb|^^|, il suffit de coder :
@@ -3696,7 +3766,7 @@ de l'AMS est \url{https://ams.org/tex/amsfonts.html}.
 Le nouvel éditeur intégré \TeX{}works est fourni pour Windows, ainsi que dans
 Mac\TeX. Pour les autres plateformes, ainsi que d'autres informations, voir la
 page de \TeX{}works : \url{https://tug.org/texworks}. Cet éditeur fonctionnant
-sur de nombreuses plateformes, inspiré par l'éditeur TeXShop de \MacOSX, vise
+sur de nombreuses plateformes, inspiré par l'éditeur TeXShop de \macOS, vise
 à faciliter l'utilisation de \TeX.
 
 Le programme de création de graphiques Asymptote est fourni pour plusieurs
@@ -3801,7 +3871,7 @@ un \DVD\ physique est maintenant beaucoup plus rapide.
 
 \subsubsection{2011}
 
-Les binaires pour \MacOSX\ (\code{universal-darwin} et \code{x86\_64-darwin}) ne
+Les binaires pour \macOS\ (\code{universal-darwin} et \code{x86\_64-darwin}) ne
 fonctionnent désormais que sous Leopard ou une version ultérieure ; Panther et
 Tiger ne sont plus pris en charge.
 
@@ -3936,7 +4006,7 @@ de multiples façons.
   parallèlement à un compagnon interne \code{numberprecision} ; une nouvelle
   définition de \code{drawdot} dans \filename{plain.mp}, par Knuth; corrections
   de bugs dans les sorties SVG et PNG output, entre autres.
-\item[\cmdname{pstopdf} :] cet utilitaire Con\TeX{}t sera retiré en tant que
+\item[\cmdname{pstopdf} :] cet utilitaire \ConTeXt{} sera retiré en tant que
   commande autonome à un certain moment après la sortie de la 2014, du fait de
   conflits avec des utilitaires de systèmes d'exploitation de même nom. Il peut
   encore (et doit désormais) être invoqué via \code{mtxrun --script pstopdf}.
@@ -3978,7 +4048,7 @@ les utilisateurs ; quelques commandes internes de bas niveau ont été renommée
 ou supprimées, mais le résultat devrait être le même.
 
 \begin{description}
-\item[pdf\TeX :] supporte Exif de JPEG ainsi que JFIF ; n'émet même plus
+\item[pdf\TeX :] prend en charge Exif de JPEG ainsi que JFIF ; n'émet même plus
   d'avertissement si \cs{pdfinclusionerrorlevel} est négatif; synchronisation
   avec \prog{xpdf}~3.04.
 \item[Lua\TeX :] nouvelle librairie \pkgname{newtokenlib} pour scanner les
@@ -3992,7 +4062,7 @@ ou supprimées, mais le résultat devrait être le même.
   à \prog{up*tex}.
 \item[Mac\TeX :] mises à jour du paquet Ghostscript inclus pour le support CJK.
   Le panneau de préférence de la distribution \TeX\ fonctionne maintenant sur
-  Yosemite (\MacOSX~10.10). Les valises de polices du type « ressources »
+  Yosemite (\macOS~10.10). Les valises de polices du type « ressources »
   (« \emph{resource-fork font suitcases} »), qui ont des noms généralement sans
   extension, ne sont plus prises en charge par \XeTeX; les valises de polices du
   type « data » (extension \code{.dfont}) continuent elles à l'être.
@@ -4052,7 +4122,7 @@ ou supprimées, mais le résultat devrait être le même.
   \item \code{ps2pk} peut traiter les fontes PK/GF étendues.
   \end{itemize*}
 \item[Mac\TeX :] le panneau de préférence de la distribution a disparu ; sa
-  fonctionnalité se trouve désormais dans la « \TeX{} Live Utility » ; l'interface
+  fonctionnalité se trouve désormais dans la « \TL{} Utility » ; l'interface
   graphique utilisateur a été mise à jour ; un nouveau script
   \code{cjk-gs-integrate} à lancer par les utilisateurs qui souhaitent
   incorporer diverses fontes CJK dans Ghostscript.
@@ -4085,11 +4155,11 @@ ou supprimées, mais le résultat devrait être le même.
 \item[ep\TeX, eup\TeX :] nouvelles primitives \cs{pdfuniformdeviate},
   \cs{pdfnormaldeviate}, \cs{pdfrandomseed}, \cs{pdfsetrandomseed},
   \cs{pdfelapsedtime}, \cs{pdfresettimer}, provenant de pdf\TeX.
-\item[Mac\TeX :] à compter de cette année, seules les versions de \MacOSX\ pour
+\item[Mac\TeX :] à compter de cette année, seules les versions de \macOS\ pour
   lesquelles Apple fournit encore des mises à jour de sécurité seront prises en
   charge dans la Mac\TeX, sous le nom de plateforme |x86_64-darwin|;
   actuellement, cela recouvre les versions Yosemite, El~Capitan et Sierra (10.10
-  et suivantes). Les binaires pour les versions plus anciennes de \MacOSX\ ne
+  et suivantes). Les binaires pour les versions plus anciennes de \macOS\ ne
   sont pas incluses dans la Mac\TeX{} mais sont toujours disponibles dans la
   \TL{} (|x86_64-darwinlegacy|, \code{i386-darwin}, \code{powerpc-darwin}).
 \item[Infrastructure :] par défaut, l'arborescence \dirname{TEXMFLOCAL} est
@@ -4140,10 +4210,10 @@ ou supprimées, mais le résultat devrait être le même.
   et ce pour \emph{tous} les répertoires.  Pour désactiver cette fonctionnalité,
   il faut changer \code{texmf.cnf} ou donner à la variable d'environnement
   \code{texmf\_casefold\_search} la valeur \code{0}.  Vous trouverez tous les
-  détails nécéssaires dans le manuel de Kpathsea
+  détails nécessaires dans le manuel de Kpathsea
   (\url{https://tug.org/kpathsea}).
 \item[ep\TeX, eup\TeX :] nouvelle primitive \cs{epTeXversion}.
-\item[Lua\TeX :] préparation de la mmigration vers Lua\TeX\ 5.3 en 2019 : un
+\item[Lua\TeX :] préparation de la migration vers Lua\TeX\ 5.3 en 2019 : un
   exécutable \code{luatex53} est désormais disponible pour la plupart des
   architectures, mais doit être renommé en \code{luatex} pour être utilisé.  Il
   est également possible d'utiliser les fichiers de \ConTeXt\ Garden
@@ -4161,7 +4231,7 @@ ou supprimées, mais le résultat devrait être le même.
   surcroît, et pour plus de limpidité, les fichiers installés par Mac\TeX\ dans
   le dossier \code{/Applications/TeX/} ont subi une réorganisation ; ce dossier
   contient désormais, au premier niveau, quatre applications graphiques
-  (BibDesk, LaTeXiT, \TeX{} Live Utility, et TeXShop) ainsi que des dossiers
+  (BibDesk, LaTeXiT, \TL{} Utility, et TeXShop) ainsi que des dossiers
   comprenant les utilitaires additionnels et la documentation.
 \item[\code{tlmgr} :] nouvelles applications graphiques \code{tlshell} (rédigée
   en Tcl/Tk) et \code{tlcockpit} (rédigée en Java) ; sortie JSON ;
@@ -4192,14 +4262,14 @@ ou supprimées, mais le résultat devrait être le même.
   inclus (cf. commentaires dans le fichier \code{texmf.cnf}).
 \item[ep\TeX, eup\TeX :] nouvelles primitives \cs{readpapersizespecial} et
   \cs{expanded}.
-\item[Lua\TeX :] Lua 5.3 désormais utilisé, avec les changements concomittants
-  de l'arithémtique et de l'interface. Le librairie propre pplib est utilisée
+\item[Lua\TeX :] Lua 5.3 désormais utilisé, avec les changements concomitants
+  de l'arithmétique et de l'interface. La librairie propre pplib est utilisée
   pour lire les fichiers PDF, éliminant ainsi la dépendance de poppler (et la
   nécessité de C++) ; interface Lua modifiée en conséquence.
 \item[MetaPost :] nom de commande \code{r-mpost} reconnu comme un alias pour
   l'invocation avec l'option \code{-{}-restricted}, et ajout à la liste des
-  commandes restreintes disponibles par défaut. Précision minimale désormais
-  2 pour les mode décimal et binaire. Mode binaire désormais indisponible avec
+  commandes restreintes disponibles par défaut. Précision minimale désormais~2
+  pour les modes décimal et binaire. Mode binaire désormais indisponible avec
   MPlib, mais toujours disponible avec MetaPost autonome.
 \item[pdf\TeX :] nouvelle primitive \cs{expanded}; si le nouveau paramètre de
   primitive \cs{pdfomitcharset} est fixé à 1, la chaîne \code{/CharSet} est
@@ -4224,15 +4294,15 @@ ou supprimées, mais le résultat devrait être le même.
   \item[\code{cwebbin} (\url{https://ctan.org/pkg/cwebbin})] est désormais
     l'implémentation CWEB dans la \TL{}, avec un support élargi des dialectes,
     et incluant le programme \code{ctwill} permettant de créer des mini-index.
-  \item[\code{chkdvifont} :] rapporte les information de fontes fournies par les
+  \item[\code{chkdvifont} :] rapporte les informations de fontes fournies par les
     fichiers \dvi{}, y compris les fontes tfm/ofm, vf, gf, pk.
   \item[\code{dvispc} :] crée un fichier \dvi{} indépendant des pages vis-à-vis
     des « specials ».
   \end{description}
-\item[Mac\TeX{} :] \code{x86\_64-darwin} supporte désormais les systèmes 10.12
-  et plus (Sierra, High Sierra, Mojave) ; \code{x86\_64-darwinlegacy} supporte
+\item[Mac\TeX{} :] \code{x86\_64-darwin} prend en charge désormais les systèmes 10.12
+  et plus (Sierra, High Sierra, Mojave) ; \code{x86\_64-darwinlegacy} prend en charge
   encore les systèmes 10.6 et plus. Le correcteur orthographique Excalibur n'est
-  plus inclus puisqu'il requiert le support des architectures 32 bits.
+  plus inclus puisqu'il requiert le support des architectures 32~bit.
 \item[Architectures :] \code{sparc-solaris} supprimée.
 \end{description}
 
@@ -4241,7 +4311,7 @@ ou supprimées, mais le résultat devrait être le même.
 \begin{description}
 \item[Général :]\
   \begin{itemize}
-  \item Dans tous les moteurs \TeX\, y compris \texttt{tex}, la primitive
+  \item Dans tous les moteurs \TeX, y compris \texttt{tex}, la primitive
     \cs{input} accepte désormais également un argument de nom de fichier
     délimité par groupe, en tant que extension dépendant du
     système. L'utilisation avec un nom de fichier délimité par un espace/token
@@ -4252,7 +4322,7 @@ ou supprimées, mais le résultat devrait être le même.
     actuellement pas la commande \cs{input} de \LaTeX, car c'est une
     redéfinition de macro de la primitive standard \cs{input}.
   \item Nouvelle option \texttt{-{}-cnf-line} pour \texttt{kpsewhich},
-    \texttt{tex}, \texttt{mf}, et tous les autres moteurs, pour supporter une
+    \texttt{tex}, \texttt{mf}, et tous les autres moteurs, pour prendre en charge une
     configuration arbitraire en ligne de commande.
   \item L'ajout de diverses primitives à divers moteurs cette année et les
     précédentes est destiné à aboutir à un ensemble commun de fonctionnalités
@@ -4279,10 +4349,10 @@ ou supprimées, mais le résultat devrait être le même.
   (\url{https://tug.org/TUGboat/tb40-2/tb125rokicki-type3search.pdf}).
 \item[Mac\TeX :] Mac\TeX\ et \texttt{x86\_64-darwin} requièrent désormais la
   version 10.13 ou plus élevé de Mac OS (High~Sierra, Mojave et Catalina) ;
-  \texttt{x86\_64-darwinlegacy} supporte 10.6 et plus récent. Mac\TeX\ est
+  \texttt{x86\_64-darwinlegacy} prend en charge 10.6 et plus récent. Mac\TeX\ est
   certifié et les programmes en ligne de commande ont des \enquote{lancements
     renforcés} (\emph{hardened runtimes}), comme maintenant requis par Apple
-  pour l'installation des paquets. BibDesk et \TeX{} Live Utility ne sont pas
+  pour l'installation des paquets. BibDesk et \TL{} Utility ne sont pas
   dans Mac\TeX\ parce qu'ils ne sont pas certifiés, mais un fichier
   \filename{README} donne la liste des URL où ils peuvent être obtenus.
 \item[\code{tlmgr} et infrastructure :]\
@@ -4293,7 +4363,7 @@ ou supprimées, mais le résultat devrait être le même.
     arborescence la cohérence des fichiers \texttt{ls-R} et \texttt{!!}.
   \item Utiliser des noms de fichiers versionnés pour les conteneurs de paquets,
     comme dans \texttt{tlnet/archive/\textsl{pkgname}.rNNN.tar.xz} ; devrait
-    être invisible pour les utilisateurs, mais consitue un changement notable
+    être invisible pour les utilisateurs, mais constitue un changement notable
     dans la distribution.
   \item Les informations \texttt{catalogue-date} ne sont plus propagées à partir
     du catalogue \TeX{} car il n'était souvent pas lié aux mises à jour des
@@ -4401,19 +4471,19 @@ ou supprimées, mais le résultat devrait être le même.
   \end{itemize}
 
 \item[Mac\TeX{} :] Mac\TeX{} et son nouveau dossier binaire
-  \texttt{universal-darwin} nécessitent maintenant macOS 10.14 ou plus (Mojave,
+  \texttt{universal-darwin} nécessitent maintenant \macOS{} 10.14 ou plus (Mojave,
   Catalina, et Big~Sur) ; le dossier binaire |x86_64-darwin| n'est plus
   présent. Le dossier binaire |x86_64-darwinlegacy|, disponible uniquement avec
-  l'installateur Unix \texttt{install-tl}, supporte les versions 10.6 et plus
+  l'installateur Unix \texttt{install-tl}, prend en charge les versions 10.6 et plus
   récentes.
 
   C'est une année importante pour le Macintosh car Apple, qui a introduit les
-  processeurs ARM en novembre, vendra et supportera pendant de nombreuses années
-  des processeurs à la fois ARM et Intel. Tous les programmes dans
+  processeurs ARM en novembre, vendra et prendra en charge pendant de nombreuses
+  années des processeurs à la fois ARM et Intel. Tous les programmes dans
   \texttt{universal-darwin} ont un code exécutable pour ARM et Intel. Les deux
   binaires sont compilés à partir du même code source.
 
-  Les programmes supplémentaires Ghostscript, LaTeXiT, \TeX{} Live Utility et
+  Les programmes supplémentaires Ghostscript, LaTeXiT, \TL{} Utility et
   TeXShop, tous universels et signés avec un \enquote{lancement renforcé}
   (\emph{hardened runtime}), sont inclus dans Mac\TeX{} cette année.
 
@@ -4430,9 +4500,7 @@ ou supprimées, mais le résultat devrait être le même.
 
 \end{description}
 
-\htmlanchor{news}
-\subsection{Présent : 2022}
-\label{sec:tlcurrent}
+\subsubsection{2022}
 
 \begin{description}
 \item[Général :]\leavevmode
@@ -4494,11 +4562,11 @@ ou supprimées, mais le résultat devrait être le même.
 \item[p\TeX{}\ et al. :]\leavevmode
   \begin{itemize*}
   \item Mise à jour majeure de p\TeX{} vers la version 4.0.0 pour mieux
-    supporter la version actuelle de \LaTeX{}.
+    prendre en charge la version actuelle de \LaTeX{}.
   \item Nouvelles primitives \cs{ptexlineendmode} et \cs{toucs}.
   \item \cs{ucs} (auparavant disponible dans uptex, euptex) désormais disponible
     également dans p\TeX\ et ep\TeX.
-  \item Distinction des caractères 8 bits et des caractères japonais, comme
+  \item Distinction des caractères 8 bit et des caractères japonais, comme
     indiqué dans un article du TUGboat rédigé par Hironori Kitagawa
     (\url{https://tug.org/TUGboat/tb41-3/tb129kitagawa-char.pdf}).
   \end{itemize*}
@@ -4507,7 +4575,7 @@ ou supprimées, mais le résultat devrait être le même.
   \texttt{xetex-unsafe} et \texttt{xelatex-unsafe} pour une invocation plus
   simple des documents nécessitant à la fois \XeTeX{} et les opérateurs de
   transparence PSTricks, ce qui est intrinsèquement dangereux (jusqu'à ce que la
-  réimplémentation dans Ghostscript ait lieu). Par mesire de sécurité, utilisez
+  réimplémentation dans Ghostscript ait lieu). Par mesure de sécurité, utilisez
   plutôt Lua\AllTeX{}.
 
 \item[Dvipdfmx :]\leavevmode
@@ -4540,7 +4608,7 @@ ou supprimées, mais le résultat devrait être le même.
   \end{itemize*}
 
 \item[Mac\TeX{} :] Mac\TeX{} et son dossier binaire \texttt{universal-darwin}
-  nécessitent macOS 10.14 ou supérieur (Mojave, Catalina, Big~Sur, Monterey). Le
+  nécessitent \macOS{} 10.14 ou supérieur (Mojave, Catalina, Big~Sur, Monterey). Le
   dossier binaire |x86_64-darwinlegacy|, disponible uniquement avec le
   \texttt{install-tl} d'Unix, prend en charge les versions 10.6 (Snow~Leopard)
   et plus récentes.
@@ -4548,9 +4616,141 @@ ou supprimées, mais le résultat devrait être le même.
 \item[Plateformes :] Aucun changement dans la prise en charge des plateformes
   pour cette année (2022). Cependant, pour la version de l'année prochaine
   (2023), nous prévoyons de faire passer les binaires Windows de 32 à 64
-  bits. Malheureusement, nous ne pouvons pas prendre en charge les deux
+  bit. Malheureusement, nous ne pouvons pas prendre en charge les deux
   simultanément.
 
+\end{description}
+
+\htmlanchor{news}
+\subsection{Présent : 2023}
+\label{sec:tlcurrent}
+
+\begin{description}
+\item[Windows :] Comme annoncé précédemment, \TL{} contient maintenant des
+  binaires Windows 64~bit au lieu de 32~bit. Le nouveau nom du répertoire est
+  \texttt{bin/windows} (il ne semblait pas correct de mettre les binaires 64~bit
+  dans un répertoire nommé « 32 »). Nous savons que cela entraînera un surcroît
+  de travail supplémentaire pour les utilisateurs de Windows, mais il ne
+  semblait pas y avoir de meilleure alternative. Voir la page web séparée \TL{}
+  Windows (\url{https://tug.org/texlive/windows.html}).
+
+\item[Extensions inter-moteurs\footnote{Sauf dans les versions originales \TeX{}
+    et e-\TeX{}.} :] \cs{special} suivi d'un nouveau mot-clé
+  « \texttt{shipout} » retarde l'expansion des tokens de l'argument jusqu'au
+  moment \cs{shipout}, comme avec un
+  non-\verb|\immediate\write|.{\raggedright\par}
+
+\item[ep\TeX{}, eup\TeX{} :]\leavevmode{}
+  \begin{itemize*}
+  \item « Raw » (u)ptex n'est plus construit ; (u)ptex fonctionne maintenant
+    dans le mode de compatibilité d'e(u)ptex. Idem pour les outils p\TeX{},
+    listés ci-dessous.
+  \item Nouvelles primitives : \cs{tojis}, \cs{ptextracingfonts},
+    \cs{ptexfontname}.
+  \item Pour \cs{font}, la nouvelle syntaxe pour JIS/UCS est prise en charge.
+  \end{itemize*}
+
+\item[Lua\TeX :]\leavevmode{}
+  \begin{itemize*}
+  \item nouvelle primitive \cs{variablefam} pour permettre aux caractères
+    mathématiques de conserver leur classe tout en laissant la famille
+    s'adapter.
+  \item amélioration des zones d'annotation r2l
+  \item « \cs{special} retardé » inter-moteurs décrit ci-dessus.
+  \end{itemize*}
+
+\item[MetaPost :] Correction de bogues. \texttt{svg->dx} et \texttt{svg->dy}
+  sont maintenant \texttt{double}, pour une meilleure précision ;
+  \verb|mp_begin_iteration| mis à jour ; fuite de mémoire dans \texttt{mplib}
+  corrigée.
+
+\item[pdf\TeX{} :] \leavevmode{}
+\begin{itemize*}
+\item nouvelle primitive \cs{pdfomitinfodict} pour omettre complètement le
+  dictionnaire \texttt{/Info}.
+\item nouvelle primitive \cs{pdfomitprocset} pour contrôler l'omission du
+  tableau \texttt{/ProcSet} : \texttt{/ProcSet} est inclus si ce paramètre est
+  négatif, ou si ce paramètre est zéro et que \prog{pdftex} génère une sortie
+  PDF~1.x.
+\item avec \cs{pdfinterwordspaceon}, si l'encodage de la police actuelle possède
+  un caractère \texttt{/space} à l'emplacement 32, il est utilisé ; sinon, le
+  \texttt{/space} de la (nouvelle) police par défaut \texttt{pdftexspace} est
+  utilisé. Cette police par défaut peut être remplacée par la nouvelle primitive
+  \cs{pdfspacefont}. Cette même nouvelle procédure est utilisée pour
+  \cs{pdffakespace}.
+ \end{itemize*}
+
+\item[p\TeX{} et al. :]\leavevmode{}
+  \begin{itemize*}
+  \item Comme mentionné ci-dessus, \texttt{ptex} exécute maintenant
+    \texttt{eptex} en mode de compatibilité au lieu d'être construit séparément.
+  \item Les outils p\TeX{} (pbibtex, pdvitype, ppltotf, ptftopl) ont été
+    fusionnés en versions up\TeX{} correspondantes, fonctionnant en mode de
+    compatibilité.
+  \end{itemize*}
+
+\item[Xe\TeX :]\leavevmode{}
+  \begin{itemize}
+  \item correction d'un bogue dans le calcul de \cs{topskip} et
+    \cs{splittopskip} lorsque \cs{XeTeXupwardsmode} est actif ;
+  \item « \cs{special} retardé » décrit ci-dessus.
+  \end{itemize}
+
+\item[Dvipdfmx :] nouvelle option \texttt{--pdfm-str-utf8} pour créer un
+  « pdfmark » et/ou un signet.
+
+\item[\BibTeX{}u :]\leavevmode{}
+  \begin{itemize*}
+  \item Cette variante de Bib\TeX{} est principalement compatible avec \BibTeX,
+    avec un bien meilleur support multilingue (basé sur Unicode). Elle est
+    présente dans \TL{} depuis quelques années.
+  \item Cette année, des fonctionnalités supplémentaires ont été ajoutées pour
+    la prise en charge des langues CJK, dont certaines ont été étendues à partir
+    du programme japonais (u)pbibtex et d'autres programmes.
+ \end{itemize*}
+
+\item[Kpathsea :] Prise en charge de l'encodage des fichiers d'entrée pour les
+  plates-formes Unix, comme sous Windows ; activé pour
+  (\texttt{e})\texttt{p}(\texttt{la})\texttt{tex}, \texttt{pbibtex},
+  \texttt{mendex}.
+
+\item[\code{tlmgr} et infrastructure :]\leavevmode{}
+ \begin{itemize*}
+ \item l'interface texte par défaut  sur \macOS ;
+ \item installer les paquets de base en premier, réessayer les autres paquets
+   une fois ;
+ \item vérification simpliste effectuée pour savoir si l'espace disque est
+   suffisant.
+ \end{itemize*}
+
+\item[Mac\TeX{} :] \leavevmode{}
+  \begin{itemize*}
+ \item Mac\TeX{} et son dossier binaire \texttt{universal-darwin} nécessitent
+   \macOS{} 10.14 ou supérieur (Mojave, Catalina, Big~Sur, Monterey, Ventura). Le
+   dossier binaire \texttt{x86\_64-darwinlegacy}, disponible uniquement avec le
+   programme Unix \texttt{install-tl}, prend en charge les versions 10.6
+   (Snow~Leopard) et ultérieures.
+ \item Le package \GUI{} de Mac\TeX{} contient désormais \texttt{hintview}, un
+   visualisateur \macOS{} pour les documents HINT (créés par les programmes
+   \texttt{hitex} et \texttt{hilatex} pour les appareils mobiles ; voir la page
+   Web Hi\TeX{}, \url{https://hint.userweb.mwn.de/hint/hitex.html}). Le
+   package \GUI{} n'installe plus de dossier de documents, il les
+   remplace par un bref \texttt{READ~ME} pour les nouveaux utilisateurs et une
+   page sur \texttt{hintview}.
+ \item Le dossier \texttt{Extras} de logiciels \TeX{} supplémentaires sur le DVD
+   a été remplacé par un document contenant des liens vers des sites de
+   téléchargement.
+ \end{itemize*}
+
+\item[Plates-formes :] \leavevmode{}
+  \begin{itemize*}
+  \item Comme mentionné ci-dessus, le nouveau répertoire binaire
+    \texttt{windows} contient les binaires Windows 64~bit, et
+  \item le répertoire binaire \texttt{bin/win32} a disparu, puisque nous ne
+    pouvons pas prendre en charge Windows 32~bit et 64~bit simultanément.
+  \item Le répertoire binaire \texttt{i386-cygwin} a disparu, car Cygwin ne
+    ne prend plus en charge i386.
+ \end{itemize*}
 \end{description}
 
 \subsection{Versions futures}

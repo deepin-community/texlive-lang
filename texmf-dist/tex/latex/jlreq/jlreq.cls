@@ -5,10 +5,10 @@
 %%
 % (based on JLReq 20200811 https://www.w3.org/TR/2020/NOTE-jlreq-20200811/)
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{jlreq}[2022/11/28 jlreq]
+\ProvidesClass{jlreq}[2023/06/19 jlreq]
 \RequirePackage{l3keys2e}
 \RequirePackage{etoolbox}
-\RequirePackage{jlreq-helpers}[2022/11/28]
+\RequirePackage{jlreq-helpers}[2023/06/19]
 
 \ExplSyntaxOn
 \int_new:N \l__jlreq_tmpa_int
@@ -1662,7 +1662,7 @@
 %. システム設定
 %.. 逆ノンブル
 \ifjlreq@option@use@reverse@pagination
-  \AtEndDocument{\clearpage\jlreq@reference@immediate@write{lastpage}{\arabic{page}}}%
+  \AtEndDocument{\clearpage\jlreq@reference@immediate@write{lastpage}{\@arabic\numexpr \c@page - 1\relax}}
   \def\c@jlreqreversepage{\numexpr\jlreq@reference@ref{lastpage}{0} - \c@page + 1\relax}
   \def\thejlreqreversepage{\arabic{jlreqreversepage}}
 \fi
@@ -2216,10 +2216,11 @@
   \jlreq@ifgluezero\jlreq@tempskipb{}{\vskip\jlreq@tempskipb}%
   \edef\jlreq@do{%
     \dim_compare:nF { \parskip=0pt } {
-      \exp_not:N \cs_set:Nn \exp_not:N \g__jlreq_gyodori_hook_par: {
-        \noexpand\parskip=\the\parskip\noexpand\relax
-        \exp_not:n { \cs_set:Nn \g__jlreq_gyodori_hook_par: {} }
-      }
+%      \exp_not:N \cs_set:Nn \exp_not:N \g__jlreq_gyodori_hook_par: {
+%        \noexpand\parskip=\the\parskip\noexpand\relax
+%        \exp_not:n { \cs_set:Nn \g__jlreq_gyodori_hook_par: {} }
+%      }
+      \exp_not:N \AddToHook { para/before } { \noexpand\parskip=\the\parskip\noexpand\relax }
       \noexpand\parskip=0pt
     }
   }%
@@ -2907,7 +2908,7 @@
     \unexpanded{%
     \if@noskipsec\leavevmode\fi
     \begingroup
-      \def\jlreq@do{\global\@noskipsectrue}%
+      \def\jlreq@do{\@nobreakfalse\global\@noskipsectrue}%
       \ifnum0\jlreq@ifempty{#3}{}{1}\ifnum #2>\c@secnumdepth 1\fi>0
         \def\jlreq@tempa##1{#8}%
       \else
@@ -2929,9 +2930,9 @@
           \noexpand\else
             \unexpanded{\everypar{}}%
           }%
-            \ifx l\jlreq@engine\else
-              \unexpanded{\unexpanded{\let\jlreq@hook@everypar\jlreq@openbracket@hook}}%
-            \fi
+          \ifx l\jlreq@engine\else
+            \unexpanded{\unexpanded{\let\jlreq@hook@everypar\jlreq@openbracket@hook}}%
+          \fi
          \unexpanded{\noexpand\fi}%
         }%
       }%
@@ -3055,7 +3056,7 @@
     \dim_set:Nn \l__jlreq_tmpa_dim { \l__jlreq_tmpa_dim / \l__jlreq_cutinheading_linecount_tl }
     % \l_jlreq_tmpb_boxに見出し部分を，\l__jlreq_cutinheading_linecount_tlに見出し自身に何行使うかを入れる
     \int_compare:nTF { \l__jlreq_cutinheading_linecount_tl = 1 }{
-      \vbox_set:Nn \l_jlreq_tmpb_box {\parindent=0pt\rightskip=0pt\leftskip=0pt\hbox_unpack_drop:N \l_jlreq_tmpa_box}
+      \vbox_set:Nn \l_jlreq_tmpb_box {\parindent=0pt\rightskip=0pt\leftskip=0pt\box_use_drop:N \l_jlreq_tmpa_box}
       \tl_set:Nn \l__jlreq_cutinheading_linecount_tl {2}
     }{
       \jlreq@inlinenote@determinelength{#6}{#1}{}{\l__jlreq_cutinheading_linecount_tl}{\l__jlreq_cutinheading_linecount_tl}{\l__jlreq_tmpa_dim}{\linewidth}%

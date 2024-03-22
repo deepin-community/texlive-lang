@@ -14,7 +14,7 @@ pair _coinnum;%milieu côté gauche pour placer la numérotation des lignes
 numeric Nblignes; Nblignes:=1;
 pair DebutListe; DebutListe=(0,0);
 boolean NumeroteLignes; NumeroteLignes=false;
-
+boolean NumeroteFinBloc; NumeroteFinBloc=false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% couleurs
 color CoulLignes; CoulLignes:=black;
 color ColBloc; % alias des couleurs de bloc
@@ -56,7 +56,7 @@ def Place expr o =
 enddef;
 
 def Placer expr o =
-  if path o: draw o else: draw o fi
+  if path o: draw o else: draw o fi;
 enddef;
 
 %impression
@@ -818,8 +818,8 @@ enddef;
 
 vardef Tournerg(expr nbpas)=
   LONG:=0;
-  save $;
-  picture $, texto;
+  save Tourner;
+  picture Tourner, texto;
   if string nbpas:
     if symbole=true:
       texto=ColleBoxNew("tourner",Arcgauche,"de",OvalNb(nbpas),"degré(s)");
@@ -834,8 +834,8 @@ vardef Tournerg(expr nbpas)=
     fi;
   fi;
   ColBloc:=BleuMouvTrois;
-  $=Affichage(texto);
-  $
+  Tourner=Affichage(texto);
+  Tourner
 enddef;
 
 vardef Orienter(expr nbpas)=
@@ -1397,8 +1397,8 @@ vardef NoteImage=
   save $;
   picture $;
   $=image(
-      linecap := butt;
-    linejoin := mitered;
+%      linecap := butt;
+%    linejoin := mitered;
     fill (80.695297,716.262024)..controls (80.574203,716.257996) and (80.476601,716.171997)..(80.480499,716.062988)
       --(80.687500,704.125000)..controls (79.941399,704.570007) and (78.644501,704.637024)..(77.312500,704.223022)
       ..controls (75.503899,703.659973) and (74.339798,702.429993)..(74.710899,701.473022)
@@ -1547,8 +1547,8 @@ vardef CrayonImage=
   picture cray;
   cray=image(%
       drawoptions (if print=false:withcolor (0.298050,0.556850,0.917650) fi);
-    linecap := butt;
-    linejoin := mitered;
+%    linecap := butt;
+%    linejoin := mitered;
     fill (0.960938,1.390630)--(1.644530,2.996090)..controls (1.730470,3.199220) and (1.917970,3.500000)..(2.062500,3.664060)..controls (2.324220,3.968750) and (3.539060,2.753910)..(3.234380,2.488280)..controls (3.070310,2.343750) and (2.769530,2.160160)..(2.566410,2.074220)--cycle;
     drawoptions (withcolor (0.349030,0.368640,0.450970));
     pickup pencircle scaled 0.498140bp;
@@ -1711,6 +1711,10 @@ $=image(
 _coinprec:=(llcorner $);
 _coinprec:=_coinprec+(0,eb);
 numblocrep:=numblocrep-1;
+if NumeroteFinBloc=true:
+  label(TEX("\footnotesize"&decimal(Nblignes)&""),_coinprec+(-3*eb,2*eb));
+  Nblignes:=Nblignes+1;
+fi;
 $
 enddef;
 
@@ -1858,7 +1862,7 @@ vardef Sinon=
   drawoptions();
   texto=image(
       labeloffset:=0;
-    label.lrt(TEX("\barre\,\hbox to"&decimal(LongRep[numblocrep])&"pt{}"),if unknown _coinprec: (0,0) else:_coinprec fi) if print=false : withcolor blanc fi;
+    label.lrt(TEX("\longbarre\,\hbox to"&decimal(LongRep[numblocrep])&"pt{}"),if unknown _coinprec: (0,0) else:_coinprec fi) if print=false : withcolor blanc fi;
   labeloffset:=3;
   );
   path cadre;
@@ -1906,8 +1910,12 @@ vardef Sinon=
 $=image(
     fill cadre withcolor if print=true : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
   draw cadre withcolor if print=true : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
-  drawoptions(withcolor white);
-  label.rt(TEX("\longbarre\sffamily\bfseries sinon"),(xpart(llcorner texto),ypart(center texto)));
+  if print:
+    label.rt(TEX("\longbarre\sffamily\bfseries sinon"),(xpart(llcorner texto),ypart(center texto)));
+  else:
+    drawoptions(withcolor white);
+    label.rt(TEX("\longbarre\sffamily\bfseries sinon"),(xpart(llcorner texto),ypart(center texto)));
+    fi;
   drawoptions();
     if BlocStopAvant=false:
       draw (coindebutbloc[numblocrep]+(0.0625+0.5cm,0)+(eb,0.125)){dir180}..
@@ -2192,8 +2200,8 @@ enddef;
 vardef DrapeauImage=
   save $; picture $;
   $=image(
-      linecap := butt;
-    linejoin := rounded;
+%      linecap := butt;
+%    linejoin := rounded;
     if print = false: drawoptions(withcolor(76/255,191/255,86/255)) fi;
     fill (72.000000,713.254028)--(72.000000,718.918030)--(72.507797,718.979980)
       --(72.984398,719.026978)--(73.437500,719.054993)--(73.867203,719.070007)
@@ -2345,7 +2353,7 @@ vardef CommandeVide(expr commande)=
   picture $,texto,TEXT;
   if string commande :
     texto=image(
-	label.lrt(TEX("\barre \hbox to"&commande&"cm{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
+	label.lrt(TEX("\sffamily\bfseries\longbarre \hbox to"&commande&"cm{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
     );
 else:
   texto=commande;
@@ -2360,18 +2368,12 @@ vardef LigneVide=
   save $;
   picture $,texto,TEXT;
   texto=image(
-      label.lrt(TEX("\barre \hbox to2cm{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
+      label.lrt(TEX("\sffamily\bfseries\longbarre \hbox to4cm{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
   );
 TEXT=image(
     path cadre;
   cadre=CADRE(texto);
   unfill cadre;
-  %draw (urcorner texto+(0,eb))--
-  %  (ulcorner texto+(0.625cm,0)+(eb,eb)){dir180}..
-  %  {dir180}(ulcorner texto+(0.625cm,0))--
-  %  (ulcorner texto+(0.375cm,0)){dir180}..
-  %  {dir180}(ulcorner texto+(0.375cm,0)+(-eb,eb))--
-  %  (ulcorner texto+(0,eb)) withpen pencircle scaled 0;
   );
 $=TEXT shifted (if unknown _coinprec:(0,0) else :_coinprec fi - ulcorner TEXT);
 _coinprec:=llcorner $;
@@ -2384,6 +2386,7 @@ if NumeroteLignes=true:
 fi;
 $
 enddef;
+
 
 vardef LigneVideVar(expr commande)=
   LONG:=0;
@@ -2410,6 +2413,7 @@ TEXT=image(
     (ulcorner texto+(0.375cm,0)+(-eb,eb))--
     (ulcorner texto+(0,eb))--(ulcorner texto+(-eb,0))--cycle;
   fill cadre withcolor white;
+  draw cadre;
 %  draw (urcorner texto+(0,eb))--
 %    (ulcorner texto+(0.625cm,0)+(eb,eb))--
 %    (ulcorner texto+(0.625cm,0))--
@@ -2429,6 +2433,22 @@ fi;
 $
 enddef;
 
+vardef LigneVideVarUn(expr commande)=
+  LONG:=0;
+  save $;
+  picture $,texto,TEXT;
+  if string texto:
+    texto=image(
+	label.lrt(TEX("\barre \hbox to2cm{}"),if unknown _coinprec: (0,0) else:_coinprec fi);
+    );
+else:
+  texto=commande;
+fi;
+ColBloc:=white;
+$=Affichage(texto);
+$
+enddef;
+
 vardef LignePointilles=
   LONG:=0;
   save $;
@@ -2440,13 +2460,13 @@ TEXT=image(
     path cadre;
   cadre=CADRE(texto);
   fill cadre withcolor white;
-  draw %(urcorner texto+(0,eb))--
-    (ulcorner texto+(0.625cm,0)+(eb,eb)){dir180}..
-    {dir180}(ulcorner texto+(0.625cm,0))--
-    (ulcorner texto+(0.375cm,0)){dir180}..
-    {dir180}(ulcorner texto+(0.375cm,0)+(-eb,eb))
-    %--(ulcorner texto+(0,eb))
-    withpen pencircle scaled 0.01;
+  %draw %(urcorner texto+(0,eb))--
+  %  (ulcorner texto+(0.625cm,0)+(eb,eb)){dir180}..
+  %  {dir180}(ulcorner texto+(0.625cm,0))--
+  %  (ulcorner texto+(0.375cm,0)){dir180}..
+  %  {dir180}(ulcorner texto+(0.375cm,0)+(-eb,eb))
+  %  %--(ulcorner texto+(0,eb))
+  %  withpen pencircle scaled 0.01;
   draw texto;
   );
 $=TEXT shifted (if unknown _coinprec:(0,0) else :_coinprec fi - ulcorner TEXT);
@@ -2942,11 +2962,41 @@ vardef OpMul(expr pasun,pasdeux)=
   Oop
 enddef;
 
+vardef OpMulS(expr pasun,pasdeux)=
+  save Oop; picture Oop;
+  save TAao; path TAao;
+  save LOPop; picture LOPop;
+  LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$*$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
+  TAao=OvalBox(LOPop);
+  Oop=image(
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+    draw LOPop;
+    draw TAao if print=false : withcolor coefprint*white fi;
+    );
+  Oop:=Oop shifted(-center Oop);
+  Oop
+enddef;
+
 vardef OpDiv(expr pasun,pasdeux)=
   save Oop; picture Oop;
   save TAao; path TAao;
   save LOPop; picture LOPop;
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$\div$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
+  TAao=OvalBox(LOPop);
+  Oop=image(
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+    draw LOPop;
+    draw TAao if print=false : withcolor coefprint*white fi;
+    );
+  Oop:=Oop shifted(-center Oop);
+  Oop
+enddef;
+
+vardef OpDivS(expr pasun,pasdeux)=
+  save Oop; picture Oop;
+  save TAao; path TAao;
+  save LOPop; picture LOPop;
+  LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$/$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
       fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;

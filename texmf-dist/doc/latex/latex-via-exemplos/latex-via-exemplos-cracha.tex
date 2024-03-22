@@ -1,0 +1,63 @@
+\documentclass[a4paper,11pt]{article}
+% cracha usando o pacote ticket e datatool
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{rotating}
+% paacote para gerar cartão de visitaas e similares
+\usepackage[rowmode,cutmark]{ticket}
+
+% A4 = 210mmx297mm
+% 1in = 24.5mm
+%
+% Definiçãao de dimensão e similares
+\unitlength=1mm
+% Cartão de visitaa internacional é 80mmx50mm (tamanho do cartão de credito)
+%\hoffset=-0.5mm %2.5mm-1in
+%\voffset=-1mm %23.5mm-1in
+%\ticketNumbers{2}{5}
+%\ticketSize{80}{50} % in unitlength
+%\ticketDistance{0}{0} % in unitlength
+
+%%% Cartão de vista brasileiro é 90mmx50mm
+%\hoffset=-9.5mm %15mm-1in
+%\voffset=-1mm %23.5mm-1in
+%\ticketNumbers{2}{5}
+%\ticketSize{90}{50} % in unitlength
+%\ticketDistance{0}{0} % in unitlength
+
+%% Crachá CR-80 (internacional) é 8.6mmx5.4mm
+\hoffset=-5.5mm %19mm-1in
+\voffset=-11mm %13.5mm-1in
+\ticketNumbers{2}{5}
+\ticketSize{86}{54} % in unitlength
+\ticketDistance{0}{0} % in unitlength
+
+% Para todos (background/logo, etc)
+% \ticketdefault{} estará no ambiente picture
+\renewcommand{\ticketdefault}{%
+  %\put(100, 5){\includegraphics[width=35mm]{logo}}%
+  \put(20,45){Nome do Evento}%
+  \put(10,7){\begin{rotate}{90}\colorbox{blue!50}{\sffamily\huge Abrev. Evento}\end{rotate}}%
+}
+
+% Cracha
+% \ticket{} estará no ambiente picture
+\newcommand{\conferencepin}[3]{\ticket{%
+  \put(20,15){\parbox{70\unitlength}{\centering #1}}%
+  \put(20,30){\parbox{70\unitlength}{\centering{\bfseries\large#2}\\#3}}%
+}}
+
+\usepackage{datatool}
+
+% Associa o nome 'namelist' ao arquivo
+%\DTLloaddb{namelist}{\jobname-dat.csv}
+\DTLloaddb{namelist}{latex-via-exemplos-lista-participantes.csv}
+\begin{document}
+% para cada linha do 'namelist'
+\DTLforeach*{namelist}{% Associar cada coluna do CSV no comando
+  \Name=Name, \Country=Country, \Institute=Institute}{%
+  \conferencepin{\Institute}{\Name}{\Country}% gera cracha
+}
+\end{document}
+

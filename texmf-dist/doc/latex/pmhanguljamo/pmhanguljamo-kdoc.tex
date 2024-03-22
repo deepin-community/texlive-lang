@@ -1,5 +1,5 @@
 %!TEX program = SpiX
-%$ xelatex -shell-escape -synctex=1 $texname
+%$ time cluttex -e xelatex --shell-escape --synctex=1 --tex-option=--8bit --package-support=minted $texname
 %%
 %% Poorman's Hangul Jamo Input Method
 %% pmhanguljamo.sty 사용설명서
@@ -7,7 +7,7 @@
 %% (C) 2020 Nova de Hi.
 %% 		part of pmhanguljamo package.
 %%
-\documentclass[a4paper]{oblivoir}
+\documentclass[a4paper,chapter]{oblivoir}
 
 \hypersetup{colorlinks}
 
@@ -16,9 +16,10 @@
 
 \usepackage{kotex-logo}
 \usepackage{amssymb}
-\usepackage[pmfont={Noto Serif KR},pmfontfeature={Ligatures=TeX}]{pmhanguljamo}
+\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
 \usepackage{boxedminipage}
 \usepackage{tabularray}
+\usepackage{amsmath,amssymb}
 
 \usepackage{oblivoir-misc}
 
@@ -32,11 +33,12 @@
 %%% [Script=Hangul] is needed to typeset YETHANGUL
 \setmainfont{Noto Serif}
 \setsansfont{Noto Sans}
-\setmonofont{Droid Sans Mono}
+%\setmonofont{Droid Sans Mono}
+\setmonofont{DejaVu Sans Mono}
 \setsansfont{Noto Sans KR}%[\fontfeatureoption]
 \setkomainfont(Noto Serif KR)(* Bold)(Noto Sans KR Light)%[\fontfeatureoption]
 \setkosansfont(Noto Sans KR)(* Bold)%[\fontfeatureoption]
-\setkomonofont(Noto Sans Mono CJK KR)
+\setkomonofont(HCR Dotum LVT)[Script=Hangul,Scale=.97]
 
 \usepackage{tcolorbox}
 \tcbuselibrary{minted,breakable}
@@ -45,8 +47,12 @@
   { \tcblisting{listing side text,righthand width=.37\textwidth} }
   { \endtcblisting }
 \NewDocumentEnvironment {exampleonly} {}
-  { \tcblisting{listing only} }
+  { \tcblisting{listing only,breakable} }
   { \endtcblisting }
+\NewDocumentEnvironment {examplebelow} {}
+  { \tcblisting{breakable} }
+  { \endtcblisting }
+
 
 \newcommand\pkg[1]{%
 	\textsf{#1}\index{#1}\index{패키지!#1}%
@@ -58,8 +64,36 @@
 
 \let\cmda\cmd
 
+\makechapterstyle{obmadsen}{% requires graphicx package
+  \chapterstyle{default}
+%  \renewcommand*{\chapnamefont}{%
+%    \normalfont\Large\scshape\raggedleft}
+  \renewcommand*{\prechapternum}{\normalfont\Large\scshape\raggedleft}
+  \renewcommand*{\postchapternum}{}
+  \renewcommand*{\chaptitlefont}{%
+    \normalfont\Huge\bfseries\sffamily\raggedleft}
+  \renewcommand*{\chapternamenum}{}
+  \renewcommand*{\printchapternum}{%
+    \makebox[0pt][l]{\hspace{0.4em}
+      \resizebox{!}{4ex}{%
+        \chapnamefont\bfseries\sffamily\thechapter}
+    }%
+  }%
+  \renewcommand*{\printchapternonum}{%
+    \chapnamefont \phantom{\printchaptername \chapternamenum \printchapternum}
+    \afterchapternum %
+  }%
+  \renewcommand*{\afterchapternum}{%
+    \par\hspace{1.5cm}\hrule\vskip\midchapskip}}
+
+
 %\makeindex
 \parindent=0pt
+
+\newcommand\jpwrd[1]{{\fontspec{Noto Sans JP}#1}}
+
+\let\originalobellipsis\obellipsis
+\def\obellipsis{{\hangulfontspec{HCR Batang LVT}\originalobellipsis}}
 
 \begin{document}
 
@@ -78,7 +112,10 @@
 %\date{2021/09/20\quad v0.3.6}
 %\date{2021/11/28\quad v0.4}
 %\date{2022/09/02\quad v0.5}
-\date{2022/09/07\quad v0.5.2}
+%\date{2022/09/07\quad v0.5.2}
+%\date{2023/02/19\quad v1.0}
+%\date{2023/02/26\quad v1.0.1a}
+\date{2023/03/03\quad v1.0.2}
 
 \maketitle
 
@@ -91,9 +128,12 @@ e/nv; na;ri i; do;ra/gar h@i;o;.
 \end{jamotext}
 \end{exampleside}
 
-\vspace{-.5\baselineskip}
+\chapterstyle{obmadsen}
 
+%\vspace{-.5\baselineskip}
 \tableofcontents*
+
+\chapter{이 패키지에 관하여}
 
 \section{목적}
 
@@ -107,25 +147,6 @@ e/nv; na;ri i; do;ra/gar h@i;o;.
 \hologo{XeLaTeX}, \hologo{LuaLaTeX}에서 사용할 수 있고 
 \hologo{pdfLaTeX}은 지원하지 않는다.
 
-\section{사용법 요약}\label{sec:summary}
-
-\begin{exampleonly}
-\documentclass{article}
-\usepackage{kotex}
-\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
-\begin{document}
-\jamoword{sei/gyei/in/guen/sen/en}
-
-\begin{jamotext}
-mo/dvn in/ryu gu/sex/uen/vi cen/bu/vi jon/em/sex/goa
-dox/dvx/ha/go yax/do/har su ebs/nvn guen/ri/rvr in/jex/ha/nvn ges/i
-sei/gyei/vi ja/yu/, jex/vi mic pyex/hoa/vi gi/co/i/mye/,
-in/guen/ei dai/han mu/si/oa gyex/myer/i in/ryu/vi yax/sim/vr
-gyeg/bun/si/ki/nvn man/haix/vr co/rai/ha/yess/v/mye/,
-\end{jamotext}
-\end{document}
-\end{exampleonly}
-
 \section{사용법}
 
 \subsection{패키지 사용 선언}
@@ -134,28 +155,205 @@ gyeg/bun/si/ki/nvn man/haix/vr co/rai/ha/yess/v/mye/,
 \usepackage[<option>]{pmhanguljamo}
 \end{boxedverbatim}
 
-preamble에 위의 문장을 둔다. 
+\subsection{패키지 옵션}
 
-옵션은 다음과 같다.
-\begin{enumerate}[1.]
-\item \verb|rrk| 또는 \verb|RRK|. 
-입력 방식이 ``표준 전자법''으로 현대 한글을 입력하는 방식으로 바뀐다. 이에 대해서는 
-\ref{sec:rrk}절을 보라. 옵션을 주지 않으면 \ref{sec:pmrule}절에서 설명하는 pm 입력 방식을 따른다.
-\item \verb|pmfont={<fontname>}|.
-식자할 폰트를 지정한다. 이 옵션이 주어지지 않으면 문서의 mainfont (\koTeX\ 패키지의
-경우는 mainhangulfont)를 따른다. 지정할 수 있는 폰트에 대해서는 \ref{sec:font} \titleref{sec:font}\를, 이 옵션에 대한 설명은 \ref{font:set}\를 보라.
-\item \verb|pmfontfeagure=<fontfeature>|.
-pmfont 옵션으로 지정하는 폰트에 추가 속성을 부여하려 할 때. \ref{font:set}\을 보라.
-\end{enumerate}
+이 패키지는 세 가지 한글 입력 방법을 지원한다. 이 각각은 서로 호환되지 않으며
+한 문서에서 서로 다른 입력 방법을 섞어쓰지 못한다. 각 입력 방법은 패키지의 옵션으로
+선언한다. 입력 방법에 따라서 각각 추가 옵션을 줄 수 있으며 이에 대해서는 각 입력 방법을 소개하는 장에서 다룬다.
+\begin{description}
+\item [pm 입력 방법] \verb|[method=pm]|. 이 패키지에서 고유하게 정의하고 있는 한글 대응 입력 체계이다. 별도의 옵션을 주지 않으면 이 방식이 활성화되며, \ref{chap:pm}장이 이에 대하여 서술한다.
+
+\item [한글 로마자 표기법 방식] \verb|[method=rrk]|, 간단히 \verb|rrk|만을 선언하여도 된다. 대문자 \verb|RRK|로 지정해도 된다.
+국가 표준인 한글 로마자 표기법 ``표준 전자법''을 현대 한글 입력 방식으로 하고 약간 확장한 것이다. 
+\ref{chap:rrk}장에서 이에 대해 설명한다.
+
+\item [hangul\TeX{} 방식] \verb|[method=frkim]|, 간단히 \verb|frkim|으로 선언한다. 후쿠이 레이의 `hangul\TeX'에서 채택한 후쿠이 레이 방식 한글 로마자 전자법에 기초를 두고 있는 입력 방법이다. \ref{chap:frkim}장에서 설명한다.
+\end{description}
+
+다음 두 옵션은 모든 입력 방식에 공통으로 적용된다.
+
+\begin{description}
+\item [\ttfamily [pmfont=<fontname>{]}] 알파벳으로 입력되는 한글 자모 문자는 적절한 폰트의
+도움을 받아 한글로 출력된다. 어떤 폰트가 사용가능한지에 대해서는 \ref{chap:fonts}장에서 상세히 설명한다. 이 옵션은 한글 문자를 식자할 폰트를 미리 설정해주는 것이다.
+폰트 이름(\texttt{<fontname>})은 \pkg{fontspec}이 인식할 수 있는 이름을
+전달해준다.
+
+\item [\ttfamily [pmfontfeature=<fontfeature>{]}] 폰트 식자 시에 전달해줄 font feature를 지정한다. 디폴트로 ``\texttt{Ligatures=TeX,Renderer=OpenType,Script=Hangul}''이 선언되어 있으므로 대부분의 경우 이를 변경할 필요가 없을 것이다.
+\end{description}
+
+다음 옵션은 이전 버전과의 호환성 때문에 들여온 것이다. \pageref{sec:compat}페이지를 보라.
+\begin{description}
+	\item[\ttfamily [compat=0.5{]}] 1.0 이전 버전의 대응 문자가 동작하게 한다. \texttt{method=pm}일 때만 유효하다.
+\end{description}
 
 \subsection{명령과 환경}
 
-\subsubsection{주의사항}
+입력 방법의 선택에 무관하게 다음 하나의 명령과 하나의 환경이 한글을 입력하는
+명령(환경)으로 제공된다. 각 입력 방법의 구현에 따라 다른 보조적인 명령이 더
+있을 수 있으나 이 두 가지가 이 패키지가 제공하는 핵심 명령이다.
+
+\paragraph{명령 \ttfamily \cs{jamoword}}
+\cs{par}가 포함되지 않은 하나의 인자를 취하여 알파벳 문자를 한글로 변환하여
+출력한다. 이 명령의 인자 범위에 만약 알파벳 아닌 것, 예를 들어 한자, 카나문자, 부호 등이 온다면 변환하지 않고 그대로 출력한다. 매크로의 경우는 인자를 취하지 않는 protect된 매크로는 그대로 출력한다. 그러나 매크로의 인자는 거기에 알파벳이 포함되어 있기 때문에 제대로 해석하지 못하므로 인자를 취하는 매크로는 오지 못하는 것으로 간주하여야 한다.
+문장부호는 (입력 방식에 따라 차이가 있지만) 마침표, 쉼표 등 기본적인 문장부호를 쓸 수 있다. 따옴표의 경우, \TeX{} 방식의 큰따옴표는 이 명령의 범위 밖에 두는 것이 안전할 것이다. 다만 패키지가 내부적으로 사용하는 몇 가지 특별한 문자(입력 방식마다 다르므로 각각 설명을 제공한다)는 주의하여 사용해야 할 때가 있다.
+
+\paragraph{환경 \ttfamily jamotext}
+\cs{par}를 포함하는 둘 이상의 문단의 범위를 한글로 식자한다.
+영어와 같은 외국어와 어울러쓰는 때가 많은 우리 문장에서 한글로 된 문단의 중간에 한글이 아닌 알파벳이 놓일 때 이를 처리하는 것이 어렵기 때문에 \env{jamotext} 환경은
+(rrk를 제외하고) 아스키 에스케이핑 트릭을 가능하게 해두었으나, 대체로 한글만
+온전하게 있는 문장을 식자할 때 사용할 것을 권장한다. 영어 등 다른 언어와의 스위칭이
+많다면 \cs{jamoword}를 써서 한글 부분만 표현하는 쪽이 좋다.
+
+\section{문서 작성}
+
+이 절에서는 pm 입력 방법을 예시로 들겠다. 자모 입력된 부분의 입력 방법을 다른 방법으로 바꾸더라도
+결과는 같다.
+
+\subsection{몇 단어\cntrdot 문단의 한글}
+
+한국어가 주언어(main language)가 아니고 한글 입력이 몇 단어(인명, 지명 등)나 몇 문단(인용문) 수준으로
+필요한 경우라고 하자. 한국어를 위한 별도의 패키지를 로드할 필요가 없이 \pkg{pmhanguljamo}만으로 필요한 단어를 입력할 수 있다.
+이 때 필요한 것은, (1) \XeLaTeX\ 또는 \LuaLaTeX 으로 컴파일하는 문서여야 한다는 것, (2) \pkg{fontspec}이 로드되어야 한다는 것, 두 가지이다.
+
+\begin{exampleonly}
+\documentclass{article}
+
+\usepackage{fontspec}
+\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
+
+\begin{document}
+Jikji (\jamoword{jig/ji/sim/cei/yo/jer}) is the world's oldest 
+extant book printed with movable metal type.
+\end{document}
+\end{exampleonly}
+
+다만, 이 때에는 \cs{jamoword}로 입력되는 부분에서 행나눔이 원만하게 일어나지 않을 수 있다.
+비교적 인용되는 문장이 길어서 한글에 맞는 행나눔이 필요한 경우라면 \pkg{polyglossia}와 같은
+패키지를 이용하고 한국어 선언을 하는 방법이 있다. 
+
+\begin{exampleonly}
+\documentclass{article}
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage{korean}
+\newfontfamily\hangulfont{HCR Batang LVT}[Script=Hangul]
+\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
+
+\begin{document}
+\begin{korean}
+\jamoword{mo/dvn in/ryu gu/seq/uen/vi cen/bu/vi jon/em/seq/goa
+doq/dvq/ha/go yaq/do/har su ebs/nvn guen/ri/rvr in/jeq/ha/nvn ges/i
+sei/gyei/vi ja/yu/, jeq/vi mic pyeq/hoa/vi gi/co/i/mye/,
+in/guen/ei dai/han mu/si/oa gyeq/myer/i in/ryu/vi yaq/sim/vr
+gyeg/bun/si/ki/nvn man/haiq/vr co/rai/ha/yess/v/mye/,}
+\end{korean}
+\end{document}
+\end{exampleonly}
+
+이 예에서 \cs{jamoword}를 \env{korean} 환경 안에 넣은 이유는 행나눔이 원활하게 일어나게
+하기 위한 것이다. 만약 \texttt{pmfont}를 별도로 지정하지 않는다면 \cs{hangulfont}로
+선언된 폰트가 쓰일 것이므로 \texttt{Script=Hangul} feature를 부여하는 데 주의해야 한다. 만약
+\texttt{pmfont}를 지정한다면(위의 예에서와 같이) \cs{jamoword} 부분은 해당 폰트와 feature로
+식자하므로 별도로 신경쓰지 않아도 좋다.
+
+\subsection{\koTeX\ 문서}
+
+주언어가 한국어이든 아니든 \koTeX (\XeTeX-\ko, \LuaTeX-\ko)이 로드되는 상황을
+이 패키지는 잘 지원한다. 
+
+\begin{exampleonly}
+\documentclass{article}
+\usepackage{kotex}
+\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
+
+\begin{document}
+\jamoword{mo/dvn in/ryu gu/seq/uen/vi cen/bu/vi jon/em/seq/goa
+doq/dvq/ha/go yaq/do/har su ebs/nvn guen/ri/rvr in/jeq/ha/nvn ges/i
+sei/gyei/vi ja/yu/, jeq/vi mic pyeq/hoa/vi gi/co/i/mye/,
+in/guen/ei dai/han mu/si/oa gyeq/myer/i in/ryu/vi yaq/sim/vr
+gyeg/bun/si/ki/nvn man/haiq/vr co/rai/ha/yess/v/mye/,}
+\end{document}
+\end{exampleonly}
+
+\paragraph{한국어가 주언어인 문서} 주로 키보드 직접 입력이 번거로운 옛한글을 위하여
+\pkg{pmhanguljamo}를 쓰게 될 것이다. 이 때 본문의 폰트와 jamo 부분 폰트를 같게 할 
+것인지 다르게 할 것인지를 결정해야 한다. 만약 동일한 폰트를 쓰게 하려 한다면 \texttt{pmfont}
+옵션을 별도로 주지 않고 그 대신 \cs{setmainhangulfont}에 \texttt{[Script=Hangul]}
+또는 \texttt{[Script=Hangul,Renderer=OpenType]}을 부여하여야 한다. 반면 
+서로 다른 폰트를 쓰는 경우라면 \texttt{pmfont}를 지정하는 것이 간단하다.
+상세한 사항은 \ref{chap:fonts}장을 참고하라.
+
+\paragraph{한국어가 주언어가 아닌 문서} \texttt{pmfont}로
+한글이 식자될 폰트를 지정하는 것으로 충분하다.
+
+
+\section{입력 방법의 예시}
+
+이 패키지가 의도하는 바에 대한 이해를 돕기 위해 동일한 문장을 입력하는 방법의 예시를 들어둔다. 
+
+\paragraph{pm 입력} 셋 중에서 옛한글을 완전하게 표현할 수 있는 방식이다. 예시는 현대 한글.
+
+\begin{exampleonly}
+\jamoword{sei/gyei/in/guen/sen/en}
+\begin{jamotext}
+mo/dvn in/ryu gu/seq/uen/vi cen/bu/vi jon/em/seq/goa
+doq/dvq/ha/go yaq/do/har su ebs/nvn guen/ri/rvr in/jeq/ha/nvn ges/i
+sei/gyei/vi ja/yu/, jeq/vi mic pyeq/hoa/vi gi/co/i/mye/,
+in/guen/ei dai/han mu/si/oa gyeq/myer/i in/ryu/vi yaq/sim/vr
+gyeg/bun/si/ki/nvn man/haiq/vr co/rai/ha/yess/v/mye/,
+\end{jamotext}
+\end{exampleonly}
+
+\paragraph{RRK 방식} 일반적으로 한국어 사용자에게 가장 친숙한 방식이다. (옛한글은\expldash 이 패키지가 확장한 몇 가지를 제외하면\expldash 일반적으로 사용하기 어렵다.)
+
+\begin{exampleonly}
+\jamoword{segye-ingwonseon-eon}
+\begin{jamotext}
+modeun inlyu guseong-won-ui cheonbu-ui jon-eomseonggwa
+dongdeunghago yangdohal su eobsneun gwonlileul injeonghaneun
+geos-i segye-ui ja-yu, jeong-ui mich pyeonghwa-ui gicho-imyeo,
+ingwon-e daehan musi-wa gyeongmyeol-i inlyu-ui yangsim-eul
+gyeogbunsikineun manhaeng-eul cholaeha-yeoss-eumyeo,
+\end{jamotext}
+\end{exampleonly}
+
+\paragraph{frkim 방식} 다음과 같다.
+
+\begin{exampleonly}
+\jamoword{seigiei'inguensen'en}
+\begin{jamotext}
+modyn inriu guseq'uen'yi cenbu'yi jon'emseqgoa
+doqdyqhago iaqdohar su ebsnyn guenriryr injeqhanyn ges'i
+seigiei'yi ja'iu, jeq'yi mic pieqhoa'yi gico'imie,
+inguen'ei daihan musi'oa gieqmier'i inriu'yi iaqsim'yr
+giegbunsikinyn manhaiq'yr coraiha'ieS'ymie,
+\end{jamotext}
+\end{exampleonly}
+
+어떤 입력 방식이든, 결과는 다음과 같이 나타난다.
+
+\begin{quote}
+\jamoword{sei/gyei/in/guen/sen/en}
+\begin{jamotext}
+	mo/dvn in/ryu gu/seq/uen/vi cen/bu/vi jon/em/seq/goa
+	doq/dvq/ha/go yaq/do/har su ebs/nvn guen/ri/rvr in/jeq/ha/nvn ges/i
+	sei/gyei/vi ja/yu/, jeq/vi mic pyeq/hoa/vi gi/co/i/mye/,
+	in/guen/ei dai/han mu/si/oa gyeq/myer/i in/ryu/vi yaq/sim/vr
+	gyeg/bun/si/ki/nvn man/haiq/vr co/rai/ha/yess/v/mye/,
+\end{jamotext}
+\end{quote}
+
+%\item \verb|pmfont={<fontname>}|.
+%식자할 폰트를 지정한다. 이 옵션이 주어지지 않으면 문서의 mainfont (\koTeX\ 패키지의
+%경우는 mainhangulfont)를 따른다. 지정할 수 있는 폰트에 대해서는 \ref{sec:font} \titleref{sec:font}\를, 이 옵션에 대한 설명은 \ref{font:set}\를 보라.
+%\item \verb|pmfontfeagure=<fontfeature>|.
+%pmfont 옵션으로 지정하는 폰트에 추가 속성을 부여하려 할 때. \ref{font:set}\을 보라.
+%\end{enumerate}
+
+\section{주의사항}
 
 이 패키지의 목적은 한글 자모를 입력하여 한글이 표현되게 하는 것이다.
-그러므로 한글이 입력되고 있는 범위(이하 “인자 범위”라고 부른다) 안에서는
-원칙적으로 다른 어떤 매크로도 올 수 없다. 글자가 먼저 만들어져야 거기에 대해서
-어떤 명령을 수행할 수 있기 때문이다. 예를 들어
+글자가 먼저 만들어지고 거기에 대해서 어떤 명령을 수행할 수 있는 것이므로 예를 들어
 \begin{verbatim}
     \textbf{\jamoword{<args>}}
 \end{verbatim}
@@ -165,155 +363,230 @@ pmfont 옵션으로 지정하는 폰트에 추가 속성을 부여하려 할 때
 \end{verbatim}
 이렇게 하면 오류가 발생한다.
 
-\subsubsection{\texttt{\bs jamoword} 명령}
+\paragraph{이전 버전과의 호환성}\label{sec:compat}
+이 패키지 1.0버전에서 \texttt{[method=pm]}의 한글 대응 문자 세 개의 설정값이 달라졌다.\marginpar{\fbox{\footnotesize v1.0}}
+그 내역은 다음과 같다.
 
+\medskip
+\begin{tabular}{lll}
+	대응 한글 자모 & 1.0 버전 & 0.6 이전 버전 \\
+	ㅇ & \texttt{q} & \texttt{x} \\
+	\char"3181 & \texttt{f} & \texttt{q} \\
+	\char"3186 & \texttt{x} & \texttt{f} \\
+\end{tabular}
+
+\medskip
+이 개편은 \texttt{[method=frkim]}이 도입되면서 이루어졌는데 가장 큰 변화는 이응(ㅇ)을 \texttt{x}가
+아니라 \texttt{q}로 적게 한 것이다.
+
+이러한 변화로 인하여 이전 버전에서 입력한 텍스트가 의도와 달리 출력될 수 있다. 패키지 옵션으로 
+\texttt{[compat=0.5]}를 부여하면 새로운 대응 문자가 아니라 0.6 이전 버전에서의 대응 문자가 
+여전히 동작하게 해두었다. 
+
+\chapter{폰트}\label{chap:fonts}
+
+\section{사용가능한 글꼴}\label{sec:font}
+
+자모 조합 한글을 출력하려면 이를 해낼 수 있는 글꼴이 필요하다. 소위 `옛한글' 글꼴이라지만 PUA 옛한글
+5000여자의 사용자 영역 글자만을 가지고 있는 글꼴로는 이 패키지에서 말하는 옛한글을 식자할 수 없다. 새바탕\cntrdot 새굴림과 같은 한양 옛한글
+폰트, 전주완판본체, 제주폰트 등이 모두 옛한글에 사용할 수 없는 폰트에 해당한다.
+
+자모 조합 한글을 구현할 수 있는 몇몇 글꼴을 테스트해보겠다. 
+
+\unusepmfont
 \begin{boxedverbatim}
-\jamoword{<several words>}
+sa:r@m/ma:da; h@i:qqye; su:bqi; ni/gye;
 \end{boxedverbatim}
 
-한글 자모를 알파벳으로 입력하여 출력한다. 
-하나 또는 둘 이상의 단어가 올 수 있다.\footnote{단 하나의 단어만을 처리하는 \cmda{\jamotextcmd}라는 명령이
-있기는 하나 내부적으로 사용되는 것이다.}
-\verb|\par|를 포함하는 문단은 올 수 없다.
+\newcommand\teststr{\jamoword{sa:r@m/ma:da; h@i:qqye; su:bqi; ni/gye;
+}}
+
+\newcommand\testfont[1]{%
+	\begingroup
+	\begin{adjustwidth}{2em}{2em}
+	\adhochangulfont[\fontfeatureoption]{#1}\teststr
+	\end{adjustwidth}
+	\endgroup
+}
+
+함초롬 바탕 \testfont{HCR Batang LVT}
+
+은 바탕 \testfont{UnBatang}
+
+본명조 또는 Noto Korean \testfont{Noto Serif KR}
+
+나눔명조옛한글 \testfont{NanumMyeongjo-YetHangul.ttf}
+
+KoPubWorld 바탕 \testfont{KoPubWorldBatangMedium}
+
+함초롬 돋움 \testfont{HCR Dotum LVT}
+
+본고딕 또는 Noto Sans \testfont{Noto Sans KR}
+
+나눔바른고딕옛한글 \testfont{NanumBarunGothic-YetHangul.ttf}
+
+맑은 고딕 \testfont{Malgun Gothic}
+
+KoPubWorld 돋움 \testfont{KoPubWorldDotumMedium}
+
+%한컴훈민정음세로쓰기\footnote{이 폰트는 방점의 위치가 정확하게 나타나지 않는다. 방점이 없는 글자에 대해서만 사용할 수 있을 
+%것이다.}
+%\testfont{Hancom Hoonminjeongeum_V}
 
 \medskip
 
-\begin{exampleside}
-\jamoword{na/ras;mar:ss@/mi; dyuq/guig;ei dar/a;} 
-\end{exampleside}
+옛한글을 무리없이 표현하는 것은 현재 이 정도인 것 같다.
+각 폰트는 특정한 문자에 대해서 약간의 차이를 보이기도 한다. 참고로 이 문서에서는
+본문과 옛한글에 Noto Serif KR을 사용하였다.
 
-\subsubsection{\env{jamotext} 환경}
+\hologo{LuaTeX}으로 컴파일하는 경우에는 위에 든 폰트들, 즉 \texttt{Script Hangul} 속성을 
+가진 폰트만 사용 가능하다. \hologo{LuaTeX}과 이 패키지의 관계에 대해서 
+\pageref{sec:luatex}페이지를 참고하라.
 
-\begin{boxedverbatim}
-\begin{jamotext} 
-<text>
-\end{jamotext}
-\end{boxedverbatim}
+\ifXeTeX
 
-\env{jamotext} 환경은 여러 문단을 포함하는 긴 문장을 식자할 수 있다.
-단 이 환경 안에 오는 모든 텍스트는 문장부호와 몇 가지 예외적인 것 이외에
-인자를 취하는 매크로를 포함하지 않고 순수한 한글로만 되어 있어야 한다.
+\bigskip
+
+한글 자모 영역의 글리프를 가지고 있는 글꼴이 있다. 성조표지를 잘 처리하지 못하는 경우가 있고 옛한글
+글자꼴이 반듯하지 않지만 어쨌든 글자가 나오기는 할 것이다. 이것은 \texttt{Script Hangul} 속성을 갖고
+있는 것은 아니며 단지 한글 자모 영역 글리프를 영리하게 배열한 것이다. 방점 없이 테스트해보겠다.
 
 \medskip
-\begin{exampleside}
-\begin{jamotext}
-na/ras;mar:ss@/mi; dyuq/guyg;ey; dar/a;
-mun/jj@x;oa;ro; se/rv s@/m@s/di; a/ni;h@r/ss@i;
 
-i;ren jyen/c@;ro; e/rin; 百b@ig;姓syeq;i; 
-ni/rv/go;jye; horf; bai; i/sye;do;
-\end{jamotext}
-\end{exampleside}
+\renewcommand\teststr{\jamoword{sa/r@m/ma/da h@i/qqye su/bqi ni/gye}}
 
-\leavevmode\marginpar{\footnotesize\fbox{v0.5}}%
-\env{jamotext} 환경 내에 긴 문장을 쓰다가 보면 잠시 jamo 입력이
-아닌 아스키 입력 상태로 escape하여야 할 때가 있다. 이를 위하여
+은 자모바탕 \testfont{UnJamoBatang}
+
+은 돋움 \testfont{UnDotum}
+
+\medskip
+그러나 자모 영역 자면이 있다 하더라도 글리프가 잘 조성되어 있지 않은 글꼴에서는
+다음과 같이 모아쓰기가 되지 않는 형태로 출력된다. 이런 글꼴은 옛한글에 사용할 수 없다.
+
+\medskip
+전주완판본 순L \testfont{TSTJJWanSunL}
+
+\medskip
+
+\textbf{현대 한글 음절문자}는 적어도 \hologo{XeLaTeX}에서는 모두 제대로 표현될 것이다.
+자모 코드로부터 한글 음절을 (유니코드 표준을 따라) 구성하는 일을 폰트가 아니라 \hologo{XeTeX}이 하고 있음을 짐작할 수 있다.\footnote{이 패키지의 입력 방법으로 \hologo{XeLaTeX} 컴파일하여 만들어진 현대 한글 음절 영역 문자를 pdf로부터
+복사하여 편집기에 붙여넣기하면 자모 코드가 아니라 음절 코드로 들어가는 것을 확인할 수 있다.}
+현대 한글만을 표기하려 한다면 폰트의 제약이 줄어든다고 하겠다.
+
+\begin{boxedverbatim}
+o/dvq/vn ja/ey a jo/sen/vi dog/rib/gug/im/goa
+\end{boxedverbatim}
+
+\renewcommand\teststr{\jamoword{o/dvq/vn ja/ey a jo/sen/vi dog/rib/gug/im/goa}}
+
+백묵 바탕 \testfont{batang.ttf}
+
+Adobe 명조 \testfont{AdobeMyungjoStd-Medium.otf}
+
+전주완판본 순L \testfont{TSTJJWanSunL}
+
+제주한라산 \testfont{JejuHallasan.ttf}
+
+\fi
+
+\usepmfont
+
+\section{폰트의 지정}\label{font:set}
+
+\subsubsection{Script Hangul Feature}
+
+\cmda{\jamoword}와 \env{jamotext} 인자 범위 내에서 한글을 식자하려 할 때에는
+주어진 (한글) 폰트의 \textsf{Script Hangul} 속성을 활성화하여야 한다.\footnote{이것은 
+폰트가 가지고 있는 오픈타입 속성을 활성화하여 자모 한글을 제대로 출력하도록 지정하는 역할을 한다. 자모 한글을
+처리하는 기능을 가지고 있지 않은 글꼴에서는 아무 역할도 하지 않고 컴파일 시 콘솔에 경고 메시지를 보일 것이다.}%
+\textsuperscript{, }\footnote{\hologo{LuaTeX}에서는 약간의
+추가 옵션(\texttt{Renderer=Harfbuzz} 또는 \texttt{Renderer=OpenType})이 더 필요할 수 있다. 이 문서의 이후 \texttt{[Script=Hangul]}을 주라고 하는 때에
+모두 동일하다. \pageref{sec:luatex}페이지의 부록 B를 보라.\label{fn:fontoption}}
+
+그러므로 \pkg{fontspec} 방식으로 폰트를 지정할 때 반드시
 \begin{verbatim}
-    !{<ascii stuffs>}
+\set...font{<fontname>}[Script=Hangul]
 \end{verbatim}
-와 같은 트릭을 쓸 수 있다.
-이 때에 \verb|!{|는 반드시 단어의 첫머리여야 하므로 한 단어 안에서
-두 번 이상 쓸 수 없다. 문단 구분을 위한 빈 줄도 올 수 없다.
+또는 Lua\TeX 이라면
+\begin{verbatim}
+\set...font{<fontname>}[Script=Hangul,Renderer=OpenType]
+\end{verbatim}
+을 지정하여야 한다.
 
-이 아스키 에스케이프 트릭은 \env{jamotext} 환경 내에서만 쓸 수 있고 
-\cmda{\jamoword}의 인자 범위에서는 쓸 수 없다.
+이 패키지는 \texttt{[pmfont=]} 옵션을 제공하여 이런 번거로움을 피해갈 수 있게 하였다.
+즉 \cs{jamoword}로 주어지는 한글에 적용할 폰트를 별도로 지정함으로써
+위에 언급한 feature를 붙여 식자하게 하였다. 다음 절에서 이에 대해 부연한다.
 
-\medskip
+\subsection{패키지 옵션 \texttt{pmfont}}
+
+\leavevmode{\marginpar{\fbox{\footnotesize v5.0}}}
+패키지 옵션 \verb|pmfont=|가 주어지지 않았을 때는 아무 일도 하지 않는다.
+이것이 의미하는 것은 현재 활성화된 기본 폰트가 pm 자모 식자에 이용된다는 뜻이다.
+mainfont로 식자할 것인지, 또는 별도의 폰트를 \cmda{\newfontfamily}로
+설정하여 식자할 것인지 사용자에게 맡겨져 있고, 이것이 디폴트이다.
+
+만약 \verb|pmfont=| 옵션이 예컨대 다음과 같이 주어졌다고 가정하자.
+\begin{verbatim}
+    \usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
+\end{verbatim}
+이 때에는 \cmda{\jamoword}와 \env{jamotext}의 인자 범위에서 pm 자모 입력된
+한글 문자에 대해서 지정된 폰트가 (필요한 속성(feature)이 자동으로 주어져서)
+적용된다.
+
+필요할 적에 활용할 수 있도록 \texttt{pmfont}에 관련된
+두 개의 매크로가 정의되어 있다. \verb|\usepmfont|는 명령이 주어진 위치부터
+\verb|\setpmhangulfont|에 의하여 지정되는 폰트를 자모 식자에 사용한다.
+\begin{verbatim}
+  \usepmfont
+  \setpmhangulfont{HCR Batang LVT}
+\end{verbatim}
+옵션 \verb|pmfont={HCR Batang LVT}|는 이 두 매크로를 문서의 맨처음부터
+설정하는 것과 동일하다.
+
+거의 쓸 일이 있을 것으로 생각하지 않지만 자모 한글을 식자할 때 pmfont에 의하지
+않고 본문 기본 한글 글꼴(이 때 한글 글꼴에는 반드시 \texttt{Script=Hangul}이
+주어져 있어야 한다)로 식자하도록 되돌리려 할 때
+\begin{verbatim}
+  \unusepmfont
+\end{verbatim}
+를 선언할 수 있다.\footnote{단 \texttt{method=frkim} 방식에서는 폰트 지정 방식이
+	독자적으로 되어 있어서 \cs{unusepmfont} 명령의 효력이 없다.}
+본문 글꼴 설정에서 \texttt{Script=Hangul} 옵션이 주어져 있지 않으면 
+다음과 같은 결과를 얻게 될 것이다.
+\unusepmfont
+\jamoword{na/ras;mar:ss@/mi;}
+\usepmfont
+
+\subsection{패키지 옵션 pmfontfeature} \marginpar{\fbox{\footnotesize{v0.5.1}}}
+자모 한글을 식자하는 폰트(pmfont)에 추가적인 fontfeature를 부여하려면 이 옵션을
+쓸 수 있다.\footnote{이 패키지가 \texttt{pmfont}에 default로 부여하는 속성은 \texttt{Ligatures=TeX},
+\texttt{Script=Hangul}, 그리고 \texttt{Renderer=OpenType}이다.}
+다음은 \koTeX\ 한글 폰트 속성 FakeStretch를 부여한 예이다.
+
+\begin{verbatim}
+  \usepackage[pmfont={HCR Batang LVT},pmfontfeature={FakeStretch=0.9}]
+  {pmhanguljamo}
+\end{verbatim}
+
+\cmda{\setpmhangulfont} 명령의 옵션으로 fontfeature를 부여할 수도 있다.
+
+\begin{verbatim}
+  \setpmhangulfont{Noto Serif KR}[FakeStretch=0.9]
+\end{verbatim}
+
+이미 부여한 속성을 기본값으로 되돌리려면 \cmda{\setpmhangulfont}를 옵션 없이
+선언하여야 한다.
+
 \begin{exampleside}
-\begin{jamotext}
-in/gan/i pog/jex/goa eg/ab/ei 
-!{tyranny and oppression} 
-dai/hax/ha/nvn ma/ji/mag su/dan/v/ro/se 
-!{as a last resort}
-ban/ran/vr ir/v/ki/do/rog gax/yo/bad/ji 
-anh/v/rye/myen
-\end{jamotext}
+\setpmhangulfont{HCR Batang LVT}[Color=blue,FakeStretch=0.8]
+\jamoword{moi/koa g@/r@m/sbun is/go}\\
+\setpmhangulfont{Noto Serif KR}
+\jamoword{moi/koa g@/r@m/sbun is/go}
 \end{exampleside}
 
-이를 이용하여 약간의 수식도 \env{jamotext} 안에 둘 수 있다.
 
-\medskip
-\begin{exampleside}
-\begin{jamotext}
-2/ca/bax/jex/sig/vi gvn/vi gox/sig/,
-!{\[ x = \frac{-b\pm\sqrt{b^2-4ac}}{2a} \]}
-vr yu/do/ha/ye bo/ja/.
-\end{jamotext}
-\end{exampleside}
 
-\subsubsection{\texttt{\bs jmcc} 명령}
-
-\begin{boxedverbatim}
-\jmcc{<single jamo>}
-\end{boxedverbatim}
-
-음절이 아니라 한 개의 자모만을 표시할 목적으로 \href{https://en.wikipedia.org/wiki/Hangul_Compatibility_Jamo}{한글 호환 자모}를 식자하려 할 때 사용하는 명령이다.
-이 패키지의 기본 명령인 \cmda{\jamoword}로도 호환 자모를 식자할 수 있기 때문에 일반적으로
-이 명령을 사용할 필요가 없으나, rrk 입력 방식으로 문서를 작성할 때라든지 오로지 호환 자모만을
-표기해야 할 필요가 있다든지 등 부득이한 경우가 있을 수 있다. 
-호환 자모를 \cmda{\jamoword} 명령의 인자 안에서 쓰는 방법은 \ref{sec:compjamo}절을 보라. 
-%이 명령은 본문 중에서 독립적으로 쓰기 위해 마련되었다.
-인자로 단 하나의 자모만이 와야 한다. 설령 \texttt{RRK} 옵션을 부여하여 RRK 입력 방법을 쓰는 때라도
-이 명령의 인자는 이 패키지의 고유한 전자 규칙을 따른다. 쌍아래아는 유니코드 호환 자모에는 정의되어 있지
-않으나 편의를 위하여 조판할 수 있도록 해두었다.
-
-\medskip
-\begin{exampleside}
-\jmcc{BSG} \jmcc{@} \jmcc{UEY} \jmcc{@@}
-\end{exampleside}
-
-\subsection{밑줄 긋기}
-
-\leavevmode\marginpar{\fbox{\footnotesize v0.5.1}}%
-밑줄을 긋는 명령 \cmda{\underline}의 인자로 \cs{jamoword}가 오는 것은 문제가 없다.
-
-\begin{exampleside}
-\underline{\jamoword{mit/jur/gvs/gi}}
-\end{exampleside}
-
-그러나 이 명령은 행자르기가 이루어지지 않는다. \textsf{ulem} 패키지의 \cs{uline}을
-쓰면 이 문제를 해결할 수 있으나,
-이 패키지의 현재 버전(0.5.1)은 \textsf{ulem} 패키지와 충돌이 있다. \XeLaTeX 으로
-\koTeX 패키지를 활용하는 상황에서 \textsf{ulem}은 오류를 보이거나 의도하지 않은 결과를
-산출할 것이다. (RRK 입력 방법에서도 동일하다.)
-
-Lua\LaTeX, 즉 \textsf{luatexko}를 이용하는 경우에는 \textsf{ulem} 없이도 ulem 명령들,
-\verb|\uline| 등을 사용할 수 있으며 이 경우에는 에러 없이 잘 동작한다. 그러므로
-\cs{uline}과 같은 ulem 명령을 사용하여야 한다면 Lua\LaTeX 으로 컴파일하는 것이 좋다.
-
-그러나 부득이하여 \XeLaTeX 으로 컴파일하여야 하는 경우이고 밑줄 등을 구현하여야 하는 때라면
-\cmda{\jamoul} 명령을 이용할 수 있다. 물론 \textsf{ulem} 패키지 등은 preamble에서
-선언되어 있어야 한다.\footnote{Lua\LaTeX 과 \koTeX 을 쓸 때는 \textsf{ulem} 패키지를
-별도로 로드하지 않는다.}
-
-\begin{boxedverbatim}
-   \jamoul{<ulem command name>}{jamo text}
-\end{boxedverbatim}
-
-\texttt{<ulem command name>}은 ulem 명령의 이름을 백슬래시 없이 지정한다는 뜻이다.
-다음 예를 보라.
-
-\ifxetex
-\begin{exampleside}
-\jamoword{go/ji nuns/mv/rvr sbv/ri/gey/ko}
-\jamoul{uline}{ye/hvi/ye/syu/mvr svr/ho/ni sai}
-\jamoul{uwave}{m@/@/m@r}
-\jamoword{nor/rai/no/ra}
-\end{exampleside}
-\else\ifluatex
-\begin{exampleside}
-\jamoword{go/ji nuns/mv/rvr sbv/ri/gey/ko}
-\uline{\jamoword{ye/hvi/ye/syu/mvr svr/ho/ni sai}}
-\uwave{\jamoword{m@/@/m@r}}
-\jamoword{nor/rai/no/ra}
-\end{exampleside}
-\fi\fi
-%\textsf{oblivoir-misc}의 \cmda{\texthl}도 같은 방법으로 할 수 있다:
-%\verb|\jamoul{texthl}{nuns/mvr/r@r sbv/ri/gey/ko}|
-%\jamoul{texthl}{nuns/mvr/r@r sbv/ri/gey/ko}
-
-\cs{jamoul}을 이용하여 밑줄을 긋는 기능은 RRK 입력방법에서는 구현되지 않았다.
-이 때에는 \textsf{luatexko}의 ulem 명령을 사용하여야 할 것이다.
+\chapter{method=pm}\label{chap:pm}
 
 \section{轉字 규칙} \label{sec:pmrule}
 
@@ -374,25 +647,26 @@ Lua\LaTeX, 즉 \textsf{luatexko}를 이용하는 경우에는 \textsf{ulem} 없�
 	hline{Y}={.7pt}
 }	
 ㄱ & g & ㄴ & n & ㄷ & d & ㄹ & r & ㅁ & m \\
-ㅂ & b & ㅅ & s & ㅇ & \SetCell{cyan!30}\textbf{x} & ㅈ & j & ㅊ & c \\
+ㅂ & b & ㅅ & s & ㅇ & \SetCell{cyan!30}\textbf{q} & ㅈ & j & ㅊ & c \\
 ㅋ & k & ㅌ & t & ㅍ & p & ㅎ & h & & \\ 
-\char"3181 & \SetCell{cyan!30}\textbf{q} & \char"317F & \SetCell{cyan!30}\textbf{z} &
-\char"3186 & \SetCell{cyan!30}\textbf{f} & \SetCell[c=4]{} \\
+\char"3181 & \SetCell{cyan!30}\textbf{f} & \char"317F & \SetCell{cyan!30}\textbf{z} &
+\char"3186 & \SetCell{cyan!30}\textbf{x} & \SetCell[c=4]{} \\
 \end{tblr}
 \end{table}
 
 \begin{enumerate}[1)] \firmlist
 \item \texttt{g}, \texttt{n}, \texttt{d}, \texttt{r}, \texttt{m}, \texttt{b}, \texttt{s}, \texttt{j}, \texttt{c}, \texttt{k}, \texttt{t}, \texttt{p}, \texttt{h}는 연상이 가능할 것이므로 따로 설명하지 않는다. \jmcc{R}에 대하여
 \verb|r|만을 사용하고 \verb|l|을 쓰지 않는다.
-\item `\jmcc{X}'(이응)에 대하여 \verb|x|를 채택하였다. 원래 이것은 오래 전 \pkg{frktex}이라는 패키지에서 
-첫소리 이응에 대하여 \verb|x|를 썼던 적이 있으므로 그 유래가 아주 없다고 할 수는 없겠다. 다만 이 패키지는 
-종성 이응 받침도 \verb|x|를 쓴다. 
-\item `\jmcc{Q}'(옛이응)을 \verb|q|로 한 것은 역시 \pkg{frktex}에서 온 것인데 ``꼭지 달린 이응''이라는 글자 모양이 \verb|q|를 연상시킨다''는 이유였다고 한다. 그럴 법도 하다.
+\item `\jmcc{Q}'(이응)에 대하여 \verb|q|를 채택하였다. 
+%원래 이것은 오래 전 \pkg{frktex}이라는 패키지에서 첫소리 이응에 대하여 \verb|x|를 썼던 적이 있으므로 그 유래가 아주 없다고 할 수는 없겠다. 다만 이 패키지는 종성 이응 받침도 \verb|x|를 쓴다. 
+\item `\jmcc{F}'(옛이응)을 \verb|f|로 한 것은 별다른 선택의 여지가 없어서였다. \ref{chap:frkim}장의 \texttt{frkim} 입력 방식에서는 이것을 대문자 \verb|Q|로 하고 있지만 우리는 대문자를 다른 용도로 할당하였기 때문에 그렇게 할 수 없었다. 
+%역시 \pkg{frktex}에서 온 것인데 ``꼭지 달린 이응''이라는 글자 모양이 \verb|q|를 연상시킨다''는 이유였다고 한다. 그럴 법도 하다.
+\item 가장 곤란했던 것은 \jmcc{X}(여린히읗)이었다. 사용되지 않은 자판 가운데서 선택할 수밖에 없는데 \texttt{l}, \texttt{v}, \texttt{w}, \texttt{x} 정도가 선택 가능한 범위였다. 알파벳이 아닌 부호문자 중에서 선택하는 것도 생각해보았으나 역시 자판의 윗줄로 올라가는 것은 꺼려져서 \verb|x|로 선택하였다. 마침 \verb|frkim| 방식에서 \verb|X|를 할당하고 있으므로 어느 정도 유사성을 확보했다고 생각하고 싶다.
 \item `\jmcc{Z}'(반시옷)을 \verb|z|로 한 것은 납득할 수 있다고 본다. z가 s의 유성음에 대응하기 때문에.
-\item 가장 곤란했던 것은 \jmcc{F}(여린히읗)이었다. 사용되지 않은 자판 가운데서 선택할 수밖에 없는데 \texttt{l}, \texttt{v}, \texttt{w}, \texttt{f} 정도가 선택 가능한 범위였다. 알파벳이 아닌 부호문자 중에서 선택하는 것도 생각해보았으나 역시 자판의 윗줄로 올라가는 것은 꺼려져서 \verb|f|로 선택하였다. 순전히 편의에 의한 대응이다.
+
 \item `\jamoword{sl@}'나 `\jamoword{slr@}'와 같은 특별한 글자, `\jamoword{jl*/cl*/jjl*/sl*/ss*}, \jamoword{jlr*/clr*/jjlr*/slr*/sslr*}'의 초성 글자들, 즉 훈민정음 언해의 ``\jamoword{dyuq/guyg;so/ri;yeys; ni;sso/ri;}'' 표기에서 쓰이는 齒頭\cntrdot 正齒音을 구분하기 위한 글자들은 \texttt{s}, \texttt{j}, \texttt{c}에 \texttt{l}, \texttt{lr}을 붙여서 표기한다. \verb|l|이 왼쪽(치두음), \verb|lr|이 오른쪽(정치음)이 더 길어지는 글자가 된다.
-\item `\jmcc{BX}', `\jmcc{BBX}', `\jmcc{MX}', `\jmcc{PX}'와 같은 ``\jamoword{ib/si/ur;ga/b@i;ya/bx@n; so/ri;}'' 표기는 \verb|x|를 이어써서 표기한다. 각각, \texttt{bx}, \texttt{bbx}, \texttt{mx}, \texttt{px}.
-\item 겹자음\cntrdot 복자음은 이어쓴다. \texttt{gg} \jmcc{GG}, \texttt{bsg} \jmcc{BSG}, \texttt{bsd} \jmcc{BSD}, \texttt{rf} \jmcc{RF}.
+\item `\jmcc{BQ}', `\jmcc{BBQ}', `\jmcc{MQ}', `\jmcc{PQ}'와 같은 ``\jamoword{ib/si/ur;ga/b@i;ya/bq@n; so/ri;}'' 표기는 \verb|q|를 이어써서 표기한다. 각각, \texttt{bq}, \texttt{bbq}, \texttt{mq}, \texttt{pq}.
+\item 겹자음\cntrdot 복자음은 이어쓴다. \texttt{gg} \jmcc{GG}, \texttt{bsg} \jmcc{BSG}, \texttt{bsd} \jmcc{BSD}, \texttt{rx} \jmcc{RX}.
 \item `제로자음'인 초성 이응은 생략할 수 있다. 모음으로 시작하면 초성 이응을 식자해준다. \verb|\jamoword{an}| \jamoword{an}. 
 \item 정말로 초성을 비우기를 원한다면(즉 초성 필러를 쓰려 한다면) \verb|w|를 그 위치에 쓸 수 있다. 이것은 종성에는 적용되지 않는다. \verb|\jamoword{wan}| \jamoword{wan}.
 \end{enumerate}
@@ -436,30 +710,189 @@ Lua\LaTeX, 즉 \textsf{luatexko}를 이용하는 경우에는 \textsf{ulem} 없�
 \verb|\jamoword{@@/nam/vn}| \jamoword{@@/nam/vn}.
 \item 표준 로마자 표기법에서 \texttt{wa}, \texttt{wo}, \texttt{we}, \texttt{wi}로 표기할 때 나타나는 반자음 \verb|w|은 채택하지 않았다. `ㅘ, ㅝ, ㅟ'는 생긴 대로 \texttt{oa}, \texttt{ue}, \texttt{ui}로 적는다.
 \item 이 패키지는 Unicode 5.2의 한글 자모 확장 A, B를 지원한다. 그러므로 한글 자모 영역([U+11XX])에는 없는 `\jamoword{wuye}'와 같은 모음을 표기할 수 있다. \verb|\jamoword{sa/guye}| \jamoword{sa/guye/}. 물론 폰트가 이를 지원해야 한다.
-\item 중성 필러([U+1160])는 \verb|*| 부호로 적을 수 있다. \verb|\jamoword{h*n}| \jamoword{h*n}. 초성과 중성을 모두 filler로 채우는 경우에는 종성이 있어야 한다. \verb|\jamoword{w*f}| \jamoword{w*f}.
+\item 중성 필러([U+1160])는 \verb|*| 부호로 적을 수 있다. \verb|\jamoword{h*n}| \jamoword{h*n}. 초성과 중성을 모두 filler로 채우는 경우에는 종성이 있어야 한다. \verb|\jamoword{w*x}| \jamoword{w*x}.
 \end{enumerate}
 
-\subsubsection{호환자모 음절} \label{sec:compjamo}
+\subsection{호환자모 음절} \label{sec:compjamo}
 
 \cmda{\jamoword}나 \env{jamotext} 범위 안에서 호환 자모를 식자하려면 해당하는 자모를 대문자로, 하나의 음절로 입력한다.
 별도로 \cmda{\jmcc}를 쓰지 않는다. 그러나 반드시 하나의 자모가 한 음절이어야 한다.
 
 \begin{exampleside}
 \jamoword{B/n@n; ib/si/ur;sso/ri;ni;} \\
-\jamoword{孟m@ix/子j@/I g@r/@/sya/d@i}
+\jamoword{孟m@if/子j@/I g@r/@/sya/d@i}
 \end{exampleside}
 
 \medskip
 
 호환 자모 아래아 `\jmcc{@}'를 \cmda{\jamoword} 인자 안에서 식자하려 할 때는 자모 아래아 `\jamoword{w@}'와
-구별하기 위해 대문자 \texttt{W}로 표기해야 한다. \verb|W|, \verb|WW|, \verb|WI|만이 지원된다.
+구별하기 위해 대문자 \texttt{W} 또는 \texttt{AA}로 표기해야 한다. \verb|W|(\verb|AA|), \verb|WW|(\verb|AAA|), \verb|WI|(\verb|AAI|)만이 지원된다.
 
 \begin{exampleside}
-\jamoword{W/n@n; 呑t@n/D/字/jj@x; ga/on;d@is;so/ri; g@;t@;ni/ra;.}\\
-\jamoword{WW/nvn jei/ju/e pyo/gi/ei i/yox/doin/da/.}
+\jamoword{AA/n@n; 呑t@n/D/字/jj@q; ga/on;d@is;so/ri; g@;t@;ni/ra;.}\\
+\jamoword{AAA/nvn jei/ju/e pyo/gi/ei i/yoq/doin/da/.}
 \end{exampleside}
 
-\subsubsection{문장 부호, 한자와 음절 한글}
+%=======
+\section{method=pm에서의 명령과 환경}
+
+\subsection{\texttt{\bs jamoword} 명령}
+
+\begin{boxedverbatim}
+\jamoword{<several words>}
+\end{boxedverbatim}
+
+한글 자모를 알파벳으로 입력하여 출력한다. 
+하나 또는 둘 이상의 단어가 올 수 있다.\footnote{단 하나의 단어만을 처리하는 \cmda{\jamotextcmd}라는 명령이
+있기는 하나 내부적으로 사용되는 것이다.}
+\verb|\par|를 포함하는 문단은 올 수 없다.
+
+\medskip
+
+\begin{exampleside}
+\jamoword{na/ras;mar:ss@/mi; dyuf/guig;ei dar/a;} 
+\end{exampleside}
+
+\subsection{\env{jamotext} 환경}\label{sec:asciiescape}
+
+\begin{boxedverbatim}
+\begin{jamotext} 
+<text>
+\end{jamotext}
+\end{boxedverbatim}
+
+\subsubsection{\env{jamotext}의 아스키 에스케이프}
+
+\env{jamotext} 환경은 여러 문단을 포함하는 긴 문장을 식자할 수 있다.
+단 이 환경 안에 오는 모든 텍스트는 문장부호와 몇 가지 예외적인 것 이외에
+인자를 취하는 매크로를 포함하지 않고 순수한 한글로만 되어 있어야 한다.
+
+\medskip
+\begin{exampleside}
+\begin{jamotext}
+na/ras;mar:ss@/mi; dyuf/guyg;ey; dar/a;
+mun/jj@q;oa;ro; se/rv s@/m@s/di; a/ni;h@r/ss@i;
+
+i;ren jyen/c@;ro; e/rin; 百b@ig;姓syef;i; 
+ni/rv/go;jye; horx; bai; i/sye;do;
+\end{jamotext}
+\end{exampleside}
+
+\leavevmode\marginpar{\footnotesize\fbox{v0.5}}%
+\env{jamotext} 환경 내에 긴 문장을 쓰다가 보면 잠시 jamo 입력이
+아닌 아스키 입력 상태로 escape하여야 할 때가 있다. 이를 위하여
+\begin{verbatim}
+    !{<ascii stuffs>}
+\end{verbatim}
+와 같은 트릭을 쓸 수 있다.
+이 때에 \verb|!{|는 반드시 단어의 첫머리여야 하므로 한 단어 안에서
+두 번 이상 쓸 수 없다. 문단 구분을 위한 빈 줄도 올 수 없다.
+
+이 아스키 에스케이프 트릭은 \env{jamotext} 환경 내에서만 쓸 수 있고 
+\cmda{\jamoword}의 인자 범위에서는 쓸 수 없다.
+
+\medskip
+\begin{exampleside}
+\begin{jamotext}
+in/gan/i pog/jeq/goa eg/ab/ei 
+!{tyranny and oppression} 
+dai/haq/ha/nvn ma/ji/mag su/dan/v/ro/se 
+!{as a last resort}
+ban/ran/vr ir/v/ki/do/rog gaq/yo/bad/ji 
+anh/v/rye/myen
+\end{jamotext}
+\end{exampleside}
+
+이를 이용하여 약간의 수식도 \env{jamotext} 안에 둘 수 있다.
+
+\medskip
+\begin{exampleside}
+\begin{jamotext}
+2/ca/baq/jeq/sig/vi gvn/vi goq/sig/,
+!{\[ x = \frac{-b\pm\sqrt{b^2-4ac}}{2a} \]}
+vr yu/do/ha/ye bo/ja/.
+\end{jamotext}
+\end{exampleside}
+
+아스키 에스케이프 트릭은 %\texttt{method=frkim}이나 
+\texttt{method=rrk}에서는 쓸 수 없다.
+
+\section{\texttt{\bs jmcc} 명령}
+
+\begin{boxedverbatim}
+\jmcc{<single jamo>}
+\end{boxedverbatim}
+
+음절이 아니라 한 개의 자모만을 표시할 목적으로 \href{https://en.wikipedia.org/wiki/Hangul_Compatibility_Jamo}{한글 호환 자모}를 식자하려 할 때 사용하는 명령이다.
+이 패키지의 기본 명령인 \cmda{\jamoword}로도 호환 자모를 식자할 수 있기 때문에 일반적으로
+이 명령을 사용할 필요가 없으나, rrk 입력 방식으로 문서를 작성할 때라든지 오로지 호환 자모만을
+표기해야 할 필요가 있다든지 등 부득이한 경우가 있을 수 있다. 
+호환 자모를 \cmda{\jamoword} 명령의 인자 안에서 쓰는 방법은 \ref{sec:compjamo}절을 보라. 
+인자로 단 하나의 자모만이 와야 한다. 이 명령은 \texttt{method=rrk}일 때도 쓸 수는 있지만
+호환 자모를 가리키는 알파벳 부호는 pm 방식의 것만을 지원한다. \texttt{method=frkim}일 때에는
+별도의 호환 자모 식자 방법을 제공하고 있다.
+
+쌍아래아는 유니코드 호환 자모에는 정의되어 있지
+않으나 편의를 위하여 조판할 수 있도록 해두었다.
+
+\medskip
+\begin{exampleside}
+\jmcc{BSG} \jmcc{@} \jmcc{UEY} \jmcc{@@}
+\end{exampleside}
+
+\section{밑줄 긋기}\label{sec:ulem}
+
+\leavevmode\marginpar{\fbox{\footnotesize v0.5.1}}%
+밑줄을 긋는 명령 \cmda{\underline}의 인자로 \cs{jamoword}가 오는 것은 문제가 없다.
+
+\begin{exampleside}
+\underline{\jamoword{mit/jur/gvs/gi}}
+\end{exampleside}
+
+그러나 이 명령은 행자르기가 이루어지지 않는다. \textsf{ulem} 패키지의 \cs{uline}을
+쓰면 이 문제를 해결할 수 있으나,
+이 패키지의 현재 버전(1.0)은 \textsf{ulem} 패키지와 충돌이 있다. \XeLaTeX 으로
+\koTeX 패키지를 활용하는 상황에서 \textsf{ulem}은 오류를 보이거나 의도하지 않은 결과를
+산출할 것이다. (RRK 입력 방법에서도 동일하다.)
+
+Lua\LaTeX, 즉 \textsf{luatexko}를 이용하는 경우에는 \textsf{ulem} 없이도 ulem 명령들,
+\verb|\uline| 등을 사용할 수 있으며 이 경우에는 에러 없이 잘 동작한다. 그러므로
+\cs{uline}과 같은 ulem 명령을 사용하여야 한다면 Lua\LaTeX 으로 컴파일하는 것이 좋다.
+
+그러나 부득이하여 \XeLaTeX 으로 컴파일하여야 하는 경우이고 밑줄 등을 구현하여야 하는 때라면
+\cmda{\jamoul} 명령을 이용할 수 있다. 물론 \textsf{ulem} 패키지는 preamble에서
+선언되어 있어야 한다.\footnote{Lua\LaTeX 에서 \koTeX 을 쓸 때는 \textsf{ulem} 패키지를 별도로 로드하지 않는다.}
+
+\begin{boxedverbatim}
+   \jamoul{<ulem command name>}{jamo text}
+\end{boxedverbatim}
+
+\texttt{<ulem command name>}은 ulem 명령의 이름을 백슬래시 없이 지정한다는 뜻이다.
+다음 예를 보라.
+
+\ifxetex
+\begin{exampleside}
+\jamoword{go/ji nuns/mv/rvr sbv/ri/gey/ko}
+\jamoul{uline}{ye/hvi/ye/syu/mvr svr/ho/ni sai}
+\jamoul{uwave}{m@/@/m@r}
+\jamoword{nor/rai/no/ra}
+\end{exampleside}
+\else\ifluatex
+\begin{exampleside}
+\jamoword{go/ji nuns/mv/rvr sbv/ri/gey/ko}
+\uline{\jamoword{ye/hvi/ye/syu/mvr svr/ho/ni sai}}
+\uwave{\jamoword{m@/@/m@r}}
+\jamoword{nor/rai/no/ra}
+\end{exampleside}
+\fi\fi
+%\textsf{oblivoir-misc}의 \cmda{\texthl}도 같은 방법으로 할 수 있다:
+%\verb|\jamoul{texthl}{nuns/mvr/r@r sbv/ri/gey/ko}|
+%\jamoul{texthl}{nuns/mvr/r@r sbv/ri/gey/ko}
+
+\cs{jamoul}을 이용하여 밑줄을 긋는 기능은 RRK 입력 방법에서는 구현되지 않았다.
+이 때에는 \textsf{luatexko}의 ulem 명령을 사용하여야 할 것이다.
+
+\section{문장 부호, 한자와 음절 한글}
 
 \cmda{\jamoword} 명령과 \env{jamotext} 환경 안에 오는 인자는 다음과 같은 문자에 대하여 예약이 되어 있다.
 \begin{itemize}\firmlist
@@ -507,363 +940,175 @@ $\Rightarrow$ na/ras/mar/ss@/mi}
 예를 들어 다음과 같은 입력
 \begin{verbatim}
   na/ras/mar/ss@/mi\\
-  中dyuq/國guig/ei dar/a
+  中dyuf/國guig/ei dar/a
 \end{verbatim}
 여기서 `\verb|mi\\|' 부분은 음절로서 완성되지 않는다. 왜냐하면
 슬래시(\verb|/|)를 생략할 수 있는 것은 space 직전이어야 하기 때문이다.
 그러므로
 \begin{verbatim}
   na/ras/mar/ss@/mi \\
-  中dyuq/國guig/ei dar/a
+  中dyuf/國guig/ei dar/a
 \end{verbatim}
 이와 같이 space를 하나 두거나
 \begin{verbatim}
   na/ras/mar/ss@/mi/\\
-  中dyuq/國guig/ei dar/a
+  中dyuf/國guig/ei dar/a
 \end{verbatim}
-슬래시(성조표지)를 생략하지 않아야 한다. 대체로 스페이스를 하나 두는 쪽이 안전하다.
-
-\section{폰트}
-
-\subsection{사용가능한 글꼴}\label{sec:font}
-
-자모 조합 한글을 출력하려면 이를 해낼 수 있는 글꼴이 필요하다. 소위 `옛한글' 글꼴이라지만 PUA 옛한글
-5000여자의 사용자 영역 글자만을 가지고 있는 글꼴로는 이 패키지에서 말하는 옛한글을 식자할 수 없다. 새바탕\cntrdot 새굴림과 같은 한양 옛한글
-폰트, 전주완판본체, 제주폰트 등이 모두 옛한글에 사용할 수 없는 폰트에 해당한다.
-
-자모 조합 한글을 구현할 수 있는 몇몇 글꼴을 테스트해보겠다. 
-
-\unusepmfont
-\begin{boxedverbatim}
-sa:r@m/ma:da; h@i:xxye; su:bxi; ni/gye;
-\end{boxedverbatim}
-
-\newcommand\teststr{\jamoword{sa:r@m/ma:da; h@i:xxye; su:bxi; ni/gye;
-}}
-
-\newcommand\testfont[1]{%
-	\begingroup
-	\begin{adjustwidth}{2em}{2em}
-	\adhochangulfont[\fontfeatureoption]{#1}\teststr
-	\end{adjustwidth}
-	\endgroup
-}
-
-함초롬 바탕 \testfont{HCR Batang LVT}
-
-은 바탕 \testfont{UnBatang}
-
-본명조 또는 Noto Korean \testfont{Noto Serif KR}
-
-나눔명조옛한글 \testfont{NanumMyeongjo-YetHangul.ttf}
-
-KoPubWorld 바탕 \testfont{KoPubWorldBatangMedium}
-
-함초롬 돋움 \testfont{HCR Dotum LVT}
-
-본고딕 또는 Noto Sans \testfont{Noto Sans KR}
-
-나눔바른고딕옛한글 \testfont{NanumBarunGothic-YetHangul.ttf}
-
-맑은 고딕 \testfont{Malgun Gothic}
-
-KoPubWorld 돋움 \testfont{KoPubWorldDotumMedium}
-
-한컴훈민정음세로쓰기\footnote{이 폰트는 방점의 위치가 정확하게 나타나지 않는다. 방점이 없는 글자에 대해서만 사용할 수 있을 
-것이다.}
-\testfont{Hancom Hoonminjeongeum_V}
-
-\medskip
-
-옛한글을 무리없이 표현하는 것은 현재 이 정도인 것 같다.
-각 폰트는 특정한 문자에 대해서 약간의 차이를 보이기도 한다. 참고로 이 문서에서는
-본문과 옛한글에 Noto Serif KR을 사용하였다.
-
-\hologo{LuaTeX}으로 컴파일하는 경우에는 위에 든 폰트들, 즉 \texttt{Script Hangul} 속성을 
-가진 폰트만 사용 가능하다. \hologo{LuaTeX}과 이 패키지의 관계에 대해서 
-\pageref{sec:luatex}페이지를 참고하라.
-
-\ifXeTeX
-
-\bigskip
-
-한글 자모 영역의 글리프를 가지고 있는 글꼴이 있다. 성조표지를 잘 처리하지 못하는 경우가 있고 옛한글
-글자꼴이 반듯하지 않지만 어쨌든 글자가 나오기는 할 것이다. 이것은 \texttt{Script Hangul} 속성을 갖고
-있는 것은 아니며 단지 한글 자모 영역 글리프를 영리하게 배열한 것이다. 방점 없이 테스트해보겠다.
-
-\medskip
-
-\renewcommand\teststr{\jamoword{sa/r@m/ma/da h@i/xxye su/bxi ni/gye
-}}
-
-은 자모바탕 \testfont{UnJamoBatang}
-
-은 돋움 \testfont{UnDotum}
-
-\medskip
-그러나 자모 영역 자면이 있다 하더라도 글리프가 잘 조성되어 있지 않은 글꼴에서는
-다음과 같이 모아쓰기가 되지 않는 형태로 출력된다. 이런 글꼴은 옛한글에 사용할 수 없다.
-
-\medskip
-전주완판본 순L \testfont{TSTJJWanSunL}
-
-\medskip
-
-\textbf{현대 한글 음절문자}는 적어도 \hologo{XeLaTeX}에서는 모두 제대로 표현될 것이다.
-자모 코드로부터 한글 음절을 (유니코드 표준을 따라) 구성하는 일을 폰트가 아니라 \hologo{XeTeX}이 하고 있음을 짐작할 수 있다.\footnote{이 패키지의 입력 방법으로 \hologo{XeLaTeX} 컴파일하여 만들어진 현대 한글 음절 영역 문자를 pdf로부터
-복사하여 편집기에 붙여넣기하면 자모 코드가 아니라 음절 코드로 들어가는 것을 확인할 수 있다.}
-현대 한글만을 표기하려 한다면 폰트의 제약이 줄어든다고 하겠다.
-
-\begin{boxedverbatim}
-o/dvx/vn ja/ey a jo/sen/vi dog/rib/gug/im/goa
-\end{boxedverbatim}
-
-\renewcommand\teststr{\jamoword{o/dvx/vn ja/ey a jo/sen/vi dog/rib/gug/im/goa}}
-
-백묵 바탕 \testfont{batang.ttf}
-
-Adobe 명조 \testfont{AdobeMyungjoStd-Medium.otf}
-
-전주완판본 순L \testfont{TSTJJWanSunL}
-
-제주한라산 \testfont{JejuHallasan.ttf}
-
-\fi
-
-\usepmfont
-
-\subsection{폰트의 지정}\label{font:set}
-
-\paragraph{Script Hangul Feature}
-
-\cmda{\jamoword}와 \env{jamotext} 인자 범위 내에서 한글을 식자하려 할 때에는
-주어진 (한글) 폰트의 \textsf{Script Hangul} 속성을 활성화하여야 한다.\footnote{이것은 
-폰트가 가지고 있는 오픈타입 속성을 활성화하여 자모 한글을 제대로 출력하도록 지정하는 역할을 한다. 자모 한글을
-처리하는 기능을 가지고 있지 않은 글꼴에서는 아무 역할도 하지 않고 컴파일 시 콘솔에 경고 메시지를 보일 것이다.}%
-\textsuperscript{, }\footnote{\hologo{LuaTeX}에서는 약간의
-추가 옵션(\texttt{Renderer=Harfbuzz} 또는 \texttt{Renderer=OpenType})이 더 필요할 수 있다. 이 문서의 이후 \texttt{[Script=Hangul]}을 주라고 하는 때에
-모두 동일하다. \pageref{sec:luatex}페이지의 부록 B를 보라.\label{fn:fontoption}}
-
-그러므로 \pkg{fontspec} 방식으로 폰트를 지정할 때 반드시
-\begin{verbatim}
-\set...font{<fontname>}[Script=Hangul]
-\end{verbatim}
-또는 Lua\TeX 이라면
-\begin{verbatim}
-\set...font{<fontname>}[Script=Hangul,Renderer=OpenType]
-\end{verbatim}
-을 지정하라.
-
-\paragraph{패키지 옵션 \texttt{pmfont}}
-
-\leavevmode{\marginpar{\fbox{\footnotesize v5.0}}}
-패키지 옵션 \verb|pmfont=|가 주어지지 않았을 때는 아무 일도 하지 않는다.
-이것이 의미하는 것은 현재 활성화된 기본 폰트가 pm 자모 식자에 이용된다는 뜻이다.
-mainfont로 식자할 것인지, 또는 별도의 폰트를 \cmda{\newfontfamily}로
-설정하여 식자할 것인지 사용자에게 맡겨져 있고, 이것이 디폴트이다.
-
-만약 \verb|pmfont=| 옵션이 예컨대 다음과 같이 주어졌다고 가정하자.
-\begin{verbatim}
-    \usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
-\end{verbatim}
-이 때에는 \cmda{\jamoword}와 \env{jamotext}의 인자 범위에서 pm 자모 입력된
-한글 문자에 대해서 지정된 폰트가 (필요한 속성(feature)이 자동으로 주어져서)
-적용된다.
-
-필요할 적에 활용할 수 있도록 \texttt{pmfont}에 관련된
-두 개의 매크로가 정의되어 있다. \verb|\usepmfont|는 명령이 주어진 위치부터
-\verb|\setpmhangulfont|에 의하여 지정되는 폰트를 자모 식자에 사용한다.
-\begin{verbatim}
-  \usepmfont
-  \setpmhangulfont{HCR Batang LVT}
-\end{verbatim}
-옵션 \verb|pmfont={HCR Batang LVT}|는 이 두 매크로를 문서의 맨처음부터
-설정하는 것과 동일하다.
-
-거의 쓸 일이 있을 것으로 생각하지 않지만 자모 한글을 식자할 때 pmfont에 의하지
-않고 본문 기본 한글 글꼴(이 때 한글 글꼴에는 반드시 \texttt{Script=Hangul}이
-주어져 있어야 한다)로 식자하도록 되돌리려 할 때
-\begin{verbatim}
-  \unusepmfont
-\end{verbatim}
-를 선언할 수 있다. 본문 글꼴에 \texttt{Script=Hangul} 옵션이
-주어져 있지 않으면 다음과 같은 결과를 얻게 될 것이다.
-\unusepmfont
-\jamoword{na/ras;mar:ss@/mi;}
-\usepmfont
-
-\paragraph{패키지 옵션 pmfontfeature} \marginpar{\fbox{\footnotesize{v0.5.1}}}
-자모 한글을 식자하는 폰트(pmfont)에 추가적인 fontfeature를 부여하려면 이 옵션을
-쓸 수 있다.\footnote{이 패키지가 \texttt{pmfont}에 default로 부여하는 속성은 \texttt{Ligatures=TeX},
-\texttt{Script=Hangul}, 그리고 \texttt{Renderer=OpenType}이다.}
-다음은 \koTeX\ 한글 폰트 속성 FakeStretch를 부여한 예이다.
-
-\begin{verbatim}
-  \usepackage[pmfont={HCR Batang LVT},pmfontfeature={FakeStretch=0.9}]
-  {pmhanguljamo}
-\end{verbatim}
-
-\cmda{\setpmhangulfont} 명령의 옵션으로 fontfeature를 부여할 수도 있다.
-
-\begin{verbatim}
-  \setpmhangulfont{Noto Serif KR}[FakeStretch=0.9]
-\end{verbatim}
-
-이미 부여한 속성을 기본값으로 되돌리려면 \cmda{\setpmhangulfont}를 옵션 없이
-선언하여야 한다.
-
-\begin{exampleside}
-\setpmhangulfont{HCR Batang LVT}[Color=blue,FakeStretch=0.8]
-\jamoword{moi/koa g@/r@m/sbun is/go}\\
-\setpmhangulfont{Noto Serif KR}
-\jamoword{moi/koa g@/r@m/sbun is/go}
-\end{exampleside}
-
-\subsection{활용}
-
-특정 언어 패키지나 입력기의 제약 없이 한글 글꼴을 지정하는 것만으로
-현대 한글과 옛한글을 모두 표현할 수 있다는 것이 \pkg{pmhanguljamo}의 장점이다.
-
-\koTeX\ 패키지와 함께 쓸 때와 그렇지 않을 때를 나누어서 간단히 사용법을 보이겠다.
-
-\subsubsection{\koTeX\ 문서}
-만약 \koTeX\ (\pkg{xetexko} 또는 \pkg{luatexko})과 함께 사용하는 경우라면 본문 한글 글꼴을 
-다음과 같이 지정한다. 
-
-
-\begin{boxedverbatim}
-  \setmainhangulfont{Noto Serif KR}[Script=Hangul]
-\end{boxedverbatim}
-
-또는 \texttt{pmfont} 옵션을 지정한다. 본문과 다른 폰트를 쓰게 하려 할 때에도
-이와 같이 한다. \texttt{pmfont} 옵션으로 지정되는 글꼴에는 \texttt{Script=Hangul}이
-자동으로 설정되므로 폰트 이름(또는 폰트 파일 이름)만을 주면 된다.
-
-\begin{boxedverbatim}
-  \usepackage[pmfont={HCR Batang LVT}]{pmhanguljamo}
-\end{boxedverbatim}
-
-\ref{sec:summary}절에서 보인 샘플을 참고하라.
-
-\subsubsection{\koTeX 이 아닐 때}
-
-\koTeX\ 문서가 아닐 때는 \pkg{fontspec} 패키지를 이용한다. main font를 위의 글꼴 중의 하나로 하거나(이 때에도 \texttt{[Script=Hangul]} 옵션을 반드시 지정하여야 한다.),
-\cmda{\newfontfamily}로 글꼴 명령을 만들어 쓰거나,
-아니면 %한글이 필요한 부분에만 \cmda{\fontspec}으로 글꼴을 지정해주는 것으로 될 것이다.
-%\fref{fig:sample}\는 \pkg{article} 문서의 한 예이다.
-\texttt{pmfont} 옵션으로 글꼴을 지정하면 될 것이다.
-다음은 \pkg{article} 문서의 한 예이다.\footnote{폰트에 부여하는
-옵션에 관하여 각주~\ref{fn:fontoption}\을 볼 것.}
-다만 이와 같이 한글 지원 패키지가 전혀 없는 상태에서는 글자 사이의 행나눔이나 양끝맞추기 등 한글 문장 식자에 꼭 필요한 몇 가지 기능이 구현되지 
-않을 것이다. 대체로 몇 자 정도의 한글을 넣어야 하는 때에 유용하리라 본다.
-
-%\begin{figure}
-%\centering
-%\begin{boxedminipage}{\dimexpr\textwidth-2.5cm\relax}
-\begin{exampleonly}
-\documentclass{article}
-\usepackage{fontspec}
-\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
-\begin{document}
-Say `Hello' in Korean, 
-\jamoword{an/nyex/ha/sey/yo}.
-\end{document}
-\end{exampleonly}
-%\end{boxedminipage}
-%\caption{article에서 pmhanguljamo을 쓰는 예}\label{fig:sample}
-%\end{figure}
-
-\bigskip
-
-\pkg{polyglossia}와 함께 사용하는 것도 잘 된다.
-%\footnote{\pkg{polyglossia}는 \XeLaTeX 에서만 사용 가능하다.}
-다음은 이 경우의 한 설정 방법이다.
-(이 보기에서는 한국어를 other language로 설정하고 있는데 만약 main language로 설정한다면
-\env{korean} 환경 안이 아니라도 한글 폰트가 적용된다.)
-\pkg{polyglossia}를 사용하여 \env{korean} 환경에서
-쓰게 되면 한국어 조판에 필요한 상당한 지원이 이루어진다.
-
-\pkg{polyglossia}에서 한국어 설정을 행한 경우에는 \cmda{\hangulfont}로
-한글 식자를 행하므로 별도로 \texttt{pmfont}를 설정하지 않아도 된다.
-\cmda{\hangulfont}를 지정할 때에 \texttt{[Script=Hangul]}을 빼먹지 않도록 한다.
-그러나 한국어가 mainlanguage라면 \texttt{pmfont}를 이용하여 
-자모 식자를 하도록 강제할 수 있다.
-
-\begin{exampleonly}
-\documentclass{article}
-\usepackage{polyglossia}
-\setmainlanguage{english}
-\setotherlanguage{korean}
-\newfontfamily\hangulfont{HCR BAtang LVT}[Script=Hangul]
-\usepackage{pmhanguljamo}
-
-\begin{document}
-\begin{korean}
-\jamoword{han/gug/e/rvr han/gvr/ro}
-\end{korean}
-\end{document}
-\end{exampleonly}
-
-만약에 \env{korean} 환경이 시작되면 그 안에서는 (무조건) pm 자모 입력 모드가 되도록 하려면
-다음 코드를 preamble에 두면 된다.
-
-\begin{boxedverbatim}
-\usepackage{etoolbox}
-\apptocmd\korean{\begin{jamotext}}{}{}
-\pretocmd\endkorean{\end{jamotext}}{}{}
-\end{boxedverbatim}
-
-이제 다음과 같이 간단히 입력할 수 있다.
-
-\begin{verbatim}
-\begin{korean}
-na/ras/mar/ss@/mi 
-\end{korean}
-\end{verbatim}
-
-%그러나 위의 처방은 이 환경 안의 모든 로마자가 한글이라는 확신이 있을 때만 적용해야 할 것이다.
-%\env{korean} 환경 안에서 로마자를 입력해야 할 일이 있을지 모르기 때문이다. 
+슬래시(성조표지)를 생략하지 않아야 한다.
+% 대체로 스페이스를 하나 두는 쪽이 안전하다.
+%%%
+%%%\subsection{활용}
+%%%
+%%%특정 언어 패키지나 입력기의 제약 없이 한글 글꼴을 지정하는 것만으로
+%%%현대 한글과 옛한글을 모두 표현할 수 있다는 것이 \pkg{pmhanguljamo}의 장점이다.
+%%%
+%%%\koTeX\ 패키지와 함께 쓸 때와 그렇지 않을 때를 나누어서 간단히 사용법을 보이겠다.
+%%%
+%%%\subsubsection{\koTeX\ 문서}
+%%%만약 \koTeX\ (\pkg{xetexko} 또는 \pkg{luatexko})과 함께 사용하는 경우라면 본문 한글 글꼴을 
+%%%다음과 같이 지정한다. 
+%%%
+%%%
+%%%\begin{boxedverbatim}
+%%%  \setmainhangulfont{Noto Serif KR}[Script=Hangul]
+%%%\end{boxedverbatim}
+%%%
+%%%또는 \texttt{pmfont} 옵션을 지정한다. 본문과 다른 폰트를 쓰게 하려 할 때에도
+%%%이와 같이 한다. \texttt{pmfont} 옵션으로 지정되는 글꼴에는 \texttt{Script=Hangul}이
+%%%자동으로 설정되므로 폰트 이름(또는 폰트 파일 이름)만을 주면 된다.
+%%%
+%%%\begin{boxedverbatim}
+%%%  \usepackage[pmfont={HCR Batang LVT}]{pmhanguljamo}
+%%%\end{boxedverbatim}
+%%%
+%%%\ref{sec:summary}절에서 보인 샘플을 참고하라.
+%%%
+%%%\subsubsection{\koTeX 이 아닐 때}
+%%%
+%%%\koTeX\ 문서가 아닐 때는 \pkg{fontspec} 패키지를 이용한다. main font를 위의 글꼴 중의 하나로 하거나(이 때에도 \texttt{[Script=Hangul]} 옵션을 반드시 지정하여야 한다.),
+%%%\cmda{\newfontfamily}로 글꼴 명령을 만들어 쓰거나,
+%%%아니면 %한글이 필요한 부분에만 \cmda{\fontspec}으로 글꼴을 지정해주는 것으로 될 것이다.
+%%%%\fref{fig:sample}\는 \pkg{article} 문서의 한 예이다.
+%%%\texttt{pmfont} 옵션으로 글꼴을 지정하면 될 것이다.
+%%%다음은 \pkg{article} 문서의 한 예이다.\footnote{폰트에 부여하는
+%%%옵션에 관하여 각주~\ref{fn:fontoption}\을 볼 것.}
+%%%다만 이와 같이 한글 지원 패키지가 전혀 없는 상태에서는 글자 사이의 행나눔이나 양끝맞추기 등 한글 문장 식자에 꼭 필요한 몇 가지 기능이 구현되지 
+%%%않을 것이다. 대체로 몇 자 정도의 한글을 넣어야 하는 때에 유용하리라 본다.
+%%%
+%%%%\begin{figure}
+%%%%\centering
+%%%%\begin{boxedminipage}{\dimexpr\textwidth-2.5cm\relax}
+%%%\begin{exampleonly}
+%%%\documentclass{article}
+%%%\usepackage{fontspec}
+%%%\usepackage[pmfont={Noto Serif KR}]{pmhanguljamo}
+%%%\begin{document}
+%%%Say `Hello' in Korean, 
+%%%\jamoword{an/nyex/ha/sey/yo}.
+%%%\end{document}
+%%%\end{exampleonly}
+%%%%\end{boxedminipage}
+%%%%\caption{article에서 pmhanguljamo을 쓰는 예}\label{fig:sample}
+%%%%\end{figure}
+%%%
+%%%\bigskip
+%%%
+%%%\pkg{polyglossia}와 함께 사용하는 것도 잘 된다.
+%%%%\footnote{\pkg{polyglossia}는 \XeLaTeX 에서만 사용 가능하다.}
+%%%다음은 이 경우의 한 설정 방법이다.
+%%%(이 보기에서는 한국어를 other language로 설정하고 있는데 만약 main language로 설정한다면
+%%%\env{korean} 환경 안이 아니라도 한글 폰트가 적용된다.)
+%%%\pkg{polyglossia}를 사용하여 \env{korean} 환경에서
+%%%쓰게 되면 한국어 조판에 필요한 상당한 지원이 이루어진다.
+%%%
+%%%\pkg{polyglossia}에서 한국어 설정을 행한 경우에는 \cmda{\hangulfont}로
+%%%한글 식자를 행하므로 별도로 \texttt{pmfont}를 설정하지 않아도 된다.
+%%%\cmda{\hangulfont}를 지정할 때에 \texttt{[Script=Hangul]}을 빼먹지 않도록 한다.
+%%%그러나 한국어가 mainlanguage라면 \texttt{pmfont}를 이용하여 
+%%%자모 식자를 하도록 강제할 수 있다.
+%%%
+%%%
+%%%만약에 \env{korean} 환경이 시작되면 그 안에서는 (무조건) pm 자모 입력 모드가 되도록 하려면
+%%%다음 코드를 preamble에 두면 된다.
+%%%
+%%%\begin{boxedverbatim}
+%%%\usepackage{etoolbox}
+%%%\apptocmd\korean{\begin{jamotext}}{}{}
+%%%\pretocmd\endkorean{\end{jamotext}}{}{}
+%%%\end{boxedverbatim}
+%%%
+%%%이제 다음과 같이 간단히 입력할 수 있다.
+%%%
+%%%\begin{verbatim}
+%%%\begin{korean}
+%%%na/ras/mar/ss@/mi 
+%%%\end{korean}
+%%%\end{verbatim}
+%%%
+%%%%그러나 위의 처방은 이 환경 안의 모든 로마자가 한글이라는 확신이 있을 때만 적용해야 할 것이다.
+%%%%\env{korean} 환경 안에서 로마자를 입력해야 할 일이 있을지 모르기 때문이다. 
+
+\section{활용 예문}
 
 \subsection{훈민정음 어제 서문}
 
 훈민정음 어제 서문을 입력한 예를 보여두겠다. 이 예문은 ``\href{http://wiki.ktug.org/wiki/wiki.php/%ED%9B%88%EB%AF%BC%EC%A0%95%EC%9D%8C%EC%96%B8%ED%95%B4}{정본 훈민정음 언해 전자문서화 프로젝트}''의 결과물을 바탕으로 하였다.
 
-\begin{boxedverbatim}
+\begin{examplebelow}
 \begin{jamotext}
-	世syeix;宗joq/御qex;製jyeix;
-	訓hun;民min/正jyeq;音fvm
+	世syeiq;宗jof/御feq;製jyeiq;
+	訓hun;民min/正jyef;音xvm
 	
 	na/ras;mar:ss@/mi;
-	中dyuq/國guig;ei; dar/a;
-	文mun/字jj@x;oa;ro; se/rv/ s@/m@s/di; a/ni;h@r/ss@i;
-	i;ren jyen/c@;ro; e/rin; 百b@ig;姓syeq;i; 
-	ni/rv/go;jye; horf; bai; i/sye;do;
-	m@/c@m;nai: jei bdv;dvr; si/re; pye/di; mod:h@rf no;mi; ha/ni;ra;
+	中dyuf/國guig;ei; dar/a;
+	文mun/字jj@q;oa;ro; se/rv/ s@/m@s/di; a/ni;h@r/ss@i;
+	i;ren jyen/c@;ro; e/rin; 百b@ig;姓syef;i; 
+	ni/rv/go;jye; horx; bai; i/sye;do;
+	m@/c@m;nai: jei bdv;dvr; si/re; pye/di; mod:h@rx no;mi; ha/ni;ra;
 
-	nai; i;r@r; 爲uix;h@;ya; e:yes/bi; ne/gye;
-	sai;ro; sv;mur;ye/dvrb; 字jj@x;r@r; m@iq/g@;no/ni;
-	sa:ram/ma:da; h@i:xxye; su:bxi; ni/gye; nar;ro; bsu;mei; 
-	便bbyen/安fan/kvi; h@/go;jye; h@rf sd@/r@/mi;ni/ra;
+	nai; i;r@r; 爲uiq;h@;ya; e:yes/bi; ne/gye;
+	sai;ro; sv;mur;ye/dvrb; 字jj@q;r@r; m@if/g@;no/ni;
+	sa:ram/ma:da; h@i:qqye; su:bqi; ni/gye; nar;ro; bsu;mei; 
+	便bbyen/安xan/kvi; h@/go;jye; h@rx sd@/r@/mi;ni/ra;
 \end{jamotext}
-\end{boxedverbatim}
+\end{examplebelow}
 
-\begin{quote}
-\begin{jamotext}
-	世syeix;宗joq/御qex;製jyeix;
-	訓hun;民min/正jyeq;音fvm
-	
-	na/ras;mar:ss@/mi;
-	中dyuq/國guig;ei; dar/a;
-	文mun/字jj@x;oa;ro; se/rv/ s@/m@s/di; a/ni;h@r/ss@i;
-	i;ren jyen/c@;ro; e/rin; 百b@ig;姓syeq;i; ni/rv/go;jye; horf; bai; i/sye;do;
-	m@/c@m;nai: jei bdv;dvr; si/re; pye/di; mod:h@rf no;mi; ha/ni;ra;
+%\begin{quote}
+%\begin{jamotext}
+%	世syeix;宗joq/御qex;製jyeix;
+%	訓hun;民min/正jyeq;音fvm
+%	
+%	na/ras;mar:ss@/mi;
+%	中dyuq/國guig;ei; dar/a;
+%	文mun/字jj@x;oa;ro; se/rv/ s@/m@s/di; a/ni;h@r/ss@i;
+%	i;ren jyen/c@;ro; e/rin; 百b@ig;姓syeq;i; ni/rv/go;jye; horf; bai; i/sye;do;
+%	m@/c@m;nai: jei bdv;dvr; si/re; pye/di; mod:h@rf no;mi; ha/ni;ra;
+%
+%	nai; i;r@r; 爲uix;h@;ya; e:yes/bi; ne/gye;
+%	sai;ro; sv;mur;ye/dvrb; 字jj@x;r@r; m@iq/g@;no/ni;
+%	sa:ram/ma:da; h@i:xxye; su:bxi; ni/gye; nar;ro; bsu;mei; 
+%	便bbyen/安fan/kvi; h@/go;jye; h@rf sd@/r@/mi;ni/ra;
+%\end{jamotext}
+%\end{quote}
 
-	nai; i;r@r; 爲uix;h@;ya; e:yes/bi; ne/gye;
-	sai;ro; sv;mur;ye/dvrb; 字jj@x;r@r; m@iq/g@;no/ni;
-	sa:ram/ma:da; h@i:xxye; su:bxi; ni/gye; nar;ro; bsu;mei; 
-	便bbyen/安fan/kvi; h@/go;jye; h@rf sd@/r@/mi;ni/ra;
-\end{jamotext}
-\end{quote}
+\subsection{\bnm{문장강화} 예문}
+
+\begin{examplebelow}
+\jamoword{sai/mar/vr man/dvr/go sai/mar/vr ssv/nvn/ges/vn yu/haiq/i
+a/ni/ra yu/haiq/i/saq em/sug/ha/gei saiq/hoar/ei pir/yo/ha/ni/gga 
+na/ta/na/nvn sa/sir/im/vr i/hai/hai/ya har/ges/i/da/. 
+ke/qpi/\textemdash/rvr meg/nvn saiq/hoar/bu/te/ga saiq/gi/go}
+\dotemph{\jamoword{pe/me/nein/tv}}\jamoword{sig/v/ro
+me/ri/rvr ji/ji/nvn saiq/hoar/bu/te/ga saiq/gi/ni/gga ge/gi/ei
+jeg/vq/han mar jvg} \snm{\dotemph{\jamoword{ke/qpi/\textemdash}}}
+\snm{\dotemph{\jamoword{pe/me/nein/tv}}}\jamoword{ga
+saiq/gi/nvn/ges/i/da/.}
+\end{examplebelow}
+
+이 예시의 \cs{snm}은 \pkg{oblivoir} 명령이고 \cs{dotemph}는 \koTeX\ 명령이다.
+
+
+\chapter{method=rrk}\label{chap:rrk}
 
 \section{표준 로마자 표기법 전자법 입력}\label{sec:rrk}
 
@@ -890,31 +1135,38 @@ RRK는 이 문서의 영어 명칭인 \emph{Revised Romanization of Korean}의 �
 전자법 입력은 오직 현대어에만 적용된다. 따라서 옛한글은 이 방법으로 입력할 수 없다. (아래아 입력을 가능하게 한 것은
 아래를 참조.)
 
-\subsection{RRK 전자 규칙}
+\section{RRK 전자 규칙}
 
 \begin{table}[h]
 \centering
-\begin{tabular}{ll|ll|ll|ll|ll|ll}
-\hline
-\multicolumn{12}{l}{자음}\\ \hline
-ㄱ & g & ㄲ & kk & ㅋ & k & ㄷ & d & ㄸ & tt & ㅌ & t \\
-ㅂ & b & ㅃ & pp & ㅍ & p & ㅈ & j & ㅉ & jj & ㅊ & ch \\
-ㅅ & s & ㅆ & ss & ㅎ & h & & & & & & \\
-ㄴ & n & ㅁ & m & ㅇ & ng & ㄹ & l & & & & \\ \hline
-\end{tabular}
+\ttfamily
+\begin{tblr}{
+	colspec={llllllll},
+	hline{1,2,Y,Z}={azure3},
+	vline{3,5,7}={azure3},
+}
+\SetCell[c=8]{c}{자음}\\ 
+ㄱ & g  & ㄲ & kk & ㅋ & k  & ㄷ & d \\
+ㄸ & tt & ㅌ & t  & ㅂ & b  & ㅃ & pp \\
+ㅍ & p  & ㅈ & j  & ㅉ & jj & ㅊ & ch \\
+ㅅ & s  & ㅆ & ss & ㅎ & h  &    & \\
+ㄴ & n  & ㅁ & m  & ㅇ & ng & ㄹ & l \\
+\SetCell[c=8]{c}{\phantom{a}}
+\end{tblr}\hfil
+\begin{tblr}{
+	colspec={llllllll},
+	hline{1,2,Z}={azure3},
+	vline{3,5,7}={azure3}
+}
+\SetCell[c=8]{c}{모음} \\ 
+ㅏ & a  & ㅓ & eo  & ㅗ & o  & ㅜ & u \\
+ㅡ & eu & ㅣ & i   & ㅐ & ae & ㅔ & e \\
+ㅚ & oe & ㅟ & wi  &   &     &   & \\ 
+ㅑ & ya & ㅕ & yeo & ㅛ & yo & ㅠ & yu \\
+ㅒ & yae & ㅖ & ye & ㅘ & wa & ㅙ & wae \\
+ㅝ & wo & ㅞ & we  & ㅢ & ui &    &  \\ 
+\end{tblr}
 \end{table}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{ll|ll|ll|ll|ll|ll}
-\hline
-\multicolumn{12}{l}{모음} \\ \hline
-ㅏ & a & ㅓ & eo & ㅗ & o &  ㅜ & u & ㅡ & eu & ㅣ & i\\ 
-ㅐ & ae & ㅔ & e & ㅚ & oe & ㅟ & wi &  & & & \\ \hline
-ㅑ & ya & ㅕ & yeo  & ㅛ & yo & ㅠ & yu & ㅒ & yae & ㅖ & ye \\
-ㅘ & wa & ㅙ & wae & ㅝ & wo & ㅞ & we & ㅢ & ui & &  \\ \hline
- \end{tabular}
- \end{table}
 
 
 \begin{enumerate}[(1)] \firmlist
@@ -940,8 +1192,9 @@ RRK는 이 문서의 영어 명칭인 \emph{Revised Romanization of Korean}의 �
 \texttt{;}, \texttt{:} 이 여섯 개에 한하여
 인자 범위 안에서 입력할 수 있다. 다른 것은 오지 못한다. 특히 줄표(\texttt{-})는 인자 범위 안에 넣으면 안 된다.\\
 \verb|\jamoword{swimpyo, machimpyo. a! geulae? olhda.}| \jamoword{swimpyo, machimpyo. a! geulae? olhda.} \\
-따옴표의 경우, \LaTeX\ 따옴표는 인자 범위 밖에 두어야 한다. 그런데 소위 “스마트 따옴표”를 이용하여 유니코드 따옴표를 입력한다면 음절 분리 부호를 이용하여 다음과 같이 할 수 있다. \\
-\verb|\jamoword{“/ulinala/”}| \jamoword{“/ulinala/”} \\
+따옴표는 분리부호를 두면 된다. \verb|\jamoword{``/ulinala/''}| \jamoword{``/ulinala/''}.
+%그런데 소위 “스마트 따옴표”를 이용하여 유니코드 따옴표를 입력한다면 음절 분리 부호를 이용하여 다음과 같이 할 수 있다. \\
+%\verb|\jamoword{“/ulinala/”}| \jamoword{“/ulinala/”} \\
 이 때의 음절 분리 부호는 하이픈 부호로 대치할 수 없다.
 
 \item 현대어만 입력할 수 있는 것이 원칙이지만 이 패키지는 편의를 위해 아래아(와 쌍아래아)를 식자할 수 있게 하였다.
@@ -956,7 +1209,7 @@ RRK는 이 문서의 영어 명칭인 \emph{Revised Romanization of Korean}의 �
 \verb|\jamoword{ri-eul li-eul}|. \jamoword{ri-eul li-eul}.
 \end{enumerate}
 
-\subsection{현대문 RRK 입력 예제}
+\section{현대문 RRK 입력 예제}
 
 \begin{boxedverbatim}
 \begin{verse}
@@ -978,16 +1231,16 @@ ijeneun hollo nam-a ttatteus-i gidalili.
 \end{jamotext}
 \end{verse}
 
-비교를 위하여 이 패키지의 고유한 pm 입력 방식으로 제시해보면 다음과 같다.
+%비교를 위하여 이 패키지의 고유한 pm 입력 방식으로 제시해보면 다음과 같다.
+%
+%\begin{verbatim}
+%nai sa/rax/ha/ri si/uer/vi gax/mur/vr \\
+%seg/yax/i jit/e/ga/nvn pu/rvn mo/rai/tob \\
+%ji/nan nar ga/jyess/den svr/pvn ye/jex/dvr/vr/, a/dvg/han gi/dai/rvr \\
+%i/jey/nvn hor/ro nam/a dda/ddvs/i gi/da/ri/ri/.
+%\end{verbatim}
 
-\begin{verbatim}
-nai sa/rax/ha/ri si/uer/vi gax/mur/vr \\
-seg/yax/i jit/e/ga/nvn pu/rvn mo/rai/tob \\
-ji/nan nar ga/jyess/den svr/pvn ye/jex/dvr/vr/, a/dvg/han gi/dai/rvr \\
-i/jey/nvn hor/ro nam/a dda/ddvs/i gi/da/ri/ri/.
-\end{verbatim}
-
-\subsection{RRK 입력으로 20세기 초반 문헌 조판}
+\section{RRK 입력으로 20세기 초반 문헌 조판}
 
 원칙적으로 RRK 입력은 현대 한글 문자, 즉 1933년 이후 표기법만을 지원하지만
 1933년의 `한글마춤법통일안'이 제정되기 직전 시기의 문헌을 이 입력 방법으로 일부
@@ -1049,16 +1302,460 @@ nog-eumbangcho ugeojyeo geumjandi jwaleuleug sgal-in jye
 \end{jamotext}
 \end{quote}
 
-이런 종류의 문헌을 조판하려면 당연히 \ref{sec:font}절에서 설명한 바,
+이런 종류의 문헌을 조판하려면 당연히 \ref{chap:fonts}장에서 설명한 바,
 옛한글을 지원하는 글꼴이어야 한다.
 
-\section{제주어}
 
-현대 제주어를 식자하려면 아래아(\jmcc{W})가 필요하다. 이 패키지를 
+\chapter{method=frkim}\label{chap:frkim}
+
+\makeatletter
+\ExplSyntaxOn
+\bool_new:N \opt_luatexko_loaded
+\@ifpackageloaded{luatexko}{
+	\bool_set_true:N \opt_luatexko_loaded
+}{
+	\bool_set_false:N \opt_luatexko_loaded
+}
+\ExplSyntaxOff
+\makeatother
+\ExplSyntaxOn
+\cs_undefine:N \jamoul
+\cs_undefine:N \jamoword
+\cs_undefine:N \l_inputword_seq
+\cs_undefine:N \l_inputpar_seq
+\cs_undefine:N \jamotext
+\cs_undefine:N \endjamotext
+\cs_undefine:N \jamo_word:nn
+\cs_set_eq:NN \frkhangulfont \opt_pmfont_tl 
+\cs_set_eq:NN \frkhangulfontfeature \opt_pmfontfeature_tl
+\input{pmhanguljamo-frkim.code.tex}
+\ExplSyntaxOff
+
+이 장은 원래 독립적으로 작성하였던 문서였다.
+
+\section{후쿠이 레이 로마자 전사법과 \pkg{hangul\protect\TeX}}
+
+\href{https://ja.wikipedia.org/wiki/%E7%A6%8F%E4%BA%95%E7%8E%B2}{\hg{후쿠이 레이(福井玲)}} \hg{교수가 
+고안한 한국어(조선어) 로마자 표기법을 ``후쿠이 레이 로마자 전사법\rq\rq 이라 한다.}\footnote{\url{http://www.tufs.ac.jp/ts/personal/choes/korean/middle/Nfukui.html}}
+우리나라의 국가 표준인 한국어 로마자 표기법과는 그 목적을 달리하여 학술적 목적에 쓰기 위한 것이다.
+한국어의 `음성\rq 이 아니라 `문자 표기\rq 를
+로마자로 나타내는 것이라서 소위 `전자법(轉字法)\rq 과 그 목적이 같다. 한국어 한글 표기의 철자를 축자적으로(\emph{literally}) 
+로마자 표기하는 것이다.
+
+이 표기법은 현대 한국어와 중세 한국어 한글 표기를 모두 포괄한다.
+
+축자적 표기법이기 때문에 이를 한국어 입력의 대응 문자로 쓸 수 있다. 실제로 이를 \TeX 으로 구현한 것이
+후쿠이 레이 교수 자신이 만든 hangul\TeX{} (1993)이라는 것이었다.\footnote{\url{http://www.vector.co.jp/vpack/filearea/dos/writing/tex/koreatex/index.html}. 이 한글 매크로 패키지의 이름은 \jpwrd{ハングル\,TeX}이다. 이를  Korean\TeX 이라고 하기도 했던 모양이나 이 글에서는 `hangul\TeX'이라고 지칭한다. 현재 찾아볼 수 있는 1.2.1 버전은 1994년 4월에 공개되었던 것이며 \LaTeX{} 2.0.9에서 동작했다.} 
+필자가 이를 \LaTeXe 용으로 수정하여 테스트한 바도 있다.\footnote{frk\TeX 에 대하여는 \url{http://faq.ktug.org/faq/pLaTeX}.}
+
+\section{사용법}
+
+\subsection{패키지 활성화와 명령}
+
+이 패키지는 단독으로 로드할 수 있다.
+
+\begin{exampleonly}
+\usepackage[<options>]{pmhanguljamo-frkim}
+\end{exampleonly}
+
+또는 pmhanguljamo 패키지의 옵션으로 부를 수 있다(\pkg{pmhanguljamo} version 0.6 이상).
+
+\begin{exampleonly}
+\usepackage[method=frkim,<options>]{pmhanguljamo}
+\end{exampleonly}
+
+\verb|<options>| 자리에 올 수 있는 옵션은 다음과 같고, 각 내용은 해당
+절에서 설명한다.
+\begin{description}
+\item [\ttfamily zeroisx] 초성의 zero 자음을 \verb|x|로 표현하게 하는 것이다. default는 false.
+\item [\ttfamily hangulfont] \cs{hg} 명령으로 식자되는 한글 폰트를 지정한다.
+\item [\ttfamily hangulfontfeature] 한글 폰트에 주어지는 feature이다.
+\item [\ttfamily frcccmds] 호환 자모 식자를 위한 명령을 미리 activate하도록 하는 옵션이다.
+\end{description}
+
+\bigskip
+
+이 패키지의 핵심 명령은 다음 두 가지이다.
+\begin{description}
+\item [\cs{hg}] 한글 자모를 알파벳으로 입력하는 명령이다. \cs{jamoword}와 같다.
+\item [\cs{hangul}, \cs{endhangul}] 여러 문단에 대하여 \cs{hg}를 실행하는 것과 같다.
+\item [\env{jamotext}] 환경 형식으로 쓸 수 있다.
+\end{description}
+
+\cs{hg}와 \cs{hangul}은 \pkg{hangul\TeX} 호환 명령이다. 예전 \pkg{hangul\TeX} 또는
+\pkg{frktex}으로 입력된 텍스트를 수정없이 식자하기 위하여 작성된 것으로서, 다른 입력 방식에서는
+제공하지 않는다. 한편, \cs{jamoword}와 \env{jamotext}는 \texttt{method=frkim}에서도
+동작한다.
+
+%\pkg{pmhanguljamo}의 기본 입력 방식인 \texttt{method=pm}에 비하여, 
+%%아스키 에스케이프 트릭이 없으며 
+%\XeLaTeX 에서 \pkg{ulem}을 이용한 밑줄 긋기가 원활하지 않다\footnote{밑줄이 반드시 필요하면 \LuaLaTeX 으로 컴파일하라.}는 차이가 있다.
+
+\bigskip
+
+다음 명령들은 편의를 위하여 제공하는 부수 명령들이며, 각각 해당 절에서 설명한다.
+\begin{description}
+\item [\cs{frcc}] 한글 호환 자모 한 개를 식자하는 명령이다. 인자로는 한글 자모를 나타내는 기호가 온다. 이 명령은 \cs{hg} 명령의 인자 안에서 쓰이면 안 되고 반드시 \cs{hg}의 인자 범위 밖에 놓여야 한다.
+\item [\cs{rq}] right quote를 인쇄하는 명령이다. \cs{hg} 인자 내부에 닫는 따옴표를 쓸 필요가 있으면 이 매크로를 사용한다.
+\item [\cs{zeroisx}, \cs{zeroisrq}] 초성의 zero 자음을 어떤 부호로 식자할 것인지를 나타낸다. \cs{zeroisrq} 상태가 디폴트이다.
+\item [\cs{frdash}, \cs{frendash}, \cs{fremdash}] \verb|-|(dash) 부호를 특별하게 처리하기 때문에 이를 대용하기 위하여 마련한 명령이다.
+\item [\cs{frkhangulfont}] 자모 한글을 식자하는 폰트이다. Noto Serif KR 폰트가 디폴트이다. 
+\item [\cs{frkhangulfontfeature}] \cs{hg} 명령의 인자로 주어지는 한글을 식자하기 위한 \cs{frkhangulfont}에 부여되는 font feature이다. ``{\ttfamily Script=Hangul,Renderer=OpenType,Ligatures=TeX}''이 디폴트로 선언되어 있다.
+\end{description}
+
+
+\subsection{한글 입력 체계}
+
+\begin{table}[h]
+\centering\small
+\caption{\pkg{hangul\TeX}\hg{'yi hangyr romaja dai'yq giucig}}\label{tab:ktex}
+\ttfamily
+\begin{tblr}{
+	colspec={llllllllll},
+	hline{1,Z}={1pt},
+	hline{2-Y}={\normalrulethickness},
+	vline{3,5,7,9}={\normalrulethickness},
+}
+\SetCell[c=10]{c,bg=azure5,fg=white}자음 &&&&&&&&&\\
+ㄱ & g & ㄴ & n & ㄷ & d & ㄹ & r & ㅁ & m \\
+ㅂ & b & ㅅ & s & ㅇ & 'x & ㅇ & q & ㅈ & j \\
+ㅊ & c & ㅋ & k & ㅌ & t & ㅍ & p & ㅎ & h  \\
+ㄲ & G & ㄸ & D & ㅃ & B & ㅆ & S & ㅉ & J \\
+ㅸ & v & ㅿ& z & ㆁ & Q & ㆆ & X & & \\
+\SetCell[c=10]{l} &&&&&&&&& \\
+\end{tblr}
+\hfil
+\begin{tblr}{
+	colspec={llllllll},
+	hline{1,Z}={1pt},
+	hline{2-Y}={\normalrulethickness},
+	vline{3,5,7,9}={\normalrulethickness},
+}
+\SetCell[c=8]{c,fg=white,bg=azure5}모음 &&&&&&&\\
+ㅏ & a  & ㅓ & e   & ㅗ & o   & ㅜ & u  \\
+ㅡ & y  & ㅣ & i   & ㆍ & @   & ㅑ & ia  \\
+ㅕ & ie & ㅛ & io  & ㅠ & iu  & ㅐ & ai \\
+ㅔ & ei & ㅒ & iai & ㅖ & iei & ㅘ & oa \\
+ㅙ & oai & ㅚ & oi & ㅝ & ue  & ㅞ & uei \\
+ㅟ & ui  & ㅢ & yi & ㆎ & @i  &    &  \\
+\end{tblr}
+\end{table}
+
+이 패키지는 \tref{tab:ktex}에 보인 \pkg{hangul\TeX}의 입력 방식을 채택하고 있으며,
+한글 문자에 해당하는 부분을 \cs{hg} 명령의 인자로 전달하는 것도 같다.
+여기에 다음과 같은 몇 가지 부수적인 규칙을 추가하였다.
+
+\begin{enumerate}[\quad(1)]
+\item 초성 위치에 오는 `\texttt{ㅇ}' 즉 zero 자음을 right quote(\texttt{'})로 
+표현하는 것이 디폴트이다. 
+zero 자음을 \texttt{x}로 대용하고 싶다면
+\cs{zeroisx}를 선언한다. \cs{zeroisrq} 명령으로 이를 되돌릴 수 있다. 이상은 \pkg{hangul\TeX}에서와 동일하다. \cs{zeroisrq}(default) 상태에서
+닫는 따옴표를 쓰려면 \cs{rq}를 \verb|'| 대신 써야 한다. \verb|''|는 \cs{rq}\cs{rq}로 쓴다.
+\verb|\hg{u'eq}| \hg{u'eq}, \verb|\zeroisx\hg{xuxeq}| {\zeroisx\hg{xuxeq}}.
+\verb|\hg{`'a'ug\rq}| \hg{`'a'ug\rq}, \verb|\zeroisx\hg{`xaxug'}| {\zeroisx\hg{`xaxug'}}. 
+\cs{zeroisx}와 \cs{zeroisrq}는 한글 입력 영역, 즉 \cs{jamoword}(=\cs{hg})의 인자
+영역 밖에서 선언하라.
+
+\activatefrcccmds
+\item 받침(종성) `\texttt{ㅇ}'은 \texttt{q}로 쓴다. 옛이응(\texttt{\frccQ})은 \texttt{Q}. 초성 자리에 올 때에도 같다.
+
+\item 단어의 첫머리에 오는 zero 자음은 생략할 수 있다. 즉 \texttt{'annieq}과 \texttt{annieq}은 그 결과가 같다($\implies$\hg{annieq}). 그러나 단어 중간의 초성 \texttt{ㅇ}은 생략할 수 없다.
+
+\item \pkg{hangul\TeX}에서는 자음이나 모음만을 \cs{hg} 명령으로 표현할 수 있었으나 이 패키지에서는 반드시 모음이 존재하여 음절을 채워야 한다. 그래서 하나의 초성 또는 중성만을 표현하려면 중성 또는 초성을 filler 문자로 채워주어야 하는데, 초성 filler는 \texttt{w}, 중성 filler는 \texttt{*} 문자를 쓴다. (이것은 \pkg{pmhanguljamo}에서와 같다.) \verb|\hg{g*}| $\implies$ \hg{g*}, \verb|\hg{wa}| $\implies$ \hg{wa}. 모음만을 표시하려 할 때 초성 필러를 써야 하는 이유는 모음으로 시작하는 단어에
+zero 자음 \texttt{ㅇ}을 넣는 규칙 때문이다.
+
+\item \pkg{hangul\TeX}에 비하여 좀더 확장된 옛한글 표현을 지원한다. 옛한글 입력과 관련하여 초성에 복자음이 오는 경우에, 그 복자음은 (단어 첫머리가 아니라면) 반드시 \verb|-|로 그 시작 위치를 밝혀주어야 한다. 단어의 첫머리 자리에서는 이것을 생략할 수 있다. \verb|\hg{gy bsgyi}| $\implies$ \hg{gy bsgyi}, \verb|\hg{gy-bsgyi'iei}| $\implies$ \hg{gy-bsgyi'iei}. 이 대시 부호를 생략하면 다음과 같이 잘못된 결과가 나타난다. \hg{gybsgyi'iei}.
+
+\item 문장 중에 \verb|-|(dash)를 프린트해야 한다면 \cs{frdash} 명령을 쓴다.\\ \verb|\hg{ga\frdash na\frendash da\fremdash ra}| $\implies$ \hg{ga\frdash na\frendash da\fremdash ra}
+
+\item 옛한글의 방점(성조점)은 지원하지 않는다. 더 자세한 사항은 \pageref{para:bangjeom} 페이지를 볼 것.
+
+\item 제주어 표기를 위한 `\hg{w@@}'를 추가하였다. 이 글자는 \verb|@@|로 쓴다. 예: \verb|\hg{@@nam'yn}| $\implies$ \hg{@@nam'yn}.
+
+\item 숫자, 한자 등 알파벳이 아닌 문자와 인자를 취하지 않는 protected 매크로는 투명하게 전달되고 처리된다. 다만 인자를 취하는 명령은 그렇지 않으므로 주의를 요한다.
+
+\end{enumerate}
+
+\section{\cs{AddRule}}
+
+\marginpar{\fbox{\footnotesize 1.0.1}}%
+\texttt{[method=pm]}의 경우와 달리 \texttt{frkim}에서는 유니코드 한글 자모 전부를 부호화해두지 않았다. 패키지가 너무 무거워지는 것을 방지하고자 함이었는데 그 결과 일부 옛한글이 나타나지 않는 경우가 생길 것이다.
+
+사용자는 자신에게 꼭 필요하지만 \texttt{frkim} 규칙에 정의되지 않은 유니코드 한글 자모의 정의를 추가할 수 있다. 다음과 같은 방식으로 사용한다.
+
+\begin{verbatim}
+\AddRule{<cho|jung|jong>}{<key=value>,<key=value>,...}
+\end{verbatim}
+
+\verb|key|는 사용할 알파벳이고 \verb|value|는 16진수 한글 자모 코드이다.
+(유니코드에 정의되지 않은 한글 자모는 쓸 수 없다.) 다음 예를 보라. 
+
+\begin{exampleside}
+\AddRule{cho}{nn=1114}
+\hg{da-nn@nira}
+\end{exampleside}
+
+만약 \verb|key|가 이미 사용되고 있는 부호라면 기존 값을 덮어쓰므로 주의한다.
+
+\texttt{frkjamofull.data.tex}이라는 이름의 부수파일에는 유니코드의 모든 한글 자모에 대하여 frkim 방식의 코드를 부여해두었다. 이 파일을
+\cs{input}하면 모든 옛한글 자모를 활용할 수 있다.
+
+\begin{exampleside}
+\input{frkjamofull.data.tex}
+\jamoword{bstoiairmh}
+\end{exampleside}
+
+\section{용례}
+
+\paragraph{현대 한글} 현대 한글의 입출력 예를 보인다.
+
+\begin{examplebelow}
+\hg{caig'yr hanguen gajigo iS'eSji'io. Gaman pioji'ei 
+	sonbadagmanhan jag'yn caig'iji'io. cesjaq'yr nemgimien
+	nun'i nairigon haji'io.}
+
+\hg{baramdo jamdyn supsog, jamdyn hiensasinamudyr tumieqhan
+	murgoanman Gai'e iS'eSji'io. gajaq kygo uramhan sasinamu 
+	mit'ei daqsin'yn memcu'eSji'io. daqsin'i namuduqci'ei 
+	dyq'yr gidaija biroso nun'i nairigi sijaghaiSji'io.
+	edi'eidyn dahgiman hamien nog'aberinyn nun.
+	gyDaiJym haise Gocnun'i Gai'enaSgeiSji'io.}
+\end{examplebelow}
+
+\cs{hangul}을 이용하여 입력한 예.
+
+\begin{examplebelow}
+\hangul
+nydas'ebs'i hoiram'i morgo'on pamun'yn 'yi'oiro simgaghan 
+ges'i'ese goanrigoa samusir'yi 'ohu najer'yr 'oanjenhi 
+gierDannai noh'aSda. goanrigoa jig'uendyr'i GiriGiri mo'ie 
+juqgunanbaq'yro Sod'a noh'yn mardyr'yn doro ju'uedam'a 
+bomien daicuq 'ui'oa gat'yn nai'ioq'i doigeiSnyndei, 
+murron gy ga'undeinyn mindosig'i Siburiedain burpieqdo
+saqdaq bubun'yr cajihago 'iS'eSda.
+
+mindosig'yn juro 'os'i nargairanyn jenrai'yi sogdam'yr 
+dyr'e gyren joqriu'yi nargairyr dargonyn seisaq'yr huerhuer
+nar'adanir su 'ebs'ym'yr nunu'i gaqjohanyn pien'i'eSda. 
+gy'yi mar'yn sasaiqhoar'i 'ebs'ejinyn seim'iranyn coqgag
+sa'uen 'ugihoan'yi jujaqgoa majbaro toqhaiSda.
+\endhangul
+\end{examplebelow}
+
+위의 예문은 \emph{hangulTeX}의 사용설명서에 있던 예문을 그대로 가져온 것이다.
+이 패키지의 방식으로는 단어 첫머리의 quote를 다 생략할 수 있으니 조금 더 수고가 줄어든다.
+
+\paragraph{\cs{rq}의 사용}
+
+닫는 따옴표는 \cs{zeroisrq}일 때 \cs{rq} 매크로를 써야 한다. 
+
+\begin{examplebelow}
+\zeroisx \hangul {``}xonyr harxirxyr naixirro miruji mara{''}nyn 
+marxi iSda. \endhangul
+\end{examplebelow}
+
+여는 겹따옴표 \verb|``|는 하나의 토큰으로 전달해주는 것이 좋다.
+
+\begin{examplebelow}
+\zeroisrq
+\hg{{``}'erin'inyn nara'yi bobai'ibnida\rq\rq{} sopa 
+`baqjeqhoan\rq{} sensaiqnim'i hasin marSym'ida.}
+\end{examplebelow}
+
+\paragraph{19세기--1933년 이전 표기법}
+주로 `아래아'와 몇 가지 복자음이 쓰이는 문헌의 예이다.
+
+\begin{examplebelow}
+\hg{nagpo'yi sdar'irnienni bando jinsaq oggieq gasda 
+	goaqhanjien'yisie jiegsoqja masna mijinjieqhoi
+	h@'orca'yi simanh@mi joiga doi'ia siaqjiei d@irohasa
+	jintoi'yi n@icisim@i gar ba'yr mornadeni du'iusan
+	sir'ieqgieisie bu'in-sd@ig'yro jisih@giro oassa'oni
+    e'iebbi iegisosie}
+\end{examplebelow}
+
+\paragraph{성조점이 있는 옛한글}\label{para:bangjeom}
+
+\texttt{[method=pm]}에서와 달리 성조점(방점)을 직접 지원하지는 않지만 이를 활용하고자 한다면 다음과 같은 방법이 
+가능하다. \verb|:|와 \verb|;| 두 글자의 catcode를 바꾸는 것이므로 텍스트에 이 부호가
+들어 있지 않아야 한다는 점에 주의해야 한다. %이 부호의 사용은 \pkg{pmhanguljamo}에서와 같다.
+
+\begin{examplebelow}
+\catcode`\:=\active \catcode`\;=\active
+\def:{\char"302F}\def;{\char"302E}
+\hg{naras;mar:S@mi; 中diuQ國guig;'ei; dar'a;
+    文mun字J@q;'oa;ro; sery s@m@sdi; ani;h@rS@i;
+    i;ren jienc@;ro; erin; 百b@ig;姓sieQ;'i nirygo;jie;
+    horX; bai; isie;do m@c@m;nai: jei bdy;dyr 
+    sire; piedi; mod:h@rX no;mi; hani;ra.}
+\end{examplebelow}
+
+\paragraph{호환 자모를 사용하는 경우}
+
+호환 자모는 \cs{frcc} 명령으로 식자할 수 있으나 \cs{hg} 인자 범위 밖에 놓여야 한다는 사실을 기억하자. 다음 예를 보라.
+
+\begin{examplebelow}
+\hg{niei 洞庭(doqjeq)}\frcc{s}\ \hg{myryr dyddani},\\
+\hg{on@r 岳陽樓('ag'iaqru)'yi or'ora}.
+\end{examplebelow}
+
+또는, \cs{hg} 명령의 인자 안에 ``인자를 취하지 않는 단독 매크로''가 오는 것은 문제없음을 이용하여, 자주쓰는 몇 가지 호환 자모를 미리 하나의 매크로로 정의하여 쓰는 방법도 있다.
+\cs{activatefrcccmds}를 선언하면 이런 종류의 매크로를 한꺼번에 만들어준다.
+패키지 옵션으로 \verb|[frcccmds]|를 부여하면 문서의 처음부터 \cs{activatefrcccmds} 상태가 된다.
+
+\begin{examplebelow}
+\activatefrcccmds
+\hg{m@iQj@\frcci\ g@r'@siad@i}\\
+\hg{\frccg n@n emSorini}\\
+\hg{g*n@n emSorini}
+\end{examplebelow}
+
+위의 마지막 예는 호환 자모를 쓰지 않고 낱자를 나타낸 것이다. 대체로 이것으로 된다고 생각하기 때문에 \cs{activatefrcccmds}를
+디폴트로 활성화시켜 두지 않은 것이다.
+
+\paragraph{ASCII 에스케이프 트릭}
+\texttt{frkim} 방식에서 아스키 에스케이프 트릭은 오직 \env{jamotext} 환경을 쓰는 경우에 가능하다. 즉, \cs{hangul} ... \cs{endhangul} 범위에서는 동작하지 않는다.
+신택스는 \texttt{method=pm}에서와 동일하다. \ref{sec:asciiescape}절을 보라.
+
+(다음 예에서 \cs{unskip}을 사용한 이유는 이 트릭이 단어 중간에 쓰일 수 없으나 괄호를 이전 단어에 붙여야 했기 때문이다.)
+
+\begin{examplebelow}
+\begin{jamotext}
+ieq'uer'ieg !{\unskip (Yeongwol Station, 寧越驛)}'yn gaq'uendo ieq'uergun 'ieq'uer'yb'ei iSnyn taibaigsen'yi cerdomieq'ida.
+iegsanyn han'og hieqsig'yro genserdoi'eS'ymie, hangugcerdogoqsa senjeq juncerdoginiemmurro jijeqdoi'e iSda.
+\end{jamotext}
+\end{examplebelow}
+
+\paragraph{\pkg{ulem}에 의한 밑줄긋기}
+
+\marginpar{\fbox{v1.1}}%
+\cs{jamoul} 명령은 \texttt{[method=pm]}의 경우와 그 사용법이 같다(\pageref{sec:ulem}페이지).
+\pkg{xetexko}와 함께 쓸 때에는 반드시 \pkg{ulem}을 로드하여야 하고
+\pkg{luatexko}와 함께 쓸 때에는 \pkg{ulem}을 로드할 필요가 없다.
+
+\begin{exampleside}
+\jamoword{odyq'yn ja'ei a}
+\jamoul{uline}{josen'yi dogribgug'im}%
+\jamoword{goa}
+\jamoul{uline}{josen'in'yi jajumin'im}%
+\jamoword{'yr}
+\jamoul{uwave}{sen'enhanora}
+\end{exampleside}
+
+\section{폰트}
+
+\paragraph{\pkg{pmhanguljamo}에서 옵션으로 부르는 경우}
+\texttt{[pmfont]}로 설정한 폰트가 \cs{frkhangulfont}가 된다.
+
+\paragraph{단독 패키지로 로드한 경우}
+
+다른 글꼴로 식자하려 한다면 
+패키지 옵션으로 \verb|[hangulfont=<fontname>]|\allowbreak 을 부여한다.
+
+\paragraph{문서 중에서}
+
+\cs{setpmhangulfont}를 이용하면 폰트와 폰트 속성을 모두 바꿀 수 있다.
+(단독 패키지를 로드하였다면 간단히 \cs{frkhangulfont} 매크로를 재정의하여도 된다.)
+
+\begin{examplebelow}
+\setpmhangulfont{HCR Dotum LVT}[Color=azure3,FakeStretch=0.7]
+\hg{g@r@mi p@r@ni sai de'ug h@i'o / 
+    moihi pereh@ni gosbici byrbydn@n d@sdoda /
+    orsbomi bond@in sdo dinagan@ni / 
+    eny nari i doragar h@i'o}
+\end{examplebelow}
+
+\emph{hangul\TeX}에는 \cs{bf}라는 명령이 있었다. 폰트를 고딕체로
+바꿔주는 것이었다.
+이 비슷한 효과를 얻기 위해서, \cs{hg} 명령을 쓰는 경우에는 \cs{hg} 밖에서
+\cs{setpmhangulfont}를 쓰면 되지만 비교적 긴 문장을 쓰는 \env{jamotext} 환경 내에서는 다음처럼 할 수 있다.
+단 이와 같은 `외부 매크로'는 한글을 구성하는 단어의 일부여서는 아니된다.
+그렇기 때문에 빈 칸을 하나 두고 명령을 주어야 한다. 이를테면 
+\verb|nim'yn\pmrm|과 같이 하면 안되고 \verb|nim'yn \pmrm|과 같이 앞 단어를 완성한 후에 매크로를 두어야 한다.
+
+\begin{examplebelow}
+\newcommand*\pmbf{\setpmhangulfont{Noto Sans CJK KR}}
+\newcommand*\pmrm{\setpmhangulfont{Noto Serif CJK KR}}
+\hg{nim'yn gaSsybnida a'a} \pmbf \hg{saraqhanyn na'yi nim}\pmrm\hg{'yn gaSsybnida}\\
+\hangul puryn sanbic'yr sgaicigo \pmbf danpuqnamu sup'yr hiaqha'ie nan \pmrm jag'yn gir'yr ger'ese cama sdercigo gaSsybnida\endhangul
+\begin{jamotext}
+narkaro'un \pmbf ceskisy'yi cu'eg \pmrm\unskip 'yn na'yi unmieq'yi jicim'yr dorrienohgo duisger'ymciese sarajieSsybnida
+\end{jamotext}
+\end{examplebelow}
+
+앞서 소개한 \cs{jamoul}이 ``감싸는 명령''임을 이용하여 다음처럼 일시적으로 폰트를 바꾸는 데 쓸 수도 있겠다.
+
+\begin{exampleside}
+\jamoword{jei gogjoryr mos iginyn}
+\jamoul{dotemph}{saraq'yi norai}\jamoword{nyn}
+\jamoul{textbf}{nim'yi cimmug}%
+\jamoword{yr huibSago dobnida}
+\end{exampleside}
+
+
+\chapter{입력 방법 요약}
+
+세 가지 입력 방법은 서로 비슷한 듯하지만 조금씩 다르다. 조견표를 작성해둔다.
+
+\section*{자음}
+
+\def\AST{\textsuperscript{*}}
+\def\DAG{\textsuperscript{$\dag$}}
+
+\activatefrcccmds
+\begin{tblr}{
+	colspec={llllllllllll},
+	hline{1,2,Y}={\normalrulethickness},
+	vline{5,9}={1pt},
+	vline{2,6,10}={dotted},
+	row{odd}={azure8},
+}
+\SetRow{fg=white,bg=azure2,font=\bfseries}
+자모 & pm & rrk & frkim & 자모 & pm & rrk & frkim & 자모 & pm & rrk & frkim \\
+ㄱ  & g  & g   & g & ㄲ  & gg & kk & G & ㄴ  & n  & n   & n \\
+ㄷ  & d  & d   & d  & ㄸ  & dd & tt  & D & ㄹ  & r  & l\AST & r \\
+ㅁ  & m  & m   & m & ㅂ  & b  & b   & b & ㅃ  & bb & pp  & B  \\
+ㅅ  & s  & s   & s & ㅆ  & ss & ss  & S & ㅇ(초) & (q)\DAG & -\DAG & '\DAG \\
+ㅇ(종) & q & ng & q & ㅈ & j & j & j & ㅉ & jj & jj & J \\
+ㅊ & c & ch & c & ㅋ & k & k & k & ㅌ & t & t & t \\
+ㅍ & p & p & p & ㅎ & h & h & h & \frccQ & f & & Q \\
+\frccz & z & & z & \frccX & x & & X & \frccv & bq & & v \\
+\SetCell[c=12]{l}{\small\AST\ 초성 자리에서 l 대신 r을 쓸 수 있음\quad
+\DAG\ 어두에 생략 가능} &&&&&&&&&&& \\
+\end{tblr}
+
+\section*{모음}
+
+\begin{tblr}{
+	colspec={llllllllllll},
+	hline{1,2,Y}={\normalrulethickness},
+	vline{5,9}={1pt},
+	vline{2,6,10}={dotted},
+	row{odd}={azure8},
+}
+\SetRow{fg=white,bg=azure2,font=\bfseries}
+자모 & pm & rrk & frkim & 자모 & pm & rrk & frkim & 자모 & pm & rrk & frkim \\
+ㅏ & a  & a   & a & ㅐ  & ay\AST & ae & ai & ㅑ  & ya &  ya  & ia \\
+ㅒ & yay\AST & yae & iai & ㅓ & e & eo & e & ㅔ & ey\AST & e & ei \\
+ㅕ & ye & yeo & ie & ㅖ & yey\AST & ye & iei & ㅗ & o & o & o \\
+ㅘ & oa & wa & oa & ㅙ & oay\AST & wae & oai & ㅚ & oy\AST & oe & oi \\
+ㅛ & yo & yo & io & ㅜ & u & u & u & ㅝ & ue & wo & ue \\
+ㅞ & uey\AST & we & uei & ㅟ & uy\AST & wi & ui & ㅠ & yu & yu & iu \\
+ㅡ & v & eu & y & ㅢ & vy\AST & ui & yi & ㅣ & i & i & i \\
+\jmcc{AA} & @ & @\DAG & @ & \jmcc{AAI} & @i & @i\DAG & @i & \jmcc{AAA} & @@ & @@\DAG & @@ \\
+\SetCell[c=12]{l}{\small \AST\ 말미의 y는 i로 대신할 수 있음(ay=ai, ey=ei, \ldots) \\
+\DAG\ 국가 표준 로마자 표기법에는 없음} & &&&&&&&&&& \\
+\end{tblr}
+
+
+
+\chapter{제주어}
+
+현대 제주어를 표기하려면 아래아(\jmcc{W})가 필요하다. 이 패키지를 
 이용하여 제주어를 식자하는 예를 보이겠다.
 
 \begin{boxedverbatim}
-\jamoword{bu/jeis/jib/i/nan jox/nvm/der h@n x@@/nam/vn d@r/ax sar/gog/.}
+\jamoword{bu/jeis/jib/i/nan joq/nvm/der h@n @@/nam/vn d@r/aq sar/gog/.}
 \end{boxedverbatim}
 
 RRK 입력 방식으로는 다음과 같이 된다.
@@ -1067,8 +1764,16 @@ RRK 입력 방식으로는 다음과 같이 된다.
 \jamoword{bujesjib-inan jongneumdeol h@n @@nam-eun d@l-ang salgog.}
 \end{boxedverbatim}
 
+frkim 방식으로는,
+
+\begin{boxedverbatim}
+\jamoword{bujeisjib'inan joqnymder h@n @@nam'yn d@r'aq sargog.}
+\end{boxedverbatim}
+
+다음과 같은 결과를 얻는다.
+
 \begin{quote}
-\jamoword{bujesjib-inan jongneumdeol h@n @@nam-eun d@l-ang salgog.}
+\jamoword{bujeisjib'inan joqnymder h@n @@nam'yn d@r'aq sargog.}
 (부잣집이니까 종놈들 한 여남은 데리고 살고)
 \end{quote}
 
@@ -1077,21 +1782,23 @@ RRK 입력 방식으로는 다음과 같이 된다.
 때문이다. 그것을 꺼내쓰기 위해서는 폰트의 사용자 영역을 열어놓고 필요한 글자를 가져다 쓰는
 수밖에 없다. 폰트 설계가 만족스럽지 않다고밖에 말할 수 없겠다.
 
+\chapter{결어와 후기}
+
 \section{贅辭}
 
 이 패키지를 만들게 된 사연이 이러하다.
 Kubuntu 리눅스에서 옛한글이 사용되는 문서를 작성할 일이 있었다. \texttt{fcitx} 입력기가 기본으로 설치되어 있었는데
 옛한글 입력이 되는 입력기를 설정하는 문제로 골머리를 썩이는 경험을 하게 된 것이다.
 세벌식 자판 배열은 이미 잊은 지 오래. \texttt{nabi}는 크롬이나
-QT에서 뭔가 이상하게 동작하거나 아예 한글 입력이 안 되거나\ldots\ldots.
+QT에서 뭔가 이상하게 동작하거나 아예 한글 입력이 안 되거나\obellipsis.
 \LaTeX\ 문서인데 굳이 입력기가 필요한가 생각이 들어 간단히 로마자 대응 입력(transliteration)으로 한글과 옛한글을
 입력하도록 하면 이 문제로 시간낭비하지 않아도 되지 않을까 싶어 시작하게 된 일이었다.
-(그리고 입력기 설치보다 더 많은 시간과 {\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{ke}\jamotextcmd{xpi}}--\footnote{이 표기를
-이태준 (1940), \ccnm{文章講話} (경성 종로, 文章社), p.~23에서 보았다. `{\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{pxi}}'가
+(그리고 입력기 설치보다 더 많은 시간과 {\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{ke}\jamotextcmd{qpi}}\textemdash\footnote{이 표기를
+이태준 (1940), \ccnm{文章講話} (경성 종로, 文章社), p.~23에서 보았다. `{\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{pqi}}'가
 아니라 
-`{\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{xpi}}'이다. 부록의 \fref{fig:mun} 참조.
+`{\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{qpi}}'이다. 부록의 \fref{fig:mun} 참조.
 인쇄 상태로 미루어보면 
-`{\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{xpi}}'자 활자가 있었던 것 같지는 않고 `피'를 식자한 후에 왼편에
+`{\hangulfontspec{Noto Serif KR}[Script=Hangul]\jamotextcmd{qpi}}'자 활자가 있었던 것 같지는 않고 `피'를 식자한 후에 왼편에
 조그마한 고리를 달아 인쇄한 것으로 보인다.
 한편, 정약용의 원본에 지석영이 영어 단어와 음을 붙여 발행했다고 하는  \ccnm{아학편} (1909)에서도 이와 같은 표기법이 쓰이고 있다.}%
 를 소비하였다.)
@@ -1127,7 +1834,22 @@ Expl3는 내가 원하는 일을 너무나 간단하게 구현할 수 있게 해
 해결되어 있는 현재 상황이 믿어지지 않을 정도이다.
 모든 한글을 잘 표현하는 좋은 폰트를 가지게 된 것은 무엇보다 반가운 일이다. 그런 폰트가 더 많아지기를 바란다.
 
+\subsection*{frkim 방식에 대한 첨언}
 
+필자는 \pkg{pmhanguljamo}를 만들고 꽤 만족하고 있었다. 그런데 이 패키지의 표준 입력 방식은
+흔히 알려진 로마자 표기법을 어느 것도 따르지 않는 것으로
+모든 음절을 `/'로 구분하게 하는 것이 (그 장점에도 불구하고) 번거롭게 여겨지는 바가 없지 않았다. 
+이에 대한 대책으로 표준 로마자 표기법의 전자법을 사용하게 한 RRK 방식이 구현되어 있으나 그 입력 방식을 필자 자신이 그다지 즐겨하지 않는 데다가 현대 한글만을 표현할 수 있다는 표현상의 제약이 존재하였다.
+
+그러던 차, \pkg{hangul\TeX}에 다시 주목하게 되었는데, 나는 이 한글--로마자 대응을 expl3로 다시 써보려고 하였고 그 과정에서
+이 패키지가 나오게 되었다. 처음의 목표는 \pkg{hangul\TeX}을 똑같이 따라하는 것이었으며
+상당히 쉽게 구현할 수 있었다. 그 결과는 \href{http://www.ktug.org/xe/index.php?mid=KTUG_open_board&document_srl=261141}{KTUG::261141(2022/11/30)}에 발표하고 있다.
+이 발표에서 옛한글을 \pkg{hangul\TeX} 방식으로 입력하는 데 대해 언급한 것이 있는데 그 부분을
+보충하여 이 패키지를 완성한 것이다.
+
+대체로 세 가지가 갖추어진 현재, frkim이 가장 효율적이다. pm 방식은 현재 유니코드로 조합할 수 있는
+모든 문자가 다 가능하다는 점과 아스키 에스케이핑같은 몇 가지 유용한 기능이 있으므로 이 패키지의 표준
+입력 방식의 지위를 내놓지는 않겠지만, 아마도 나 자신 일상적으로는 frkim을 쓰지 않을까 싶다.
 
 \section{변경 이력}
 
@@ -1160,9 +1882,22 @@ Expl3는 내가 원하는 일을 너무나 간단하게 구현할 수 있게 해
 \textbullet\ v0.5 (2022/09/02): 패키지 옵션 \texttt{pmfont} 추가. jamotext 환경 
 내에서 아스키 에스케이핑.
 
-\textbullet\ v0.5.1 (2022/09/06): 버그 수정 및 ulem. 패키지 옵션 \texttt{pmfontfeature}.
+\textbullet\ v0.5.1 (2022/09/06): 버그 수정 및 ulem. 패키지 옵션  \texttt{pmfontfeature}.
 
 \textbullet\ v0.5.2 (2022/09/07): \texttt{pmhanguljamo-kdoc.pdf} 문서의 오류 수정. \cmda{\jamoul} 버그 수정.
+
+
+\textbullet\ v0.6 (2022/11/30): \texttt{frkim.sty}의 작성
+
+\textbullet\ v0.7.1 (2022/12/25): \texttt{frkim}과 통합 및 q/f/x의 대응 문자를 바꿈. 훈민정음체 코멘트 삭제
+
+\textbullet\ v1.0 (2023/02/18): version 1.0으로 릴리스.
+
+\textbullet\ v1.0.1 (2023/02/22): frkim rule에 \cs{AddRule} 추가. \cs{zeroisx} 버그 수정.
+
+\textbullet\ v1.0.2 (2023/03/01): frkim의 \cs{hg} 명령 일부 개선
+
+
 %%% APPENDICES
 \ExplSyntaxOn
 \int_new:N \l_appsec_int
@@ -1192,7 +1927,7 @@ Adobe사의 \href{https://source.typekit.com/source-han-serif/kr/}{본명조(Sou
 \item[KoPubWorld] KoPubWorld 바탕, KoPubWorld 돋움. \href{https://www.kopus.org/biz-electronic-font2/}{한국출판인회의}.
 \item[맑은 고딕] Windows 8 이후 한글 Windows 폰트. 마이크로소프트. 
 \item[은 글꼴] 은 바탕 \TeX\,Live 배포 서체.
-\item[한컴 훈민정음 세로쓰기체] 한컴 배포 서체.
+%\item[한컴 훈민정음 세로쓰기체] 한컴 배포 서체.
 \end{description}
 
 \ifXeTeX
@@ -1210,6 +1945,8 @@ Adobe사의 \href{https://source.typekit.com/source-han-serif/kr/}{본명조(Sou
 \section*{부록 \appsec. \hologo{LuaLaTeX} 컴파일을 위한 주석}\label{sec:luatex}
 
 \hologo{LuaLaTeX}으로 컴파일하는 경우를 위한 메모.
+
+(이 메모는 version 0.1 당시의 것으로 현재는 큰 의미가 없다.)
 
 우선 LuaHB\TeX 의 \LaTeX\ 포맷을 이용하는 것이 좋다. 
 \pkg{harfbuzz} 라이브러리를 활용하므로 더 바람직한 결과를 얻을 수 있을 것으로 기대한다.

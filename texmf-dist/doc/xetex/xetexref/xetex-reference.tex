@@ -4,7 +4,7 @@
 % conditions of the LaTeX Project Public License, either version 1.3c
 % of this license or (at your option) any later version.
 % The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
+%   https://www.latex-project.org/lppl.txt
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 %
@@ -19,12 +19,17 @@
 
 \title{The \xetex reference guide\\\url{https://ctan.org/pkg/xetexref}}
 \author{Will Robertson \and Khaled Hosny \and Karl Berry}
-\date{\VERSION}
+\date{\today}
 
 \suppressfontnotfounderror=1
+\tracinglostchars=1
 
 \makeatletter
 \def\@dotsep{999}
+\makeatother
+
+\usepackage{refstyle} % must load before unicode-math with 2023 LaTeX.
+% https://tex.stackexchange.com/questions/675145
 
 \usepackage{fontspec,unicode-math}
 \setmainfont{texgyrepagella}[
@@ -43,13 +48,13 @@
     BoldItalicFont = *-bolditalic ,
     Scale=MatchLowercase
   ]
-\setmonofont{inconsolata}[
+\iffalse \setmonofont{inconsolata}[
   Scale=MatchLowercase,
   StylisticSet=3, % <- straight quotes
-  AutoFakeSlant=.2]
+  AutoFakeSlant=.2]\fi
 \setmathfont{texgyrepagella-math.otf}
 
-\usepackage{calc,fancyvrb,hyperref,refstyle,varioref,xcolor,hologo,xspace}
+\usepackage{calc,fancyvrb,hyperref,varioref,xcolor,hologo,xspace}
 \usepackage{geometry}
 %\geometry{screen,margin=3cm}
 
@@ -88,9 +93,9 @@
 \edef\|{|}
 \DefineShortVerb{\|}
 \newcommand\xarg[1]{$\langle\hbox{\rmfamily\itshape #1}\rangle$}
-\let\meta\xarg
 \def\<#1>{\xarg{#1}}
 \newcommand\oarg[1]{\texttt{[\,#1\,]}}
+\newcommand\barg[1]{\mbox{{\tt\char`\{\,}#1\,{\tt\char`\}}}}% braced arg
 \newcommand\desc[1]{\par\noindent\ignorespaces#1\par}
 \def\endcmd{%
   \end{minipage}
@@ -103,24 +108,38 @@
 \newlength\exampleindent
 \setlength\exampleindent{1em}
 
-\newenvironment{example}
-  {\VerbatimEnvironment
+\newenvironment{examplenooutput}
+  {\wlog{^^Jstarting examplenooutput at line \the\inputlineno}
+   \VerbatimEnvironment
    \begin{VerbatimOut}{\examplefilename}}
   {\end{VerbatimOut}
+   \def\typesetoutput{[No output for the example, since no AAT or
+                       Graphite fonts are available.}
    \typesetexample}
+
+\newenvironment{example}
+  {\wlog{^^Jstarting example at line \the\inputlineno}
+   \VerbatimEnvironment
+   \begin{VerbatimOut}{\examplefilename}}
+  {\end{VerbatimOut}
+   \def\typesetoutput{\color[rgb]{0.7,0,0}\input\examplefilename\relax}%
+   \typesetexample}
+
 
 \newcommand\typesetexample{%
   \begin{trivlist}\item[]
   \vrule
   \hspace{\exampleindent}
   \begin{minipage}{\linewidth-\exampleindent-\exampleindent}
+    \hfuzz=24pt % italic small caps example has overfull line
     \textit{Example:}\par
     \vspace{0.4\baselineskip}
     \BVerbatimInput[fontsize=\small]{\examplefilename}\par
     \vspace{0.4\baselineskip}
-    \color[rgb]{0.7,0,0}\input\examplefilename\relax
+    \typesetoutput
   \end{minipage}\par
   \end{trivlist}}
+
 
 \let\strong\textbf
 \newcommand\hlink[2]{\href{#1}{#2}\footnote{\url{#1}}}
@@ -145,19 +164,21 @@
 
 \section*{Introduction}
 
-This document serves to summarise additional features of \xetex without
-being so much as a ‘users’ guide. Much of the functionality
-addressed here is provided in abstracted form in various \latex
-packages and \context modules.
+This document serves as a reference for additional features of \xetex.
+It is not a users' guide. Much of the functionality addressed here is
+provided in abstracted form in various \latex packages and \context
+modules.
 
-The descriptions here should be a fairly exhaustive list of the new
-primitives and features of \xetex. Descriptions are still rather
-aenemic, however.
+The descriptions here are intended to be a reasonably complete, though
+terse, list of the new primitives and features of \xetex.
+
+For contributions (very welcome!), bug reports, etc., see links from
+the CTAN package page: \url{https://ctan.org/pkg/xetexref}.
 
 \section*{License}
 
 This work, is distributed under the terms of the LaTeX Project Public License
-(\url{http://www.latex-project.org/lppl.txt}).
+(\url{https://www.latex-project.org/lppl.txt}).
 
 This basically means you are free to re-distribute this file as you
 wish; you may also make changes to this file or use its contents for
@@ -283,7 +304,7 @@ The following \xarg{font options} control which `renderer' \xetex uses to interf
 \item[/AAT] Explicitly use the AAT renderer (Mac~OS~X only).
 \item[/OT] Explicitly use the OpenType renderer (new in 0.9999).
 \item[/GR] Explicitly use the Graphite renderer.%
-           \footnote{\url{http://scripts.sil.org/cms/scripts/page.php?site_id=projects&item_id=graphite_home}}
+           \footnote{\raggedright \url{https://scripts.sil.org/cms/scripts/page.php?site_id=projects&item_id=graphite_home}}
 \item[/ICU] Explicitly use the OpenType renderer (deprecated since 0.9999).
 \end{optdesc}
 
@@ -292,7 +313,7 @@ The following \xarg{font options} control which `renderer' \xetex uses to interf
 
 The \xarg{font features} is a comma or semi-colon separated list
 activating or deactivating various OpenType, Graphite, or AAT font
-features, which will vary by font.  In contrast to font options,
+features; these vary by font.  In contrast to font options,
 features work whether the font is selected by file name or through the
 operating system.
 
@@ -302,21 +323,20 @@ font (see comments at the top of each).
 
 \subsubsection{Font features specific to OpenType, Graphite, or AAT}
 
-OpenType font features are usually chosen with
-\hlink{http://www.microsoft.com/typography/otspec/featuretags.htm}{standard
-tags}. They may be either comma- or semicolon-separated, and prefixed
-with a |+| to turn them on and a |-| to turn them off, optionally followed
-by |=| and a 0-based index for selecting alternates from multiple
-alternates features (ignored for |-| prefixed tags).
+OpenType font features are usually specified with
+\hlink{https://www.microsoft.com/typography/otspec/featuretags.htm}{standard
+tags} in the \cs{font} command. They may be either comma- or
+semicolon-separated, and prefixed with a |+| to turn them on and a |-|
+to turn them off, optionally followed by |=| and a 0-based index for
+selecting alternates from multiple alternates features (ignored for |-|
+prefixed tags).
 
 \begin{example}
 \font\liber="[LinLibertine_RI.otf]/I=5:+smcp" at 12pt
 \liber This is the OpenType font Linux Libertine in italic with small caps.
 \end{example}
 
-Varying depending on the language and script in use (see
-\secref[vref]{script}), a small number of OpenType features, if they
-exist, may be activated by default.
+OpenType features can be activated by default:
 
 \begin{example}
 \font\antt="[AntykwaTorunska-Regular.otf]"         at 12pt \antt 0
@@ -329,12 +349,12 @@ exist, may be activated by default.
 
 AAT font features and Graphite font features are specified by strings
 within each font rather than standardised tags. Therefore, even
-equivalent features between different fonts can have different names.
+equivalent features can and do have different names in different fonts.
 
-\begin{example}
-\font\gra="[CharisSIL-R.ttf]/GR:Small Caps=True" at 12pt
+\begin{examplenooutput}
+\font\gra="[CharisSIL-Regular.ttf]/GR:Small Caps=True" at 12pt
 \gra This is the Graphite font Charis SIL with small caps.
-\end{example}
+\end{examplenooutput}
 
 \subsubsection{Features for all fonts}
 
@@ -346,7 +366,7 @@ Triple pair of hex values to specify the colour in RGB space, with an
 optional value for the transparency.
 
 \begin{example}
-\font\9="[lmsans10-regular]:color=0000FF,mapping=tex-text"
+\font\9="[lmsans10-regular.otf]:color=0000FF,mapping=tex-text"
 \9 A sans blue quoted em-dash: ``---''.
 \end{example}
 
@@ -379,10 +399,10 @@ size.
 
 \subsubsection{OpenType script and language support}\seclabel{script}
 
-OpenType font features (and font behaviour) can vary by
-\hlink{http://www.microsoft.com/typography/otspec/scripttags.htm}{script}
+OpenType font features (and font behavior) can vary by
+\hlink{https://www.microsoft.com/typography/otspec/scripttags.htm}{script}
 (‘alphabet’) and by
-\hlink{http://www.microsoft.com/typography/otspec/languagetags.htm}{language}.
+\hlink{https://www.microsoft.com/typography/otspec/languagetags.htm}{language}.
 These are selected with four and three letter tags, respectively.
 
 \begin{optdesc}
@@ -431,8 +451,8 @@ Enables glyph rotation in the output so vertical typesetting can be performed.
   \texttt{\fontname#1} is rendered by
   \ifcase\XeTeXfonttype#1\TeX\or AAT\or OpenType\or Graphite\fi.\par}
 \font\1="cmr10"
-\font\2="[CharisSIL-R.ttf]"
-\font\3="[CharisSIL-R.ttf]/OT"
+\font\2="[CharisSIL-Regular.ttf]"
+\font\3="[CharisSIL-Regular.ttf]/OT"
 \whattype\1 \whattype\2 \whattype\3
 \end{example}
 
@@ -447,7 +467,7 @@ Enables glyph rotation in the output so vertical typesetting can be performed.
 \endcmd
 
 \begin{example}
-\font\1="[CharisSIL-R.ttf]"\1
+\font\1="[CharisSIL-Regular.ttf]"\1
 The first character in Charis SIL is: "\char\XeTeXfirstfontchar\1"
 and the last character is: "\char\XeTeXlastfontchar\1".
 \end{example}
@@ -488,7 +508,7 @@ font.}
 \endcmd
 
 \begin{example}
-\font\1="[CharisSIL-R.ttf]"\1
+\font\1="[CharisSIL-Regular.ttf]"\1
 The glyph slot in Charis SIL for the Yen symbol is:
     \the\XeTeXglyphindex"yen" . % font-specific glyph name
 Or: \the\XeTeXcharglyph"00A5.   % unicode character slot
@@ -536,7 +556,7 @@ these two dimensions.}
   #1}
 
 \noindent
-\font\x="[CharisSIL-I.ttf]" at 24pt \x
+\font\x="[CharisSIL-Italic.ttf]" at 24pt \x
 \shadebbox{A} \shadebbox{W} \shadebbox{a} \shadebbox{f}
 \shadebbox{;} \shadebbox{*} \shadebbox{=}
 \end{example}
@@ -604,6 +624,9 @@ for better copy/paste and search in PDF viewers.}
 
 \subsection{AAT and Graphite fonts}
 
+These commands apply to AAT and Graphite fonts; for other kinds of
+fonts, they produce an error.
+
 \subsubsection{Features}
 
 \cmd|\XeTeXcountfeatures|
@@ -635,18 +658,18 @@ exclusive (can only take a single selector).}
 \xarg{font}
 \xarg{feature name}
 \desc{This command provides a method to query whether a feature name
-corresponds to a feature contained in the font. It represents an integer
+corresponds to a feature contained in the font. It returns an integer
 corresponding to the feature number used to access the feature
 numerically. If the feature does not exist, the integer is
 \texttt{-1}. Also see \cs{XeTeXfindselectorbyname}.}
 \endcmd
 
-\begin{example}
-\font\1="[CharisSIL-R.ttf]/GR" at 10pt
+\begin{examplenooutput}
+\font\1="[CharisSIL-Regular.ttf]/GR" at 10pt
 \def\featname{Uppercase Eng alternates}
 The feature ‘\featname’ has index
 \the\XeTeXfindfeaturebyname\1 "\featname"\relax
-\end{example}
+\end{examplenooutput}
 
 \subsubsection{Feature selectors}
 
@@ -681,14 +704,13 @@ feature of a \xarg{font}.}
 of a font is on by default.}
 \endcmd
 
-
 \cmd|\XeTeXfindselectorbyname|
 \xarg{font}
-\xarg{feature name}
+\xarg{feature code}
 \xarg{selector name}
 \desc{This command provides a method to query whether a feature selector
 name corresponds to a selector of a specific feature contained in the
-font. It represents an integer corresponding to the selector number used
+font. It returns an integer corresponding to the selector number used
 to access the feature selector numerically. If the feature selector does
 not exist, the integer is \texttt{-1}.
 
@@ -698,8 +720,8 @@ below). Alternatively, they can be used as a means of checking whether a
 feature/selector exists before attempting to use it.}
 \endcmd
 
-\begin{example}
-\font\1="[CharisSIL-R.ttf]/GR" at 10pt
+\begin{examplenooutput}
+\font\1="[CharisSIL-Regular.ttf]/GR" at 10pt
 \def\featname{Uppercase Eng alternates}
 \newcount\featcount
 \featcount=\XeTeXfindfeaturebyname\1 "\featname"\relax
@@ -709,11 +731,11 @@ feature/selector exists before attempting to use it.}
 \seleccount=\XeTeXfindselectorbyname\1 \featcount "\selecname"\relax
 The feature selector ‘\selecname’ has index \the\seleccount
 
-\font\2="[CharisSIL-R.ttf]/GR:\featname=\selecname" at 10pt
-\font\3="[CharisSIL-R.ttf]/GR:\the\featcount=\the\seleccount" at 10pt
+\font\2="[CharisSIL-Regular.ttf]/GR:\featname=\selecname" at 10pt
+\font\3="[CharisSIL-Regular.ttf]/GR:\the\featcount=\the\seleccount" at 10pt
 
 Activating the feature: \1 Ŋ \2 Ŋ \3 Ŋ
-\end{example}
+\end{examplenooutput}
 
 \subsubsection{Variation axes}
 
@@ -763,6 +785,20 @@ the \xarg{font}.}
 the \xarg{variation name}. This index cannot be used directly but may be
 used to error-check that a specified variation name exists before
 attempting to use it.}
+\endcmd
+
+\subsection{Contextual adjustment space handling}
+\cmd|\XeTeXinterwordspaceshaping|
+\xarg{integer}
+\desc{Controls the shaping of space characters in context when using
+native fonts. Defaults to 0 (disabled). Set to 1 for contextual
+adjustment of space width only, and 2 for full cross-space shaping
+(e.g., multi-word ligatures).
+
+When set to 2, each run of text (words and intervening spaces) in a
+single font will be re-shaped as a unit as a page is shipped out, so
+setting this register to 2 affects the whole page, not respecting \TeX\
+grouping.}
 \endcmd
 
 \subsection{Maths fonts}
@@ -878,9 +914,19 @@ optional keyword:\medskip
 
 \section{Characters}
 
+\cmd|\char|
+\xarg{number}
+\desc{This and related \TeX\ primitives have been extended to take any
+16-bit number, that is, up to 65536. As usual, hex digits must be
+specific in uppercase: \cs{char"FF}, not \cs{char"ff}.}
+\endcmd
+
 \cmd|\Uchar|
 \xarg{number}
-\desc{Expands to a character token with specified slot \meta{number} (range 0 to 1,114,111) with category code 12. While it looks superficially like the \TeX\ primitive \cs{char}, \cs{Uchar} is an expandable operation.}
+\desc{Expands to a character token with specified slot \xarg{number}
+(range 0 to 1,114,111) with category code 12. While it looks
+superficially like the \TeX\ primitive \cs{char}, \cs{Uchar} is an
+expandable operation.}
 \endcmd
 
 \begin{example}
@@ -892,8 +938,9 @@ optional keyword:\medskip
 \cmd|\Ucharcat|
 \xarg{number}
 \xarg{catcode}
-\desc{Expands to a character token with slot \meta{number} and \meta{catcode} specified.
-The values allowed for \meta{catcode} are: 1--4, 6--8 and 10--13.}
+\desc{Expands to a character token with slot \xarg{number} and
+\xarg{catcode} specified. The values allowed for \xarg{catcode} are:
+1--4, 6--8 and 10--13.}
 \endcmd
 
 \begin{example}
@@ -959,8 +1006,8 @@ useful for diacritics so I’m told.}
 \XeTeXinterchartoks \mycharclassA \mycharclassa = {\upshape]}
 
 % between " " and "B":
-\XeTeXinterchartoks 255 \mycharclassB = {\bgroup\color{blue}}
-\XeTeXinterchartoks \mycharclassB 255 = {\egroup}
+\XeTeXinterchartoks 4095 \mycharclassB = {\bgroup\color{blue}}
+\XeTeXinterchartoks \mycharclassB 4095 = {\egroup}
 
 % between "B" and "B":
 \XeTeXinterchartoks \mycharclassB \mycharclassB = {.}
@@ -976,10 +1023,10 @@ aAa A a B aBa BB
 \section{Encodings}
 
 \cmd|\XeTeXinputnormalization|
-\xarg{Integer}
+\xarg{integer}
 \desc{Specify whether \xetex is to perform normalisation on the input
 text and, if so, what type of normalisation to use. See
-\url{http://unicode.org/reports/tr15/} for a description of Unicode
+\url{https://unicode.org/reports/tr15/} for a description of Unicode
 normalisation. The \<Integer> value can be:\medskip
 \begin{optdesc}
 \item[0] (default) do not perform normalisation.
@@ -991,42 +1038,49 @@ normalisation. The \<Integer> value can be:\medskip
 \endcmd
 
 \cmd|\XeTeXinputencoding|
-\xarg{Charset name}
+\xarg{charset name}
 \desc{Defines the input encoding of the following text.}
 \endcmd
 
 \cmd|\XeTeXdefaultencoding|
-\xarg{Charset name}
+\xarg{charset name}
 \desc{Defines the input encoding of subsequent files to be read.}
 \endcmd
 
 \section{Line breaking}
 
 \cmd|\XeTeXdashbreakstate|
-\xarg{Integer}
+\xarg{integer}
 \desc{Specify whether line breaks after en- and em-dashes are
 allowed. Off, 0, by default.}
 \endcmd
 
 \cmd|\XeTeXlinebreaklocale|
-\xarg{Locale ID}
+\xarg{locale-id}
 \desc{Defines how to break lines for multilingual text.}
 \endcmd
 
 \cmd|\XeTeXlinebreakskip|
-\xarg{Glue}
+\xarg{glue}
 \desc{Inter-character linebreak stretch}
 \endcmd
 
 \cmd|\XeTeXlinebreakpenalty|
-\xarg{Integer}
+\xarg{integer}
 \desc{Inter-character linebreak penalty}
 \endcmd
 
 \cmd|\XeTeXupwardsmode|
-\xarg{Integer}
+\xarg{integer}
 \desc{If greater than zero, successive lines of text (and rules, boxes,
 etc.) will be stacked upwards instead of downwards.}
+\endcmd
+
+
+\cmd|\XeTeXhyphenatablelength|
+\xarg{integer}
+\desc{Sets the maximum hyphenatable word length;
+     the default is 63, for compatibility with classic \TeX.}
 \endcmd
 
 \section{Graphics}
@@ -1074,7 +1128,7 @@ circle) and the rotation is counterclockwise. The syntax of
   \| \<coerced dimen> \| \<internal dimen>\\
 \<normal decimal> $\to$ \<normal integer> \| \<decimal constant>
 \end{quote}
-A \xarg{coerced dimen} or \xarg{internal dimen} is interpreted as number
+A \xarg{coerced dimen} or \xarg{internal dimen} is interpreted as a number
 with unit ‘|pt|’. For example, for a rotation specified with a dimension
 \cs{testdim},
 \begin{itemize}
@@ -1082,17 +1136,17 @@ with unit ‘|pt|’. For example, for a rotation specified with a dimension
 \item \verb|\testdim=1in    | is 72.27\textdegree, and
 \item \verb|\testdim=100sp| is (100/65536)\textdegree.
 \end{itemize}
-In all cases the resulting decimal number for rotation $x$ must be
+In all cases, the final decimal number for rotation $x$ must be
 within the limits $-16384 < x < 16384$.
 
 The \cs{XeTeXpdffile} command takes one more optional argument for
 specifying to which ‘box’ the PDF should be cropped before inserting
-it (the second optional argument listed in thes syntax of
+it (the second optional argument listed in the syntax of
 \cs{XeTeXpdffile} above). The PDF standard defines a number of
 (rectangular) bounding boxes that may be specified for various
 purposes. These are described in the PDF Standard\footnote{Adobe
 Systems Incorporated, 2008:\\
-\url{http://www.adobe.com/devnet/acrobat/pdfs/PDF32000_2008.pdf}} and
+\url{https://adobe.com/devnet/acrobat/pdfs/PDF32000_2008.pdf}} and
 summarised below.
 \begin{quote}
 \begin{description}[style=nextline,leftmargin=1.5cm]
@@ -1121,7 +1175,7 @@ box.
 
 \cmd|\XeTeXprotrudechars|
 \xarg{integer}
-\desc{Equivalent to \cs{pdfprotrudechars} in pdf\TeX{} for controlling
+\desc{Equivalent to \cs{pdfprotrudechars} in \pdftex\ for controlling
 character protrusion or ‘margin kerning’. When set to zero (default), character
 protrusion is turned off. When set to one, it is activated but will not affect
 line-breaking. When set to two, line-breaking decisions will change as a result
@@ -1134,7 +1188,7 @@ of the character protrusion.}
 \hsize=20mm
 a a a a a a a a a a abbabbabb aabbabbabb abbabb
 \end{example}
-See the pdf\TeX{} documentation for further details.
+See the \pdftex\ documentation for further details.
 \endcmd
 
 \cmd|\rpcode| \xarg{font} \xarg{char slot} (integer, $n$)
@@ -1147,8 +1201,24 @@ the specified \xarg{font} to $n/1000$\,em. $n$ is clipped to $\pm1000$.}
 the specified \xarg{font} to $n/1000$\,em. $n$ is clipped to $\pm1000$.}
 \endcmd
 
+\cmd|\rightmarginkern| \xarg{box number}
+\desc{Expands to the width of the margin kerning at the right side of
+the horizontal list stored in \cs{box} \xarg{box number}.}
+\endcmd
 
-\section{Cross-compatibility with \pdftex and/or \luatex}
+\cmd|\leftmarginkern| \xarg{box number}
+\desc{Expands to the width of the margin kerning at the left side of
+the horizontal list stored in \cs{box} \xarg{box number}.}
+\endcmd
+
+
+\section{Cross-compatibility with other \TeX\ engines}
+
+All of the major (non-frozen) \TeX\ engines support most of the
+functionality described in this section, in one way or another, so that
+macro formats (e.g., \LaTeX) can make use of it. Please see the
+\pdftex\ manual for details (in \pdftex, all these primitive names
+begin with \verb|\pdf...|).
 
 \subsection{Geometry}
 
@@ -1182,8 +1252,8 @@ the specified \xarg{font} to $n/1000$\,em. $n$ is clipped to $\pm1000$.}
 but it is still expandable.}
 \endcmd
 
-\cmd|\ifincsname...(\else...)\fi|
-\desc{\tex conditional to branch true if the expansion occurs within
+\cmd|\ifincsname...[\else...]\fi|
+\desc{\tex conditional, true if the expansion occurs within
 \texttt{\char`\\csname ... \char`\\endcsname}.}
 \endcmd
 
@@ -1193,10 +1263,24 @@ but it is still expandable.}
 \x/\csname\x\endcsname
 \end{example}
 
-\cmd|\ifprimitive| \xarg{control sequence} |...(\else...)\fi|
+\cmd|\ifprimitive| \xarg{control sequence} |...[\else...]\fi|
 \desc{\tex conditional to test if a control sequence is a primitive
 which still has its primitive meaning, \ie, has not been redefined or
 undefined.}
+\endcmd
+
+\cmd|\partokencontext|
+\xarg{integer}
+\desc{Specifies the cases in which \cs{par}, or the given
+\cs{partokenname} (see next) is internally emitted. The default is zero,
+yielding the standard behavior. See the \pdftex\ manual for more.}
+\endcmd
+
+\cmd|\partokenname|
+\xarg{control sequence}
+\desc{By default, \TeX\ emits a control sequence \cs{par} at blank lines
+and other situations. This command changes the name of what is emitted
+to the given control sequence. See the \pdftex\ manual for more.}
 \endcmd
 
 \cmd|\primitive|
@@ -1220,6 +1304,23 @@ greater) in which a subset of commands only are allowed.}
 Shell escape \ifnum\shellescape>0 is \else is not \fi enabled.
 \end{example}
 
+\cmd|\showstream|
+\xarg{integer}
+\desc{If this primitive parameter has a value corresponding to an open output
+stream (which has been opened with \cs{openout}), then any
+\cs{show}, \cs{showthe}, \cs{showbox} or \cs{showlists}
+commands do not write output to the terminal, but instead write to only
+the referenced output stream, as if they were written with
+\cs{immediate}\cs{write}.}
+\endcmd
+
+\cmd|\special shipout |
+\xarg{token list}
+\desc{With the additional ``keyword'' \texttt{shipout}, expansion of the
+\xarg{token listr} is delayed until \cs{shipout}, like
+non-\cs{immediate}\cs{write}.}
+\endcmd
+
 \cmd|\strcmp|
 \xarg{arg one}
 \xarg{arg two}
@@ -1242,13 +1343,22 @@ Therefore, |\a| is greater than |\z|: \strcmp{\a}{\z}
 Also note that catcodes are ignored: \strcmp{b}{\b}
 \end{example}
 
+\cmd|\tracingstacklevels|
+\xarg{integer}
+\desc{If this integer parameter is positive, and \cs{tracingmacros}
+is also positive, a prefix indicating the macro expansion depth
+is output on each relevant log line (e.g., \texttt{\char`\~..}\ at depth~2).
+Also, macro logging is truncated at a depth $\ge$ the parameter value.}
+\endcmd
+
 \subsection{Randomness}
 
 \cmd|\normaldeviate|
 \xarg{number}
 \desc{Generate a normally-distributed random integer with a mean of $0$ and
 standard deviation $65\,536$. That is, about $68$\% of the time, the result
-will be between $−65\,536$ and $65\,536$ (one standard deviation away from
+will be between $−65\,536$ and $65\,536$ (one standard
+deviation away from
 the mean). About $95\%$ of results will be within two standard deviations, and
 $99.7$\% within three.}
 \endcmd
@@ -1269,6 +1379,25 @@ sequences of semi-randoms at a later moment.}
 (inclusive) and ⟨number⟩ (exclusive).}
 \endcmd
 
+\cmd|SOURCE_DATE_EPOCH|
+(environment variable)
+\desc{If this environment variable is set, its value is used as the current
+time in seconds since the usual Unix ``epoch'': the beginning of
+1970-01-01, UTC. Negative or non-integer values cause a fatal error.
+Thus, a value of \texttt{32} would result in a \texttt{/CreationDate} and
+\texttt{/ModDate} values of \texttt{19700101000032Z}. This is useful for
+reproducible builds of documents.}
+\endcmd
+
+\cmd|FORCE_SOURCE_DATE|
+(environment variable)
+\desc{If this is set to~\texttt{1}, \xetex's time-related primitives are also
+initialized from the value of \texttt{SOURCE\_DATE\_EPOCH}. These primitives
+are \cs{year}, \cs{month}, \cs{day}, and \cs{time}. If
+\texttt{SOURCE\_DATE\_EPOCH} is not set, setting \texttt{FORCE\_SOURCE\_DATE}
+has no effect. (See the \pdftex\ manual for pathological cases.)}
+\endcmd
+
 \subsection{Timing}
 
 \cmd|\elapsedtime|
@@ -1283,46 +1412,91 @@ $2^{31} − 1$ will be returned.}
 \desc{Reset the internal timer to $0$.}
 \endcmd
 
-\subsection{File queries}
+\subsection{File handling}
+
+\cmd|\creationdate|
+\desc{Expands to the date string \xetex\ uses in the \texttt{/Info}
+dictionary of the output PDF document. This corresponds to the date and
+time when \xetex\ engine started, \eg\ \creationdate\ for this file. If
+\texttt{SOURCE\_DATE\_EPOCH} is set, its value is used for
+\cs{creationdate}.}
+\endcmd
 
 \cmd|\filedump|
 \texttt{[offset]} \xarg{number}
 \texttt{[length]} \xarg{number}
-\xarg{file}
+\barg{\xarg{filename}}
 \desc{Expands to a hexadecimal dump of the contents of the file, starting
 from position zero and extending to the end of the file unless either an
 offset or length are given.}
 \endcmd
 
 \cmd|\filemoddate|
-\xarg{file name}
-\desc{Expands to the date the file was last modified in the format
-\texttt{D:YYYYMMDDHHMMSS+ZZZZ} as a string.}
+\barg{\xarg{filename}}
+\desc{Expands to the date the file was last modified in the same format
+as for \cs{creationdate} as a string. If both \texttt{SOURCE\_DATE\_EPOCH}
+and \texttt{FORCE\_SOURCE\_DATE} are set, \cs{filemoddate} returns a value
+in UTC, ending in \texttt{Z}, regardless of the values of environment
+variables.}
 \endcmd
 
 \cmd|\filesize|
-\xarg{file name}
+\barg{\xarg{filename}}
 \desc{Expands to the size of the file in bytes.}
 \endcmd
 
 \cmd|\mdfivesum|
-\texttt{[file]}
-\xarg{text}
-\desc{Expands to the MD5 sum of the \meta{text}, or if the \texttt{file}
-keyword is given, the MD5 sum of the file contents.}
+\oarg{file}
+\barg{\xarg{text}}
+\desc{Expands to the MD5 sum of the \xarg{text}, or if the \texttt{file}
+keyword is given, the MD5 sum of the contents of the file named \xarg{text}.}
+\endcmd
+
+\cmd|\input|
+\barg{\xarg{filename}}
+\desc{As of \TeX~Live 2020, the \cs{input} primitive in all \TeX\
+engines, including \xetex, now also accepts a group-delimited filename
+argument, as a system-dependent extension, as in
+\cs{input\barg{foo.tex}}. The usage of \cs{input} with a standard
+space/token-delimited filename is completely unchanged.
+
+This group-delimited argument was previously implemented in \luatex; now
+it is available in all engines. ASCII double quote characters
+(\texttt{"}) are removed from the filename, but it is otherwise left
+unchanged after tokenization.
+
+This extension is unlike most others in that it affects a primitive in
+standard \TeX\ (\cs{input}), rather than being related to a new
+primitive, command line option, etc. This is allowed because additional
+methods of recognizing filenames are explicitly mentioned in
+\texttt{tex.web} as acceptable system-dependent extensions.
+
+Incidentally, this does not directly affect \LaTeX's \cs{input} command
+(which takes a group-delimited argument), as that is a macro
+redefinition of the \cs{input} primitive.}
 \endcmd
 
 
 \subsection{Fonts}
 
 \cmd|\pdfmapfile|
-\xarg{map spec}
+\barg{\xarg{map file}}
 \desc{Defined in \texttt{xe(la)tex.ini} to place a whatsit special for \texttt{xdvipdfmx} to set a font map file. See the \pdftex user manual for full details.}
 \endcmd
 
 \cmd|\pdfmapline|
-\xarg{line from map spec}
+\barg{\xarg{line from map file}}
 \desc{Defined in \texttt{xe(la)tex.ini} to place a whatsit special for \texttt{xdvipdfmx} to set up a font map. See the \pdftex user manual for full details.}
+\endcmd
+
+\cmd|\tracinglostchars|
+\xarg{integer}
+\desc{When set to 3 or larger, a character missing from a font provokes
+a full error, not just a diagnostic message (perhaps only in the log
+file, depending on \texttt{\char`\\tracingonline}. Also, the missing
+character code is always reported in hex, two digits for normal \TeX\
+fonts or \texttt{U+....} format for system fonts, in addition to its ASCII
+character, if printable.}
 \endcmd
 
 \cmd|\suppressfontnotfounderror|
@@ -1342,6 +1516,17 @@ suppressed and the font control sequence being defined is set to
 \end{example}
 \endcmd
 
+\subsection{Invoking \xetex}
+
+\xetex\ has many command line options. They are almost all inherited
+from the common framework for \TeX\ engines as implemented in Web2C
+(its manual is available at \url{https://tug.org/web2c}).
+
+The main exceptions are \verb|-no-pdf|, which tells \xetex\ to output
+its XDV (extended DVI) without further processing, and
+\verb|-output-driver=|\xarg{cmd}, which processes the XDV output with
+\xarg{cmd}; the default is \texttt{xdvipdfmx}.
+
 
 \section{Engine version}
 
@@ -1359,6 +1544,5 @@ suppressed and the font control sequence being defined is set to
 The \xetex version used to typeset this document is:
 \the\XeTeXversion\XeTeXrevision
 \end{example}
-
 
 \end{document}

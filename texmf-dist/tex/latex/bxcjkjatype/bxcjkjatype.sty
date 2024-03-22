@@ -1,7 +1,7 @@
 %%
 %% This is file 'bxcjkjatype.sty'.
 %% 
-%% Copyright (c) 2016 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2013-2023 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -10,13 +10,40 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bxcjkjatype}[2016/10/15 v0.3]
+\ProvidesPackage{bxcjkjatype}[2023/07/23 v0.5]
 \def\bxjy@pkgname{bxcjkjatype}
-
-%% definitions
 \def\bxjy@error{\PackageError\bxjy@pkgname}
-\def\bxjy@warn{\PackageWarning\bxjy@pkgname}
-\def\bxjy@info{\PackageInfo\bxjy@pkgname}
+
+%--------------------------------------- environment check
+
+%% \bxjy@ifprimitive\CS{<true>}{<false>}
+\@onlypreamble\bxjy@ifprimitive
+\def\bxjy@ifprimitive#1{%
+  \edef\bxjy@tmpa{\string#1}\edef\bxjy@tmpb{\meaning#1}%
+  \ifx\bxjy@tmpa\bxjy@tmpb\expandafter\@firstoftwo
+  \else\expandafter\@secondoftwo\fi
+}
+
+%% engine check
+\@tempswatrue
+\bxjy@ifprimitive\eTeXversion{}{%else
+  \IfFileExists{bxcjkjatype-lite.sty}{%
+    \PackageWarningNoLine\bxjy@pkgname
+     {The e-TeX extension is missing,\MessageBreak
+      so Lite version is used instead}%
+    \RequirePackageWithOptions{bxcjkjatype-lite}\relax
+    \endinput\relax
+  }{\@tempswafalse}%
+}
+\bxjy@ifprimitive\kanjiskip{\@tempswafalse}{}
+\bxjy@ifprimitive\luatexversion{\@tempswafalse}{}
+\bxjy@ifprimitive\XeTeXversion{\@tempswafalse}{}
+\if@tempswa\else
+  \PackageError\bxjy@pkgname
+   {The engine in use is not supported}%
+   {Only pdfTeX engine is supported.\MessageBreak
+    Package loading is aborted.}
+\expandafter\endinput\fi\relax
 
 %--------------------------------------- helpers
 
@@ -29,33 +56,10 @@
 \def\bxjy@mark{\bxjy@mark@}
 \def\bxjy@end{\bxjy@end@}
 
-%% \bxjy@ifprimitive\CS{<true>}{<false>}
-\@onlypreamble\bxjy@ifprimitive
-\def\bxjy@ifprimitive#1{%
-  \edef\bxjy@tmpa{\string#1}%
-  \edef\bxjy@tmpb{\meaning#1}%
-  \ifx\bxjy@tmpa\bxjy@tmpb \expandafter\@firstoftwo
-  \else \expandafter\@secondoftwo \fi
-}
-
 %% \bxjy@cond\ifXX...\fi{<true>}{<false>}
 \@gobbletwo\if\if \def\bxjy@cond#1\fi{%
   #1\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
 }
-
-%--------------------------------------- environment check
-
-%% engine check
-\bxjy@oktrue
-\bxjy@ifprimitive\kanjiskip{\bxjy@okfalse}{}
-\bxjy@ifprimitive\luatexversion{\bxjy@okfalse}{}
-\bxjy@ifprimitive\XeTeXversion{\bxjy@okfalse}{}
-\bxjy@ifprimitive\eTeXversion{}{\bxjy@okfalse}
-\ifbxjy@ok\else
-  \bxjy@error{The engine in use is not supported}%
-    {Only pdfTeX engine is supported.\MessageBreak
-    Package loading is aborted.}
-\expandafter\endinput\fi\relax
 
 %--------------------------------------- option handling
 
@@ -80,8 +84,10 @@
 \DeclareOption{everypage}{\bxjy@everypagetrue}
 \DeclareOption{noeverypage}{\bxjy@everypagefalse}
 \newif\ifbxjy@ipaex
+\newif\ifbxjy@defaultmin
 \let\bxjy@oneweight=f
 \DeclareOption{ipaex-type1}{\bxjy@ipaextrue}
+\DeclareOption{defaultmingoth}{\bxjy@defaultmintrue}
 \DeclareOption{oneweight}{\let\bxjy@oneweight=t}
 \DeclareOption{nooneweight}{\let\bxjy@oneweight=f}
 \newif\ifbxjy@autotilde
@@ -99,14 +105,20 @@
 \newif\ifbxjy@substmin
 \DeclareOption{substmingoth}{\bxjy@substmintrue}
 \DeclareOption{nosubstmingoth}{\bxjy@substminfalse}
+\newif\ifbxjy@tildespace
+\DeclareOption{CJKtildeasspace}{\bxjy@tildespacetrue}
+\DeclareOption{noCJKtildeasspace}{\bxjy@tildespacefalse}
 % preset spec options
+% NB. All of the (non-obsolete) options of pxchfon are also
+% listed here, but some of them are useless in this package.
 \def\bxjy@all@main@preset{%
   %(uniweight)
   ms,ipa,ipaex,%
   %(multiweight)
-  ms-hg,ipa-hg,moga-mobo,moga-maruberi,%
-  kozuka-pro,kozuka-pr6,kozuka-pr6n,%
-  hiragino-pro,hiragino-pron,morisawa-pro,morisawa-pr6n}
+  ms-hg,ipa-hg,ipaex-hg,moga-mobo,moga-maruberi,%
+  kozuka-pro,kozuka-pr6,kozuka-pr6n,hiragino-pro,hiragino-pron,%
+  hiragino-elcapitan-pro,hiragino-elcapitan-pron,%
+  morisawa-pro,morisawa-pr6n,yu-win,yu-win10,yu-osx}
 \let\bxjy@main@preset\relax
 \def\bxjy@do#1{\DeclareOption{#1}{\def\bxjy@main@preset{#1}}}
 \@for\bxjy@x:=\bxjy@all@main@preset\do{%
@@ -119,14 +131,15 @@
 \let\bxjy@scale\relax
 \define@key{bxjy}{scale}{%
   \def\bxjy@scale{#1}}
-% 'verrtical=<val>'
-\let\bxjy@vertical\@empty
-\define@key{bxjy}{vertical}[true]{%
-  \def\bxjy@vertical{#1}}
 % 'ttfname=<val>'
 \let\bxjy@ttfname\@empty
 \define@key{bxjy}{ttfname}{%
   \def\bxjy@ttfname{#1}}
+% 'vertical' (removed)
+\define@key{bxjy}{vertical}[true]{%
+  \PackageError\bxjy@pkgname
+   {Option 'vertical' is abolished}%
+   {\@ehc}}
 %% Dispatch options
 \ProcessOptions*
 
@@ -134,10 +147,13 @@
 
 %% Check the driver specified
 \def\bxjy@tmpa#1#2{%
-  \bxjy@info{Driver auto-detected: #2}%
+  \PackageInfo\bxjy@pkgname
+   {Driver auto-detected: #2}%
   \let\bxjy@driver#1}
 \def\bxjy@tmpb#1#2{%
-  \bxjy@error{Wrong driver specified, changed to: #2}\@ehc%
+  \PackageError\bxjy@pkgname
+   {Wrong driver specified, changed to: #2}%
+   {\@ehc}%
   \let\bxjy@driver#1}
 \ifnum\ifdefined\pdfoutput\pdfoutput\else\z@\fi>\z@
   \unless\ifdefined\bxjy@driver
@@ -158,11 +174,11 @@
   \bxjy@error{Preset options cannot go with 'ipaex-type1'}\@ehc
   \let\bxjy@main@preset\relax
 \fi\fi
-\ifx \bxjy@driver\bxjy@none \unless\ifx\bxjy@main@preset\relax
+\ifx\bxjy@driver\bxjy@none \unless\ifx\bxjy@main@preset\relax
   \bxjy@error{Preset options require a valid driver}\@ehc
   \let\bxjy@main@preset\relax
 \fi\fi
-\ifx \bxjy@driver\bxjy@none
+\ifx\bxjy@driver\bxjy@none
   \bxjy@boldbyemboldenfalse
 \fi
 
@@ -198,7 +214,6 @@
 \ifbxjy@everypage\ifx\bxjy@driver\bxjy@dvipdfmx
   \RequirePackage{atbegshi}
 \fi\fi
-%%
 
 %%<+> \FirstCJKUse
 %%<+> \EveryCJKUse
@@ -212,39 +227,6 @@
   \gappto\bxjy@first@cjk@use@hook}
 \newcommand*\EveryCJKUse{%
   \gappto\bxjy@every@cjk@use@hook}
-
-%--------------------------------------- vertical
-
-%% constants
-\chardef\bxjy@vert@none=0
-\chardef\bxjy@vert@false=0
-\chardef\bxjy@vert@=0
-\chardef\bxjy@vert@sub=1
-\chardef\bxjy@vert@main=2
-\chardef\bxjy@vert@true=2
-
-%% \bxjy@vert
-\let\bxjy@vert\bxjy@vert@none
-\ifcsdef{bxjy@vert@\bxjy@vertical}{%
-  \letcs\bxjy@vert{bxjy@vert@\bxjy@vertical}
-}{%else
-  \bxjy@error{Invalid value of 'vertical': \bxjy@vertical}\@ehc
-}
-\ifcase\bxjy@vert %none
-  \AfterEndPreamble{\csuse{CJKhorz}}
-\or %sub
-  \RequirePackage{CJKvert}[]%
-  \AfterEndPreamble{\CJKhorz}
-\or %main
-  \RequirePackage{CJKvert}[]%
-  \AfterEndPreamble{\CJKvert}
-\fi
-\AtBeginDocument{%
-  \@ifpackageloaded{CJKvert}{%
-    \bxjy@patch@CJKsymbol@CJKvert
-    \patchcmd{\CJKvert}{\normalfont}{\bxjy@normalafont}{}{}%
-    \patchcmd{\CJKhorz}{\normalfont}{\bxjy@normalafont}{}{}%
-  }{}}
 
 %--------------------------------------- user interface
 
@@ -290,7 +272,6 @@
 }
 
 %%<*> \setCJKfamilydefault{<fam>}
-%\newif\ifbxjy@default@set
 \newrobustcmd*\setCJKfamilydefault[1]{%
   \bxjy@default@settrue
   \CJKencfamily{UTF8}{#1}}
@@ -319,8 +300,15 @@
 \fi
 
 %%<*> \>
+\bxjy@okfalse
 \def\bxjy@tmpa{\mskip\medmuskip}
-\ifx\>\bxjy@tmpa
+\ifx\>\bxjy@tmpa \bxjy@oktrue
+\else\ifx\>\medspace
+  \long\def\bxjy@tmpa{\tmspace+\medmuskip{.2222em}}
+  \begingroup\expandafter\endgroup\expandafter
+      \ifx\csname : \endcsname\bxjy@tmpa \bxjy@oktrue \fi
+\fi\fi
+\ifbxjy@ok
   \def\>{\ifmmode\mskip\medmuskip\else \CJKecglue\ignorespaces \fi}
 \fi
 
@@ -401,8 +389,8 @@
 }
 \def\bxjy@cjk@force#1{%
   \expandafter\bxjy@cjkforce@do
-   \csname u8:#1\expandafter\endcsname
-   \csname bxjy@U/#1\endcsname{#1}%
+      \csname u8:#1\expandafter\endcsname
+      \csname bxjy@U/#1\endcsname{#1}%
 }
 
 %%<*> \CJKforced{<kanji>}
@@ -429,12 +417,12 @@
   \bxjy@cond\ifcat\noexpand\bxjy@tok\@sptoken\fi{\bxjy@org@at}{%
   \bxjy@cond\ifcat\noexpand\bxjy@tok\bgroup\fi{\CJKforced}{%
   \bxjy@cond\ifcat\noexpand\bxjy@tok\relax\fi{\bxjy@at@c}{%
-     \bxjy@org@at
+    \bxjy@org@at
   }}}}%
 }
 \def\bxjy@at@c#1{%
   \bxjy@cond\ifcat\noexpand#1\noexpand~\fi{\CJKforced}{%
-     \bxjy@org@at
+    \bxjy@org@at
   }#1%
 }
 
@@ -483,7 +471,7 @@
       \fi
     \fi
     \ifx\bxjy@ttfname@ptn\relax
-      \@latex@warning@no@line
+      \PackageWarningNoLine\bxjy@pkgname
        {Option 'ttfname' has an invalid value:\MessageBreak
         "\bxjy@ttfname"}%
     \fi
@@ -511,9 +499,10 @@
   \ifdefined\pdfmatch
     \bxjy@set@ttfname@ptn
   \else
-    \bxjy@error
+    \PackageError\bxjy@pkgname
      {Option 'ttfname' cannot be used because your\MessageBreak
-      pdfTeX engine is too old}\@ehc
+      pdfTeX engine is too old}%
+     {\@ehc}%
   \fi
 \fi
 
@@ -636,7 +625,7 @@
 \letcs\bxjy@normalafont{normalfont }
 
 %% Add patches to \rmfamily, etc.
-\csappto{rmfamily }{%
+\csappto{rmfamily }{% FIXME
   \CJKfamily{\mcdefault}}
 \csappto{sffamily }{%
   \CJKfamily{\gtdefault}}
@@ -721,6 +710,15 @@
     \let\extract@font\relax \pickup@font
   \endgroup}
 
+%--------------------------------------- defaultmingoth
+\ifbxjy@defaultmin
+
+%% default changed
+\renewcommand{\mcdefault}{min}
+\renewcommand{\gtdefault}{goth}
+\renewcommand{\mgdefault}{maru}
+
+\fi
 %--------------------------------------- ipaex-type1
 \ifbxjy@ipaex
 
@@ -922,8 +920,13 @@
 
 %%<+> \bxcjkjatypeHyperrefPatchDone
 %% Informs that the patch is applied.
+\ifbxjy@tildespace
+\let\bxcjkjatypeHyperrefPatchDone=f
+\else
 \let\bxcjkjatypeHyperrefPatchDone=t
+\fi
 
+\unless\ifbxjy@tildespace   %----<*!CJKtildeasspace>
 %% prepare
 \begingroup
   \CJK@input{UTF8.bdg}% emerge CJK@UTF8Binding
@@ -945,6 +948,7 @@
     \bxjy@org@LetUnexpandableSpace#1%
   \fi
 }
+\fi                         %----</!CJKtildeasspace>
 
 %--------------------------------------- preset font mappings
 
@@ -998,6 +1002,9 @@
 \bxjy@declare@preset{ipa-hg}{%
   \bxjy@multiweight{ipam.ttf}{ipam.ttf}{:0:hgrme.ttc}%
   {:0:hgrgm.ttc}{:0:hgrge.ttc}{:0:hgrsgu.ttc}{ipag.ttf}{hgrsmp.ttf}}
+\bxjy@declare@preset{ipaex-hg}{%
+  \bxjy@multiweight{ipaexm.ttf}{ipaexm.ttf}{:0:hgrme.ttc}%
+  {:0:hgrgm.ttc}{:0:hgrge.ttc}{:0:hgrsgu.ttc}{ipaexg.ttf}{hgrsmp.ttf}}
 \bxjy@declare@preset{moga-mobo}{%
   \bxjy@enable@switch@realfont
   \bxjy@multiweight{\bxjy@MI mogam.ttc}{\bxjy@MI mogam.ttc}%
@@ -1033,6 +1040,16 @@
   \bxjy@multiweight{HiraMinProN-W2.otf}{HiraMinProN-W3.otf}%
    {HiraMinProN-W6.otf}{HiraKakuProN-W3.otf}{HiraKakuProN-W6.otf}%
    {HiraKakuStdN-W8.otf}{HiraKakuProN-W6.otf}{HiraMaruProN-W4.otf}}
+\bxjy@declare@preset{hiragino-elcapitan-pro}{%
+  \usecmapforalphabet
+  \bxjy@multiweight{HiraMinPro-W2.otf}{:1:HiraginoSerif-W3.ttc}%
+   {:1:HiraginoSerif-W6.ttc}{:3:HiraginoSans-W3.ttc}{:3:HiraginoSans-W6.ttc}%
+   {:2:HiraginoSans-W8.ttc}{:3:HiraginoSans-W6.ttc}{:0:HiraginoSansR-W4.ttc}}
+\bxjy@declare@preset{hiragino-elcapitan-pron}{%
+  \usecmapforalphabet
+  \bxjy@multiweight{HiraMinProN-W2.otf}{:0:HiraginoSerif-W3.ttc}%
+   {:0:HiraginoSerif-W6.ttc}{:2:HiraginoSans-W3.ttc}{:2:HiraginoSans-W6.ttc}%
+   {:3:HiraginoSans-W8.ttc}{:2:HiraginoSans-W6.ttc}{:1:HiraginoSansR-W4.ttc}}
 \bxjy@declare@preset{morisawa-pro}{%
   \usecmapforalphabet
   \bxjy@multiweight{A-OTF-RyuminPro-Light.otf}{A-OTF-RyuminPro-Light.otf}%
@@ -1045,6 +1062,19 @@
    {A-OTF-FutoMinA101Pr6N-Bold.otf}{A-OTF-GothicBBBPr6N-Medium.otf}%
    {A-OTF-FutoGoB101Pr6N-Bold}{A-OTF-MidashiGoPr6N-MB31.otf}%
    {A-OTF-GothicBBBPr6N-Medium.otf}{A-OTFJun101Pr6N-Light.otf}}
+\bxjy@declare@preset{yu-win}{%
+  \bxjy@multiweight{yuminl.ttf}{yumin.ttf}%
+   {yumindb.ttf}{yugothic.ttf}{yugothib.ttf}%
+   {yugothib.ttf}{yugothic.ttf}{yugothic.ttf}}
+\bxjy@declare@preset{yu-win10}{%
+  \bxjy@multiweight{yuminl.ttf}{yumin.ttf}%
+   {yumindb.ttf}{:0:YuGothR.ttc}{:0:YuGothB.ttc}%
+   {:0:YuGothB.ttc}{:0:YuGothM.ttc}{:0:YuGothM.ttc}}
+\bxjy@declare@preset{yu-osx}{%
+  \usecmapforalphabet
+  \bxjy@multiweight{YuMin-Medium.otf}{YuMin-Medium.otf}%
+   {YuMin-Demibold.otf}{YuGo-Medium.otf}{YuGo-Bold.otf}%
+   {YuGo-Bold.otf}{YuGo-Medium.otf}{YuGo-Medium.otf}}
 
 %% ... and invokes the specified one!
 \ifx\bxjy@main@preset\relax\else

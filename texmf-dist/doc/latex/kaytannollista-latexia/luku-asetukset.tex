@@ -244,40 +244,23 @@ Dokumenttiluokassa \luokka{slides} toimii \koodi{clock}\-/ valitsin,
 joka latoo kellonajan piirtoheitinkalvon loppuun \komento{note}\-/
 komennon yhteydessä. Tämä valitsin kuulunee samaan paikkaan kuin
 piirtoheittimet ja \luokka{slides}\-/luokkakin: kierrätykseen tai
-kaatopaikalle.
+museoon.
 
-\subsection{Muita dokumenttiluokkia}
+\subsection{Kehittyneempi dokumentti: memoir}
 
-Kuka tahansa voi tehdä ja julkaista omia dokumenttiluokkia, ja niinpä
-perusdokumenttiluokkien lisäksi onkin saatavilla monenlaisia luokkia.
-Tässä käsitellään vain joitakin.
+Luokka \luokkactan{memoir} on Latexin \luokka{book}\-/ luokkaan
+perustuva, ominaisuuksiltaan laajennettu luokka, joka sopii varsinkin
+laajoihin dokumentteihin. Tähän luokkaan on sisällytetty monia
+dokumentin rakenteeseen ja ulkoasuun liittyviä toimintoja, joihin
+muutoin tarvitaan erillisiä paketteja tai lisäkoodia.
 
-Luokka \luokka{memoir} on Latexin \luokka{book}\-/luokkaan perustuva,
-ominaisuuksiltaan laajennettu luokka, joka sopii yleiskäyttöön. Tähän
-luokkaan on sisällytetty monia dokumentin rakenteeseen ja ulkoasuun
-liittyviä toimintoja, joihin yleensä tarvitaan erillisiä paketteja
-tai muuten lisäkoodia. Sen sijaan, että ratkoisi dokumentin rakenteen ja
-asettelun kysymyksiä erillisten pakettien avulla, saattaisi olla
-helpompaa lukea (lähes) pelkästään vain \luokka{memoir}\-/ luokan
-ohjekirjaa ja toteuttaa asiat yhtenäisen järjestelmän avulla.
-
-\luokka{beamer}\-/luokka on monipuolinen ja huippuunsa viritetty luokka
-esitysgrafiikan eli diaesitysten tekemiseen. Se on eräänlainen Latexin
-vastine esimerkiksi \englanti{Libreoffice Impress}\-/{} ja
-\englanti{Microsoft Powerpoint} \=/ohjelmille.
-
-Pienempiin, rajattuihin erityistarpeisiin on olemassa useita luokkia.
-Esimerkiksi yksisivuisten taitettavien lehtisten kuten tapahtuman
-käsiohjelmien tekemiseen soveltuu \luokka{leaflet}\-/luokka.
-\textsc{cd}\-/levyjen kansia voi tehdä \luokka{cd}\-/luokan avulla.
-Kuvitettuja seinäkalentereita vartenkin on tehty oma luokkansa,
-\luokka{wallcalendar}. Kitaran tablatuureja eli otelautakuvaan
-perustuvia nuotteja voi tehdä \luokka{guitartabs}\-/ luokan avulla.
-
-Kaikenlaista on siis olemassa. Saatavilla oleviin dokumenttiluokkiin voi
-tutustua esimerkiksi \englanti{Comprehensive Tex Archive Network}
-(\textsc{ctan}) \=/verkkosivun avulla.%
-\footnote{\url{https://www.ctan.org/topic/class}}
+Saattaa siis olla helpompaa käyttää lähes pelkästään \luokka{memoir}\-/
+luokkaa ja opiskella sen ohjekirjaa, kuin että ratkoisi dokumentin
+rakenteen ja asettelun kysymyksiä erillisten pakettien avulla. Jos
+päädyt käyttämään \luokka{memoir}\-/ luokkaa, kannattaa aina ensin
+tutkia sen ohjekirjasta, saako tarvittavat asiat toteutettua luokan
+omien ominaisuuksien avulla. Vasta sen jälkeen voi hakea neuvoa tästä
+tai muista oppaista.
 
 \section{Sivu}
 \label{luku/sivuasetukset}
@@ -1079,8 +1062,8 @@ asetusten näkökulmasta.
   \hfill
   {\ttfamily\addfontfeatures{FakeStretch=1, Scale=4.5}Amf}
 }{
-  \caption{Vasemmalla pääteviivallinen, keskellä pääteviivaton ja
-    oikealla tasalevyinen pääteviivallinen kirjainperhe}
+  \caption{Vasemmalla pääteviivallinen (antiikva), keskellä
+    pääteviivaton (groteski) ja oikealla tasalevyinen kirjainperhe}
   \label{kuva/kirjainperhetyypit}
 }
 
@@ -1095,7 +1078,7 @@ kir\-jain\-perhe\-koko\-nai\-suuk\-sille.
 Latexissa pisimmälle ''tuotteistettu'' kokonaisuus taitaa olla
 Libertinus\-/ kirjainperhe, joka sisältää antiikvan, groteskin ja
 tasalevyisen kirjainperheen sekä matematiikkatilan symboleita.
-Libertinus\-/ kirjainperheet saa käyttöön lataamalla paketti
+Libertinus\-/ kirjainperheet saa käyttöön lataamalla paketin
 \pakettictan{libertinus}:
 
 \komentoi{usepackage}
@@ -1121,11 +1104,45 @@ seuraavan esimerkin mukaisesti:
 \setmonofont{TeX Gyre Cursor}[Scale=MatchLowercase]
 \end{koodilohkosis}
 
+\leijutlk{
+  \begin{tabular}{ll}
+    \toprule
+    \ots{Kirjainperhe} & \ots{Tyyli} \\
+    \midrule
+    Garamond Libre & antiikva, renessanssi, ranskalainen \\
+    TeX Gyre Pagella & antiikva, renessanssi, ranskalainen \\
+    TeX Gyre Termes & antiikva, renessanssi, alankomainen \\
+    Libertinus Serif & antiikva, barokki, siirtymäkausi \\
+    Latin Modern Roman & antiikva, uusantiikva \\
+    TeX Gyre Schola & antiikva, vahvapäätteinen \\
+    TeX Gyre Bonum & antiikva, vahvapäätteinen \\
+    DejaVu Serif & antiikva, vahvapäätteinen \\
+    TeX Gyre Chorus & kalligrafinen \\
+    \midrule
+    Libertinus Sans & groteski, humanistinen, kaksivahvuinen \\
+    TeX Gyre Heros & groteski, uusgroteski \\
+    DejaVu Sans & groteski, uusgroteski \\
+    TeX Gyre Adventor & groteski, geometrinen \\
+    \midrule
+    Libertinus Mono & tasalevyinen \\
+    TeX Gyre Cursor & tasalevyinen \\
+    DejaVu Sans Mono & tasalevyinen \\
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Vapaita fontteja ja kirjainperheitä, jotka toimitetaan Tex
+    Live \=/jakelun tai käyttöjärjestelmän mukana. Tyylit viittaavat
+    kirjainmuotoon tai historialliseen kirjaintyyliin}
+  \label{tlk/vapaita-fontteja}
+}
+
 \noindent
 Edellisessä esimerkissä \englanti{TeX Gyre Termes, Heros} ja
-\englanti{Cursor} ovat kirjainperheiden nimiä. Fonttitiedostojen
-tulee olla asennettuna käyttöjärjestelmän normaalien käytäntöjen
-mukaisesti tai Latex\-/jakelun käytäntöjen mukaisesti.
+\englanti{Cursor} ovat kirjainperheiden nimiä. Fonttitiedostojen tulee
+olla asennettuna käyttöjärjestelmän normaalien käytäntöjen mukaisesti
+tai Latex\-/jakelun käytäntöjen mukaisesti. Taulukkoon
+\ref{tlk/vapaita-fontteja} on koottu erityylisiä, vapaasti käytettävissä
+olevia kirjainperheitä.
 
 Kirjainperheiden käyttöönoton yhteydessä voi määritellä lukuisia
 asetuksia kuten ligatuureja, gemenanumeroita, optisia kokoja ja muita
@@ -1157,7 +1174,7 @@ lihavoinnin. On kuitenkin mahdollista määritellä kirjainperheeseen
 kuuluvia leikkausten nimiä tai fonttitiedostoja erikseen. Tällainen on
 tarpeen esimerkiksi silloin, kun kirjainperhe sisältää useita eri
 vahvuuksia ja halutaan itse määritellä, mikä niistä tulee
-perusvahvuudeksi ja mikä lihavoiduksi.
+perusvahvuudeksi ja mikä lihavaksi.
 
 Esimerkki \ref{esim/fontit-leik-omin} selventää, kuinka kirjainperheen
 eri leikkausten nimet tai fonttitiedostot määritellään. Kullekin
@@ -1165,7 +1182,8 @@ leikkaukselle voi määrittää myös omat asetuksensa \koodi{Fea\-tures}\-/
 sanaan päättyvällä valitsimella. Samaa asiaa havainnollistetaan myös
 konkreettisemmin esimerkissä \ref{esim/fontit-leik-omin-käyt}.
 Leikkauksen nimessä voi käyttää tähteä (\koodi{*}), joka korvautuu
-kirjainperheen nimellä (\englanti{Macklin Text}).
+kirjainperheen nimellä (\englanti{Macklin Text}). Fonttien nimeämisestä
+on lisätietoa luvussa \ref{luku/luatex-xetex-fonttitekn}.
 
 \begin{esimerkki*}
   \komentoi{setmainfont}
@@ -1177,7 +1195,9 @@ kirjainperheen nimellä (\englanti{Macklin Text}).
   BoldItalicFont={…},  BoldItalicFeatures={…},
   SlantedFont={…},     SlantedFeatures={…},
   BoldSlantedFont={…}, BoldSlantedFeatures={…},
-  SmallCapsFont={…},   SmallCapsFeatures={…}]
+  SmallCapsFont={…},   SmallCapsFeatures={…},
+  SwashFont={…},       SwashFeatures={…},
+  BoldSwashFont={…},   BoldSwashFeatures={…}]
 \end{koodilohko}
   \caption{Kirjainperheeseen sisältyvien leikkausten nimien ja
     kirjainleikkauskohtaisten ominaisuuksien määrittely}
@@ -1352,76 +1372,113 @@ rivikorkeus on parasta asettaa \komento{fontsize}\-/komennolla.
 
 Latexissa on joukko korkean tason fonttikomentoja, jotka on tarkoitettu
 käytettäväksi sen jälkeen, kun matalan tason asetukset on kerran
-määritetty. Taulukossa \ref{tlk/fonttimallikomennot} on komennot
-kirjainperheen ja kirjainleikkauksen valintaan. Joka rivillä ensin
-mainittu komento (esim. \komento{rmfamily}) vaikuttaa tekstiin, joka
-tulee komennon jälkeen. Vaikutusalue rajoittuu nykyisen ympäristön (luku
-\ref{luku/ympäristöt}) sisään tai aaltosulkeilla (luku
-\ref{luku/aaltosulkeet}) rajatun alueen sisään. Rivillä toisena olevalle
-komennolle (esim. \komentox{textrm}) annetaan yksi argumentti, ja
-komennon vaikutus koskee vain argumenttina olevaa tekstiä.
+määritetty. Taulukoissa \ref{tlk/komennot-kirjainperhe} ja
+\ref{tlk/komennot-kirjainleikk} ovat komennot kirjainperheen ja
+kirjainleikkauksen valintaan. Joka rivillä ensin mainittu komento (esim.
+\komento{rmfamily}) vaikuttaa tekstiin, joka tulee komennon jälkeen.
+Vaikutusalue rajoittuu nykyisen ympäristön (luku \ref{luku/ympäristöt})
+sisään tai aaltosulkeilla (luku \ref{luku/aaltosulkeet}) rajatun alueen
+sisään. Rivillä toisena olevalle komennolle (esim. \komentox{textrm})
+annetaan yksi argumentti, ja komennon vaikutus koskee vain argumenttina
+olevaa tekstiä.
 
 \leijutlk{
   \providecommand{\rivi}{}
-  \renewcommand{\rivi}[4]{%
-    \komento{#1} & \komento{#2}\komentoarg{\dots} & #3 & #4 \\}
-  \begin{tabular}{llll}
+  \renewcommand{\rivi}[3]{%
+    \komento{#1} & \komento{#2}\komentoarg{\dots} & #3 \\}
+  \begin{tabular}{lll}
     \toprule
-    \multicolumn{2}{l}{\ots{Komento}}
-    & \multicolumn{2}{l}{\ots{Merkitys}} \\
+    \multicolumn{2}{l}{\ots{Komento}} & \ots{Merkitys} \\
 
     \midrule
-    \rivi {rmfamily} {textrm} {\rmfamily perhe}
-    {perus, yl. antiikva, serif, roman}
-    \rivi {sffamily} {textsf} {\sffamily perhe}
-    {groteski, sans serif, gothic}
-    \rivi {ttfamily} {texttt} {\ttfamily perhe}
-    {tasalevyinen, typewriter}
+    \rivi {rmfamily} {textrm}
+    {\textrm{perus, yleensä antiikva, serif, roman}}
+    \rivi {sffamily} {textsf}
+    {\textsf{groteski, sans serif, gothic}}
+    \rivi {ttfamily} {texttt}
+    {\texttt{tasalevyinen, typewriter}}
 
-    \midrule
-    \rivi {mdseries} {textmd} {\mdseries leikkaus}
-    {tavallinen vahvuus, medium}
-    \rivi {bfseries} {textbf} {\bfseries leikkaus}
-    {lihavoitu, bold}
-
-    \midrule
-    \rivi {upshape} {textup} {\upshape leikkaus}
-    {pystyasento, tavallinen}
-    \rivi {itshape} {textit} {\itshape leikkaus}
-    {kursiivi, italic}
-    \rivi {slshape} {textsl} {\slshape leikkaus}
-    {kalteva, slanted, oblique}
-    \rivi {scshape} {textsc} {\scshape leikkaus}
-    {pienversaali, kapiteeli, small caps}
     \bottomrule
   \end{tabular}
 }{
-  \caption{Komennot kirjainperheen ja kirjainleikkauksen valintaan.
-    Perustila on \komento{rmfamily}, \komento{mdseries} ja
-    \komento{upshape}}
-  \label{tlk/fonttimallikomennot}
+  \caption{Komennot kirjainperheen valintaan. Perustila on
+    \komento{rmfamily}}
+  \label{tlk/komennot-kirjainperhe}
 }
 
-Taulukossa on ensimmäisillä riveillä kirjainperhekomennot (3\,kpl),
-jotka vaihtavat koko perheen kaikkine leikkauksineen. Niiden jälkeen
-tulevat kirjainleikkauskomennot, jotka valitsevat toisen leikkauksen
-samasta perheestä. Kirjainleikkauksen asetukset jaetaan kahteen ryhmään:
-\englantik{series} 'sarja' ja \englantik{shape} 'muoto'. Kummastakin
-ryhmästä on valittuna aina yksi ominaisuus, eli samanaikaisesti voi olla
-voimassa esimerkiksi \komento{bfseries} (\textbf{lihavoitu}) ja
-\komento{itshape} (\textit{kursiivi}), ja tuloksena on \textbf{\itshape
-  lihavoitua kursiivia}.
+\leijutlk{
+  \providecommand{\rivi}{}
+  \renewcommand{\rivi}[3]{%
+    \komento{#1} & \komento{#2}\komentoarg{\dots} & #3 \\}
+  \begin{tabular}{llll}
+    \toprule
+    \multicolumn{2}{l}{\ots{Komento}} & \ots{Merkitys} \\
+
+    \midrule
+    \rivi {mdseries} {textmd}
+    {\textmd{tavallinen vahvuus, medium}}
+    \rivi {bfseries} {textbf}
+    {\textbf{lihavoitu, bold}}
+
+    \midrule
+    \rivi {upshape} {textup}
+    {\textup{pystyasento, tavallinen}}
+    \rivi {itshape} {textit}
+    {\textit{kursiivi, italic}}
+    \rivi {slshape} {textsl}
+    {\textsl{kalteva, slanted, oblique}}
+    \rivi {swshape} {textsw}
+    {{\swashfontti Koristeellinen, swash}}
+    \rivi {scshape} {textsc}
+    {\textsc{pienversaali, kapiteeli, small caps}}
+
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Komennot kirjainleikkauksen valintaan saman kirjainperheen
+    sisällä. Perustila on \komento{mdseries} ja \komento{upshape}}
+  \label{tlk/komennot-kirjainleikk}
+}
+
+Taulukossa \ref{tlk/komennot-kirjainperhe} ovat kirjainperhekomennot,
+jotka vaihtavat koko perheen kaikkine leikkauksineen. Taulukon
+\ref{tlk/komennot-kirjainleikk} komennot puolestaan valitsevat toisen
+leikkauksen samasta perheestä. Kirjainleikkauksen asetukset jaetaan
+kahteen ryhmään: \englantik{series} 'sarja' ja \englantik{shape}
+'muoto'. Kummastakin ryhmästä on valittuna aina yksi ominaisuus, eli
+samanaikaisesti voi olla voimassa esimerkiksi \komento{bfseries}
+(\textbf{lihavoitu}) ja \komento{itshape} (\textit{kursiivi}), ja
+tuloksena on \textbf{\itshape lihavoitua kursiivia}.
 
 Useimmissa fonteissa kursiivileikkaus (\komento{itshape}) ja kalteva
 leikkaus (\komento{slshape}) tuottavat saman lopputuloksen, mutta
 käsitteellisesti ne ovat eri asia. Kursiivi on aina muodoltaan erilainen
 leikkaus, joka hieman mukailee käsialakirjoitusta, joskaan kirjaimia ei
 ole sidottu toisiinsa. Sen sijaan kalteva leikkaus on tavallisen eli
-pystyasentoisen leikkauksen kallistettu versio. Kallistus voi olla
-kirjainmuotoilijan piirtämä leikkaus, tai kallistus on voitu toteuttaa
-mekaanisesti. Kallistuksen voi tehdä myös Latexissa (luku
-\ref{luku/fontit-venytys}).
+pystyasentoisen leikkauksen kallistettu versio.
 
+Jos kallistus on kirjainmuotoilijan piirtämä, kursiivista poikkeava
+leikkaus eli ihan oma fonttitiedostonsa, kallistettu leikkaus täytynee
+erikseen määrittää osaksi kirjainperhettä \koodi{Slanted\-Font}\-/
+asetuksella (esimerkki \ref{esim/fontit-leik-omin}). Kallistuksen voi
+tehdä myös keinotekoisesti Latexissa. Katso lisätietoa luvusta
+\ref{luku/fontit-venytys}.
+
+Jotkut \englanti{Open Type} \=/fontit sisältävät erillisen
+koristeellisen tyylin (\komento{swshape}), joka voi sisältyä esimerkiksi
+kursiivileikkaukseen mutta joka täytyy silti kytkeä erikseen päälle.
+Sellaisen saa määritettyä osaksi kirjainperhettä käyttämällä valitsimia
+\koodi{Swash\-Font} ja \koodi{Swash\-Fea\-tures} (esimerkki
+\ref{esim/fontit-leik-omin}) seuraavalla tavalla:
+
+\komentoi{setmainfont}
+\begin{koodilohkosis}
+\setmainfont{Garamond Premier Pro}[
+  SwashFont={GaramondPremrPro-It},   % kursiivileikkaus
+  SwashFeatures={Style=Swash}]       % koristeellinen swash-tyyli
+\end{koodilohkosis}
+
+\noindent
 Komennot fontin koon valintaan ovat taulukossa
 \ref{tlk/fonttikokokomennot}. Taulukko kertoo myös, mitä fontin
 pistekokoa (pt) mikäkin komento tarkoittaa oletuksena. Oletus riippuu
@@ -1462,6 +1519,7 @@ fonttikokovalitsimista \koodi{10pt}, \koodi{11pt} ja \koodi{12pt}.
 \ymparistoi{upshape}
 \ymparistoi{itshape}
 \ymparistoi{slshape}
+\ymparistoi{swshape}
 \ymparistoi{scshape}
 \ymparistoi{tiny}
 \ymparistoi{scriptsize}
@@ -1666,7 +1724,7 @@ samoja mutta ilman skaalausta.
 Uusien skaalaamattomien kirjainperheiden komentojen nimiksi on valittu
 \komentox{sf\-fam\-i\-ly\-abs} ja \komentox{tt\-fam\-i\-ly\-abs} (vrt.
 \komento{sffamily} ja \komento{ttfamily}, taulukko
-\ref{tlk/fonttimallikomennot}), ja näillä komennoilla kirjainperheet
+\ref{tlk/komennot-kirjainperhe}), ja näillä komennoilla kirjainperheet
 kytketään päälle. Jos esimerkiksi jonkin julkaisun vaatimuksiin kuuluu,
 että otsikossa täytyy olla 20 pisteen lihavoitu TeX Gyre Heros
 \=/kirjainleikkaus, voi esimerkissä \ref{esim/fontti-absoluuttinen}
@@ -1710,6 +1768,61 @@ julkaisuun saadaan juuri ne mitat, jotka halutaan tai vaaditaan. Tapa on
 myös teknisesti eheä eli toimii Latexin sisäisen logiikan näkökulmasta
 oikein. Haittana voi pitää sitä, että kaikki koot täytyy määritellä
 erikseen.
+
+\subsection{Lualatex, Xelatex ja fonttitekniikka}
+\label{luku/luatex-xetex-fonttitekn}
+
+Kääntäjät Lualatex ja Xelatex (Luatex ja Xetex) käsittelevät fontteja
+sisäisesti eri tavalla. Ne esimerkiksi hyväksyvät kirjainperheiden tai
+\=/leikkausten nimet hieman toisistaan poikkeavalla tavalla, ja
+kääntäjää vaihtaessa saattaa joskus huomata, ettei jotakin
+kirjainperhettä tai yksittäistä leikkausta enää löydykään.
+
+Ongelma korjaantuu nimeämällä kirjainperheen tai \=/leikkauksen eri
+tavalla. Yleispätevää ohjetta nimeämiseen on vaikeaa antaa, mutta jos
+tulee ongelmia, kannatta fonttitiedostoista tutkia kirjainperheelle tai
+\=/leikkaukselle annettuja nimiä. Se onnistuu käyttöjärjestelmän
+komentotulkissa \koodi{otfinfo}\-/ komennolla, joka tulostaa jotakin
+esimerkin \ref{esim/otfinfo-fonttinimiä} kaltaista. Kokeilemalla
+tulosteessa olevia nimiä saa kyllä fontit toimimaan.
+
+\begin{esimerkki*}
+\begin{koodilohko}
+Family:              Garamond Premr Pro
+Subfamily:           Regular
+Full name:           GaramondPremrPro
+PostScript name:     GaramondPremrPro
+Preferred family:    Garamond Premier Pro
+Mac font menu name:  Garamond Premr Pro
+\end{koodilohko}
+  \caption{\koodi{otfinfo}\-/ komennon tuloste kertoo fontista muun
+    muassa kirjainperheen ja \=/leikkauksen nimiä}
+  \label{esim/otfinfo-fonttinimiä}
+\end{esimerkki*}
+
+\begin{koodilohkosis}
+otfinfo -i GaramondPremrPro.otf
+\end{koodilohkosis}
+
+\noindent
+Lualatex (Luatex) käyttää ulkoisia tekniikoita fonttien latomiseen eli
+''renderöimiseen'', ja näitä tekniikoita voi vaihtaa fontin
+määrittelemisen yhteydessä. Eri vaihtoehtojen kokeilu voi olla tarpeen,
+jos oletusasetuksilla ei synny toivottua jälkeä. Asetuksia muutetaan
+käyttämällä valitsinta \koodi{Renderer} seuraavan esimerkin tavoin:
+
+\komentoi{setmainfont}
+\begin{koodilohkosis}
+\setmainfont{…}[Renderer=Node]
+\end{koodilohkosis}
+
+\noindent
+Tavallisimpia \koodi{Renderer}\-/ valitsimen arvoja ovat
+\koodi{\mbox{Node}}, \koodi{Harf\-Buzz} ja \koodi{Open\-Type}.
+Lisätietoa voi lukea \paketti{fontspec}\-/ paketin ohjekirjan luvusta,
+joka käsittelee Luatexin erityispiirteitä. Myös Xelatexissa (Xetex) on
+fontteihin liittyviä ominaisuuksia, joita ei muissa kääntäjissä ole.
+Niistäkin kerrotaan \paketti{fontspec}\-/ paketin ohjekirjassa.
 
 \subsection{Fonttien oletusasetuksia}
 \label{luku/fontit-oletusasetukset}
@@ -1801,8 +1914,8 @@ Komennon valinnaisella argumentilla voi rajata, mitä kirjainperheitä
 oletusasetukset koskevat. Valinnaiseen argumenttiin kirjoitetaan yksi
 tai useampia pilkulla erotettuja komentoja, joilla kirjainperheet
 kytketään päälle: \komento{rmfamily}, \komento{sffamily},
-\komento{ttfamily} (taulukko \ref{tlk/fonttimallikomennot},
-s.~\pageref{tlk/fonttimallikomennot}) tai komennolla
+\komento{ttfamily} (taulukko \ref{tlk/komennot-kirjainperhe},
+s.~\pageref{tlk/komennot-kirjainperhe}) tai komennolla
 \komento{newfontfamily} määritelty fonttikomento (luku
 \ref{luku/fontin-valinta}).
 
@@ -1996,6 +2109,13 @@ kirjainperheeseen kuuluvaan pienversaaliin, käytetään valitsinta
 \setmainfont{…}[SmallCapsFeatures={LetterSpace=6}]
 \end{koodilohkosis}
 
+\noindent
+\koodi{Letter\-Space}\-/ ominaisuus ei ole aina toiminut kunnolla
+kaikilla Lualatexin fontinladontatekniikoilla. Jos merkkien välistys
+toimii epätasaisesti, kannattaa kokeilla vaihtaa tekniikkaa
+\koodi{Renderer}\-/ valitsimella. Lisätietoa on luvussa
+\ref{luku/luatex-xetex-fonttitekn}.
+
 \subsection{Keinotekoinen venytys, lihavointi ja kallistus}
 \label{luku/fontit-venytys}
 
@@ -2020,8 +2140,8 @@ Kirjainleikkauksen leventäminen tekee tekstistä samalla lihavampaa,
 koska kirjainten viivat tulevat vahvemmiksi leveyssuunnassa.
 Korkeussuunnassa vahvuus säilyy ennallaan, joten kirjainten
 viivakontrasti muuttuu. Kirjainleikkauksen kutistaminen vaikuttaa
-lihavuuteen päinvastaisesti. Tällainen mekaaninen fontin
-''korjaileminen'' ei välttämättä tuota typografisesti kovin hyvää jälkeä
+lihavuuteen päinvastaisesti. Tällainen keinotekoinen fontin
+korjaileminen ei välttämättä tuota typografisesti kovin hyvää jälkeä
 mutta voi sopia lievästi käytettynä esimerkiksi otsikoihin. Tämän oppaan
 tasalevyistä kirjainperhettä on hieman kutistettu, koska alkuperäinen on
 kohtuuttoman leveä ({\ttfamily\addfontfeatures{FakeStretch=1}
@@ -2043,20 +2163,21 @@ pysty {\addfontfeatures{FakeSlant=.2} kalteva}
 \end{tulossis}
 
 \noindent
-Mekaanisen lihavoinnin tai kallistuksen saa osaksi kirjainperhettä, kun
-asettaa kirjainperheen määrittelyn yhteydessä halutun kirjainleikkauksen
-valitsimella \koodi{Bold\-Font} tai \koodi{Slanted\-Font} ja määrittää
-niille erityisiä ominaisuuksia valitsimella \koodi{Bold\-Fea\-tures} tai
-\koodi{Slanted\-Fea\-tures}. Seuraava esimerkki asettaa dokumentin
-perusfontille kaltevan leikkauksen. Tämän jälkeen komento
-\komento{slshape} valitsee \textsl{kaltevan} leikkauksen, joka on siis
-eri asia kuin \textit{kursiivi} (\komento{itshape}).
+Keinotekoisen lihavoinnin tai kallistuksen saa osaksi kirjainperhettä,
+kun asettaa kirjainperheen määrittelyn yhteydessä halutun
+kirjainleikkauksen valitsimella \koodi{Bold\-Font} tai
+\koodi{Slanted\-Font} ja määrittää niille erityisiä ominaisuuksia
+valitsimella \koodi{Bold\-Fea\-tures} tai \koodi{Slanted\-Fea\-tures}.
+Seuraava esimerkki asettaa dokumentin perusfontille kaltevan
+leikkauksen. Tämän jälkeen komennot \komento{slshape} ja
+\komento{textsl} valitsevat \textsl{kaltevan} leikkauksen, joka on siis
+eri asia kuin \textit{kursiivi} (\komento{itshape}, \komento{textit}).
 
 \komentoi{setmainfont}
 \begin{koodilohkosis}
-\setmainfont{…}[
-  SlantedFont={…}, % tähän pystyasentoinen leikkaus
-  SlantedFeatures={FakeSlant=.2}]
+\setmainfont{TeX Gyre Termes}[           % kirjainperhe
+  SlantedFont={TeX Gyre Termes Regular}, % pystyasentoinen leikkaus
+  SlantedFeatures={FakeSlant=.2}]        % keinotekoinen kallistus
 \end{koodilohkosis}
 
 \subsection{Keinotekoinen pienversaali}
@@ -2094,7 +2215,9 @@ joka täytyy ladata muiden matematiikkaan tai fontteihin liittyvien
 pakettien jälkeen. Paketti tuo komennon \komento{setmathfont}, joka on
 matematiikkatilan vastine luvussa \ref{luku/fontin-valinta} esitellyille
 fontinmäärittelykomennoille \komento{setmainfont}, \komento{setsansfont}
-ja \komento{setmonofont}.
+ja \komento{setmonofont}. Lähes aina on järkevää käyttää
+matematiikkatilan fontille asetusta \koodi{Scale=\katk MatchLowercase}.
+Se asettaa fontin samankokoiseksi kuin vastaava peruskirjainperhe.
 
 \pakettii{fontspec}
 \pakettii{unicode-math}
@@ -2103,8 +2226,8 @@ ja \komento{setmonofont}.
 \begin{koodilohkosis}
 \usepackage{fontspec}
 \usepackage{unicode-math}
-\setmainfont{TeX Gyre Pagella}       % tekstitilan perusfontti
-\setmathfont{TeX Gyre Pagella Math}  % matematiikkatilan fontti
+\setmainfont{TeX Gyre Pagella}     % tekstitilan perusfontti
+\setmathfont{TeX Gyre Pagella Math}[Scale=MatchLowercase]
 \end{koodilohkosis}
 
 \leijutlk{
@@ -2145,48 +2268,46 @@ latinalaisia tai kreikkalaisia kirjaimia.
 \noindent
 Matematiikkatilan fontiksi ei kelpaa mikä tahansa, koska tarvittavien
 matemaattisten symbolien täytyy sisältyä \englanti{Open Type} \=/fontin
-merkkivalikoimaan. Tukea ei ehkä ole, jos sitä ei fontille erikseen
-mainosteta. Fonttitiedoston ominaisuuksia voi tutkia esimerkiksi
-käyttöjärjestelmän komentotulkissa \koodi{otfinfo}\-/ komennolla:
+merkkivalikoimaan. Matematiikkatukea ei todennäköisesti ole, jos sitä ei
+fontin ominaisuuksien yhteydessä mainita. Fonttitiedoston ominaisuuksia
+voi tutkia esimerkiksi käyttöjärjestelmän komentotulkissa
+\koodi{otfinfo}\-/ komennolla:
 
 \begin{koodilohkosis}
 otfinfo -s texgyrepagella-math.otf
 \end{koodilohkosis}
 
+\leijutlk{
+  \providecommand{\rivi}{}
+  \renewcommand{\rivi}[2]{#1 & $\longleftrightarrow$ & #2 \\}
+
+  \begin{tabular}{r@{\enspace}c@{\enspace}l}
+    \toprule
+    \ots{Leipäteksti} && \ots{Matematiikkatila} \\
+    \midrule
+    \rivi{Libertinus Serif}{Libertinus Math}
+    \rivi{TeX Gyre Bonum}{TeX Gyre Bonum Math}
+    \rivi{TeX Gyre Pagella}{TeX Gyre Pagella Math}
+    \rivi{TeX Gyre Schola}{TeX Gyre Schola Math}
+    \rivi{TeX Gyre Termes}{TeX Gyre Termes Math}
+    \rivi{DejaVu Serif}{TeX Gyre Dejavu Math}
+    \rivi{Garamond Libre}{Garamond Math}
+    \rivi{Latin Modern Roman}{Latin Modern Math}
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Ulkoasultaan yhteensopivia leipätekstin ja matematiikkatilan
+    fontteja}
+  \label{tlk/matematiikka-fontteja}
+}
+
 \noindent
-Tex Live \=/jakelun mukana tulee muutama \englanti{Open Type}
-\=/kirjainperhe, joihin kuuluvat myös matematiikan symbolit. Tällaisia
-kirjainperheitä ovat ainakin Libertinus sekä eri TeX Gyre \-/perheet.
-Koko Libertinus\-/ perheen voi ottaa käyttöön hyvin yksinkertaisesti:
-ladataan vain paketti \paketti{libertinus}, joka määrittää kerralla
-antiikvan, groteskin, tasalevyisen ja matematiikkafontin. Myös
-tavallisten fontinmäärityskomentojen käyttö on mahdollista.
-
-\begin{esimerkki*}
-  \komentoi{setmathfont}
-
-\begin{koodilohko}
-\setmathfont{Libertinus Math Regular}
-\setmathfont{TeX Gyre Bonum Math}
-\setmathfont{TeX Gyre Dejavu Math}
-\setmathfont{TeX Gyre Pagella Math}
-\setmathfont{TeX Gyre Schola Math}
-\setmathfont{TeX Gyre Termes Math}
-\end{koodilohko}
-
-  \caption{Matematiikan symboleja sisältäviä vapaita fontteja. Komento
-    \komento{setmathfont} sisältyy pakettiin \paketti{unicode-math}}
-  \label{esim/matematiikka-fontteja}
-\end{esimerkki*}
-
-Esimerkissä \ref{esim/matematiikka-fontteja} on komentoja joidenkin
-matematiikkafonttien lataamiseen. Lähes aina on järkevää käyttää
-asetusta \koodi{Scale=\katk MatchLowercase}, joka asettaa fontin
-samankokoiseksi kuin vastaava peruskirjainperhe.
-
-\begin{koodilohkosis}
-\setmathfont{TeX Gyre Pagella Math}[Scale=MatchLowercase]
-\end{koodilohkosis}
+Taulukkoon \ref{tlk/matematiikka-fontteja} on koottu \englanti{Open
+  Type} \=/fontteja, joissa on yhteensopiva leipätekstin ja
+matematiikkatilan kirjainperhe. Teknisesti kaikkia voi käyttää kaikkien
+kanssa, mutta on tietenkin toivottavaa, että kirjainleikkaukset sopivat
+ulkoasultaan yhteen. Kaikki fontit ovat vapaita ja toimitetaan Tex Live
+\=/jakelun tai käyttöjärjestelmän mukana.
 
 \section{Kieli}
 \label{luku/kieliasetukset}
@@ -2226,7 +2347,8 @@ että Latex\-/dokumentin esittelyosassa ladataan kielipaketti ja
 määritellään dokumentin pääasiallinen kieli ja mahdolliset muut kielet.
 Jos dokumentin tekstiosa sisältää muita kuin pääasiallista kieltä,
 täytyy käyttää erityisiä komentoja tai ympäristöjä, joilla kerrotaan
-Latexille, mistä kielestä on kyse.
+Latexille, mistä kielestä on kyse. Tavutusta käsitellään kummankin
+kielipaketin osalta luvussa \ref{luku/tavutus}.
 
 \subsection{Polyglossia}
 \label{luku/polyglossia}
@@ -2251,17 +2373,8 @@ esimerkiksi seuraavanlaiselta:
 Eri kielillä on erilaisia valinnaisia asetuksia, jotka täytyy selvittää
 \paketti{polyglossia}\-/paketin ohjekirjasta. Asetukset liittyvät
 esimerkiksi kielen kirjoitusjärjestelmän alueelliseen tai
-historialliseen vaihteluun. Yleinen moniin kieliin sopiva valitsin on
-\koodi{babel\-short\-hands}, joka lisää erilaisia, lähinnä tavutukseen
-liittyviä komentoja (luku \ref{luku/tavutus}). Suomen kielen voisi siis
-ottaa käyttöön myös seuraavalla tavalla:
+historialliseen vaihteluun.
 
-\komentoi{setdefaultlanguage}
-\begin{koodilohkosis}
-\setdefaultlanguage[babelshorthands]{finnish}
-\end{koodilohkosis}
-
-\noindent
 Dokumentin tekstiosa käyttää kieltä, joka määriteltiin komennolla
 \komento{setdefaultlanguage}. Muita dokumentin esittelyosassa
 määriteltyjä kieliä voi käyttää väliaikaisesti komennolla, joka alkaa
@@ -2322,10 +2435,8 @@ kohdekielelle ja \=/kirjainperheelle on määritelty sopiva fonttikomento.
 \subsection{Babel}
 \label{luku/babel}
 
-Vanha kunnon \pakettictan{babel}\yipilkku\footnote{Katso myös
-  \paketti{babel}\-/ paketin mukana toimitettavat kielikohtaiset
-  dokumentit, esimerkiksi tiedosto \koodi{finnish.pdf}.} toimii useiden
-eri Latex\-/ kääntäjien kanssa. Ennen dokumentit kirjoitettiin
+Vanha kunnon \pakettictan{babel}\yipilkku\avctan{babel-finnish} toimii
+useiden eri Latex\-/ kääntäjien kanssa. Ennen dokumentit kirjoitettiin
 rajallisilla merkistöillä (kuten \textsc{iso-8859\=/1}), jotka
 sisältävät vain reilut kaksisataa ihmiskielten kirjoitusmerkkiä.
 \paketti{babel} kuitenkin toimii myös Lualatex\-/\ ja Xelatex\-/
@@ -2432,44 +2543,49 @@ ohjekirjasta.
 \section{Tavutus}
 \label{luku/tavutus}
 
-Tex tavuttaa eli katkaisee sanoja automaattisesti rivien lopussa, jotta
-se saa tekstikappaleet näyttämään tasapainoisilta. Lähtökohtaisesti
-tavutus määräytyy kielikohtaisten tavutussääntöjen ja \=/asetusten
-perusteella, mutta kirjoittaja voi tehdä poikkeuksia kirjoittamalla
-tavutusvihjeitä. Käytännössä tavutusvihjeitä tarvitaan välillä. Kielen
-valintaa ja yleisiä kieliasetuksia käsitellään tarkemmin luvussa
-\ref{luku/kieliasetukset}.
+Sanojen tavutus eli katkaiseminen rivin lopussa tavurajan kohdalta
+kytkeytyy läheisesti kieliasetuksiin (luku \ref{luku/kieliasetukset}),
+joihin on syytä perehtyä ennen tämän luvun lukemista.
 
-\subsection{Yleiset tavutussäännöt}
+Tex tavuttaa eli katkaisee sanat automaattisesti rivien lopussa, jotta
+se saisi tekstikappaleet näyttämään tasapainoisilta. Tavutus perustuu
+yksinkertaisiin kirjainpohjaisiin sääntöihin: millaisia kirjainten
+yhdistelmiä tavuissa voi olla. Tavutussäännöt määräytyvät valitun kielen
+perusteella ja joskus kieleen liittyvien muiden asetusten perusteella.
 
-Texin automaattinen tavutus ei perustu varsinaiseen sanojen eikä
-taivutusmuotojen tunnistamiseen vaan yksinkertaisiin kirjainpohjaisiin
-sääntöihin. Säännöt pyrkivät kuvaamaan kielen tavujen rakenteen ja
-huomioimaan myös typografiaan liittyviä suosituksia.
+Automaattinen tavutus auttaa paljon, mutta se ei yksinään riitä. Se
+tavuttaa välillä kielen kannalta väärin tai tuottaa muuten suositusten
+vastaista jälkeä. Niinpä kirjoittajan täytyy auttaa välillä eli
+kirjoittaa tavutusvihjeitä. Texissä itsessään on tavutukseen vaikuttavia
+erikoismerkkejä ja toimintoja, mutta myös kielipaketeissa
+\paketti{polyglossia} ja \paketti{babel} on omia tavutukseen vaikuttavia
+erikoisuuksiaan, jotka voivat olla eri kielissä erilaisia.
+Kielipakettien ominaisuuksia käsitellään luvuissa
+\ref{luku/tavutus-polyglossia} ja \ref{luku/tavutus-babel}.
 
-Automaattinen tavutus auttaa paljon, mutta se ei yksinään riitä, koska
-se tavuttaa välillä kielen kannalta väärin tai tuottaa muuten
-suositusten vastaista jälkeä. Kirjoittajan täytyy siis auttaa välillä
-eli kirjoittaa tavutusvihjeitä. Yksi tapa tavutusvihjeiden
-kirjoittamiseen on \komento{hyphenation}\-/ komento, jolla määritellään
-yksittäisten sanojen tavutuskohdat kaikkialla dokumentissa. Seuraava
-esimerkki selventää komennon käyttöä:
+\subsection{Yleiset tavutusvihjeet}
+\label{luku/hyphenation-komento}
+
+Yksi tapa tavutusvihjeiden kirjoittamiseen on \komento{hyphenation}\-/
+komento, jolla määritellään yksittäisten sanojen tavutuskohdat
+kaikkialla dokumentissa. Seuraava esimerkki selventää komennon käyttöä:
 
 \komentoi{hyphenation}
 \begin{koodilohkosis}
 \hyphenation{
-  ala-indek-si alku-osa
-  nimen-omaan
-  typo-gra-fi-nen
+  ala-indek-si alku-osa nimen-omaan
+  typo-gra-fi-nen Latex
 }
 \end{koodilohkosis}
 
 \noindent
-Komennon perään aaltosulkeiden sisään kirjoitetaan sanoja, jotka
-erotetaan toisistaan sanaväleillä. Sanoihin kirjoitetaan yhdysmerkki
-niihin kohtiin, joista sanan katkaiseminen on sallittua. Jos sanassa
-itsessään on yhdysmerkki, sen tavutusta ei voi käsitellä tällä
-komennolla. Luvussa \ref{luku/tavutuksen-merkit} kerrotaan muita tapoja.
+Komennon argumentiksi eli aaltosulkeiden sisään kirjoitetaan sanoja,
+jotka erotetaan toisistaan sanaväleillä. Sanoihin kirjoitetaan
+yhdysmerkki niihin kohtiin, joista sanan katkaiseminen on sallittua. Jos
+yhdysmerkkiä ei ole, sanaa ei tavuteta mistään kohdasta. Jos taas sana
+on yhdyssana ja sen osien väliin kuuluu on yhdysmerkki, ei sen tavutusta
+voi käsitellä tällä komennolla. Luvussa \ref{luku/tavutuksen-merkit}
+kerrotaan muita tapoja.
 
 \komento{hyphenation}\-/komennon voi sijoittaa dokumentin esittelyosaan
 tai tekstiosaan, mutta sijainti vaikuttaa sen toimintaan. Jos komennon
@@ -2477,7 +2593,10 @@ sijoittaa dokumentin esittelyosaan ennen kuin mitään kieltä on ladattu
 tai valittu, se vaikuttaa kaikkien sanojen tavutukseen kielestä
 riippumatta. Jos komennon sijoittaa dokumentin tekstiosaan eli kielen
 valitsemisen jälkeen, se vaikuttaa vain kyseisen kielen eli yleensä
-dokumentin pääasiallisen kielen tavutukseen.
+dokumentin pääasiallisen kielen tavutukseen. Kielipaketit
+\paketti{polyglossia} (luku \ref{luku/tavutus-polyglossia}) ja
+\paketti{babel} (luku \ref{luku/tavutus-babel}) sisältävät komennon,
+joilla voi asettaa yleisiä kielikohtaisia tavutusvihjeitä.
 
 \subsection{Yksittäisten sanojen tavutus}
 \label{luku/tavutuksen-merkit}
@@ -2488,14 +2607,113 @@ lyhyt ajatusviiva (\mbox{\koodi{--}}) tai pitkä ajatusviiva
 (\mbox{\koodi{---}}), sana katkaistaan vain näiden merkkien jälkeen, eli
 muut tavutuskohdat kytketään pois käytöstä.
 
-Myös tavutusvihje (\komento{-}) käyttäytyy yleensä samoin: jos sanassa
-on mukana yksikin tavutusvihje, tavalliset tavutuskohdat kytkeytyvät
-pois käytöstä, ja sana katkaistaan vain tavutusvihjeiden kohdalta sekä
-edellä mainittujen viivavälimerkkien jälkeen. Kielipaketti
-\paketti{babel} (luku \ref{luku/babel}) käyttäytyy kuitenkin suomen
-kielessä eri tavoin. Se määrittelee suomen kielelle tavutusvihjeen
-siten, että se sallii sanan tavutuksen muistakin kohdista kuin
-tavutusvihjeen kohdalta.
+Unicode\-/ merkistön ajastusviivat \uctunnus{u+2013 en dash} ja
+\uctunnus{u+2014 em dash} ovat toimineet tavutuksessa eri tavalla
+Lualatex\-/{} ja Xelatex\-/ kääntäjissä ja mahdollisesti eri tavalla
+kuin edellä mainitut Texin omat merkintätavat. Yhteensopivuussyistä on
+parasta kirjoittaa ajatusviivat Texin merkintätavoilla.
+
+Myös tavutusvihje (\komento{-}) vaikuttaa sanan tavutuskohtiin: jos
+sanassa on mukana yksikin tavutusvihje, tavalliset tavutuskohdat
+kytkeytyvät pois käytöstä, ja sana katkaistaan vain tavutusvihjeiden
+kohdalta sekä edellä mainittujen viivavälimerkkien jälkeen. Kielipaketti
+\paketti{babel} (luku \ref{luku/tavutus-babel}) käyttäytyy kuitenkin
+suomen kielessä eri tavoin. Se määrittelee ainakin suomen kielessä
+tavutusvihjeen siten, että se sallii sanan tavutuksen muistakin kohdista
+kuin tavutusvihjeen kohdalta.
+
+\subsection{Tavutus sanan reunasta}
+\label{luku/tavutus-reunasta}
+
+Asetukset \komento{lefthyphenmin}\komentojatko{=N} ja
+\komento{righthyphenmin}\komentojatko{=N} vaikuttavat tavutukseen sanan
+reunoissa. Argumentti \koodi{N} on positiivinen kokonaisluku, joka
+määrittelee, kuinka monta merkkiä vähintään sanan vasemmasta tai
+oikeasta reunasta pidetään yhdessä. Oletusarvot ovat kielikohtaisia ja
+ne on määritelty \paketti{polyglossia}\-/{} ja \paketti{babel}\-/
+paketeissa. Suomen kielessä kumpikin asetus on kaksi (2) merkkiä.
+
+Nämä asetukset alustetaan automaattisesti kielikohtaisiin oletusarvoihin
+aina, kun kieliasetukset tulevat voimaan. Näin on esimerkiksi dokumentin
+aloittavan \ymparistox{document}\-/ ympäristön alussa ja aina kielen
+vaihtuessa. Jos kirjoittaja haluaa muuttaa asetuksia, täytyy omat
+muutokset tehdä joka kerta edellä mainittujen asioiden jälkeen.
+Toisaalta kätevämpää on sisällyttää omat asetukset kielikohtaisiin
+alustuskomentoihin. Sillä tavoin omat asetukset tulevat voimaan
+automaattisesti kielen vaihtuessa.
+
+\komentoi{addto}
+\komentoi{captionsfinnish}
+\komentoi{lefthyphenmin}
+\komentoi{righthyphenmin}
+\begin{koodilohkosis}
+\addto{\captionsfinnish}{
+  \lefthyphenmin=3 \righthyphenmin=2
+}
+\end{koodilohkosis}
+
+\noindent
+Edellisessä esimerkissä oleva komento \komento{addto} on
+\paketti{polyglossia}\-/{} ja \paketti{babel}\-/ paketin ominaisuus,
+jolla lisätään omia komentoja kielikohtaisiin asetuksiin. Tässä
+esimerkissä käsitellään suomen kielen asetuksia
+(\komento{captionsfinnish}). Komento täytyy suorittaa lähdedokumentin
+esittelyosassa.
+
+\subsection{Polyglossia ja tavutus}
+\label{luku/tavutus-polyglossia}
+
+Kielipaketti \pakettictan{polyglossia} (myös luku
+\ref{luku/polyglossia}) sisältää tavutukseen vaikuttavia asetuksia,
+jotka ovat eri kielissä erilaisia. Suomen kielessä on hyödyllistä ottaa
+käyttöön asetus \koodi{babelshorthands}, joka tuo mukaan muutaman
+tavutukseen vaikuttavan erikoismerkin.
+
+\komentoi{setdefaultlanguage}
+\begin{koodilohkosis}
+\setdefaultlanguage[babelshorthands]{finnish}
+\end{koodilohkosis}
+
+\noindent
+Asetus \koodi{babelshorthands} lisää erikoismerkkivalikoimaan seuraavat
+tavutukseen vaikuttavat merkit. Taulukossa \ref{tlk/polyglossia-tavutus}
+on esimerkkejä tavutusvihjeiden, yhdysmerkin ja ajatusviivan sekä
+\paketti{polyglossia}\-/ paketin erikoismerkkien vaikutuksesta.
+
+\newcommand{\shorthandsyhdysmerkki}{%
+\item [\textquotedbl-] Sitova yhdysmerkki (\=/), joka sitoo merkin
+  seuraavaan sanaan eli estää katkaisemisen yhdysmerkin jälkeen. Tämä
+  merkki sallii sanan tavuttamisen muista kohdista. Tämän sijasta voi
+  käyttää Unicode\-/ merkistön sitovaa yhdysmerkkiä \uctunnus{u+2011
+    non\-/ breaking hyphen}.}
+
+\newcommand{\shorthandspystyviiva}{%
+\item [\textquotedbl|] Estää typografisten ligatuurien (luku
+  \ref{luku/typo-liga}) muodostumisen tähän kohtaan. Esimerkiksi fi\-/
+  ligatuurin muodostumisen voi estää kirjoittamalla \koodi{f"|i}, ja
+  tuloksena on kaksi erillistä merkkiä: f\textcompwordmark i.}
+
+\newcommand{\shorthandslainausmerkki}{%
+\item [\textquotedbl\textquotedbl] Tavutusvihje, joka ei lisää
+  tavutuskohtaan yhdysmerkkiä. Tämä on hyödyllinen esimerkiksi
+  teknisissä ilmauksissa, joissa sanaan tarvitaan mahdollinen
+  katkaisukohta mutta ei haluta lisätä ylimääräistä yhdysmerkkiä
+  sotkemaan ilmausta.}
+
+\begin{maaritelma}{\koodi{#1}}
+  \shorthandsyhdysmerkki
+
+% Polyglossian tulevassa versiossa (jälkeen 30.12.2023).
+% \item [\textquotedbl=] Sama kuin edellinen (\koodi{\textquotedbl-}).
+
+  \shorthandspystyviiva
+
+  \shorthandslainausmerkki
+
+\item [\textquotedbl/] Vinoviiva (/), jonka jälkeen on tavutusvihje.
+  Tavutuskohtaan ei lisätä yhdysmerkkiä. Tavutus sallitaan sanan muista
+  kohdista.
+\end{maaritelma}
 
 \leijutlk{
   \begin{tabular}{lll}
@@ -2505,17 +2723,13 @@ tavutusvihjeen kohdalta.
     & \ots{Merkitys} \\
     \midrule
 
-    \koodi{matkustaa}
-    & mat\tavukohta kus\tavukohta taa
-    & tavutus kaikista kohdista \\
+    \koodi{erikoisalalla}
+    & eri\tavukohta koi\tavukohta sa\tavukohta lal\tavukohta la
+    & tavutus kaikista kohdista (väärin) \\
 
-    \koodi{matkus\komento{-}taa}
-    & matkus\tavukohta taa
+    \koodi{erikois\komento{-}alalla}
+    & erikois\tavukohta alalla
     & vain tavutusvihjeen kohdalta \\
-
-    \koodi{matkus\komento{-}taa}
-    & mat\tavukohta kus\tavukohta taa
-    & (\paketti{babel} ja suomen kieli) \\
 
     \koodi{matka-aika}
     & matka-\tavukohta aika
@@ -2533,9 +2747,123 @@ tavutusvihjeen kohdalta.
     & Oulu--\tavukohta Rova\tavukohta niemi
     & vain ajatusviiva ja tavutusvihje \\
 
+    \koodi{matka-}
+    & matka-
+    & ei tavutuskohtia \\
+
+    \koodi{-aika}
+    & -\tavukohta aika
+    & vain yhdysmerkin jälkeen (väärin) \\
+
+    \koodi{\textquotedbl-aika}
+    & -ai\tavukohta ka
+    & ei sitovan yhdysmerkin jälkeen \\
+
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Kielipaketti \paketti{polyglossia} ja tavutusvihjeen,
+    yhdysmerkin ja ajatusviivan sekä kielipaketin omien erikoismerkkien
+    (\koodi{babelshorthands}) vaikutus tavutukseen}
+  \label{tlk/polyglossia-tavutus}
+}
+
+\noindent
+Yleisiä koko kieleen vaikuttavia tavutusvihjeitä voi määritellä
+komennolla \komento{pghyphenation}. Se vastaa Texin
+\komento{hyphenation}\-/ komentoa (luku \ref{luku/hyphenation-komento}),
+mutta tavutusvihjeet määritellään kielikohtaisesti. Komennon ensimmäinen
+argumentti on kielen nimi, ja toiseen argumenttiin luetellaan sanat ja
+niiden sallitut tavutuskohdat yhdysmerkin avulla.
+
+\komentoi{pghyphenation}
+\begin{koodilohkosis}
+\pghyphenation{finnish}{
+  ala-indek-si alku-osa nimen-omaan typo-gra-fi-nen Latex
+}
+\end{koodilohkosis}
+
+\noindent
+Kielikohtaisesti voi määrittää myös sen, kuinka monta kirjainta sanan
+reunasta jätetään tavuttamatta. \paketti{polyglossia}\-/ paketissa on
+komento \komento{setlanghyphenmins}, jonka ensimmäinen argumentti on
+kielen nimi. Toinen ja kolmas argumentti ovat kokonaislukuja, joilla
+asetetaan sanan vasemman ja oikean reunan tavuttamaton merkkimäärä.
+
+\komentoi{setlanghyphenmins}
+\begin{koodilohkosis}
+\setlanghyphenmins{finnish}{3}{2}
+\end{koodilohkosis}
+
+\noindent
+Suomen kielellä vaihtoehtoisen tavutussäännöstön voi kytkeä päälle
+käyttämällä kielen asettamisen yhteydessä valitsinta
+\koodi{schoolhyphens}. Tämä sallii tavutuksen kaikista mahdollisista
+kohdista. Lisätietoa suomen tavutuksen erityispiirteistä on luvussa
+\ref{luku/suomi-tavutus}.
+
+\komentoi{setdefaultlanguage}
+\begin{koodilohkosis}
+\setdefaultlanguage[schoolhyphens]{finnish}
+\end{koodilohkosis}
+
+\subsection{Babel ja tavutus}
+\label{luku/tavutus-babel}
+
+Kielipaketti \pakettictan{babel}\yipilkku\avctan{babel-finnish} (myös
+luku \ref{luku/babel}) lisää automaattisesti moniin kieliin -- myös
+suomen kieleen -- muutaman erikoismerkin, joilla voi vaikuttaa
+tavutukseen. Erikoismerkit saa pois päältä käyttämällä paketin
+lataamisen yhteydessä valitsinta \koodi{shorthands=\katk off}.
+Seuraavassa on selitetty suomen kielen erikoismerkkejä.
+
+\begin{maaritelma}{\koodi{#1}}
+\item [\komento{-}] Tämä on Texin normaali tavutusvihje (luku
+  \ref{luku/tavutuksen-merkit}), mutta \paketti{babel} määrittelee sen
+  suomen kielessä uudelleen siten, että tavutus sallitaan sanassa myös
+  muista kohdista tavutussääntöjen mukaan.
+
+  \shorthandsyhdysmerkki
+
+\item [\textquotedbl=] Sama kuin edellinen (\koodi{\textquotedbl-}).
+
+  \shorthandspystyviiva
+
+  \shorthandslainausmerkki
+
+\end{maaritelma}
+
+\leijutlk{
+  \begin{tabular}{lll}
+    \toprule
+    \ots{Lähde}
+    & \ots{Tavutus}
+    & \ots{Merkitys} \\
+    \midrule
+
+    \koodi{erikoisalalla}
+    & eri\tavukohta koi\tavukohta sa\tavukohta lal\tavukohta la
+    & tavutus kaikista kohdista (väärin) \\
+
+    \koodi{erikois\komento{-}alalla}
+    & eri\tavukohta kois\tavukohta alal\tavukohta la
+    & tavutusvihjeen kohdalta ja muualta \\
+
+    \koodi{matka-aika}
+    & matka-\tavukohta aika
+    & vain yhdysmerkin jälkeen \\
+
+    \koodi{matka-ai\komento{-}ka}
+    & matka-\tavukohta ai\tavukohta ka
+    & vain yhdysmerkki ja tavutusvihje \\
+
+    \koodi{Oulu--Rovaniemi}
+    & Oulu--\tavukohta Rovaniemi
+    & vain ajatusviivan jälkeen \\
+
     \koodi{Oulu--Rova\komento{-}niemi}
     & Oulu--\tavukohta Rova\tavukohta nie\tavukohta mi
-    & (\paketti{babel} ja suomen kieli) \\
+    & tavutusvihjeen kohdalta ja muualta \\
 
     \koodi{matka-}
     & matka-
@@ -2543,47 +2871,83 @@ tavutusvihjeen kohdalta.
 
     \koodi{-aika}
     & -\tavukohta aika
-    & vain yhdysmerkin jälkeen \\
+    & vain yhdysmerkin jälkeen (väärin) \\
+
+    \koodi{\textquotedbl-aika}
+    & -ai\tavukohta ka
+    & ei sitovan yhdysmerkin jälkeen \\
 
     \bottomrule
   \end{tabular}
 }{
-  \caption{Tavutusvihjeen, yhdysmerkin ja ajatusviivan vaikutus
-    tavutukseen. \paketti{babel}\-/ kielipaketin tavutusvihje
-    (\komento{-}) ei suomen kielessä estä sanan tavutusta muista
-    kohdista}
-  \label{tlk/tex-tavutus}
+  \caption{Kielipaketti \paketti{babel} ja suomen kielellä
+    tavutusvihjeen, yhdysmerkin ja ajatusviivan sekä kielipaketin omien
+    erikoismerkkien vaikutus tavutukseen}
+  \label{tlk/babel-tavutus}
 }
 
-Taulukossa \ref{tlk/tex-tavutus} on esimerkkejä tavutusvihjeiden,
-yhdysmerkin ja ajatusviivan vaikutuksesta. Ensimmäisessä sarakkeessa on
-esimerkkisana siinä muodossa kuin se kirjoitetaan lähdetiedostoon.
-Toisessa sarakkeessa on ladottu sana, johon on pystyviivalla merkittynä
-mahdolliset tavutuskohdat.
+\noindent
+Taulukossa \ref{tlk/babel-tavutus} on esimerkkejä suomen kielen
+tavutuksesta, kun sanassa on tavutusvihjeitä, yhdysmerkkejä,
+ajatusviivoja tai \paketti{babel}\-/ paketin erikoismerkkejä.
 
-Taulukon viimeinen rivi paljastaa suomen kielen kannalta ongelmallisen
-tilanteen. Esimerkiksi ilmauksessa \emph{matkasuunnitelma ja
-  \mbox{-aika}} ei riviä saa katkaista sanassa \emph{\mbox{-aika}}
-olevan yhdysmerkin jälkeen, koska rivin loppuun jäisi yksinäinen
-yhdysmerkki. Latexin peruskeinoilla sana täytyy laittaa näkymättömään
-laatikkoon, joka pitää merkit yhdessä: \komento{mbox}\komentoarg{-aika}.
-Toinen vaihtoehto on sitovan yhdysmerkin käyttö, jota käsitellään
-seuraavassa alaluvussa.
+Taulukon viimeinen rivi soittaa, että kun sanan alussa on yhdysmerkki,
+täytyy suomen kielessä käyttää sitovaa yhdysmerkkiä, joka estää
+tavutuksen heti yhdysmerkin jälkeen. Toisaalta \paketti{babel}\-/
+paketissa on suomen kielelle asetus, joka käsittelee sanan alussa olevan
+yhdysmerkin automaattisesti oikein. Ominaisuus kytketään päälle
+kielipaketin lataamisen jälkeen \komento{babelprovide}\-/ komennolla
+seuraavasti:
 
-\subsection{Tavutuksen sallivia ja sitovia merkkejä}
-\label{luku/tavutus-sallivat-sitovat}
+\komentoi{usepackage}
+\pakettii{babel}
+\komentoi{babelprovide}
+\begin{koodilohkosis}
+\babelprovide[transforms=prehyphen.nobreak]{finnish}
+\end{koodilohkosis}
 
-Unicode\-/merkistön sitova yhdysmerkki \uctunnus{u+2011 non\-/ breaking
-  hyphen} näkyy tavallisena yhdysmerkkinä, mutta se estää sanan
-katkaisemisen yhdysmerkin vierestä. \uctunnus{u+2011}\-/merkkiä voi
-käyttää, mutta se ei ole aina toiminut luotettavasti eikä
-yhdenmukaisesti eri kääntäjissä. Yhteensopivuussyistä voi olla järkevää
-käyttää muita vaihtoehtoja sitovalle yhdysmerkille.
+\noindent
+Kun edellä mainittu asetus on päällä, voi lähdetiedostoon kirjoittaa
+huoletta esimerkiksi \koodi{matkasuunnitelma ja \=/aika} (ilman sitovaa
+yhdysmerkkiä), ja silti sanaan \emph{\mbox{-aika}} sisältyvä yhdysmerkki
+pysyy kiinni sanassa eikä jää koskaan yksin rivin loppuun.
 
-Paketti \pakettictan{extdash} tuo uusia komentoja ja mahdollisuuksia
-tavutuksen hallintaan. Komennot ovat sellaisia kuin \komento{Hyphdash}
-ja \komento{Endash}, mutta niille on saatavilla myös lyhemmät muodot,
-jos paketin lataa käyttämällä \koodi{short\-cuts}\-/ valitsinta.
+Yleisiä kaikkiin kieliin tai tiettyyn kieleen vaikuttavia
+tavutusvihjeitä voi asettaa komennolla \komento{babelhyphenation}.
+Komento vastaa Texin \komento{hyphenation}\-/ komentoa (luku
+\ref{luku/hyphenation-komento}), mutta sille voi antaa valinnaisen
+argumentin, joka rajaa vaikutuksen vain tiettyyn kieleen. Seuraavassa
+esimerkissä asetetaan tavutusvihjeitä vain suomen kielen sanoille:
+
+\komentoi{babelhyphenation}
+\begin{koodilohkosis}
+\babelhyphenation[finnish]{
+  ala-indek-si alku-osa nimen-omaan typo-gra-fi-nen Latex
+}
+\end{koodilohkosis}
+
+\noindent
+Vaihtoehtoisen suomen kielen tavutussäännöstön voi kytkeä päälle
+komennolla \komento{babelprovide}, seuraavan esimerkin mukaisesti. Tämä
+vaihtoehto sallii sanan katkaisemisen kaikista mahdollisista suomen
+kielen tavutuskohdista. Lisätietoa suomen tavutuksen erityispiirteistä
+on luvussa \ref{luku/suomi-tavutus}.
+
+\komentoi{babelprovide}
+\begin{koodilohkosis}
+\babelprovide[hyphenrules=schoolfinnish]{finnish}
+\end{koodilohkosis}
+
+\subsection{Viivojen erikoispaketti extdash}
+\label{luku/tavutus-extdash}
+
+Jos Texin ja kielipakettien välimerkit ja tavutusvihjeet eivät riitä,
+mahdollisuuksia saa lisää \pakettictan{extdash}\-/ paketin avulla. Se
+tuo mukanaan uusia komentoja viivavälimerkeille ja samalla lisää
+vaihtoehtoja tavutuksen hallintaan. Komennot ovat sellaisia kuin
+\komento{Hyphdash} ja \komento{Endash}, mutta niille on saatavilla myös
+lyhyemmät vastineet, jos paketin lataa käyttämällä
+\koodi{short\-cuts}\-/ valitsinta.
 
 \komentoi{usepackage}
 \pakettii{extdash}
@@ -2598,7 +2962,7 @@ Texin viivavälimerkit (luku \ref{luku/tavutuksen-merkit}) aina estävät
 tavutuksen muualta kuin välimerkin jälkeen, \paketti{extdash}\-/ paketin
 perusvaihtoehdot sallivat tavutuksen muualtakin. Lisäksi kaikille
 kolmelle viivavälimerkille on sitova versio, joka estää tavutuksen
-välimerkin kohdalta (mutta sallii muualta).
+välimerkin jälkeen mutta sallii muualta.
 
 Taulukossa \ref{tlk/extdash} ovat \paketti{extdash}\-/paketin tärkeimmät
 komennot ja niiden merkitykset. Taulukossa \ref{tlk/extdash-vertailu}
@@ -2618,7 +2982,8 @@ vertaillaan \paketti{extdash}\-/paketin komentoja Texin vastaaviin.
     \bottomrule
   \end{tabular}
 }{
-  \caption{\paketti{extdash}-paketin komentoja}
+  \caption{\paketti{extdash}-paketin komentoja, kun paketti on ladattu
+    käyttämällä asetusta \koodi{short\-cuts}}
   \label{tlk/extdash}
 }
 
@@ -2646,7 +3011,7 @@ vertaillaan \paketti{extdash}\-/paketin komentoja Texin vastaaviin.
     \koodi{matka-}
                 & matka-
     & \koodi{-aika}
-                  & -\tavukohta aika \\
+                  & -\tavukohta aika (väärin) \\
     \koodi{matka\komento{-/}}
                 & mat\tavukohta ka-
     & \koodi{\komento{=/}aika}
@@ -2654,7 +3019,7 @@ vertaillaan \paketti{extdash}\-/paketin komentoja Texin vastaaviin.
     \bottomrule
   \end{tabular}
 }{
-  \caption{Texin ja \paketti{extdash}-paketin komentojen vertailua}
+  \caption{Texin ja \paketti{extdash}-paketin viivamerkkien vertailua}
   \label{tlk/extdash-vertailu}
 }
 
@@ -2675,7 +3040,8 @@ matka\-/ ja aika\-/arvio
 \noindent
 Ensimmäisen yhdysmerkkikomennon jälkeinen sanaväli hävisi, ja syntyi
 virheellinen sana \emph{matka-ja}. Sanavälin saa säilymään, kun
-kirjoittaa komennon perään aaltosuljeparin tai kenoviivan ja sanavälin.
+kirjoittaa komennon perään aaltosuljeparin tai kenoviivan sekä
+sanavälin.
 
 \komentoi{-/}
 \begin{koodilohkosis}
@@ -2688,62 +3054,8 @@ matka\-/\ ja aika\-/arvio
   matka\-/\ ja aika\-/arvio
 \end{tulossis}
 
-\subsection{Tavutus sanan reunasta}
-
-Asetukset \komento{lefthyphenmin}\komentojatko{~N} ja
-\komento{righthyphenmin}\komentojatko{~N} vaikuttavat tavutukseen sanan
-reunoissa. Argumentti \koodi{N} on positiivinen kokonaisluku, ja se
-määrittelee, kuinka monta merkkiä vähintään sanan vasemmasta tai
-oikeasta reunasta pidetään yhdessä. Oletusarvot ovat kielikohtaisia ja
-määritellään \paketti{polyglossia}\-/{} ja \paketti{babel}\-/paketeissa.
-Suomen kielessä kumpikin asetus on kaksi (2) merkkiä.
-
-Nämä asetukset alustetaan kielikohtaisiin oletusarvoihin aina, kun
-kieliasetukset tulevat voimaan. Näin on esimerkiksi dokumentin
-aloittavan \ymparistox{document}\-/ ympäristön alussa ja aina kielen
-vaihtuessa. Jos asetuksia haluaa muuttaa, täytyy omat muutokset tehdä
-aina edellä mainittujen asioiden jälkeen. Toisaalta vielä kätevämpää on
-sisällyttää omat asetukset kielikohtaisiin alustuskomentoihin. Sillä
-tavoin omat asetukset tulevat voimaan automaattisesti kielen vaihtuessa.
-
-\komentoi{addto}
-\komentoi{captionsfinnish}
-\komentoi{lefthyphenmin}
-\komentoi{righthyphenmin}
-\begin{koodilohkosis}
-\addto{\captionsfinnish}{
-  \lefthyphenmin  3
-  \righthyphenmin 3
-}
-\end{koodilohkosis}
-
-\noindent
-Edellisessä esimerkissä oleva komento \komento{addto} on
-\paketti{polyglossia}\-/{} ja \paketti{babel}\-/ paketin ominaisuus,
-jolla lisätään omia komentoja kielikohtaisiin asetuksiin. Tässä
-esimerkissä käsitellään suomen kielen asetuksia
-(\komento{captionsfinnish}). Komento täytyy suorittaa lähdedokumentin
-esittelyosassa.
-
-\subsection{Muita tavutusasetuksia ja -vinkkejä}
+\subsection{Muita tavutusasetuksia}
 \label{luku/tavutus-muut}
-
-Aiemmin mainittu \paketti{extdash}\-/paketti sisältää tavutuksen
-hallintaan liittyviä välimerkkejä, mutta kielestä riippuen sellaisia on
-myös kielipaketeissa \paketti{babel} ja \paketti{polyglossia}.
-Jälkimmäiseen pakettiin lisävälimerkit täytyy kytkeä erikseen päälle
-käyttämällä valitsinta \koodi{babelshorthands} (luku
-\ref{luku/polyglossia}).
-
-Molemmat kielipaketit tuovat suomen kieleen muun muassa sitovan,
-tavutuksen sallivan yhdysmerkin \koodi{\textquotedbl\=/}, joka toimii
-samoin kuin \paketti{extdash}\-/ paketin komento \komento{=/}. Lisäksi
-on tavutusvihje \koodi{\textquotedbl\textquotedbl}, joka ei tee
-yhdysmerkkiä katkaisukohtaan. Sitä voi käyttää teknisten ilmausten
-tavutusvihjeenä, koska niihin ei välttämättä haluta yhdysmerkkiä edes
-katkaisutilanteessa. Muitakin yleislainausmerkillä
-(\koodi{\textquotedbl}) alkavia erikoismerkkejä sisältyy
-kieliasetuksiin.
 
 Varsinainen tavutuksen peruskomento on \komento{discretionary}, joka
 mahdollistaa omanlaisten tavutuskohtien määrittelyn. Komento
@@ -2803,12 +3115,33 @@ tavutuskohdan saa myös seuraavalla tavalla:
 
 \noindent
 Tavutuksen suunnittelussa ja tutkimisessa voi auttaa
-\pakettictan{showhyphens}\-/ paketti. Kun paketti on ladattuna, kaikkien
-sanojen mahdollisiin tavutuskohtiin ladotaan ohut punainen pystyviiva.
+\pakettictan{showhyphenation}\-/ paketti. Kun paketti on ladattuna,
+kaikkien sanojen mahdollisiin tavutuskohtiin ladotaan pieni merkki.
 Paketti hyödyntää Lualatex\-/ kääntäjän ominaisuuksia, eikä se siis
 toimi muiden kääntäjien kanssa.
 
 \subsection{Suomen kielen tavutus}
+\label{luku/suomi-tavutus}
+
+Suomen kielelle on olemassa Latexissa kaksi erilaista tavutussäännöstöä.
+Oletuksena toimivat säännöt kuvaavat tavallisimmat tavujen rakenteet
+mutta pyrkivät huomioimaan myös typografisia suosituksia. Esimerkiksi
+sanaa ei välttämättä katkaista vokaalien välistä, koska se ei ole
+suositeltavaa. Myös jotkin yleiset vierasperäisten sanojen
+konsonanttiyhdistelmät pidetään yhdessä, vaikka ne suomen tavurakenteen
+mukaan kuuluisivat joskus eri tavuihin.
+
+Toinen, vaihtoehtoinen tavutussäännöstö kuvaa pelkästään suomen tavujen
+rakenteen, eli se tavuttaa sanat kaikista mahdollisista kohdista eikä
+huomioi typografisia suosituksia mitenkään.%
+\footnote{Lisätietoa:
+  \url{https://github.com/hyphenation/basic-finnish}} Asetus sanan
+reunasta tavuttamisesta on kuitenkin voimassa (luku
+\ref{luku/tavutus-reunasta}). Tämä vaihtoehtoinen tavutustapa täytyy
+kytkeä erikseen päälle kielipaketin asetuksista. Sen nimi on Latexissa
+\emph{\englanti{school}}, koska se on ''peruskoulutavuttamista'' eikä
+typografian mukaista tavuttamista. Katso kielipakettikohtaiset ohjeet
+luvuista \ref{luku/tavutus-polyglossia} ja \ref{luku/tavutus-babel}.
 
 Texin kirjainyhdistelmiin perustuvat tavutussäännöt eivät yksinään ole
 tarpeeksi älykkäitä suomen kieleen, ja esimerkiksi yhdyssanojen
@@ -2832,8 +3165,7 @@ Käytännössä siis suomenkielinen teksti ja hyvä typografia vaativat
 välillä tavutusvihjeiden kirjoittamista. Yhdyssanojen osien väliin
 tarvitaan tavutusvihje silloin, kun jälkimmäinen osa alkaa vokaalilla
 tai useammalla kuin yhdellä konsonantilla. Joitakin tällaisia tapauksia
-Tex osaa tavuttaa oikein ilman tavutusvihjeitäkin, mutta etukäteen sitä
-ei tiedä, ellei ole kokemusta.
+Tex osaa tavuttaa oikein ilman tavutusvihjeitäkin.
 
 \komentoi{-}
 \begin{koodilohkosis}
@@ -2841,6 +3173,15 @@ alku\-osa pusku\-traktori
 \end{koodilohkosis}
 
 \noindent
+Sitova yhdysmerkki on suomen kielessä tarpeellinen, kun sana alkaa
+yhdysmerkillä eli ennen yhdysmerkkiä on sanaväli. Esimerkiksi
+ilmauksessa \emph{matkasuunnitelma ja \mbox{-aika}} ei riviä saa
+katkaista sanassa \emph{\mbox{-aika}} olevan yhdysmerkin jälkeen. Täytyy
+siis käyttää sitovaa yhdysmerkkiä eli merkkiä, joka sitoo yhdysmerkin
+kiinni seuraavaan sanaan. Sitovan yhdysmerkin käyttöä neuvotaan luvuissa
+\ref{luku/tavutus-polyglossia}, \ref{luku/tavutus-babel} ja
+\ref{luku/tavutus-extdash}.
+
 Yhdysmerkin tai ajatusviivan sisältävät pitkät yhdyssanat voivat vaatia
 tavutuskohtien lisäämistä, koska yhdysmerkki ja ajatusviivat estävät
 tavutuksen muualta kuin näiden merkkien jälkeen. Ilman tavutuskohtien
@@ -2849,10 +3190,11 @@ rivittämiseen. Voi syntyä liian suuria sanavälejä, tai joistakin
 riveistä tulee ylipitkiä, eli ne yltävät marginaalin puolelle.
 
 Tavutuskohtia voi lisätä sopiviin kohtiin tavutusvihjeillä.
-Vaihtoehtoisesti kaikki yleisten tavutussääntöjen mukaiset tavutuskohdat
-saa käyttöön \paketti{extdash}\-/ paketin välimerkkikomennoilla
-(taulukko \ref{tlk/extdash}). Seuraavassa esimerkissä on tavutuksen
-hallintaa sanalle \emph{Molo\-tov--Ribben\-trop-sopi\-mus}:
+Vaihtoehtoisesti voi käyttää \paketti{extdash}\-/ paketin
+välimerkkikomentoja (taulukko \ref{tlk/extdash}), jotka sallivat
+tavutuksen kaikista kielen tavutussääntöjen mukaisista kohdista.
+Seuraavassa esimerkissä on tavutuksen hallintaa sanalle
+\emph{Molo\-tov--Ribben\-trop-sopi\-mus}:
 
 \komentoi{-}
 \komentoi{--}
@@ -2889,7 +3231,7 @@ sijasta.
 \komentoi{discretionary}
 \begin{koodilohkosis}
 \newcommand{\hm}{\discretionary{-}{}{'}}
-vaa\hm an
+vaa\hm an, liu\hm uttaa
 \end{koodilohkosis}
 
 \noindent

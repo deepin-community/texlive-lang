@@ -7,7 +7,7 @@
 %% fduthesis.dtx  (with options: `logo')
 %% fduthesis-logo.dtx  (with options: `logo')
 %% 
-%%     Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
+%%     Copyright (C) 2017--2023 by Xiangdong Zeng <xdzeng96@gmail.com>
 %% 
 %%     This work may be distributed and/or modified under the
 %%     conditions of the LaTeX Project Public License, either
@@ -44,7 +44,7 @@
 %%                                 and README.md.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2020/10/01]
-\GetIdInfo $Id: fduthesis.dtx 0.8 2022-09-04 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
+\GetIdInfo $Id: fduthesis.dtx 0.9a 2023-05-27 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
   {Fudan University's Visual Identity}
 \ProvidesExplPackage{fdulogo}
   {\ExplFileDate}{\ExplFileVersion}{\ExplFileDescription}
@@ -80,7 +80,10 @@
       { \c__fdulogo_default_arg_tl, #3 }
   }
 \NewDocumentCommand \fdumotto { O { } }
-  { \__fdulogo_tikz:nx { \fdulogo@motto } { \c__fdulogo_default_arg_tl, #1 } }
+  {
+    \__fdulogo_tikz:nx
+      { \fdulogo@motto } { \c__fdulogo_default_arg_tl, #1 }
+  }
 \tl_const:Nn \c__fdulogo_default_arg_tl { x = 1 pt, y = 1 pt }
 \cs_new_protected:Npn \__fdulogo_tikz:nn #1#2
   {

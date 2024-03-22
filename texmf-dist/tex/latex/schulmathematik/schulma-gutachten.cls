@@ -1,8 +1,8 @@
 % schulmathematik bundle: document class schulma-gutachten
-% Version 1.3
-% 12. August 2022
+% Version 1.6
+% 30. Dezember 2023
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-gutachten}{2022-08-12}{1.3}{Dokumentenklasse fuer Gutachten ueber schriftliche Abiturklausuren}
+\ProvidesExplClass{schulma-gutachten}{2023-12-30}{1.6}{Dokumentenklasse fuer Gutachten ueber schriftliche Abiturklausuren}
 
 \bool_new:N \g_schulma_gutachten_bell_bool
 \bool_new:N \g_schulma_gutachten_oesterreich_bool
@@ -75,7 +75,7 @@
 
 \cs_generate_variant:Nn \tl_if_eq:nnTF {V}
 
-\cs_new:Npn \schulma_gutachten_notenpunkte_ermitteln: 
+\cs_new:Npn \schulma_gutachten_notenpunkte_ermitteln:
   {
     \int_set:Nn \l_schulma_gutachten_notenpunkte_int {15}
     \fp_compare:nNnT {\l_schulma_gutachten_prozentsatz_fp} < {95.0}{
@@ -189,12 +189,12 @@
         \bool_set_true:N \l_schulma_gutachten_pruefling_weiblich_bool
       }
     \noindent
-    \tl_if_empty:NTF \g_schulma_gutachten_schulname_tl  
+    \tl_if_empty:NTF \g_schulma_gutachten_schulname_tl
       {
         \msg_warning:nn {schulma-gutachten} {Schule fehlt}
       }
       {
-        \g_schulma_gutachten_schulname_tl
+        \parbox [t] {8cm} {\g_schulma_gutachten_schulname_tl}
         \hfill
       }
     Abiturpr\"ufung~
@@ -222,7 +222,7 @@
       }
     \\[1mm]
     \normalsize
-    \tl_if_empty:NTF \g_schulma_gutachten_fach_tl  
+    \tl_if_empty:NTF \g_schulma_gutachten_fach_tl
       {
         \msg_warning:nn {schulma-gutachten} {Fach fehlt}
       }
@@ -305,7 +305,7 @@
         \c_space_tl
         und~wird~mit
         \begin {center}
-        \schulma_gutachten_notenpunktausgabe:N 
+        \schulma_gutachten_notenpunktausgabe:N
           \l_schulma_gutachten_notenpunkte_int
         \end {center}
         bewertet.
@@ -362,8 +362,9 @@
   }
 
 \RequirePackage [useregional=text] {datetime2}
-\RequirePackage [locale=DE] {siunitx}
+\RequirePackage {siunitx}
 
+\sisetup { locale = DE , mode = match }
 \KOMAoption {DIV} {13}
 
 \pagestyle {empty}

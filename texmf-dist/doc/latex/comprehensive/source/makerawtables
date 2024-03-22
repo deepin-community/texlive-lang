@@ -3,9 +3,9 @@
 #############################################
 # Create a massive table of every character #
 # in every font used in the Comprehensive   #
-# LaTeX Symbol List			    #
-#					    #
-# By Scott Pakin <scott+clsl@pakin.org>	    #
+# LaTeX Symbol List                         #
+#                                           #
+# By Scott Pakin <scott+clsl@pakin.org>     #
 #############################################
 
 use Getopt::Long;
@@ -24,7 +24,7 @@ if ($paper eq "letter") {
 }
 elsif ($paper eq "a4") {
     $paperwidth = "210mm";
-    $paperheight = "297mm";    
+    $paperheight = "297mm";
 }
 else {
     die $usagestr;
@@ -36,19 +36,37 @@ sub compare_names ($$)
     return lc($_[0]) cmp lc($_[1]) || $_[0] cmp $_[1];
 }
 
+# Given a base name for a font file, see if the corresponding .sty file
+# exists and includes one or more \pdfmapline lines.  If so, return the
+# concatenation of those lines.  Otherwise, return an empty string.  This
+# function is intended to be used for faked font files.
+sub find_map_line ($)
+{
+    my $mapline = "";
+    my $sty = $_[0];
+    $sty =~ s/[A-Z]$//;  # One .sty representing multiple .tfm files
+    $sty .= ".sty";
+    open(STY, "<", $sty) || return $mapline;
+    while (my $ln = <STY>) {
+        $mapline .= $& if $ln =~ /^\\pdfmapline.*\}$/o;
+    }
+    close STY;
+    return $mapline;
+}
+
 # Define a subroutine that returns a list of valid font names to process.
 sub find_valid_fonts ()
 {
     # Build the CLSL under strace to acquire a list of .tfm files.
     my %unique_tfms;
-    open(STRACE, "strace -e trace=open,openat -s 32768 -f pdflatex -jobname symbols-letter-pdf \"\\\\RequirePackage{snapshot}\\\\PassOptionsToClass{letterpaper}{article}\\\\input symbols\" 2>&1|") || die "open: $!\n";
+    open(STRACE, "strace -e trace=open,openat -s 32768 -f pdflatex -jobname symbols-letter-pdf \"\\\\PassOptionsToClass{letterpaper}{article}\\\\input symbols\" 2>&1|") || die "open: $!\n";
     while (my $oneline = <STRACE>) {
-	print $oneline;
-	next if $oneline !~ /open\(\"(.*?)\.tfm\",.*\)\s+=\s+(\S+)/ &&
-	    $oneline !~ /openat\(\w+, \"(.*?)\.tfm\",.*\)\s+=\s+(\S+)/;
-	my ($tfm, $retcode) = (basename($1), $2);
-	next if $retcode eq "-1";
-	$unique_tfms{$tfm} = 1;
+        next if $oneline !~ /open\(\"(.*?)\.tfm\",.*\)\s+=\s+(\S+)/ &&
+            $oneline !~ /openat\(\w+, \"(.*?)\.tfm\",.*\)\s+=\s+(\S+)/;
+        my ($tfm, $retcode) = (basename($1), $2);
+        next if $retcode eq "-1";
+        print defined $unique_tfms{$tfm} ? "$tfm (duplicate)\n" : "$tfm\n";
+        $unique_tfms{$tfm} = 1;
     }
     close STRACE || die;
     my @tfmlist = sort compare_names keys %unique_tfms;
@@ -56,45 +74,52 @@ sub find_valid_fonts ()
     # Produce one table per font (overwriting as we go) to determine which
     # fonts are missing, then remove those from the TFM list.
     foreach my $tfm (@tfmlist) {
-	print "\n*** TESTING $tfm ***\n";
-	open(PDFTEX, "|pdftex testfont") || die "open: $!\n";
-	print PDFTEX $tfm, "\n";
-	print PDFTEX "\\table\n";
-	print PDFTEX "\\bye\n";
-	close PDFTEX || do {
-	    print "*** DISCARDING $tfm ***\n";
-	    delete $unique_tfms{$tfm};
-	};
+        print "\n*** TESTING $tfm ***\n";
+        my $mapline = substr($tfm, 0, 4) eq "fake" ? find_map_line($tfm) : "";
+        if ($mapline eq "") {
+            open(PDFTEX, "|pdftex -jobname=testfont-$paper testfont") || die "open: $!\n";
+        }
+        else {
+            open(PDFTEX, "|pdftex -jobname=testfont-$paper '$mapline\\input testfont'") || die "open: $!\n";
+        }
+        print PDFTEX $tfm, "\n";
+        print PDFTEX "\\table\n";
+        print PDFTEX "\\bye\n";
+        close PDFTEX || do {
+            print "*** DISCARDING $tfm ***\n";
+            delete $unique_tfms{$tfm};
+        };
     }
     @tfmlist = sort compare_names keys %unique_tfms;
 
-    # For fonts that come in multiple sizes, discard all but the closest to 10 pt.
+    # For fonts that come in multiple sizes, discard all but the closest to
+    # 10 pt.
     my %base2tfms;
     foreach my $tfm (@tfmlist) {
-	if ($tfm =~ /^(\D+)\d+$/) {
-	    push @{$base2tfms{$1}}, $tfm;
-	}
-	else {
-	    push @{$base2tfms{$tfm}}, $tfm;
-	}
+        if ($tfm =~ /^(\D+)\d+$/) {
+            push @{$base2tfms{$1}}, $tfm;
+        }
+        else {
+            push @{$base2tfms{$tfm}}, $tfm;
+        }
     }
     while (my ($base, $tfmref) = each %base2tfms) {
-	my @tfms = @$tfmref;
-	if ($#tfms == 0) {
-	    $base2tfms{$base} = $tfms[0];
-	    next;
-	}
-	my @sizes = map {/(\d+)/; $1 >= 100 ? $1/1000 : $1} @tfms;
-	my ($best_tfm, $least_badness) = (0, 2**30);
-	foreach my $i (0 .. $#sizes) {
-	    my $bad = ($sizes[$i] - 10)**2;
-	    if ($bad < $least_badness) {
-		$best_tfm = $tfms[$i];
-		$least_badness = $bad;
-	    }
-	}
-	print "*** RETAINING ONLY $best_tfm OUT OF [@tfms] ***\n";
-	$base2tfms{$base} = $best_tfm;
+        my @tfms = @$tfmref;
+        if ($#tfms == 0) {
+            $base2tfms{$base} = $tfms[0];
+            next;
+        }
+        my @sizes = map {/(\d+)/; $1 >= 100 ? $1/1000 : $1} @tfms;
+        my ($best_tfm, $least_badness) = (0, 2**30);
+        foreach my $i (0 .. $#sizes) {
+            my $bad = ($sizes[$i] - 10)**2;
+            if ($bad < $least_badness) {
+                $best_tfm = $tfms[$i];
+                $least_badness = $bad;
+            }
+        }
+        print "*** RETAINING ONLY $best_tfm OUT OF [@tfms] ***\n";
+        $base2tfms{$base} = $best_tfm;
     }
     @tfmlist = sort compare_names values %base2tfms;
     return @tfmlist;
@@ -103,8 +128,8 @@ sub find_valid_fonts ()
 # Use the font list from a prior run if available.  Otherwise, process
 # symbols.tex to acquire a list of valid fonts.
 my @tfmlist;
-if (-e "rawtables.list") {
-    open(LIST, "<", "rawtables.list") || die "open: $!\n";
+if (-e "rawtables-$paper.list") {
+    open(LIST, "<", "rawtables-$paper.list") || die "open: $!\n";
     chomp(@tfmlist = <LIST>);
     close LIST;
 }
@@ -114,7 +139,7 @@ else {
 
     # Dump the list of font names to disk to use for speeding up
     # subsequent runs.
-    open(LIST, ">", "rawtables.list") || die "open: $!\n";
+    open(LIST, ">", "rawtables-$paper.list") || die "open: $!\n";
     print LIST join("\n", @tfmlist), "\n";
     close LIST;
 }
@@ -203,7 +228,7 @@ print PDFTEX <<'TESTFONT';
 % \LaTeX typesets the LaTeX logogram in either roman or italic.  The
 % code was derived from the definition of \LaTeX in texnames.sty.
 \def\LaTeX{%
-  \ifdim\fontdimen1\font>0pt 
+  \ifdim\fontdimen1\font>0pt
     \bgroup
       \itshape
       L\kern-.36em\raise.3ex\hbox{\setfontsize{10pt}\itshape A}\kern-.23em\TeX
@@ -229,7 +254,7 @@ print PDFTEX <<'TESTFONT';
  \centerline{Scott Pakin, \textit{scott+clsl@pakin.org}}\par}
 \vskip10pt
 \centerline{%
-  \number\day \ 
+  \number\day \
   \ifcase\month
      \or January\or February\or March%
      \or April\or May\or June%
@@ -284,7 +309,7 @@ respectively.
 }
 \def\cs#1{\hbox{\texttt{\expandafter\string\csname#1\endcsname}}}
 
-To put this means of character usage in contact, suppose we want to
+To put this means of character usage in context, suppose we want to
 typeset \cs{sqiiint} (``\sqiiint\kern3pt'') from the \textsf{txfonts}
 package.  \textsf{txfonts} is a large package that redefines all text
 and math fonts, which may not be desirable just to typeset a single
@@ -329,6 +354,12 @@ to the desired height:
 Note that the \textsf{amstext} package's \cs{text} command is a useful
 mechanism for typesetting text characters in math mode.
 
+Fonts named ``\texttt{fake}\dots'' that appear in this document are
+generated from the corresponding non-\texttt{fake} font as a means of
+introducing pdf\LaTeX\ compatibility to fonts that otherwise lack it.  The
+character positions of a \texttt{fake}\dots\ font are meaningless and
+should be ignored.
+
 \vfill\eject
 
 % Use Knuth's testfont.tex to typeset a bunch of tables.
@@ -338,6 +369,10 @@ TESTFONT
 ;#`
 foreach my $tfm (@tfmlist) {
     print "*** PRODUCING A TABLE FOR $tfm ***\n";
+    my $mapline = substr($tfm, 0, 4) eq "fake" ? find_map_line($tfm) : "";
+    if ($mapline ne "") {
+        print PDFTEX $mapline, "\n";
+    }
     printf PDFTEX "\\fonttable{%d}{%s}\n", $lettertally{uc(substr $tfm, 0, 1)}, $tfm;
 }
 print PDFTEX "\\bye\n";

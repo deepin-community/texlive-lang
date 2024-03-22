@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{arabxetex} % for typesetting Arabic text in Rigth−To−Left direction
+
+\usepackage{pgffor}
+% trans={fa,en,de,lt} option would be sent to quran package
+\usepackage[all, trans={fa,en,de,lt}, wordwise]{quran-en}
+
+\newcommand{\compare}[1]{%
+    \def\setTr##1{\par\enSetTrans{##1}\fbox{\makebox[2cm]{\enGetTrans}}}
+    \noindent\hrulefill{\string #1}\hrulefill
+    \foreach \x/\y in {ahmedali/1,ahmedraza/2,arberry/3,daryabadi/4,hilali/5,itani/6,maududi/7,mubarakpuri/8,pickthall/9,qarai/10,qaribullah/11,sahih/12,sarwar/13,shakir/14,wahiduddin/15,yusufali/16} {%
+        \setTr{\y} #1
+    }
+\par
+}
+\newcommand{\para}[2]{\noindent%
+\begin{minipage}{.4\textwidth}
+\begin{arab}[utf]#1\end{arab}
+\end{minipage}\hfill
+\begin{minipage}{.55\textwidth}
+#2
+\end{minipage}
+}
+
+\begin{document}
+
+\quranayahen[1][1][4]+
+
+\begin{arab}[utf]
+\quranayah[2][5][2]+
+\end{arab}
+
+\para{\quranayah[Al-Ikhlas][1-4]}{\quranayahlt[Al-Ikhlas][1-4]}
+\bigskip
+\para{\quranayahfa[Al-Ikhlas][1-4]}{\quranayahen[Al-Ikhlas][1-4]}
+
+%\quransurahen*
+
+\compare{\quransurahen*}
+\compare{\quranayahen[1][1]}
+\ToggleBasmalah
+\quranpageen[1]
+\compare{\quranpageen*[2]}
+
+\end{document}

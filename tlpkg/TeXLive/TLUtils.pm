@@ -1,6 +1,6 @@
-# $Id: TLUtils.pm 63645 2022-06-18 22:33:14Z karl $
+# $Id: TLUtils.pm 69653 2024-01-31 21:52:46Z karl $
 # TeXLive::TLUtils.pm - the inevitable utilities for TeX Live.
-# Copyright 2007-2022 Norbert Preining, Reinhard Kotucha
+# Copyright 2007-2024 Norbert Preining, Reinhard Kotucha
 # This file is licensed under the GNU General Public License version 2
 # or any later version.
 
@@ -8,7 +8,7 @@ use strict; use warnings;
 
 package TeXLive::TLUtils;
 
-my $svnrev = '$Revision: 63645 $';
+my $svnrev = '$Revision: 69653 $';
 my $_modulerevision = ($svnrev =~ m/: ([0-9]+) /) ? $1 : "unknown";
 sub module_revision { return $_modulerevision; }
 
@@ -27,7 +27,7 @@ C<TeXLive::TLUtils> - TeX Live infrastructure miscellany
   TeXLive::TLUtils::platform();
   TeXLive::TLUtils::platform_name($canonical_host);
   TeXLive::TLUtils::platform_desc($platform);
-  TeXLive::TLUtils::win32();
+  TeXLive::TLUtils::wndws();
   TeXLive::TLUtils::unix();
 
 =head2 System tools
@@ -41,6 +41,7 @@ C<TeXLive::TLUtils> - TeX Live infrastructure miscellany
   TeXLive::TLUtils::wsystem($msg,@args);
   TeXLive::TLUtils::xsystem(@args);
   TeXLive::TLUtils::run_cmd($cmd [, @envvars ]);
+  TeXLive::TLUtils::run_cmd_with_log($cmd, $logfn);
   TeXLive::TLUtils::system_pipe($prog, $infile, $outfile, $removeIn, @args);
   TeXLive::TLUtils::diskfree($path);
   TeXLive::TLUtils::get_user_home();
@@ -59,6 +60,8 @@ C<TeXLive::TLUtils> - TeX Live infrastructure miscellany
   TeXLive::TLUtils::copy($file, $target_dir);
   TeXLive::TLUtils::touch(@files);
   TeXLive::TLUtils::collapse_dirs(@files);
+  TeXLive::TLUtils::all_dirs_and_removed_dirs(@files);
+  TeXLive::TLUtils::dirs_of_files(@files);
   TeXLive::TLUtils::removed_dirs(@files);
   TeXLive::TLUtils::download_file($path, $destination);
   TeXLive::TLUtils::setup_programs($bindir, $platform);
@@ -78,6 +81,7 @@ C<TeXLive::TLUtils> - TeX Live infrastructure miscellany
   TeXLive::TLUtils::time_estimate($totalsize, $donesize, $starttime)
   TeXLive::TLUtils::install_packages($from_tlpdb,$media,$to_tlpdb,$what,$opt_src, $opt_doc, $retry, $continue);
   TeXLive::TLUtils::do_postaction($how, $tlpobj, $do_fileassocs, $do_menu, $do_desktop, $do_script);
+  TeXLive::TLUtils::update_context_cache($plat_bindir);
   TeXLive::TLUtils::announce_execute_actions($how, @executes, $what);
   TeXLive::TLUtils::add_symlinks($root, $arch, $sys_bin, $sys_man, $sys_info);
   TeXLive::TLUtils::remove_symlinks($root, $arch, $sys_bin, $sys_man, $sys_info);
@@ -106,12 +110,6 @@ C<TeXLive::TLUtils> - TeX Live infrastructure miscellany
   TeXLive::TLUtils::member($item, @list);
   TeXLive::TLUtils::merge_into(\%to, \%from);
   TeXLive::TLUtils::texdir_check($texdir);
-  TeXLive::TLUtils::quotify_path_with_spaces($path);
-  TeXLive::TLUtils::conv_to_w32_path($path);
-  TeXLive::TLUtils::native_slashify($internal_path);
-  TeXLive::TLUtils::forward_slashify($path_from_user);
-  TeXLive::TLUtils::give_ctan_mirror();
-  TeXLive::TLUtils::give_ctan_mirror_base();
   TeXLive::TLUtils::compare_tlpobjs($tlpA, $tlpB);
   TeXLive::TLUtils::compare_tlpdbs($tlpdbA, $tlpdbB);
   TeXLive::TLUtils::report_tlpdb_differences(\%ret);
@@ -120,6 +118,18 @@ C<TeXLive::TLUtils> - TeX Live infrastructure miscellany
   TeXLive::TLUtils::setup_sys_user_mode($prg,$optsref,$tmfc,$tmfsc,$tmfv,$tmfsv);
   TeXLive::TLUtils::prepend_own_path();
   TeXLive::TLUtils::repository_to_array($str);
+
+=head2 Windows and paths
+
+  TeXLive::TLUtils::quotify_path_with_spaces($path);
+  TeXLive::TLUtils::conv_to_w32_path($path);
+  TeXLive::TLUtils::native_slashify($internal_path);
+  TeXLive::TLUtils::forward_slashify($path_from_user);
+
+=head2 CTAN
+
+  TeXLive::TLUtils::give_ctan_mirror();
+  TeXLive::TLUtils::give_ctan_mirror_base();
 
 =head2 JSON
 
@@ -137,7 +147,8 @@ our $PERL_SINGLE_QUOTE; # we steal code from Text::ParseWords
 # We use myriad global and package-global variables, unfortunately.
 # To avoid "used only once" warnings, we must use the variable names again.
 # 
-# This ugly repetition in the BEGIN block works with all Perl versions.
+# This ugly repetition in the BEGIN block works with all Perl versions;
+# cleaner/fancier ways of handling this don't.
 BEGIN {
   $::LOGFILE = $::LOGFILE;
   $::LOGFILENAME = $::LOGFILENAME;
@@ -146,13 +157,15 @@ BEGIN {
   @::ddebug_hook = @::ddebug_hook;
   @::dddebug_hook = @::dddebug_hook;
   @::info_hook = @::info_hook;
+  @::install_packages_hook = @::install_packages_hook;
+  @::installation_failed_packages = @::installation_failed_packages;
   @::warn_hook = @::warn_hook;
   $::checksum_method = $::checksum_method;
   $::gui_mode = $::gui_mode;
-  @::install_packages_hook = @::install_packages_hook;
   $::machinereadable = $::machinereadable;
   $::no_execute_actions = $::no_execute_actions;
   $::regenerate_all_formats = $::regenerate_all_formats;
+  $::context_cache_update_needed = $::context_cache_update_needed;
   #
   $JSON::false = $JSON::false;
   $JSON::true = $JSON::true;
@@ -203,6 +216,8 @@ BEGIN {
     &copy
     &touch
     &collapse_dirs
+    &all_dirs_and_removed_dirs
+    &dirs_of_files
     &removed_dirs
     &install_package
     &install_packages
@@ -231,9 +246,11 @@ BEGIN {
     &give_ctan_mirror_base
     &create_mirror_list
     &extract_mirror_entry
+    &system_ok
     &wsystem
     &xsystem
     &run_cmd
+    &run_cmd_with_log
     &system_pipe
     &diskfree
     &get_user_home
@@ -264,7 +281,7 @@ BEGIN {
   @EXPORT = qw(setup_programs download_file process_logging_options
                tldie tlwarn info log debug ddebug dddebug debug
                debug_hash_str debug_hash
-               win32 xchdir xsystem run_cmd system_pipe sort_archs);
+               wndws xchdir xsystem run_cmd system_pipe sort_archs);
 }
 
 use Cwd;
@@ -284,7 +301,7 @@ our $SshURIRegex = '^((ssh|scp)://([^@]*)@([^/]*)/|([^@]*)@([^:]*):).*$';
 =item C<platform>
 
 If C<$^O =~ /MSWin/i> is true we know that we're on
-Windows and we set the global variable C<$::_platform_> to C<win32>.
+Windows and we set the global variable C<$::_platform_> to C<windows>.
 Otherwise we call C<platform_name> with the output of C<config.guess>
 as argument.
 
@@ -296,13 +313,16 @@ understands the C<$(...)> construct. This means that on old-enough
 systems, such as Solaris, we have to look for a shell. We use the value
 of the C<CONFIG_SHELL> environment variable if it is set, else
 C</bin/ksh> if it exists, else C</bin/bash> if it exists, else give up.
+Happily, C<config.guess> later reverted this change, but we keep our
+shell-finding code anyway to defend against future mistakes of the same ilk.
 
 =cut
 
 sub platform {
-  unless (defined $::_platform_) {
+  if (! defined $::_platform_) {
     if ($^O =~ /^MSWin/i) {
-      $::_platform_ = "win32";
+      # print STDERR "\$^O is $^O\n";
+      $::_platform_ = "windows";
     } else {
       my $config_guess = "$::installerdir/tlpkg/installer/config.guess";
 
@@ -527,7 +547,8 @@ sub platform_desc {
     'sparc-linux'      => 'GNU/Linux on Sparc',
     'sparc-solaris'    => 'Solaris on Sparc',
     'universal-darwin' => 'MacOSX current (10.14-) on ARM/x86_64',
-    'win32'            => 'Windows',
+    'win32'            => 'Windows (32-bit)',
+    'windows'          => 'Windows (64-bit)',
     'x86_64-cygwin'    => 'Cygwin on x86_64',
     'x86_64-darwinlegacy' => 'MacOSX legacy (10.6-) on x86_64',
     'x86_64-dragonfly' => 'DragonFlyBSD on x86_64',
@@ -550,21 +571,21 @@ sub platform_desc {
 }
 
 
-=item C<win32>
+=item C<wndws>
 
 Return C<1> if platform is Windows and C<0> otherwise.  The test is
 currently based on the value of Perl's C<$^O> variable.
 
 =cut
 
-sub win32 {
+sub wndws {
   if ($^O =~ /^MSWin/i) {
     return 1;
   } else {
     return 0;
   }
   # the following needs config.guess, which is quite bad ...
-  # return (&platform eq "win32")? 1:0;
+  # return (&platform eq "windows")? 1:0;
 }
 
 
@@ -575,7 +596,7 @@ Return C<1> if platform is UNIX and C<0> otherwise.
 =cut
 
 sub unix {
-  return (&platform eq "win32")? 0:1;
+  return (&platform eq "windows")? 0:1;
 }
 
 
@@ -599,7 +620,7 @@ sub getenv {
   my $envvar=shift;
   my $var=$ENV{"$envvar"};
   return 0 unless (defined $var);
-  if (&win32) {
+  if (&wndws) {
     $var=~s!\\!/!g;  # change \ -> / (required by Perl)
   }
   return "$var";
@@ -621,7 +642,7 @@ sub which {
   my @PATH;
   my $PATH = getenv('PATH');
 
-  if (&win32) {
+  if (&wndws) {
     my @PATHEXT = split (';', getenv('PATHEXT'));
     push (@PATHEXT, '');  # in case argument contains an extension
     @PATH = split (';', $PATH);
@@ -699,6 +720,19 @@ sub xchdir {
   ddebug("xchdir($dir) ok\n");
 }
 
+=item C<system_ok($cmdline)>
+
+Run C<system($cmdline)> and return true if return status was zero, false
+if status was nonzero. Throw away stdout and stderr.
+
+=cut
+
+sub system_ok {
+  my $nulldev = nulldev();
+  my ($cmdline) = @_;
+  `$cmdline >$nulldev 2>&1`;
+  return $? == 0;
+}
 
 =item C<wsystem($msg, @args)>
 
@@ -740,8 +774,9 @@ sub xsystem {
 
 =item C<run_cmd($cmd, @envvars)>
 
-Run shell command C<$cmd> and captures its output. Returns a list with CMD's
-output as the first element and the return value (exit code) as second.
+Run shell command C<$cmd> and captures its standard output (not standard
+error). Returns a list with CMD's output as the first element and its
+return value (exit code) as second.
 
 If given, C<@envvars> is a list of environment variable name / value
 pairs set in C<%ENV> for the call and reset to their original value (or
@@ -777,6 +812,36 @@ sub run_cmd {
   return ($output,$retval);
 }
 
+=item C<run_cmd_with_log($cmd, $logfn)>
+
+Run shell command C<$cmd> and captures both standard output and standard
+error (as one string), passing them to C<$logfn>. The return value is
+the exit status of C<$cmd>. Environment variable overrides cannot be
+passed. (This is used for running special post-installation commands in
+install-tl and tlmgr.)
+
+The C<info> function is called to report what is happening.
+
+=cut
+
+sub run_cmd_with_log {
+  my ($cmd,$logfn) = @_;
+  
+  info ("running $cmd ...");
+  my ($out,$ret) = TeXLive::TLUtils::run_cmd ("$cmd 2>&1");
+  if ($ret == 0) {
+    info ("done\n");
+  } else {
+    info ("failed\n");
+    tlwarn ("$0: $cmd failed (status $ret): $!\n");
+    $ret = 1;
+  }
+  &$logfn ($out); # log the output
+  
+  return $ret;
+} # run_cmd_with_log
+
+
 =item C<system_pipe($prog, $infile, $outfile, $removeIn, @extraargs)>
 
 Runs C<$prog> with C<@extraargs> redirecting stdin from C<$infile>,
@@ -788,7 +853,7 @@ sub system_pipe {
   my ($prog, $infile, $outfile, $removeIn, @extraargs) = @_;
   
   my $progQuote = quotify_path_with_spaces($prog);
-  if (win32()) {
+  if (wndws()) {
     $infile =~ s!/!\\!g;
     $outfile =~ s!/!\\!g;
   }
@@ -821,7 +886,7 @@ computing the disk space.
 sub diskfree {
   my $td = shift;
   my ($output, $retval);
-  if (win32()) {
+  if (wndws()) {
     # the powershell one-liner only works from win8 on.
     my @winver = Win32::GetOSVersion();
     if ($winver[1]<=6 && $winver[2]<=1) {
@@ -874,19 +939,23 @@ sub diskfree {
   $td .= "/" if ($td !~ m!/$!);
   return (-1) if (! -e $td);
   debug("checking diskfree() in $td\n");
-  ($output, $retval) = run_cmd("df -P \"$td\"", POSIXLY_CORRECT => 1);
+  ($output, $retval) = run_cmd("df -Pk \"$td\"");
+    # With -k (mandated by POSIX), we should always get 1024-blocks.
+    # Otherwise, the POSIXLY_CORRECT envvar for GNU df would need to
+    # be set, to force 512-blocks; and the BLOCKSIZE envvar would need
+    # to be unset to avoid overriding.
   if ($retval == 0) {
     # Output format should be this:
-    # Filesystem      512-blocks       Used  Available Capacity Mounted on
-    # /dev/sdb3       6099908248 3590818104 2406881416      60% /home
+    # Filesystem      1024-blocks     Used Available Capacity Mounted on
+    # /dev/sdb3       209611780 67718736 141893044      33% /
     my ($h,$l) = split(/\n/, $output);
     my ($fs, $nrb, $used, $avail, @rest) = split(' ', $l);
-    debug("diskfree: used=$used (512-block), avail=$avail (512-block)\n");
-    # $avail is in 512-byte blocks, so we need to divide by 2*1024 to
-    # obtain Mb. Require that at least 100M remain free.
-    return (int($avail / 2048));
+    debug("diskfree: df -Pk output: $output");
+    debug("diskfree: used=$used (1024-block), avail=$avail (1024-block)\n");
+    # $avail is in 1024-byte blocks, so we divide by 1024 to obtain Mb.
+    return (int($avail / 1024));
   } else {
-    # error in running df -P for whatever reason
+    # error in running df -P for whatever reason, just skip the check.
     return (-1);
   }
 }
@@ -904,7 +973,7 @@ my $user_home_dir;
 
 sub get_user_home {
   return $user_home_dir if ($user_home_dir);
-  $user_home_dir = getenv (win32() ? 'USERPROFILE' : 'HOME') || '~';
+  $user_home_dir = getenv (wndws() ? 'USERPROFILE' : 'HOME') || '~';
   return $user_home_dir;
 }
 
@@ -939,7 +1008,7 @@ Return both C<dirname> and C<basename>.  Example:
 sub dirname_and_basename {
   my $path=shift;
   my ($share, $base) = ("", "");
-  if (win32) {
+  if (wndws()) {
     $path=~s!\\!/!g;
   }
   # do not try to make sense of paths ending with /..
@@ -948,7 +1017,7 @@ sub dirname_and_basename {
     # eliminate `/.' path components
     while ($path =~ s!/\./!/!) {};
     # UNC path? => first split in $share = //xxx/yy and $path = /zzzz
-    if (win32() and $path =~ m!^(//[^/]+/[^/]+)(.*)$!) {
+    if (wndws() and $path =~ m!^(//[^/]+/[^/]+)(.*)$!) {
       ($share, $path) = ($1, $2);
       if ($path =~ m!^/?$!) {
         $path = $share;
@@ -1006,7 +1075,7 @@ sub basename {
 
 sub tl_abs_path {
   my $path = shift;
-  if (win32) {
+  if (wndws()) {
     $path=~s!\\!/!g;
   }
   if (-e $path) {
@@ -1016,13 +1085,13 @@ sub tl_abs_path {
   } else{
     # collapse /./ components
     $path =~ s!/\./!/!g;
-    # no support for .. path components or for win32 long-path syntax
+    # no support for .. path components or for windows long-path syntax
     # (//?/ path prefix)
     die "Unsupported path syntax" if $path =~ m!/\.\./! || $path =~ m!/\.\.$!
       || $path =~ m!^\.\.!;
-    die "Unsupported path syntax" if win32() && $path =~ m!^//\?/!;
+    die "Unsupported path syntax" if wndws() && $path =~ m!^//\?/!;
     if ($path !~ m!^(.:)?/!) { # relative path
-      if (win32() && $path =~ /^.:/) { # drive letter
+      if (wndws() && $path =~ /^.:/) { # drive letter
         my $dcwd;
         # starts with drive letter: current dir on drive
         $dcwd = Cwd::getdcwd ($1);
@@ -1056,7 +1125,7 @@ sub dir_slash {
 sub dir_creatable {
   my $path=shift;
   #print STDERR "testing $path\n";
-  $path =~ s!\\!/!g if win32;
+  $path =~ s!\\!/!g if wndws;
   return 0 unless -d $path;
   $path .= '/' unless $path =~ m!/$!;
   #print STDERR "testing $path\n";
@@ -1098,7 +1167,7 @@ a fileserver.
 sub dir_writable {
   my ($path) = @_;
   return 0 unless -d $path;
-  $path =~ s!\\!/!g if win32;
+  $path =~ s!\\!/!g if wndws;
   $path .= '/' unless $path =~ m!/$!;
   my $i = 0;
   my $f;
@@ -1142,9 +1211,9 @@ sub mkdirhier {
     $ret = 1;
   } else {
     my $subdir = "";
-    # win32 is special as usual: we need to separate //servername/ part
+    # windows is special as usual: we need to separate //servername/ part
     # from the UNC path, since (! -d //servername/) tests true
-    $subdir = $& if ( win32() && ($tree =~ s!^//[^/]+/!!) );
+    $subdir = $& if ( wndws() && ($tree =~ s!^//[^/]+/!!) );
 
     my @dirs = split (/[\/\\]/, $tree);
     for my $dir (@dirs) {
@@ -1585,30 +1654,14 @@ sub collapse_dirs {
   return @ret;
 }
 
-=item C<removed_dirs(@files)>
+=item C<dirs_of_files(@files)>
 
-Returns all the directories from which all content will be removed.
-
-Here is the idea:
-
-=over 4
-
-=item create a hashes by_dir listing all files that should be removed
-   by directory, i.e., key = dir, value is list of files
-
-=item for each of the dirs (keys of by_dir and ordered deepest first)
-   check that all actually contained files are removed
-   and all the contained dirs are in the removal list. If this is the
-   case put that directory into the removal list
-
-=item return this removal list
-
-=back
+Returns all the directories in which at least one of the given
+files reside.
 =cut
 
-sub removed_dirs {
+sub dirs_of_files {
   my (@files) = @_;
-  my %removed_dirs;
   my %by_dir;
 
   # construct hash of all directories mentioned, values are lists of the
@@ -1617,13 +1670,13 @@ sub removed_dirs {
     # what should we do with not existing entries????
     next if (! -r "$f");
     my $abs_f = Cwd::abs_path ($f);
-    # the following is necessary because on win32,
+    # the following is necessary because on windows,
     #   abs_path("tl-portable")
     # returns
     #   c:\tl test\...
     # and not forward slashes, while, if there is already a forward /
     # in the path, also the rest is done with forward slashes.
-    $abs_f =~ s!\\!/!g if win32();
+    $abs_f =~ s!\\!/!g if wndws();
     if (!$abs_f) {
       warn ("oops, no abs_path($f) from " . `pwd`);
       next;
@@ -1633,6 +1686,21 @@ sub removed_dirs {
     push (@a, $abs_f);
     $by_dir{$d} = \@a;
   }
+
+  return %by_dir;
+}
+
+=item C<all_dirs_and_removed_dirs(@files)>
+
+Returns all the directories for files and those from which all
+content will be removed.
+
+=cut
+
+sub all_dirs_and_removed_dirs {
+  my (@files) = @_;
+  my %removed_dirs;
+  my %by_dir = dirs_of_files(@files);
 
   # for each of our directories, see if we are removing everything in
   # the directory.  if so, return the directory; else return the
@@ -1669,8 +1737,36 @@ sub removed_dirs {
       $removed_dirs{$d} = 1;
     }
   }
+  return (%by_dir, %removed_dirs);
+}
+
+=item C<removed_dirs(@files)>
+
+Returns all the directories from which all content will be removed.
+
+Here is the idea:
+
+=over 4
+
+=item create a hashes by_dir listing all files that should be removed
+   by directory, i.e., key = dir, value is list of files
+
+=item for each of the dirs (keys of by_dir and ordered deepest first)
+   check that all actually contained files are removed
+   and all the contained dirs are in the removal list. If this is the
+   case put that directory into the removal list
+
+=item return this removal list
+
+=back
+=cut
+
+sub removed_dirs {
+  my (@files) = @_;
+  my (%by_dir, %removed_dirs) = all_dirs_and_removed_dirs(@files);
   return keys %removed_dirs;
 }
+
 
 =item C<time_estimate($totalsize, $donesize, $starttime)>
 
@@ -1883,7 +1979,7 @@ sub do_postaction {
 
 sub _do_postaction_fileassoc {
   my ($how, $mode, $tlpobj, $pa) = @_;
-  return 1 unless win32();
+  return 1 unless wndws();
   my ($errors, %keyval) =
     parse_into_keywords($pa, qw/extension filetype/);
 
@@ -1921,7 +2017,7 @@ sub _do_postaction_fileassoc {
 
 sub _do_postaction_filetype {
   my ($how, $tlpobj, $pa) = @_;
-  return 1 unless win32();
+  return 1 unless wndws();
   my ($errors, %keyval) =
     parse_into_keywords($pa, qw/name cmd/);
 
@@ -1966,7 +2062,7 @@ sub _do_postaction_filetype {
 # associated program shows up in `open with' menu
 sub _do_postaction_progid {
   my ($how, $tlpobj, $pa) = @_;
-  return 1 unless win32();
+  return 1 unless wndws();
   my ($errors, %keyval) =
     parse_into_keywords($pa, qw/extension filetype/);
 
@@ -2016,7 +2112,7 @@ sub _do_postaction_script {
     return 0;
   }
   my $file = $keyval{'file'};
-  if (win32() && defined($keyval{'filew32'})) {
+  if (wndws() && defined($keyval{'filew32'})) {
     $file = $keyval{'filew32'};
   }
   my $texdir = `kpsewhich -var-value=TEXMFROOT`;
@@ -2046,7 +2142,7 @@ sub _do_postaction_script {
 
 sub _do_postaction_shortcut {
   my ($how, $tlpobj, $do_menu, $do_desktop, $pa) = @_;
-  return 1 unless win32();
+  return 1 unless wndws();
   my ($errors, %keyval) =
     parse_into_keywords($pa, qw/type name icon cmd args hide/);
 
@@ -2138,6 +2234,10 @@ sub _do_postaction_shortcut {
   return 1;
 }
 
+=item C<parse_into_keywords>
+
+=cut
+
 sub parse_into_keywords {
   my ($str, @keys) = @_;
   my @words = quotewords('\s+', 0, $str);
@@ -2162,25 +2262,92 @@ sub parse_into_keywords {
   return($error, %ret);
 }
 
-=item C<announce_execute_actions($how, $tlpobj, $what)>
+=item C<update_context_cache($bindir,$progext,$run_postinst_cmd)>
 
-Announces that the actions given in C<$tlpobj> should be executed
-after all packages have been unpacked. C<$what> provides 
-additional information.
+Run the ConTeXt cache generation commands, using C<$bindir> and
+C<$progext> to check if commands can be run. Use the function reference
+C<$run_postinst_cmd> to actually run the commands. The return status is
+zero if all succeeded, nonzero otherwise. If the main ConTeXt program
+(C<luametatex>) cannot be run at all, the return status is status.
+
+Functions C<info> and C<debug> are called with status reports.
+
+=cut
+
+sub update_context_cache {
+  my ($bindir,$progext,$run_postinst_cmd) = @_;
+  
+  my $errcount = 0;
+
+  # The story here is that in 2023, the provided lmtx binary for
+  # x86_64-linux was too new to run on the system where we build TL.
+  # (luametatex: /lib64/libm.so.6: version `GLIBC_2.23' not found)
+  # So we have to try running the binary to see if it works, not just
+  # test for its existence. And since it exits nonzero given no args, we
+  # have to specify --version. Hope it keeps working like that ...
+  # 
+  # If lmtx is not runnable, don't consider that an error, since nothing
+  # can be done about it.
+  my $lmtx = "$bindir/luametatex$progext";
+  if (TeXLive::TLUtils::system_ok("$lmtx --version")) {
+    info("setting up ConTeXt cache: ");
+    $errcount += &$run_postinst_cmd("mtxrun --generate");
+    #
+    # If mtxrun failed, don't bother trying more.
+    if ($errcount == 0) {
+      $errcount += &$run_postinst_cmd("context --luatex --generate");
+      #
+      # If context succeeded too, try luajittex. Missing on some platforms.
+      # Although we build luajittex normally, instead of importing the
+      # binary, testing for file existence should suffice, we may as
+      # well test execution since it's just as easy.
+      # 
+      if ($errcount == 0) {
+        my $luajittex = "$bindir/luajittex$progext";
+        if (TeXLive::TLUtils::system_ok("$luajittex --version")) {
+          $errcount += &$run_postinst_cmd("context --luajittex --generate");
+        } else {
+          debug("skipped luajittex cache setup, can't run $luajittex\n");
+        }
+      }
+    }
+  }
+  return $errcount;
+}
+
+=item C<announce_execute_actions($how, [$tlpobj[, $what]])>
+
+Announces (records) that the actions, usually given in C<$tlpobj> (but
+can be omitted for global actions), should be executed after all
+packages have been unpacked. The optional C<$what> depends on the
+action, e.g., a parse_AddFormat_line reference for formats; not sure if
+it's used for anything else.
+
+This is called for every package that gets installed.
 
 =cut
 
 sub announce_execute_actions {
-  my ($type, $tlp, $what) = @_;
-  # do simply return immediately if execute actions are suppressed
+  my ($type,$tlp,$what) = @_;
+  # return immediately if execute actions are suppressed
   return if $::no_execute_actions;
-
+  
+  # since we're called for every package with "enable",
+  # it's not helpful to report that again.
+  if ($type ne "enable") {
+    my $forpkg = $tlp ? ("for " . $tlp->name) : "no package";
+    debug("announce_execute_actions: given $type ($forpkg)\n");
+  }
   if (defined($type) && ($type eq "regenerate-formats")) {
     $::regenerate_all_formats = 1;
     return;
   }
   if (defined($type) && ($type eq "files-changed")) {
     $::files_changed = 1;
+    return;
+  }
+  if (defined($type) && ($type eq "context-cache")) {
+    $::context_cache_update_needed = 1;
     return;
   }
   if (defined($type) && ($type eq "rebuild-format")) {
@@ -2192,17 +2359,18 @@ sub announce_execute_actions {
   if (!defined($type) || (($type ne "enable") && ($type ne "disable"))) {
     die "announce_execute_actions: enable or disable, not type $type";
   }
-  my (@maps, @formats, @dats);
   if ($tlp->runfiles || $tlp->srcfiles || $tlp->docfiles) {
     $::files_changed = 1;
   }
-  $what = "map format hyphen" if (!defined($what));
+  #
+  $what = "map format hyphen" if (!defined($what)); # do all by default
   foreach my $e ($tlp->executes) {
     if ($e =~ m/^add((Mixed|Kanji)?Map)\s+([^\s]+)\s*$/) {
       # save the refs as we have another =~ grep in the following lines
       my $a = $1;
       my $b = $3;
       $::execute_actions{$type}{'maps'}{$b} = $a if ($what =~ m/map/);
+
     } elsif ($e =~ m/^AddFormat\s+(.*)\s*$/) {
       my %r = TeXLive::TLUtils::parse_AddFormat_line("$1");
       if (defined($r{"error"})) {
@@ -2211,6 +2379,7 @@ sub announce_execute_actions {
         $::execute_actions{$type}{'formats'}{$r{'name'}} = \%r
           if ($what =~ m/format/);
       }
+
     } elsif ($e =~ m/^AddHyphen\s+(.*)\s*$/) {
       my %r = TeXLive::TLUtils::parse_AddHyphen_line("$1");
       if (defined($r{"error"})) {
@@ -2219,6 +2388,7 @@ sub announce_execute_actions {
         $::execute_actions{$type}{'hyphens'}{$r{'name'}} = \%r
           if ($what =~ m/hyphen/);
       }
+
     } else {
       tlwarn("Unknown execute $e in ", $tlp->name, "\n");
     }
@@ -2317,7 +2487,7 @@ sub add_remove_symlinks {
   my $plat_bindir = "$Master/bin/$arch";
 
   # nothing to do with symlinks on Windows, of course.
-  return if win32();
+  return if wndws();
 
   my $info_dir = "$Master/texmf-dist/doc/info";
   if ($mode eq "add") {
@@ -2403,7 +2573,7 @@ be called to make the changes immediately visible.
 
 sub w32_add_to_path {
   my ($bindir, $multiuser) = @_;
-  return if (!win32());
+  return if (!wndws());
 
   my $path = TeXLive::TLWinGoo::get_system_env() -> {'/Path'};
   $path =~ s/[\s\x00]+$//;
@@ -2648,7 +2818,7 @@ sub untar {
 
   # on w32 don't extract file modified time, because AV soft can open
   # files in the mean time causing time stamp modification to fail
-  my $taropt = win32() ? "xmf" : "xf";
+  my $taropt = wndws() ? "xmf" : "xf";
   if (system($tar, $taropt, $tarfile) != 0) {
     tlwarn("TLUtils::untar: $tar $taropt $tarfile failed (in $targetdir)\n");
     $ret = 0;
@@ -3146,7 +3316,7 @@ sub _download_file_lwp {
 
 sub _download_file_program {
   my ($url, $dest, $type) = @_;
-  if (win32()) {
+  if (wndws()) {
     $dest =~ s!/!\\!g;
   }
   
@@ -3195,7 +3365,7 @@ Return C</dev/null> on Unix and C<nul> on Windows.
 =cut
 
 sub nulldev {
-  return (&win32()) ? 'nul' : '/dev/null';
+  return (&wndws()) ? 'nul' : '/dev/null';
 }
 
 =item C<get_full_line ($fh)>
@@ -3712,8 +3882,8 @@ package.
 =cut
 
 sub debug {
-  my $str = "D:" . join("", @_);
   return if ($::opt_verbosity < 1);
+  my $str = "D:" . join("", @_);
   logit(\*STDERR, 1, $str);
   for my $i (@::debug_hook) {
     &{$i}($str);
@@ -3733,8 +3903,8 @@ each package, in addition to the first level.
 =cut
 
 sub ddebug {
-  my $str = "DD:" . join("", @_);
   return if ($::opt_verbosity < 2);
+  my $str = "DD:" . join("", @_);
   logit(\*STDERR, 2, $str);
   for my $i (@::ddebug_hook) {
     &{$i}($str);
@@ -3757,8 +3927,8 @@ debugging those parts of the code, it just gets in the way.
 =cut
 
 sub dddebug {
-  my $str = "DDD:" . join("", @_);
   return if ($::opt_verbosity < 3);
+  my $str = "DDD:" . join("", @_);
   logit(\*STDERR, 3, $str);
   for my $i (@::dddebug_hook) {
     &{$i}($str);
@@ -4058,7 +4228,7 @@ sub texdir_check {
   # Unfortunately we have lots of special characters.
   # On Windows, backslashes are normal but will already have been changed
   # to slashes by tl_abs_path. And we should only check for : on Unix.
-  my $colon = win32() ? "" : ":";
+  my $colon = wndws() ? "" : ":";
   if ($texdir =~ /[,$colon;\\{}\$]/) {
     if ($warn) {
       print "     !! TEXDIR value has problematic characters: $orig_texdir\n";
@@ -4071,7 +4241,7 @@ sub texdir_check {
     return 0;
   }
   # w32: for now, reject the root of a samba share
-  return 0 if win32() && $texdir =~ m!^//[^/]+/[^/]+$!;
+  return 0 if wndws() && $texdir =~ m!^//[^/]+/[^/]+$!;
 
   # if texdir already exists, make sure we can write into it.
   return dir_writable($texdir) if (-d $texdir);
@@ -4102,7 +4272,7 @@ are (erroneously) eradicated.
 
 sub quotify_path_with_spaces {
   my $p = shift;
-  my $m = win32() ? '[+=^&();,!%\s]' : '.';
+  my $m = wndws() ? '[+=^&();,!%\s]' : '.';
   if ( $p =~ m/$m/ ) {
     $p =~ s/"//g; # remove any existing double quotes
     $p = "\"$p\""; 
@@ -4150,13 +4320,13 @@ slashes after reading a path. They both are no-ops on Unix.
 
 sub native_slashify {
   my ($r) = @_;
-  $r =~ s!/!\\!g if win32();
+  $r =~ s!/!\\!g if wndws();
   return $r;
 }
 
 sub forward_slashify {
   my ($r) = @_;
-  $r =~ s!\\!/!g if win32();
+  $r =~ s!\\!/!g if wndws();
   return $r;
 }
 
@@ -4169,6 +4339,7 @@ false.
 =cut
 
 sub setup_persistent_downloads {
+  my $certs = shift;
   if ($TeXLive::TLDownload::net_lib_avail) {
     ddebug("setup_persistent_downloads has net_lib_avail set\n");
     if ($::tldownload_server) {
@@ -4176,10 +4347,10 @@ sub setup_persistent_downloads {
         debug("stop retrying to initialize LWP after 10 failures\n");
         return 0;
       } else {
-        $::tldownload_server->reinit();
+        $::tldownload_server->reinit(certificates => $certs);
       }
     } else {
-      $::tldownload_server = TeXLive::TLDownload->new;
+      $::tldownload_server = TeXLive::TLDownload->new(certificates => $certs);
     }
     if (!defined($::tldownload_server)) {
       ddebug("TLUtils:setup_persistent_downloads: failed to get ::tldownload_server\n");
@@ -4238,7 +4409,7 @@ END_NO_SSL
 # 
 sub query_ctan_mirror_curl {
   my $max_trial = 3;
-  my $warg = (win32() ? '-w "%{url_effective}" ' : "-w '%{url_effective}' ");
+  my $warg = (wndws() ? '-w "%{url_effective}" ' : "-w '%{url_effective}' ");
   for (my $i = 1; $i <= $max_trial; $i++) {
     # -L -> follow redirects
     # -s -> silent
@@ -4845,7 +5016,7 @@ sub mktexupd {
           die "mktexupd: exec file does not exist: $file" if (! -f $file);
         }
       }
-      my $delim= (&win32)? ';' : ':';
+      my $delim= (&wndws)? ';' : ':';
       my $TEXMFDBS;
       chomp($TEXMFDBS=`kpsewhich --show-path="ls-R"`);
 
@@ -4855,8 +5026,8 @@ sub mktexupd {
       foreach my $path (keys %files) {
         foreach my $db (@texmfdbs) {
           $db=substr($db, -1) if ($db=~m|/$|); # strip leading /
-          $db = lc($db) if win32();
-          my $up = (win32() ? lc($path) : $path);
+          $db = lc($db) if wndws();
+          my $up = (wndws() ? lc($path) : $path);
           if (substr($up, 0, length("$db/")) eq "$db/") {
             # we appended a / because otherwise "texmf" is recognized as a
             # substring of "texmf-dist".
@@ -4988,7 +5159,7 @@ directory for PATH.
 
 sub prepend_own_path {
   my $bindir = dirname(Cwd::abs_path(which('kpsewhich')));
-  if (win32()) {
+  if (wndws()) {
     $bindir =~ s!\\!/!g;
     $ENV{'PATH'} = "$bindir;$ENV{PATH}";
   } else {
@@ -5246,4 +5417,4 @@ GNU General Public License Version 2 or later.
 ### tab-width: 2
 ### indent-tabs-mode: nil
 ### End:
-# vim:set tabstop=2 expandtab: #
+# vim:set tabstop=2 shiftwidth=2 expandtab: #

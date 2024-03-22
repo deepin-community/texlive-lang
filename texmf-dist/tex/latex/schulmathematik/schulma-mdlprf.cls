@@ -1,8 +1,8 @@
 % schulmathematik bundle: document class schulma-mdlprf
-% Version 1.3
-% 12. August 2022
+% Version 1.6
+% 30. Dezember 2023
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-mdlprf}{2022-08-12}{1.3}{Dokumentenklasse fuer muendliche Abiturpruefungen}
+\ProvidesExplClass{schulma-mdlprf}{2023-12-30}{1.6}{Dokumentenklasse fuer muendliche Abiturpruefungen}
 
 \bool_new:N \g_schulma_mdlprf_oesterreich_bool
 \bool_new:N \g_schulma_mdlprf_pruefer_weiblich_bool
@@ -196,7 +196,7 @@
       {
         \msg_warning:nn {schulma-mdlprf} {Datum~fehlt}
       }
-  
+
     \vspace {2ex}
     \begin {center}
       \sffamily\bfseries\Large
@@ -210,7 +210,7 @@
           ( P \, \g_schulma_mdlprf_pnummer_str )
         }
     \end {center}
-  
+
     \vspace {1ex}
     \begin {tabbing}
     Beginn~der~Vorbereitungszeit:~ \=
@@ -248,10 +248,10 @@
     \> Pr\"ufungsraum: \> \g_schulma_mdlprf_pruefungsraum_tl
     \end {tabbing}
     \hrule
-  
+
     \subsubsection* {Aufgabe:}
     \g_schulma_mdlprf_aufgabe_tl
-    
+
     \tl_if_empty:NF \g_schulma_mdlprf_hilfsmittel_tl
       {
         \par

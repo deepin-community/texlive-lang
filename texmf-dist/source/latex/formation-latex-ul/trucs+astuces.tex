@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -16,10 +16,10 @@ En clôture de l'ouvrage, ce chapitre traite de différents sujets que
 même une personne débutant avec {\LaTeX} voudra assez rapidement
 aborder, comme le contrôle des sauts de ligne et des sauts de page, la
 modification de la police du document, l'utilisation de la couleur ou
-l'insertion d'hyperliens dans le fichier de sortie PDF. Nous offrons
+l'insertion d'hyperliens dans le fichier de sortie PDF. J'offre
 également de courtes introductions à des usages plus spécialisés de
 {\LaTeX} comme la mise en page de code informatique, la production de
-diapositives ou la programmation lettrée. Enfin, nous expliquons
+diapositives ou la programmation lettrée. Enfin, j'explique
 sommairement comme assurer de manière efficace la gestion des versions
 de ses documents, surtout dans un contexte de travail collaboratif.
 
@@ -34,9 +34,9 @@ notamment pour les sauts de page et la coupure de mots.
 \subsection{Sauts de ligne et de page}
 \label{sec:trucs:controle:sauts}
 
-Il est assez rarement nécessaire avec {\LaTeX} de devoir forcer les
-retours à la ligne. Chose certaine, l'on devrait toujours utiliser une
-ligne blanche dans le code source pour identifier un changement de
+Il est rarement nécessaire, avec {\LaTeX}, de forcer les retours à la
+ligne. Chose certaine, vous devriez toujours utiliser une ligne
+blanche dans le code source pour identifier un changement de
 paragraphe.
 
 Cela dit, les commandes suivantes permettent d'insérer un saut de
@@ -53,17 +53,17 @@ d'une suite d'équations (\autoref{sec:math:align}). L'argument optionnel
 \autoref{sec:bases:longueurs} explique comment spécifier une
 longueur.
 
-Généralement équivalente à {\bs\bs}, la commande \cmd{\newline} est
+Généralement équivalente à {\pixbsbs}, la commande \cmd{\newline} est
 parfois nécessaire, notamment pour insérer un changement de ligne à
 l'intérieur d'une cellule d'un tableau ou à l'intérieur d'un titre de
-section. Quand {\bs\bs} ne fonctionne pas, essayer
+section. Quand {\pixbsbs} ne fonctionne pas, essayez
 \cmdprint{\newline}.
 
 \begin{exemple}
-  La commande {\bs\bs} est particulièrement utile --- voire nécessaire
-  --- pour disposer des boites à l'intérieur d'une figure.
+  La commande {\pixbsbs} est particulièrement utile --- voire
+  nécessaire --- pour disposer des boites à l'intérieur d'une figure.
   L'utilisation de l'argument \meta{longueur} permet alors de
-  contrôler l'espacement vertical entre les éléments. Comparer les
+  contrôler l'espacement vertical entre les éléments. Comparez les
   deux exemples ci-dessous.
   \begin{demo}
     \begin{texample}[0.55\linewidth]
@@ -101,8 +101,8 @@ section. Quand {\bs\bs} ne fonctionne pas, essayer
         \framebox[\linewidth]{texte}
       \end{minipage}
     \end{texample}
-  \end{demo}
   \qed
+  \end{demo}
 \end{exemple}
 
 Les commandes
@@ -130,33 +130,33 @@ Moins directives, les commandes
 \enlargethispage`\marg{longueur}'
 \end{lstlisting}
 permettent de seulement aider {\LaTeX} à gérer les sauts de page à un
-endroit précis. La commande \cmd{\pagebreak} est intéressante
-lorsque utilisée avec son argument optionnel \meta{n}: celui-ci
-indique, par le biais d'un nombre entier entre 0 et 4, à quel point
-nous \emph{recommandons} à {\LaTeX} d'insérer un saut de page à
-l'endroit où la commande apparait (0 étant une faible recommandation
-et 4, une forte).
+endroit précis. La commande \cmd{\pagebreak} est intéressante lorsque
+utilisée avec son argument optionnel \meta{n}: celui-ci indique, par
+le biais d'un nombre entier entre 0 et 4, à quel point vous
+\emph{recommandez} à {\LaTeX} d'insérer un saut de page à l'endroit où
+la commande apparait (0 étant une faible recommandation et 4, une
+forte).
 
 La commande \cmd{\enlargethispage}, comme son nom l'indique, permet
 d'allonger une page de \meta{longueur} pour y faire tenir plus de
 texte. C'est une commande particulièrement utile pour éviter que la
-toute dernière ligne d'un chapitre ou d'un document se retrouve seule sur
-une page.
+toute dernière ligne d'un chapitre ou d'un document se retrouve seule
+sur une page.
 
 \subsection{Coupure de mots}
 \label{sec:trucs:controle:coupure}
 
 La coupure automatique des mots en fin de ligne est toujours active
-avec {\LaTeX}. C'est d'ailleurs pourquoi il importe d'indiquer à
-{\LaTeX} dans quelle langue est le texte (lorsque ce n'est pas en
-anglais) avec les commandes du paquetage \pkg{babel}.
+avec {\LaTeX}. C'est d'ailleurs pourquoi il est important d'indiquer à
+{\LaTeX}, à l'aide du paquetage \pkg{babel}, la langue d'un texte
+lorsque ce n'est pas l'anglais.
 
 Il existe deux façons de contrôler la coupure de mots. La première,
 principalement utilisée lorsque {\LaTeX} refuse de couper un mot en
 fin de ligne, consiste à insérer des \emph{suggestions} d'endroits où
 couper le mot avec la commande \cmd{\-}. Par exemple, en écrivant
-\verb=vrai\-sem\-blance=, on indique à {\LaTeX} qu'il est possible de
-diviser le mot en \emph{vrai-semblance} ou \emph{vraisem-blance}.
+\verb=vrai\-sem\-blance=, vous indiquez à {\LaTeX} qu'il est possible
+de diviser le mot en \emph{vrai-semblance} ou \emph{vraisem-blance}.
 
 La seconde méthode, celle-là surtout utilisée lorsque {\LaTeX} ne
 reconnait pas des mots qui reviennent souvent dans le document,
@@ -169,6 +169,7 @@ La \meta{liste} est une suite de mots, séparés par des virgules, des
 blancs ou des retours à la ligne, dans lesquels les points de coupure
 sont identifiés par un trait d'union.
 
+\enlargethispage{5mm}           % pour \qed
 \begin{exemple}
   La commande suivante, insérée dans le préambule, permet d'ajouter
   des points de coupure aux mots «puisque», «constante» et
@@ -189,87 +190,46 @@ sont identifiés par un trait d'union.
 
 {\CM%
   Les documents {\LaTeX} standards sont facilement reconnaissables par
-  leur police par défaut, Computer Modern --- celle utilisée dans ce
+  leur police par défaut Computer Modern --- celle utilisée dans ce
   paragraphe. Pour qui souhaitait briser la relative monotonie induite
   par cette uniformité, il a longtemps été difficile d'utiliser une
   autre police. Fort heureusement, la situation a beaucoup évolué et
   il est aujourd'hui assez simple de produire des documents {\LaTeX}
-  utilisant des polices variées.}
+  utilisant des polices variées.
+}
 
 Avant d'aller plus loin, une mise en garde: si un document contient
 plus que quelques équations mathématiques très simples, le choix de
-police devient très restreint. La raison: peu de polices comprennent
+police devient très restreint. En effet, peu de polices comprennent
 des symboles mathématiques et les informations nécessaires pour les
-assembler selon les hauts standards qualité usuels de {\LaTeX}.
+assembler selon les hauts standards de qualité usuels de {\LaTeX}.
 
-Cela dit, pour qui souhaite aller au-delà de la police Computer Modern
-sans trop se compliquer la vie, il existe deux solutions principales.
-
+Cela dit, si vous souhaitez aller au-delà de la police Computer Modern
+sans trop vous compliquer la vie, il existe deux solutions
+principales.
 \begin{enumerate}
-\item Utiliser l'une ou l'autre des polices PostScript standards
-  convenant pour du texte normal
-  ({\Times Times}, %
-   {\Palatino Palatino}, %
-   {\Bookman Bookman}, %
-   {\Charter Charter}, %
-   {\NewCent New Century Schoolbook}, %
-   {\Helvet Helvetica}). %
-  C'est très simple avec toute distribution {\LaTeX} moderne: il
-  suffit de charger le paquetage approprié. Consulter la %
-  \doc{psnfss2e}{http://texdoc.net/pkg/psnfss/} %
-  de l'ensemble de paquetages PSNFSS.
 \item Utiliser une police OpenType ou TrueType présente sur son
-  système avec le moteur {\XeLaTeX}. Seule une poignée de ces polices
-  offre toutefois un support approprié pour les mathématiques. La
-  gestion des polices avec {\XeLaTeX} se fait avec le paquetage
-  standard \pkg{fontspec}; consulter sa %
-  \doc{fontspec}{http://texdoc.net/pkg/fontspec/}.
+  système avec le moteur {\XeLaTeX}. C'est aujourd'hui la meilleure
+  solution. La gestion des polices avec {\XeLaTeX} repose sur le
+  paquetage standard \pkg{fontspec}; consultez sa %
+  \doc{fontspec}{https://texdoc.net/pkg/fontspec}.
+\item Utiliser l'une ou l'autre des polices PostScript standards
+  convenant pour du texte normal %
+  ({\Times Times}, %
+  {\Palatino Palatino}, %
+  {\Bookman Bookman}, %
+  {\Charter Charter}, %
+  {\NewCent New Century Schoolbook}, %
+  {\Helvet Helvetica}). %
+  C'est la solution à privilégier si vous utilisez toujours
+  pdf{\LaTeX}. Il suffit alors de charger le paquetage approprié.
+  Consultez à ce sujet la %
+  \doc{psnfss2e}{https://texdoc.net/pkg/psnfss} %
+  de l'ensemble de paquetages PSNFSS.
 \end{enumerate}
 
-Pour les thèses et mémoires de l'Université Laval, la Faculté des
-études supérieures et postdoctorales accepte les polices %
-\begin{quote}
-  \begin{tabbing}
-    Computer Modern \qquad \=  ABCDEF abcdef 1234567890 \kill
-    {\CM Computer Modern} \> {\CM ABCDEF abcdef 1234567890} \\
-    {\Times Times} \> {\Times ABCDEF abcdef 1234567890} \\
-    {\Palatino Palatino} \> {\Palatino ABCDEF abcdef 1234567890}
-  \end{tabbing}
-\end{quote}
-Pour utiliser ces deux dernières avec pdf{\LaTeX}, charger
-respectivement les paquetages \pkg{mathptmx} ou \pkg{mathpazo}. Avec
-{\XeLaTeX}, utiliser les polices Termes et Pagella du projet %
-\link{http://www.gust.org.pl/projects/e-foundry/tex-gyre/}{TeX~Gyre}.
-Ce sont des polices très similaires à Times et Palatino, disponibles
-en version OpenType et qui fournissent un bon support pour les
-mathématiques via le projet frère %
-\link{http://www.gust.org.pl/projects/e-foundry/tg-math/}{TeX~Gyre
-  Math}.
-
-\begin{exemple}
-  \label{ex:trucs:palatino}
-  Pour utiliser la police PostScript classique Palatino avec {\LaTeX}
-  tant pour le texte que pour les mathématiques, il suffit d'insérer
-  dans le préambule de son document la commande
-\begin{lstlisting}
-\usepackage{mathpazo}
-\end{lstlisting}
-
-  Avec le moteur {\XeLaTeX}, il est possible d'utiliser n'importe
-  quelle police OpenType et TrueType installée dans le système
-  d'exploitation de l'ordinateur. Pour obtenir un résultat équivalent
-  à celui de \pkg{mathpazo}, installer les polices TeX~Gyre dans le
-  système, puis insérer dans le préambule les commandes
-\begin{lstlisting}
-\usepackage{fontspec}
-\setmainfont{TeX Gyre Pagella}
-\setmathfont{TeX Gyre Pagella Math}
-\end{lstlisting}
-  \qed
-\end{exemple}
-
 Le texte principal du présent document est en %
-\link{https://tug.org/store/lucida/}{Lucida Bright~OT}, %
+\link{https://tug.org/store/lucida}{Lucida Bright~OT}, %
 une police commerciale de très haute qualité offrant également un
 excellent support pour les mathématiques. Ses auteurs ont toujours été
 proches de la communauté {\LaTeX}. La Bibliothèque de l'Université
@@ -283,12 +243,13 @@ gratuitement en écrivant à
 \section{Couleurs}
 \label{sec:trucs:couleurs}
 
-L'utilisation de couleur dans un document {\LaTeX} requiert de charger
-le paquetage \pkg{xcolor} \citep{xcolor}. Celui-ci définit d'abord
-plusieurs couleurs que l'on peut utiliser directement; consulter la %
-\doc{xcolor}{http://texdoc.net/pkg/xcolor} %
+L'ajout de couleur dans un document {\LaTeX} requiert le paquetage
+\pkg{xcolor} \citep{xcolor}. Celui-ci définit d'abord plusieurs
+dizaines de couleurs que vous pouvez ensuite utiliser directement dans
+votre document; consultez la %
+\doc{xcolor}{https://texdoc.net/pkg/xcolor} %
 pour en connaitre les différentes listes. Le
-\autoref{tab:trucs:couleurs} fournit celle des couleurs toujours
+\autoref{tab:trucs:couleurs} fournit la liste des couleurs toujours
 disponibles.
 
 \begin{table}
@@ -346,10 +307,10 @@ et \textcolor{blue}{en bleu}
 
 La commande \cmd{\definecolor} permet de définir de nouvelles couleurs
 selon plusieurs systèmes de codage. Le plus usuel demeure \emph{Rouge,
-  vert, bleu} (RVB ou RGB, en anglais) où une couleur est représentée
-par une combinaison de teintes --- exprimées par un nombre entre $0$
-et $1$ --- de rouge, de vert et de bleu. Dans ce cas, la syntaxe de
-\cmd{\definecolor} est
+  vert, bleu} (RVB ou RGB, en anglais), dans lequel une couleur est
+représentée par une combinaison de teintes --- exprimées par un nombre
+entre $0$ et $1$ --- de rouge, de vert et de bleu. Dans ce cas, la
+syntaxe de \cmd{\definecolor} est
 \begin{lstlisting}
 \definecolor`\marg{nom}'{rgb}`\marg{valeur\_r,valeur\_v,valeur\_b}
 \end{lstlisting}
@@ -386,22 +347,22 @@ couleur.
 \section{Hyperliens et métadonnées de documents PDF}
 \label{sec:trucs:hyperliens}
 
-Nous en avons déjà traité à quelques reprises, notamment à la
+J'en ai déjà traité à quelques reprises, notamment à la
 \autoref{sec:organisation:renvois}: le paquetage \pkg{hyperref}
-\citep{hyperref} permet de transformer les références dans le
-texte en hyperliens cliquables lorsque le document est produit avec
-pdf{\LaTeX} ou {\XeLaTeX}. C'est très pratique lors de la consultation
+\citep{hyperref} permet de transformer les références dans le texte en
+hyperliens cliquables lorsque le document est produit avec pdf{\LaTeX}
+ou {\XeLaTeX}. C'est très pratique lors de la consultation
 électronique d'un document.
 
-Le paquetage offre une multitudes d'options de configuration; nous
-n'en présenterons que quelques unes. On accède aux options de
-configuration de \pkg{hyperref} via la commande \cmd{\hypersetup} dans
-le préambule. Celle-ci prend en arguments des paires
-\code{option=valeur} séparées par des virgules.
+Le paquetage offre une multitudes d'options de configuration; je n'en
+présente que quelques unes. On accède aux options de configuration de
+\pkg{hyperref} via la commande \cmd{\hypersetup} dans le préambule.
+Celle-ci prend en arguments des paires \code{option=valeur} séparées
+par des virgules.
 
-Une des principales choses que l'on pourra souhaiter configurer, c'est
-le comportement et la couleur des divers types d'hyperliens. On
-trouvera ci-dessous les options de configuration pertinentes, leur
+Une des principales choses que vous pourrez souhaiter configurer dans
+\pkg{hyperref}, c'est le comportement et la couleur des divers types
+d'hyperliens. Voici les options de configuration pertinentes, leur
 valeur (avec en gras la valeur par défaut) ainsi qu'une brève
 explication de chacune.
 
@@ -419,16 +380,11 @@ explication de chacune.
                                                              des
                                                              matières \\
     \code{linkcolor} & \meta{couleur} & couleur des liens internes \\
-    \code{urlcolor}  & \meta{couleur} & couleur des URL externes \\
+    \code{urlcolor}  & \meta{couleur} & couleur des adresses URL \\
     \code{citecolor} & \meta{couleur} & couleur des citations \\
     \code{allcolor}  & \meta{couleur} & couleur pour tous les types d'hyperliens
   \end{tabularx}
 \end{table}
-
-Lorsque la valeur admissible d'une option est \code{true} ou
-\code{false}, sa seule mention équivaut à \code{true}. La valeur
-\meta{couleur} est le nom d'une couleur telle que définie par
-\pkg{xcolor} (\autoref{sec:trucs:couleurs}).
 
 Les fichiers PDF peuvent contenir diverses métadonnées sur leur
 contenu. Le paquetage \pkg{hyperref} permet d'en définir certaines,
@@ -441,19 +397,19 @@ notamment le titre ou l'auteur du document.
   \end{tabularx}
 \end{table}
 
-Consulter la section~3.7 de la %
-\doc{hyperref}{http://texdoc.net/pkg/hyperref} %
+Consultez la %
+\doc{hyperref}{https://texdoc.net/pkg/hyperref} %
 de \pkg{hyperref} pour obtenir la liste complète des options de
 configuration des métadonnées.
 
 \begin{exemple}
   \label{ex:trucs:couleurs}
-  Le présent document fait appel aux définitions de couleurs
-  et aux options de configuration de \pkg{hyperref} suivantes:
+  Le préambule du présent document contient les définitions de
+  couleurs et d'options de \pkg{hyperref} suivantes:
 \begin{lstlisting}
-\definecolor{link}{rgb}{0,0.4,0.6}   % ~RoyalBlue de dvips
-\definecolor{url}{rgb}{0.6,0,0}      % rouge foncé
-\definecolor{citation}{rgb}{0,0.5,0} % vert foncé
+\definecolor{link}{rgb}{0,0.4,0.6}   % liens internes
+\definecolor{url}{rgb}{0.6,0,0}      % liens externes
+\definecolor{citation}{rgb}{0,0.5,0} % citations
 \hypersetup{%
   pdfauthor = {Vincent Goulet},
   pdftitle = {Rédaction avec LaTeX},
@@ -466,22 +422,9 @@ configuration des métadonnées.
   \qed
 \end{exemple}
 
-\begin{exemple}
-  Les gabarits de thèses et de mémoires livrés avec la classe
-  \class{ulthese} contiennent dans le préambule la ligne suivante:
-\begin{lstlisting}
-\hypersetup{colorlinks,allcolors=ULlinkcolor}
-\end{lstlisting}
-  Tous les liens de la thèse ou du mémoire seront donc de la même
-  couleur, \code{ULlinkcolor} \fcolorbox{black}{ULlinkcolor}{\phantom{xx}},
-  une couleur définie par la classe. %
-  \qed
-\end{exemple}
-
 \tipbox{L'interaction du paquetage \pkg{hyperref} avec les autres est
-  parfois (voire souvent) délicate. Pour cette raison, il est
-  fortement recommandé que \pkg{hyperref} soit le tout dernier
-  paquetage chargé dans le préambule.}
+  souvent délicate. Pour cette raison, il est fortement recommandé
+  qu'il soit le tout dernier paquetage chargé dans le préambule.}
 
 
 
@@ -489,10 +432,9 @@ configuration des métadonnées.
 \label{sec:trucs:listings}
 
 L'environnement standard \Ie{verbatim} de {\LaTeX} permet de présenter
-du texte tel qu'il est entré dans le code source du document. C'est un
-environnement particulièrement utile pour afficher du code
-informatique puisque le texte est composé en police non
-proportionnelle et que sa disposition exacte est respectée.
+du texte tel qu'il est entré dans le code source du document. Le texte
+qu'il contient est composé en police non proportionnelle et sa
+disposition exacte est respectée.
 
 \begin{demo}
   \begin{texample}
@@ -522,21 +464,20 @@ int main()
   \end{texample}
 \end{demo}
 
-Si un document doit contenir beaucoup de code informatique et que l'on
-souhaite exercer un fin contrôle sur sa disposition et sa mise en
-forme, il vaut mieux se tourner vers un paquetage spécialisé comme
+Si un document doit contenir beaucoup de code informatique et que vous
+souhaitez exercer un fin contrôle sur sa disposition et sa mise en
+forme, il vaut mieux vous tourner vers un paquetage spécialisé comme
 \pkg{listings} \citep{listings}. La %
-\doc{listings}{http://texdoc.net/pkg/listings} %
+\doc{listings}{https://texdoc.net/pkg/listings} %
 du paquetage compare ses fonctionnalités à celles de plusieurs autres
 paquetages similaires.
 
 Le paquetage \pkg{listings} peut effectuer automatiquement le marquage
 des mots-clés de nombreux langages de programmation, ajouter des
 numéros de ligne, importer du code de fichiers externes ou même
-indexer les mots-clés des extraits de code. À titre d'illustration, en
-utilisant l'environnement \Ie{lstlisting} de \pkg{listings} plutôt que
-\Ie{verbatim}, l'extrait de code C ci-dessus pourrait se présenter
-ainsi:
+indexer les mots-clés des extraits de code. À titre d'illustration,
+l'environnement \Ie{lstlisting} pourrait composer ainsi l'extrait de
+code C ci-dessus:
 \begin{demo}
   \begin{texample}
     \begin{vglisting}
@@ -578,9 +519,9 @@ int main()
 \end{demo}
 
 Il serait trop long et nettement hors de la portée du présent ouvrage
-d'expliquer les nombreuses fonctionnalités de \pkg{listings}.
-Précisons simplement que le paquetage a servi pour composer ses
-extraits de code et pour construire une grande partie de son index.
+d'expliquer les nombreuses fonctionnalités de \pkg{listings}. Je
+précise simplement que c'est à l'aide du paquetage que j'ai composé
+les extraits de code et construit une grande partie de l'index.
 
 \begin{exemple}
   \label{ex:trucs:listings}
@@ -589,20 +530,20 @@ extraits de code et pour construire une grande partie de son index.
   préambule de la manière suivante:
 \begin{lstlisting}
 %% Couleurs
-\definecolor{comments}{rgb}{0.7,0,0}
+\definecolor{comments}{rgb}{0.5,0.55,0.6}
 
 %% Configuration de listings
-\lstset{language = [LaTeX]TeX,
-  basicstyle = \ttfamily\NoAutoSpacing,
-  keywordstyle = \mdseries,
-  commentstyle = \color{comments}\slshape,
-  extendedchars = true,
-  showstringspaces = false,
-  backgroundcolor = \color{LightYellow1},
-  frame = lr,
-  rulecolor = \color{LightYellow1},
-  xleftmargin = 3.4pt,
-  xrightmargin = 3.4pt}
+\lstset{language=[LaTeX]TeX,
+  basicstyle=\ttfamily\NoAutoSpacing,
+  keywordstyle=\mdseries,
+  commentstyle=\color{comments}\slshape,
+  extendedchars=true,
+  showstringspaces=false,
+  backgroundcolor=\color{LightYellow1},
+  frame=leftline,
+  framerule=2pt,
+  framesep=5pt,
+  xleftmargin=7.4pt}
 \end{lstlisting}
   (La couleur \code{LightYellow1} est définie par \pkg{xcolor} lorsque
   le paquetage est chargé avec l'option \code{x11names}.)
@@ -691,7 +632,7 @@ des commandes à l'invite de commande:
 La commande \verb=exp(1)= donne 2.71828182845905,
 la valeur du nombre $e$.
 \end{lstlisting}
-\item On compile le fichier \code{.tex} comme d'habitude.
+\item Le fichier \code{.tex} est compilé comme d'habitude.
 \end{enumerate}
 
 Sweave se révèle particulièrement utile pour créer des graphiques à
@@ -699,21 +640,24 @@ partir de R: tout ce que l'on doit conserver dans son fichier
 \code{.Rnw}, c'est le code pour créer le graphique. Il est également
 possible de contrôler l'exécution des blocs de code et l'affichage du
 code source et des résultats par le biais d'options placées à
-l'intérieur de la balise d'ouverture \verb|<<>>=|. Consulter la %
-\link{https://leisch.userweb.mwn.de/Sweave/Sweave-manual.pdf}{documentation} %
-de Sweave pour les détails.
+l'intérieur de la balise d'ouverture \verb|<<>>=|.
 
-\link{http://mpastell.com/pweave/}{Pweave} est un système similaire à
+Vous pouvez consulter la documentation de Sweave en entrant dans R la
+commande
+\begin{lstlisting}[language=R]
+> vignette("Sweave", package = "utils")
+\end{lstlisting}
+
+\link{https://mpastell.com/pweave}{Pweave} est un système similaire à
 Sweave pour le langage Python.
 
 Inspiré de Sweave, knitr \citep{knitr} permet également d'entrelacer
 du code {\LaTeX} et du code R. Cet outil offre plus d'options de
 traitement que Sweave, mais au prix d'une complexité accrue.
 
-En terminant, rappelons que Sweave n'est qu'un exemple de système de
-programmation lettrée. Il en existe plusieurs autres. Il appartient
-dès lors au lecteur de trouver le système qui correspond le mieux à
-ses besoins.
+En terminant, je souligne que Sweave n'est qu'un exemple de système de
+programmation lettrée. Il en existe plusieurs autres. Je vous invite à
+identifier celui qui correspond le mieux à vos besoins.
 
 \notebox{On doit le concept de programmation lettrée au créateur de
   {\TeX}, Donald Knuth. En fait, tout le code source de {\TeX} est
@@ -721,13 +665,7 @@ ses besoins.
   \link{https://fr.wikipedia.org/wiki/Programmation_lettrée}{page
     Wikipedia} %
   consacrée au sujet offre un très bon survol de l'historique et de la
-  nature du concept.
-
-  Le lecteur intéressé pourra consulter, par exemple, le %
-  \link{https://www.ctan.org/pkg/ulthese}{code source} %
-  de la classe \class{ulthese}. La documentation de la classe, le
-  code {\LaTeX}, les gabarits, tout se trouve entrelacé
-  dans le seul fichier \code{ulthese.dtx}.}
+  nature du concept.}
 
 
 \section{Diapositives}
@@ -743,27 +681,24 @@ comme PowerPoint.
 
 Fort heureusement, il est tout à fait possible de composer ses
 diapositives avec {\LaTeX}. La classe standard \class{slides} produit
-des diapositives élégantes, quoique minimalistes, qui conviendront à
-l'auteur qui ne recherche rien de plus que du texte noir sur fond
-blanc.
+des diapositives élégantes, quoique minimalistes. Elles vous
+conviendront si vous ne recherchez rien de plus que du texte noir sur
+fond blanc.
 
 Cependant, l'outil devenu le standard \emph{de facto} pour la
 production de diapositives est la classe \class{beamer}
 \citep{beamer}. Celle-ci compte un grand nombre de thèmes et de
-gabarits élaborés, rend très simple l'insertion d'animations d'une
-diapositive à l'autre, gère automatiquement la table des matières
-et\dots\ produit des diapositives en couleur.
-
-Quelle que soit la classe utilisée, les diapositives produites avec
-{\LaTeX} se présentent sous forme de fichier PDF. On les projette avec
-une liseuse PDF en mode plein écran.
-
-Nous n'irons pas plus loin sur le sujet dans ce document. Consulter
-la %
-\doc{beamer}{http://texdoc.net/pkg/beameruserguide} %
+gabarits élaborés, elle rend très simple l'insertion d'animations
+d'une diapositive à l'autre et\dots\ elle produit des diapositives en
+couleur. Consultez la %
+\doc{beamer}{https://texdoc.net/pkg/beameruserguide} %
 de \class{beamer} pour apprendre à utiliser la classe. Produire des
 diapositives de grande qualité avec les gabarits fournis avec la
 classe se révèle simple et rapide.
+
+Quelle que soit la classe utilisée, les diapositives produites avec
+{\LaTeX} se présentent sous forme de fichier PDF que l'on les projette
+avec une liseuse PDF en mode plein écran.
 
 
 
@@ -778,12 +713,12 @@ aujourd'hui? Une modification apportée au fichier n'est plus
 nécessaire; comment retourner en arrière facilement?
 
 Les informaticiens ont résolu ce genre de problèmes il y a des
-dizaines d'années avec les systèmes de gestion de versions. Les
-systèmes les plus populaires en ce moment sont Subversion
-\citep{subversion} et Git \citep{git}.
+dizaines d'années avec les systèmes de gestion de versions. Le système
+le plus populaire dans le monde en ce moment est Git \citep{git} (que
+l'on prononce avec un «g» dur, comme dans «guitare»).
 
 Bien que développés à l'origine pour la gestion du code source de
-logiciels, les systèmes de contrôle de versions conviennent
+logiciels, les systèmes de gestion de versions conviennent
 parfaitement pour les sources {\LaTeX}. L'utilisation d'un tel système
 permet de:
 \begin{itemize}
@@ -796,28 +731,16 @@ permet de:
 \item gérer automatiquement les éventuels conflits de modification
   d'un fichier;
 \item disposer en tout temps d'une copie de secours de son travail
-  lorsque l'on a recours à un serveur central (obligatoire avec
-  Subversion; optionnel avec Git\footnote{%
-    Si ce n'est que pour le volet de sauvegarde, nous recommandons
-    d'utiliser avec Git un dépôt central tel que
-    \link{https://gitlab.com}{GitLab}, un serveur public qui héberge
-    déjà des millions de projets.}.)
+  lorsque l'on a recours à un dépôt centralisé.
 \end{itemize}
-Un système de gestion de versions est un outil qui permet d'augmenter
-considérablement sa productivité ou celle de son équipe de
-travail au moment de rédiger un ouvrage scientifique.
+Un système de gestion de versions est un outil qui vous permettra
+d'augmenter considérablement votre productivité ou celle de votre équipe
+de travail au moment de rédiger un ouvrage scientifique.
 
-La %
-\link{https://fr.wikipedia.org/wiki/Gestion_de_versions}{page Wikipedia} %
-sur le sujet offre une bonne introduction aux systèmes de gestion de
-versions. Les membres de la communauté de l'Université Laval qui
-souhaitent mettre sur pied un dépôt pour un projet pourront
-consulter leur équipe de soutien informatique facultaire.
-
-\notebox{La présente documentation est conservée dans un dépôt Git
-  public d'où l'on peut toujours obtenir la plus récente version.
-  Consulter la page des notices de copyright au début du document pour
-  accéder au dépôt.}
+\notebox{Le code source de cet ouvrage présente est conservé dans un
+  dépôt Git public duquel vous pouvez en tout temps obtenir la plus
+  récente version. L'adresse URL du dépôt se trouve dans la page des
+  notices de copyright au début du document.}
 
 
 
@@ -839,15 +762,17 @@ consulter leur équipe de soutien informatique facultaire.
 \noindent%
 Pour les exercices
 \nolink{\ref{exercice:trucs:1}}--\nolink{\ref{exercice:trucs:n}},
-utiliser le fichier \fichier{exercice\_trucs.tex}. Celui-ci reprend
-une partie de la documentation de la classe \class{ulthese}. De plus,
-on remarquera que le document:
+utiliser le fichier \fichier{exercice-trucs.tex}. Celui-ci reprend une
+partie de la documentation de la classe \class{ulthese} pour les
+thèses et mémoires de l'Université Laval. Avant toute chose, passez
+rapidement en revue le préambule du document. Vous constaterez que le
+document:
 \begin{itemize}
-\item doit être compilé avec pdf{\LaTeX} puisqu'il charge les
-  paquetages \pkg{inputenc} et \pkg{fontenc};
+\item est compatible tant avec pdf{\LaTeX} qu'avec {\XeLaTeX} grâce à
+  un test sur le moteur utilisé effectué dans le préambule;;
 \item définit des nouvelles commandes \cmdprint{\class} et
   \cmdprint{\fichier} pour composer, respectivement, les noms de
-  classe et les noms de fichier;
+  classes et les noms de fichiers;
 \item utilise la commande \cmdprint{\doc} de
   l'\autoref{ex:commandes:doc};
 \item charge le paquetage \pkg{hyperref}, ce qui transforme les titres
@@ -856,32 +781,59 @@ on remarquera que le document:
 \end{itemize}
 \medskip
 
-\begin{exercice}
+\begin{exercice}[nosol]
   \label{exercice:trucs:1}
   Compiler et visualiser le fichier sans aucune modification. Le texte
   est composé dans la police par défaut Computer Modern.
 
-  Ensuite, modifier le préambule du document pour composer le document
-  dans la police Palatino, tel qu'expliqué à
-  l'\autoref{ex:trucs:palatino}. Charger également le paquetage
-  \pkg{helvet} afin d'utiliser Helvetica pour le texte en police sans
-  empattements (\cmdprint{\textsf}).
-  \begin{sol}
-    On doit ajouter dans le préambule les commandes
+  Ensuite, modifier le préambule du document pour composer le
+  document avec les polices suivantes:
+  \begin{itemize}
+  \item \link{https://www.stixfonts.org}{STIX} (version 2) %
+    pour le texte romain;
+  \item \link{https://bboxtype.com/typefaces/FiraSans}{Fira Sans} pour
+    le texte sans empattements;
+  \item \link{https://bboxtype.com/typefaces/FiraMono}{Fira Mono} pour
+    le texte à largeur fixe.
+  \end{itemize}
+
+  Avec {\XeLaTeX}, insérer les lignes suivantes après le chargement du
+  paquetage \pkg{fontspec}:
 \begin{lstlisting}
-\usepackage{mathpazo}
-\usepackage{helvet}
+\setmainfont{STIXTwoText}
+[
+  Extension = .otf,
+  UprightFont = *-Regular,
+  BoldFont = *-SemiBold,
+  ItalicFont = *-Italic,
+  BoldItalicFont = *-SemiBoldItalic,
+]
+\setsansfont{FiraSans}
+[
+  Extension = .otf,
+  UprightFont = *-Regular,
+  BoldFont = *-SemiBold,
+  ItalicFont = *-Italic,
+  BoldItalicFont = *-SemiBoldItalic,
+  Scale = 0.92
+]
+\setmonofont{FiraMono}
+[
+  Extension = .otf,
+  UprightFont = *-Regular,
+  BoldFont = *-Medium,
+  ItalicFont = *-Oblique,
+  BoldItalicFont = *-MediumOblique,
+  Scale = 0.90
+]
 \end{lstlisting}
-    La police Helvetica est très grande. Tel que mentionné dans la %
-    \doc{psnfss2e}{http://texdoc.net/pkg/psnfss/} %
-    de PSNFSS (section~4), il est généralement préférable de charger
-    le paquetage \pkg{helvet} avec, par exemple,
+  Avec pdf{\LaTeX}, insérer les lignes suivantes après le chargement
+  du paquetage \pkg{fontenc}:
 \begin{lstlisting}
-\usepackage[scaled=0.92]{helvet}
+\usepackage{stix2}
+\usepackage[scale=0.92]{FiraSans}
+\usepackage[scale=0.90]{FiraMono}
 \end{lstlisting}
-    pour que le texte en Helvetica se marie mieux à celui dans une
-    autre police.
-  \end{sol}
 \end{exercice}
 
 \begin{exercice}
@@ -889,7 +841,7 @@ on remarquera que le document:
   la table des matières soient ancrés aux numéros de page plutôt
   qu'aux titres de section.
   \begin{sol}
-    Tel qu'expliqué à la \autoref{sec:trucs:hyperliens}, on doit
+    Tel qu'expliqué à la \autoref{sec:trucs:hyperliens}, il faut
     insérer dans le préambule du document la commande
 \begin{lstlisting}
 \hypersetup{linktocpage=true}
@@ -906,13 +858,13 @@ on remarquera que le document:
   \code{colorlinks} à \pkg{hyperref}, puis recompiler le document.
   Observer les changements.
   \begin{sol}
-    En conservant l'ajout de l'exercice précédent, on a dans le
-    préambule la commande
+    En conservant l'ajout de l'exercice précédent, le préambule doit
+    contenir la commande
 \begin{lstlisting}
 \hypersetup{colorlinks, linktocpage}
 \end{lstlisting}
-    Les hyperliens se présentent maintenant en couleur selon les
-    paramètres par défaut de \pkg{hyperref}.
+    Les hyperliens apparaitront alors en couleur selon les paramètres
+    par défaut de \pkg{hyperref}.
   \end{sol}
 \end{exercice}
 
@@ -920,10 +872,10 @@ on remarquera que le document:
   En s'inspirant de l'\autoref{ex:trucs:couleurs}, modifier la couleur
   des liens internes et externes.
   \begin{sol}
-    On peut soit utiliser des couleurs prédéfinies de \pkg{xcolor}
-    (\autoref{tab:trucs:couleurs}), soit en  définir de nouvelles avec
-    \cmd{\definecolor}. On fait ensuite appel aux couleurs choisies
-    pour les options \code{linkcolor} (liens internes) et
+    Il est possible soit d'utiliser des couleurs prédéfinies de
+    \pkg{xcolor} (\autoref{tab:trucs:couleurs}), soit d'en définir de
+    nouvelles avec \cmd{\definecolor}. Les couleurs sont ensuite
+    sélectionnées via les options \code{linkcolor} (liens internes) et
     \code{urlcolor} (liens externes) de \pkg{hyperref}.
 
     Exemple utilisant des couleurs prédéfinies:

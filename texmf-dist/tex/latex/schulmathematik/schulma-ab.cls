@@ -1,8 +1,8 @@
 % schulmathematik bundle: document class schulma-ab
-% Version 1.3
-% 12. August 2022
+% Version 1.6
+% 30. Dezember 2023
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-ab}{2022-08-12}{1.3}{Dokumentenklasse fuer Arbeitsblaetter}
+\ProvidesExplClass{schulma-ab}{2023-12-30}{1.6}{Dokumentenklasse fuer Arbeitsblaetter}
 
 \tl_new:N \g_schulma_ab_kurs_tl
 \tl_new:N \g_schulma_ab_thema_tl
@@ -49,7 +49,7 @@
     \PassOptionsToClass {\CurrentOption} {scrartcl}
   }
 
-\ProcessOptions\relax
+\ProcessOptions \relax
 
 \NewDocumentCommand \Kurs {m}
   {
@@ -132,6 +132,7 @@
 
 \addtokomafont{pagefoot}{\upshape}
 \cfoot{\pagemark/\pageref{LastPage}}
+\ofoot{}
 
 %\DTMlangsetup*{twodigits=false,datesep={.\thinspace}} % Option twodigits z. Zt. nicht implementiert
 

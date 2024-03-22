@@ -54,12 +54,18 @@ vardef Initialisation(expr r,t,p,d)=
   Aux6:=Aux1*Aux2;
   Aux7:=Aux3*Aux4;
   Aux8:=Aux1*Aux4;
+  color Oeil;
+%  if typerepre="cabinet":
+%    Oeil=(Rho,0,0);
+%  else:
+    Oeil=(Aux7,Aux8,Aux2)*Rho;
+%  fi;
   pointilles:="oui";
   Lumiere:=Oeil;
 enddef;
 
-vardef Oeil=(Rho*Aux7,Rho*Aux8,Rho*Aux2)
-enddef;
+%vardef Oeil=(Rho*Aux7,Rho*Aux8,Rho*Aux2)
+%enddef;
 
 vardef sin(expr t) = sind(c*t) enddef;
 
@@ -101,14 +107,30 @@ vardef GCoord(expr N)=
   (-Xpart(N)*Aux1+Ypart(N)*Aux3,-Xpart(N)*Aux5-Ypart(N)*Aux6+Zpart(N)*Aux4,-Xpart(N)*Aux7-Ypart(N)*Aux8-Zpart(N)*Aux2+Rho)
 enddef;
 
+vardef GCoordcabinet(expr N)=
+  (-(Xpart(N)*sind(30)*0.5)*Aux1+Ypart(N)*cosd(30)*Aux3,-(Xpart(N)*cosd(30)*0.5)*Aux5-Ypart(N)*Aux6+Zpart(N)*Aux4,-Xpart(N)*Aux7-Ypart(N)*Aux8-Zpart(N)*Aux2+Rho)
+enddef;
+
 unit:=1;%pour les mises à l'échelle :) Merci pst-solides3d
 
 vardef Projette(expr M)=
-  %if typerepre="proj":
-  %  unit*(DE*(Xpart(GCoord(M)/Zpart(GCoord(M))),(Ypart(GCoord(M))/Zpart(GCoord(M)))))
-  %elseif typerepre="persp":
-    unit*(DE*(Xpart(GCoord(M)),Ypart(GCoord(M))))
-  %fi
+  if typerepre="proj":
+    ((Xpart(GCoord(M)),Ypart(GCoord(M)))/Zpart(GCoord(M)))*DE*10%
+  elseif typerepre="persp":
+    (Xpart(GCoord(M)),Ypart(GCoord(M)))*unit*DE
+  elseif typerepre="cabinet":
+%    (0.5*cosd(30)*Xpart(GCoord(M)),0.75*sind(30)*Ypart(GCoord(M)))*unit*DE
+%    (Xpart(M)+0.5*cosd(30)*Zpart(M),Ypart(M)+0.5*sind(30)*Zpart(M))*20
+%    (Xpart(M)+0.5*cosd(30)*Ypart(M),Zpart(M)+0.5*sind(30)*Ypart(M))*20
+%    (Ypart(M)+0.5*cosd(30)*Xpart(M),Zpart(M)+0.5*sind(30)*Xpart(M))*20%Good avec Theta=-20/Phi=-10
+    %(Ypart(GCoord(M))+0.5*cosd(-30)*Xpart(GCoord(M)),Zpart(GCoord(M))+0.5*sind(-30)*Xpart(GCoord(M)))*20%Good avec Theta=-20/Phi=-10
+%    (Xpart(GCoord(M))*cosd(90-30),Ypart(GCoord(M))*sind(90-30)*0.5)*DE%à garder peut-être ?
+    (Xpart(GCoordcabinet(M)),Ypart(GCoordcabinet(M)))*DE%
+    %(Zpart(GCoord(M))+0.5*cosd(-30)*Ypart(GCoord(M)),Xpart(GCoord(M))+0.5*sind(-30)*Ypart(GCoord(M)))*20
+%    (0.5*cosd(45)*Xpart(GCoord(M)),0.5*sind(45)*Ypart(GCoord(M)))*unit*DE
+%    (Xpart(GCoord(M)),Ypart(GCoord(M)))*unit*DE
+    %(Xpart(GCoord(M)),Ypart(GCoord(M)))*10
+  fi
 enddef;
 
 vardef TraceAxes=
@@ -181,7 +203,6 @@ vardef Normal(expr vecun,vecde,vectr)=
 enddef;
 
 vardef ProduitScalaire(expr wec,mor)=
-  %Mexp(Mlog redpart(wec) Mmul Mlog redpart(mor))+Mexp(Mlog greenpart(wec) Mmul Mlog greenpart(mor))+Mexp(Mlog bluepart(wec) Mmul Mlog bluepart(mor))
   Xpart(wec)*Xpart(mor)+Ypart(wec)*Ypart(mor)+Zpart(wec)*Zpart(mor)
 enddef;
 %pour les rotations et translations
@@ -1025,7 +1046,7 @@ vardef DefinirSommets(text t)=
   nbauto:=0;
   for p_=t:
     nbauto:=nbauto+1;
-    if unknown p_:p_=Sommet[nbauto]; else: p_:=Sommet[nbauto] fi;
+    if unknown p_: p_=Sommet[nbauto]; else: p_:=Sommet[nbauto]; fi;
   endfor;
 enddef;
 
@@ -1034,7 +1055,7 @@ vardef DefinirSommetsSection(text t)=
   nbauto:=0;
   for p_=t:
     nbauto:=nbauto+1;
-    if unknown p_:p_=MSection[nbauto]; else: p_:=MSection[nbauto] fi;
+    if unknown p_: p_=MSection[nbauto]; else: p_:=MSection[nbauto]; fi;
   endfor;
 enddef;
 

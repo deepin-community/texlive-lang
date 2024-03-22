@@ -1,7 +1,7 @@
 The `fduthesis` Class
 =====================
 
-*LaTeX thesis template for Fudan University, v0.8*
+*LaTeX thesis template for Fudan University, v0.9a*
 
 Overview
 --------
@@ -41,7 +41,7 @@ To install `fduthesis`, you can use one of the following methods:
 
       git clone https://github.com/stone-zeng/fduthesis.git
 
-  Run `install-win.bat` (on Windows) or `install-linux.sh` (on Linux)
+  Run `install-win.bat` (Windows) or `install-unix.sh` (Linux or macOS)
   to generate the templates and configuration files. These files would
   be found in a new-created `thesis` folder. You can enjoy `fduthesis`
   here at once.
@@ -78,4 +78,4 @@ version.
 
 -----
 
-Copyright (C) 2017&ndash;2022 by Xiangdong Zeng <xdzeng96@gmail.com>.
+Copyright (C) 2017&ndash;2023 by Xiangdong Zeng <xdzeng96@gmail.com>.

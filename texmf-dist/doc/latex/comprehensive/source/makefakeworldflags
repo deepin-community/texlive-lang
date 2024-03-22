@@ -1,68 +1,126 @@
-#! /usr/bin/env perl
+#! /usr/bin/env python
 
-##########################################
-# Patch the worldflags package to reduce #
-# conflicts with other packages          #
-#                                        #
-# By Scott Pakin <scott.clsl@pakin.org>  #
-##########################################
+#################################################
+# Convert each worldflags symbol to a PDF file. #
+#                                               #
+# Author: Scott Pakin <scott.clsl@pakin.org>    #
+#################################################
 
-use warnings;
-use strict;
+import concurrent.futures
+import glob
+import os
+import re
+import subprocess
+import sys
 
-# ------------------ #
-# fakeworldflags.sty #
-# ------------------ #
 
-# Prepare to modify the worldflags.sty file into fakeworldflags.sty.
-my $styname = `kpsewhich worldflags.sty`;
-chomp $styname;
-die "${0}: Failed to find worldflags.sty\n" if !$styname;
-open(STY_IN, "<", $styname) || die "${0}: open failed ($!)\n";
-open(STY_OUT, ">", "fakeworldflags.sty") || die "${0}: open failed ($!)\n";
+def kpsewhich(fname):
+    'Find a filename in the TeX tree.'
+    proc = subprocess.run(['kpsewhich', fname], capture_output=True,
+                          check=True, encoding='utf-8')
+    return proc.stdout.strip()
 
-# Output some header boilerplate.
-print STY_OUT "\%" x 43, "\n";
-print STY_OUT "\% This is a generated file.  DO NOT EDIT. \%\n";
-print STY_OUT "\%" x 43, "\n";
-print STY_OUT "\n";
 
-# Apply a prefix to each of \b, \h, and \ifgrid.
-foreach my $ln (<STY_IN>) {
-    $ln =~ s/\\([bh])\b/\\wflags\@$1/g;
-    $ln =~ s/\\ifgrid\b/\\ifwflags\@grid/g;
-    $ln =~ s/\\grid(true|false)\b/\\wflags\@grid$1/g;
-    print STY_OUT $ln;
-}
+# Extract the package date from worldflags.sty.
+wfdate_re = re.compile(r'(\d\d\d\d)-(\d\d)-(\d\d)')
+sty = kpsewhich('worldflags.sty')
+with open(sty) as r:
+    for ln in r:
+        match = wfdate_re.search(ln)
+        if match is not None:
+            wfdate = match[1] + '/' + match[2] + '/' + match[3]
+            break
 
-# Finish the fakeworldflags.sty file.
-close STY_OUT or die "${0}: close failed ($!)\n";
-close STY_IN or die "${0}: close failed ($!)\n";
+# Acquire a list of all defined symbols.
+wfdir = os.path.dirname(kpsewhich('worldflag_US.tex'))
+tex_files = glob.glob(os.path.join(wfdir, '*.tex'))
+flags = [os.path.splitext(os.path.basename(fn))[0][10:] for fn in tex_files]
+flags.sort()
 
-# ---------------- #
-# worldflag_GY.tex #
-# ---------------- #
+# Create a fakeworldflags.sty file.
+with open('fakeworldflags.sty', 'w') as w:
+    w.write('''\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is a generated file.  DO NOT EDIT. %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# Prepare to modify the worldflag_GY.tex file into the current directory.
-unlink "worldflag_GY.tex";  # Delete any existing version of the file.
-my $texname = `kpsewhich worldflag_GY.tex`;
-chomp $texname;
-die "${0}: Failed to find worldflag_GY.tex\n" if !$texname;
-open(TEX_IN, "<", $texname) || die "${0}: open failed ($!)\n";
-open(TEX_OUT, ">", "worldflag_GY.tex") || die "${0}: open failed ($!)\n";
+''')
+    w.write(r'''
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fakeworldflags}[%s v0.0 Flags of the world]
+\RequirePackage{graphicx}
 
-# Output some header boilerplate.
-print TEX_OUT "\%" x 43, "\n";
-print TEX_OUT "\% This is a generated file.  DO NOT EDIT. \%\n";
-print TEX_OUT "\%" x 43, "\n";
-print TEX_OUT "\n";
+\newcommand*{\worldflag}[1]{\includegraphics{worldflags/flag_#1}}
 
-# Apply a prefix to \d.
-foreach my $ln (<TEX_IN>) {
-    $ln =~ s/\\d\b/\\wflagsD/g;
-    print TEX_OUT $ln;
-}
+\endinput
+'''[1:] % wfdate)
 
-# Finish the worldflag_GY.tex file.
-close TEX_OUT or die "${0}: close failed ($!)\n";
-close TEX_IN or die "${0}: close failed ($!)\n";
+# Create and switch to a worldflags subdirectory.
+try:
+    os.mkdir('worldflags')
+except FileExistsError:
+    pass
+os.chdir('worldflags')
+
+
+def run_and_return_output(cmd_line):
+    'Run a command line and return its combined stdout + stderr.'
+    stdout = 'RUN: ' + ' '.join(cmd_line) + '\n'
+    proc = subprocess.run(cmd_line, check=True,
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout += proc.stdout.decode('utf-8')
+    return stdout
+
+
+# For speed, dump a LaTeX format file with worldflags preloaded.
+with open('preloaded.tex', 'w') as w:
+    w.write(r'''
+\documentclass{minimal}
+\usepackage{worldflags}
+\begin{document}
+\end{document}
+'''[1:])
+subprocess.run([
+    'pdflatex',
+    '--ini',
+    '&pdflatex',
+    'mylatex.ltx',
+    'preloaded.tex'
+],
+    check=True)
+
+
+def generate_graphic(flag):
+    'Generate a PDF file for a given worldflags flag.'
+    stdout = f'*** PROCESSING {flag} ***\n\n'
+
+    # Create a LaTeX file.
+    fbase = 'flag_' + flag
+    stdout += f'CREATE: {fbase}.tex\n'
+    with open(fbase + '.tex', 'w') as w:
+        w.write(r'''
+\documentclass{minimal}
+\usepackage{worldflags}
+\begin{document}
+\worldflag[width=9pt]{%s}
+\end{document}
+''' % flag)
+
+    # Compile the LaTeX file to PDF.
+    stdout += run_and_return_output(['pdflatex', '&mylatex', fbase + '.tex'])
+
+    # Crop the PDF file.
+    stdout += run_and_return_output(['pdfcrop', fbase + '.pdf'])
+
+    # Overwrite the original PDF file with the cropped version.
+    stdout += f'RUN: mv {fbase}-crop.pdf {fbase}.pdf\n'
+    os.rename(f'{fbase}-crop.pdf', f'{fbase}.pdf')
+
+    # Output the buffered output.
+    stdout += '\n'
+    print(stdout)
+
+
+# Concurrently process all symbols.
+with concurrent.futures.ProcessPoolExecutor() as executor:
+    executor.map(generate_graphic, flags)

@@ -8,7 +8,7 @@
 %% 
 %% This is a generated file.
 %% 
-%% Copyright (C) 2019-2022 by Antoine Missier <antoine.missier@ac-toulouse.fr>
+%% Copyright (C) 2019-2024 by Antoine Missier <antoine.missier@ac-toulouse.fr>
 %% 
 %% This file may be distributed and/or modified under the conditions of
 %% the LaTeX Project Public License, either version 1.3 of this license
@@ -22,174 +22,71 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2005/12/01]
 \ProvidesPackage{frenchmath}
-    [2022/12/26 v2.3 .dtx frenchmath file]
-\RequirePackage{ifthen}
-\newboolean{capsit}
-\DeclareOption{capsit}{\setboolean{capsit}{true}}
-\newboolean{lgrmath}
-\DeclareOption{lgrmath}{\setboolean{lgrmath}{true}}
-\newboolean{upgreek}
-\DeclareOption{upgreek}{\setboolean{upgreek}{true}}
-\newboolean{Upgreek}
-\DeclareOption{Upgreek}{\setboolean{Upgreek}{true}
-    \setboolean{upgreek}{true}}
+    [2024/01/22 v2.8 .dtx frenchmath file]
+\newif\ifcapsit
+\DeclareOption{capsit}{\capsittrue}
+\newif\iffrenchmathgreek % pour sauvegarder les lettres d'origine
+\newif\iflgrmath
+\DeclareOption{lgrmath}{\lgrmathtrue\frenchmathgreektrue}
+\newif\ifupgreek
+\DeclareOption{upgreek}{\upgreektrue\frenchmathgreektrue}
+\newif\ifUpgreek
+\DeclareOption{Upgreek}{\Upgreektrue\upgreektrue\frenchmathgreektrue}
+\newif\ifnoibrackets
+\DeclareOption{noibrackets}{\noibracketstrue}
 \ProcessOptions \relax
 
 \AtBeginDocument{
     \@ifpackageloaded{mathdesign}{
-        \PackageWarningNoLine{frenchmath}{Package mathdesign
+        \PackageInfo{frenchmath}{Package mathdesign
             is loaded, \MessageBreak
             I don't load mathrsfs and amssymb packages}
     }{
-        \RequirePackage{mathrsfs} % fournit les majuscules cursives
         \RequirePackage{amssymb} % \leqslant, \geqslant, \varnothing
+        \@ifundefined{mathscr}{\RequirePackage{mathrsfs}}{}
     }
 }
 \RequirePackage{amsopn} % fournit \DeclareMathOperator
-\ifthenelse{\boolean{lgrmath}}{
+\@ifpackageloaded{mathptmx}{\RequirePackage{dotlessj}}{}
+
+\AtBeginDocument{
+  \iflgrmath
     \@ifpackageloaded{lgrmath}{}{
         \RequirePackage[font=fcm,style=french]{lgrmath}}
-}{}
-\ifthenelse{\boolean{upgreek}}{
-    \@ifpackageloaded{upgreek}{}{\RequirePackage[Euler]{upgreek}}
-}{}
-\RequirePackage{xspace} % utile pour les commandes \curs, \ssi, \Oij
-\RequirePackage{ibrackets} % intelligent brackets
-\RequirePackage{ncccomma} %  depuis frenchmath 1.6
-\AtBeginDocument{\mathcode`\,="8000\relax
-    \@ifpackageloaded{babel}{
-        \addto\extrasfrench{\mathcode`\,="8000\relax}
-    }{}
+  \fi
+  \ifupgreek
+    \@ifpackageloaded{upgreek}{}{
+        \RequirePackage[Symbol]{upgreek}}
+  \fi
 }
+\RequirePackage{xspace} % utile pour les commandes \ssi, \Oij
+\ifnoibrackets\else\RequirePackage{ibrackets}\fi % intelligent brackets
 
-\ifthenelse{\boolean{capsit}}{}{
-    \AtBeginDocument{
-        \DeclareMathSymbol{A}\mathalpha{operators}{`A}
-        \DeclareMathSymbol{B}\mathalpha{operators}{`B}
-        \DeclareMathSymbol{C}\mathalpha{operators}{`C}
-        \DeclareMathSymbol{D}\mathalpha{operators}{`D}
-        \DeclareMathSymbol{E}\mathalpha{operators}{`E}
-        \DeclareMathSymbol{F}\mathalpha{operators}{`F}
-        \DeclareMathSymbol{G}\mathalpha{operators}{`G}
-        \DeclareMathSymbol{H}\mathalpha{operators}{`H}
-        \DeclareMathSymbol{I}\mathalpha{operators}{`I}
-        \DeclareMathSymbol{J}\mathalpha{operators}{`J}
-        \DeclareMathSymbol{K}\mathalpha{operators}{`K}
-        \DeclareMathSymbol{L}\mathalpha{operators}{`L}
-        \DeclareMathSymbol{M}\mathalpha{operators}{`M}
-        \DeclareMathSymbol{N}\mathalpha{operators}{`N}
-        \DeclareMathSymbol{O}\mathalpha{operators}{`O}
-        \DeclareMathSymbol{P}\mathalpha{operators}{`P}
-        \DeclareMathSymbol{Q}\mathalpha{operators}{`Q}
-        \DeclareMathSymbol{R}\mathalpha{operators}{`R}
-        \DeclareMathSymbol{S}\mathalpha{operators}{`S}
-        \DeclareMathSymbol{T}\mathalpha{operators}{`T}
-        \DeclareMathSymbol{U}\mathalpha{operators}{`U}
-        \DeclareMathSymbol{V}\mathalpha{operators}{`V}
-        \DeclareMathSymbol{W}\mathalpha{operators}{`W}
-        \DeclareMathSymbol{X}\mathalpha{operators}{`X}
-        \DeclareMathSymbol{Y}\mathalpha{operators}{`Y}
-        \DeclareMathSymbol{Z}\mathalpha{operators}{`Z}
-    }
-}
+\RequirePackage{decimalcomma} %  depuis frenchmath 2.7
 
-\ifthenelse{\boolean{upgreek}}{
-    \@ifundefined{italpha}{\let\italpha\alpha}{
-        \PackageWarningNoLine{frenchmath}{Command
-            \string\italpha\space already exist \MessageBreak
-            and will not be redefined, \MessageBreak
-            no more warning for the other Greek letters, \MessageBreak
-            except pi}
-    }
-    \@ifundefined{itbeta}{\let\itbeta\beta}{}
-    \@ifundefined{itgamma}{\let\itgamma\gamma}{}
-    \@ifundefined{itdelta}{\let\itdelta\delta}{}
-    \@ifundefined{itepsilon}{\let\itepsilon\epsilon}{}
-    \@ifundefined{itzeta}{\let\itzeta\zeta}{}
-    \@ifundefined{iteta}{\let\iteta\eta}{}
-    \@ifundefined{ittheta}{\let\ittheta\theta}{}
-    \@ifundefined{itiota}{\let\itiota\iota}{}
-    \@ifundefined{itkappa}{\let\itkappa\kappa}{}
-    \@ifundefined{itlambda}{\let\itlambda\lambda}{}
-    \@ifundefined{itmu}{\let\itmu\mu}{}
-    \@ifundefined{itnu}{\let\itnu\nu}{}
-    \@ifundefined{itxi}{\let\itxi\xi}{}
-    \@ifundefined{itpi}{\let\itpi\pi}{
-       \PackageWarningNoLine{frenchmath}{Command
-            \string\itpi\space already exist \MessageBreak
-            and will not be redefined}
-    }
-    \@ifundefined{itrho}{\let\itrho\rho}{}
-    \@ifundefined{itsigma}{\let\itsigma\sigma}{}
-    \@ifundefined{ittau}{\let\ittau\tau}{}
-    \@ifundefined{itupsilon}{\let\itupsilon\upsilon}{}
-    \@ifundefined{itphi}{\let\itphi\phi}{}
-    \@ifundefined{itchi}{\let\itchi\chi}{}
-    \@ifundefined{itpsi}{\let\itpsi\psi}{}
-    \@ifundefined{itomega}{\let\itomega\omega}{}
-    \@ifundefined{itvarepsilon}{\let\itvarepsilon\varepsilon}{}
-    \@ifundefined{itvartheta}{\let\itvartheta\vartheta}{}
-    \@ifundefined{itvarpi}{\let\itvarpi\varpi}{}
-    \@ifundefined{itvarsigma}{\let\itvarsigma\varsigma}{}
-    \@ifundefined{itvarphi}{\let\itvarphi\varphi}{}
-}{}
+\newcommand*\DeclareMathUp[1]{
+    \DeclareMathSymbol{#1}{\mathalpha}{operators}{`#1}}
 
-\ifthenelse{\boolean{upgreek}}{
-    \renewcommand\alpha{\upalpha}
-    \renewcommand\beta{\upbeta}
-    \renewcommand\gamma{\upgamma}
-    \renewcommand\delta{\updelta}
-    \renewcommand\epsilon{\upepsilon}
-    \renewcommand\zeta{\upzeta}
-    \renewcommand\eta{\upeta}
-    \renewcommand\theta{\uptheta}
-    \renewcommand\iota{\upiota}
-    \renewcommand\kappa{\upkappa}
-    \renewcommand\lambda{\uplambda}
-    \renewcommand\mu{\upmu}
-    \renewcommand\nu{\upnu}
-    \renewcommand\xi{\upxi}
-    \renewcommand\pi{\uppi}
-    \renewcommand\rho{\uprho}
-    \renewcommand\sigma{\upsigma}
-    \renewcommand\tau{\uptau}
-    \renewcommand\upsilon{\upupsilon}
-    \renewcommand\phi{\upphi}
-    \renewcommand\chi{\upchi}
-    \renewcommand\psi{\uppsi}
-    \renewcommand\omega{\upomega}
-    \renewcommand\varepsilon{\upvarepsilon}
-    \renewcommand\vartheta{\upvartheta}
-    \renewcommand\varpi{\upvarpi}
-    \renewcommand\varrho{\upvarrho}
-    \renewcommand\varsigma{\upvarsigma}
-    \renewcommand\varphi{\upvarphi}
-}{}
+\def\apply#1#2{\apply@#1#2,\apply@,}
+\def\apply@#1#2,{\ifx\apply@#2\empty
+    \else #1{#2}\afterfi@{\apply@#1}\fi}
+\def\afterfi@#1#2\fi{\fi#1}
 
-\ifthenelse{\boolean{Upgreek}}{
-    \renewcommand\Gamma{\Upgamma}
-    \renewcommand\Delta{\Updelta}
-    \renewcommand\Theta{\Uptheta}
-    \renewcommand\Lambda{\Uplambda}
-    \renewcommand\Xi{\Upxi}
-    \renewcommand\Pi{\Uppi}
-    \renewcommand\Sigma{\Upsigma}
-    \renewcommand\Upsilon{\Upupsilon}
-    \renewcommand\Phi{\Upphi}
-    \renewcommand\Psi{\Uppsi}
-    \renewcommand\Omega{\Upomega}
-}{}
+\ifcapsit\else
+  \AtBeginDocument{
+    \apply\DeclareMathUp{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+  }
+\fi
 
 \AtBeginDocument{\@ifpackageloaded{pstricks-add}{\psset{comma=true}}{}}
 \DeclareMathSymbol{;}{\mathbin}{operators}{'73} % \mathpunct à l'origine
 
-\newcommand*\curs[1]{\ensuremath{\mathscr{#1}}\xspace}
+\newcommand\curs{\mathscr}
 \newcommand\infeg{\leqslant}
 \newcommand\supeg{\geqslant}
 \newcommand\vide{\varnothing}
 \newcommand\paral{\mathrel{\ooalign{$\mkern-1.75mu/\mkern1.75mu$\cr%
-        $\mkern1.75mu/\mkern-1.75mu$}}
-}
+    $\mkern1.75mu/\mkern-1.75mu$}}}
 \newcommand\ssi{si, et seulement si,\xspace}
 \newcommand*\cmod[1]{\quad[#1]}
 
@@ -240,6 +137,95 @@
         \left(\vec{\vphantom{t}\imath}, \vec{\vphantom{t}\jmath},
         \vec{\vphantom{t}\smash{k}}\,\right)}%
     \xspace}
+
+\iffrenchmathgreek
+    \@ifundefined{italpha}{\let\italpha\alpha}{
+        \PackageWarningNoLine{frenchmath}{Command
+            \string\italpha\space already exist \MessageBreak
+            and will not be redefined, \MessageBreak
+            no more warning for the other Greek letters, \MessageBreak
+            except pi}
+    }
+    \@ifundefined{itbeta}{\let\itbeta\beta}{}
+    \@ifundefined{itgamma}{\let\itgamma\gamma}{}
+    \@ifundefined{itdelta}{\let\itdelta\delta}{}
+    \@ifundefined{itepsilon}{\let\itepsilon\epsilon}{}
+    \@ifundefined{itzeta}{\let\itzeta\zeta}{}
+    \@ifundefined{iteta}{\let\iteta\eta}{}
+    \@ifundefined{ittheta}{\let\ittheta\theta}{}
+    \@ifundefined{itiota}{\let\itiota\iota}{}
+    \@ifundefined{itkappa}{\let\itkappa\kappa}{}
+    \@ifundefined{itlambda}{\let\itlambda\lambda}{}
+    \@ifundefined{itmu}{\let\itmu\mu}{}
+    \@ifundefined{itnu}{\let\itnu\nu}{}
+    \@ifundefined{itxi}{\let\itxi\xi}{}
+    \@ifundefined{itpi}{\let\itpi\pi}{
+       \PackageWarningNoLine{frenchmath}{Command
+            \string\itpi\space already exist \MessageBreak
+            and will not be redefined}
+    }
+    \@ifundefined{itrho}{\let\itrho\rho}{}
+    \@ifundefined{itsigma}{\let\itsigma\sigma}{}
+    \@ifundefined{ittau}{\let\ittau\tau}{}
+    \@ifundefined{itupsilon}{\let\itupsilon\upsilon}{}
+    \@ifundefined{itphi}{\let\itphi\phi}{}
+    \@ifundefined{itchi}{\let\itchi\chi}{}
+    \@ifundefined{itpsi}{\let\itpsi\psi}{}
+    \@ifundefined{itomega}{\let\itomega\omega}{}
+    \@ifundefined{itvarepsilon}{\let\itvarepsilon\varepsilon}{}
+    \@ifundefined{itvartheta}{\let\itvartheta\vartheta}{}
+    \@ifundefined{itvarpi}{\let\itvarpi\varpi}{}
+    \@ifundefined{itvarsigma}{\let\itvarsigma\varsigma}{}
+    \@ifundefined{itvarphi}{\let\itvarphi\varphi}{}
+\fi
+
+\AtBeginDocument{
+  \ifupgreek
+    \renewcommand\alpha{\upalpha}
+    \renewcommand\beta{\upbeta}
+    \renewcommand\gamma{\upgamma}
+    \renewcommand\delta{\updelta}
+    \renewcommand\epsilon{\upepsilon}
+    \renewcommand\zeta{\upzeta}
+    \renewcommand\eta{\upeta}
+    \renewcommand\theta{\uptheta}
+    \renewcommand\iota{\upiota}
+    \renewcommand\kappa{\upkappa}
+    \renewcommand\lambda{\uplambda}
+    \renewcommand\mu{\upmu}
+    \renewcommand\nu{\upnu}
+    \renewcommand\xi{\upxi}
+    \renewcommand\pi{\uppi}
+    \renewcommand\rho{\uprho}
+    \renewcommand\sigma{\upsigma}
+    \renewcommand\tau{\uptau}
+    \renewcommand\upsilon{\upupsilon}
+    \renewcommand\phi{\upphi}
+    \renewcommand\chi{\upchi}
+    \renewcommand\psi{\uppsi}
+    \renewcommand\omega{\upomega}
+    \renewcommand\varepsilon{\upvarepsilon}
+    \renewcommand\vartheta{\upvartheta}
+    \renewcommand\varpi{\upvarpi}
+    \renewcommand\varrho{\upvarrho}
+    \renewcommand\varsigma{\upvarsigma}
+    \renewcommand\varphi{\upvarphi}
+  \fi
+
+  \ifUpgreek
+    \renewcommand\Gamma{\Upgamma}
+    \renewcommand\Delta{\Updelta}
+    \renewcommand\Theta{\Uptheta}
+    \renewcommand\Lambda{\Uplambda}
+    \renewcommand\Xi{\Upxi}
+    \renewcommand\Pi{\Uppi}
+    \renewcommand\Sigma{\Upsigma}
+    \renewcommand\Upsilon{\Upupsilon}
+    \renewcommand\Phi{\Upphi}
+    \renewcommand\Psi{\Uppsi}
+    \renewcommand\Omega{\Upomega}
+  \fi
+}
 
 \endinput
 %%

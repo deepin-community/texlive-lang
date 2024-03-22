@@ -13,22 +13,22 @@ XeLaTeX / LuaLaTeX の上でも日本語処理パッケージと連携して使�
 
 ### 前提環境
 
-  * TeX エンジン： pdfTeX / XeTeX / LuaTeX / pTeX / upTeX / pTeX-ng
+  * TeX エンジン： TeX／pdfTeX／XeTeX／LuaTeX／pTeX／upTeX／pTeX-ng
       - e-TeX 拡張は必須でない
+          + 標準モード使用時は (u)pTeX 以外は e-TeX 拡張が必要
       - XeTeX は 0.997 版以降が必要
   * フォーマット： LaTeX
   * DVI ウェア： 不問
   * 必須パッケージ：
       - calc
       - geometry v5.0以降
-      - ifpdf
       - keyval
   * 場合により必須となるパッケージ：
       - bxwareki： 日付の和暦表示機能を使う場合
       - jslogo： `jslogo` 指定時
       - plautopatch v0.3以降： (u)pLaTeX かつ `plautopatch` 指定時
       - type1cm： `magstyle=nomag*` 指定時
-      - standard 和文ドライバ使用時：
+      - 標準モード（standard 和文ドライバ）使用時：
           + bxcalc v1.0以降： 和文パラメタ `units` 指定時
           + bxcjkjatype v0.2c以降： (pdf)LaTeX 使用時
           + CJK： (pdf)LaTeX 使用時
@@ -43,7 +43,7 @@ XeLaTeX / LuaLaTeX の上でも日本語処理パッケージと連携して使�
           + bxorigcapt： Babel 使用時
           + etoolbox v2.0以降： e-TeX なら
           + filehook v0.5d以降： e-TeX なら
-          + iftex
+          + iftex v0.2以降
           + pdftexcmds v0.5以降
           + pxbabel： (u)pLaTeX かつ Babel 使用時
   * エンジンが (u)pTeX 以外で、かつ和文ドライバが standard 以外の場合、
@@ -111,6 +111,22 @@ XeLaTeX / LuaLaTeX の上でも日本語処理パッケージと連携して使�
 更新履歴
 --------
 
+  * Version 2.9b 〈2024/01/22〉
+      - bm パッケージとの併用で起こる不具合を回避した。
+  * Version 2.9a 〈2023/08/02〉
+      - 一部の standard ドライバの機能（`\jQ` 等）を本体に移動。
+      - バグ修正。
+  * Version 2.9  〈2023/07/17〉
+      - LaTeX の未使用グローバルオプション検査を稼働するようにした。
+      - 和文パラメタ指定の代替表記（`ja:`）をサポートした。
+      - バグ修正。
+  * Version 2.8b 〈2023/07/01〉
+      - バグや細かい不具合を修正。
+  * Version 2.8a 〈2023/06/20〉
+      - バグ修正。
+  * Version 2.8  〈2023/06/14〉
+      - jsclasses の 2023/02/23 と同期。
+      - hyperref の unicode 設定に対する調整処理の見直し。
   * Version 2.7a 〈2022/04/10〉
       - (試験的) `nodvidriver*` オプションを追加。
   * Version 2.7  〈2022/03/30〉

@@ -56,6 +56,17 @@ _tn:=0;
 pair _t[];
 color _T[];
 
+%%%%%%%%%
+%Labelisation spéciale :)
+%
+vardef Labelcp(suffix a)(expr s,z) = 
+  save p; picture p;
+  if picture s:  p=s
+  else:    p = s infont defaultfont scaled defaultscale
+  fi;
+  draw p shifted (z + 2*labeloffset*unitvector(z-a)-center p)
+enddef;
+
 %%-----------------------------------------------
 %% Procedures d'affichage
 %%-----------------------------------------------
@@ -180,7 +191,22 @@ vardef cercles(text t)=
       _T[n]:=p_;
     fi;
   endfor;
-  if typetrace="3D":%centre aa passant par bb dans le plan (ccddee) généralement aa=cc
+  if typetrace="mainlevee":
+    path Cer;
+    path dep;
+    pair ct;
+    if n=1 : dep=fullcircle scaled (2*rayon) shifted _t[1];
+      ct=_t[1];
+    elseif n=2 : dep=fullcircle scaled (2*abs(_t[1]-_t[2])) shifted _t[1];
+      ct=_t[1];
+    elseif n=3 :
+      dep=fullcircle scaled (2*abs(CentreCercleC(_t[1],_t[2],_t[3])-_t[1])) shifted CentreCercleC(_t[1],_t[2],_t[3]);
+      ct=CentreCercleC(_t[1],_t[2],_t[3]);
+    fi
+    path ess;
+    ess=pointarc(dep,0){dir(80+uniformdeviate(5))}..pointarc(dep,90){dir(170+uniformdeviate(20))}..pointarc(dep,90){dir(185+uniformdeviate(5))}..pointarc(dep,180){dir(-80-uniformdeviate(20))}..pointarc(dep,180){dir(-100+uniformdeviate(20))}..pointarc(dep,270){dir(-10+uniformdeviate(20))}..pointarc(dep,270){dir(uniformdeviate(10))}..pointarc(dep,360){dir(80+uniformdeviate(20))};
+    Cer=ess;
+  elseif typetrace="3D":%centre aa passant par bb dans le plan (ccddee) généralement aa=cc
     path Cer;
     color ptcer[];
     for k=0 step 5 until 360 :
@@ -495,6 +521,45 @@ vardef marquedemidroite(expr aa,bb)=
     trace rotation(segment(aa-marque_s*unitvector(bb-aa),aa+marque_s*unitvector(bb-aa)),aa,90);
     );
   tr
+enddef;
+
+vardef marque_para(expr dd,ee,pa)=
+  save im;
+  picture im;
+  pair kk,ll,mn,mo;
+  kk=point(pa*length dd) of dd;
+  ll=projection(kk,point(0.25*length ee) of ee,point(0.5*length ee) of ee);
+  mn=iso(kk,ll);
+  mo=(mn--kk) intersectionpoint cercles(mn,3mm);
+  im=image(
+    drawarrow mo--kk;
+    drawarrow symetrie(mo,mn)--ll;
+    label(btex // etex,mn);
+    );
+  im
+enddef;
+
+vardef marque_Para(text totem)(expr dd,ee,pa)=
+  save im;
+  picture im;
+  pair kk,ll,mn,mo;
+  kk=point(pa*length dd) of dd;
+  ll=projection(kk,point(0.25*length ee) of ee,point(0.5*length ee) of ee);
+  mn=iso(kk,ll);
+  mo=(mn--kk) intersectionpoint cercles(mn,3mm);
+  im=image(
+      drawarrow (mn{dir(210+angle(mn-mo))}..{dir(150+angle(mn-mo))}kk) cutbefore cercles(mn,3mm);
+    drawarrow symetrie((mn{dir(210+angle(mn-mo))}..{dir(150+angle(mn-mo))}kk) cutbefore cercles(mn,3mm),mn);
+    trace cercles(mn,3mm);
+    for p_=totem:
+    if p_="":
+      label(btex // etex ,mn);
+    else:
+      label(btex ? etex,mn);
+    fi;
+    endfor;
+    );
+  im
 enddef;
 
 %------------------------------------------------
@@ -1300,28 +1365,40 @@ enddef;
 
 %Outils
 numeric echelleequerre;
-echelleequerre=2;
-vardef equerre(expr dte,drte,perpe,sens)=
-  save picequerre;
-  picture picequerre;
+echelleequerre=0.5;
+vardef Equerre(expr dte,drte,perpe,sens)=
+  save $;
+  picture $,fig;
+  fig=currentpicture;
   pair ww,t[];
+  picture grad[],gradu[];
+  numeric long;
   path intermede;
   pair perpen,ptt,pttt;
   perpen:=projection(perpe,dte,drte);
-  %if sens=1 :
-    ptt:=longueurequerre*(drte-dte) rotated 90 shifted perpen;
-  %else :
-%    ptt:=longueurequerre*(drte-dte) rotated (-90) shifted perpen;
-  %fi;
+  if sens=1 :
+    ptt:=echelleequerre*(drte-dte) rotated 90 shifted perpen;
+  else :
+    ptt:=echelleequerre*(drte-dte) rotated (-90) shifted perpen;
+  fi;
   ww=unitvector(drte-dte);
-  intermede=ptt--(10[ptt,(perpen rotatedabout(ptt,if sens=1: 30 else:-30 fi))]);
+  intermede=ptt--(10[ptt,(perpen rotatedabout(ptt,30))]);
   pttt=intermede intersectionpoint (10[dte,drte]--10[drte,dte]);
-  picequerre=image(
+  long=floor(abs(perpen+7*unitvector(ptt-perpen)-ptt)*2.54/72);
+  pair CentreE;
+  CentreE=CentreCercleI(perpen,ptt,pttt);
+  $=image(
+      fill (perpen--ptt--pttt--cycle) withcolor gris;
     draw perpen--ptt--pttt--cycle;
     draw codeperp(ptt,perpen,pttt,5);
+    fill homothetie(polygone(perpen,ptt,pttt),CentreE,0.6) withcolor white;
+    draw homothetie(polygone(perpen,ptt,pttt),CentreE,0.6);
+    draw fig;
     );
-  picequerre
+  $
 enddef;
+
+vardef equerre(expr dte,drte,perpe,sens)=Equerre(dte,drte,perpe,sens) enddef;
 
   vardef regle(expr depart,arrivee,rr)=
   save picregle;
@@ -1410,16 +1487,168 @@ vardef crayon(expr depart,arrive,ptplace,nbechelle)=
   piccray
 enddef;
 
-boolean Simple;
-Simple=false;
+boolean Simpleold;
+Simpleold=false;
+
+vardef Rapporteur(text t)(expr rapcentre,pointsupport,rr,pasgrad)=
+  picture rap;
+  path cc,cd,cent;
+  pair grada[],gradb[],rapv,rapw,rapt,rapww,rapvv,rap[],rapp[],RA[],RB[];
+  boolean Simple,Double,Aleph,Tiret;
+  Simple=true;
+  Double=false;
+  Aleph=false;
+  Tiret=false;
+  for p_=t:
+  if p_="Double":
+  Double:=true;
+  Simple:=false;
+  elseif p_="Aleph":
+    Aleph:=true;
+    Tiret:=true;
+  elseif p_="Tiret":
+    Tiret:=true;
+  fi;
+endfor;
+taillefonte=6;
+  % Le cercle
+  RA1=0.3[rapcentre,pointsupport];
+  RA2=0.375[rapcentre,pointsupport];
+  RA3=0.45[rapcentre,pointsupport];
+  RB1=rotation(RA1,rapcentre,rr*45);
+  RB2=rotation(RA2,rapcentre,rr*45);
+  RB3=rotation(RA3,rapcentre,rr*45);
+  cc=cercles(rapcentre,0.75*abs(rapcentre-pointsupport));
+  rapt=cc intersectionpoint (rapcentre--pointsupport);
+  rapw=rapt-2*unitvector(pointsupport-rapcentre);rapv=symetrie(rapw,rapt);
+  rapww=rapt-5*unitvector(pointsupport-rapcentre);rapvv=symetrie(rapww,rapt);
+  grada0=(rapww-rapcentre) shifted rapcentre;
+  gradb0=(rapvv-rapcentre) shifted rapcentre;
+  path cerc;
+  cerc=subpath((angle(pointsupport-rapcentre)*(length cc))/360,((length cc)/2)+(angle(pointsupport-rapcentre)*(length cc))/360) of cc;
+  % On trace les graduations
+  for i=0 upto 71 :
+    for j=1 upto 4 :
+      grada[5*i+j]=(rapw-rapcentre) rotated (rr*(5*i+j)) shifted rapcentre;
+      gradb[5*i+j]=(rapv-rapcentre) rotated (rr*(5*i+j)) shifted rapcentre;
+    endfor;
+    grada[5*(i+1)]=(rapww-rapcentre) rotated (rr*(5*(i+1))) shifted rapcentre;
+    gradb[5*(i+1)]=(rapvv-rapcentre) rotated (rr*(5*(i+1))) shifted rapcentre;
+  endfor;
+  if Aleph:
+    fincompteur:=72;
+  else:
+    fincompteur:=36;
+  fi;
+  if (pasgrad=10) or (pasgrad=5) or (pasgrad=1):
+    for i=0 upto (fincompteur)/2:
+      draw grada[10*i]--gradb[10*i] withpen pencircle scaled 1.15;
+    endfor;
+  fi;
+  if (pasgrad=5) or (pasgrad=1):
+    for i=1 step 2 until (fincompteur-1):
+%      draw grada[5*i]--gradb[5*i];
+      draw 0.9[grada[5*i],gradb[5*i]]--0.9[gradb[5*i],grada[5*i]];
+    endfor;
+  fi;  
+  if pasgrad=1:
+    for i=0 upto (fincompteur-1) :
+      for j=1 upto 4 :
+	draw grada[5*i+j]--gradb[5*i+j];
+      endfor;
+    endfor;
+  fi; 
+  % On affiche les graduations
+  picture nomb[],nombre[];
+  if Aleph:
+    for j=0 upto (fincompteur/2):
+      nombre[10*j]=image(
+      label.top(TEX("\fontsize{4}{4}\selectfont"&decimal(10*j)&""),gradb[10*j]);
+	currentpicture:=currentpicture rotatedabout(gradb[10*j],angle(gradb[10*j]-rapcentre)-90);
+	);
+    endfor;
+  else:
+  if rr=1:
+    for j=0 upto 18:
+      nombre[10*j]=image(
+      label.bot(TEX("\fontsize{"&decimal(taillefonte)&"}{"&decimal(taillefonte)&"}\selectfont"&decimal(10*j)),grada[10*j]);
+	currentpicture:=currentpicture rotatedabout(grada[10*j],angle(grada[10*j]-rapcentre)-90);
+	);
+    endfor
+    for j=0 upto 18:
+      nombre[10*j+1]=image(
+      label.top(TEX("\fontsize{"&decimal(taillefonte)&"}{"&decimal(taillefonte)&"}\selectfont"&decimal(180-10*j)),gradb[10*j]);
+	currentpicture:=currentpicture rotatedabout(gradb[10*j],angle(gradb[10*j]-rapcentre)-90);
+	);
+    endfor
+  else:
+    for j=0 upto 18:
+      nombre[10*j]=image(
+	  label.bot(TEX("\fontsize{"&decimal(taillefonte)&"}{"&decimal(taillefonte)&"}\selectfont"&decimal(180-10*j)),grada[10*j]);
+	currentpicture:=currentpicture rotatedabout(grada[10*j],angle(grada[10*j]-rapcentre)-90);
+	);
+    endfor
+    for j=18 downto 0:
+      nombre[10*j+1]=image(
+	  label.top(TEX("\fontsize{"&decimal(taillefonte)&"}{"&decimal(taillefonte)&"}\selectfont"&decimal(10*j)),gradb[10*j]);
+	currentpicture:=currentpicture rotatedabout(gradb[10*j],angle(gradb[10*j]-rapcentre)-90);
+	);
+    endfor
+  fi;
+  fi;
+  picture $;
+  $=image(
+      if Aleph:
+      for i=0 upto (fincompteur/2)-1 :
+	draw nombre[10*i];
+      endfor;
+      else:
+  for i=0 upto (fincompteur/2) :
+    draw nombre[10*i+1];
+    if Simple=false:
+      draw nombre[10*i];
+    fi;
+  endfor;
+  fi;
+  if Aleph:
+    draw cc;
+    draw grada[0]--grada[180];
+    else:
+  if rr=-1:
+  draw cerc reflectedabout(pointsupport,rapcentre)--cycle;
+  else:
+  draw cerc--cycle;
+  fi;
+  fi;
+  cent=cercle(rapcentre,0.05*u);
+  if Tiret:
+    trace ((0.05[rapcentre,grada[0]])--(0.05[rapcentre,grada[180]])) withpen pencircle scaled 1.25;
+    trace rotation(((0.05[rapcentre,grada[0]])--(0.05[rapcentre,grada[180]])),rapcentre,90) withpen pencircle scaled 1.25;
+  else:
+    fill cent withcolor if unknown fillrap: 0.9white else: fillrap fi;
+  fi;
+  if Aleph=true:
+  if rr=1:
+  for k=1 upto 3:
+  drawarrow arccercle(RA[k],RB[k],rapcentre);
+  endfor;
+  else:
+  for k=1 upto 3:
+  drawarrow reverse(arccercle(RB[k],RA[k],rapcentre));
+  endfor;
+  fi;
+  fi;
+  );
+  $
+  enddef;
 
 vardef rapporteur(expr centre,segment,rr)=
   save raps;
   picture raps;
   raps=image(
-  Simple:=true;
+  Simpleold:=true;
   trace rapporteurdouble(centre,segment,rr);
-    Simple:=false;
+    Simpleold:=false;
     );
   raps
 enddef;
@@ -1476,7 +1705,7 @@ vardef rapporteurdouble(expr centre,segment,rr)=
   rap=image(
       for i=0 upto 18 :
       draw nombre[10*i+1];
-      if Simple=false:
+      if Simpleold=false:
 	draw nombre[10*i];
       fi;
     endfor;
@@ -1532,6 +1761,432 @@ vardef compas(expr centre,extre,n)=
     draw f--extre withpen pencircle scaled 1.5bp withcolor 0.25[red,blue];
     );
   piccompas
+enddef;
+
+%Grilles
+boolean orig,uni;
+orig=false;
+uni=false;
+
+vardef origine(expr p)=
+  x.origine:=x.so+xpart(p)*quad.u;
+  y.origine:=y.so+ypart(p)*quad.u;
+  orig:=true;
+enddef;
+
+vardef unites(expr g,h)=
+  x.u:=g*cm;
+  y.u:=h*cm;
+  uni:=true;
+enddef;
+
+vardef axes=
+  path axehor,axever;
+  axehor=(x.so*cm,y.origine)--(x.ne*cm,y.origine);
+  axever=(x.origine,y.so*cm)--(x.origine,y.ne*cm);
+  picture axx;
+  axx=image(
+    drawarrow (x.so*cm,y.origine)--(x.ne*cm,y.origine);
+    drawarrow (x.origine,y.so*cm)--(x.origine,y.ne*cm);
+%    label.llft(TEX("$O$"),z.origine);
+    );
+  axx
+enddef;
+
+vardef axesvide=
+  path axehor,axever;
+  axehor=(x.so*cm,y.origine)--(x.ne*cm,y.origine);
+  axever=(x.origine,y.so*cm)--(x.origine,y.ne*cm);
+  picture axxx;
+  axxx=image(
+    drawarrow (x.so*cm,y.origine)--(x.ne*cm,y.origine);
+    drawarrow (x.origine,y.so*cm)--(x.origine,y.ne*cm);
+    );
+  axxx
+enddef;
+
+vardef axesvideorigine=
+  path axehor,axever;
+  axehor=(x.origine,y.origine)--(x.ne*cm,y.origine);
+  axever=(x.origine,y.origine)--(x.origine,y.ne*cm);
+  picture axxx;
+  axxx=image(
+    drawarrow (x.origine,y.origine)--(x.ne*cm,y.origine);
+    drawarrow (x.origine,y.origine)--(x.origine,y.ne*cm);
+    );
+  axxx
+enddef;
+
+def enplace=
+  if orig:
+    xscaled x.u yscaled y.u shifted (z.origine)
+  else:
+    xscaled x.u yscaled y.u shifted (z.so)
+  fi
+enddef;
+
+vardef placepoint(expr q,r)=
+  (q,r) enplace
+enddef;
+
+vardef pp(expr qq,rr)=placepoint(qq,rr)
+enddef;
+
+def replace=
+  xscaled (1/x.u) yscaled (1/y.u) shifted (-z.origine)
+enddef;
+
+def retrouvecoord(expr p)=%transforme les coordonées du point d'affixe p dans le repère absolu de metapost en les coordonnées du point dans le repère défini par l'utilisateur
+  p replace
+enddef;
+
+vardef placepointtri(expr q,r)=
+  save $;
+  pair $;
+  if orig:
+    $=z.origine shifted (q*(x.u,0)+r*(x.u/2,y.u));
+  else:
+    $=z.so*cm shifted (q*(x.u,0)+r*(x.u/2,y.u));
+  fi;
+  $
+enddef;
+
+vardef pptri(expr qq,rr)=placepointtri(qq,rr)
+enddef;
+
+vardef placepointiso(expr q,r)=
+  save $;
+  pair $;
+  $=if orig: z.origine else: (z.so+((sqrt(3)/2),0.5))*cm fi shifted (q*(sqrt(3)*cm,0)+0.5*r*cm*(sqrt(3),1));
+  $
+enddef;
+
+vardef ppiso(expr qq,rr)=placepointiso(qq,rr)
+enddef;
+
+vardef reperehexa(expr colo,lign)=
+  save $;
+  path $;
+  if (colo mod 2)=1:
+    $=(hexa shifted(0.5cm,0)) shifted((colo-1)*1.5*cm,(lign-1)*2*((sqrt 3)/2)*cm);
+  else:
+    $=(hexa shifted(0.5cm,0)) shifted((colo-1)*1.5*cm,((lign-1)*2+1)*((sqrt 3)/2)*cm);
+  fi;
+  $
+enddef;
+
+vardef Centrehexa(expr colo,lign)=
+  save $;
+  pair $;
+  if (colo mod 2)=1:
+    $=(centrehexa shifted(0.5cm,0)) shifted((colo-1)*1.5*cm,(lign-1)*2*((sqrt 3)/2)*cm);
+  else:
+    $=(centrehexa shifted(0.5cm,0)) shifted((colo-1)*1.5*cm,((lign-1)*2+1)*((sqrt 3)/2)*cm);
+  fi;
+  $
+enddef;
+
+%%Les grilles
+
+vardef grille(expr t)=
+  save gri;
+  picture gri;
+  orig:=false;
+  x.u:=t*cm;
+  y.u:=t*cm;
+  quad.u:=t*cm;
+  gri=image(
+    path p[];
+      %horizontale
+    p1:=(x.so*cm,0)--(x.ne*cm,0);
+      %verticale
+    p2:=(0,y.so*cm)--(0,y.ne*cm);
+          %options
+          %horizontales
+    for i:=0 step t until (y.ne-y.so):
+      draw p1 shifted (0,i*cm);
+    endfor;
+          %verticales
+    for i:=0 step t until (x.ne-x.so) :
+      draw p2 shifted (i*cm,0);
+    endfor;
+    );
+  gri
+enddef;
+
+vardef papiermillimetre=
+  save $;
+  picture $;
+  orig:=false;
+  x.u:=1cm;
+  y.u:=1cm;
+  quad.u:=1cm;
+  $=image(
+    path p[];
+      %horizontale
+    p1:=(x.so*cm,0)--(x.ne*cm,0);
+      %verticale
+    p2:=(0,y.so*cm)--(0,y.ne*cm);
+    %grille millimétrique
+    pickup pencircle scaled 0.2;
+    %horizontales
+    for j:=y.so step 0.1 until y.ne:
+      draw p1 shifted (0,j*cm);
+    endfor;
+    %verticales
+    for j:=x.so step 0.1 until x.ne :
+      draw p2 shifted (j*cm,0);
+    endfor;
+    %grille demi-centimétrique
+    pickup pencircle scaled 0.5;
+    %horizontales
+    for j:=y.so step 0.5 until y.ne:
+      draw p1 shifted (0,j*cm);
+    endfor;
+    %verticales
+    for j:=x.so step 0.5 until x.ne :
+      draw p2 shifted (j*cm,0);
+    endfor;
+    %grille centimétrique
+    pickup pencircle scaled 0.7;
+    %horizontales
+    for j:=y.so step 1 until y.ne:
+      draw p1 shifted (0,j*cm);
+    endfor;
+    %verticales
+    for j:=x.so step 1 until x.ne :
+      draw p2 shifted (j*cm,0);
+    endfor;    
+    %grille penta-centimétrique
+    pickup pencircle scaled 1;
+    %horizontales
+    for j:=y.so step 5 until y.ne:
+      draw p1 shifted (0,j*cm);
+    endfor;
+    %verticales
+    for j:=x.so step 5 until x.ne :
+      draw p2 shifted (j*cm,0);
+    endfor;
+    );
+  $
+enddef;
+
+vardef Pointe(text t)=
+  for p_=t: if pair p_:
+      fill fullcircle scaled 1mm shifted p_;
+    fi;
+  endfor;
+enddef;
+
+vardef papiercahier=
+  save $;
+  orig:=false;
+  picture $;
+  x.u:=8mm;
+  y.u:=8mm;
+  quad.u:=8mm;
+  $=image(
+    path p[];
+  %horizontale
+p1:=(x.so*cm,0)--(x.ne*cm,0);
+  %verticale
+p2:=(0,y.so*cm)--(0,y.ne*cm);
+     %grille 2-millimétrique
+    pickup pencircle scaled 0.5;
+     %lignes horizontales
+    for i:=y.ne step -0.2 until y.so:
+      draw p1 shifted (0,i*cm);
+    endfor;
+     %grille 8-millimétrique
+    pickup pencircle scaled 1bp;
+     %lignes horizontales
+    for i:=y.ne step -0.8 until y.so:
+      draw p1 shifted (0,i*cm);
+    endfor;
+     %lignes verticales
+    for i:=x.so step 0.8 until (x.ne+1):
+      draw p2 shifted (i*cm,0);
+    endfor;
+    );
+  $
+enddef;
+
+vardef papierdeuxlignes=
+  save $;
+  orig:=false;
+  picture $;
+  x.u:=8mm;
+  y.u:=6mm;
+  $=image(
+    path p[];
+    %horizontale
+    p1:=(x.so*cm,0)--(x.ne*cm,0);
+    %grille 2-millimétrique
+    pickup pencircle scaled 0.5;
+    %lignes horizontales
+    for i:=y.so+0.2 step 0.6 until y.ne:
+      draw p1 shifted (0,i*cm);
+    endfor;
+    %grille 8-millimétrique
+    pickup pencircle scaled 1;
+    %lignes horizontales
+    for i:=y.so step 0.6 until y.ne:
+      draw p1 shifted (0,i*cm);
+    endfor;
+    );
+  $
+enddef;
+
+vardef papierpointe=
+  save $;
+  picture $;
+  orig:=false;
+  x.u:=5mm;
+  y.u:=5mm;
+  quadu:=5mm;
+  $=image(
+    for i:=0 upto 2*(xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))):
+      for j:=0 upto 2*(ypart(retrouvecoord(z.ne*cm))-ypart(retrouvecoord(z.so*cm))):
+	fill ((fullcircle scaled 1bp shifted(z.so*cm)) shifted ((i/2,j/2)*cm));
+      endfor
+    endfor;
+    );
+  $
+enddef;
+
+vardef papiertriangle=
+  save $;
+  orig:=false;
+  if uni=false:
+    x.u:=1cm;
+    y.u:=(sqrt(3)/2)*cm;
+  fi;
+  picture $;
+  $=image(
+    path p[];
+    %triangle haut
+    %p1:=(x.so*cm,0)--(x.so*cm+1cm,0)--((x.so*cm,0) rotatedabout((x.so*cm+1cm,0),-60))--cycle;
+    p1:=(x.so*cm,0)--(x.so*cm+x.u,0)--((x.so*cm,0) rotatedabout((x.so*cm+x.u,0),-60))--cycle;
+    %triangle bas
+    %p2:=((x.so*cm,0)--(x.so*cm+1cm,0)--((x.so*cm,0) rotatedabout((x.so*cm+1cm,0),60))--cycle) shifted (-0.5cm,((sqrt3)/2)*cm);
+    p2:=((x.so*cm,0)--(x.so*cm+x.u,0)--((x.so*cm,0) rotatedabout((x.so*cm+x.u,0),60))--cycle) shifted (-x.u/2,y.u);
+    %grille horizontale1
+    pickup pencircle scaled 0.5;
+    numeric etag;
+    etag=floor(2*cm*(ypart(retrouvecoord(z.ne*cm))-ypart(retrouvecoord(z.so*cm)))/(y.u))+1;
+    for i:=0 step 2 until etag:
+      for j:=0 upto (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))):
+	draw p1 shifted (j*x.u,i*y.u);
+	draw p2 shifted (j*x.u,i*y.u);
+      endfor
+    endfor;
+     %grille horizontale 2
+    pickup pencircle scaled 0.5;
+    for i:=1 step 2 until etag:
+      for j:=0 upto (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))):
+	draw p1 shifted ((j-1/2)*x.u,i*y.u);
+	draw p2 shifted ((j+1/2)*x.u,i*y.u);
+      endfor
+    endfor;
+    );
+  $
+enddef;
+
+vardef papiertrianglepointe=
+  save $;
+  orig:=false;
+  if uni=false:
+    x.u:=1cm;
+    y.u:=(sqrt(3)/2)*cm;
+  fi;
+  picture $;
+  $=image(
+     pickup pencircle scaled 0.5;
+    numeric etag;
+    etag=floor(2*cm*(ypart(retrouvecoord(z.ne*cm))-ypart(retrouvecoord(z.so*cm)))/(y.u))+1;
+    for i:=0 step 2 until etag:
+      for j:=0 upto (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))):
+	fill (fullcircle scaled 1bp shifted(z.so*cm)) shifted (j*x.u,i*y.u);
+      endfor
+    endfor;
+    for i:=1 step 2 until etag:
+      for j:=0 upto (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))):
+	fill (fullcircle scaled 1bp shifted(z.so*cm)) shifted ((j-1/2)*x.u,i*y.u);
+      endfor
+    endfor;
+    );
+  $
+enddef;
+
+vardef papierisometriquepointe=
+  save $;
+  orig:=false;
+  y.u:=1cm;
+  x.u:=(sqrt(3)/2)*cm;
+  picture $;
+  $=image(
+    %grille horizontale1
+    pickup pencircle scaled 0.5;
+    for i:=0 step 1 until (ypart(retrouvecoord(z.ne*cm))-ypart(retrouvecoord(z.so*cm))):
+      for j:=0 step 2 until (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))+2):
+	fill (fullcircle scaled 1bp shifted (z.so*cm)) shifted (j*((sqrt3)/2)*cm,i*cm);
+      endfor
+    endfor;
+     %grille horizontale 2
+    for i:=0 step 1 until (ypart(retrouvecoord(z.ne*cm))-ypart(retrouvecoord(z.so*cm))-1):
+      for j:=1 step 2 until (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))+1):
+	fill (fullcircle scaled 1bp shifted (z.so*cm)) shifted (j*((sqrt3)/2)*cm,(i+0.5)*cm);
+      endfor
+    endfor;
+    );
+  $
+enddef;
+
+vardef papierisometrique=
+  save $;
+  orig:=false;
+  x.u:=(sqrt(3)/2)*cm;
+  y.u:=1cm;
+  picture $;
+  $=image(
+    path p[];
+    %triangle haut
+    p1:=(x.so*cm,1cm)--((x.so*cm,0) rotatedabout((x.so*cm,1cm),60))--(x.so*cm,0);
+    %triangle bas
+    p2:=((x.so*cm,1cm)--((x.so*cm,0) rotatedabout((x.so*cm,1cm),-60))--(x.so*cm,0)) shifted (((sqrt3)/2)*cm,0);
+    %grille horizontale1
+    pickup pencircle scaled 0.5;
+    for i:=0 step 2  until (xpart(retrouvecoord(z.ne*cm))-xpart(retrouvecoord(z.so*cm))):
+      for j:=0 upto (ypart(retrouvecoord(z.ne*cm))-ypart(retrouvecoord(z.so*cm))-1):
+	draw p1 shifted (i*((sqrt3)/2)*cm,j*cm);
+	draw p2 shifted ((i+1)*((sqrt3)/2)*cm,j*cm);
+      endfor
+    endfor;
+    );
+  $
+enddef;
+
+vardef papierhexagonal=
+  save $;
+  picture $;
+  orig:=false;
+  path hexa;
+  %hexagone de départ
+  hexa:=z.so*cm--(x.so*cm+1cm,y.so*cm)--(z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120))--((x.so*cm+1cm,y.so*cm) rotatedabout((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)),-120))--((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)) rotatedabout(((x.so*cm+1cm,y.so*cm) rotatedabout((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)),-120)),-120))--(((x.so*cm+1cm,y.so*cm) rotatedabout((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)),-120)) rotatedabout(((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)) rotatedabout(((x.so*cm+1cm,y.so*cm) rotatedabout((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)),-120)),-120)),-120))--cycle;
+  $=image(
+    pair centrehexa;
+    centrehexa=1/2[z.so*cm,((x.so*cm+1cm,y.so*cm) rotatedabout((z.so*cm rotatedabout((x.so*cm+1cm,y.so*cm),-120)),-120))];
+    pickup pencircle scaled 0.5;
+    numeric etag;
+    etag=floor((abs(y.ne*cm-y.so*cm))/((sqrt(3)/2)*cm));
+    for i:=0 step 3  until (abs(x.ne*cm-x.so*cm)/1cm):
+      for j:=0 step 2 until etag:
+	draw hexa shifted ((i+0.5)*cm,j*((sqrt 3)/2)*cm);
+	draw hexa shifted ((i+2)*cm,(j+1)*((sqrt 3)/2)*cm);
+      endfor
+    endfor;
+    );
+  $
 enddef;
 
 endinput;

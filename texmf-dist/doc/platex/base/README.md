@@ -71,6 +71,6 @@ the 3-clause BSD license (see [LICENSE](./LICENSE)).
 
 ## Release Date
 
-2022-12-15
+2023-02-26
 
 Japanese TeX Development Community

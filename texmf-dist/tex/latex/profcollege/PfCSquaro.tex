@@ -1,0 +1,105 @@
+%%%
+% Squaro
+%%%
+\setKVdefault[Squaro]{Solution=false,Longueur=8,Largeur=8,Echelle=8mm,Nom=Jeu1,Graines=false}
+\defKV[Squaro]{Graine=\setKV[Squaro]{Graines}}%
+
+\NewDocumentCommand\SquarO{o}{%
+  \useKVdefault[Squaro]%
+  \setKV[Squaro]{#1}%
+  \BuildSquaro%
+}%
+
+\def\BuildSquarobase{%
+  numeric Longueur,Largeur;
+  Longueur=\useKV[Squaro]{Longueur};
+  Largeur=\useKV[Squaro]{Largeur};
+  boolean Solution,Graines;
+  Solution=\useKV[Squaro]{Solution};
+  Graines=\useKV[Squaro]{Graines};
+  if Graines:
+  randomseed:=\useKV[Squaro]{Graine};
+  fi;
+  %
+  u:=\useKV[Squaro]{Echelle};
+  %
+  p:=0;
+  pair A[];%centre des carrés.
+  boolean Allume[][];
+}
+
+\NewDocumentCommand\BuildSquaro{}{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \BuildSquarobase
+    for k=0 upto Longueur-1:
+    for l=0 upto Largeur-1:
+    p:=p+1;
+    A[p]=u*(k,-l);
+    trace (unitsquare scaled u) shifted A[p];
+    endfor;
+    endfor;
+
+    for k=0 upto Largeur:
+    for l=0 upto Longueur:
+    m:=uniformdeviate(1);
+    if m<0.5:
+    Allume[k][l]=true;
+    fill cercles(u*(l,-k+1),1mm) if Solution=false:withcolor white fi;
+    else:
+    Allume[k][l]=false;
+    fill cercles(u*(l,-k+1),1mm) withcolor white;
+    fi;
+    trace cercles(u*(l,-k+1),1mm);
+    endfor;
+    endfor;
+
+    for k=0 upto Largeur-1:
+    for l=0 upto Longueur-1:
+    Retiens:=0;
+    if Allume[k][l]:Retiens:=Retiens+1 fi;
+    if Allume[k][l+1]:Retiens:=Retiens+1 fi;
+    if Allume[k+1][l]:Retiens:=Retiens+1 fi;
+    if Allume[k+1][l+1]:Retiens:=Retiens+1 fi;
+    label(TEX(decimal(Retiens)),u*(l+0.5,-k+0.5));
+    endfor;
+    endfor;
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\BuildSquarobase}]
+    for k=0 upto Longueur-1:
+    for l=0 upto Largeur-1:
+    p:=p+1;
+    A[p]=u*(k,-l);
+    trace (unitsquare scaled u) shifted A[p];
+    endfor;
+    endfor;
+
+    for k=0 upto Largeur:
+    for l=0 upto Longueur:
+    m:=uniformdeviate(1);
+    if m<0.5:
+    Allume[k][l]=true;
+    fill cercles(u*(l,-k+1),1mm) if Solution=false:withcolor white fi;
+    else:
+    Allume[k][l]=false;
+    fill cercles(u*(l,-k+1),1mm) withcolor white;
+    fi;
+    trace cercles(u*(l,-k+1),1mm);
+    endfor;
+    endfor;
+
+    for k=0 upto Largeur-1:
+    for l=0 upto Longueur-1:
+    Retiens:=0;
+    if Allume[k][l]:Retiens:=Retiens+1 fi;
+    if Allume[k][l+1]:Retiens:=Retiens+1 fi;
+    if Allume[k+1][l]:Retiens:=Retiens+1 fi;
+    if Allume[k+1][l+1]:Retiens:=Retiens+1 fi;
+    label(LATEX(decimal(Retiens)),u*(l+0.5,-k+0.5));
+    endfor;
+    endfor;
+  \end{mpost}
+ \fi
+}%

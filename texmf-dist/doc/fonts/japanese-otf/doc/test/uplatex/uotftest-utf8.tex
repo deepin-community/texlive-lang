@@ -1,5 +1,6 @@
 % -*- coding: utf-8 -*-
 \newif\ifuptexmode\uptexmodefalse
+\newif\iftatemode\tatemodefalse
 \ifnum\jis"2121="3000 \uptexmodetrue\fi
 
 \makeatletter
@@ -9,7 +10,12 @@
 \def\@jarticle{jarticle}
 \def\@tarticle{tarticle}
 \def\@utarticle{utarticle}
+\def\@deluxe{deluxe}
 
+\newif\ifdeluxe \deluxefalse
+\@for\@@opt:=\option\do{%
+ \ifx\@@opt\@deluxe\deluxetrue\fi
+}
 \ifx\option\@undefined
  \def\option{default}
 \fi
@@ -27,24 +33,32 @@
 \fi
 
 \def\baseshift{-.12zh}
-\ifx\class\@tarticle\def\baseshift{-.5zh}\fi
-\ifx\class\@utarticle\def\baseshift{-.5zh}\fi
+\ifx\class\@tarticle\def\baseshift{-.5zh}\tatemodetrue\fi
+\ifx\class\@utarticle\def\baseshift{-.5zh}\tatemodetrue\fi
 
 \ifuptexmode
  \edef\@opt@{uplatex,\@opt@}
 \fi
-\documentclass[a4paper,titlepage, draft]{\class}
-%\documentclass[a4paper,titlepage, draft,landscape]{\class}
+\documentclass[a4paper,titlepage,draft,dvipdfmx]{\class}
+%\documentclass[a4paper,titlepage,draft,landscape,dvipdfmx]{\class}
 
 \usepackage[\@opt@]{otf}
 
 %
-% furikana.sty があれば読み込む
 \newread\@istheresuchafile
-\openin\@istheresuchafile furikana.sty
+%
+% okumacro.sty があれば読み込む
+\openin\@istheresuchafile okumacro.sty
 \ifeof\@istheresuchafile\relax
 \else\closein\@istheresuchafile\relax
-\usepackage{furikana}% found
+\usepackage{okumacro}% found
+\fi
+%
+% pxrubrica.sty があれば読み込む
+\openin\@istheresuchafile pxrubrica.sty
+\ifeof\@istheresuchafile\relax
+\else\closein\@istheresuchafile\relax
+\usepackage{pxrubrica}% found
 \fi
 
 \makeatother
@@ -61,9 +75,20 @@
 \ifx\rubyfamily\@undefined\let\rubyfamily=\relax\fi
 \ifx\mgfamily\@undefined\let\mgfamily=\relax\fi
 \makeatother
+
+\iftatemode
+\textwidth250mm
+\oddsidemargin0mm
+\evensidemargin0mm
+\textheight168mm
+\topmargin-15mm
+\else
 \textwidth160mm
 \oddsidemargin0mm
 \evensidemargin0mm
+\textheight250mm
+\topmargin-15mm
+\fi
 
 \begin{document}
 \section{見出し}
@@ -77,8 +102,14 @@
 \hline
 mc/m & ひらかな & 漢字 & \UTF{9DD7} & \CID{8705} & {\rubyfamily 振りかな}\\
 mc/bx & {\bfseries ひらかな} & {\bfseries 漢字} & {\bfseries\UTF{9DD7}} & {\bfseries\CID{8705}} & {\bfseries\rubyfamily 振りかな}\\
+\ifdeluxe
+mc/l & {\ltseries ひらかな} & {\ltseries 漢字} & {\ltseries\UTF{9DD7}} & {\ltseries\CID{8705}} & {\ltseries\rubyfamily 振りかな}\\
+\fi
 gt/m & {\gtfamily ひらかな} & {\gtfamily 漢字} & {\gtfamily\UTF{9DD7}} & {\gtfamily\CID{8705}} & {\gtfamily\rubyfamily 振りかな}\\
 gt/bx & {\gtfamily\bfseries ひらかな} & {\gtfamily\bfseries 漢字} & {\gtfamily\bfseries\UTF{9DD7}} & {\gtfamily\bfseries\CID{8705}} & {\gtfamily\bfseries\rubyfamily 振りかな}\\
+\ifdeluxe
+gt/eb & {\gtfamily\ebseries ひらかな} & {\gtfamily\ebseries 漢字} & {\gtfamily\ebseries\UTF{9DD7}} & {\gtfamily\ebseries\CID{8705}} & {\gtfamily\ebseries\rubyfamily 振りかな}\\
+\fi
 mg/m & {\mgfamily ひらかな} & {\mgfamily 漢字} & {\mgfamily\UTF{9DD7}} & {\mgfamily\CID{8705}} & {\mgfamily\rubyfamily 振りかな}\\
 \end{tabular}
 \vspace{\baselineskip}
@@ -89,18 +120,53 @@ mg/m & {\mgfamily ひらかな} & {\mgfamily 漢字} & {\mgfamily\UTF{9DD7}} & {
 
 日本：\UTF{8FF0}　簡体字：\UTFC{8FF0}　繁體字：\UTFT{8FF0}　朝鮮：\UTFK{8FF0}
 
-% with furikana.sty
-\makeatletter
-\ifx\kana\@undefined
-\else
-\kana{漢字}{振りかな}{\bfseries \kana{漢字}{振りかな}}%
-{\gtfamily\kana{漢字}{振りかな}\bfseries \kana{漢字}{振りかな}}
-{\mgfamily\kana{漢字}{振りかな}}
 
-\kana{\UTF{9DD7}}{かな}\kana{鴎}{かな}
-
-\Kana[3]{\UTFK{c548},\UTFK{b155},\UTFK{d558},\UTFK{c138},\UTFK{c694}}{アン,ニョン,ハ,セ,ヨ}
+% with okumacro.sty
+\ifx\ruby\@undefined\else
+\vspace{\baselineskip}
+\ruby{漢字}{振りかな}~%
+{\bfseries\ruby{漢字}{振りかな}}~%
+\ifdeluxe
+ {\ltseries\ruby{漢字}{振りかな}}~%
 \fi
+{\gtfamily\ruby{漢字}{振りかな}~%
+ \bfseries\ruby{漢字}{振りかな}~%
+\ifdeluxe
+ \ebseries\ruby{漢字}{振りかな}~%
+\fi
+}%
+{\mgfamily\ruby{漢字}{振りかな}}
+
+\bgroup
+\ruby{\UTFK{c548}}{アン}\ruby{\UTFK{b155}}{ニョン}\ruby{\UTFK{d558}}{ハ}\ruby{\UTFK{c138}}{セ}\ruby{\UTFK{c694}}{ヨ}~%
+\gtfamily\ruby{\UTFK{c548}}{アン}\ruby{\UTFK{b155}}{ニョン}\ruby{\UTFK{d558}}{ハ}\ruby{\UTFK{c138}}{セ}\ruby{\UTFK{c694}}{ヨ}
+\egroup
+\fi
+
+
+% with pxrubrica.sty
+\makeatletter
+\ifx\jruby\@undefined\else
+\vspace{\baselineskip}
+\jruby[g]{漢字}{振りかな}~%
+{\bfseries\jruby[g]{漢字}{振りかな}}~%
+\ifdeluxe
+ {\ltseries\jruby[g]{漢字}{振りかな}}~%
+\fi
+{\gtfamily\jruby[g]{漢字}{振りかな}~%
+ \bfseries\jruby[g]{漢字}{振りかな}~%
+\ifdeluxe
+ \ebseries\jruby[g]{漢字}{振りかな}~%
+\fi
+}%
+{\mgfamily\jruby[g]{漢字}{振りかな}}
+
+\bgroup
+ \jruby[m]{{\UTFK{c548}}{\UTFK{b155}}{\UTFK{d558}}{\UTFK{c138}}{\UTFK{c694}}}{アン|ニョン|ハ|セ|ヨ}~%
+ \gtfamily\jruby[m]{{\UTFK{c548}}{\UTFK{b155}}{\UTFK{d558}}{\UTFK{c138}}{\UTFK{c694}}}{アン|ニョン|ハ|セ|ヨ}
+\egroup
+\fi
+
 \makeatother
 
 \vspace{\baselineskip}
@@ -133,13 +199,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -150,17 +216,37 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
 }
+
+\ifdeluxe
+{\ltseries%
+[mc/lt]
+
+ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
+ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
+\ifuptexmode
+ゔゕゖ𛄲
+\fi
+
+ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
+バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
+\ifuptexmode
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
+\fi
+
+“回”、‘回’。“回”，‘回’．
+}
+\fi
 
 {\gtfamily
 [gt/m]
@@ -168,13 +254,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -185,17 +271,38 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
-}}
+}
+
+\ifdeluxe
+{\ebseries%
+[gt/eb]
+
+ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
+ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
+\ifuptexmode
+ゔゕゖ𛄲
+\fi
+
+ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
+バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
+\ifuptexmode
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
+\fi
+
+“回”、‘回’。“回”，‘回’．
+}
+\fi
+}
 
 {\mgfamily
 [mg/m]
@@ -203,13 +310,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -221,7 +328,7 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 
 \fbox{\hbox{\tate\Huge ㇰ}}
 
@@ -232,7 +339,7 @@ UTFM:%
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -243,13 +350,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -261,13 +368,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -282,13 +389,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．
@@ -300,13 +407,13 @@ UTFM:%
 ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのは
 ばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんヽヾゝゞー
 \ifuptexmode
-ゔゕゖ
+ゔゕゖ𛄲
 \fi
 
 ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハ
 バパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
 \ifuptexmode
-ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ
+ヷヸヹヺㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ𛅕
 \fi
 
 “回”、‘回’。“回”，‘回’．

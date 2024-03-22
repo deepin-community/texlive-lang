@@ -9,8 +9,9 @@ The documentation files for pBibTeX are included in pbibtex-manual bundle
 ## Character encoding
 
 All the text files containing Japanese characters are encoded in
-ISO-2022-JP. This is because ISO-2022-JP encoded texts are most suitable
-for the traditional pTeX and pBibTeX programs.
+UTF-8. This is because UTF-8 encoded texts are most suitable
+for the latest pTeX and pBibTeX programs
+with feature of automatic encoding conversion.
 
 ## Repository
 
@@ -28,6 +29,6 @@ this redistribution also follows it (see [LICENSE](./LICENSE)).
 
 ## Release Date
 
-2022-02-06
+2023-02-23
 
 Japanese TeX Development Community

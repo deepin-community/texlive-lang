@@ -2,23 +2,23 @@
 
 -- LGR Transcription to Greek LICR transformation
 -- **********************************************
--- 
+--
 -- :Copyright: © 2010 Günter Milde
 -- :Licence:   This work may be distributed and/or modified under the
 --             conditions of the `LaTeX Project Public License`_, either
 --             version 1.3 of this license or any later version.
--- 
+--
 -- .. _LaTeX Project Public License: http://www.latex-project.org/lppl.txt
--- 
+--
 -- The LGR font encoding is the de-facto standard for Greek typesetting with
--- LaTeX. This file provides a translation from the Latin transcription defined
+-- LaTeX. This file provides a translation from the Latin transliteration defined
 -- by LGR into the LaTeX Internal Character Representation (LICR) macros.
--- 
+--
 -- ::
 
 usage = [[
 Usage: lua lgr2licr.lua [OPTIONS] [STRING]
-  Convert STRING from Latin transcription to LICR macros for Greek symbols.
+  Convert STRING from Latin transliteration to LICR macros for Greek symbols.
   (This dumb conversion fails if the string contains TeX macros.)
   Without argument, the script reads from standard input like a
   redirected file. End interactive input with Ctrl-D.
@@ -47,8 +47,8 @@ else
     s = io.read("*all")
 end
 
--- The mapping from the LGR Latin transcription to LICR macros::
-  
+-- The mapping from the LGR Latin transliteration to LICR macros::
+
 LGR_map = {
   A = "\\textAlpha{}",
   B = "\\textBeta{}",
@@ -74,7 +74,7 @@ LGR_map = {
   Q = "\\textChi{}",
   Y = "\\textPsi{}",
   W = "\\textOmega{}",
-  
+
   a = "\\textalpha{}",
   b = "\\textbeta{}",
   g = "\\textgamma{}",
@@ -101,7 +101,7 @@ LGR_map = {
   y = "\\textpsi{}",
   w = "\\textomega{}",
   v = "\\noboundary{}",
-  
+
   ["'"] = "\\'",
   ["`"] = "\\`",
   ["~"] = "\\~",
@@ -114,7 +114,7 @@ LGR_map = {
 }
 
 -- Return substitution string for 3 captures:
--- 
+--
 -- `c1` backslash
 -- `c2` a-zA-Z
 -- `c3` any other char
@@ -155,15 +155,15 @@ s = string.gsub(s, "{}([^ a-zA-Z])", "%1")
 s = string.gsub(s, "\\textautosigma\\noboundary", "\\textsigma")  -- sv
 s = string.gsub(s, "\\textautosigma(\\['`~<>|\"])", "\\textsigma%1") -- accents
 
-s = string.gsub(s, "\\textautosigma([-%s!#$%%&%(%)*+,./0-9:=%[%]{|}])", 
+s = string.gsub(s, "\\textautosigma([-%s!#$%%&%(%)*+,./0-9:=%[%]{|}])",
                    "\\textfinalsigma%1")
 
 s = string.gsub(s, "\\textautosigma(\\textquote)", "\\textfinalsigma%1")
 s = string.gsub(s, "\\textautosigma(\\texterotimatiko)", "\\textfinalsigma%1")
 s = string.gsub(s, "\\textautosigma(\\textanoteleia)", "\\textfinalsigma%1")
-                   
+
 s = string.gsub(s, "\\textautosigma$", "\\textfinalsigma")
 
 -- Write the result to stdout::
-  
+
 io.write(s)

@@ -1,6 +1,6 @@
 %% File `oblivoir-xl.cls`
 %%
-%% (C) Copyright 2006-2022 Kangsoo Kim <modviv2k15 at gmail dot com>
+%% (C) Copyright 2006-2023 Kangsoo Kim <modviv2k15 at gmail dot com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,8 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xl}
-  [2022/04/07 v0.8.8 article-like class to typeset Korean]
-%\typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
+  [2023/03/08 v3.2.1 memoir-based class to typeset Korean]
 
 \providecommand\@DisabledOption[1]{%
   \typeout{[#1] option is deprecated}}
@@ -37,6 +36,9 @@
 \DeclareOptionX{nokorean}{\nokoreantrue}
 \newif\if@polyglossia\@polyglossiafalse
 \DeclareOptionX{polyglossia}{\@polyglossiatrue}
+\newif\if@babelhangul\@babelhangulfalse
+\DeclareOptionX{babelhangul}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}} %%2023-03
+\DeclareOptionX{babelvacant}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}} %%2023-03
 \newif\iftwosidedoc\twosidedocfalse
 \DeclareOptionX{twoside}{\twosidedoctrue}
 \newif\ifopenrightdoc\openrightdocfalse
@@ -514,6 +516,7 @@
 \endinput
 
 %%% ChangeLog:
+%%% 2023-03-08 : polyglossia, babel, babelvacant added.
 %%% 2015-10-19 : fix conflicts with etextools package.
 %%%% 2015-08-01 : drop etex.sty 
 %%% 2015-07-27 : fix nokorean bug 

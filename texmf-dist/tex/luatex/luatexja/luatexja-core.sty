@@ -61,12 +61,23 @@
 \expandafter\ifx\csname RequirePackage\endcsname\relax %<*!LaTeX>
   \expandafter\let\csname ifltj@in@latex\expandafter\endcsname
     \csname iffalse\endcsname
+  \endlinechar=13 %
+  \input infwarerr.sty
+  \endlinechar=-1 %
 \else                           %<*LaTeX>
   \expandafter\let\csname ifltj@in@latex\expandafter\endcsname
     \csname iftrue\endcsname
   \NeedsTeXFormat{LaTeX2e}
-  \ProvidesPackage{luatexja-core}[2022-08-24 Core of LuaTeX-ja]
+  \ProvidesPackage{luatexja-core}[2023-04-06 Core of LuaTeX-ja]
+  \endlinechar=13 %
+  \RequirePackage{infwarerr}
+  \endlinechar=-1 %
 \fi                             %</LaTeX>
+
+%% Check if LuaTeX is used
+\expandafter\ifx\csname directlua\endcsname\relax
+  \@PackageError{luatexja-core}{This package requires Lua(HB)(La)TeX}{}
+\expandafter\endinput\fi\relax
 
 %% Load prerequisite packages.
 \endlinechar=13 %
@@ -89,12 +100,7 @@
 \fi                             %</LaTeX>
 \endlinechar=-1 %
 
-%% Check if LuaTeX is used
-\ltx@LocalExpandAfter\ifx\csname directlua\endcsname\relax
-  % Loading is silently aborted, since the notice of the wrong
-  % engine is already shown in luaotfload.
-  \ltj@core@AtEnd
-\expandafter\endinput\fi\relax
+\directlua{require('ltj-unicode-ccfix.lua')}% catcode of ideographs
 
 %% Check LuaTeX version.
 \ifnum\luatexversion<110
@@ -221,23 +227,24 @@
 \luadef\ltj@@start@time@measure\ltj@@start@time@measure@inner
 \luadef\ltj@@stop@time@measure\ltj@@stop@time@measure@inner
 
+\let\ltj@@convert@input@path@to@lua\relax % defined in LaTeX only (ltj-latex.sty)
+
 %%%%%%%% \jfont\CS={...:...;jfm=metric;...}, \globaljfont
-\protected\def\jfont#1{%
-  \def\ltj@temp{#1}\afterassignment\ltj@@jfont\directlua{luatexja.jfont.jfontdefX(false, 'yoko')}}
-\protected\def\globaljfont#1{%
-  \def\ltj@temp{#1}\afterassignment\ltj@@jfont\directlua{luatexja.jfont.jfontdefX(true,  'yoko')}}
+%%%%%%%% \tfont\CS={...:...;jfm=metric;...}, \globaltfont
+\begingroup
+\def\ltj@@jfdef#1#2#3{%
+  \protected\gdef#1##1{%
+    \ltj@@convert@input@path@to@lua\def\ltj@temp{##1}%
+    \afterassignment\ltj@@jfont\directlua{luatexja.jfont.jfontdefX(#2, '#3')}}}
+\ltj@@jfdef\jfont{false}{yoko}\ltj@@jfdef\globaljfont{true}{yoko}
+\ltj@@jfdef\tfont{false}{tate}\ltj@@jfdef\globaltfont{true}{tate}
+\endgroup
 \newluafunction\ltj@@jfont@inner
 \directlua{
-  local t = lua.get_functions_table()
-  t[\the\ltj@@jfont@inner] = luatexja.jfont.jfontdefY
+  (lua.get_functions_table())[\the\ltj@@jfont@inner] = luatexja.jfont.jfontdefY
 }
 \def\ltj@@jfont{\expandafter\expandafter\expandafter\luafunction\expandafter\ltj@@jfont@inner\ltj@temp}
 
-%%%%%%%% \tfont\CS={...:...;jfm=metric;...}, \globaltfont
-\protected\def\tfont#1{%
-  \def\ltj@temp{#1}\afterassignment\ltj@@jfont\directlua{luatexja.jfont.jfontdefX(false, 'tate')}}
-\protected\def\globaltfont#1{%
-  \def\ltj@temp{#1}\afterassignment\ltj@@jfont\directlua{luatexja.jfont.jfontdefX(true,  'tate')}}
 
 %%%%%%%% \zw, \zh
 \newluafunction\ltj@zw@inner
@@ -487,8 +494,7 @@
 }
 \newluafunction\ltj@@getparam@one@inner
 \directlua{
-  local t = lua.get_functions_table()
-  t[\the\ltj@@getparam@one@inner] = luatexja.ext_get_parameter_unary
+  (lua.get_functions_table())[\the\ltj@@getparam@one@inner] = luatexja.ext_get_parameter_unary
 }
 \luadef\ltj@@getparam@one\ltj@@getparam@one@inner
 \def\ltj@@getparam@two#1#2{%
@@ -540,7 +546,7 @@
   \ltj@reset@globaldefs
   \begingroup\ltj@curjfnt\m@ne\ltj@curtfnt\m@ne\relax
   #1\directlua{luatexja.__temp = -(\the\ltj@curjfnt)*(\the\ltj@curtfnt)}\endgroup
-  \ltj@tempcntc=\directlua{tex.sprint(luatexja.__temp)}\relax
+  \ltj@tempcntc=\directlua{tex.sprint(-2,luatexja.__temp)}\relax
   \ifnum\ltj@tempcntc=\m@ne
     \@PackageError{luatexja-core}%
     {\string#1 is not a control sequence that represents \MessageBreak
@@ -600,8 +606,7 @@
 \let\ltj@@orig@insert\insert
 \newluafunction\ltj@@lua@populate@insertwhatsit@inner
 \directlua{
-  local t = lua.get_functions_table()
-  t[\the\ltj@@lua@populate@insertwhatsit@inner]
+  (lua.get_functions_table())[\the\ltj@@lua@populate@insertwhatsit@inner]
     = luatexja.direction.populate_insertion_dir_whatsit
 }
 \luadef\ltj@@lua@populate@insertwhatsit\ltj@@lua@populate@insertwhatsit@inner
@@ -673,8 +678,7 @@
 %%%% \raise, \lower, \moveleft, \moveright
 \newluafunction\ltj@@lua@raisebox@inner
 \directlua{
-  local t = lua.get_functions_table()
-  t[\the\ltj@@lua@raisebox@inner]=luatexja.direction.raise_box
+  (lua.get_functions_table())[\the\ltj@@lua@raisebox@inner]=luatexja.direction.raise_box
 }
 \protected\luadef\ltj@@lua@raisebox\ltj@@lua@raisebox@inner
 \let\ltj@@orig@raise\raise
@@ -701,8 +705,12 @@
 \let\moveright\ltj@@moveright %% PRIMITIVE
 
 %%%%\vsplit
+\newluafunction\ltj@@vsplit@inner
+\directlua{
+  (lua.get_functions_table())[\the\ltj@@vsplit@inner]=luatexja.direction.vsplit
+}
 \let\ltj@@orig@vsplit\vsplit
-\protected\def\ltj@@vsplit{\directlua{luatexja.direction.vsplit()}}
+\protected\def\ltj@@vsplit{\luafunction\ltj@@vsplit@inner}
 \let\vsplit\ltj@@vsplit %% PRIMITIVE
 
 %%%% \vcenter
@@ -715,30 +723,34 @@
 
 %%%% \unhbox and \unvbox
 \newluafunction\ltj@@lua@unboxcheckdir@inner
+\newluafunction\ltj@@lua@uncopycheckdir@inner
+\newluafunction\ltj@@lua@uncopy@restore@whatsit@inner
 \directlua{
   local t = lua.get_functions_table()
   t[\the\ltj@@lua@unboxcheckdir@inner]=luatexja.direction.unbox_check_dir
+  t[\the\ltj@@lua@uncopycheckdir@inner]=luatexja.direction.uncopy_check_dir
+  t[\the\ltj@@lua@uncopy@restore@whatsit@inner]=luatexja.direction.uncopy_restore_whatsit
 }
 \luadef\ltj@@lua@unboxcheckdir\ltj@@lua@unboxcheckdir@inner
+\luadef\ltj@@lua@uncopycheckdir\ltj@@lua@uncopycheckdir@inner
+\luadef\ltj@@lua@uncopy@restore@whatsit\ltj@@lua@uncopy@restore@whatsit@inner
 \long\def \@gobbletwo #1#2{}
 \let\ltj@@orig@unhbox\unhbox
 \let\ltj@@orig@unvbox\unvbox
 \protected\def\ltj@@unhbox{\ltj@reset@globaldefs\afterassignment\ltj@@unhbox@\ltj@tempcnta}
 \protected\def\ltj@@unvbox{\ltj@reset@globaldefs\afterassignment\ltj@@unvbox@\ltj@tempcnta}
-\protected\def\ltj@@unhbox@{\ltj@@lua@unboxcheckdir\ltj@@orig@unhbox\ltj@tempcnta}
-\protected\def\ltj@@unvbox@{\ltj@@lua@unboxcheckdir\ltj@@orig@unvbox\ltj@tempcnta}
+\protected\def\ltj@@unhbox@{\ltj@@lua@unboxcheckdir\expandafter\ltj@@orig@unhbox\the\ltj@tempcnta\relax}
+\protected\def\ltj@@unvbox@{\ltj@@lua@unboxcheckdir\expandafter\ltj@@orig@unvbox\the\ltj@tempcnta\relax}
 \let\ltj@@orig@unhcopy\unhcopy
 \let\ltj@@orig@unvcopy\unvcopy
 \protected\def\ltj@@unhcopy{\ltj@reset@globaldefs\afterassignment\ltj@@unhcopy@\ltj@tempcnta}
 \protected\def\ltj@@unvcopy{\ltj@reset@globaldefs\afterassignment\ltj@@unvcopy@\ltj@tempcnta}
 \protected\def\ltj@@unhcopy@{%
-  \directlua{luatexja.direction.unbox_check_dir(true)}%
-  \ltj@@orig@unhcopy\ltj@tempcnta
-  \directlua{luatexja.direction.uncopy_restore_whatsit()}}
+  \ltj@@lua@uncopycheckdir\expandafter\ltj@@orig@unhcopy\the\ltj@tempcnta\relax
+  \ltj@@lua@uncopy@restore@whatsit}%
 \protected\def\ltj@@unvcopy@{%
-  \directlua{luatexja.direction.unbox_check_dir(true)}%
-  \ltj@@orig@unvcopy\ltj@tempcnta
-  \directlua{luatexja.direction.uncopy_restore_whatsit()}}
+  \ltj@@lua@uncopycheckdir\expandafter\ltj@@orig@unvcopy\the\ltj@tempcnta\relax
+  \ltj@@lua@uncopy@restore@whatsit}%
 \let\unhbox\ltj@@unhbox %% PRIMITIVE
 \let\unvbox\ltj@@unvbox %% PRIMITIVE
 \let\unhcopy\ltj@@unhcopy %% PRIMITIVE

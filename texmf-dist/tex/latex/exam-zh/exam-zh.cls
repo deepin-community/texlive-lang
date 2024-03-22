@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-9-18} {v0.1.20} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2023-06-28} {v0.1.27} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -531,26 +531,42 @@
   { list .meta:nn = { exam-zh / list } {#1} }
 
 \setlist{nosep}
+\setlist
+  {
+    labelsep    = 2pt,
+  }
 
 \setlist[enumerate, 1]
   {
     labelindent = \parindent,
+    labelsep    = 4pt,
     leftmargin  = *,
-    label       = { \arabic * .}
+    % label       = { \arabic * .}
+    label       = {（ \arabic * ）},
   }
 
 \setlist[enumerate, 2]
   {
     % labelindent = *,
-    leftmargin  = 0pt, 
+    leftmargin  = 2em, 
     widest      = 0,
-    itemindent  = 4em,
+    itemindent  = 0em,
     labelsep    = 0pt,
     % labelwidth  = 2em,
     listparindent = \parindent,
-    label       = {（ \arabic * ）},
+    label       = {（ \alph * ）},
   }
-
+\setlist[enumerate, 3]
+  {
+    % labelindent = *,
+    leftmargin  = 2em, 
+    widest      = 0,
+    itemindent  = 0em,
+    labelsep    = 0pt,
+    % labelwidth  = 2em,
+    listparindent = \parindent,
+    label       = {（ \roman * ）},
+  }
 % 多种方法: method环境
 \newlist{method}{enumerate}{1}
 \setlist[method, 1]
@@ -657,7 +673,7 @@
   }
 
 % 科目
-\tl_new:N \l__exam_zh_subject_tl
+\tl_new:N \l__examzh_subject_tl
 \NewDocumentCommand \subject { o m }
   {
     \IfNoValueTF {#1}
@@ -665,14 +681,14 @@
         % 默认使用自然宽度
         \hbox_set:Nn \l_tmpa_box {#2}
         \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box * 2 }
-        \tl_set:Nn \l__exam_zh_subject_tl
+        \tl_set:Nn \l__examzh_subject_tl
           {
             \__examzh_spread_box:nn { \l_tmpa_dim } {#2}
           }
       }
       {
         % 手动调整宽度
-        \tl_set:Nn \l__exam_zh_subject_tl
+        \tl_set:Nn \l__examzh_subject_tl
           {
             \__examzh_spread_box:nn {#1} {#2}
           }
@@ -687,10 +703,10 @@
     \begin { center }
       \let \footnote \thanks
       { \l__examzh_title_format_tl \@title \par }
-      \tl_if_blank:VF \l__exam_zh_subject_tl
+      \tl_if_blank:VF \l__examzh_subject_tl
         {
           \addvspace { 1em }
-          { \l__examzh_subject_format_tl \l__exam_zh_subject_tl }
+          { \l__examzh_subject_format_tl \l__examzh_subject_tl }
         }
     \end { center }
     \par
@@ -1597,7 +1613,7 @@
 \tl_new:N \l__examzh_foot_content_before_page_tl
 \tl_new:N \l__examzh_foot_content_after_page_tl
 \tl_new:N \l__examzh_foot_content_after_lastpage_tl
-\cs_generate_variant:Nn \regex_count:nnN { nxN }
+\cs_generate_variant:Nn \regex_count:nnN { nxN, noN }
 
 \cs_new:Npn \__examzh_foot_content_only_page_input:ww #1 ; #2 \q_stop
   {
@@ -1662,9 +1678,19 @@
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new_nopar:Npn \__examzh_relax: { \relax }
+% \cs_new:Npn \__examzh_foot_lastpage_tmp_set:
+%   {
+%     \cs_if_eq:NNTF \lastpage@lastpage \__examzh_relax:
+%       { \int_set:Nn \l__examzh_tmp_int { 0 } }
+%       { \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage } }
+%   }
+
+% https://gitee.com/xkwxdyy/exam-zh/issues/I6B7MU#note_17945353_link
 \cs_new:Npn \__examzh_foot_lastpage_tmp_set:
   {
-    \cs_if_eq:NNTF \lastpage@lastpage \__examzh_relax:
+    \bool_lazy_or:nnTF 
+      { \cs_if_eq_p:NN \lastpage@lastpage \__examzh_relax: }
+      { \str_if_eq_p:ee \lastpage@lastpage {??} }
       { \int_set:Nn \l__examzh_tmp_int { 0 } }
       { \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage } }
   }
@@ -1675,7 +1701,9 @@
 \cs_new:cpn { __examzh_foot_content_a4paper_output: }
   {
     % 检测输入有多少个 ;
-    \regex_count:nxN { ; } 
+    % \regex_count:nxN { ; }
+    % https://gitee.com/xkwxdyy/exam-zh/issues/I5NNR8#note_13447684_link
+    \regex_count:noN { ; } 
       { \l__examzh_foot_content_format_tl }
       \l__examzh_foot_content_count_semicolon_int
     \int_case:nnF { \l__examzh_foot_content_count_semicolon_int }
@@ -1789,7 +1817,7 @@
                   {
                     \small
                     \use:c { __examzh_foot_content_a4paper_output: }
-                    % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                    % \l__examzh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
                   }
               }
           }
@@ -1804,7 +1832,7 @@
                     \fancyfoot [ C ]
                       {
                         \small
-                        % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                        % \l__examzh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
                         \use:c { __examzh_foot_content_a3paper_common_output: }
                       }
                   }
@@ -1816,7 +1844,7 @@
                           {
                             \small
                             \use:c { __examzh_foot_content_a3paper_separate_left_output: }
-                            % \l__exam_zh_subject_tl 试题第 
+                            % \l__examzh_subject_tl 试题第 
                             % % \thepage 
                             % \int_eval:n { 2 * \c@page - 1 }
                             % { } 页
@@ -1836,7 +1864,7 @@
                             % % \int_gincr:N \c@page
                             % \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                             
-                            % \l__exam_zh_subject_tl 试题第 
+                            % \l__examzh_subject_tl 试题第 
                             % \int_eval:n { 2 * \c@page }
                             % { } 
                             % 页

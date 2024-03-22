@@ -9,7 +9,7 @@
 %\usepackage{pxfonts}
 \usepackage{mflogo}
 \usepackage[greek,english]{babel}
-\def\workingdate{2020/11/01}% see two lines ahead
+\def\workingdate{2023-08-22}% see two lines ahead
 \usepackage[boldLipsian,10pt,GlyphNames]% <--------  teubner options
            {teubner}[\workingdate]% <--- older versions don't work well
 \usepackage[scaled=0.90]{helvet}
@@ -46,7 +46,7 @@
 An extension for Greek philology\\
 User manual}
 \author{Claudio Beccari\thanks{\texttt{claudio dot beccari at gmail dot com}}}
-\date{October 2022}% <---- this is the date of the teubner-doc document!
+\date{August 2023}% <---- this is the date of the teubner-doc document!
 \def\comando#1{\expandafter\texttt\expandafter{\string#1}}
 \def\cs#1{\texttt{\char92#1}}
 \def\ARG#1{\texttt{\char123}\meta{#1}\texttt{\char125}}
@@ -242,7 +242,16 @@ Therefore we suggest you to either use the text commands or to use the declarati
 \verb|\end{Lipsiakostext}|
 \end{quote}
 
-Some authors have defined themselves the environments \amb{GRD} and \amb{GRL} to typeset longer texts with Didot or, respectively, Lipsian fonts and such definitions are included in the \pack{teubner} package; see the documentation of the code in the \file{teubner.pdf} file.
+Some authors have defined themselves the environments \amb{GRD} and \amb{GRL} to typeset longer texts with Didot or, respectively, Lipsian fonts, and such definitions are now included in the \pack{teubner} package; see the documentation of the code in the \file{teubner.pdf} file to see the details. Il any case the syntax is the following:
+\begin{quote}\obeylines
+\verb|\begin{GRD}|
+\meta{Text to be typeset with the Greek Didot like font}
+\verb|\end{GRD}|
+~
+\verb|\begin{GRL}|
+\meta{Text to be typeset with the Lipsiakos font, if available, or italics}
+\verb|\end{GRL}|
+\end{quote}
 
 Such environments have been tested with the Latin Modern, extended Times and extended Palatino fonts and with the standard classes besides the \class{memoir} and \class{scrbook} ones. No kludges were necessary with the Latin Modern fonts and the standard classes; some kludges were necessary in order to get the expected results with the other tested  fonts and classes; such kludges are described in the above code documentation file. They are not complicated, but users that use different fonts and/or different classes might need to apply similar kludges to their software. 
 
@@ -330,7 +339,6 @@ The attentive readers might have noticed that some accent macros use the control
 On the opposite some conflicts may arise with \cs{<} and \cs{>}, as reported by David Kastrup. We have examined these conflict occurrences and we noticed that actually \cs{>} is defined as a `math wide space' command; an alias \cs{:} is defined immediately after the definition, and the \LaTeX\ handbook by Leslie Lamport does not even mention \cs{>}; therefore \cs{>} may be considered a leftover from the beginnings of \LaTeX, and it would be surprising if anybody used it; nevertheless\dots\ The control symbol \cs{<} has been reported as being used as a macro with a delimited argument \cs{<}\meta{arg}\texttt{>} in the documentation of package \pack{calc}. We immagine that it is very unlikely that this \pack{teubner} module functionalities might be used in another package documentation, but\dots
 
 These conflicts are avoided if Günter Milde package \pack{textalpha} is loaded; we did not find out any conflict in any testing run we made, but such conflicts may arise; therefore we decided to have \pack{teubner} load the \pack{textalpha} package at \verb|\begin{document}| execution time, so as to avoid any possible conflicts.
-
 
 \begin{table}[tb]\thrule
 \makebox[\textwidth]{\def\V{\rule{0pt}{2.5ex}}%

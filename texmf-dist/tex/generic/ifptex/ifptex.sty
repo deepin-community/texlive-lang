@@ -1,7 +1,7 @@
 %%
 %% This is file 'ifptex.sty'.
 %%
-%% Copyright (c) 2008-2022 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2008-2023 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -61,21 +61,24 @@
   \let\bxip@latex=f
   \long\def\bxip@input#1\ProvidesPackage#2[#3]{%
     \def\bxip@input\RequirePackage##1[##2]{\input ##1.sty\relax}%
+    \let\bxip@opt@input\bxip@input
     \immediate\write-1{Package: #2 #3}}
   \expandafter\bxip@input
 \else                          %<*LaTeX>
   \let\bxip@latex=t
   \let\bxip@input\relax
+  \def\bxip@opt@input\RequirePackage#1[#2]{%
+    \IfFileExists{#1.sty}{\RequirePackage{#1}[#2]}{}}
 \fi                            %</LaTeX>
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ifptex}[2022/04/03 v2.2 pTeX checker]
+\ProvidesPackage{ifptex}[2023/04/08 v2.2c pTeX checker]
 \def\bxip@pkgname{ifptex}
 
 %% packages
 \ifx\newif\@undefined\else
-\bxip@input
+\bxip@opt@input
 \RequirePackage{iftex}[2013/04/04]% v0.2
 \fi
 
@@ -142,7 +145,7 @@
 
 %% \bxip@protected
 \let\bxip@protected\protected
-\ifx\directlua\@undefined\else
+\ifx\directlua\@undefined\else % NB. this defines globally
   \directlua{tex.enableprimitives('bxip@', {'protected'})}
 \fi
 \bxip@csletcs{bxip@protected}{bxip@protected}
@@ -316,6 +319,28 @@
 %%<+> \ifstrictptexng == \ifstrictpTeXng
 \global\bxip@csletcs{ifstrictptexng}{ifstrictpTeXng}
 
+%%<+> \ifstrictuplatex
+\global\bxip@false{ifstrictuplatex}
+\if t\bxip@latex \ifnativeuptex \ifstrictuptex
+  \global\bxip@true{ifstrictuplatex}
+\fi\fi\fi
+%%<+> \ifstrictplatex
+\global\bxip@false{ifstrictplatex}
+\if t\bxip@latex \ifnativeuptex\else \ifstrictuptex
+  \global\bxip@true{ifstrictplatex}
+\fi\fi\fi
+\if t\bxip@latex \ifstrictptex
+  \global\bxip@true{ifstrictplatex}
+\fi\fi
+%%<+> \ifporuplatex
+\global\bxip@false{ifporuplatex}
+\ifstrictplatex
+  \global\bxip@true{ifporuplatex}
+\fi
+\ifstrictuplatex
+  \global\bxip@true{ifporuplatex}
+\fi
+
 %%<+> \RequirepTeX
 \bxip@protected\gdef\RequirepTeX{%
   \bxip@Require\ifpTeX{(u)pTeX}\fi}
@@ -337,6 +362,15 @@
 %%<+> \RequireStrictpTeXng
 \bxip@protected\gdef\RequireStrictpTeXng{%
   \bxip@Require\ifstrictpTeXng{pTeX-ng}\fi}
+%%<+> \RequireStrictpLaTeX
+\bxip@protected\gdef\RequireStrictpLaTeX{%
+  \bxip@Require\ifstrictplatex{pLaTeX}\fi}
+%%<+> \RequireStrictupLaTeX
+\bxip@protected\gdef\RequireStrictupLaTeX{%
+  \bxip@Require\ifstrictuplatex{upLaTeX}\fi}
+%%<+> \RequirepOrupLaTeX
+\bxip@protected\gdef\RequirepOrupLaTeX{%
+  \bxip@Require\ifporuplatex{((u)pLaTeX}\fi}
 
 %%<+> \RequireupTeXAtLeast{<min_version>}
 \bxip@protected\gdef\RequireupTeXAtLeast#1{%
@@ -350,6 +384,13 @@
   \ifnativeupTeX
     \bxip@check@version\upTeXguessedversion{#1}{upTeX in Unicode}%
   \else \bxip@err@required{upTeX in Unicode}%
+  \fi}
+
+%%<+> \RequireStrictupLaTeXAtLeast{<min_version>}
+\bxip@protected\gdef\RequireStrictupLaTeXAtLeast#1{%
+  \ifstrictuplatex
+    \bxip@check@version\upTeXguessedversion{#1}{upTeX in Unicode}%
+  \else \bxip@err@required{upLaTeX}%
   \fi}
 
 %--------------------------------------- deprecated stuffs
@@ -385,6 +426,7 @@
 % clean up
 \let\bxip@latex\@undefined
 \let\bxip@input\@undefined
+\let\bxip@opt@input\@undefined
 \let\bxip@protected\@undefined
 \bxip@restore@codes
 \endinput

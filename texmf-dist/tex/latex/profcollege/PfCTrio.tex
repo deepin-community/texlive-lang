@@ -1,0 +1,282 @@
+\newlength\PfCTrioHauteur%
+\newcounter{PfCTrioLettre}%
+
+\setKVdefault[Trio]{Largeur=15pt,Graines=false,Repere=false,Cibles=false,Ligne=1,Colonne=1,Vide=false,VideRepere=false,Relatifs=false,Ecole=false}%
+\defKV[Trio]{Graine=\setKV[Trio]{Graines}}%
+\defKV[Trio]{Cible=\setKV[Trio]{Cibles}}%
+
+\NewDocumentCommand\TrioCalculs{mmm}{%
+  Les combinaisons Trio de #1, #2 et #3 sont :%
+  \begin{enumerate}%
+  \item $#1\times#2+#3=\fpeval{#1*#2+#3}$%
+  \item $#1\times#2-#3=\fpeval{#1*#2-#3}$%
+  \item $#2\times#3+#1=\fpeval{#2*#3+#1}$%
+  \item $#2\times#3-#1=\fpeval{#2*#3-#1}$%
+  \item $#3\times#1+#2=\fpeval{#3*#1+#2}$%
+  \item $#3\times#1-#2=\fpeval{#3*#1-#2}$%
+  \end{enumerate}%
+}%
+
+\NewDocumentCommand\Trio{o}{%
+  \setcounter{PfCTrioLettre}{0}
+  \useKVdefault[Trio]%
+  \setKV[Trio]{#1}%
+  \ifboolKV[Trio]{Graines}{\PfCGraineAlea{\useKV[Trio]{Graine}}}{}%
+  \ifboolKV[Trio]{Ecole}{\xdef\PfCTrioMaxA{5}\xdef\PfCTrioMaxB{3}}{\xdef\PfCTrioMaxA{7}\xdef\PfCTrioMaxB{5}}
+  \ifboolKV[Trio]{Repere}{\xdef\PfCTrioNbCases{\fpeval{\PfCTrioMaxA+1}}}{\xdef\PfCTrioNbCases{\PfCTrioMaxA}}%      
+  % On définit la liste de nombres
+  \ifboolKV[Trio]{Relatifs}{%
+    \xdef\PfCTrioFoo{-4,-4,-4,-4,-4,-3,-3,-3,-3,-3,-3,-2,-2,-2,-2,-2,-2,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4}%
+  }{%
+    \ifboolKV[Trio]{Ecole}{%
+      \xdef\PfCTrioFoo{1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,5,5}%
+    }{%
+      \xdef\PfCTrioFoo{1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,9,9,9,9}%
+    }%
+  }%
+  \ifboolKV[Trio]{Ecole}{\MelangeListe{\PfCTrioFoo}{25}}{\MelangeListe{\PfCTrioFoo}{49}}%
+  \setsepchar{,}\ignoreemptyitems%
+  \readlist*\PfCTrioMelange{\faa}%
+  \reademptyitems%
+  \setlength{\PfCTrioHauteur}{\useKV[Trio]{Largeur}+\tabcolsep}%
+  \begin{NiceTabular}{*{\PfCTrioNbCases}{m{\useKV[Trio]{Largeur}}}}[hvlines]%
+    \CodeBefore%
+    \ifboolKV[Trio]{Cibles}{%
+      \ifboolKV[Trio]{Repere}{%
+        \xdef\PfCTrioAjout{1}%
+      }{%
+        \xdef\PfCTrioAjout{0}
+      }%
+      % Calculs des horizontaux
+      \xintFor* ##2 in{\xintSeq{1}{\PfCTrioMaxA}}\do{%
+        \xintFor* ##1 in{\xintSeq{1}{\PfCTrioMaxB}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1+1}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1+2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{\tikz\draw[fill=Cornsilk,line width=2pt] (\fpeval{##2+\PfCTrioAjout}-|\fpeval{##1+\PfCTrioAjout}) rectangle (\fpeval{##2+1+\PfCTrioAjout}-|\fpeval{##1+3+\PfCTrioAjout});\xintBreakFor}{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+      % Calculs des verticaux
+      \xintFor* ##2 in{\xintSeq{1}{\PfCTrioMaxA}}\do{%
+        \xintFor* ##1 in{\xintSeq{1}{\PfCTrioMaxB}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-1)+##2}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1)+##2}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1+1)+##2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{\tikz\draw[fill=LightSteelBlue,line width=2pt] (\fpeval{##1+\PfCTrioAjout}-|\fpeval{##2+\PfCTrioAjout}) rectangle (\fpeval{##1+3+\PfCTrioAjout}-|\fpeval{##2+1+\PfCTrioAjout});\xintBreakFor}{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+      % Calculs des diag positives (descendantes)
+      \xintFor* ##2 in{\xintSeq{1}{\PfCTrioMaxB}}\do{%
+        \xintFor* ##1 in{\xintSeq{1}{\PfCTrioMaxB}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2)+##1+1}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2+1)+##1+2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+            \tikz\draw[fill=MistyRose,line width=2pt] (\fpeval{##2+\PfCTrioAjout}-|\fpeval{##1+\PfCTrioAjout}) rectangle (\fpeval{##2+1+\PfCTrioAjout}-|\fpeval{##1+1+\PfCTrioAjout});%
+            \tikz\draw[fill=MistyRose,line width=2pt] (\fpeval{##2+1+\PfCTrioAjout}-|\fpeval{##1+1+\PfCTrioAjout}) rectangle (\fpeval{##2+2+\PfCTrioAjout}-|\fpeval{##1+2+\PfCTrioAjout});%
+            \tikz\draw[fill=MistyRose,line width=2pt] (\fpeval{##2+2+\PfCTrioAjout}-|\fpeval{##1+2+\PfCTrioAjout}) rectangle (\fpeval{##2+3+\PfCTrioAjout}-|\fpeval{##1+3+\PfCTrioAjout});%
+            \xintBreakFor}{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+      % Calculs des diagonale négatives (montantes)
+      \xintFor* ##2 in{\xintSeq{1}{\PfCTrioMaxB}}\do{%
+        \xintFor* ##1 in{\xintSeq{2}{\fpeval{\PfCTrioMaxB+1}}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1)+##2}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-1)+##2+1}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-2)+##2+2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+            \tikz\draw[fill=LavenderBlush,line width=2pt] (\fpeval{##1+\PfCTrioAjout+1}-|\fpeval{##2+\PfCTrioAjout}) rectangle (\fpeval{##1+2+\PfCTrioAjout}-|\fpeval{##2+1+\PfCTrioAjout});%
+            \tikz\draw[fill=LavenderBlush,line width=2pt] (\fpeval{##1+\PfCTrioAjout}-|\fpeval{##2+1+\PfCTrioAjout}) rectangle (\fpeval{##1+1+\PfCTrioAjout}-|\fpeval{##2+2+\PfCTrioAjout});%
+            \tikz\draw[fill=LavenderBlush,line width=2pt] (\fpeval{##1-1+\PfCTrioAjout}-|\fpeval{##2+2+\PfCTrioAjout}) rectangle (\fpeval{##1+\PfCTrioAjout}-|\fpeval{##2+3+\PfCTrioAjout});%
+            \xintBreakFor%
+          }{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+    }{}%
+    \Body
+    \ifboolKV[Trio]{Repere}{%
+      \rule{0pt}{\PfCTrioHauteur}\Block[fill=gray!15]{}{}\xintFor* ##1in{\xintSeq{1}{\PfCTrioMaxA}}\do{%
+        &\Block[fill=gray!15]{}{\stepcounter{PfCTrioLettre}\Alph{PfCTrioLettre}}%
+        }\\
+    }{}%
+    \xintFor* ##1 in{\xintSeq{1}{\PfCTrioMaxA}}\do{%
+      \rule{0pt}{\PfCTrioHauteur}%
+      \ifboolKV[Trio]{Repere}{\Block[fill=gray!15]{}{##1}}{}%
+      \ifboolKV[Trio]{Repere}{&}{}\xintFor* ##2 in{\xintSeq{1}{\PfCTrioMaxA}}\do{%
+        \xintifForFirst{}{&}\Block{}{\num{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-1)+##2}]}}%
+      }\\
+    }%
+  \end{NiceTabular}%
+}%
+
+\NewDocumentCommand\TrioCourt{o}{%
+  \useKVdefault[Trio]%
+  \setKV[Trio]{#1}%
+  \setcounter{PfCTrioLettre}{\useKV[Trio]{Colonne}-1}%
+  \ifboolKV[Trio]{Repere}{\xdef\PfCTrioNbCases{4}}{\xdef\PfCTrioNbCases{3}}%
+  \setlength{\PfCTrioHauteur}{\useKV[Trio]{Largeur}+\tabcolsep}%
+  \begin{NiceTabular}{*{\PfCTrioNbCases}{m{\useKV[Trio]{Largeur}}}}[hvlines]%
+    \CodeBefore%
+    \ifboolKV[Trio]{Cibles}{%
+      \ifboolKV[Trio]{Repere}{%
+        \xdef\PfCTrioAjout{1}%
+      }{%
+        \xdef\PfCTrioAjout{0}
+      }%
+      % Calculs des horizontaux
+      \xintFor* ##2 in{\xintSeq{\fpeval{\useKV[Trio]{Ligne}}}{\fpeval{\useKV[Trio]{Ligne}+2}}}\do{%
+        \xintFor* ##1 in{\xintSeq{\fpeval{\useKV[Trio]{Colonne}}}{\fpeval{\useKV[Trio]{Colonne}}}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1+1}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1+2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{\tikz\draw[fill=Cornsilk,line width=2pt] (\fpeval{##2+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##2+1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+3+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});\xintBreakFor}{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+      % Calculs des verticaux
+      \xintFor* ##2 in{\xintSeq{\fpeval{\useKV[Trio]{Colonne}}}{\fpeval{\useKV[Trio]{Colonne}+2}}}\do{%
+        \xintFor* ##1 in{\xintSeq{\useKV[Trio]{Ligne}}{\useKV[Trio]{Ligne}}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-1)+##2}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1)+##2}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1+1)+##2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            || \fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{\tikz\draw[fill=LightSteelBlue,line width=2pt] (\fpeval{##1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##1+3+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});\xintBreakFor}{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+      % Calculs des diag positives (descendantes)
+      \xintFor* ##2 in{\xintSeq{\useKV[Trio]{Ligne}}{\useKV[Trio]{Ligne}}}\do{%
+        \xintFor* ##1 in{\xintSeq{\useKV[Trio]{Colonne}}{\useKV[Trio]{Colonne}}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2-1)+##1}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2)+##1+1}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##2+1)+##1+2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+            \tikz\draw[fill=MistyRose,line width=2pt] (\fpeval{##2+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##2+1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});%
+            \tikz\draw[fill=MistyRose,line width=2pt] (\fpeval{##2+1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##2+2+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+2+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});%
+            \tikz\draw[fill=MistyRose,line width=2pt] (\fpeval{##2+2+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+2+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##2+3+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##1+3+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});%
+            \xintBreakFor}{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+      % Calculs des diagonale négatives (montantes)
+      \xintFor* ##2 in{\xintSeq{\useKV[Trio]{Colonne}}{\useKV[Trio]{Colonne}}}\do{%
+        \xintFor* ##1 in{\xintSeq{\fpeval{\useKV[Trio]{Ligne}}}{\fpeval{\useKV[Trio]{Ligne}}}}\do{%
+          \xdef\PfCTrioNombreA{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1+1)+##2}]}%
+          \xdef\PfCTrioNombreB{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1)+##2+1}]}%
+          \xdef\PfCTrioNombreC{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-1)+##2+2}]}%
+          \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+            ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+            \tikz\draw[fill=LavenderBlush,line width=2pt] (\fpeval{##1+2+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##1+3+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});%
+            \tikz\draw[fill=LavenderBlush,line width=2pt] (\fpeval{##1+1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+1+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##1+2+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+2+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});%
+            \tikz\draw[fill=LavenderBlush,line width=2pt] (\fpeval{##1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+2+\PfCTrioAjout-\useKV[Trio]{Colonne}+1}) rectangle (\fpeval{##1+1+\PfCTrioAjout-\useKV[Trio]{Ligne}+1}-|\fpeval{##2+3+\PfCTrioAjout-\useKV[Trio]{Colonne}+1});%
+            \xintBreakFor%
+          }{}%
+        }%
+        \xintifboolexpr{\fpeval{\PfCTrioNombreA*\PfCTrioNombreB+\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreA*\PfCTrioNombreB-\PfCTrioNombreC}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC+\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreB*\PfCTrioNombreC-\PfCTrioNombreA}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA+\PfCTrioNombreB}==\useKV[Trio]{Cible}%
+          ||\fpeval{\PfCTrioNombreC*\PfCTrioNombreA-\PfCTrioNombreB}==\useKV[Trio]{Cible}}{%
+          \xintBreakFor}{}%
+      }%
+    }{}%
+    \Body
+    \ifboolKV[Trio]{Repere}{%
+      \rule{0pt}{\PfCTrioHauteur}\Block[fill=gray!15]{}{}\xintFor* ##1in{\xintSeq{1}{3}}\do{%
+        &\Block[fill=gray!15]{}{\ifboolKV[Trio]{VideRepere}{}{\stepcounter{PfCTrioLettre}\Alph{PfCTrioLettre}}}%
+      }\\%
+    }{}%
+    \xintFor* ##1 in{\xintSeq{\fpeval{\useKV[Trio]{Ligne}}}{\fpeval{\useKV[Trio]{Ligne}+2}}}\do{%%
+      \rule{0pt}{\PfCTrioHauteur}%
+      \ifboolKV[Trio]{Repere}{\Block[fill=gray!15]{}{\ifboolKV[Trio]{VideRepere}{}{##1}}}{}%
+      \ifboolKV[Trio]{Repere}{&}{}\xintFor* ##2 in{\xintSeq{\fpeval{\useKV[Trio]{Colonne}}}{\fpeval{\useKV[Trio]{Colonne}+2}}}\do{%
+        \xintifForFirst{}{&}\Block{}{\ifboolKV[Trio]{Vide}{}{\num{\PfCTrioMelange[\fpeval{\PfCTrioMaxA*(##1-1)+##2}]}}}%
+      }\\
+    }%
+  \end{NiceTabular}%
+}%

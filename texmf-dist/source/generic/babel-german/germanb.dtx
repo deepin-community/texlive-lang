@@ -2,7 +2,7 @@
 %
 % File `germanb.dtx'
 % 
-% Copyright 1989--2021
+% Copyright 1989--2024
 %     Johannes L. Braams
 %     Bernd Raichle
 %     Walter Schmidt
@@ -25,7 +25,7 @@
 % 
 % The Current Maintainer of this work is Juergen Spitzmueller.
 % \fi
-% \CheckSum{522}
+% \CheckSum{538}
 %
 % \iffalse
 %    Tell the \LaTeX\ system who we are and write an entry on the
@@ -39,7 +39,7 @@
 %<germanb>\ProvidesLanguage{germanb}
 %\fi
 %\ProvidesFile{germanb.dtx}
-        [2021/02/27 v2.13 German support for babel (pre-1996 orthography)]
+        [2024/01/19 v2.14 German support for babel (pre-1996 orthography)]
 %\iffalse
 %
 %<*filedriver>
@@ -241,6 +241,16 @@
 %      |"/|	& 	\newfeature{2.9}A slash that allows for a linebreak. 
 %			As opposed to |\slash{}|, hyphenation at the breakpoints
 %             		preset in the hyphenation patterns is still allowed.	\tabularnewline
+%      |"*|	& 	\newfeature{2.14}An asterisk which assures the word can
+%                       still be hyphenated at its defined breakpoints.
+%                       Useful if you want to employ gender-sensitive writing
+%                       (,gender star`).					
+%                       Similar shorthands are available for the alternative
+%                       gender-sensitive spellings, |":| and |"_|.		\tabularnewline
+%      |"x|	& 	\newfeature{2.14}Inserts a gender mark which assures
+%                       the word can still be hyphenated at its defined breakpoints.
+%                       This is predefined to |*| but can be globally redefined
+%                       by redefining the macro |\def\mkgender{*}|.		\tabularnewline
 %      |"`|	& 	German left double quotes \graph{,,}.               	\tabularnewline
 %      |"'|	& 	German right double quotes \graph{``}.              	\tabularnewline
 %      |"<|	& 	French/Swiss left double quotes \graph{<<}.   		\tabularnewline
@@ -291,21 +301,11 @@
 %
 %   So you need to explicitly activate the new patterns for a given document (except for \Lopt{swissgerman}) with the classic engines, should you
 %   want to use them instead of the old ones.
-%   With \Babel, this can be done quite easily by means of the \textsf{hyphsubst} \cite{hyphsubst} package:
+%   With \Babel, this can be done easily by means of the \cs{babelprovide} command and the \textsf{hyphenrules} option:
 %   \begin{verbatim}
-%     \usepackage[german=german-x-latest]{hyphsubst}
-%     \usepackage[german]{babel}
+%     \babelprovide[hyphenrules=german-x-latest]{german}
 %   \end{verbatim}\vspace{-\baselineskip}
-%   Since \Lopt{austrian} uses the same patterns as \Lopt{german}, the given \textsf{hyphsubst} option activates
-%   the new patterns for this variety as well; but note that \textsf{hyphsubst} must be loaded before \babel\ (please refer to \cite{exptl} and 
-%   \cite{hyphsubst} for details).
-%
-%   If you only want to use experimental patterns for one variety, you can do like so:
-%   \begin{verbatim}
-%     \usepackage{hyphsubst}
-%     \usepackage[german,austrian]{babel}
-%     \HyphSubstLet{austrian}{german-x-latest}
-%   \end{verbatim}\vspace{-\baselineskip}
+%   For \Lopt{austrian}, use a respectively adapted version of the above.
 %
 %
 %   \section{Variety-specific options}\label{sec:toss}
@@ -925,6 +925,16 @@
 \declare@shorthand{german}{"/}{\textormath
   {\bbl@allowhyphens\discretionary{/}{}{/}\bbl@allowhyphens}{}}
 %    \end{macrocode}
+%  and some shorthands to support gender-sensitive spelling:
+%  \changes{Version 2.9e=Version 2.14}{2024/01/19}{Add \texttt{"*}, \texttt{":}, \texttt{"\_}, and \texttt{"x}
+%                                     shorthands to support gender-sensitive writing}
+%    \begin{macrocode}
+\def\mkgender{*}
+\declare@shorthand{german}{":}{\nobreak:\bbl@allowhyphens}
+\declare@shorthand{german}{"*}{\nobreak*\bbl@allowhyphens}
+\declare@shorthand{german}{"_}{\nobreak\_\bbl@allowhyphens}
+\declare@shorthand{german}{"x}{\nobreak\mkgender\bbl@allowhyphens}
+%    \end{macrocode}
 %
 %  \begin{macro}{\mdqon}
 %  \begin{macro}{\mdqoff}
@@ -994,9 +1004,6 @@
 %    \bibitem{exptl} Deutschsprachige Trennmustermannschaft:
 %       \emph{dehyph-exptl -- Experimental hyphenation patterns for the German language}.
 %       \url{https://ctan.org/pkg/dehyph-exptl}.
-%    \bibitem{hyphsubst} Heiko Oberdiek:
-%       \emph{hyphsubst -- Substitute hyphenation patterns}.
-%       \url{https://ctan.org/pkg/hyphsubst}.
 %    \bibitem{HP} Partl, Hubert:
 %      \emph{German \TeX}, \emph{TUGboat} 9/1 (1988), p.~70--72.
 %    \bibitem{gerdoc} Raichle, Bernd:

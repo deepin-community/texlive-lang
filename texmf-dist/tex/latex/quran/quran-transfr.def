@@ -1,6 +1,6 @@
 %% This is file `quran-transfr.def',
-%% 
-%% Copyright © 2015-2021
+%%
+%% Copyright © 2015-2023
 %% Seiied-Mohammad-Javad Razavian <javadr@gmail.com>
 %%
 %% This work may be distributed and/or modified under the
@@ -12,11 +12,11 @@
 %% version 2005/12/01 or later.
 %%
 %% This work has the LPPL maintenance status `maintained'.
-%% 
+%%
 %% This work is “author-maintained” (as per LPPL maintenance status).
-%% 
+%%
 %% The Current Maintainer of this work is Seiied-Mohammad-Javad Razavian.
-%% 
+%%
 %% to one who has devoted his life to Quran
 %%
 \let\qt@doqt@orig\qt@doqt%
@@ -42,12 +42,13 @@
     \addtocounter{qt@count}{1}%
     \def\@qtexp{}%
     \loop%
-        \global\xdef\@qtexp{\@qtexp\csname qurantrans@fr@\roman{qt@count}\endcsname\ifnum\value{qt@count}=\qt@max\else\space\fi\qt@par}%
+        \global\xdef\@qtexp{\@qtexp\csname qurantrans@fr@\roman{qt@count}\endcsname\ifnum\value{qt@count}=\qt@max\else\space\fi%
+        \ifnum\value{qt@count}<\qt@max\relax\qt@par\fi}%
         \ifnum\value{qt@count}<\qt@max\relax%
         \addtocounter{qt@count}{1}%
     \repeat%
     \IfNoValueTF{#1}%
-    {\@qtexp}%true
+    {\@qtexp\qt@par}%true
     {\qt@WordCount=0\relax\c@qt@start=\numexpr#1-1\relax%
     \readlist*\qt@words{\@qtexp}%
         \IfNoValueTF{#2}%
@@ -56,7 +57,7 @@
             \ifnum\qt@wordcnt>\c@qt@start\ifnum\qt@wordcnt<\c@qt@end\qt@word\ifnum\qt@wordcnt=\numexpr\c@qt@end-1\relax\else\xspace\fi\fi\fi%
         }%
         \qt@showitems{\ifdefined\arabicfont\arabicfont\fi\showitems\qt@words}%
-    }%false
+    \qt@par}%false
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\qurantextfr}{ s O{\qt@default} o t{+} }{%
@@ -65,7 +66,7 @@
     \IfBooleanTF{#1}%
     {\IfBooleanTF{#4}{\qurantext*[#2][#3]+}{\qurantext*[#2][#3]}}%
     {\IfBooleanTF{#4}{\qurantext[#2][#3]+}{\qurantext[#2][#3]}}%
-    \let\qt@doqt\qt@doqt@orig% 
+    \let\qt@doqt\qt@doqt@orig%
     \def\qt@showitems##1{\relax}%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,7 +75,7 @@
     \IfBooleanTF{#1}%
     {\quransurah*[#2]}%
     {\quransurah[#2]}%
-    \let\qt@doqt\qt@doqt@orig%        
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\quranayahfr}{ s o o o t{+} }{%
@@ -82,8 +83,8 @@
     \let\ToggleBasmalah\ToggleBasmalahfr%
     \IfBooleanTF{#1}%
     {\IfBooleanTF{#5}{\quranayah*[#2][#3][#4]+}{\quranayah*[#2][#3][#4]}}%
-    {\IfBooleanTF{#5}{\quranayah[#2][#3][#4]+}{\quranayah[#2][#3][#4]}}%    
-    \let\qt@doqt\qt@doqt@orig%    
+    {\IfBooleanTF{#5}{\quranayah[#2][#3][#4]+}{\quranayah[#2][#3][#4]}}%
+    \let\qt@doqt\qt@doqt@orig%
     \let\ToggleBasmalah\ToggleBasmalah@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,47 +92,47 @@
     \let\qt@doqt\qt@dofr%
     \IfBooleanTF{#1}%
     {\quranjuz*[#2]}%
-    {\quranjuz[#2]}%        
-    \let\qt@doqt\qt@doqt@orig%    
+    {\quranjuz[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\quranpagefr}{ s o }{%
     \let\qt@doqt\qt@dofr%
     \IfBooleanTF{#1}%
     {\quranpage*[#2]}%
-    {\quranpage[#2]}%        
-    \let\qt@doqt\qt@doqt@orig%    
+    {\quranpage[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\quranquarterfr}{ s o }{%
     \let\qt@doqt\qt@dofr%
     \IfBooleanTF{#1}%
     {\quranquarter*[#2]}%
-    {\quranquarter[#2]}%        
-    \let\qt@doqt\qt@doqt@orig%    
+    {\quranquarter[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\quranrukufr}{ s o }{%
     \let\qt@doqt\qt@dofr%
     \IfBooleanTF{#1}%
     {\quranruku*[#2]}%
-    {\quranruku[#2]}%        
-    \let\qt@doqt\qt@doqt@orig%    
+    {\quranruku[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\quranhizbfr}{ s o }{%
     \let\qt@doqt\qt@dofr%
     \IfBooleanTF{#1}%
     {\quranhizb*[#2]}%
-    {\quranhizb[#2]}%        
-    \let\qt@doqt\qt@doqt@orig%    
+    {\quranhizb[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareDocumentCommand{\quranmanzilfr}{ s o }{%
     \let\qt@doqt\qt@dofr%
     \IfBooleanTF{#1}%
     {\quranmanzil*[#2]}%
-    {\quranmanzil[#2]}%        
-    \let\qt@doqt\qt@doqt@orig%    
+    {\quranmanzil[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%

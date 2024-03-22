@@ -1,4 +1,8 @@
-\documentclass[a4paper,oneside]{oblivoir}
+%!TEX program = SpiX
+%$ xelatex -synctex=1 $texname
+\documentclass[chapter,a4paper,oneside,colorlinks]{oblivoir}
+
+\usepackage{fancyvrb}
 
 \usepackage{fapapersize}
 \usefapapersize{*,*,30mm,50mm,35mm,*}
@@ -23,21 +27,46 @@
 
 \makeatletter
 \makechapterstyle{thisdoc}{%
-	\chapterstyle{section}
+%	\chapterstyle{section}
 	\renewcommand\clearforchapter{\par}
 	\setlength\beforechapskip{2\onelineskip}
-%	\setlength\midchapskip{10pt}
+%	\setlength\midchapskip{2pt}
+	\renewcommand*\afterchapternum{\quad}
 	\setlength\afterchapskip{1.33\onelineskip}
-	\renewcommand*\chaptitlefont{\sffamily\LARGE}
-	\renewcommand*\chapnamefont{\sffamily\large}
-	\renewcommand*\chapnumfont{\sffamily\Large}
-	\renewcommand*\pre@chapter{}
+	\renewcommand*\chaptitlefont{\sffamily\bfseries\huge}
+	\renewcommand*\chapnamefont{\sffamily\bfseries\Large}
+	\renewcommand*\chapnumfont{\sffamily\bfseries\LARGE}
+	\renewcommand*\pre@chapter{Chapter\:}
 	\renewcommand*\post@chapter{}
 	\renewcommand*\memendofchapterhook{\chaptertoc}
 	\renewcommand*\printchapternum{\chapnumfont\thechapter}
 }
+\makeatother
 
+\setlength\cftchapternumwidth{5em}
+\renewcommand*\cftsectionpresnum{}
+\setlength\cftsectionnumwidth{3.8em}
+\setlength\cftsectionindent{1.2em}
+\setlength\cftsubsectionnumwidth{2.8em}
+\setlength\cftsubsectionindent{2.2em}
 \chapterstyle{thisdoc}
+
+\chaptertocmaxlevel{section}
+\renewcommand*\chaptertocfont{\small}
+\ChapterTOCFormat{
+    \setpnumwidth{0em}
+    \hypersetup{linkcolor=cyan}
+    \renewcommand*\numberline[1]{}
+    %%% section
+	\setlength\cftsectionnumwidth{2em}
+	\renewcommand*\cftsectiondotsep{\cftnodots}
+	\renewcommand*\cftsectionleader{\;}
+    \renewcommand*\cftsectionafterpnum{\hfill}
+    \renewcommand*\cftsectionfont{\hfill}
+    \renewcommand*\cftsectionformatpnum[1]{\textsubscript{\color{red}#1}}
+    %%% subsection
+    \TOCFormatsameas{subsection}{section}{dotsep,leader,afterpnum,font,formatpnum,numwidth}
+}
 
 \begin{document}
 
@@ -45,41 +74,51 @@
 
 \title{chapter toc for oblivoir}
 \author{Nova de Hi}
-\date{2020/09/02 \quad v2.0}
+%\date{2020/09/02 \quad v2.0}
+\date{2024/01/31 \quad v4.0}
 \begin{adjustwidth}{\unitlength}{-\unitlength}
 \maketitle
 \end{adjustwidth}
 
+\tableofcontents
+
+\chapter{시작하기}
+
 \section{개요}
 chaptertoc에 대해서는 게시판의 이곳저곳에 이런저런 솔루션들이 있습니다. 패키지도 많고요. memoir 관련해서 yihoze께서 (언젠지 기억나지 않지만) chaptertoc를 위한 외부 파일 기법으로 제안하셨던 것도 있었던 기억이 나네요.
 
-그런데 뭔가 oblivoir에서 깔끔하게 동작하지 않든가, 손봐야 하는 곳이 너무 많든가 하더라고요. 작년 memoir 스터디그룹에서 이 문제를 다루었는데, 그 때 토론한 내용을 바탕으로 패키지로 만들었습니다. 다른 추가적인 것 없이 오로지 oblivoir와 memoir 명령만으로 chaptertoc를 만들도록 했습니다.
+그런데 뭔가 oblivoir에서 깔끔하게 동작하지 않든가, 손봐야 하는 곳이 너무 많든가 하더라고요. 작년(2019) memoir 스터디그룹에서 이 문제를 다루었는데, 그 때 토론한 내용을 바탕으로 패키지로 만들었습니다. 다른 추가적인 것 없이 오로지 oblivoir와 memoir 명령만으로 chaptertoc를 만들도록 했습니다.
 
 사용설명서를 만들기 귀찮기 때문에... 복잡한 패키지도 아니고 해서, 사용법을 여기에 간단히 기록해둡니다.
 
 \section{옵션}
 
 [v2.0] 다음 옵션을 줄 수 있습니다.
-\begin{verbatim}
+\begin{Verbatim}[baselinestretch=1.05]
 \usepackage[level=part]{obchaptertoc}
-\end{document}
-\end{verbatim}
+\end{Verbatim}
 
 level로 제공할 수 있는 값은 \verb|book|, \verb|part|이고, 기본값은 \verb|chapter|입니다.
 아무 것도 주지 않으면 이 값이 \verb|chapter|인 것과 같습니다.
 
-이를 통하여 parttoc를 만들 수 있습니다. 예컨대, 
-\begin{verbatim}
+아무런 설정이 없으면 \verb|\chaptertoc|는 당연히 chapter에 적용되지만, 만약 parttoc를 만들고자 한다면, 
+\begin{Verbatim}[baselinestretch=1.05]
 \usepackage[level=part]{obchaptertoc}
 \chaptertocmaxlevel{chapter}
 \renewcommand\chaptertocfont{\normalfont\normalsize\selectfont}
 \renewcommand\printparttitle[1]{#1\par\vspace{40pt}\chaptertoc}
-\end{verbatim}
-이것은 가장 간단한 parttoc를 위한 코드입니다.
+\end{Verbatim}
+이렇게 하면 되겠습니다.
 
-참고로, 이 패키지는 part에는 parttoc를 붙이고 chapter에 또다시 chaptertoc를 붙이는
+이 패키지는 part에는 parttoc를 붙이고 chapter에 또다시 chaptertoc를 붙이는
 (비상식적인) 상황은 고려하지 않았습니다. 따라서, 비록 parttoc를 작성하더라도 
 식자 명령은 여전히 \cs{chaptertoc}입니다. 다른 설정 명령도 마찬가지입니다.
+
+이 패키지는 section toc를 지원하지 않습니다. 저자는 section 이하 디비전에 toc를 붙이는 것은
+넌센스라고 생각하고 있습니다. 그러므로 \texttt{level=section}과 같은 옵션은
+제공하지 않습니다.
+
+\chapter{명령과 포매팅}
 
 \section{명령}
 
@@ -100,12 +139,12 @@ chaptertoc를 어느 수준까지 만들 것인가 지정합니다. 인자로 se
 \subsection{\cs{ChapterTOCFormat} 명령}
 
 chaptertoc의 모든 포매팅 설정은 memoir의 \verb|\cft...| 명령으로 합니다. 그러나 이 명령을 재정의하는 코드를 그냥 preamble에 넣으면 그것은 문서 전체의 toc에 해당하는 것이 되기 때문에 chaptertoc를 위한 cft 설정 명령들을 \cs{ChapterTOCFormat} 명령의 인자로 주어야 합니다. 예를 들면,
-\begin{verbatim}
+\begin{Verbatim}[baselinestretch=1.05]
 \ChapterTOCFormat{%
 	\renewcommand\cftsectionfont{\sffamily\small}
 	\setlength{\cftsectionnumwidth}{3em}
 }
-\end{verbatim}
+\end{Verbatim}
 이런 식으로 모든 chaptertoc용 cft 설정 명령들을 여기에 모아서 지정하면 됩니다.
 
 \subsection{\cs{chaptertocfont}}
@@ -115,13 +154,76 @@ chaptertoc의 모든 포매팅 설정은 memoir의 \verb|\cft...| 명령으로 �
 \subsection{\cs{TOCFormatsameas}}
 
 그런데 이런 식으로 설정하다보면 section에 대해서 한 설정을 subsection에 대해서도 일일이 해주어야 하는 것이 귀찮을 수 있습니다. \cs{TOCFormatsameas} 명령은 3개의 인자를 취하는데, \verb|#1|은 설정하고자 하는 section level 이름, \verb|#2|는 이미 설정되어 있는 section level 이름, \verb|#3|은 동일하게 변경하고자 하는 매크로의 끝이름입니다. 다음 예는,
-\begin{verbatim}
+\begin{Verbatim}[baselinestretch=1.05]
 \TOCFormatsamsas{subsection}{section}{dotsep,presnum}
-\end{verbatim}
+\end{Verbatim}
 이것은 \cs{cftsubsectiondotsep}을 \cs{cftsectiondotsep}과 같게 하고, \cs{cftsubsectionpresnum}을 \cs{cftsectionpresnum}과 동일하게 설정하라는 의미입니다. 마지막 인자는 필요한 것을 더 추가할 수 있습니다.
 
 
-\section{기타}
+\chapter{기타}
+
+\section{이 안내문서의 chaptertoc}
+
+예제를 겸하여 이 안내문서의 chaptertoc를 어떻게 만들었는지 소개하겠습니다.
+
+패키지 사용을 선언합니다.
+\begin{Verbatim}[baselinestretch=1.05]
+   \usepackage{obchaptertoc}
+\end{Verbatim}
+
+chapterstyle을 정의하면서 \cmd{\memendofchapterhook}에 \cmd{\chaptertoc}를 추가하여 
+\cmd{\chapter} 명령이 실행되면 항상 \cmd{\chaptertoc}를 붙이도록 하였습니다.
+\begin{Verbatim}[baselinestretch=1.05]
+	\renewcommand*\memendofchapterhook{\chaptertoc}
+\end{Verbatim}
+
+다음 두 줄은 전역 설정입니다. chaptertoc는 section 수준까지만 만들고 디폴트 폰트는 \cmd{\small}로
+하라는 것입니다. 
+\begin{Verbatim}[baselinestretch=1.05]
+    \chaptertocmaxlevel{section}
+    \renewcommand*\chaptertocfont{\small}
+\end{Verbatim}
+
+그리고 chaptertoc의 format을 다음과 같이 주었습니다.
+
+\begin{Verbatim}[baselinestretch=1.05,numbers=left]
+\ChapterTOCFormat{
+    \setpnumwidth{0em}
+    \hypersetup{linkcolor=cyan}
+    \renewcommand*\numberline[1]{}
+    %%% section
+    \setlength\cftsectionnumwidth{2em}
+    \renewcommand*\cftsectiondotsep{\cftnodots}
+    \renewcommand*\cftsectionleader{\;}
+    \renewcommand*\cftsectionafterpnum{\hfill}
+    \renewcommand*\cftsectionfont{\hfill}
+    \renewcommand*\cftsectionformatpnum[1]{\textsubscript{\color{red}#1}}
+    %%% subsection
+    \TOCFormatsameas{subsection}{section}{dotsep,leader,afterpnum,font,formatpnum,numwidth}
+}
+\end{Verbatim}
+
+이 설정 안에 있는 것은 chaptertoc에만 영향을 미칩니다. 따라서 문서 전체의 \cmd{\tableofcontents}에는 
+이 설정의 효과가 나타나지 않습니다.
+
+2행은 페이지 번호를 찍는 박스의 폭인데, 이 문서는 최대 한 자리에 불과하므로 이렇게 했습니다. 일반적으로 이 설정은 디폴트를 그대로 사용하는 것이 좋습니다.
+
+3행은 chaptertoc의 타이틀 색상입니다.
+
+4행은 매우 희귀한 사례입니다. 간단히 말하자면, ``2.1 개요''와 같이 이른바 \dotemph{절 번호}를 
+chaptertoc에서는 식자하지 않겠다는 선언입니다. 
+
+6행부터 11행까지는 section toc 포맷입니다. 이 각각이 무엇을 의미하는가는 memoir 매뉴얼이나, 
+pgreenbook 매뉴얼(한글)에 상세합니다.
+다만, 이런 식으로 타이틀 뒤에 페이지 번호를 바로 붙일 적에, \cmd{\cftsectionafterpnum}은 보통 \cmd{\cftparfillskip}을 주어서 \verb|\par|가 바로 효과를 발휘하도록 합니다만 여기에서는 판면의 오른쪽 끝에 붙일 예정(오른쪽 정렬)이라서 이런 식으로 정의하였습니다. 역시 일반적으로 쓰이는 것은 아니지만 참고가 되리라 봅니다.
+
+모든 행이 오른쪽 정렬되도록 만드는 것은 \cmd{\cftsectionfont}를 \cmd{\hfill}로 하는 것이라서
+조금 트릭처럼 보이기도 합니다.
+
+13행은 subsection도 section과 똑같이 하라는 정의인데, 실상 chaptertoc를 section까지밖에
+만들지 않기 때문에 이것은 불필요해보이지만 혹시 모를 경우에 대비하여 적어둔 것입니다.
+
+\section{마치는 말}
 
 스타일 파일과 테스트 파일을 함께 묶어 올립니다. 테스트 파일 test.tex을 보시면 어떻게 사용하는지 한눈에 알 수 있을 것입니다. 이 패키지는 오로지 oblivoir만을 위하여 작성된 것으로, 다른 클래스가 로드되면 에러를 보이면서 멈춥니다. 심지어 memoir와도 함께 쓰지 못합니다.
 
@@ -131,7 +233,9 @@ chaptertoc의 모든 포매팅 설정은 memoir의 \verb|\cft...| 명령으로 �
 
 version 2.0은 KTUG 게시판에 parttoc에 대한 질문이 올라온 것을 보고 확장하였습니다.
 
- 
+version 3.0은 KTUG 게시판에 Kriss님이 알려주신 페이지 스타일 관련 버그를 고친 것입니다.
+
+version 4.0은 버그를 고치고 문서를 다시 작성했습니다.
 
 \end{document}
 

@@ -1,29 +1,48 @@
-\documentclass[a4paper]{article}
-% \usepackage{textcomp}
+\documentclass[a4paper]{scrartcl}
+
 \usepackage[unicode,colorlinks=true,linkcolor=blue]{hyperref}
-% \usepackage{bookmark}
-% \usepackage{parskip}
+\usepackage{bookmark}
 \usepackage{booktabs}
 \usepackage{amssymb}
 
 % It is possible to use 8-bit Greek text fonts in the LGR TeX font encoding
 % also with XeTeX/LuaTeX, if the »fontenc« package is loaded before
 % »fontspec« and »textalpha«:
-\usepackage[LGR]{fontenc}
+\usepackage[LGR,TU]{fontenc}
+% Prevent a font substitution warning:
+\DeclareFontFamilySubstitution{LGR}{FreeSerif(0)}{cmr}
 
 % Unicode font setup:
 \usepackage{fontspec}
 % \setmainfont{DejaVu Serif}
 % \setsansfont{DejaVu Sans}
 % \usepackage{libertineotf}
-\setmainfont{Linux Libertine O}
-\setsansfont{Linux Biolinum O}
+% \setmainfont{Linux Libertine O}
+\setsansfont[Renderer=Harfbuzz]{Linux Biolinum O}
 % \setmainfont{cmunrm.otf} % CMU Serif % many missing characters :(
-% \setmainfont{FreeSerif}%
+\setmainfont[Renderer=Harfbuzz]{FreeSerif}%
 % \setmainfont{Droid Sans}
 
 % Declare the font encoding and Greek LICR definitions:
 \usepackage[normalize-symbols]{textalpha}
+
+% For the new \MakeUppercase, we need to set the text language to Greek
+% with Babel or Polyglossia:
+\usepackage[greek,english]{babel}
+
+\newcommand{\Greek}{
+  \ifdefined\extrasgreek
+    \selectlanguage{greek}
+  \fi
+}
+
+% select the LGR font encoding and CB fonts
+\providecommand*{\lgrfont}[1]{\leavevmode{%
+  \fontfamily{cmr}\fontencoding{LGR}\selectfont#1}%
+}
+
+\newcommand{\pkgref}[1]{\emph{\href{https://ctan.org/pkg/#1}{#1}}}
+
 
 \begin{document}
 
@@ -36,10 +55,9 @@
 support for Greek \hyperref[licr]{LICR} macros and upcasing of text with
 XeTeX and LuaTeX. It is loaded automatically by
 \href{textalpha-doc.pdf}{\emph{textalpha}},
-\href{alphabeta-doc.pdf}{\emph{alphabeta}}, and
-\href{http://www.ctan.org/pkg/babel-greek}{\emph{babel-greek}} when used
-with Unicode fonts (LuaTeX or XeTeX with
-\href{http://www.ctan.org/pkg/fontspec}{\emph{fontspec}}).
+\href{alphabeta-doc.pdf}{\emph{alphabeta}},
+and \pkgref{babel-greek} when used with Unicode fonts
+(LuaTeX or XeTeX with \pkgref{fontspec}).
 
 \tableofcontents
 
@@ -48,34 +66,32 @@ with Unicode fonts (LuaTeX or XeTeX with
 \subsection{\emph{fontspec} and suitable Unicode fonts}
 
 LaTeX sets up the TU Unicode text font encoding if it detects the XeTeX or
-LuaTeX engiges. The user must ensure that the selected font contains Greek
+LuaTeX engines. The user must ensure that the selected font contains Greek
 glyphs (the default Latin Modern fonts have only capital Greek letters).
-\textbf{There are no errors for missing glyphs, just warnings in the log
+\textbf{There are no errors for missing glyphs}, just warnings in the log
 file (but not in the console output) and empty spaces in the output
-document.}
+document.
 
-The \href{http://www.ctan.org/pkg/fontspec}{\emph{fontspec}} package is the
-standard tool to select fonts in Xe/LuaLaTeX. Examples for suitable fonts
-are given in the
-\href{http://mirrors.ctan.org/language/greek/greek-fontenc/greek-fontenc.html#TU}
-{greek-fontenc documentation}.
-
+The \pkgref{fontspec} package is the standard tool to select fonts in
+XeTeX/LuaTeX. \pkgref{babel} provides a front-end to set
+up language-specific fonts with the \verb|\babelfont| command.
 
 \section{Usage}
 
-\texttt{tuenc-greek.def} is usually not loaded directly, but by one of
+\texttt{tuenc-greek.def} is loaded automatically by
 \href{textalpha-doc.pdf}{\emph{textalpha}},
-\href{alphabeta-doc.pdf}{\emph{alphabeta}}, or \emph{Babel} (with the
-language option \href{http://www.ctan.org/pkg/babel-greek}{greek}). If these
-packages are used with Unicode-aware TeX engines (XeTeX or LuaTeX), Unicode
-font setup is amended for use of the Greek script.
+\href{alphabeta-doc.pdf}{\emph{alphabeta}}, or \pkgref{Babel} (with the
+language option \href{https://ctan.org/pkg/babel-greek}{greek}) if these
+packages are used with Unicode-aware TeX engines (XeTeX or LuaTeX). This
+provides support for Greek LICR input and fixes for MakeUppercase
+(cf. section~\ref{sec:uppercase-and-lowercase}).
 
 
 \section{LICR input%
          \label{licr}}
 
-The LaTeX internal character representation (LICR) is a verbose,
-fail-safe 7-bit ASCII encoding that can be used unaltered under both, 8-bit
+The LaTeX internal character representation (LICR) can be used as a verbose,
+fail-safe 7-bit ASCII encoding. It works under both, 8-bit
 TeX and XeTeX/LuaTeX. Use cases are macro definitions and generated text.
 
 See the source of this document,
@@ -101,11 +117,12 @@ Greek letters via LICR macros:
 The small sigma is set with a different
 glyph if it ends a word:
 \begin{quote}
-  \textsigma{}       \verb|textsigma|\\
-  \textfinalsigma{}  \verb|textfinalsigma| or \verb|textvarsigma|
+  \textsigma{}       \verb|\textsigma|\\
+  \textfinalsigma{}  \verb|\textfinalsigma| or \verb|\textvarsigma|
 \end{quote}
-The \verb|\textautosigma| macro, which automatically chooses the
-glyph according to the position, is not implemented for Unicode fonts.
+The \verb|\textautosigma| currently works only with 8-bit LGR fonts:
+\textautosigma\textiota{} vs. \textiota\textautosigma.
+
 
 \subsection{Diacritics}
 
@@ -119,10 +136,16 @@ Greek diacritics can be input by named macro or symbol macro:
   \accdasia\textalpha       \<\textalpha{}  \accdasia       x\<x
 \end{quote}
 %
-XeTeX normalizes base letter and combining diacritics to the
-corresponding pre-composed character if such a mapping is defined in the
-Unicode standard.
-
+XeTeX and LuaTeX with the Harfbuzz renderer normalise combining diacritics
+with the base letter to the corresponding pre-composed Unicode character
+(if such a character exists).%
+\footnote{\label{fnt:overlap}
+  Composite diacritics may overlap when they are not normalised to a
+  pre-composed character.
+  However, this is no problem in normal use as there are pre-composed
+  Unicode characters for all letters/diacritic combinations that are
+  actually used in the Greek language.%
+}
 \begin{quote}
   % άάὰὰϊϊᾶᾶἀἀἁἁ
   \acctonos α       \'α
@@ -133,26 +156,30 @@ Unicode standard.
   \accdasia α       \<α
 \end{quote}
 
-
 \subsubsection{perispomeni vs. tilde}
 
-The Greek \emph{perispomeni} has the look of a tilde but the semantic
-of a circumflex accent.
-The ``named'' \verb|\accperispomeni| macro uses COMBINING GREEK PERISPOMENI,
-while the standard tilde-accent macro \verb|\~| uses the COMBINING TILDE
-which is not normalized to GREEK LETTER ... WITH PERISPOMENI
-characters.
+The Greek \emph{perispomeni} has the look of a tilde but the semantic of
+a circumflex accent. The Unicode standard provides distinct code points.
+Only <Greek letter> + COMBINING GREEK PERISPOMENI is considered equivalent
+to the pre-composed character <Greek letter> WITH PERISPOMENI.
 
+The \verb|\accperispomeni| macro uses COMBINING GREEK PERISPOMENI,
+while the standard tilde-accent macro \verb|\~| uses the COMBINING TILDE.
 Composite definitions for \verb|\~| select the pre-composed character:
 
 \begin{quote}
-  \~α = ᾶ, \~η = ῆ, \~ι = ῖ, \~υ = ῦ, \~ω = ῶ
+  accent + base char / literal:
+  \~α/ᾶ, \~η/ῆ, \~ι/ῖ, \~υ/ῦ, \~ω\ypogegrammeni{}/ῷ
+
+  There are no pre-composed capital letters with perispomeni:
+  \~Α, \~Η, \~Ι, \~Υ, \~ῼ \footref{fnt:overlap}
 \end{quote}
 
 
-\subsubsection{combined diacritics}
+\subsubsection{composite diacritics}
 
-Combined accents are defined using combining diacritical characters.
+Composite diacritics are defined using two combining diacritical characters.%
+\footref{fnt:overlap}
 
 \begin{quote}
 \accdialytikatonos\textiota{}     \"'\textiota{} \"\'\textiota{}
@@ -176,24 +203,19 @@ Combined accents are defined using combining diacritical characters.
 \accpsiliperispomeni\textiota{}   \~>\textiota{} \~\>\textiota{}
 \accpsiliperispomeni x            \~>x           \~\>x
 \end{quote}
-Composite diacritics overlap when they are not normalized to a pre-composed
-character. However, this is not a major problem in normal use as
-pre-composed characters exist in Unicode for all letters that are
-used with diacritics in (ancient, polytonic or monotonic) Greek.
 
 \subsubsection{sub-iota}
 
 The sub-iota is input after the base letter.
 
 \begin{itemize}
-\item 
+\item
   \verb|\ypogegrammeni| sets a COMBINING GREEK YPOGEGRAMMENI:
   \textalpha\ypogegrammeni{} k\ypogegrammeni{}.
 
   A Greek capital letter followed by COMBINING GREEK YPOGEGRAMMENI is
-  normalized to the corresponding Greek capital letter WITH [... AND]
-  PROSGEGRAMMENI, if a mapping exists in the Unicode standard (by XeTeX but
-  not by LuaTeX)
+  normalised to the corresponding Greek capital letter WITH [... AND]
+  PROSGEGRAMMENI, if a mapping exists in the Unicode standard.
 
 \item \verb|\prosgegrammeni| sets a spacing GREEK PROSGEGRAMMENI:
   \textAlpha\prosgegrammeni{} K\prosgegrammeni{}.
@@ -203,37 +225,38 @@ The sub-iota is input after the base letter.
 
   Compare Αι (small letter iota) vs. Αι (spacing prosgegrammeni) vs. ᾼ
   (pre-composed).
-  
+
 
 \end{itemize}
 %
 Test letters with ypogegrammeni and prosgegrammeni (literal/LICR):
 
 \begin{quote}
-\begin{tabbing}
+  % \Greek % compilation error, see section TODO below
+  \begin{tabular}{lll}
+    unchanged & make lowercase & make uppercase. \\
 
-  unchanged \quad\=  make lowercase\quad\=  make uppercase. \\
+    ᾳαι/\textalpha\ypogegrammeni \textalpha\prosgegrammeni{} &
+    \MakeLowercase{ᾳαι/\textalpha\ypogegrammeni \textalpha\prosgegrammeni} &
+    \MakeUppercase{ᾳαι/\textalpha\ypogegrammeni \textalpha\prosgegrammeni} \\
 
-  ᾳαι/\textalpha\ypogegrammeni \textalpha\prosgegrammeni{} \>
-  \MakeLowercase{ᾳαι/\textalpha\ypogegrammeni \textalpha\prosgegrammeni} \>
-  \MakeUppercase{ᾳαι/\textalpha\ypogegrammeni \textalpha\prosgegrammeni} \\
+    ᾼΑι/\textAlpha\ypogegrammeni \textAlpha\prosgegrammeni{} &
+    \MakeLowercase{ᾼΑι/\textAlpha\ypogegrammeni \textAlpha\prosgegrammeni} &
+    \MakeUppercase{ᾼΑι/\textAlpha\ypogegrammeni \textAlpha\prosgegrammeni} \\
 
-  ᾼΑι/\textAlpha\ypogegrammeni \textAlpha\prosgegrammeni{} \>
-  \MakeLowercase{ᾼΑι/\textAlpha\ypogegrammeni \textAlpha\prosgegrammeni} \>
-  \MakeUppercase{ᾼΑι/\textAlpha\ypogegrammeni \textAlpha\prosgegrammeni} \\
-
-  ΛͅΛι/\textLambda\ypogegrammeni \textLambda\prosgegrammeni{} \>
-  \MakeLowercase{ΛͅΛι/\textLambda\ypogegrammeni \textLambda\prosgegrammeni} \>
-  \MakeUppercase{ΛͅΛι/\textLambda\ypogegrammeni \textLambda\prosgegrammeni}
-
-\end{tabbing}
+    ΛͅΛι/\textLambda\ypogegrammeni \textLambda\prosgegrammeni{} &
+    \MakeLowercase{ΛͅΛι/\textLambda\ypogegrammeni \textLambda\prosgegrammeni} &
+    \MakeUppercase{ΛͅΛι/\textLambda\ypogegrammeni \textLambda\prosgegrammeni}
+  \end{tabular}
 \end{quote}
+
 
 \subsection{Additional Greek symbols}
 
 \subsubsection{symbols for Greek numbers}
 
 \begin{quote}
+\raggedright
 \textkoppa{}      textkoppa                 \\ % ϟ
 \textKoppa{}      textKoppa                 \\ % Ϟ
 \textqoppa{}      textqoppa (archaic koppa) \\ % ϙ
@@ -243,14 +266,14 @@ Test letters with ypogegrammeni and prosgegrammeni (literal/LICR):
 \textStigma{}     textStigma (Sigma-Tau-Ligature in CB-fonts)%
 \footnote{the name “stigma” originally applied to a medieval sigma-tau
          ligature, whose shape was confusingly similar to the cursive
-         digamma}                      \\ % Ϛ
-\textsampi{}      textsampi  \\ % ϡ
-\textSampi{}      textSampi  \\ % Ϡ
-\textdigamma{}    textdigamma  \\ % ϝ (\digamma used by amsmath!)
-\textDigamma{}    textDigamma  \\ % Ϝ
+         digamma}                           \\ % Ϛ
+\textsampi{}      textsampi                 \\ % ϡ
+\textSampi{}      textSampi                 \\ % Ϡ
+\textdigamma{}    textdigamma               \\ % ϝ (\digamma used by amsmath!)
+\textDigamma{}    textDigamma               \\ % Ϝ
 % numeral signs: http://en.wikipedia.org/wiki/Greek_numerals
-\textdexiakeraia{}    textdexiakeraia  \\ % ʹ
-\textaristerikeraia{} textaristerikeraia \\ % ͵
+\textdexiakeraia{}    textdexiakeraia       \\ % ʹ
+\textaristerikeraia{} textaristerikeraia    \\ % ͵
 \end{quote}
 
 \subsubsection{symbol variants}
@@ -298,7 +321,7 @@ letters:
      GREEK ... SYMBOL variant,
 
   \verb|\textvar<name>| selects the variant
-    shape according to TeX' mathematical mode
+    shape according to TeX's mathematical mode
 \end{quote}
 See Table \ref{tab:symbol-variant-macros} for the full list. The
 \href{alphabeta-doc.pdf}{\emph{alphabeta}} package defines short macros that
@@ -311,6 +334,26 @@ work in text and math mode.
   \multicolumn{2}{c}{text} & \multicolumn{2}{c}{mathematics} \\
   macro & output & macro & output \\
   \hline
+  \verb$\textbeta$          & \textbeta          & \verb$\beta$       & $\beta$       \\
+  \verb$\textvarbeta$       & \textvarbeta       & \emph{missing}     & \\
+  \verb$\textbetasymbol$    & \textbetasymbol    &                    & \\
+  \hline
+  \verb$\textepsilon$       & \textepsilon       & \verb$\epsilon$    & $\epsilon$    \\
+  \verb$\textvarepsilon$    & \textvarepsilon    & \verb$\varepsilon$ & $\varepsilon$ \\
+  \verb$\textepsilonsymbol$ & \textepsilonsymbol &                    & \\
+  \hline
+  \verb$\texttheta$         & \texttheta         & \verb$\theta$      & $\theta$      \\
+  \verb$\textvartheta$      & \textvartheta      & \verb$\vartheta$   & $\vartheta$   \\
+  \verb$\textthetasymbol$   & \textthetasymbol   &                    & \\
+  \hline
+  \verb$\textTheta$         & \textTheta         & \verb$\Theta$      & $\Theta$      \\
+  \verb$\textvarTheta$      & \textvarTheta      & \emph{missing}     & \\
+  \verb$\textThetasymbol$   & \textThetasymbol   &                    & \\
+  \hline
+  \verb$\textkappa$         & \textkappa         & \verb$\kappa$      & $\kappa$      \\
+  \verb$\textvarkappa$      & \textvarkappa      & \verb$\varkappa$   & $\varkappa$   \\
+  \verb$\textkappasymbol$   & \textkappasymbol   &                    & \\
+  \hline
   \verb$\textpi$            & \textpi            & \verb$\pi$         & $\pi$         \\
   \verb$\textvarpi$         & \textvarpi         & \verb$\varpi$      & $\varpi$      \\
   \verb$\textpisymbol$      & \textpisymbol      &                    & \\
@@ -319,29 +362,9 @@ work in text and math mode.
   \verb$\textvarrho$        & \textvarrho        & \verb$\varrho$     & $\varrho$     \\
   \verb$\textrhosymbol$     & \textrhosymbol     &                    & \\
   \hline
-  \verb$\texttheta$         & \texttheta         & \verb$\theta$      & $\theta$      \\
-  \verb$\textvartheta$      & \textvartheta      & \verb$\vartheta$   & $\vartheta$   \\
-  \verb$\textthetasymbol$   & \textthetasymbol   &                    & \\
-  \hline
-  \verb$\textepsilon$       & \textepsilon       & \verb$\epsilon$    & $\epsilon$    \\
-  \verb$\textvarepsilon$    & \textvarepsilon    & \verb$\varepsilon$ & $\varepsilon$ \\
-  \verb$\textepsilonsymbol$ & \textepsilonsymbol &                    & \\
-  \hline
   \verb$\textphi$           & \textphi           & \verb$\phi$        & $\phi$        \\
   \verb$\textvarphi$        & \textvarphi        & \verb$\varphi$     & $\varphi$     \\
   \verb$\textphisymbol$     & \textphisymbol     &                    & \\
-  \hline
-  \verb$\textbeta$          & \textbeta          & \verb$\beta$       & $\beta$       \\
-  \verb$\textvarbeta$       & \textvarbeta       & \emph{missing}     & \\
-  \verb$\textbetasymbol$    & \textbetasymbol    &                    & \\
-  \hline
-  \verb$\textkappa$         & \textkappa         & \verb$\kappa$      & $\kappa$      \\
-  \verb$\textvarkappa$      & \textvarkappa      & \verb$\varkappa$   & $\varkappa$   \\
-  \verb$\textkappasymbol$   & \textkappasymbol   &                    & \\
-  \hline
-  \verb$\textTheta$         & \textTheta         & \verb$\Theta$      & $\Theta$      \\
-  \verb$\textvarTheta$      & \textvarTheta      & \emph{missing}     & \\
-  \verb$\textThetasymbol$   & \textThetasymbol   &                    & \\
   \hline
   \end{tabular}
   \caption{Macros for Greek symbol variants}
@@ -360,13 +383,10 @@ Deja Vu). The “FreeSerif” font works fine:
 \end{quote}
 If the LGR font encoding is loaded via «fontenc» in the document preamble,
 Ancient Greek Numbers (as well as any other character) from LGR encoded
-8-bit TeX fonts can be used after a font-encoding switch. babel-greek
-defines the \verb|\textgreek| command for this purpose.
-\providecommand*{\textgreek}[1]{\leavevmode{%
-  \fontfamily{cmr}\fontencoding{LGR}\selectfont#1}%
-}
+8-bit TeX fonts can be used after a font-encoding switch. (This document
+defines the \verb|\lgrfont| command for this purpose in the preamble.)
 \begin{quote}
-\textgreek{
+\lgrfont{
 \textpentedeka    % GREEK ACROPHONIC ATTIC FIFTY
 \textpentehekaton % GREEK ACROPHONIC ATTIC FIVE HUNDRED
 \textpenteqilioi  % GREEK ACROPHONIC ATTIC FIVE THOUSAND
@@ -377,9 +397,9 @@ defines the \verb|\textgreek| command for this purpose.
 
 \subsubsection{generic text symbols}
 
-There are some LICR macros for some symbols from the 8-bit font encoding LGR
-that are not confined to Greek but not defined in
-\texttt{tuenc.def} [2018/08/11 v2.0j].
+There are some LICR macros for symbols from the 8-bit font encoding LGR
+that are not confined to Greek but missing in
+\texttt{tuenc.def} [2021/04/29 v2.0v] in TeXLive 23.
 
 \begin{quote}
   \textsemicolon{} textsemicolon\\
@@ -394,70 +414,74 @@ The SI unit prefix MICRO SIGN is not upcased with MakeUppercase:
 \end{quote}
 
 
-\section{Latin transcription}
+\section{Latin transliteration}
 
-The Latin transcription known from LGR encoded 8-bit fonts%
-\footnote{ See the \href{http://www.ctan.org/pkg/teubner}{teubner} package
-or the file usage.pdf from the
-\href{http://www.ctan.org/pkg/babel-greek}{\emph{babel-greek}} package for a
-description.}
+The Latin transliteration known from LGR encoded 8-bit fonts%
+\footnote{See the \pkgref{teubner} package or \pkgref{babel-greek}
+          for a description.}
 does not work with Unicode fonts.
+
+For LuaTeX, there is a \texttt{transliteration.omega} \emph{transform} that
+applies the transliteration system devised by Yannis Haralambous for the
+Omega system (cf. the Babel documentation for the
+\href{https://latex3.github.io/babel/guides/locale-greek.html}{Greek locale}).
 
 It is possible to set up LGR encoded fonts parallel to Unicode fonts (see
 the preamble of the source file \url{test-tuenc-greek.tex} for an example).
-The \verb|\textgreek| macro can then be used for the input of Greek letters
-via the \emph{Latin transcription}, e.g. «logos» becomes «\textgreek{logos}»
-and «\verb|\>aupn\'ia|» becomes «\textgreek{\>aupn\'ia}».
+After switching the font encoding to LGR, Greek text can be input
+via a \emph{Latin transliteration}, e.g. «logos» becomes «\lgrfont{logos}»
+and «\texttt{>aupn'ia}» becomes «\lgrfont{>aupn\'ia}».
 
 Mark that you cannot use Unicode input with LGR encoded fonts except when
 running in 8-bit compatibility mode.
-LICR macros work in both, Unicode font encoding and LGR: compare
-           \>\textIota\textalpha\textnu\textomicron\textupsilon\textalpha
-           \textrho\acctonos\textiota\textomicron\textupsilon{}
-(Unicode font set up via fontspec) vs.
-\textgreek{\>\textIota\textalpha\textnu\textomicron\textupsilon\textalpha
-           \textrho\acctonos\textiota\textomicron\textupsilon}
-(LGR-encoded 8-bit font set up via NFSS commands).
+LICR macros work in both, TU and LGR: compare
+\>\textIota\textalpha\textnu\textomicron\textupsilon\textalpha
+\textrho\acctonos\textiota\textomicron\textupsilon{} (TU) vs.
+\lgrfont{\>\textIota\textalpha\textnu\textomicron\textupsilon\textalpha
+         \textrho\acctonos\textiota\textomicron\textupsilon} (LGR).
 
 
-\section{UPPERCASE and lowercase}
+\section{UPPERCASE and lowercase \label{sec:uppercase-and-lowercase}}
 
-Capital Greek letters have Greek diacritics (except the dialytika and
-sub-iota) to the left (instead of above) and drop them if text is set in
-UPPERCASE, e.g.
-\ensuregreek{μαΐστρος $\mapsto$ \MakeUppercase{μαΐστρος}}.
+According to Greek typesetting conventions, Greek diacritics (except the
+dialytika and sub-iota) are placed to the left (instead of above) capital
+letters and dropped if text is set in UPPERCASE, e.g. \ensuregreek{μαΐστρος
+$\mapsto$ \MakeUppercase{μαΐστρος}}.
 
-The uccode/lccode corrections (taken from Apostolos Syropoulos xgreek
-package) ensure dropping of accents with \verb|\MakeUppercase| for literal
-Unicode characters.
+The 2022 \verb|\MakeUppercase| implementation
+(cf. \textsf{ltnews35.pdf}) relies on Unicode data.
+It upcases literal characters according to the Greek conventions
+\textbf{if the text language is set to Greek} with \pkgref{babel}
+or \pkgref{polyglossia}.
+For the pre-2022/06 implementation, \texttt{tuenc-greek.def} contains
+uccode/lccode corrections (taken from Apostolos Syropoulos \pkgref{xgreek}
+package) to get the same effect (independent of the text language).
 
-@uclclist additions ensure that upcasing also drops Greek diacritics.
-However, when the tonos, varia, and perispomeni accents
-are input using the symbol macros (\verb|\' \` \~|), this does not work, as
-they cannot be distinguished from Latin acute, grave, and tilde accents.%
-\footnote{This might be fixed with \textbackslash accACUTE,
-          \textbackslash accGRAVE, and  \textbackslash accTILDE definitions
-          with corresponding @uclclist entries and composite definitions.}
-If these accents should be dropped by MakeUppercase, they must be input as
-named macro:
+In addition, \texttt{tuenc-greek.def} contains code to drop Greek diacritics
+input as accent macros.
+However, when using the symbol macros (\verb|\' \` \~|) for tonos, varia,
+and perispomeni, special definitions from \pkgref{babel-greek} ≥ 1.13.3 are
+required to distinguish them from acute, grave, and tilde accents that must
+be kept on Latin letters.
 
+Named Greek accents and symbol accents on Greek vs. Latin letter:
 \begin{quote}
-\acctonos\textalpha       \'\textalpha{}  \acctonos a\'a
-\accvaria\textalpha       \`\textalpha{}  \accvaria a\`a
-$\mapsto$
-\MakeUppercase{
-\acctonos\textalpha       \'\textalpha{}  \acctonos a\'a
-\accvaria\textalpha       \`\textalpha{}  \accvaria a\`a
-}
+  \Greek
+  \newcommand{\sample}{
+   \acctonos\textupsilon\'\textupsilon{}  \acctonos u\'u
+   \accvaria\textupsilon\`\textupsilon{}  \accvaria u\`u}
+  \sample → \MakeUppercase{\sample}
 \end{quote}
+Standard symbol accents on Latin letters are kept (OK). With pre-2023 LaTeX
+versions or babel-greek < 1.13.3, standard accents are also kept on Greek
+letters (sic!).
 
-\subsubsection{hiatus}
 
-Tonos and dasia mark a \emph{hiatus} (break-up of a diphthong) if placed on
-the first vowel of a diphtong (άι, άυ, έι, ἄι, ἄυ, ἔι). A dialytika must be
-placed on the second vowel if they are dropped.
+\subsection{hiatus}
 
-The «hiatus» feature works with macro input:
+Tonos and psili mark a \emph{hiatus} (break-up of a diphthong) if placed on
+the first of two consecutive vowels (άι, άυ, έι, ἀυ, ἄι, ἄυ, ἔι).
+A dialytika must be placed on the second vowel if they are dropped:
 \begin{quote}
   % from teubner: άυλος/ΑΫΛΟΣ
   \acctonos\textalpha\textupsilon λος $\mapsto$
@@ -474,440 +498,50 @@ The «hiatus» feature works with macro input:
   \MakeUppercase{\textkappa\acctonos\textepsilon\textiota\textkappa},
   \accpsili\textalpha\textupsilon πνία $\mapsto$
   \MakeUppercase{\accpsili\textalpha\textupsilon πνία}.
+  % from https://r12a.github.io/scripts/grek/el.html#transforms
+  % νεράιδα -> ΝΕΡΑΪΔΑ
+  νεράιδα → \MakeUppercase{νεράιδα}
 \end{quote}
-
-It does not work with Unicode literals:
+%
+Since 2023/02/10, this works with all literals
 \begin{quote}
-  άι, άυ, έι, ἄι, ἄυ, ἔι $\mapsto$ \MakeUppercase{άι, άυ, έι, ἄι, ἄυ, ἔι}
+  \Greek
+  \newcommand*{\hiatest}{άι, άυ, έι, ἄι, ἄυ, ἔι, ἀυ}
+  \hiatest{} $\mapsto$ \MakeUppercase{\hiatest},
 \end{quote}
-
-or accent-macro + Unicode literals (yet?):
+with named accent-macro + Unicode literals:
 \begin{quote}
-  \acctonos αι, \acctonos αυ, \acctonos ει, \'>αι, \'>αυ, \'>ει
-  $\mapsto$
-  \MakeUppercase{\acctonos αι, \acctonos αυ, \acctonos ει, \'>αι, \'>αυ, \'>ει}
+  \Greek
+  \newcommand*{\hiatest}{
+    \acctonos αι, \acctonos αυ, \acctonos ει,
+    \accpsilioxia αι, \accpsilioxia αυ, \accpsilioxia ει, \accpsili αυ}
+  \hiatest{} $\mapsto$ \MakeUppercase{\hiatest}
+\end{quote}
+and, with babel-greek 1.13.3 with short accent-macro + Unicode literals:
+\begin{quote}
+  \Greek
+  \newcommand*{\hiatest}{
+    \'αι, \'αυ, \'ει, \'>αι, \'>αυ, \'>ει, \>αυ}
+  \hiatest{} $\mapsto$ \MakeUppercase{\hiatest}
 \end{quote}
 
 \section{Character Tables}
 
-The following tables list the Greek Unicode characters. In the input, the
-LICR macro is followed by the corresponding literal Unicode character.
+The file \texttt{char-list.tex} contains a listing of all Greek
+Unicode characters supported by the \emph{greek-fontenc} package.
+See \texttt{char-list-tu.tex} for the output with XeTeX/LuaTeX.
 
-\subsection{Greek and Coptic Unicode block}
+\section{TODO}
 
-Seldom used characters that are not part of LGR encoded TeX fonts have no
-LICR definition.
+Compilation error with MakeUppercase and combining ypogegrammeni in Greek
+locale.
 
-\newcommand{\greekandcoptic}{
-% NR    Unicode Name                                       %   babel name, UCS name
-% 0370  GREEK CAPITAL LETTER HETA                          % Ͱ
-% 0371  GREEK SMALL LETTER HETA                            % ͱ
-% 0372  GREEK CAPITAL LETTER ARCHAIC SAMPI                 % Ͳ
-% 0373  GREEK SMALL LETTER ARCHAIC SAMPI                   % Ͳ
-\textnumeralsigngreek ʹ % \anwtonos, \textdexiakeraia
-\textnumeralsignlowergreek ͵ % \katwtonos, \textaristerikeraia,
-% 0376  GREEK CAPITAL LETTER PAMPHYLIAN DIGAMMA            % Ͷ
-% 0377  GREEK SMALL LETTER PAMPHYLIAN DIGAMMA              % ͷ
-{ }\ypogegrammeni ͺ % \textsubiota{\empty}
-% 037B  GREEK SMALL REVERSED LUNATE SIGMA SYMBOL           %
-% 037C  GREEK SMALL DOTTED LUNATE SIGMA SYMBOL             %
-% 037D  GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL    %
-\texterotimatiko ; % \textquestion
-
-\acctonos{ } ΄
-\"'{ } ΅
-\'\textAlpha Ά
-\textanoteleia · % \anoteleia
-\'\textEpsilon Έ
-\'\textEta Ή
-\'\textIota Ί
-\'\textOmicron Ό
-\'\textUpsilon Ύ
-\'\textOmega Ώ
-
-\'"\textiota ΐ
-\textAlpha Α
-\textBeta Β
-\textGamma Γ
-\textDelta Δ
-\textEpsilon Ε
-\textZeta Ζ
-\textEta Η
-\textTheta Θ
-\textIota Ι
-\textKappa Κ
-\textLambda Λ
-\textMu Μ
-\textNu Ν
-\textXi Ξ
-\textOmicron Ο
-
-\textPi Π
-\textRho Ρ
-\textSigma Σ
-\textTau Τ
-\textUpsilon Υ
-\textPhi Φ
-\textChi Χ
-\textPsi Ψ
-\textOmega Ω
-\"\textIota Ϊ
-\"\textUpsilon Ϋ
-\'\textalpha ά
-\'\textepsilon έ
-\'\texteta ή
-\'\textiota ί
-
-\"'\textupsilon ΰ
-\textalpha α
-\textbeta β
-\textgamma γ
-\textdelta δ
-\textepsilon ε
-\textzeta ζ
-\texteta η
-\texttheta θ
-\textiota ι
-\textkappa κ
-\textlambda λ
-\textmu μ % \textmugreek
-\textnu ν
-\textxi ξ
-\textomicron ο
-
-\textpi π
-\textrho ρ
-\textvarsigma ς
-\textsigma σ
-\texttau τ
-\textupsilon υ
-\textphi φ
-\textchi χ
-\textpsi ψ
-\textomega ω
-\"\textiota ϊ
-\"\textupsilon ϋ
-\'\textomicron ό
-\'\textupsilon ύ
-\'\textomega ώ
-
-\textbetasymbol ϐ
-\textthetasymbol ϑ
-ϒ ϓ ϔ
-\textphisymbol ϕ
-\textpisymbol ϖ %ϗ
-
-\textQoppa Ϙ
-\textqoppa ϙ
-\textStigma Ϛ
-\textstigma ϛ
-\textDigamma Ϝ
-\textdigamma ϝ
-\textKoppa Ϟ % \textKoppagreek
-\textkoppa ϟ % \koppa, \textqoppa [sic!]
-
-\textSampi Ϡ
-\textsampi ϡ
-
-% Ϣ ϣ Ϥ ϥ Ϧ ϧ Ϩ ϩ Ϫ ϫ Ϭ ϭ Ϯ ϯ
-
-\textkappasymbol ϰ
-\textrhosymbol ϱ
-% ϲ
-% ϳ
-\textThetasymbol ϴ
-\textepsilonsymbol ϵ
-% ϶
-% Ϸ ϸ
-% Ϲ
-% Ϻ ϻ ϼ
-% Ͻ Ͼ Ͽ
-}
-
-\greekandcoptic
-
-\noindent MakeUppercase (note: standard accents not dropped):
-
-\MakeUppercase{\greekandcoptic}
-
-\noindent MakeLowercase:
-
-\MakeLowercase{\greekandcoptic}
-
-The lowercase of Σ is σ (GREEK SMALL LETTER SIGMA).\footnote{%
-With LICRs, it is \texttt{\textbackslash textautosigma}.}
-The lowercase of Ϛ (GREEK LETTER STIGMA) is ϛ (GREEK SMALL LETTER STIGMA).
-
-
-\subsection{Greek Extended Unicode block}
-
-Note: There are no LICR definitions for spacing diacritical characters.
-Use the corresponding accent macro with an empty argument or a space.
-
-% \accvaria\textalpha    ὰ
-% \accoxia\textalpha    ά
-
-\medskip
-
-\newcommand{\greekextended}{
-\>\textalpha   ἀ
-\<\textalpha   ἁ
-\>`\textalpha  ἂ
-\<`\textalpha  ἃ
-\>'\textalpha  ἄ
-\<'\textalpha  ἅ
-\~>\textalpha  ἆ
-\~<\textalpha  ἇ
-\>\textAlpha   Ἀ
-\<\textAlpha   Ἁ
-\>`\textAlpha  Ἂ
-\<`\textAlpha  Ἃ
-\>'\textAlpha  Ἄ
-\<'\textAlpha  Ἅ
-\~>\textAlpha  Ἆ
-\~<\textAlpha  Ἇ
-
-\>\textepsilon   ἐ
-\<\textepsilon   ἑ
-\>`\textepsilon  ἒ
-\<`\textepsilon  ἓ
-\>'\textepsilon  ἔ
-\<'\textepsilon  ἕ
-\>\textEpsilon   Ἐ
-\<\textEpsilon   Ἑ
-\>`\textEpsilon  Ἒ
-\<`\textEpsilon  Ἓ
-\>'\textEpsilon  Ἔ
-\<'\textEpsilon  Ἕ
-
-\>\texteta   ἠ
-\<\texteta   ἡ
-\>`\texteta  ἢ
-\<`\texteta  ἣ
-\>'\texteta  ἤ
-\<'\texteta  ἥ
-\~>\texteta  ἦ
-\~<\texteta  ἧ
-\>\textEta   Ἠ
-\<\textEta   Ἡ
-\>`\textEta  Ἢ
-\<`\textEta  Ἣ
-\>'\textEta  Ἤ
-\<'\textEta  Ἥ
-\~>\textEta  Ἦ
-\~<\textEta  Ἧ
-
-\>\textiota   ἰ
-\<\textiota   ἱ
-\>`\textiota  ἲ
-\<`\textiota  ἳ
-\>'\textiota  ἴ
-\<'\textiota  ἵ
-\~>\textiota  ἶ
-\~<\textiota  ἷ
-\>\textIota   Ἰ
-\<\textIota   Ἱ
-\>`\textIota  Ἲ
-\<`\textIota  Ἳ
-\>'\textIota  Ἴ
-\<'\textIota  Ἵ
-\~>\textIota  Ἶ
-\~<\textIota  Ἷ
-
-\>\textomicron   ὀ
-\<\textomicron   ὁ
-\>`\textomicron  ὂ
-\<`\textomicron  ὃ
-\>'\textomicron  ὄ
-\<'\textomicron  ὅ
-\>\textOmicron   Ὀ
-\<\textOmicron   Ὁ
-\>`\textOmicron  Ὂ
-\<`\textOmicron  Ὃ
-\>'\textOmicron  Ὄ
-\<'\textOmicron  Ὅ
-
-\>\textupsilon   ὐ
-\<\textupsilon   ὑ
-\>`\textupsilon  ὒ
-\<`\textupsilon  ὓ
-\>'\textupsilon  ὔ
-\<'\textupsilon  ὕ
-\~>\textupsilon  ὖ
-\~<\textupsilon  ὗ
-\<\textUpsilon   Ὑ
-\<`\textUpsilon  Ὓ
-\<'\textUpsilon  Ὕ
-\~<\textUpsilon  Ὗ
-
-\>\textomega   ὠ
-\<\textomega   ὡ
-\>`\textomega  ὢ
-\<`\textomega  ὣ
-\>'\textomega  ὤ
-\<'\textomega  ὥ
-\~>\textomega  ὦ
-\~<\textomega  ὧ
-\>\textOmega   Ὠ
-\<\textOmega   Ὡ
-\>`\textOmega  Ὢ
-\<`\textOmega  Ὣ
-\>'\textOmega  Ὤ
-\<'\textOmega  Ὥ
-\~>\textOmega  Ὦ
-\~<\textOmega  Ὧ
-
-\accvaria\textalpha   ὰ
-\accoxia\textalpha    ά
-\accvaria\textepsilon ὲ
-\accoxia\textepsilon  έ
-\accvaria\texteta     ὴ
-\accoxia\texteta      ή
-\accvaria\textiota    ὶ
-\accoxia\textiota     ί
-\accvaria\textomicron ὸ
-\accoxia\textomicron  ό
-\accvaria\textupsilon ὺ
-\accoxia\textupsilon  ύ
-\accvaria\textomega   ὼ
-\accoxia\textomega    ώ
-
-\>\textalpha\ypogegrammeni   ᾀ
-\<\textalpha\ypogegrammeni   ᾁ
-\>`\textalpha\ypogegrammeni  ᾂ
-\<`\textalpha\ypogegrammeni  ᾃ
-\>'\textalpha\ypogegrammeni  ᾄ
-\<'\textalpha\ypogegrammeni  ᾅ
-\~>\textalpha\ypogegrammeni  ᾆ
-\~<\textalpha\ypogegrammeni  ᾇ
-\>\textAlpha\ypogegrammeni   ᾈ
-\<\textAlpha\ypogegrammeni   ᾉ
-\>`\textAlpha\ypogegrammeni  ᾊ
-\<`\textAlpha\ypogegrammeni  ᾋ
-\>'\textAlpha\ypogegrammeni  ᾌ
-\<'\textAlpha\ypogegrammeni  ᾍ
-\~>\textAlpha\ypogegrammeni  ᾎ
-\~<\textAlpha\ypogegrammeni  ᾏ
-
-\>\texteta\ypogegrammeni     ᾐ
-\<\texteta\ypogegrammeni     ᾑ
-\>`\texteta\ypogegrammeni    ᾒ
-\<`\texteta\ypogegrammeni    ᾓ
-\>'\texteta\ypogegrammeni    ᾔ
-\<'\texteta\ypogegrammeni    ᾕ
-\~>\texteta\ypogegrammeni    ᾖ
-\~<\texteta\ypogegrammeni    ᾗ
-\>\textEta\ypogegrammeni     ᾘ
-\<\textEta\ypogegrammeni     ᾙ
-\>`\textEta\ypogegrammeni    ᾚ
-\<`\textEta\ypogegrammeni    ᾛ
-\>'\textEta\ypogegrammeni    ᾜ
-\<'\textEta\ypogegrammeni    ᾝ
-\~>\textEta\ypogegrammeni    ᾞ
-\~<\textEta\ypogegrammeni    ᾟ
-
-\>\textomega\ypogegrammeni   ᾠ
-\<\textomega\ypogegrammeni   ᾡ
-\>`\textomega\ypogegrammeni  ᾢ
-\<`\textomega\ypogegrammeni  ᾣ
-\>'\textomega\ypogegrammeni  ᾤ
-\<'\textomega\ypogegrammeni  ᾥ
-\~>\textomega\ypogegrammeni  ᾦ
-\~<\textomega\ypogegrammeni  ᾧ
-\>\textOmega\ypogegrammeni   ᾨ
-\<\textOmega\ypogegrammeni   ᾩ
-\>`\textOmega\ypogegrammeni  ᾪ
-\<`\textOmega\ypogegrammeni  ᾫ
-\>'\textOmega\ypogegrammeni  ᾬ
-\<'\textOmega\ypogegrammeni  ᾭ
-\~>\textOmega\ypogegrammeni  ᾮ
-\~<\textOmega\ypogegrammeni  ᾯ
-
-\u\textalpha                      ᾰ
-\=\textalpha                      ᾱ
-\accvaria\textalpha\ypogegrammeni ᾲ
-\textalpha\ypogegrammeni          ᾳ
-\accoxia\textalpha\ypogegrammeni  ᾴ
-\accperispomeni\textalpha         ᾶ
-\accperispomeni\textalpha\ypogegrammeni ᾷ
-\u\textAlpha                      Ᾰ
-\=\textAlpha                      Ᾱ
-\accvaria\textAlpha               Ὰ
-\accoxia\textAlpha                Ά
-\textAlpha\ypogegrammeni          ᾼ
-\>{ }                             ᾽
-{ }\prosgegrammeni                ι
-\>{ }                             ᾿
-
-\accperispomeni{ }                ῀
-\"\~{ }                           ῁
-\accvaria\texteta\ypogegrammeni   ῂ
-\texteta\ypogegrammeni            ῃ
-\accoxia\texteta\ypogegrammeni    ῄ
-\accperispomeni\texteta           ῆ
-\accperispomeni\texteta\ypogegrammeni ῇ
-\accvaria\textEpsilon             Ὲ
-\accoxia\textEpsilon              Έ
-\accvaria\textEta                 Ὴ
-\accoxia\textEta                  Ή
-\textEta\ypogegrammeni            ῌ
-\>`{ }                            ῍
-\>'{ }                            ῎
-\~>{ }                            ῏
-
-\u\textiota                       ῐ
-\=\textiota                       ῑ
-\`"\textiota                      ῒ
-\'"\textiota                      ΐ
-\accperispomeni\textiota          ῖ
-\accperispomeni"\textiota         ῗ
-\u\textIota                       Ῐ
-\=\textIota                       Ῑ
-\accvaria\textIota                Ὶ
-\accoxia\textIota                 Ί
-  \<`{ }                          ῝
-\>'{ }                            ῞
-\~<{ }                            ῟
-
-\u\textupsilon                    ῠ
-\=\textupsilon                    ῡ
-\`"\textupsilon                   ῢ
-\'"\textupsilon                   ΰ
-\>\textrho                        ῤ
-\<\textrho                        ῥ
-\accperispomeni\textupsilon       ῦ
-\accperispomeni"\textupsilon      ῧ
-\u\textUpsilon                    Ῠ
-\=\textUpsilon                    Ῡ
-\accvaria\textUpsilon             Ὺ
-\accoxia\textUpsilon              Ύ
-\<\textRho                        Ῥ
-\`"{ }                            ῭
-\'"{ }                            ΅
-\accvaria{ }                      `
-
-\accvaria\textomega\ypogegrammeni ῲ
-\textomega\ypogegrammeni          ῳ
-\accoxia\textomega\ypogegrammeni  ῴ
-\accperispomeni\textomega         ῶ
-\accperispomeni\textomega\ypogegrammeni ῷ
-\accvaria\textOmicron             Ὸ
-\accoxia\textOmicron              Ό
-\accvaria\textOmega               Ὼ
-\accoxia\textOmega                Ώ
-\textOmega\ypogegrammeni          ῼ
-\accoxia{ }                       ´
-\<{ }                             ῾
-}
-
-\greekextended
-
-\noindent MakeUppercase:
-
-\MakeUppercase{\greekextended}
-
-\noindent MakeLowercase:
-
-\MakeLowercase{\greekextended}
+% \begin{quote}
+%   \Greek
+%   Λͅ → \MakeUppercase{Λͅ} % fails with new XeTeX / LuaTeX
+%
+%   % \~α\ypogegrammeni{} →
+%   % \MakeUppercase{\~α\ypogegrammeni{}} % fails with old LuaTeX (but not XeTeX)
+% \end{quote}
 
 \end{document}

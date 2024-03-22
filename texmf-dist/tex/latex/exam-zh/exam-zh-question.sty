@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-9-18} {v0.1.20}
+\ProvidesExplPackage {exam-zh-question} {2023-06-28} {v0.1.27}
   {exam-zh question module}
 
 
@@ -19,6 +19,7 @@
   { \RequirePackage [ most ] { tcolorbox } }
 % \RequirePackage { zref-savepos }
 \RequirePackage { xeCJKfntef }
+\RequirePackage { enumitem }
 
 % https://github.com/CTeX-org/forum/issues/264#issuecomment-1200087776
 \disable@package@load { etex }
@@ -45,6 +46,11 @@
 % ulem 宏包重定义了 \emph，使用 \normalem 恢复
 \normalem
 
+\setlist{nosep}
+\setlist
+  {
+    labelsep    = 4pt,
+  }
 
 % question 环境相关变量
 
@@ -70,6 +76,7 @@
 \skip_new:N \l__examzh_question_bottom_sep_skip
 % label 的对齐
 \tl_new:N \l__examzh_question_label_align_tl
+\tl_new:N \l__examzh_problem_label_align_tl
 
 
 \keys_define:nn { exam-zh }
@@ -188,7 +195,7 @@
     label .tl_set:N = \l__examzh_question_label_tl,
     label-align .choices:nn =
       { left, center, right }
-      { \tl_set_eq:NN \l__examzh_question_label_align_tl \l_keys_choice_tl },
+      { \tl_set_eq:NN \l__examzh_problem_label_align_tl \l_keys_choice_tl },
     points-prelabel .tl_set:N = \l__examzh_problem_points_prelabel_tl,
     points-postlabel .tl_set:N = \l__examzh_problem_points_postlabel_tl,
   }
@@ -215,20 +222,97 @@
 % 选择题和填空题的题干
 \NewDocumentEnvironment { question } { O { } +b }
   {
-    \bool_set_false:N \l__examzh_question_problem_style_bool
-    \__examzh_question_begin:nn {#1}{#2}
+    % \bool_set_false:N \l__examzh_question_problem_style_bool
+    \group_begin:
+      \__examzh_question_begin:nn {#1}{#2}
+      \__examzh_question_end:nn {#1}{#2} 
+    \group_end:
   }
-  { \__examzh_question_end:nn {#1}{#2}  }
+  {}
 
 % 解答题
 \NewDocumentEnvironment { problem } { O { } +b }
   {
-    \bool_set_true:N \l__examzh_question_problem_style_bool
-    \__examzh_problem_begin:nn {#1}{#2}
+    % \bool_set_true:N \l__examzh_question_problem_style_bool
+    \group_begin:
+      \__examzh_problem_begin:nn {#1}{#2}
+      \__examzh_problem_end:nn {#1}{#2} 
+    \group_end:
   }
-  { \__examzh_problem_end:nn {#1}{#2} }
+  { }
 
 \prg_generate_conditional_variant:Nnn \int_compare:nNn { xNn } { T }
+
+% question 和 problem 环境的 list 间距设置
+\cs_new:Npn \__examzh_enumerate_set_question:
+  {
+    \setlist[enumerate, 1]
+      {
+        labelindent = \parindent,
+        labelsep    = 2pt,
+        leftmargin  = *,
+        % label       = { \arabic * .}
+        label       = {（ \arabic * ）},
+      }
+
+    \setlist[enumerate, 2]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \alph * ）},
+      }
+    \setlist[enumerate, 3]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \roman * ）},
+      }
+  }
+\cs_new:Npn \__examzh_enumerate_set_problem:
+  {
+    \setlist[enumerate, 1]
+      {
+        labelindent = 2em,
+        labelsep    = 4pt,
+        leftmargin  = *,
+        % label       = { \arabic * .}
+        label       = {（ \arabic * ）},
+      }
+
+    \setlist[enumerate, 2]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \alph * ）},
+      }
+    \setlist[enumerate, 3]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \roman * ）},
+      }
+  }
+
 \cs_new:Npn \__examzh_question_begin:nn #1#2
   {
     \par
@@ -242,6 +326,8 @@
     % 设置上方间距
     % \addvspace { \l__examzh_question_top_sep_skip }
     \vspace { \l__examzh_question_top_sep_skip }
+    % 设置 enumerate 环境间距
+    \__examzh_enumerate_set_question:
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
@@ -251,7 +337,9 @@
     % \@enumdepth 主要控制 enumerate 不同层级的编号
     % 这样设置后，在 question 中使用 enumerate 会调用 level 2 的编号
     % 也就是 question 中的 enumerate 环境直接从第二层开始
-    \int_incr:N \@enumdepth
+
+    % \int_incr:N \@enumdepth
+
     % 如果 show-points = auto 那么解答题显示分数，选择题和填空题不显示分数
     % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
     % 而解答题不太一样
@@ -263,11 +351,14 @@
     \list 
       {
         % \int_use:N \g__examzh_question_index_int . 
-        \__examzh_question_make_label:n
+        \bool_if:NTF \l__examzh_question_combine_fillin_bool
           {
-            \bool_if:NT \l__examzh_question_combine_fillin_bool
+            % \framebox[6em]
+            % \fbox
+              % {
+            \__examzh_question_make_label:n
               {
-                \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
+                  \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
                   { \fillin }
                   {
                     \use:x
@@ -275,18 +366,43 @@
                         \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
                       }
                   }
+                  \__examzh_question_the_label:
               }
-            \int_compare:xNnT { \g__examzh_question_index_int } < { 11 }
-              { \phantom {1} }
-            \__examzh_question_the_label:
+              % }
           }
+          {
+            \__examzh_question_make_label:n
+              {
+                \__examzh_question_the_label:
+              }
+          }
+        % \__examzh_question_make_label:n
+        %   {
+        %     \bool_if:NT \l__examzh_question_combine_fillin_bool
+        %       {
+        %         % \makebox
+        %           % {
+        %             \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
+        %               { \fillin }
+        %               {
+        %                 \use:x
+        %                   {
+        %                     \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
+        %                   }
+        %               }
+        %           % }
+        %       }
+        %     \int_compare:xNnT { \g__examzh_question_index_int } < { 11 }
+        %       { \phantom {1} }
+        %     \__examzh_question_the_label:
+        %   }
       }
       {
         % 用 group 是为了防止 combine-fillin 的 type 影响了环境里面的 fillin 的type
         \group_begin:
           \dim_gset:Nn \topsep       { 0pt }
           \dim_gset:Nn \partopsep    { 0pt }
-          \dim_gset:Nn \itemsep      { 0pt }
+          \dim_gset:Nn \itemsep      { 0em }
           \dim_gset:Nn \parsep       { 0pt }
           % \group_begin:
             % 上面 \fillin 里面的设置是局部的，这样的问题是 question 的可选参数改 type 的时候不会影响 \l__examzh_fillin_type_str 的值
@@ -371,6 +487,27 @@
         \keys_set:nx { exam-zh / fillin } { \seq_use:Nn \l_tmpa_seq {,} }
       }
   }
+\cs_new:Npn \__examzh_problem_begin_labelsep_labelwidth_set:
+  {
+    \str_case:Vn \l__examzh_problem_label_align_tl 
+      {
+        { left } 
+          { 
+            \dim_gset:Nn \labelsep { .7em }
+            \dim_gset:Nn \labelwidth { 1.8em } 
+          }
+        { center }
+          {
+            \dim_gset:Nn \labelsep { .7em } 
+            \dim_gset:Nn \labelwidth { 1.3em } 
+          }
+        { right  } 
+          {
+            \dim_gset:Nn \labelsep { .7em } 
+            \dim_gset:Nn \labelwidth { 1.3em } 
+          }
+      }
+  }
 \cs_new:Npn \__examzh_question_begin_labelsep_labelwidth_set:
   {
     \bool_if:NTF \l__examzh_question_combine_fillin_bool
@@ -384,14 +521,32 @@
                     { paren } 
                       { 
                         % combin-left-paren
-                        \dim_gset:Nn \labelsep { 2.8em } 
-                        \dim_gset:Nn \labelwidth { 4.2em } 
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 2.6em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 4.5em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          }
                       }
                     { line }
                       { 
                         % combin-left-line
-                        \dim_gset:Nn \labelsep { 2.4em } 
-                        \dim_gset:Nn \labelwidth { 3.8em } 
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 2.2em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 3.8em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          } 
                       }
                   }
                   { 
@@ -425,8 +580,44 @@
               }
             { right  }
               {
-                \dim_gset:Nn \labelsep { .7em } 
-                \dim_gset:Nn \labelwidth { 1.3em }
+                \str_case:VnF \l__examzh_fillin_type_str
+                  {
+                    { paren } 
+                      { 
+                        % combin-left-paren
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 3.8em } 
+                            \dim_gset:Nn \labelwidth { 2em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 5.8em } 
+                            \dim_gset:Nn \labelwidth { 2em } 
+                          }
+                      }
+                    { line }
+                      { 
+                        % combin-left-line
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 0.7em } 
+                            \dim_gset:Nn \labelwidth { 1.3em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 5.2em } 
+                            \dim_gset:Nn \labelwidth { 2em } 
+                          }
+                      }
+                  }
+                  { 
+                    % combin-left-paren/line 外的
+                    \dim_gset:Nn \labelsep { 2.8em } 
+                    \dim_gset:Nn \labelwidth { 1.3em }
+                  }
               }
           }
       }
@@ -476,6 +667,8 @@
     % 设置上方间距
     % \addvspace { \l__examzh_question_top_sep_skip }
     \vspace { \l__examzh_problem_top_sep_skip }
+    % 设置 enumerate 环境间距
+    \__examzh_enumerate_set_problem:
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
@@ -485,7 +678,7 @@
     % \@enumdepth 主要控制 enumerate 不同层级的编号
     % 这样设置后，在 problem 中使用 enumerate 会调用 level 2 的编号
     % 也就是 question 中的 enumerate 环境直接从第二层开始
-    \int_incr:N \@enumdepth
+    % \int_incr:N \@enumdepth
     % 如果 show-points = auto 那么解答题显示分数，选择题和填空题不显示分数
     % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
     % 而解答题不太一样
@@ -497,7 +690,7 @@
     \list 
       {
         % \int_use:N \g__examzh_question_index_int . 
-        \__examzh_question_make_label:n
+        \__examzh_problem_make_label:n
           {
             \__examzh_question_the_label:
           }
@@ -509,12 +702,7 @@
           \dim_gset:Nn \partopsep    { 0pt }
           \dim_gset:Nn \itemsep      { 0pt }
           \dim_gset:Nn \parsep       { 0pt }
-          % \group_begin:
-            % 上面 \fillin 里面的设置是局部的，这样的问题是 question 的可选参数改 type 的时候不会影响 \l__examzh_fillin_type_str 的值
-            % 所以要把 \l__examzh_question_combine_fillin_args_tl 里关于 type 的选取出来
-            \__examzh_question_begin_fillin_type_set:
-            \__examzh_question_begin_labelsep_labelwidth_set:
-          % \group_end:
+          \__examzh_problem_begin_labelsep_labelwidth_set:
           \dim_gset:Nn \leftmargin { 0pt }
           \dim_gset:Nn \itemindent { 2em }
           \dim_gset_eq:NN \listparindent \itemindent
@@ -559,6 +747,15 @@
 \cs_new:Npn \__examzh_question_make_label:n #1
   {
     \str_case:Vn \l__examzh_question_label_align_tl
+      {
+        { left   } { \rlap { #1 } \hss }
+        { center } { \hss \clap { #1 } \hss }
+        { right  } { \hss \llap { #1 } }
+      }
+  }
+\cs_new:Npn \__examzh_problem_make_label:n #1
+  {
+    \str_case:Vn \l__examzh_problem_label_align_tl
       {
         { left   } { \rlap { #1 } \hss }
         { center } { \hss \clap { #1 } \hss }
@@ -801,7 +998,7 @@
   {
     show-answer = false,
     text-color  = black,
-    show-paren  = false,
+    show-paren  = true,
     type        = hfill
   }
 \keys_define:nn { exam-zh }
@@ -872,6 +1069,9 @@
 % no-answer-type = counter 的计数器
 \int_new:N \g__examzh_fillin_no_answer_counter_int
 
+% 控制fillin 没答案的时候的长度由内容长度决定
+\bool_new:N \l__examzh_fillin_width_type_hidden_bool
+
 \keys_define:nn { exam-zh / fillin }
   {
     type .code:n = 
@@ -888,7 +1088,7 @@
     color .tl_set:N = \l__examzh_fillin_color_tl,
     text-color .tl_set:N = \l__examzh_fillin_text_color_tl,
     no-answer-type .choices:nn =
-      { blacktriangle, counter, none }
+      { blacktriangle, counter, none, hidden }
       { \str_set:Nx \l__examzh_fillin_no_answer_type_str { \l_keys_choice_tl } },
     no-answer-counter-index .int_gset:N = \g__examzh_fillin_no_answer_counter_int,
     no-answer-counter-label .tl_set:N = \l__examzh_fillin_label_tl,
@@ -946,8 +1146,8 @@
             {
               % 不显示答案
               \IfBooleanTF {#1}
-                { \__examzh_fillin_no_answer_breakble_typeset: }
-                { \__examzh_fillin_no_answer_unbreakble_typeset: }
+                { \__examzh_fillin_no_answer_breakable_typeset: }
+                { \__examzh_fillin_no_answer_unbreakable_typeset: }
             }
         }
         {
@@ -968,8 +1168,8 @@
             {
               % 不显示答案
               \IfBooleanTF {#1}
-                { \__examzh_fillin_no_answer_breakble_typeset: }
-                { \__examzh_fillin_no_answer_unbreakble_typeset: }
+                { \__examzh_fillin_no_answer_breakable_typeset: }
+                { \__examzh_fillin_no_answer_unbreakable_typeset: }
             }
         }
     \group_end:
@@ -980,7 +1180,7 @@
     There~is~no~such~noanswertype~named~#1!\\
     Please~read~the~manual~carefully!
   }
-\cs_new:Npn \__examzh_fillin_no_answer_unbreakble_typeset:
+\cs_new:Npn \__examzh_fillin_no_answer_unbreakable_typeset:
   {
     \str_case:VnF \l__examzh_fillin_no_answer_type_str
       {
@@ -993,7 +1193,7 @@
           { \l__examzh_fillin_no_answer_type_str }
       }
   }
-\cs_new:Npn \__examzh_fillin_no_answer_breakble_typeset:
+\cs_new:Npn \__examzh_fillin_no_answer_breakable_typeset:
   {
     \str_case:VnF \l__examzh_fillin_no_answer_type_str
       {
@@ -1298,12 +1498,12 @@
     \group_end:
     \ignorespaces
   }
-\cs_new:Npn \__examzh_fillin_blank_breakble_F:
+\cs_new:Npn \__examzh_fillin_blank_breakable_F:
   {
     % \hspace* { \l__examzh_fillin_F_width_dim }
     \__examzh_fillin_breakable_hspace:NN \use:n \allowbreak
   }
-\cs_new:Npn \__examzh_fillin_blank_unbreakble_F:
+\cs_new:Npn \__examzh_fillin_blank_unbreakable_F:
   {
     \hspace* { \l__examzh_fillin_F_width_dim }
     % \__examzh_fillin_breakable_hspace:NN \use:n \allowbreak
@@ -1488,13 +1688,15 @@
 \NewDocumentEnvironment { solution } { O{ } +b }
   {
     % \addvspace { \l__examzh_solution_top_sep_skip }
-    \vspace { \l__examzh_solution_top_sep_skip }
     \keys_set:nn { exam-zh / solution } {#1}
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
     \bool_if:NTF \l__examzh_solution_show_bool
       {
+        \vspace { \l__examzh_solution_top_sep_skip }
         \__examzh_solution_print_answer:n {#2}
+        \par    
+        \vspace { \l__examzh_solution_bottom_sep_skip }
       }
       {
         \str_case:VnF \l__examzh_solution_blank_type_str
@@ -1508,7 +1710,6 @@
     \par
     % \mode_leave_vertical:
     % \addvspace { \l__examzh_solution_bottom_sep_skip }
-    \vspace { \l__examzh_solution_bottom_sep_skip }
   }
   {}
 \cs_new:Npn \__examzh_solution_simply_hide_solution:n #1

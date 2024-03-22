@@ -1,0 +1,215 @@
+%%%
+% Tortue
+%%%
+\setKVdefault[Tortue]{%
+  Pas=0.2mm,%Déplacement,
+  Etapes=false,%Pour arrêter la construction à une étape particulière
+  Nom=\jobname,%Pour la sauvegarde du fichier mp
+  Grille=false,%Pour faire apparaître une grille
+  Couleur=black,%Couleur du tracé
+  LargeurG=10,%Largeur Grille
+  HauteurG=10,%Hauteur Grille
+  TortueD=false,%Affiche la tortue au départ
+  TortueF=false,%Affiche la tortue à l'arrivée
+  Epaisseur=1,%Epaisseur du tracé
+  Angle=0,%Angle de départ de la tortue
+  Debut=false,%Pour indiquer que rien n'est fait (utile ?)
+  Depart={(0,0)},%Point de départ de la tortue
+  Axes=false,%Affichage des axes ou pas
+  Origine={(0,0)},%Origine des axes
+  Cases=false,%Se déplace-t-on sur des cases ?
+}
+\defKV[Tortue]{Etape=\setKV[Tortue]{Etapes}}%choix de l'étape d'arrêt
+
+\newcounter{PfCTortue}
+\setcounter{PfCTortue}{0}
+
+\makeatletter
+\NewDocumentCommand\TortueCreationFichier{o m}{%
+  \stepcounter{PfCTortue}%
+  \useKVdefault[Tortue]%
+  \setKV[Tortue]{#1}%
+  \setKV[Tortue]{Nom=\jobname+t\thePfCTortue}%
+  \setsepchar[*]{,* }%
+  \readlist*\PfCListeCmdTortue{#2}%
+  \setsepchar{,}%
+  \xdef\PfCNbRep{0}%
+  \savecomparemode%
+  \newwrite\turtle@out%
+  \immediate\openout\turtle@out \jobname+t\thePfCTortue.turtle%
+  \immediate\write\turtle@out{%
+    numeric ut;
+    ut=\useKV[Tortue]{Pas};
+    pair OrigineAxes;OrigineAxes=\useKV[Tortue]{Origine};
+    Etapes=\useKV[Tortue]{Etapes};
+    if Etapes:Total=\useKV[Tortue]{Etape};fi;
+  }%
+  \ifboolKV[Tortue]{Grille}{%
+    \immediate\write\turtle@out{%
+      larg=\useKV[Tortue]{LargeurG}; haut=\useKV[Tortue]{HauteurG};
+      for k=-larg upto larg:
+      draw 3*ut*(10k,-10haut)--3*ut*(10k,10haut) withcolor 0.75white;
+      endfor;
+      for k=-haut upto haut:
+      draw 3*ut*(-10larg,10k)--3*ut*(10larg,10k) withcolor 0.75white;
+      endfor;
+      %dotlabel("",ut*OrigineAxes);
+      if \useKV[Tortue]{Axes}:
+      drawarrow (3*ut*(-10larg,0)--3*ut*(10larg,0)) shifted(ut*(0,ypart(OrigineAxes-(0,0))));
+      drawarrow (3*ut*(0,-10haut)--3*ut*(0,10haut)) shifted(ut*(xpart(OrigineAxes-(0,0)),0));
+      %label.llft(btex O etex,(0,0));
+      dotlabel.lrt(btex 30 etex,(30*ut,0)+ut*(OrigineAxes-(0,0)));
+      dotlabel.ulft(btex 30 etex,(0,30*ut)+ut*(OrigineAxes-(0,0)));
+      fi;
+      if \useKV[Tortue]{Cases}:
+      string T[];
+      T1="A";
+      T2="B";
+      T3="C";
+      T4="D";
+      T5="E";
+      T6="F";
+      T7="G";
+      T8="H";
+      T9="I";
+      T10="J";
+      T11="K";
+      T12="L";
+      T13="M";
+      T14="N";
+      T15="O";
+      T16="P";
+      T17="Q";
+      T18="R";
+      T19="S";
+      T20="T";
+      T21="U";
+      T22="V";
+      T23="W";
+      T24="X";
+      T25="Y";
+      T26="Z";
+      for k=-larg upto larg-1:
+      label(TEX(T[k+larg+1]),3*ut*(10k+5,10haut+5));
+      endfor;
+      for k=haut downto -haut+1:
+      label(TEX(decimal(haut-k+1)),3*ut*(-10larg-5,10k-5));
+      endfor;
+      fi;
+      Epaisseur:=1.5;
+    }%
+  }{}%
+  \ifboolKV[Tortue]{Debut}{}{%
+    \foreachitem\compteur\in\PfCListeCmdTortue{%
+      \comparestrict%
+      \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{MP}[\PfCTestMP]%
+      \xintifboolexpr{\PfCTestMP==0}{%
+        \immediate\write\turtle@out{\PfCListeCmdTortue[\compteurcnt,2]}%
+      }{%
+        \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{[}[\PfCTestCrochetO]%
+        \xintifboolexpr{\PfCTestCrochetO==0}{}{%
+          \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{]}[\PfCTestCrochetF]%
+          \xintifboolexpr{\PfCTestCrochetF==0}{%
+            \immediate\write\turtle@out{TotalRemplis:=tt-1; remplis for l=1 upto TotalRemplis:B[l]--endfor cycle withcolor CouleurRemplis;}%
+          }{%
+            \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Remplis}[\PfCTestRemplis]%
+            \xintifboolexpr{\PfCTestRemplis==0}{%
+              \immediate\write\turtle@out{tt:=0;
+                TotalRemplis:=0; CouleurRemplis:=\PfCListeCmdTortue[\compteurcnt,2];}%
+            }{%
+              \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Fin}[\PfCTestFinPour]%
+              \xintifboolexpr{\PfCTestFinPour==0}{%
+                \immediate\write\turtle@out{enddef;k:=0;}%
+                \xdef\PfCNbRep{\fpeval{\PfCNbRep+1}}%
+              }{%
+                \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Pour}[\PfCTestPour]%
+                \xintifboolexpr{\PfCTestPour==0}{%
+                  \immediate\write\turtle@out{vardef \PfCListeCmdTortue[\compteurcnt,2](expr \PfCListeCmdTortue[\compteurcnt,3])=}%
+                }{%
+                  \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Rep}[\PfCTestRep]%
+                  \xintifboolexpr{\PfCTestRep==0}{%
+                    \xdef\PfCNbRep{\fpeval{\PfCNbRep+1}}%
+                    \immediate\write\turtle@out{nb[\PfCNbRep]:=0;}%
+                    \immediate\write\turtle@out{forever:}%
+                    \immediate\write\turtle@out{nb[\PfCNbRep]:=nb[\PfCNbRep]+1;}%
+                    % \immediate\write\turtle@out{nbcomp:=nbcomp+1;}
+                  }{%
+                    \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{)}[\PfCTestParaF]%
+                    \xintifboolexpr{\PfCTestParaF==0}{%
+                      \immediate\write\turtle@out{exitif nb[\PfCNbRep]=\PfCListeCmdTortue[\compteurcnt,2];}%
+                      \immediate\write\turtle@out{endfor;}%
+                      \xdef\PfCNbRep{\fpeval{\PfCNbRep-1}}%
+                    }{%
+                      \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{(}[\PfCTestParaO]%
+                      \xintifboolexpr{\PfCTestParaO==0}{%
+                      }{%
+                        \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Bc}[\PfCTestBc]%
+                        \xintifboolexpr{\PfCTestBc==0}{%
+                          \immediate\write\turtle@out{Bc;}%
+                        }{%
+                          \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Lc}[\PfCTestLc]%
+                          \xintifboolexpr{\PfCTestLc==0}{%
+                            \immediate\write\turtle@out{Lc;}%
+                          }{%
+                            \StrCompare{\PfCListeCmdTortue[\compteurcnt,1]}{Tlp}[\PfCTestTlp]%
+                            \xintifboolexpr{\PfCTestTlp==0}{%
+                              \immediate\write\turtle@out{Teleporter(\PfCListeCmdTortue[\compteurcnt,2],\PfCListeCmdTortue[\compteurcnt,3]);}%
+                            }{%
+                              \immediate\write\turtle@out{\PfCListeCmdTortue[\compteurcnt,1](\PfCListeCmdTortue[\compteurcnt,2]);}%
+                            }%
+                          }%
+                        }%
+                      }%
+                    }%
+                  }%
+                }%
+              }%
+            }%
+          }%
+        }%
+      }%
+    }%
+  }%
+  % \immediate\write\turtle@out{Tortue:=currentpicture;Tortue enddef;}%
+  % \immediate\write\turtle@out{draw Dessin;}%
+  \ifboolKV[Tortue]{TortueD}{%
+    \immediate\write\turtle@out{drawoptions(withcolor DarkGreen);label(btex \noexpand\Large\noexpand\ding{40} etex rotated RetiensAngle[0] scaled 1.5,A[0]);}%
+  }{}%
+  \ifboolKV[Tortue]{Etapes}{%
+    \immediate\write\turtle@out{drawoptions(withcolor DarkGreen);label(btex \noexpand\Large\noexpand\ding{40} etex rotated RetiensAngle[Total] scaled 1.5,A[Total]);}%
+  }{\ifboolKV[Tortue]{TortueF}{\immediate\write\turtle@out{drawoptions(withcolor DarkGreen);label(btex \noexpand\Large\noexpand\ding{40} etex rotated RetiensAngle[k] scaled 1.5,A[k]);}}{}}%
+  \immediate\closeout\turtle@out%
+  \restorecomparemode%
+}%
+\makeatother
+
+\NewDocumentCommand\Tortue{o m}{%
+  \useKVdefault[Tortue]%
+  \setKV[Tortue]{#1}%
+  \TortueCreationFichier[#1]{#2}%
+  \TortueDessinFinal%
+}
+
+\NewDocumentCommand\TortueDessinFinal{}{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    input PfCTurtleTestRemplis.mp;
+    drawoptions(withcolor \useKV[Tortue]{Couleur});
+    pair Depart;
+    Depart=\useKV[Tortue]{Depart} if \useKV[Tortue]{Cases}:+(15,15)fi;
+    pair A[],B[];
+    A[0]=\useKV[Tortue]{Pas}*(xpart(Depart),ypart(Depart));
+    B[0]=A[0];
+    Epaisseur:=\useKV[Tortue]{Epaisseur};
+    Angle:=0;
+    numeric RetiensAngle[];
+    RetiensAngle[0]=\useKV[Tortue]{Angle};
+    
+    pair VecteurDpt;
+    VecteurDpt=(1,0) rotated RetiensAngle[0];
+    input \useKV[Tortue]{Nom}.turtle;
+  \end{mplibcode}
+  \else
+  \fi
+}%

@@ -1,8 +1,13 @@
-# 中文版 lshort，6.03 版
+[English](https://github.com/CTeX-org/lshort-zh-cn) | [中文](https://github.com/CTeX-org/lshort-zh-cn/blob/master/README-zh.md)
+
+# 一份（不太）简短的 LaTeX2ε 介绍
+
+[![CTAN](https://img.shields.io/ctan/v/lshort-zh-cn)](https://ctan.org/pkg/lshort-zh-cn)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/CTeX-org/lshort-zh-cn)](https://github.com/CTeX-org/lshort-zh-cn/releases/latest)
 
 ## 许可证
 
-本文档以 **GNU 自由文档许可证（1.3 版）** 发布。详见文档中题为“GNU Free Documentation License”的章节，或者源代码文件 `fdl.tex`。
+本文档以 **GNU 自由文档许可证（1.3 版）** 发布。详见文档中题为「GNU Free Documentation License」的章节，或者源代码文件 `fdl.tex`。
 
 ## 编译之前的准备
 

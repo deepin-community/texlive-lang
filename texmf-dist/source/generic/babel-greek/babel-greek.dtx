@@ -20,13 +20,13 @@
 % The Current Maintainer of this work is Günter Milde <milde@users.sf.net>.
 %
 % Babel-greek is a contributed package providing support for the Greek
-% language and script via the Babel system (http://www.ctan.org/pkg/babel).
+% language and script via the Babel system (https://ctan.org/pkg/babel).
 %
 % The list of derived (unpacked) files belonging to this work
 % and covered by LPPL is defined by the unpacking script (babel-greek.ins)
 % which is part of the package.
 % \fi
-% \CheckSum{1547}
+% \CheckSum{1694}
 %
 % \iffalse
 %    Tell the \LaTeX\ system who we are and write an entry on the
@@ -37,12 +37,12 @@
 %<code>\ProvidesLanguage{greek}
 %\fi
 %\ProvidesFile{babel-greek.dtx}
-        [2020/11/10 v1.10 Greek support for the babel system]
+        [2023/10/13 1.15 Greek support for the babel system]
 %\iffalse
 %% File `babel-greek.dtx'
 %% Greek language Definition File
 %% Copyright © 1997, 2005 Apostolos Syropoulos, Johannes Braams
-%% Copyright © 2013, 2019 Günter Milde
+%% Copyright © 2013 -- 2023 Günter Milde
 %
 %% Please report errors to: Günter Milde <milde@users.sf.net>
 %
@@ -50,19 +50,17 @@
 %    code for the greek language definition file. The original
 %    version of this file was written by Apostolos Syropoulos.
 %    It was then enhanced by adding code from kdgreek.sty from David
-%    Kastrup <dak@gnu.org> with his
-%    consent.
+%    Kastrup <dak@gnu.org> with his consent.
 %<*filedriver>
 \documentclass{ltxdoc}
-% \usepackage{lmodern}
-\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=black}
-\newcommand*{\babel}{\textsf{babel}}
-\newcommand*{\note}[1]{}
 \newcommand*{\Lopt}[1]{\textsf{#1}}
 \newcommand*{\file}[1]{\texttt{#1}}
-\newcommand*{\pkg}[1]{\texttt{#1}}
+\newcommand*{\pkg}[1]{\textsf{#1}}
+\newcommand*{\pkgref}[1]{\textsf{\href{https://ctan.org/pkg/#1}{#1}}}
+\RecordChanges  % Write index file with \changes entries
 \begin{document}
  \DocInput{babel-greek.dtx}
 \end{document}
@@ -86,68 +84,38 @@
 % \changes{greek-1.4}{2013/05/17}{new maintainer}
 % \changes{greek-1.5}{2013/06/21}{bugfixes,
 %    change some symbol macros to aliases,
-%    LGR fixes via DeclareTextCommand instead of
+%    LGR fixes via \cs{DeclareTextCommand} instead of
 %    extrasgreek/noextrasgreek definitions,
 %    LICR macros in string definitions,
 %    LGR font encoding not used with XeTeX/LuaTeX.}
-% \changes{greek-1.5a}{2013/06/27}{``extraspolutonikogreek'' definition
-%    was missing with Xe/LuaTeX.
-%    Replaced non-printable literal character with ^^-notation.}
 % \changes{greek-1.6}{2013/07/18}{fix \cs{@roman} and \cs{@Roman}
 %    redefinition (thanks to Enrico Gregorio and Claudio Beccari),
 %    load LICR macro definitions for Xe/LuaTeX.}
 % \changes{greek-1.7}{2013/09/09}{Do not load euenc.def with XeTeX/LuaTeX.
 %    Prevent re-loading lgrenc.def.}
-% \changes{greek-1.7a}{2013/09/13}{bugfix: remove spurious ``fi''.}
-% \changes{greek-1.7b}{2013/10/01}{bugfix: correct upcasing of babel strings
+% \changes{greek-1.7a}{2013/09/13}{Remove spurious ``fi''.}
+% \changes{greek-1.7b}{2013/10/01}{Correct upcasing of babel strings
 %    with Xe/LuaTeX.}
-% \changes{babel-greek-1.8}{2013/11/27}{Rename to ``babel-greek.dtx''.
-%    Restore compatibility with Xe/LuaTeX in 8-bit and Unicode mode.
-%    Load ``euenc.def'' if EU1 or EU2 font encoding is detected.
-%    New TextCommands ``greekscript'' and ``ensuregreek''.}
-% \changes{babel-greek-1.8a}{2013/12/03}{Set `encodingdefault' in `greekscript'
-%   to fix Greek in footnotes etc. with document language Greek.}
-% \changes{babel-greek-1.9}{2014/07/20}{Added attribute for ancient Greek.
-%   Load correct hyphenation patterns. Patch by Claudio Beccari.}
-% \changes{babel-greek-1.9b}{2014/09/18}{Remove spurious whitespace from
-%   `extrasgreek'  definition (report Eike Schmidt).
-%   Use named macros instead of non-standard short accent macros for
-%   psili and dasia.}
-% \changes{babel-greek-1.9c}{2014/10/21}{Fix dummy hyphenation language names
-%   (report/patch Ulrike Fischer).}
-% \changes{babel-greek-1.9d}{2015/07/06}{uc-/lccode corrections from xgreek are now
-%   in greek-euenc.def (the polyglossia version has bugs).}
-% \changes{babel-greek-1.9e}{2015/11/27}{Fix bug in lccode-setting loop
-%   (patch by Enrico Gregorio).}
-% \changes{babel-greek-1.9f}{2016/02/04}{Support for standard
-%   Unicode text encoding ``TU'' (new in fontspec v2.5a).}
-% \changes{babel-greek-1.9g}{2016/09/07}{Babel 3.9i deprecated textlatin
-%   and fixed latinencoding.}
-% \changes{babel-greek-1.9h}{2019/07/11}{Move breathing composite commands
-%   to textalpha.}
-% \changes{babel-greek-1.9i}{2020/02/28}{Update test for Unicode fonts.
-%   Fix accent in seename and alsoname.}
-% \changes{babel-greek-1.9j}{2020/03/17}{Fix ampersand in math mode.}
-% \changes{babel-greek-1.10}{2020/11/10}{Use TU as \cs{greekfontencoding}
-%   for Xe/LuaTeX. TU is the default font encoding there since 2017/01/01.
-%   PDF-string secure implementation of \cs{greeknumeral}
-%   (taken from ``hyperref'').
-%   Use zig-zagy \cs{textkoppa} for \cs{greeknumeral{90}}.
-%   This is what it looked originally and what it looks
-%   in current (not classical or medieval) Greek typography.
-%   Load ``puenc-greek.def`` (from greek-fontenc_) if used with hyperref.}
+% \changes{greek-1.8}{2013/11/27}{Renamed to `babel-greek'.}
+% \changes{babel-greek-1.08}{2013/11/27}{\file{greek.dtx} renamed to
+%    \file{babel-greek.dtx} (but still generates \file{greek.ldf}).}
+% \changes{babel-greek-1.08}{2013/11/27}{
+%    Restore compatibility with Xe/LuaTeX in 8-bit and Unicode mode.}
+% \changes{babel-greek-1.09g}{2016/09/07}{Babel 3.9i deprecated
+%    \cs{textlatin} and fixed \cs{latinencoding}.}
+% \changes{babel-greek-1.09i}{2020/02/28}{
+%   Fix accent in \cs{seename} and \cs{alsoname}.}
 %
 % \title{Babel support for the Greek language}
 % \author{Apostolos Syropoulos, Günter Milde}
 % \maketitle
 %
 % Babel-greek is a contributed package providing support for the Greek
-% language and script via the \href{http://www.ctan.org/pkg/babel}{Babel}
-% system. See the \href{README.html}{README} file for an overwiew of the
+% language and script via the \pkgref{babel} system.
+% See \href{babel-greek-doc.html}{babel-greek-doc} for an overwiew of the
 % \pkg{babel-greek} package and links to requirements and related packages.
 %
-% The file \file{\filename}%
-%  \footnote{
+% The file \file{\filename}\footnote{
 %   The file described in this section has version number \fileversion\
 %   and was last revised on \filedate.
 %   The original author is Apostolos Syropoulos, code from \file{kdgreek.sty}
@@ -155,212 +123,302 @@
 % is the literate source for the Babel language definition file
 % \file{greek.ldf}.
 %
+% \tableofcontents
+%
 % \section{Requirements}
 %
-% Typesetting Greek with Babel requires (of course) the
-% \href{http://www.ctan.org/pkg/babel}{Babel core}, support for Greek font
-% encodings (\href{http://www.ctan.org/pkg/greek-fontenc}{greek-fontenc})
+% Typesetting Greek with Babel requires (of course) the \pkgref{babel}
+% package, support for Greek font encodings (\pkgref{greek-fontenc})
 % and a \href{README.html#greek-text-fonts}{text font supporting the
 % Greek script}.
 %
-% The \href{http://www.ctan.org/pkg/cbgreek-complete}{CB Greek fonts}
+% The \href{https://ctan.org/pkg/cbgreek-complete}{CB Greek fonts}
 % created by \textsc{Claudio Beccari}\footnote{Apostolos Syropoulos
 %   wishes to thank Claudio Beccari for his
 %   patience, collaboration, comments and suggestions.}
-% are a complete set of 8-bit TeX fonts matching \textsc{Knuth}'s
+% are a complete set of 8-bit \TeX{} fonts matching \textsc{Knuth}'s
 % Computer Modern.
-% The package \pkg{\href{http://www.ctan.org/pkg/cbfonts-fd}{cbfonts-fd}}
-% sets them up as Greek substitute for the Computer Modern and Latin Modern
-% font families.
-% The \pkg{\href{http://www.ctan.org/pkg/substitutefont}{substitutefont}}
-% package can be used to set up Greek supplements for other
-% font families (like Times or Palatino).
+% The package \pkgref{cbfonts-fd} sets them up as Greek substitute
+% for the Computer Modern and Latin Modern font families.
+% The standard |\DeclareFontFamilySubstitution| macro can be used to set up
+% Greek supplements for other \TeX{} font families (like Times or Palatino).
 %
-% The \href{http://ctan.org/pkg/lm}{Latin Modern} OpenType font that is the
-% default font for XeTeX/LuaTeX does not support the Greek script. The user
-% needs to set up an alternative font like CM Unicode, Linux Libertine or
-% DejaVu with \pkg{\href{http://www.ctan.org/pkg/fontspec}{fontspec}}.
+% Unicode fonts (used with XeTeX or LuaTeX) provide slots for all Unicode
+% characters in one font but commonly only a subset of the actual glyphs.
+% \textbf{Many Unicode fonts, including the default
+% \href{https://ctan.org/pkg/lm}{Latin Modern},
+% do not support the Greek script!}
+% Authors need to set up an alternative font like CM Unicode, Linux Libertine,
+% or DejaVu with \pkgref{fontspec} or the \pkgref{babel} font configuration
+% system.
+%
+% With 8-bit TeX and XeTeX, hyphenation patterns must be
+% pre-loaded in the format file.
+% This is a limitation by TeX, common to all languages.
+% The LuaTeX engine loads hyphenation patterns dynamically.
+%
 %
 % \section{Usage}
 %
-%    To activate Greek support with babel, specify the option
-%    \Lopt{greek}, either as global option or as option to the
-%    \pkg{babel} package. Remember, that the \emph{last} language
-%    option determines the document language, e.g.
-%    \begin{verbatim}
-%    \usepackage[greek,english]{babel}\end{verbatim}
-%    activates support for Greek in an English document.
-%    The default is modern ``monotonic'' Greek, while
-%    \begin{verbatim}
-%      \usepackage[english,greek]{babel}
-%      \languageattribute{greek}{polutoniko}
-%    \end{verbatim}
-%    sets the document language to modern Greek with ``polytonic''
-%    spelling and
-%    \begin{verbatim}
-%      \usepackage[english,greek]{babel}
-%      \languageattribute{greek}{ancient}
-%    \end{verbatim}
-%    sets the document language to ancient Greek.
+% To activate Greek language support with babel, specify the option
+% \Lopt{greek}, either as global option or as option to the
+% \pkg{babel} package. Remember, that the \emph{last} language
+% option determines the document language, e.g.
+% \begin{verbatim}
+% \usepackage[greek,english]{babel}\end{verbatim}
+% activates support for Greek text parts in an English document.
 %
-%    Both attributes may also be used as modifiers as in
-%    \begin{verbatim}
-%      \usepackage[greek.polutoniko,english]{babel}
-%    \end{verbatim}
-%    and similarly
-%    \begin{verbatim}
-%      \usepackage[greek.ancient,english]{babel}
-%    \end{verbatim}
-%
-%    By default,
-%    \pkg{babel-greek} activates the modern Greek monotonic hyphenation;
-%    the attribute/modifier |polutoniko| activates the modern Greek
-%    polytonic hyphenation and the attribute/modifier |ancient| activates
-%    the ancient Greek hyphenation.  8-bit TeX and XeTeX require the
-%    hyphenation patterns to be pre-loaded in the format file.
-%    This is a limitation by TeX, common to all languages.
-%    The LuaTeX engine loads hyphenation patterns on demand.
-%
-%  \DescribeMacro\selectlanguage
-%  \DescribeMacro\foreignlanguage
+% \DescribeMacro\selectlanguage
 % The Babel core provides two commands to switch the active language:
 % The declaration |\selectlanguage{greek}| switches to the Greek language.
+% \DescribeMacro\foreignlanguage
 % The macro \verb|\foreignlanguage{greek}{<some text>}| sets its second
 % argument in the Greek language. This is intended for short text parts.
-% For details see the \href{http://www.ctan.org/pkg/babel}{Babel}
-% documentation.
+% For details see the \pkgref{babel} documentation.
 %
-%    For backwards compatibility, ``polytonic'' spelling can also be
-%    selected via the dummy language \Lopt{polutonikogreek}. In this
-%    case, the language name \Lopt{polutonikogreek} must also be
-%    used for language switches with |\selectlanguage| or
-%    |\foreignlanguage|.  However, it is not possible to use
-%    both options, \Lopt{greek} and \Lopt{polutonikogreek} in one document.
+%
+% \subsection{Language attributes}
+%
+% The attributes \hyperref[sec:polutoniko]{\Lopt{polutoniko}}^^A
+%   \footnote{with the alias \Lopt{polytonic}},
+% and \hyperref[sec:ancient]{\Lopt{ancient}} allow the specification
+% of the used orthography.
+% The language variant affects automatic hyphenation, spelling of
+% auto-generated strings and support for multi-accented letters.
+%
+% The default is modern \emph{monotonic} Greek, while
+% \begin{verbatim}
+%   \usepackage[english,greek]{babel}
+%   \languageattribute{greek}{polutoniko}\end{verbatim}
+% sets the document language to modern Greek with
+% \emph{\href{https://en.wikipedia.org/wiki/Greek_diacritics}{polytonic}}
+% spelling and
+% \begin{verbatim}
+%   \usepackage[english,greek]{babel}
+%   \languageattribute{greek}{ancient}\end{verbatim}
+% sets the document language to \emph{ancient} Greek.
+%
+% The \hyperref[sec:keep-semicolon]{\Lopt{keep-semicolon}} language
+% attribute (new in babel-greek 1.13) ensures that a SEMICOLON character (;)
+% can be used as input for the similar looking Greek question mark
+% (\emph{erotimatiko}).
+% By default, the LGR font encoding uses the QUESTION MARK (?)
+% as input for the \emph{erotimatiko} and maps the SEMICOLON
+% to an \emph{ano teleia} (·).
+%
+% \subsection{Modifiers \label{sec:modifiers}}
+%
+% \changes{babel-greek-1.12}{2023/03/04}{
+%   New modifiers \Lopt{local-LGR-fixes} and \Lopt{no-LGR-fixes}.}
+% \changes{babel-greek-1.14}{2023/08/18}{
+%   New modifier \Lopt{local-MakeUppercase-fixes}.}
+% \changes{babel-greek-1.15}{2023/10/13}{
+%   Rename modifier \Lopt{local-MakeUppercase-fixes} to
+%   \Lopt{no-MakeUppercase-fixes}.}
+%
+% All language attributes may also be used as modifiers, e.g.
+% \begin{verbatim}
+%   \usepackage[greek.polutoniko,english]{babel}\end{verbatim}
+% In addition, there are modifiers that cannot be set with
+% |\languageattribute|.
+%
+% The \hyperref[sec:lgr-redefinitions]{\Lopt{local-LGR-fixes}} modifier
+% restricts the re-definitions in section~\ref{sec:lgr-redefinitions}
+% to text parts using the Greek language.
+% The \hyperref[sec:lgr-redefinitions]{\Lopt{no-LGR-fixes}} modifier
+% disables them completely. You may try, e.g.,
+%    \begin{verbatim}
+%    \usepackage[greek.local-LGR-fixes,english]{babel}\end{verbatim}
+% as a last ressort if the workarounds make a document uncompilable
+% and using Xe/LuaTeX with Unicode fonts is not an option.
+% Check for problems with enumerations in Greek text parts and with
+% Roman and Greek numerals everywhere (especially in the ToC).
+%
+% The \hyperref[sec:MakeUppercase-fixes]{\Lopt{no-MakeUppercase-fixes}}
+% modifier skips the mapping of standard accents to ``capital'' accents
+% in section~\ref{sec:MakeUppercase-fixes}.
+%
+% These modifiers are provisional, naming and behaviour may change.
+%
+%
+% \subsection{Language hooks \label{sec:language-hooks}}
+%
+% \DescribeMacro\extrasgreek
+% The macro |\extrasgreek| is called by \pkgref{babel} on every switch
+% of the active language to Greek.
+% \DescribeMacro\noextrasgreek
+% The macro |\noextrasgreek| is called when switching away from Greek.
+% Package and document authors can add setup and tear-down code
+% to the hooks with the help of the |\addto| command provided by \pkg{babel}.
+% The first call of |\addto\<hookname>{<code>}| initializes the hook,
+% subsequent calls append |<code>| to its definition.
+%
+% \pkg{Babel-greek} uses these hooks to, e.g, select correct hyphenation
+% patterns (cf.\ section~\ref{sec:hyphenation-patterns}) or ensure a font
+% encoding supporting the Greek script is used for Greek text parts
+% (cf.\ section~\ref{sec:font-setup}).
+%
 %
 % \subsection{Input of Greek text}
 %
 % There are several alternatives to write Greek text.
 % \begin{itemize}
-%  \item With the packages \pkg{inputenc} and
-%    \pkg{\href{http://www.ctan.org/pkg/greek-inputenc}{greek-inputenc}},
-%    literal Greek characters can be input using the utf-8, iso-8859-7,
-%    or macgreek encoding.
+%  \item Literal input using the UTF-8 encoding is the standard input method.
+%    With 8-bit TeX, this requires the package \pkgref{greek-inputenc}
+%    and special handling for Latin letters and some symbols
+%    (consider using the \hyperref[sec:keep-semicolon]{\Lopt{keep-semicolon}}
+%    attribute).
 %
-%    Literal input using the utf-8 encoding is also the standard input
-%    method if compiling with the XeTeX and LuaTeX engines.
+%    With the packages \pkgref{inputenc} and \pkgref{greek-inputenc},
+%    literal Greek characters can also be input using the legacy encodings
+%    \emph{iso-8859-7} and \emph{macgreek}.
 %
 %  \item The Latin transliteration defined by the LGR font encoding
 %    is explained in the file \file{\href{usage.pdf}{usage.pdf}}.
 %
-%   \item The package
-%    \pkg{\href{http://www.ctan.org/pkg/greek-fontenc}{greek-fontenc}}
+%   \item The package \pkgref{greek-fontenc}
 %    defines \emph{LaTeX internal character representation} (LICR) macros
-%    for Greek letters and text symbols. It is required by \pkg{babel-greek},
-%    so the |\textAlpha| \ldots |\textomega|
-%    macros are a safe but cumbersome method to input Greek characters.
+%    for Greek letters and text symbols. It is required by \pkg{babel-greek}.
+%    The LICR macros |\textAlpha| \ldots |\textomega|
+%    are a safe but cumbersome method to input Greek characters.
 %
-%  \item The \pkg{alphabeta} package bundled with
-%    \href{http://www.ctan.org/pkg/greek-fontenc}{greek-fontenc} makes the
-%    short macro names |\Alpha| \ldots |\omega| available in text mode, too.
+%  \item The \pkg{alphabeta} package, bundled with \pkgref{greek-fontenc},
+%    makes the short macro names |\Alpha| \ldots |\omega| available
+%    in both, text and math mode.
 % \end{itemize}
-% The \href{http://www.ctan.org/pkg/greek-fontenc}{greek-fontenc} bundle
-% has details and examples for all these input methods.
 %
 % \subsection{Greek vs. Latin script}
 %    When switching the language to Greek, \pkg{babel-greek} ensures that the
 %    Greek script is supported.
-%    With 8-bit LaTeX, Greek text fonts use a non-standard
-%    font encoding\footnote{LaTeX font encodings are described in
-%    the \emph{LaTeX font guide} (fntguide.pdf).}
-%    (LGR) that misses Latin letters. Latin characters in the source are
-%    instead interpreted as a transcription for Greek characters.
-%    The following macros allow the use of Greek vs. Latin script without
-%    changing the active language.
+%    The following macros allow the use of Greek vs.\ Latin script without
+%    changing the active language:
+%
 %  \DescribeMacro\greekscript
-%  \DescribeMacro\greektext
 %    The \emph{TextCommand}\footnote{For a discussion of TextCommands, see
-%    the \emph{LaTeX font guide} (fntguide.pdf), too.}
+%    the \emph{LaTeX font guide}.}
 %    |\greekscript| switches to a font encoding
 %    supporting the Greek script.
+%  \DescribeMacro\greektext
 %    The declaration |\greektext| always switches the font encoding
 %    to LGR. Both declarations do not change the active language.
+%
 %  \DescribeMacro\latintext
-%    |\latintext| (defined by the Babel
-%    core) can be used to switch back to an encoding supporting the Latin
-%    script (deprecated since Babel 3.9i from March 2014).
+%    |\latintext| (defined by the Babel core, deprecated since March 2014)
+%    can be used to switch back to an encoding supporting the Latin script.
 %
 %  \DescribeMacro\ensuregreek
-%  \DescribeMacro\textgreek
-%    The macros |\ensuregreek| and |\textgreek| take one argument
-%    which is typeset using a font encoding supporting the Greek
-%    script. While |\ensuregreek| only switches the
-%    font encoding if required, |\textgreek| always uses the LGR font
-%    encoding.
-%  \DescribeMacro\textlatin
-%    The Babel core defines a corresponding |\textlatin| macro
-%    (deprecated in favour of |\ensureascii| in Babel 3.9i from March 2014).
+%    The function |\ensuregreek| takes one argument which
+%    is typeset using a font encoding supporting the Greek script.
+%    It only switches the font encoding if required (i.e. if the current
+%    font encoding does not support Greek letters and symbols).
 %
-%  \section{Greek numbering}
+%  \DescribeMacro\lgrfont
+%    The function |\lgrfont|^^A
+%      \footnote{The legacy name \cs{textgreek} is available as alias.}
+%    switches to the non-standard Greek 8-bit font encoding LGR.
+%    Hint: Use |\lgrfont|, if you want to use the
+%    \emph{Latin transliteration} input method and |\ensuregreek| else.
 %
-%    The Greek alphabetical numbering system, like the Roman one, is
-%    still used in everyday life for short enumerations. Unfortunately
-%    most Greeks don't know how to write Greek numbers bigger than 20 or
-%    30. Nevertheless, in official editions of the last century and
-%    beginning of this century this numbering system was also used  for
-%    dates and numbers in the range of several thousands. Nowadays
-%    this numbering system is primary used by the Eastern Orthodox
-%    Church and by certain scholars. It is hence necessary to be able
-%    to typeset any Greek numeral up to \hbox{999\,999}. Here are the
-%    conventions:
+%  \DescribeMacro\ensureascii
+%    The Babel core defines |\ensureascii| that typesets its
+%    argument using an ASCII-compatible ``standard text font encoding''.
+%    It is the recommended way for text parts requiring Latin letters
+%    but no language switch.
+%
+%
+% \subsection{Greek numbering \label{sec:greek-numbering}}
+%    The \href{https://en.wikipedia.org/wiki/Greek_numerals}
+%    {Greek (Milesian) alphabetical numbering system}\footnote{
+%      Attic numerals, which predate the Milesian numerals
+%      are implemented in package |athnum|.}
+%    is still used in everyday life for short enumerations.
+%    It was used for dates and numbers in the range of several thousands
+%    in official editions up to the beginning of the 20th century and
+%    is still used by the Eastern Orthodox Church and certain scholars.
+%    Unfortunately, most Greeks don't know how to write Greek numbers
+%    bigger than 20 or 30.
+%
+%  \DescribeMacro{\greeknumeral}
+%    The command |\greeknumeral| makes it possible to typeset Greek
+%    numerals for numbers up to \hbox{999\,999}.
+%  \DescribeMacro{\Greeknumeral}
+%    |\Greeknumeral| is the ``uppercase'' version of this macro.
+%    Here are the conventions:
 %    \begin{itemize}
 %    \item There is no Greek numeral for any number less than or equal
 %      to $0$.
-%    \item Numbers from $1$ to $9$ are denoted by letters alpha, beta,
-%      gamma,  delta, epsilon, stigma, zeta, eta, theta, followed by a
-%      mark similar to the mathematical symbol ``prime''. (Nowadays
-%      instead of letter stigma the digraph sigma tau is used for number
-%      $6$. Mainly because the letter stigma is not always available, so
-%      people opt to write down the first two letters of its name as an
-%      alternative. In our implementation we produce the letter stigma,
-%      not the digraph sigma tau.)
-%    \item Decades from $10$ to $90$ are denoted by letters iota,
-%      kappa, lambda, mu, nu, xi, omikron, pi, qoppa, again followed by
-%      the numeric mark. The qoppa used for this purpose has a special
-%      zig-zag form, which doesn't resemble at all the original
-%      `q'-like qoppa.
-%    \item Hundreds from $100$ to $900$ are denoted by letters rho,
-%      sigma, tau, upsilon, phi, chi, psi, omega, sampi, followed by the
+%    \item Numbers from $1$ to $9$ are denoted by letters
+%      \emph{alpha}, \emph{beta}, \emph{gamma}, \emph{delta}, \emph{epsilon},
+%      \emph{stigma}\footnote{
+%        cf.\ \hyperref[greeknumeralsix]{\cs{greeknumeralsix}}},
+%      \emph{zeta}, \emph{eta}, \emph{theta}, followed by a \emph{keraia},
+%      a mark similar to the mathematical symbol ``prime''.
+%    \item Decades from $10$ to $90$ are denoted by letters \emph{iota},
+%      \emph{kappa}, \emph{lambda}, \emph{mu}, \emph{nu}, \emph{xi},
+%      \emph{omikron}, \emph{pi}, \emph{koppa}\footnote{
+%        cf.\ \hyperref[greeknumeralninety]{\cs{greeknumeralninety}}},
+%      again followed by the numeric mark.
+%    \item Hundreds from $100$ to $900$ are denoted by letters \emph{rho},
+%      \emph{sigma}, \emph{tau}, \emph{upsilon}, \emph{phi}, \emph{chi},
+%      \emph{psi}, \emph{omega}, \emph{sampi}, followed by the
 %      numeric mark.
 %    \item Any number between $1$ and $999$ is obtained by a group of
 %      letters denoting the hundreds decades and units, followed by a
 %      numeric mark.
 %    \item To denote thousands one uses the same method, but this time
-%      the mark is placed in front of the letter, and under the baseline
-%      (it is inverted by 180 degrees). When a group of letters denoting
-%      thousands is followed by a group of letters denoting a number
-%      under $1000$, then both marks are used.
+%      the mark is an \emph{aristeri keraia}, a prime inverted by 180 degrees
+%      and placed in front of the letter, under the baseline.
+%      When a group of letters denoting thousands is followed by a group of
+%      letters denoting a number under $1000$, both marks are used.
 %    \end{itemize}
+%    The shape of the obsolete characters used for number 6
+%    (\emph{digamma}/\emph{stigma}) and 90 (\emph{koppa}) evolved over time
+%    and different characters are in use for them today.
+%    The following four macros can be re-defined to configure
+%    |\greeknumeral| and |\Greeknumeral| respectively:
 %
-%    Using these conventions one obtains numbers up to \hbox{999\,999}.
-%  \DescribeMacro{\greeknumeral}
-%    The command |\greeknumeral| makes it possible to typeset Greek
-%    numerals. There is also an
-%  \DescribeMacro{\Greeknumeral}
-%    ``uppercase'' version of this macro: |\Greeknumeral|.
+%  \DescribeMacro\greeknumeralsix
+%    \phantomsection\label{greeknumeralsix}
+%    Originally, the sixth letter of the alphabet, standing for 6, was the
+%    \emph{digamma} -- just as its Latin equivalent F is the sixth letter of
+%    the Latin alphabet.
+%    As Greek script turned to uncial and then lowercase, digamma changed its
+%    shape – it became similar to the ligature for sigma-tau (\emph{stigma}).
+%    People started using the stigma or the digraph sigma tau\footnote{
+%      Mainly because the letter stigma is not always available, so people
+%      opted to write down the first two letters of its name instead.}.
+%    The macro |\greeknumeralsix| allows configuring the symbol for the
+%    number 6 in |\greeknumeral|,
+%  \DescribeMacro\greeknumeralSix
+%    the macro |\greeknumeralSix| does the same for |\Greeknumeral|.
+%    The default values are |\textstigma| and |\textStigma|.
 %
-%    Another system which was in wide use only in Athens, could
-%    express any positive number. This system is implemented in
-%    package |athnum|.
+%  \DescribeMacro\greeknumeralninety
+%    \phantomsection\label{greeknumeralninety}
+%    Three symbols are in use for the number 90:
+%    Classicists prefer the q-like ``archaic'' \emph{koppa}
+%    and, more rarely, its uncial form\footnote{
+%    resembling CYRILLIC LETTER KOPPA or GOTHIC LETTER NINETY},
+%    modern Greek uses the zig-zag shaped ``modern'' \emph{koppa}
+%    exclusively. The macro |\greeknumeralninety| allows configuring
+%    the symbol for the number 90 in |\greeknumeral|,
+%  \DescribeMacro\greeknumeralNinety
+%    the macro |\greeknumeralNinety| does the same for |\Greeknumeral|.
+%    The default values are |\textkoppa| and |\textKoppa| for modern Greek
+%    and |\textqoppa| and |\textqoppa| for ancient Greek.
+%
+%    There is no such variation in the shape of the \emph{sampi}
+%    used for the number 900.
 %
 % \StopEventually{}
 %
-%  \section{Implementation}
 %
+% \section{Implementation}
 %    The macro |\LdfInit| takes care of preventing that this file is
 %    loaded more than once, checking the category code of the
 %    \texttt{@} sign, etc.
-% \changes{greek-1.0b}{1996/11/02}{Now use \cs{LdfInit} to perform
-%    initial checks}
+% \changes{greek-1.0b}{1996/11/02}{
+%          Use \cs{LdfInit} to perform initial checks.}
 %    \begin{macrocode}
 %<*code>
 \LdfInit\CurrentOption{captions\CurrentOption}
@@ -370,123 +428,267 @@
 %    \begin{macrocode}
 \gdef\CurrentOption{greek}
 %    \end{macrocode}
+%    Set up the Babel shorthands feature. It is used later to insert literal
+%    |~| characters with polytonic Greek and LGR and to prevent LGR converting
+%    a literal semicolon |;| to an \emph{ano teleia} |·|.
+% \changes{babel-greek-1.13}{2023/03/15}{
+%          Setup \cs{languageshorthands} for all language variants.}
+%    \begin{macrocode}
+\addto\extrasgreek{\languageshorthands{greek}}
+%    \end{macrocode}
+% An auxiliary macro allows to test whether a macro holds the string `LGR'
+% with |\ifx|:
+%    \begin{macrocode}
+\def\bbl@greek@LGR{LGR}
+%    \end{macrocode}
 %
-%    Hyphenation patterns:
+%
+% \subsection{Hyphenation patterns \label{sec:hyphenation-patterns}}
+%
 %    When this file is read as an option, i.e. by the |\usepackage|
 %    command, \texttt{greek} could be an `unknown' language in
 %    which case we have to make it known.  So we check for the
 %    existence of the three variants of the Greek language
-%    |\l@greek|, |\l@monogreek|, and |l@ancientgreek| to see whether
-%    we have to do something here.
-% \changes{greek-1.9}{2014/07/20}{Support all 3 language (hyphenation)
-%                                 variants.}
+%    |\l@greek|, |\l@monogreek|, and |l@ancientgreek|
+%    and set the hyphenation to |\language0| for the missing ones.
+% \changes{babel-greek-1.09}{2014/07/20}{
+%   Load correct hyphenation patterns (patch by Claudio Beccari).}
+% \changes{babel-greek-1.09c}{2014/10/21}{
+%   Fix dummy hyphenation language names (patch Ulrike Fischer).}
 %    \begin{macrocode}
 \ifx\l@greek\@undefined
   \@nopatterns{greek}
-  \adddialect\l@greek 0\fi
+  \adddialect\l@greek 0
+\fi
 \ifx\l@monogreek\@undefined
-  \adddialect\l@monogreek 0\fi
+  \@nopatterns{greek}
+  \adddialect\l@monogreek 0
+\fi
 \ifx\l@ancientgreek\@undefined
-  \adddialect\l@ancientgreek 0\fi
+  \@nopatterns{greek}
+  \adddialect\l@ancientgreek 0
+\fi
 \newcount\bbl@monogreek \bbl@monogreek=\l@monogreek
 \newcount\bbl@polygreek \bbl@polygreek=\l@greek
-\newcount\bbl@ancientgreek  \bbl@ancientgreek=\l@ancientgreek
+\newcount\bbl@ancientgreek \bbl@ancientgreek=\l@ancientgreek
 %    \end{macrocode}
-% The |\extrasgreek| macro is called when switching the language to Greek.
-% We collect code for polytonic and ancient greek in the macros
-% |extraspolutonikogreek| and |extrasancientgreek| and add it later to
-% |extrasgreek|.
+% Use the \emph{language hooks} (cf.\ section~\ref{sec:language-hooks})
+% to set the correct hyphenation patterns.
+% (We collect setup code for the language variants \Lopt{polutoniko} and
+% \Lopt{ancient} in |\extraspolutonikogreek| and |\extrasancientgreek|;
+% \DescribeMacro\extraspolutonikogreek
+% their content is added to |\extrasgreek| by the respective language
+% attributes, cf.\ section~\ref{sec:language-variants}).
+% \DescribeMacro\extrasancientgreek
+% ^^A TODO: Move the |\let\l@greek=...| definitions to the language
+% ^^A attribute functions (as we only have one language variant per document)
+% ^^A or use the hooks to allow more than one language variant?
+% \changes{greek-1.5a}{2013/06/27}{provide \cs{extraspolutonikogreek} also
+%    for Xe/LuaTeX.}
 %    \begin{macrocode}
-\addto\extrasgreek{\let\l@greek\bbl@monogreek\relax}
+\addto\extrasgreek{\let\l@greek=\bbl@monogreek}
 \addto\extraspolutonikogreek{\l@greek=\bbl@polygreek}
 \addto\extrasancientgreek{\l@greek=\bbl@ancientgreek}
 %    \end{macrocode}
 %
-%    Now we declare the |polutoniko| language attribute.
+% \begin{macro}{\providehyphenmins}
+% \changes{greek-1.3h}{2000/09/22}{Now use \cs{providehyphenmins} to
+%                                  provide a default value}
+%   The macro |\providehyphenmins| is used to set the correct values of
+%   the hyphenation parameters |\lefthyphenmin| and |\righthyphenmin|.
+%   Yannis Haralambous has suggested the value 1.
 %    \begin{macrocode}
-\bbl@declare@ttribute{greek}{polutoniko}{%
+\providehyphenmins{\CurrentOption}{\@ne\@ne}
 %    \end{macrocode}
-%    This code adds the expansion of |\extraspolutonikogreek| to
-%    |\extrasgreek| and changes the definition of |\today| for Greek
-%    to produce polytonic month names (by re-defining |\gr@month|).
+% \end{macro}
+%
+%
+% \subsection{Language attributes}
+%
+% The Babel core provides the command |\bbl@declare@ttribute| for the
+% declaration of language attributes in language definition files.
+% It takes three arguments:
+% the name of the language, the attribute to be defined,
+% and the code to be executed when the attribute is to be used.
+% If the language attribute is selected, the third argument is executed
+% after reading the *.ldf file.
+%
+% \label{sec:language-variants}
+% \subsubsection{\Lopt{polutoniko}\label{sec:polutoniko}}
+%    The |polutoniko| language attribute selects the ``polytonic'' spelling.
+%
+%    We use an auxiliary function for the setup part used with several
+%    language attributes:
+%    Add the expansion of |\extraspolutonikogreek| to |\extrasgreek|
+%    to set up support for multi-accented characters and
+%    hyphenation patterns for the polytonic orthography
+%    and use polytonic spelling for auto-strings (captions and month names).
+%    More code is added later (cf. section~\ref{sec:character-codes}).
 %    \begin{macrocode}
+\def\bbl@greek@setup@polytonic{%
   \expandafter\addto\expandafter\extrasgreek
     \expandafter{\extraspolutonikogreek}%
   \let\captionsgreek\captionspolutonikogreek
-  \let\gr@month\gr@c@month
+  \let\gr@month\gr@polutoniko@month
+}
 %    \end{macrocode}
-%    We need to take some extra precautions in order not to break
-%    older documents which still use the old \Lopt{polutonikogreek}
-%    pseuso-language option: language switching commands like
-%    |\selectlanguage{polutonikogreek}|, call the
-%    |extraspolutonikogreek| macro, set the language to |\l@polutonikogreek|
-%    and use |\datepolutonikogreek| for |\today|. We define aliases:
-% \changes{greek-1.3f}{1999/09/29}{Added some code to make older
-%    documents work}
-% \changes{greek-1.3g}{2000/02/04}{\cs{noextraspolutonikogreek} was
-%    missing}
+%    Now declare the option. For backwards compatibility,
+%    modern Greek with ``polytonic'' spelling can also be
+%    selected via the dummy language \Lopt{polutonikogreek}.
+%    However, it is not possible to use both options,
+%    \Lopt{greek} and \Lopt{polutonikogreek} in one document.^^A
+%      \footnote{Use of more than one Greek orthograpies in one document
+%                is possible with \cs{babelprovide}.
+%                However, there are side-effects.
+%                See the example in \file{test-greek.tex}.}
+%    We also define aliases to allow language switching commands using
+%    the language name |polutonikogreek|:
+% \changes{greek-1.3f}{1999/09/29}{
+%          Added some code to make older documents work.}
+% \changes{greek-1.3g}{2000/02/04}{\cs{noextraspolutonikogreek} was missing.}
 %    \begin{macrocode}
+\bbl@declare@ttribute{greek}{polutoniko}{%
+  \bbl@greek@setup@polytonic
   \let\l@polutonikogreek\l@greek
   \let\datepolutonikogreek\dategreek
   \let\extraspolutonikogreek\extrasgreek
   \let\noextraspolutonikogreek\noextrasgreek
-  }
+}
 %    \end{macrocode}
-%    The |ancient| language attribute is used for classical Greek.
-% \changes{greek-1.9}{2014/07/20}{Add support for ancient Greek.}
+%
+% \subsubsection{\Lopt{polytonic}}
+%
+% \changes{babel-greek-1.12}{2023/03/04}{
+%   New language attribute \Lopt{polytonic} (alias for \Lopt{polutoniko}).}
+%
+% The |polytonic| language attribute is an alias for the
+% attribute |polutoniko| matching the spelling for this orthography
+% variant in \pkg{polyglossia} and Babel |*.ini| files.
+%    \begin{macrocode}
+\bbl@declare@ttribute{greek}{polytonic}{%
+  \bbl@greek@setup@polytonic
+}
+%    \end{macrocode}
+%
+% \subsubsection{\Lopt{ancient}\label{sec:ancient}}
+%
+% \changes{babel-greek-1.09}{2014/07/20}{Add support for ancient Greek.}
+%
+% The \Lopt{ancient} language attribute is used for classical Greek.
+% This attribute adds the expansion of |\extraspolutonikogreek| and
+% |\extrasancientgreek| to |\extrasgreek| to set up support for
+% multi-accented characters and ancient hyphenation patterns.
 %    \begin{macrocode}
 \bbl@declare@ttribute{greek}{ancient}{%
-%    \end{macrocode}
-%    This attribute adds the expansion of |\extraspolutonikogreek| and
-%    |\extrasancientgreek| to |\extrasgreek| to set up support for
-%    multi-accented characters and ancient hyphenation patterns.
-%    Auto-strings (captions) are specific to ancient Greek while |\today|
-%    uses modern polytonic month names (as there existed incompatible
-%    sets of month names and no common calendar in ancient Greece.
-%    \begin{macrocode}
-  \expandafter\addto\expandafter\extrasgreek
-    \expandafter{\extraspolutonikogreek}% multi-accented letters
+  \bbl@greek@setup@polytonic
   \expandafter\addto\expandafter\extrasgreek
     \expandafter{\extrasancientgreek}%
+%    \end{macrocode}
+%    Auto-strings (captions) are specific to ancient Greek while |\today|
+%    uses modern polytonic month names (as there existed incompatible
+%    sets of month names and no common calendar in ancient Greece).
+%    \begin{macrocode}
   \let\captionsgreek\captionsancientgreek
-  \let\gr@month\gr@c@month % (modern) polytonic month names
-  }
+%    \end{macrocode}
+%    Classicists tend to use the Q-like ``archaic'' koppa for the number 90.
+%    Thus, for classical Greek, we set the default to the  ``archaic'' koppa
+%    (cf.\ section~\ref{sec:greek-numbering}).
+%    \begin{macrocode}
+  \renewcommand{\greeknumeralninety}{\textqoppa}%
+  \renewcommand{\greeknumeralNinety}{\textQoppa}%
+}
 %    \end{macrocode}
 %
-% \section{Font setup}
 %
-% Typesetting Greek texts requires a font with Greek characters:
+% \subsubsection{\Lopt{keep-semicolon}\label{sec:keep-semicolon}}
 %
-% For 8-bit LaTeX, this package uses fonts with the
-% \href{http://www.ctan.org/pkg/greek-fontenc}{LGR font encoding}.
-% With the XeTeX or LuaTeX engines and Unicode fonts, the user must ensure
-% that the selected font contains the required glyphs.
-% LGR-encoded fonts can also be used alongside Unicode fonts with XeTeX/LuaTeX
-% to enable the input of Greek letters via the Latin transcription provided by
-% this font encoding.
+% \changes{babel-greek-1.13}{2023/03/15}{
+%    New language attribute \Lopt{keep-semicolon}.}
+% \changes{babel-greek-1.13}{2023/03/15}{
+%    Don't use text command in math mode.}
+% The LGR font encoding uses the Latin question mark as input for
+% the Greek question mark (\emph{erotimatiko}) and maps the semicolon
+% to a middle dot (\emph{ano teleia}).
+% As a result, Unicode-encoded texts that use the semicolon (;) as
+% \emph{erotimatiko} end up with an \emph{ano teleia} (·) in its place!
 %
-% \changes{greek-1.2a}{1997/10/31}{filename \file{lgrenc.def} now
-%    lowercase}
-% \changes{greek-1.4}{2013/05/17}{\file{lgrenc.def} moved to the
-%    separate package `greek-fontenc'}
+% With the \texttt{keep-semicolon} language attribute, 003B SEMICOLON is made
+% active and inserts an \emph{erotimatiko} also with LGR encoded fonts:
+%    \begin{macrocode}
+\bbl@declare@ttribute{greek}{keep-semicolon}{%
+    \ifx\greekfontencoding\bbl@greek@LGR
+    \ProvideTextCommandDefault{\textsemicolon}{;}
+    \ProvideTextCommand{\textsemicolon}{LGR}{\texterotimatiko}
+    \initiate@active@char{;}
+    \addto\extrasgreek{\bbl@activate{;}}
+    \addto\noextrasgreek{\bbl@deactivate{;}}
+    \declare@shorthand{greek}{;}{\TextOrMath{\textsemicolon}{;}}
+  \fi
+}
+%    \end{macrocode}
+%
+% \subsection{Report unsupported modifiers}
+%
+% \changes{babel-greek-1.13.2}{2023/06/01}{Warn of unsupported modifiers.}
+%
+% Test for unsupported (or misspelled) \hyperref[sec:modifiers]{modifiers}
+% (code contributed by Javier Bezos).
+%    \begin{macrocode}
+\def\bbl@greek@modifiers{,%
+  polutoniko,polytonic,ancient,keep-semicolon,%
+  local-LGR-fixes,no-LGR-fixes,no-MakeUppercase-fixes,}
+\ifx\BabelModifiers\relax\else
+  \bbl@foreach\BabelModifiers{%
+    \@expandtwoargs\in@{,#1,}{\bbl@greek@modifiers}
+    \ifin@\else
+      \bbl@warning
+        {Unknown/misspelled modifier '#1' in '\CurrentOption'.
+         See "babel-greek.pdf" for valid modifiers.}
+    \fi}%
+\fi
+
+%    \end{macrocode}
+%
+% \subsection{Font setup \label{sec:font-setup}}
+%
+% \subsubsection{Greek font encoding \label{sec:greekfontencoding}}
+%
+% \changes{babel-greek-1.08}{2013/11/27}{
+%          Load \file{euenc.def} if EU1 or EU2 font encoding is detected.}
+% \changes{greek-1.2a}{1997/10/31}{filename \file{lgrenc.def} now lowercase}
+% \changes{greek-1.4}{2013/05/17}{
+%          \file{lgrenc.def} moved to the separate package `greek-fontenc'}
 % \changes{greek-1.5}{2013/06/21}{LGR setup skipped with XeTeX/LuaTeX}
 % \changes{greek-1.7}{2013/09/09}{Do not load euenc.def with XeTeX/LuaTeX
-%    (too complicated to get it right).}
-% \changes{greek-1.8}{2013/11/30}{Check for EU1/EU2 font encoding
-%    instead of engine}
-% \changes{babel-greek-1.9f}{2016/02/04}{Check also for TU font encoding.}
-% \changes{babel-greek-1.9i}{2020/02/27}{Update check for Unicode fonts.}
+%                     (too complicated to get it right).}
+% \changes{babel-greek-1.08}{2013/11/30}{
+%          Check for EU1/EU2 font encoding instead of engine}
+% \changes{babel-greek-1.09f}{2016/02/04}{Check also for standard
+%          Unicode text encoding ``TU'' (new in fontspec v2.5a).}
+% \changes{babel-greek-1.09i}{2020/02/27}{Update check for Unicode fonts.}
 % \changes{babel-greek-1.10}{2020/11/10}{Use TU with Xe/LuaTeX.}
+% \begin{macro}{\greekfontencoding}
+%   The macro |\greekfontencoding| holds the name of the font
+%   encoding\footnote{cf.\
+%     \href{https://mirrors.ctan.org/macros/latex/base/encguide.pdf}
+%     {encguide.pdf}}
+%   used to ensure support of the Greek script.
+%   The default is LGR for 8-bit TeX and TU for Xe/LuaTeX.\footnote{
+%     Document authors must ensure that the selected font actually contains
+%     the required glyphs.
 %
-% \DescribeMacro\greekfontencoding
-% We test for available font encodings and set |\greekfontencoding|
-% and the internal macro |\bbl@greek@fontencdef| with the name of the
-% font definition file with Greek LICR macros.
-% The default is LGR for 8-bit TeX engines and TU for Xe/LuaTeX.
-% (TODO: The font encoding definition file was renamed to tuenc-greek.def
-%  in \emph{greek-fontenc} 0.14 (2020-02-28).)
+%     LGR-encoded fonts can be used alongside Unicode fonts with
+%     XeTeX/LuaTeX to enable the input of Greek letters via the Latin
+%     transliteration (with some limitations, see \file{test-greek.tex}).}
+%   It can be overridden defining |\greekfontencoding| with a custom value
+%   before loading \pkg{babel}.
+%
+% Also store the name of the \emph{encoding definition file}\footnote{
+%   see \href{https://www.latex-project.org/help/documentation/fntguide.pdf}
+%   {fntguide.pdf}}
+% with the extended Greek setup for the Greek font encoding.
 %    \begin{macrocode}
-\ifdefined \UnicodeEncodingName % set by LaTeX for Unicode-aware engines
+\ifdefined\UnicodeEncodingName % set by XeTeX/LuaTeX
   \providecommand*{\greekfontencoding}{\UnicodeEncodingName}
   \providecommand*{\bbl@greek@fontencdef}{tuenc-greek}
 \else
@@ -494,126 +696,160 @@
   \providecommand*{\bbl@greek@fontencdef}{lgrenc}
 \fi
 %    \end{macrocode}
-% Ensure that the Greek LICR macros are available:
+% TODO: Why does the more generic version\\
+% |  \edef\bbl@greek@fontencdef{\lowercase{\greekfontencoding}.enc}|\\
+% fail when used in |\ifl@aded|?
+% \end{macro}
+%
+% \subsubsection{Ensure loading of Greek font encoding definitions.
+%                \label{load-greek-font-encoding-definitions}}
+%
+% If the \emph{encoding definition file} for |\greekfontencoding| is not yet
+% loaded, do this now.
+% (Using |\RequirePackage| fails as we are in an ``Options Section''.)
+% TODO: set with |\AtEndOfPackage|?
+% (All definitions requiring the font encoding must be delayed as well!)
 %    \begin{macrocode}
-\@ifl@aded{def}{\bbl@greek@fontencdef}{}
-{% else
-  \InputIfFileExists{\bbl@greek@fontencdef .def}{}{% else
-    \bbl@error{Font support for the Greek script missing.\\
-               babel-greek can't typeset Greek.\\
-               Install the "greek-fontenc" package\\
-               or use XeTeX/LuaTeX with polyglossia.}
-              {I can't find the \bbl@greek@fontencdef .def file
-               for the Greek fonts (encoding \greekfontencoding)}
-    \@@end
+\@ifl@aded{def}{\bbl@greek@fontencdef}
+  {}
+  {\InputIfFileExists{\bbl@greek@fontencdef .def}
+     {}
+     {\bbl@error{Font support for the Greek script missing.\\
+                 babel-greek can't typeset Greek.\\
+                 Install the "greek-fontenc" package\\
+                 or use XeTeX/LuaTeX with polyglossia.}
+                {I can't find the \bbl@greek@fontencdef .def file
+                 for the Greek fonts (encoding \greekfontencoding)}
+      \@@end
+     }
   }
+%    \end{macrocode}
+% If the PU font encoding is defined (by \pkgref{hyperref}), load extended
+% Greek support for it. Do this in the |\AtBeginDocument| hook because
+% documents may load \pkg{hyperref} after \pkg{babel}.
+% We cannot rely on |@| being a letter when the hook is called and we must
+% not use |\makeatother| in the hook
+% (\href{https://tex.stackexchange.com/questions/62583/is-it-really-bad-to-use-makeatletter-and-makeatother-in-a-package-or-class-fil}
+% {explanation at stackexchange}).
+% We use a temporary function to save and restore the previous catcode.
+% \changes{babel-greek-1.10}{2020/11/10}{Load \file{puenc-greek.def}
+%          from \pkg{greek-fontenc} if used with hyperref.}
+% \changes{babel-greek-1.12}{2023/03/04}{
+%          Don't use \cs{makeatother} in \cs{AtBeginDocument}.}
+%    \begin{macrocode}
+\AtBeginDocument{%
+  \@ifl@aded{def}{puenc}%
+    {\@ifl@aded{def}{puenc-greek}
+       {}%
+       {\edef\RestoreAtCatcode{\catcode`@=\the\catcode`@\relax}%
+        \makeatletter
+        \InputIfFileExists{puenc-greek.def}%
+          {}%
+          {\bbl@warning{I cannot find the Greek fixes for PDF strings
+                        ("punec-greek.def" from "greek-fontenc").}%
+          }%
+        \RestoreAtCatcode
+       }%
+    }% end "puenc.def loaded" branch
+    {}% empty "puenc.def not loaded" branch
 }
 %    \end{macrocode}
+%
+% \subsubsection{Font encoding switches \label{sec:font-encoding-switches}}
+%
+% Add font encoding switches (see below) to the language hooks
+% (cf.\ section~\ref{sec:language-hooks}) to ensure a font encoding
+% supporting the Greek script is used in Greek text parts:
+% \changes{greek-1.5}{2013/06/21}{LGR not used with XeTeX/LuaTeX.}
+% \changes{babel-greek-1.08}{2013/11/27}{
+%          Use EU1 or EU2 for Latin script if available}
+% \changes{babel-greek-1.11}{2020/11/20}{Save/restore previous font encoding
+%          instead of switching to \cs{latinencoding} when leaving Greek.}
+%    \begin{macrocode}
+\addto\extrasgreek{%
+  \let\BabelGreekPreviousFontEncoding\encodingdefault
+  \greekscript}
+\addto\noextrasgreek{\BabelGreekRestoreFontEncoding}
+%    \end{macrocode}
+%
 % \begin{macro}{\greekscript}
-%   The TextCommand |\greekscript| is a declaration that switches the font
-%   encoding to |\greekfontencoding| if the current font encoding does not
-%   provide a (typically empty) local variant.
-% \changes{greek-1.8.1}{2013/12/03}{Set `encodingdefault' in `greekscript'
-%   to fix Greek in titles, footnotes, etc. with document language Greek.}
+%   The TextCommand\footnote{See
+%      \href{https://www.latex-project.org/help/documentation/fntguide.pdf}
+%      {fntguide.pdf} for more info about \emph{TextCommands}.}
+%   |\greekscript| is a declaration that switches the font
+%   encoding to |\greekfontencoding|.
+%   The extended Greek font encoding definitions from \pkgref{greek-fontenc}
+%   define empty local variants for TU, LGR, and PU, so that the declaration
+%   does nothing if the active font encoding supports the Greek script.
+% \changes{babel-greek-1.08}{2013/11/27}{
+%    New TextCommands ``greekscript'' and ``ensuregreek''.}
+% \changes{babel-greek-1.08a}{2013/12/03}{Set `encodingdefault'
+%   to fix Greek in footnotes etc. with document language Greek.}
 %    \begin{macrocode}
 \ProvideTextCommandDefault{\greekscript}{%
   \fontencoding{\greekfontencoding}\selectfont
-      \def\encodingdefault{\greekfontencoding}}
+  \def\encodingdefault{\greekfontencoding}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ensuregreek}
-%   The TextCommand |\ensuregreek| sets it argument in |\greekfontencoding|
+%   The TextCommand |\ensuregreek| sets its argument in |\greekfontencoding|
 %   if the current font encoding does not provide a (typically empty) local
 %   variant.
 %    \begin{macrocode}
 \ProvideTextCommandDefault{\ensuregreek}[1]{%
-  \leavevmode{\greekscript #1}}
+  \leavevmode {\greekscript #1}}
 %    \end{macrocode}
 % \end{macro}
-%
-% The package hyperref defines the PU font encoding which supports
-% monotonic Greek. Load support for polytonic greek, archaic symbols,
-% and the |\greekscript| and |\ensuregreek| TextCommands:
-% \begin{macrocode}
-\AtBeginDocument{
-  \@ifl@aded{def}{puenc}{
-    \makeatletter % required inside \AtBeginDocument
-    \InputIfFileExists{puenc-greek.def}{}{% else
-      \bbl@warning{I can't find the file puenc-greek.def from "greek-fontenc".}
-    }
-    \makeatother
-  }{}
+% \begin{macro}{\BabelGreekRestoreFontEncoding}
+%   The declaration |\BabelGreekRestoreFontEncoding| changes the font encoding
+%   to the value of |\encodingdefault| before the switch to the Greek language.
+%   It does nothing, if there was no font encoding change when entering Greek.
+% \changes{babel-greek-1.12}{2023/03/04}{New macro.}
+% \changes{babel-greek-1.15}{2023/10/13}{
+%          Do not ``restore'' LGR when leaving Greek.}
+%    \begin{macrocode}
+\def\BabelGreekRestoreFontEncoding{%
+  \ifx\encodingdefault\BabelGreekPreviousFontEncoding
+  \else
+    \let\encodingdefault\BabelGreekPreviousFontEncoding
+    \fontencoding{\encodingdefault}\selectfont
+  \fi
 }
-% \end{macrocode}
+%    \end{macrocode}
+% \end{macro}
+% Exception: don't keep LGR if it was the initial encoding
+% as it is clearly unsuited for non-Greek texts.
+% If Greek is the main language, |\extrasgreek| is called before
+% |\begin{document}| --- we can check the saved value of the previous
+% font encoding and replace LGR with the default generic text font encoding.
+% ^^A TODO: Use the font encoding detection from \cs{ensureascii}?
+%    \begin{macrocode}
+\AtBeginDocument{
+  \ifx\BabelGreekPreviousFontEncoding\bbl@greek@LGR
+    \let\BabelGreekPreviousFontEncoding\latinencoding
+  \fi
+}
+%    \end{macrocode}
 %
-% \subsection{Fixes for the LGR font encoding}
+% \subsubsection{Additional commands for the LGR font encoding}
 %
+% The actions in this section add ``harmless'' setup steps for the LGR
+% font encoding that cannot be done in the \file{lgrenc.def}
+% encoding definition file.
+%
+% We do this only, if the LGR font encoding is defined (either by \pkg{fontenc}
+% or \pkg{babel-greek}), but also if it is not the |\greekfontencoding|:
 %    \begin{macrocode}
 \@ifl@aded{def}{lgrenc}{%
 %    \end{macrocode}
 %
-% We redefine a few commands in the LGR encoding to work around problems
-% because LGR is no \emph{standard text encoding} but has Greek letters in
-% the places of Latin ones.
-% The ampersand must work in text and math mode. We provide the text
-% command |\textampersand| and re-define |\&| to use it in text mode.
-% \changes{greekfdd-2.2c}{1999/04/05}{Fixed typos, \cs{textrademark}
-%    misses a `t', \cs{copyright} should be \cs{textcopyright}}
-% \changes{greekfdd-2.2d}{1999/04/25}{removed redefinition of \cs{\&}}
-% \changes{greek-1.4}{2013/05/17}{moved here from \file{lgrenc.def} because
-%    the definitions require the \texttt{\textbackslash latintext} macro
-%    defined by Babel.}
-% \changes{greek-1.5}{2013/05/27}{enable use of "textcomp" characters
-%    for "textcopyright" and "textregistered" macros}
-% \changes{greek-1.5}{2013/06/15}{\textbackslash & made TextCommand}
-% \changes{babel-greek-1.9j}{2020/03/17}{Fix ampersand in math.}
-%
-%    \begin{macrocode}
-  \ProvideTextCommand{\textcopyright}{LGR}{\ensureascii{\textcopyright}}
-  \ProvideTextCommand{\textregistered}{LGR}{\ensureascii{\textregistered}}
-  \ProvideTextCommand{\texttrademark}{LGR}{\ensureascii{\texttrademark}}
-  \let\ltx@amp\&
-  \ProvideTextCommandDefault{\textampersand}{\ltx@amp}
-  \ProvideTextCommand{\textampersand}{LGR}{\ensureascii{\ltx@amp}}
-  \DeclareRobustCommand{\&}{\ifmmode\ltx@amp\else\textampersand\fi}
-  \ProvideTextCommand{\SS}{LGR}{\ensureascii{\SS}}
-%    \end{macrocode}
-%
-%  \begin{macro}{\greek@roman}
-%  \begin{macro}{\greek@Roman}
-% \changes{greek-1.2e}{1999/04/16}{Moved redefinition of \cs{@roman}
-%    back to the language specific file}
-% \changes{greek-1.3d}{1999/08/27}{\cs{@roman} and \cs{@Roman} need to
-%    be added to \cs{extraspolutonikogreek}}
-% \changes{greek-1.3e}{1999/09/24}{\cs{@roman} and \cs{@Roman} need
-%    \emph{not} be in \cs{extraspolutonikogreek} when they are already
-%    in \cs{extrasgreek}}
-% \changes{greek-1.5}{2013/06/15}{\cs{@roman} and \cs{@Roman} as TextCommands
-%    (BUG: this extended the expansion problem to all languages!)}
-% \changes{greek-1.6}{2013/07/19}{apply a patch by Enrico Gregorio.
-%    Thanks to Claudio Beccari for testing and reporting.}
-%
-%    To prevent roman numerals being typeset in greek letters we need
-%    to adopt the internal \LaTeX\ commands |\@roman| and
-%    |\@Roman|. \emph{Up to version 1.5, the definition caused errors where
-%    |\@roman| ends up in a situation where the argument needs to be expanded
-%    (e.g. Roman page numbers in the ToC).}
-%    \begin{macrocode}
-  \def\@roman#1{\expandafter\ensureascii\expandafter{\romannumeral#1}}
-  \def\@Roman#1{\expandafter\ensureascii\expandafter{%
-                \expandafter\@slowromancap\romannumeral#1@}}
-%    \end{macrocode}
-%  \end{macro}
-%  \end{macro}
-%
-%    Now we define two commands that switch
-%    to the LGR font encoding. The Babel core defines corresponding commands
-%    to switch to a Latin font encoding.
-%
 %  \begin{macro}{\greektext}
-%    The declaration |\greektext| switches to LGR.
-%    For shorter pieces of text the |\textgreek| macro should be
-%    used.
+%    The declaration |\greektext| switches to LGR. Use this if you explicitly
+%    require LGR (e.g. to use the Latin transliteration or special fonts).
+%    Use |\greekscript| instead, if you want to avoid a font encoding change
+%    if the current font encoding already supports the Greek script (e.g. TU).
+%    For shorter pieces of text, the |\lgrfont| (see below) or |\ensuregreek|
+%    commands should be used. Cf.\ section~\ref{sec:font-encoding-switches}.
 %    \begin{macrocode}
   \DeclareRobustCommand{\greektext}{%
     \fontencoding{LGR}\selectfont
@@ -621,59 +857,193 @@
 %    \end{macrocode}
 %  \end{macro}
 %
-%  \begin{macro}{\textgreek}
-%    This command takes an argument which is then typeset using the
-%    LGR font encoding. In order to avoid many encoding switches
-%    it operates in a local scope.
+%  \begin{macro}{\lgrfont}
+%    This command takes an argument which is typeset using the
+%    LGR font encoding.
+%
+%    The original name |\textgreek| is deprecated because of its ambiguitiy:
+%    The command does not change the text \emph{language} but only the
+%    font encoding, which allows the use of the Greek \emph{script}
+%    but does not activate Greek hyphenation and case-changing rules.
 % \changes{greek-1.0b}{1996/09/23}{Added a level of braces to keep
-%    encoding change local}
+%                                  encoding change local}
 % \changes{greek-1.3k}{2003/03/19}{Added \cs{leavevmode} as was done
-%    with \cs{latintext}}
+%                                  with \cs{latintext}}
+% \changes{babel-greek-1.12}{2023/03/04}{
+%   Simplified implementation using \cs{\DeclareTextFontCommand}.
+%   Name changed from \cs{textgreek} to \cs{lgrfont}.}
 %    \begin{macrocode}
-  \DeclareRobustCommand{\textgreek}[1]{\leavevmode{\greektext #1}}
+  \DeclareTextFontCommand{\lgrfont}{\greektext}
+  \let\textgreek\lgrfont
 %    \end{macrocode}
 %  \end{macro}
 %
 %  \begin{macro}{\textol}
-%    The \href{http://www.ctan.org/pkg/cbgreek-complete}{CB Greek fonts}
+%    The \href{https://ctan.org/pkg/cbgreek-complete}{CB Greek fonts}
 %    contain an outline family. In order to make it available,
 %    we define the command |\textol|. (This font-specific macro does not
-%    fit in a language defintion file is and only kept for backwards
+%    fit in a language definition file and is only kept for backwards
 %    compatibility.)
 %    \begin{macrocode}
   \def\outlfamily{\usefont{LGR}{cmro}{m}{n}}
   \DeclareTextFontCommand{\textol}{\outlfamily}
-}{} % End of LGR fixes.
 %    \end{macrocode}
 %  \end{macro}
-%
-% \section{Definitions for the Greek language}
-%
-% The next step consists in defining commands to switch to (and
-% from) the Greek language.
-%
-%  \begin{macro}{\greekhyphenmins}
-%    This macro is used to store the correct values of the hyphenation
-%    parameters |\lefthyphenmin| and |\righthyphenmin|.
-% \changes{greek-1.3h}{2000/09/22}{Now use \cs{providehyphenmins} to
-%    provide a default value}
+%  Add LGR-specific variants to some \emph{TextCommands}
+%  that use Latin characters in their default definition.
+%  These definitions cannot be done in \file{lgrenc.def} because they rely
+%  on |\ensureascii| (defined by \pkg{babel}).
+% \changes{greekfdd-2.2c}{1999/04/05}{Fixed typos, \cs{textrademark}
+%          misses a `t', \cs{copyright} should be \cs{textcopyright}}
+% \changes{greekfdd-2.2d}{1999/04/25}{removed redefinition of \cs{\&}}
+% \changes{greek-1.4}{2013/05/17}{moved here from \file{lgrenc.def} because
+%          the definitions require the \cs{latintext} macro defined by Babel.}
+% \changes{greek-1.5}{2013/05/27}{enable use of "textcomp" characters
+%          for "textcopyright" and "textregistered" macros}
+% \changes{babel-greek-1.08}{2013/11/27}{
+%          Use font-encoding specific TextCommands.}
+% \changes{babel-greek-1.12}{2023/03/04}{Drop definition for \cs{\SS}.}
 %    \begin{macrocode}
-% Yannis Haralambous has suggested this value
-\providehyphenmins{\CurrentOption}{\@ne\@ne}
+  \ProvideTextCommand{\textcopyright}{LGR}{\ensureascii{\textcopyright}}
+  \ProvideTextCommand{\textregistered}{LGR}{\ensureascii{%
+                                                       \textregistered}}
+  \ProvideTextCommand{\texttrademark}{LGR}{\ensureascii{\texttrademark}}
+%    \end{macrocode}
+%
+%  \begin{macro}{\textampersand}
+%    LGR has a ``middle dot'' glyph at the place of the ampersand.
+%    Provide the \emph{TextCommand} |\textampersand| and an LGR-specific
+%    version. It is used in the next section to define a version of |\&|
+%    that also works in LGR.
+% \changes{greek-1.5}{2013/06/15}{Make \cs{\&} a TextCommand}
+% \changes{babel-greek-1.09j}{2020/03/17}{Fix ampersand in math.}
+%    \begin{macrocode}
+  \let\bbl@greek@original@amp\&
+  \ProvideTextCommandDefault{\textampersand}{\bbl@greek@original@amp}
+  \ProvideTextCommand{\textampersand}{LGR}{%
+    \ensureascii{\bbl@greek@original@amp}}
 %    \end{macrocode}
 %  \end{macro}
+% \begin{macro}{\EnsureStandardFontEncoding}
+%   The TextCommand |\EnsureStandardFontEncoding| can be used to make
+%   existing commands ``LGR-proof''. It makes sure its argument is typeset
+%   using a \href{https://mirrors.ctan.org/macros/latex/base/encguide.pdf}
+%   {standard text font encoding}.
+%   The default is an empty command: almost all commonly used font encodings
+%   are standard text encodings -- LGR is the notable exception.
+%   The local LGR variant uses |\ensureascii| from the Babel core that comes
+%   with elaborate heuristics to select a suitable standard font encoding.
+%   A special clause for \pkg{hyperref} avoids warnings from this package.
+% \changes{babel-greek-1.12}{2023/03/04}{New TextCommand.}
+%    \begin{macrocode}
+  \ProvideTextCommandDefault{\EnsureStandardFontEncoding}{\@firstofone}
+  \ProvideTextCommand{\EnsureStandardFontEncoding}{LGR}[1]{%
+    \ensureascii{#1}
+  }
+  \AtBeginDocument{%
+    \@ifpackageloaded{hyperref}
+      {\pdfstringdefDisableCommands{%
+         \let\EnsureStandardFontEncoding\@firstofone}
+      }
+      {}
+  }
+%    \end{macrocode}
+% \end{macro}
+% End the LGR additions block:
+%    \begin{macrocode}
+}{}
+%    \end{macrocode}
+
+% \subsubsection{LGR workarounds \label{sec:lgr-redefinitions}}
 %
+% The following redefinitions work around problems with the
+% non-standard LGR font encoding.
+% As they may have serious side-effects, they are only done if LGR is the
+% default Greek font encoding (cf.\ section~\ref{sec:greekfontencoding}).
+%
+% As an emergency measure, the \Lopt{local-LGR-fixes} or \Lopt{no-LGR-fixes}
+% \hyperref[sec:modifiers]{modifiers} can be used to restrict
+% the ``roman'' redefinitions to text parts using the Greek language or skip
+% them completely.
+%
+% To prevent Roman numerals being typeset with Greek letters in text parts
+% using the LGR font encoding, they must be wrapped in |\ensureascii|.
+% However, Roman numerals are also auto generated by LaTeX and
+% used  in moving arguments.\footnote{
+%   For example, Roman page numbers are generated at ``unpredictable''
+%   positions and can move to the ToC, (hyper)references, or an index.}
+% These ``moving'' Roman numbers must be LGR-proofed also if they originate
+% from a text part using a standard font encoding. This can only be ensured by
+% a global re-definition of the generating functions |\@roman| and |\@Roman|.
+% On the other hand, the re-definition breaks the assumption by
+% MakeIndex, that page numbers are plain character sequences.
+% \pkg{Hyperref} assumes that |\thepage| is expandable and doesn't
+% contain formatting instructions (cf.\
+% \href{https://github.com/latex3/babel/issues/170}{Babel issue \#170}).
+% \changes{greek-1.2e}{1999/04/16}{Moved redefinition of \cs{@roman}
+%                                  back to the language specific file}
+% \changes{greek-1.3d}{1999/08/27}{\cs{@roman} and \cs{@Roman} need to
+%          be added to \cs{extraspolutonikogreek}}
+% \changes{greek-1.3e}{1999/09/24}{\cs{@roman} and \cs{@Roman} need
+%          \emph{not} be in \cs{extraspolutonikogreek} when they are
+%          already in \cs{extrasgreek}}
+% \changes{greek-1.5}{2013/06/15}{\cs{@roman} and \cs{@Roman} as TextCommands
+%          (BUG: this extended the expansion problem to all languages!)}
+% \changes{greek-1.6}{2013/07/19}{Apply a patch by Enrico Gregorio.
+%          Thanks to Claudio Beccari for testing and reporting.}
+%
+% The ampersand macro |\&| is used in both, text and math mode.
+% Let it use the new defined \emph{TextCommand} |\textampersand|
+% in text mode.
+%    \begin{macrocode}
+\ifx\greekfontencoding\bbl@greek@LGR
+  \def\bbl@greek@roman#1{\expandafter\EnsureStandardFontEncoding%
+                         \expandafter{\romannumeral#1}}
+  \def\bbl@greek@Roman#1{\expandafter\EnsureStandardFontEncoding%
+           \expandafter{\expandafter\@slowromancap\romannumeral#1@}}
+  \DeclareRobustCommand{\bbl@greek@ampersand}{%
+           \ifmmode\bbl@greek@original@amp\else\textampersand\fi}
+  \bbl@xin@{,no-LGR-fixes,}{,\BabelModifiers,}%
+  \ifin@
+    % skip re-definitions
+  \else
+    \bbl@xin@{,local-LGR-fixes,}{,\BabelModifiers,}%
+    \ifin@
+      \addto\extrasgreek{%
+        \babel@save\@roman
+        \babel@save\@Roman
+        \let\@roman\bbl@greek@roman
+        \let\@Roman\bbl@greek@Roman
+        \babel@save\&%
+        \let\&\bbl@greek@ampersand%
+        }
+    \else
+      \let\@roman\bbl@greek@roman
+      \let\@Roman\bbl@greek@Roman
+      \let\&\bbl@greek@ampersand
+    \fi
+  \fi
+\fi
+%    \end{macrocode}
+%
+%
+% \subsection{Definitions for the Greek language}
+%
+% The next step consists in defining macros for the requirements of Greek
+% typesetting which will later be added to the language switch hooks.
+%
+% \subsubsection{Auto-strings for Greek}
 % \changes{greek-1.1e}{1997/10/12}{Added caption name for proof}
 % \changes{greek-1.3d}{1999/08/28}{Fixed typo, \texttt{bl'epe ep'ishc}
-%    instead of \texttt{bl'pe ep'ishc}}
+%                                  instead of \texttt{bl'pe ep'ishc}}
 %
 %  \begin{macro}{\captionsgreek}
 %    The macro |\captionsgreek| defines all strings used in the
 %    four standard document classes provided with \LaTeX.
 % \changes{greek-1.3h}{2000/09/20}{Added \cs{glossaryname}}
 % \changes{greek-1.3i}{2000/10/02}{The final sigma in all names appears
-%    as `s' instead of `c'.}
-% \changes{babel-greek-1.9i}{2020/02/27}{Fix accent in seename and alsoname.}
+%                                  as `s' instead of `c'.}
+% \changes{babel-greek-1.09i}{2020/02/27}{Fix accent in seename and alsoname.}
 %    \begin{macrocode}
 \addto\captionsgreek{%
   \def\prefacename{\textPi\textrho\acctonos\textomicron\textlambda
@@ -682,8 +1052,9 @@
     \textphi\textomicron\textrho\acctonos\textepsilon\textfinalsigma}%
   \def\abstractname{\textPi\textepsilon\textrho\acctonos\textiota
     \textlambda\texteta\textpsi\texteta}%
-  \def\bibname{\textBeta\textiota\textbeta\textlambda\textiota\textomicron
-    \textgamma\textrho\textalpha\textphi\acctonos\textiota\textalpha}%
+  \def\bibname{\textBeta\textiota\textbeta\textlambda\textiota
+    \textomicron\textgamma\textrho\textalpha\textphi\acctonos
+    \textiota\textalpha}%
   \def\chaptername{\textKappa\textepsilon\textphi\acctonos\textalpha
     \textlambda\textalpha\textiota\textomicron}%
   \def\appendixname{\textPi\textalpha\textrho\acctonos\textalpha\textrho
@@ -697,7 +1068,8 @@
     \textomega\textnu}%
   \def\listtablename{\textKappa\textalpha\texttau\acctonos\textalpha
     \textlambda\textomicron\textgamma\textomicron\textfinalsigma{}
-    \textPi\textiota\textnu\acctonos\textalpha\textkappa\textomega\textnu}%
+    \textPi\textiota\textnu\acctonos\textalpha\textkappa\textomega
+    \textnu}%
   \def\indexname{\textEpsilon\textupsilon\textrho\textepsilon
     \texttau\acctonos\texteta\textrho\textiota\textomicron}%
   \def\figurename{\textSigma\textchi\acctonos\texteta\textmu\textalpha}%
@@ -712,27 +1084,31 @@
   \def\headtoname{\textPi\textrho\textomicron\textfinalsigma}%
   \def\pagename{\textSigma\textepsilon\textlambda\acctonos\textiota
     \textdelta\textalpha}%
-  \def\seename{\textbeta\textlambda\acctonos\textepsilon\textpi\textepsilon}%
-  \def\alsoname{\textbeta\textlambda\acctonos\textepsilon\textpi\textepsilon{}
-    \textepsilon\textpi\acctonos\textiota\textsigma\texteta\textfinalsigma}%
+  \def\seename{\textbeta\textlambda\acctonos\textepsilon\textpi
+    \textepsilon}%
+  \def\alsoname{\textbeta\textlambda\acctonos\textepsilon\textpi
+    \textepsilon{} \textepsilon\textpi\acctonos\textiota\textsigma
+    \texteta\textfinalsigma}%
   \def\proofname{\textAlpha\textpi\acctonos\textomicron
     \textdelta\textepsilon\textiota\textxi\texteta}%
   \def\glossaryname{\textGamma\textlambda\textomega\textsigma
     \textsigma\acctonos\textalpha\textrho\textiota}%
-  }
+}
 %    \end{macrocode}
 %  \end{macro}
-% \changes{greek-1.2}{1997/10/28}{Added caption names for
-%    \cs{polutonikogreek}}
-% \changes{greek-1.3d}{1999/08/28}{Fixed typo, \texttt{bl'epe >ep'ishc}
-%    instead of \texttt{bl'pe >ep'ishc}}
 %
+% \subsubsection{Auto-strings for polytonic Greek}
+% \changes{greek-1.2}{1997/10/28}{Added caption names for
+%                                 \cs{polutonikogreek}}
+% \changes{greek-1.3d}{1999/08/28}{Fixed typo, \texttt{bl'epe >ep'ishc}
+%                                  instead of \texttt{bl'pe >ep'ishc}}
 %  \begin{macro}{\captionspolutonikogreek}
-%    For texts written in the $\pi o\lambda\upsilon\tau
-%    o\nu\kappa\acute{o}$ (polytonic greek) the translations are
+%    For texts written in polytonic greek, the translations are
 %    the same as above, but some words are spelled differently. For
 %    now we just add extra definitions to |\captionsgreek| in order to
 %    override the earlier definitions.
+% \changes{babel-greek-1.09b}{2014/09/18}{Use named macros instead of
+%          non-standard short accent macros for psili and dasia.}
 %    \begin{macrocode}
 \let\captionspolutonikogreek\captionsgreek
 \addto\captionspolutonikogreek{%
@@ -740,82 +1116,85 @@
     \textphi\textomicron\textrho\accvaria\textepsilon\textfinalsigma}%
   \def\indexname{\textEpsilon\accdasia\textupsilon\textrho\textepsilon
     \texttau\acctonos\texteta\textrho\textiota\textomicron}%
-  \def\figurename{\textSigma\textchi\accperispomeni\texteta\textmu\textalpha}%
+  \def\figurename{\textSigma\textchi\accperispomeni\texteta\textmu
+    \textalpha}%
   \def\headtoname{\textPi\textrho\accvaria\textomicron\textfinalsigma}%
-  \def\alsoname{\textbeta\textlambda\acctonos\textepsilon\textpi\textepsilon{}
-    \accpsili\textepsilon\textpi\acctonos\textiota\textsigma\texteta\textfinalsigma}%
+  \def\alsoname{\textbeta\textlambda\acctonos\textepsilon\textpi
+    \textepsilon{} \accpsili\textepsilon\textpi\acctonos\textiota
+    \textsigma\texteta\textfinalsigma}%
   \def\proofname{\accpsili\textAlpha\textpi\acctonos\textomicron
     \textdelta\textepsilon\textiota\textxi\texteta}%
 }
 %    \end{macrocode}
 %  \end{macro}
 %
-% \changes{babel-greek-1.9}{2014/07/20}{Added caption names for
-%    \cs{ancientgreek}}
-%
+% \subsubsection{Auto-strings for ancient Greek}
+% \changes{babel-greek-1.09}{2014/07/20}{Added caption names for
+%                                       \cs{ancientgreek}}
 %  \begin{macro}{\captionsancientgreek}
-%    For texts written in ancient Greek, we took
-%    the translations from Apostolos Syropoulos' |xgreek| package. For
-%    now we just add extra definitions to |\captionsgreek| in order to
-%    override the earlier definitions.
+%    For texts written in ancient Greek, we took the translations
+%    from Apostolos Syropoulos' \pkgref{xgreek} package.
+%    For now we just add extra definitions to |\captionsgreek|
+%    in order to override the earlier definitions.
 %    \begin{macrocode}
 \let\captionsancientgreek\captionsgreek
 \addto\captionsancientgreek{%
-  \def\prefacename{\textPi\textrho\textomicron\textomicron\acctonos\textiota\textmu
-    \textiota\textomicron\textnu}%
-  \def\refname{\accpsili\textAlpha\textnu\textalpha\textphi\textomicron\textrho
-    \textalpha\accvaria\textiota}%
-  \def\abstractname{\textPi\textepsilon\textrho\acctonos\textiota\textlambda\texteta
-    \textpsi\textiota\textvarsigma}%
-  \def\bibname{\textBeta\textiota\textbeta\textlambda\textiota\textomicron
-    \textgamma\textrho\textalpha\textphi\acctonos\textiota\textalpha}%
-  \def\chaptername{\textKappa\textepsilon\textphi\acctonos\textalpha\textlambda
-    \textalpha\textiota\textomicron\textnu}%
-  \def\appendixname{\textPi\textalpha\textrho\acctonos\textalpha\textrho\texttau
-    \texteta\textmu\textalpha}%
-  \def\contentsname{\textPi\textepsilon\textrho\textiota\textepsilon\textchi
-    \acctonos\textomicron\textmu\textepsilon\textnu\textalpha}%
-  \def\listfigurename{\textKappa\textalpha\texttau\acctonos\textalpha\textlambda
-    \textomicron\textgamma\textomicron\textvarsigma{}
-    \textsigma\textchi\texteta\textmu\acctonos\textalpha\texttau\textomega\textnu}%
-  \def\listtablename{\textKappa\textalpha\texttau\acctonos\textalpha\textlambda
-    \textomicron\textgamma\textomicron\textvarsigma{}
-    \textpi\textiota\textnu\acctonos\textalpha\textkappa\textomega\textnu}%
-  \def\indexname{\textEpsilon\accdasia\textupsilon\textrho\textepsilon\texttau
-    \acctonos\texteta\textrho\textiota\textomicron\textnu}%
-  \def\figurename{\textSigma\textchi\accperispomeni\texteta\textmu\textalpha}%
+  \def\prefacename{\textPi\textrho\textomicron\textomicron
+    \acctonos\textiota\textmu\textiota\textomicron\textnu}%
+  \def\refname{\accpsili\textAlpha\textnu\textalpha\textphi\textomicron
+    \textrho\textalpha\accvaria\textiota}%
+  \def\abstractname{\textPi\textepsilon\textrho\acctonos\textiota
+    \textlambda\texteta\textpsi\textiota\textvarsigma}%
+  \def\bibname{\textBeta\textiota\textbeta\textlambda\textiota
+    \textomicron\textgamma\textrho\textalpha\textphi
+    \acctonos\textiota\textalpha}%
+  \def\chaptername{\textKappa\textepsilon\textphi\acctonos\textalpha
+    \textlambda\textalpha\textiota\textomicron\textnu}%
+  \def\appendixname{\textPi\textalpha\textrho\acctonos\textalpha
+    \textrho\texttau\texteta\textmu\textalpha}%
+  \def\contentsname{\textPi\textepsilon\textrho\textiota\textepsilon
+    \textchi\acctonos\textomicron\textmu\textepsilon\textnu\textalpha}%
+  \def\listfigurename{\textKappa\textalpha\texttau\acctonos\textalpha
+    \textlambda\textomicron\textgamma\textomicron\textvarsigma{}
+    \textsigma\textchi\texteta\textmu\acctonos\textalpha\texttau
+    \textomega\textnu}%
+  \def\listtablename{\textKappa\textalpha\texttau\acctonos\textalpha
+    \textlambda\textomicron\textgamma\textomicron\textvarsigma{}
+    \textpi\textiota\textnu\acctonos\textalpha\textkappa
+    \textomega\textnu}%
+  \def\indexname{\textEpsilon\accdasia\textupsilon\textrho\textepsilon
+    \texttau\acctonos\texteta\textrho\textiota\textomicron\textnu}%
+  \def\figurename{\textSigma\textchi\accperispomeni\texteta\textmu
+    \textalpha}%
   \def\tablename{\textPi\acctonos\textiota\textnu\textalpha\textxi}%
-  \def\partname{\textMu\acctonos\textepsilon\textrho\textomicron\textvarsigma}%
+  \def\partname{\textMu\acctonos\textepsilon\textrho\textomicron
+    \textvarsigma}%
   \def\enclname{\textSigma\textupsilon\textnu\texteta\textmu\textmu
     \acctonos\textepsilon\textnu\textomega\textvarsigma}%
   \def\ccname{\textKappa\textomicron\textiota\textnu\textomicron\textpi
-    \textomicron\acctonos\textiota\texteta\textsigma\textiota\textvarsigma}%
+    \textomicron\acctonos\textiota\texteta\textsigma\textiota
+    \textvarsigma}%
   \def\headtoname{\textPi\textrho\accvaria\textomicron\textvarsigma}%
-  \def\pagename{\textSigma\textepsilon\textlambda\accvaria\textiota\textvarsigma}%
+  \def\pagename{\textSigma\textepsilon\textlambda\accvaria\textiota
+    \textvarsigma}%
   \def\seename{\accdasiaoxia\textomicron\textrho\textalpha}%
-  \def\alsoname{\accdasiaoxia\textomicron\textrho\textalpha{} \accdasia\textomega\textsigma
-    \textalpha\acctonos\textupsilon\texttau\textomega\textvarsigma}%
-  \def\proofname{\accpsili\textAlpha\textpi\acctonos\textomicron\textdelta\textepsilon
-    \textiota\textxi\textiota\textvarsigma}%
+  \def\alsoname{\accdasiaoxia\textomicron\textrho\textalpha{}
+    \accdasia\textomega\textsigma\textalpha\acctonos\textupsilon
+    \texttau\textomega\textvarsigma}%
+  \def\proofname{\accpsili\textAlpha\textpi\acctonos\textomicron
+    \textdelta\textepsilon\textiota\textxi\textiota\textvarsigma}%
   \def\glossaryname{\textGamma\textlambda\textomega\textsigma\textsigma
     \acctonos\textalpha\textrho\textiota\textomicron\textnu}%
- }
+}
 %    \end{macrocode}
 %  \end{macro}
 %
+% \subsubsection{Date specification}
+%
 %  \begin{macro}{\gr@month}
+%    The auxiliary macro |\gr@month| returns Greek month names in
+%    monotonic spelling.
 % \changes{greek-1.1e}{1997/10/12}{Macro added}
-%  \begin{macro}{\dategreek}
-%    The macro |\dategreek| redefines the command |\today| to
-%    produce greek dates. The name of the month is now produced
-%    by the macro |\gr@month| since it is needed in the definition
-%    of the macro |\Grtoday|.
-% \changes{greek-1.1a}{1997/03/03}{Fixed typo, \texttt{Oktwbr'iou}
-%    instead of \texttt{Oktobr'iou}}
-% \changes{greek-1.1d}{1997/10/12}{Macro \cs{gr@month} now produces
-%    the  name of the month}
-% \changes{greek-1.2a}{1997/10/31}{Use \cs{edef} to define \cs{today}}
-% \changes{greek-1.2b}{1998/03/28}{use \cs{def} instead of \cs{edef}}
 %    \begin{macrocode}
 \def\gr@month{%
   \ifcase\month\or
@@ -823,8 +1202,9 @@
       \textrho\acctonos\textiota\textomicron\textupsilon \or
     \textPhi\textepsilon\textbeta\textrho\textomicron\textupsilon
       \textalpha\textrho\acctonos\textiota\textomicron\textupsilon \or
-    \textMu\textalpha\textrho\texttau\acctonos\textiota\textomicron\textupsilon
-    \or \textAlpha\textpi\textrho\textiota\textlambda\acctonos\textiota
+    \textMu\textalpha\textrho\texttau\acctonos\textiota\textomicron
+      \textupsilon \or
+    \textAlpha\textpi\textrho\textiota\textlambda\acctonos\textiota
       \textomicron\textupsilon \or
     \textMu\textalpha\'"\textiota\textomicron\textupsilon \or
     \textIota\textomicron\textupsilon\textnu\acctonos\textiota
@@ -843,30 +1223,28 @@
       \textrho\acctonos\textiota\textomicron\textupsilon
   \fi
 }
-\def\dategreek{%
-  \def\today{\number\day \space \gr@month\space \number\year}}
 %    \end{macrocode}
 %  \end{macro}
-%  \end{macro}
 %
-%  \begin{macro}{\gr@c@greek}
+% \begin{macro}{\gr@polutoniko@month}
+%   The auxiliary macro |\gr@polutoniko@month| returns Greek month names in
+%   polytonic spelling. It is activated by the |polutoniko| language option.
 % \changes{greek-1.2}{1997/10/28}{Added macro \cs{gr@cl@month}}
-% \changes{greek-1.2}{1997/10/28}{Added macro
-%    \cs{datepolutonikogreek}}
-% \changes{greek-1.3a}{1997/10/28}{removed macro
-%    \cs{datepolutonikogreek}}
+% \changes{greek-1.2}{1997/10/28}{Added macro \cs{datepolutonikogreek}}
+% \changes{greek-1.3a}{1997/10/28}{removed macro \cs{datepolutonikogreek}}
 %    \begin{macrocode}
-\def\gr@c@month{%
+\def\gr@polutoniko@month{%
   \ifcase\month\or
-    \accpsili\textIota\textalpha\textnu\textomicron\textupsilon\textalpha
-      \textrho\acctonos\textiota\textomicron\textupsilon \or
+    \accpsili\textIota\textalpha\textnu\textomicron\textupsilon
+      \textalpha\textrho\acctonos\textiota\textomicron\textupsilon \or
     \textPhi\textepsilon\textbeta\textrho\textomicron\textupsilon
       \textalpha\textrho\acctonos\textiota\textomicron\textupsilon \or
     \textMu\textalpha\textrho\texttau\acctonos\textiota\textomicron
       \textupsilon \or
     \accpsili\textAlpha\textpi\textrho\textiota\textlambda
       \acctonos\textiota\textomicron\textupsilon \or
-    \textMu\textalpha\"'\textiota\textomicron\textupsilon \or
+    \textMu\textalpha\accdialytikatonos\textiota\textomicron
+      \textupsilon \or
     \accpsili\textIota\textomicron\textupsilon\textnu
       \acctonos\textiota\textomicron\textupsilon \or
     \accpsili\textIota\textomicron\textupsilon\textlambda
@@ -886,49 +1264,80 @@
 %    \end{macrocode}
 %  \end{macro}
 %
+%  \begin{macro}{\dategreek}
+%    The macro |\dategreek| redefines the command |\today| to
+%    produce Greek dates. The name of the month is produced
+%    by the macro |\gr@month| since it is also needed in the definition
+%    of the macro |\Grtoday|.
+% \changes{greek-1.1a}{1997/03/03}{Fixed typo, \texttt{Oktwbr'iou}
+%                                  instead of \texttt{Oktobr'iou}}
+% \changes{greek-1.1d}{1997/10/12}{Macro \cs{gr@month} now produces
+%                                  the  name of the month}
+% \changes{greek-1.2a}{1997/10/31}{Use \cs{edef} to define \cs{today}}
+% \changes{greek-1.2b}{1998/03/28}{use \cs{def} instead of \cs{edef}}
+%    \begin{macrocode}
+\def\dategreek{%
+  \def\today{\number\day \space \gr@month\space \number\year}}
+%    \end{macrocode}
+%  \end{macro}
+%
 %  \begin{macro}{\Grtoday}
 % \changes{greek-1.1}{1996/10/28}{Added macro \cs{Grtoday}}
 %    The macro |\Grtoday| produces the current date, only that the
 %    month and the day are shown as greek numerals instead of arabic
-%    as it is usually the case.
+%    as it is usually the case. (The \pkgref{teubner} package defines
+%    a matching lowercase version \cs{grtoday}.)
 %    \begin{macrocode}
 \def\Grtoday{%
   \expandafter\Greeknumeral\expandafter{\the\day}\space
-  \gr@c@month \space
+  \gr@polutoniko@month \space
   \expandafter\Greeknumeral\expandafter{\the\year}}
 %    \end{macrocode}
 %  \end{macro}
 %
-%  \begin{macro}{\extrasgreek}
-%  \begin{macro}{\noextrasgreek}
-%    The macro |\extrasgreek| will perform all the extra definitions
-%    needed for the Greek language. The macro |\noextrasgreek| is used
-%    to cancel the actions of |\extrasgreek|. For the moment these
-%    macros switch the fontencoding (with 8-bit TeX) and the definition of
-%    the internal macros |\@alph| and |\@Alph| because in Greek we do use
-%    the Greek numerals.
-% \changes{greek-1.5}{2013/06/21}{LGR not used with XeTeX/LuaTeX.}
-% \changes{greek-1.8}{2013/11/27}{use font-encoding specific TextCommands.
-%    Use EU1 or EU2 for Latin script if available}
+% \subsubsection{Greek numerals \label{sec:Greek numerals}}
+%
+%  \begin{macro}{\greeknumeralsix}
+%  \begin{macro}{\greeknumeralSix}
+%  \begin{macro}{\greeknumeralninety}
+%  \begin{macro}{\greeknumeralNinety}
+%    The shape of the obsolete characters used for number 6 (digamma/stigma)
+%    and 90 (koppa) evolved over time and different characters are in use
+%    for them today. We define placeholders that allow configuration by
+%    the user or a package.
+% \changes{babel-greek-1.10}{2020/11/10}{
+%   Use zig-zagy \cs{textkoppa}.
+%   This is what it looks in current Greek typography.}
 %    \begin{macrocode}
-\addto\extrasgreek{\greekscript}
-\addto\noextrasgreek{\latintext}
+\providecommand*{\greeknumeralsix}{\textstigma}
+\providecommand*{\greeknumeralSix}{\textStigma}
+\providecommand*{\greeknumeralninety}{\textkoppa}
+\providecommand*{\greeknumeralNinety}{\textKoppa}
 %    \end{macrocode}
-%    TODO restore previous font encoding.
+%  \end{macro}
+%  \end{macro}
+%  \end{macro}
+%  \end{macro}
 %
 %  \begin{macro}{\greeknumeral}
+%    The commands |\greeknumeral| and |\Greeknumeral| produce the lowercase
+%    and uppercase \href{https://en.wikipedia.org/wiki/Greek_numerals}{Greek
+%    numerals} respectively.
+%
 %    The command |\greeknumeral| needs to be \emph{fully} expandable
 %    in order to get the right information in auxiliary
 %    files. It should also be usable in PDF-strings.
 %    Therefore we use the implementation from the \cs{HyPsd@GreekPatch}
-%    in \href{https://ctan.org/pkg/hyperref}{hyperref}
-%    (version 7.00e 2020-05-15).
+%    in \pkgref{hyperref} (version 7.00e 2020-05-15).
+%
 % \changes{babel-greek-1.10}{2020/11/10}{PDF-string secure implementation
-%    taken from ``hyperref'' (collaboration with Ulrike Fischer).}
+%    taken from ``hyperref'' (thanks to Ulrike Fischer).}
+% \changes{babel-greek-1.11}{2020/11/20}{Configurable shapes for 6 and 90.
+%   90 defaults to \cs{textqoppa} for ancient Greek.}
 %    \begin{macrocode}
 \def\greeknumeral#1{%
   {\greekscript
-  \bbl@greek@GreekNum\@firstoftwo{#1}}%
+   \bbl@greek@GreekNum\@firstoftwo{#1}}%
 }
 %    \end{macrocode}
 %  \end{macro}
@@ -937,7 +1346,7 @@
 %    \begin{macrocode}
 \def\Greeknumeral#1{%
   {\greekscript
-  \bbl@greek@GreekNum\@secondoftwo{#1}}%
+   \bbl@greek@GreekNum\@secondoftwo{#1}}%
 }
 %    \end{macrocode}
 %  \end{macro}
@@ -1018,7 +1427,7 @@
   \or\textgamma\textGamma
   \or\textdelta\textDelta
   \or\textepsilon\textEpsilon
-  \or\textstigmagreek\textStigmagreek
+  \or\greeknumeralsix\greeknumeralSix % stigma or digamma
   \or\textzeta\textZeta
   \or\texteta\textEta
   \or\texttheta\textTheta
@@ -1043,7 +1452,7 @@
   \or\textxi\textXi
   \or\textomicron\textOmicron
   \or\textpi\textPi
-  \or\textkoppa\textKoppa
+  \or\greeknumeralninety\greeknumeralNinety % koppa or qoppa
   \else
     {}{}%
   \fi
@@ -1096,19 +1505,13 @@
 %
 %  \begin{macro}{\greek@alph}
 %  \begin{macro}{\greek@Alph}
-%    In the previous release of this language definition the
+%    In the previous release of this language definition file the
 %    commands |\greek@aplh| and |\greek@Alph| were kept just for
 %    reasons of compatibility. Here again they become meaningful macros.
-%    They are definited in a way that even page numbering with greek
-%    numerals is possible. Since the macros |\@alph| and |\@Alph| will
-%    lose their original meaning while the Greek option is active, we
-%    must save their original value.
-%    macros |\@alph|
-%    \begin{macrocode}
-\let\latin@alph\@alph
-\let\latin@Alph\@Alph
-%    \end{macrocode}
-%    Then we define the Greek versions; the additional |\expandafter|s
+%    They are defined in a way that even page numbering with greek
+%    numerals is possible.
+%
+%    We define the Greek versions; the additional |\expandafter|s
 %    are needed in order to make sure the table of contents will be
 %    correct, e.g., when we have appendixes.
 %    \begin{macrocode}
@@ -1116,100 +1519,87 @@
 \def\greek@Alph#1{\expandafter\Greeknumeral\expandafter{\the#1}}
 %    \end{macrocode}
 %
-%    Now we can set up the switching.
-% \changes{greek-1.1a}{1997/03/03}{removed two superfluous @'s which
-%    made \cs{@alph} undefined}
+%    Redefine the internal macros |\@alph| and |\@Alph| in the
+%    language hook, so that we use Greek numerals\footnote{
+%      cf.\ section \ref{sec:Greek numerals}}
+%    instead of the Latin alphabet\footnote{
+%      Eventually interpreted as Latin transliteration and converted
+%      to Greek letters in a ``strange'' order.}
+%    in Greek text parts.
+% \changes{greek-1.1a}{1997/03/03}{
+%          removed two superfluous @'s which made \cs{@alph} undefined}
+% \changes{babel-greek-1.12}{2023/03/04}{
+%          Save/restore expansion of \cs{\@alph} and \cs{\@Alph}
+%          with every switch to/from Greek.}
 %    \begin{macrocode}
 \addto\extrasgreek{%
+  \babel@save\@alph
+  \babel@save\@Alph
   \let\@alph\greek@alph
-  \let\@Alph\greek@Alph}
-\addto\noextrasgreek{%
-  \let\@alph\latin@alph
-  \let\@Alph\latin@Alph}
+  \let\@Alph\greek@Alph
+}
 %    \end{macrocode}
 %  \end{macro}
 %  \end{macro}
 %
 %
-% \section{Character codes}
+% \subsection{Character codes \label{sec:character-codes}}
 %
-%    Greek letters drop diacritics (eccept dialytika and sub-iota) in
-%    UPPERCASE. This is not cared for by the Unicode standard.
-%    The file \file{greek-euenc.def} from \pkg{greek-fontenc}
-%    contains the required |\lccode| and |\uccode| corrections from the
-%    \pkg{xgreek} package by Apostolos Syropoulos.
-% \changes{greek-1.5}{2013/06/21}{Support XeTeX/LuaTeX.}
-% \changes{greek-1.9d}{2015/07/06}{uclc fixes not included in greek-euenc.def}
-%
-%    The LGR encoded fonts that are used to typeset Greek with 8-bit TeX
-%    define ligatures for characters with diacritics. In order for this to
-%    work, some characters need to be considered as letters. These
-%    characters are |<|, |>|, |~|, |`|, |'|, |"| and
-%    \verb=|=. Therefore, their |\lccode| is changed when Greek is in
-%    effect. In order to let |\uppercase| give correct results, the
-%    |\uccode| of these characters is set to a non-existing character
-%    to make them disappear. Of course not all characters are needed
-%    when typesetting ``modern'' $\mu o\nu o\tau o\nu
-%    \iota\kappa\acute{o}$. In that case we only need the |'| and |"|
-%    symbols which are treated in the proper way.
-%
-%  \begin{macro}{\greek@tilde}
-% \changes{greek-1.0c}{1997/02/19}{Added command}
-%    The Greek script uses a number of characters with more
-%    than one accent. In LGR encoded fonts combined diacritics can be
-%    obtained using Knuth's ligature mechanism (see usage.pdf).
-%    Characters we need to have ligatures with are the tilde, the
-%    acute and grave accent characters, the rough and smooth breathings,
-%    the subscript, and the double quote character.
-%    In text input the |~| is normally used to produce an
-%    unbreakable space.
-% \changes{greek-1.3k}{2003/04/10}{Make sure the character `!' is not
-%    active during the definition of \cs{greek@tilde}}
-% \changes{greek-1.4}{2013/05/17}{do not re-define the tilde accent macro:
-%    it works as expected with \file{lgrenc.def} from \pkg{greek-fontenc}.}
-%    \begin{macrocode}
-\@ifl@aded{def}{lgrenc}{%
-  \begingroup
-    \@ifundefined{active@char\string!}{}{\catcode`!=12\relax}
-    \catcode`\~=12%
-    \lccode`\!=`\~%
-    \lowercase{\def\x{\endgroup
-        \def\greek@tilde{!}}\x}
-%    \end{macrocode}
-%  \end{macro}
-%    In order to get correct hyphenation we need to set the lower case
-%    code of a number of characters. The `v' character has a special
-%    usage for the |cb| fonts: in fact this ligature mechanism detects
-%    the end of a word and assures that a final sigma is typeset with
-%    the proper sign wich is different from that of an initial or
-%    medial sigma;  the  `v  'after  an  \textit{isolated} sigma fools
-%    the ligature mechanism in order to typeset $\sigma$ in place of
-%    $\varsigma$. Because of this we make sure its lowercase code is
-%    not changed. For ``modern'' greek we have to deal only with |'|
-%    and |"| and so things are easy.
 % \changes{greek-1.1c}{1997/04/30}{fixed two typos}
 % \changes{greek-1.1e}{1997/10/12}{Added lowercase code for v}
 % \changes{greek-1.2}{1997/10/28}{Definitions for ``modern'' Greek are
-%    now the definitions of ``Polutoniko'' Greek}
+%    now the definitions of ``polutoniko'' Greek}
 % \changes{greek-1.2}{1997/10/28}{Added lowercase codes for ``modern''
 %    greek}
 % \changes{greek-1.3e}{1999/09/24}{\cs{extrasgreek} and
 %    \cs{extraspolutonikogreek} should be complementary}
-% \changes{babel-greek-1.9}{2014/07/20}{Added lc codes for chars 128 to 255}
-%    In order to process the suitable characters and in such a way that
-%    hyphenation patterns work also with precomposed characters, it is
-%    necessary to declare the lc code for all characters, that can be part
-%    of a word. We do this in |\extrasgreek| because this is a feature of
-%    the LGR font encoding (which is the same in all language variants).
-%    This means that multi-accented characters are regarded parts of a word
-%    (and not non-word characters) also in monotonic spelling.
-% \changes{babel-greek-1.9e}{2015/11/27}{Fix bug in lccode-setting loop
+% \changes{babel-greek-1.09}{2014/07/20}{Added lc codes for chars 128 to 255}
+% \changes{babel-greek-1.09b}{2014/09/18}{Remove spurious whitespace from
+%    `extrasgreek'  definition (report Eike Schmidt).}
+% \changes{babel-greek-1.09e}{2015/11/27}{Fix bug in lccode-setting loop
 %   (patch by Enrico Gregorio).}
+% \changes{babel-greek-1.12}{2023/03/04}{
+%    Only change uc/lccodes if \cs{greekfontencoding} is LGR.}
+%
+% In order to get correct hyphenation we need to set the lower case
+% code for all characters that can be part of a word.
+%
+% In LGR encoded fonts, diacritics can be obtained using Knuth's
+% ligature mechanism (see usage.pdf). This means that the characters
+% |<|, |>|, |~|, |`|, |'|, |"|, and \verb=|= may be part of a word.
+% Therefore, their |\lccode| is changed when polytonic Greek is in
+% effect. For monotonic Greek, we only need |'| and |"|.
+%
+% The `v' character has a special usage in LGR-encoded fonts:
+% The LGR ligature mechanism detects the end of a word and assures that
+% a final sigma ($\varsigma$) is used. The `v' after  an `s' overrides this
+% ligature mechanism so that it is possible to typeset an isolated $\sigma$
+% without it becoming a $\varsigma$.
+% Because of this we make sure its lowercase code is not changed.
 %    \begin{macrocode}
+\ifx\greekfontencoding\bbl@greek@LGR
   \addto\extrasgreek{%
     \babel@savevariable{\lccode`v}\lccode`v=`v%
     \babel@savevariable{\lccode`\'}\lccode`\'=`\'%
     \babel@savevariable{\lccode`\"}\lccode`\"=`\"%
+  }
+  \addto\extraspolutonikogreek{%
+    % \l@greek=\bbl@polygreek
+    \babel@savevariable{\lccode`\<}\lccode`\<=`\<%
+    \babel@savevariable{\lccode`\>}\lccode`\>=`\>%
+    \babel@savevariable{\lccode`\~}\lccode`\~=`\~%
+    \babel@savevariable{\lccode`\|}\lccode`\|=`\|%
+    \babel@savevariable{\lccode`\`}\lccode`\`=`\`%
+  }
+%    \end{macrocode}
+% Also set the lc code for the precomposed characters in the upper half
+% of the code table.
+%    We do this in |\extrasgreek| because this is a feature of
+%    the LGR font encoding (used in all language variants).
+%    This means that multi-accented characters are regarded parts of a word
+%    also in monotonic spelling.
+%    \begin{macrocode}
+  \addto\extrasgreek{%
     % ``high bit characters'': set in a loop and correct exceptions
     \@tempcnta=128%
     \@whilenum\@tempcnta<253\do{%
@@ -1228,103 +1618,184 @@
     \lccode219=240% GREEK CAPITAL LETTER IOTA WITH DIALYTIKA
     \lccode223=244% GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA
   }
-
-  \addto\extraspolutonikogreek{%
-    % \l@greek=\bbl@polygreek
-    \babel@savevariable{\lccode`\<}\lccode`\<=`\<%
-    \babel@savevariable{\lccode`\>}\lccode`\>=`\>%
-    \babel@savevariable{\lccode`\~}\lccode`\~=`\~%
-    \babel@savevariable{\lccode`\|}\lccode`\|=`\|%
-    \babel@savevariable{\lccode`\`}\lccode`\`=`\`%
-    }
 %    \end{macrocode}
-%    And in order to get rid of all accents and breathings when a
-%    string is |\uppercase|d we also change a number of uppercase
-%    codes.
+%
+% \begin{macro}{\bbl@greek@tilde}
+%   \changes{greek-1.0c}{1997/02/19}{Added command}
+%   \changes{greek-1.1b}{1997/03/06}{Made tilde expand to a tilde with
+%     \cs{catcode 12}.}
+%   \changes{greek-1.3k}{2003/04/10}{Make sure the character `!' is not
+%     active during the definition of \cs{greek@tilde}}
+%   \changes{greek-1.4}{2013/05/17}{Do not re-define the tilde accent macro:
+%     it works as expected with \file{lgrenc.def} from \pkg{greek-fontenc}.}
+%   \changes{babel-greek-1.13}{2023/03/15}{
+%     Renamed from \cs{greek@tilde}. Simplified definition.}
+%
+%   By default, the tilde produces an unbreakable space in text mode.
+%   For the variants ``polutoniko'' and ``ancient'', we change its meaning
+%   to allow using |~| in the Latin transliteration of characters with
+%   perispomeni and in composite diacritics.
+%    \begin{macrocode}
+  \DeclareTextSymbol{\bbl@greek@tilde}{LGR}{126}
+  \addto\bbl@greek@setup@polytonic{
+    \declare@shorthand{greek}{~}{\bbl@greek@tilde}
+  }
+\fi % End of LGR-specific code.
+%    \end{macrocode}
+%  \end{macro}
+%
+%
+% \subsection{MakeUppercase fixes \label{sec:MakeUppercase-fixes}}
+%
 % \changes{greek-1.1b}{1997/03/06}{Added setting of \cs{uccode}s
-%    (after \file{kdgreek.sty})}
+%   (after \file{kdgreek.sty})}
 % \changes{greek-1.1e}{1997/10/12}{Added uppercase code for special
-%    letter ``v''. Uppercase code for accents is now \texttt{9f},
-%    instead of \texttt{ff}}
+%   letter ``v''. Uppercase code for accents is now \texttt{9f},
+%   instead of \texttt{ff}}
 % \changes{greek-1.2}{1997/10/28}{Added uppercase codes for ``modern''
-%    Greek. The old codes are now for ``Polutoniko'' Greek}
+%   Greek. The old codes are now for ``Polutoniko'' Greek}
 % \changes{greek-1.3e}{1999/09/24}{\cs{extrasgreek} and
-%    \cs{extraspolutonikogreek} should be complementary}
+%   \cs{extraspolutonikogreek} should be complementary}
 % {\catcode`|=12\relax\gdef\indexbar{\cs{|}}}
 % \changes{greek-1.3g}{1999/11/17}{uc code of \indexbar{} is now just
-%    \indexbar{} to reflect recent changes in the cb fonts}
+%   \indexbar{} to reflect recent changes in the cb fonts}
 % \changes{greek-1.3i}{2000/10/02}{uc code of `v' is switched to V
-%    so that mixed text appears correctly in headers.}
-% \changes{greek-1.3j}{2001/02/03}{Because other languages might
-%    make the caret active, we can't use the double caret notation
-%    here}
+%   so that mixed text appears correctly in headers.}
+% \changes{greek-1.3j}{2001/02/03}{Don't use the double caret notation here,
+%   because other languages might make the caret active.}
+% \changes{greek-1.5}{2013/06/21}{Support XeTeX/LuaTeX.}
+% \changes{babel-greek-1.09d}{2015/07/06}{uc-/lccode corrections from xgreek
+%   are now in greek-euenc.def (the polyglossia version has bugs).}
+% \changes{babel-greek-1.12}{2023/03/04}{
+%   Only change uccodes if LaTeX is older than 2022/06/01.}
+% \changes{babel-greek-1.13.2}{2023/06/01}{
+%   \cs{MakeUppercase} fix for transliteration input.}
+% \changes{babel-greek-1.14}{2023/08/18}{
+%   \cs{MakeUppercase} fix for standard accent macros.}
+% \changes{babel-greek-1.15}{2023/10/13}{
+%   Fix standard accent macros also with pre-2022 \cs{MakeUppercase}.}
+% In Greek typographical praxis,
+% letters drop accents (eccept dialytika) and breathings in
+% UPPERCASE. This is not cared for by the Unicode standard.
+% For Unicode literals, |\MakeUppercase| implements locale-specific
+% corrections.\footnote{
+%   The pre-2022 implementation is corrected by character code definitions
+%   in \file{tuenc-greek.def} from \pkgref{greek-fontenc},
+%   cf. section~\ref{load-greek-font-encoding-definitions}.}
+%
+% To fix the behaviour of the 2022 |\MakeUppercase| implementation with
+% standard accent macros, we define and use ``capital'' accent
+% macros.
+% Font-encoding specific definitions for the ``capital'' accent macros
+% in \pkgref{greek-fontenc}~$\ge 2.4$ suppress them on Greek letters.
+% The \Lopt{no-MakeUppercase-fixes} modifier can be used to skip this step
+% (cf. section~\ref{sec:modifiers}).
 %    \begin{macrocode}
-  \addto\extrasgreek{%
-    \babel@savevariable{\uccode`\"}\uccode`\"=`\"%
-    \babel@savevariable{\uccode`\'}\uccode`\'=159% 159 == ^^9f
-    }
-  \addto\extraspolutonikogreek{%
-    \babel@savevariable{\uccode`\~}\uccode`\~=159%
-    \babel@savevariable{\uccode`\>}\uccode`\>=159%
-    \babel@savevariable{\uccode`\<}\uccode`\<=159%
-    \babel@savevariable{\uccode`\|}\uccode`\|=`\|%
-    \babel@savevariable{\uccode`\`}\uccode`\`=159%
-    }
+\bbl@xin@{,no-MakeUppercase-fixes,}{,\BabelModifiers,}%
+\ifin@
+\else
+  \ProvideTextCommandDefault{\accACUTE}{\@tabacckludge'}
+  \ProvideTextCommandDefault{\accGRAVE}{\@tabacckludge`}
+  \ProvideTextCommandDefault{\accTILDE}{\@tabacckludge~}
+  \ProvideTextCommandDefault{\accDIAERESIS}{\@tabacckludge"}
+  \addto\@uclclist{\'\accACUTE \`\accGRAVE \~\accTILDE \"\accDIAERESIS}%
+\fi
 %    \end{macrocode}
-%    For this to work we make the character |^^9f| a shorthand that
-%    expands to nothing. In order for this to work we need to make a
-%    character look like |^^9f| in \TeX's eyes. The trick is to have
-%    another character and assign it a different lowercase code. The
-%    execute the macros needed in a |\lowercase| environment. Usually
-%    the tilde |~| character is used for such purposes. Before we do
-%    this we save it's original lowercase code to restore it once
-%    we're done.
-% \changes{greek-1.1b}{1997/03/06}{Added shorthand for \cs{char255}}
-% \changes{greek-1.1e}{1997/10/12}{Shorthand is changed. Active
-%    character is now \cs{char159}}
-% \changes{greek-1.2a}{1997/10/31}{Need shorthand to exist for
-%    ``monotoniko'' Greek, not ``polutoniko'' Greek}
-% \changes{greek-1.3j}{2001/02/03}{Use the tilde as an alias for
-%    character 159}
+% Drop diacritics also with ``input ligatures'' defined in LGR fonts:
+%
+% Since 2023/06, we can set up character mappings to be used on the argument
+% of |\MakeUppercase|.\footnote{cf.
+%  \href{https://www.latex-project.org/news/latex2e-news/ltnews37.pdf}
+%  {LaTeX News~37}}
+% The optional ``locale'' argument |[el]| restricts the mapping to Greek
+% text parts.
 %    \begin{macrocode}
-  \@tempcnta=\lccode`\~
-  \lccode`\~=159
-  \lowercase{%
-    \initiate@active@char{~}%
-    \declare@shorthand{greek}{~}{}}
-  \lccode`\~=\@tempcnta
+\ifx\greekfontencoding\bbl@greek@LGR
+  \ifdefined\DeclareUppercaseMapping % new in 2023
+    % \DeclareUppercaseMapping[el]{"1FBE}{\prosgegrammeni}%
+    \DeclareUppercaseMapping[el]{"0027}{}% '
+    \addto\bbl@greek@setup@polytonic{
+      \DeclareUppercaseMapping[el]{"003C}{}% <
+      \DeclareUppercaseMapping[el]{"003E}{}% >
+      \DeclareUppercaseMapping[el]{"0060}{}% `
+      \DeclareUppercaseMapping[el]{"007E}{}% ~
+    }
+  \fi
+%    \end{macrocode}
+% If LaTeX is older than 2022/06,
+% we set the |\uccode| of the relevant characters to a dummy character
+% (|\uccode| changes are ignored by |\MakeUppercase| since 2022).
+% To minimize side-effects, the re-definition is limited to Greek text parts.
+%    \begin{macrocode}
+  \IfFormatAtLeastTF{2022/06/01}{}
+    {% else (LaTeX format older than 2022/06/01)
+     \addto\extrasgreek{%
+       \babel@savevariable{\uccode`\"}\uccode`\"=`\"%
+       \babel@savevariable{\uccode`\'}\uccode`\'=159% 159 == ^^9f
+     }
+     \addto\extraspolutonikogreek{%
+       \babel@savevariable{\uccode`\~}\uccode`\~=159%
+       \babel@savevariable{\uccode`\>}\uccode`\>=159%
+       \babel@savevariable{\uccode`\<}\uccode`\<=159%
+       \babel@savevariable{\uccode`\`}\uccode`\`=159%
+     }
+%    \end{macrocode}
+% To avoid errors if the tilde is used as perispomeni
+% (in polytonic or ancient Greek), we need to declare an expansion for
+% the ``dummy'' character~0x9f = 159.\footnote{
+%   Since UTF-8 became the default encoding (cf.\
+%   \href{https://www.latex-project.org/news/latex2e-news/ltnews28.pdf}
+%   {LaTeX News~28}), an ``inputenc'' error is also thrown
+%   if the \pkg{inputenc} package is not loaded.}
+% To be independent of \pkg{inputenc}, we do not use |\DeclareInputText|
+% but code modelled after its definition to declare an empty expansion.
+% \changes{greek-1.1b}{1997/03/06}{
+%          Added shorthand for \cs{char255}}
+% \changes{greek-1.1e}{1997/10/12}{
+%          Shorthand is changed. Active character is now \cs{char159}}
+% \changes{greek-1.2a}{1997/10/31}{
+%          Need shorthand to exist for monotonic Greek, not polytonik Greek}
+% \changes{greek-1.3j}{2001/02/03}{
+%          Use the tilde as an alias for character 159}
+% \changes{babel-greek-1.12}{2023/03/04}{
+%          Declare char 159 expansion similar to
+%          \pkg{inputenc} to avoid ``inputenc error''.}
+%    \begin{macrocode}
+     \bgroup
+        \uccode`\~159%
+        \uppercase{%
+     \egroup
+        \def~{}%
+     }
 %    \end{macrocode}
 % Add composite commands, so that the dialytika is kept or put on the
-% following character of a diphthong with |\MakeUppercase|
-% (see lgrdef.enc from the the greek-fontenc package for details).
-% \changes{greek-1.4}{2013/05/17}{Add TextCompositeCommands for
-%     ``uppercase diacritics''.}
+% following character of a diphthong with |\MakeUppercase| (see
+% \file{lgrdef.enc} from the \pkgref{greek-fontenc} package for details).
+% \changes{greek-1.4}{2013/05/17}{
+%   Add TextCompositeCommands for ``uppercase diacritics''.}
 % \changes{greek-1.5}{2013/05/27}{Bugfix: @hiatus->LGR@hiatus}
 % \changes{greek-1.5a}{2013/07/02}{Replaced non-printable literal character
-%     with ^^-notation (thanks to Heiko Oberdiek for the hint).}
-% \changes{greek-1.9}{2014/07/20}{The |^^|-notation seems to require lower case
-%     letters. |^^9F| failed.}
+%   with \textasciicircum-notation (tip by Heiko Oberdiek).}
+% \changes{babel-greek-1.09}{2014/07/20}{The \textasciicircum-notation seems
+%   to require lower case letters.}
+% \changes{babel-greek-1.09h}{2019/07/11}{Move breathing composite commands
+%   to textalpha.}
 %    \begin{macrocode}
-  \DeclareTextCompositeCommand{\"}{LGR}{^^9f}{\accdialytika}
-  \DeclareTextCompositeCommand{\'}{LGR}{^^9f}{\LGR@hiatus}
-  \DeclareTextCompositeCommand{\`}{LGR}{^^9f}{\LGR@hiatus}
+     \DeclareTextCompositeCommand{\"}{LGR}{^^9f}{\accdialytika}
+     \DeclareTextCompositeCommand{\'}{LGR}{^^9f}{\LGR@hiatus}
+     \DeclareTextCompositeCommand{\`}{LGR}{^^9f}{\LGR@accdropped}
+%    \end{macrocode}
+% If Unicode fonts are loaded together with LGR, we must also care for
+% |\"'| and |\"`| in TU, because the |\"| is kept when upcasing.
+%    \begin{macrocode}
+     \ifdefined\UnicodeEncodingName % set by XeTeX/LuaTeX
+       \DeclareTextCompositeCommand{\"}{TU}{^^9f}{\accdialytika}
+     \fi
+    }% end of the \IfFormatAtLeastTF else block
+\fi % End of LGR-specific code.
 %    \end{macrocode}
 %
-%    We can also make the tilde character itself expand to a tilde with
-%    category code 12 to make the typing of texts easier.
-% \changes{greek-1.1b}{1997/03/06}{Made tilde expand to a tilde with
-%    \cs{catcode 12}.}
-% \changes{greek-1.5a}{2013/06/27}{provide ``extraspolutonikogreek'' also
-%    for Xe/LuaTeX.}
-%    \begin{macrocode}
-  \addto\extraspolutonikogreek{\languageshorthands{greek}}%
-  \declare@shorthand{greek}{~}{\greek@tilde}
-}{} % End of LGR-specific code.
-%    \end{macrocode}
-%  \end{macro}
-%  \end{macro}
-%
-% \section{symbol name aliases}
+% \subsection{Symbol name aliases}
 %    For backwards compatibility, we keep aliases for a few symbols.
 % \changes{greek-1.1c}{1997/03/10}{Added a couple of symbols, needed
 %    for \cs{greeknumeral}}
@@ -1335,9 +1806,9 @@
 %   the remaining symbol definitions have been moved here}
 % \changes{greek-1.5}{2013/06/11}{change symbol macros to aliases}
 % \changes{greek-1.10}{2020/11/10}{Fix: \cs{qoppa} is the legacy name of
-%   \cs{textkoppa} not \cs{textqoppa}!
-%   Provide fallbacks for makros required for greek numerals
-%   (added in greek-fontenc 1.0 2020-09-25).}
+%   \cs{textkoppa} not \cs{textqoppa}!}
+% \changes{babel-greek-1.12}{2023/03/04}{Remove \cs{textKoppa} and
+%   \cs{textmu} (in greek-fontenc since version 1.0).}
 %    \begin{macrocode}
 \providecommand*{\anwtonos}{\textdexiakeraia}
 \providecommand*{\katwtonos}{\textaristerikeraia}
@@ -1350,20 +1821,11 @@
 \providecommand*{\vardigamma}{\textvardigamma}
 \providecommand*{\euro}{\texteuro}
 \providecommand*{\permill}{\textperthousand}
-%    \end{macrocode}
-% TODO remove the following lines once greek-fontenc 1.0 is in common use.
-%    \begin{macrocode}
-\@ifl@aded{def}{lgrenc}{%
-  \ProvideTextCommand{\textKoppa}{LGR}{\textkoppa}
-  \ProvideTextCommand{\textmugreek}{LGR}{\textmu}
-}{}
 \ProvideTextCommand{\textmugreek}{\greekfontencoding}{\textmu}
 %    \end{macrocode}
 %
-% \changes{greek-1.3l}{2004/02/19}{Commented these lines out as this
-%    change has made it into \LaTeX{} itself.}
-% \changes{greek-1.8}{2013/11/27}{Remove the redefintion of fnum@figure
-%    and fnum@table.}
+% \changes{babel-greek-1.08}{2013/11/27}{Remove redefinition of
+%    \cs{fnum@figure} and \cs{fnum@table}.}
 %
 %    The macro |\ldf@finish| takes care of looking for a
 %    configuration file, setting the main language to be switched on
@@ -1374,6 +1836,8 @@
 \ldf@finish{\CurrentOption}
 %</code>
 %    \end{macrocode}
+%
+% \PrintChanges
 %
 % \Finale
 %\endinput

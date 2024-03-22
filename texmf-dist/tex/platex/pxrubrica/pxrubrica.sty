@@ -22,7 +22,7 @@
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{pxrubrica}
-  [2021/03/06 v1.3d PX Japanese-style ruby]
+  [2023/03/01 v1.3e PX Japanese-style ruby]
 \RequirePackage{keyval}
 \def\pxrr@pkgname{pxrubrica}
 \def\pxrr@error{%
@@ -500,8 +500,12 @@
 }{%
   \pxrr@csletcs{ifpxrr@in@ptex}{iffalse}%
 }
-\pxrr@ifprimitive\enablecjktoken{%
-  \pxrr@csletcs{ifpxrr@in@uptex}{iftrue}%
+\pxrr@ifprimitive\kchardef{%
+  \ifnum\ucs"3000="3000
+    \pxrr@csletcs{ifpxrr@in@uptex}{iftrue}%
+  \else
+    \pxrr@csletcs{ifpxrr@in@uptex}{iffalse}%
+  \fi
 }{%
   \pxrr@csletcs{ifpxrr@in@uptex}{iffalse}%
 }

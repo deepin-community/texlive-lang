@@ -1,0 +1,242 @@
+% !TeX TXS-program:compile = txs:///arara
+% arara: lualatex: {shell: no, synctex: yes, interaction: batchmode}
+% arara: pythontex: {rerun: always} if found('pytxcode', 'PYTHONTEX#py')
+% arara: lualatex: {shell: no, synctex: yes, interaction: batchmode} if found('pytxcode', 'PYTHONTEX#py')
+% arara: lualatex: {shell: no, synctex: yes, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
+
+\documentclass[french,a4paper,10pt]{article}
+\def\PLver{2.7.5}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{ProfLycee}
+\useproflyclib{pythontex}
+\usepackage{babel}
+\sisetup{locale=FR,output-decimal-marker={,},group-minimum-digits=4}
+\usepackage{codehigh}
+
+\begin{document}
+
+\part*{ProfLycee (\PLver), Pythontex}
+
+\section{Code \og Pythontex \fg{}}
+
+\subsection{Préambule basique}
+
+{\small \begin{codehigh}
+\documentclass[french,a4paper,10pt]{article}
+\usepackage{ProfLycee}
+\useproflyclib{pythontex}                     % compilation spécifique
+\end{codehigh}}
+
+\subsection{Exemples}
+
+{\small \begin{codehigh}
+%Sortie par défaut
+\begin{CodePythontex}{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontex}
+\end{codehigh}}
+
+\begin{CodePythontex}{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+
+#bla
+#bla
+#bla
+\end{CodePythontex}
+
+{\small \begin{codehigh}
+%Sortie avec Style=Classique, Largeur=10cm, centré
+\begin{CodePythontexAlt}[Largeur=10cm,Centre,PremLigne=10]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontexAlt}
+\end{codehigh}}
+
+\begin{CodePythontexAlt}[Largeur=10cm,Centre,PremLigne=10]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+
+#bla
+#bla
+#bla
+\end{CodePythontexAlt}
+
+\pagebreak
+
+{\small \begin{codehigh}
+%Sortie avec Style=Classique, Largeur=10cm
+\begin{CodePythontexAlt}[Largeur=10cm]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontexAlt}
+\end{codehigh}}
+
+\begin{CodePythontexAlt}[Largeur=10cm]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+\end{CodePythontexAlt}
+
+{\small \begin{codehigh}
+%Sortie avec Style=Classique, Largeur=0.5\linewidth, centré, sans numéro
+\begin{CodePythontexAlt}[Largeur=0.5\linewidth,Centre,Lignes=false]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontexAlt}
+\end{codehigh}}
+
+\begin{CodePythontexAlt}[Largeur=0.5\linewidth,Centre,Lignes=false]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+\end{CodePythontexAlt}
+
+{\small \begin{codehigh}
+%Sortie Moderne, Largeur=11cm, sans ligne
+\begin{CodePythontex}[Largeur=11cm,Lignes=false]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontex}
+\end{codehigh}}
+
+\begin{CodePythontex}[Largeur=11cm,Lignes=false]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+\end{CodePythontex}
+
+\pagebreak
+
+\section{Console \og Pythontex \fg{}}
+
+{\small \begin{codehigh}
+%Déclaration d'une fonction python + librairie random pour utilisation ultérieure
+\begin{pyconcode}
+from random import randint
+
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+        return -x
+
+\end{pyconcode}
+\end{codehigh}}
+
+\begin{pyconcode}
+from random import randint
+
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+
+\end{pyconcode}
+
+{\small \begin{codehigh}
+\begin{ConsolePythontex}{}
+1+1
+2**10
+valeur_absolue(-3)
+valeur_absolue(0)
+valeur_absolue(5)
+print(f"La valeur absolue de 5 est {valeur_absolue(5)}")
+print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
+\end{ConsolePythontex}
+\end{codehigh}}
+
+\begin{ConsolePythontex}{}
+1+1
+2**10
+valeur_absolue(-3)
+valeur_absolue(0)
+valeur_absolue(5)
+print(f"La valeur absolue de 5 est {valeur_absolue(5)}")
+print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
+\end{ConsolePythontex}
+
+\pagebreak
+
+{\small \begin{codehigh}
+\begin{ConsolePythontex}[Largeur=12cm,Centre]{}
+1+1
+2**10
+valeur_absolue(-3)
+valeur_absolue(0)
+valeur_absolue(5)
+print(f"La valeur absolue de 5 est {valeur_absolue(5)}")
+print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
+liste = [randint(1,20) for i in range(10)]
+print(liste)
+print(max(liste), min(liste), sum(liste))
+\end{ConsolePythontex}
+\end{codehigh}}
+
+\begin{ConsolePythontex}[Largeur=12cm,Centre]{}
+1+1
+2**10
+valeur_absolue(-3)
+valeur_absolue(0)
+valeur_absolue(5)
+print(f"La valeur absolue de 5 est {valeur_absolue(5)}")
+print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
+liste = [randint(1,20) for i in range(10)]
+print(liste)
+print(max(liste), min(liste), sum(liste))
+\end{ConsolePythontex}
+
+\end{document}

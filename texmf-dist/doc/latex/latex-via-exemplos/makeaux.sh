@@ -8,6 +8,10 @@ pdflatex latex-via-exemplos-poster
 pdflatex latex-via-exemplos-slides
 pdflatex latex-via-exemplos-slides
 pdflatex latex-via-exemplos-certificado
+pdflatex latex-via-exemplos-cracha
+pdflatex latex-via-exemplos-folder
+pdflatex latex-via-exemplos-todonotes
+pdflatex latex-via-exemplos-todonotes
 
 # clean up
 rm *.aux
@@ -26,6 +30,8 @@ rm *.toc
 rm *.nav
 rm *.snm
 rm *.vrb
+
+rm *.tdo
 
 # rm *.csv
 

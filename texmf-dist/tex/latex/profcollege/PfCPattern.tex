@@ -1,0 +1,779 @@
+%%%
+% Visual Pattern
+%%%
+\setKVdefault[Pattern]{Type=1,Etape=3}
+
+\NewDocumentCommand\VisualPattern{o}{%
+  \useKVdefault[Pattern]%
+  \setKV[Pattern]{#1}%
+  \IfStrEqCase{\useKV[Pattern]{Type}}{%
+    {284}{\BuildPatternDeuxCentQuatreVingtQuatre}%
+    {254}{\BuildPatternDeuxCentCinquanteQuatre}%
+    {156}{\BuildPatternCentCinquanteSix}%
+    {155}{\BuildPatternCentCinquanteCinq}%
+    {55}{\BuildPatternCinquanteCinq}%
+    {53}{\BuildPatternCinquanteTrois}%
+    {48}{\BuildPatternQuaranteHuit}%
+    {46}{\BuildPatternQuaranteSix}%
+    {45}{\BuildPatternQuaranteCinq}%
+    {39}{\BuildPatternTrenteNeuf}%
+    {30}{\BuildPatternTrente}%
+    {24}{\BuildPatternVingtQuatre}%
+    {20}{\BuildPatternVingt}%
+    {19}{\BuildPatternDixNeuf}%
+    {18}{\BuildPatternDixHuit}%
+    {15}{\BuildPatternQuinze}%
+    {14}{\BuildPatternQuatorze}%
+    {6}{\BuildPatternSix}%
+    {5}{\BuildPatternCinq}%
+    {4}{\BuildPatternQuatre}%
+    {3}{\BuildPatternTrois}%
+    {2}{\BuildPatternDeux}%
+    {1}{\BuildPatternUn}%
+  }%
+}%
+
+%284
+\NewDocumentCommand\BuildPatternDeuxCentQuatreVingtQuatre{}{
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      input PfCSolid;
+           
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=LightSteelBlue;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+           
+      Initialisation(2500,40,20,50);
+      Objetcube1("a=0.25");
+      nbobj:=1;
+      TR:=(0,a,0);
+      %base
+      for k=1 upto 2:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      % barre gauche
+      for k=1 upto Etape:
+      TR:=(0,0,k*a);
+      NBobj:=1;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      %barre gauche
+      for k=1 upto Etape-1:
+      TR:=(0,2*a,k*a);
+      NBobj:=1;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      DessineFusion;
+    \end{mplibcode}
+  \fi
+}%
+
+% 254
+\NewDocumentCommand\BuildPatternDeuxCentCinquanteQuatre{}{
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      for k=0 upto Etape-1:
+      for l=0 upto Etape-1:
+      fill ((fullcircle scaled 4mm) shifted (5mm*(l,k))) withcolor LightSteelBlue;
+      trace ((fullcircle scaled 4mm) shifted (5mm*(l,k)));
+      endfor;
+      endfor;
+      fill ((fullcircle scaled 4mm) shifted (5mm*(0,-1))) withcolor LightSteelBlue;
+      trace ((fullcircle scaled 4mm) shifted (5mm*(0,-1)));
+      fill ((fullcircle scaled 4mm) shifted (5mm*(-1,0))) withcolor LightSteelBlue;
+      trace ((fullcircle scaled 4mm) shifted (5mm*(-1,0)));
+      fill ((fullcircle scaled 4mm) shifted (5mm*(0,Etape))) withcolor LightSteelBlue;
+      trace ((fullcircle scaled 4mm) shifted (5mm*(0,Etape)));
+    \end{mplibcode}
+  \fi
+}%
+
+%156
+\NewDocumentCommand\BuildPatternCentCinquanteSix{}{
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      input PfCSolid;
+           
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=LightSteelBlue;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+           
+      Initialisation(2500,40,20,50);
+      Objetcube1("a=0.25");
+      nbobj:=1;
+      TR:=(0,a,0);
+      for k=1 upto Etape:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      TR:=(0,0,-0.25);
+      for k=1 upto Etape:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      TR:=(0,0.25,0);
+      for k=1 upto Etape:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      %nbobj=4;
+      DessineFusion;
+    \end{mplibcode}
+  \fi
+}%
+
+%155
+\NewDocumentCommand\BuildPatternCentCinquanteCinq{}{
+  \ifluatex%
+    \mplibforcehmode
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      input PfCSolid;
+      
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=LightSteelBlue;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+      
+      Initialisation(2500,40,20,50);
+      angx:=-40;
+      Objetcube1("a=0.25");
+      angx:=0;
+      nbobj:=1;
+      TR:=(0,a*cosd(-40),a*sind(-40));
+      for k=0 upto Etape-2:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      NBobj:=1;
+      TR:=(0,-a*cosd(-40),-a*sind(-40));
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(0,a*sind(-40),-a*cosd(-40));
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(0,-a*sind(-40),a*cosd(-40));
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(a,0,0);%
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(-a,0,0);
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      DessineFusion;
+    \end{mplibcode}
+  \fi%
+}%
+
+%55
+\NewDocumentCommand\BuildPatternCinquanteCinq{}{%
+  \ifluatex%
+    \begin{Allumettes}[Echelle=0.35]
+      Etape=\useKV[Pattern]{Etape};
+      pair A[],B[],C[],D[],E[];
+      A0=(0,0);
+      B0=A0;
+      B1-B0=u*(0,1);
+      B2=rotation(B0,B1,108);
+      B3=rotation(B1,B2,108);
+      B4=rotation(B2,B3,108);
+      A1=B1;
+      A2-A1=u*(-1,0);
+      A3-A0=A2-A1;
+      trace Allu(B0,B1);
+      trace Allu(B1,B2);
+      trace Allu(B2,B3);
+      trace Allu(B3,B4);
+      trace Allu(B4,B0);
+      for k=0 upto Etape-1:
+      trace Allu(A3,A0) shifted(k*u*(-1,0));
+      trace Allu(A1,A2) shifted(k*u*(-1,0));
+      trace Allu(A2,A3) shifted(k*u*(-1,0));
+      endfor;
+    \end{Allumettes}    
+  \fi%
+}%
+
+%53
+\NewDocumentCommand\BuildPatternCinquanteTrois{}{%
+  \ifluatex%
+    \begin{Allumettes}[Echelle=0.35]
+      Etape=\useKV[Pattern]{Etape};
+      pair A[],B[],C[],D[],E[];
+      A0=(0,0);
+      B0=A0;
+      B1-B0=u*(0,1);
+      B2=rotation(B0,B1,60);
+      A1=B1;
+      A2-A1=u*(-1,0);
+      A3-A0=A2-A1;
+      trace Allu(B0,B1);
+      trace Allu(B1,B2);
+      trace Allu(B2,B0);
+      for k=0 upto Etape-1:
+      trace Allu(A3,A0) shifted(k*u*(-1,0));
+      trace Allu(A1,A2) shifted(k*u*(-1,0));
+      trace Allu(A2,A3) shifted(k*u*(-1,0));
+      endfor;
+    \end{Allumettes}    
+  \fi%
+}%
+
+%48
+\NewDocumentCommand\BuildPatternQuaranteHuit{}{
+  \ifluatex%
+    \mplibforcehmode
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      input PfCSolid;
+      
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=LightSteelBlue;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+      
+      Initialisation(2500,40,20,50);
+      Objetcube1("a=0.25");
+      nbobj:=1;
+      TR:=(0,a,0);
+      for k=0 upto Etape-2:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      NBobj:=1;
+      TR:=(-a,0,0);
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(0,0,a);%
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      DessineFusion;
+    \end{mplibcode}
+  \fi%
+}%
+
+%46
+\NewDocumentCommand\BuildPatternQuaranteSix{}{
+  \ifluatex%
+    \mplibforcehmode
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      input PfCSolid;
+      
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=LightSteelBlue;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+      
+      Initialisation(2500,40,20,50);
+      Objetcube1("a=0.25");
+      nbobj:=1;
+      TR:=(0,a,0);
+      for k=0 upto Etape-2:
+      NBobj:=nbobj;
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      endfor;
+      NBobj:=1;
+      TR:=(0,-a,0);
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(a,0,0);
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(-a,0,0);
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      NBobj:=1;
+      TR:=(0,0,a);%
+      for k=0 upto Etape-2:
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](NBobj);
+      NBobj:=nbobj;
+      endfor;
+      DessineFusion;
+    \end{mplibcode}
+  \fi%
+}%
+
+%45
+\NewDocumentCommand\BuildPatternQuaranteCinq{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    A[0]=(0,0);
+    path piece;
+    piece=unitsquare scaled 5mm shifted(-2.5mm,-2.5mm);
+    for k=0 upto (2*Etape):
+    for l=0 upto Etape:
+    if (k=Etape) and (l=0):
+    else:
+    trace piece shifted(5mm*(k,l));
+    fi;
+    endfor;
+    endfor;
+  \end{mplibcode}
+  \fi
+}
+
+%39
+\NewDocumentCommand\BuildPatternTrenteNeuf{}{
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      input PfCSolid;
+           
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=Orange;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+           
+      Initialisation(2500,40,20,50);
+      Objetcube1("a=0.25");
+      nbobj:=1;
+      for k=0 upto Etape-1:%x
+      for l=0 upto Etape-1:%y
+      for m=Etape-1-l downto 0:%z
+      nbobj:=nbobj+1;
+      TR:=(k*a,l*a,m*a);
+      ObjetDeplacement[nbobj](1);
+      endfor;
+      endfor;
+      endfor;
+      DessineFusion;
+    \end{mplibcode}
+  \fi
+}%
+
+%30
+\NewDocumentCommand\BuildPatternTrente{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    A[0]=(0,0);
+    Etape:=\useKV[Pattern]{Etape};
+    picture Cle;
+    path piece;
+    piece=(unitsquare scaled 3mm) shifted(-1.5mm,-1.5mm);
+    if (Etape mod 2)=0:
+    A0:=(0,1.75mm)+(Etape div 2)*(0,3.5mm);
+    for k=0 upto Etape-1:
+    for l=0 upto Etape-1:
+    if (k*l)<>(Etape-1)*(Etape-1):
+    draw piece shifted(A[0]+3.5mm*(-k,l));
+    draw symetrie(piece shifted(A[0]+3.5mm*(-k,l)),(0,0));
+    fi;
+    endfor;
+    endfor;
+    for k=0 upto ((Etape div 2)-1):
+    draw piece shifted((0,1.75mm)+k*(0,3.5mm));
+    draw symetrie(piece shifted((0,1.75mm)+k*(0,3.5mm)),(0,0));
+    endfor;
+    else:
+    A0:=(0,0)+((Etape div 2)+1)*(0,3.5mm);
+    for k=0 upto Etape-1:
+    for l=0 upto Etape-1:
+    if (k*l)<>(Etape-1)*(Etape-1):
+    draw piece shifted(A[0]+3.5mm*(-k,l));
+    draw symetrie(piece shifted(A[0]+3.5mm*(-k,l)),(0,0));
+    fi;
+    endfor;
+    endfor;
+    for k=1 upto (Etape div 2):
+    draw piece shifted(k*(0,3.5mm));
+    draw symetrie(piece shifted(k*(0,3.5mm)),(0,0));
+    endfor;
+    draw piece;
+    fi;
+    Cle=currentpicture;
+    currentpicture:=nullpicture;
+    draw rotation(Cle,(0,0),40);
+  \end{mplibcode}
+  \fi%
+}%
+
+%24
+\NewDocumentCommand\BuildPatternVingtQuatre{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    A[0]=(0,0);
+    path piece;
+    piece=unitsquare scaled 5mm shifted(-2.5mm,-2.5mm);
+    drawoptions(withcolor Orange);
+    for k=0 upto Etape+1:
+    for l=0 upto Etape-1:
+    fill piece shifted(5mm*(k,l));
+    endfor;
+    endfor;
+    fill (piece shifted(0,Etape*5mm));
+    drawoptions();
+    for k=0 upto Etape+1:
+    for l=0 upto Etape-1:
+    trace piece shifted(5mm*(k,l));
+    endfor;
+    endfor;
+    trace (piece shifted(0,Etape*5mm));
+  \end{mplibcode}
+  \fi
+}
+
+%20
+\NewDocumentCommand\BuildPatternVingt{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    A[0]=(0,0);
+    for l=0 upto Etape-1:
+    for k=0 upto Etape+1:
+    draw (unitsquare scaled 5mm) shifted(A[0]+5mm*(k,l));
+    endfor;
+    endfor;
+  \end{mplibcode}
+  \fi%
+}%
+
+%19
+\NewDocumentCommand\BuildPatternDixNeuf{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    A[0]=(0,0);
+    path piece;
+    piece=unitsquare scaled 5mm shifted(-2.5mm,-2.5mm);
+    drawoptions(withcolor LightGreen);
+    for k=0 upto Etape+1:
+    for l=0 upto Etape-1:
+    fill piece shifted(5mm*(k,l));
+    endfor;
+    endfor;
+    fill (piece shifted(5mm,-5mm));
+    fill (piece shifted(5mm,Etape*5mm));
+    drawoptions();
+    for k=0 upto Etape+1:
+    for l=0 upto Etape-1:
+    trace piece shifted(5mm*(k,l));
+    endfor;
+    endfor;
+    trace (piece shifted(5mm,-5mm));
+    trace (piece shifted(5mm,Etape*5mm));
+  \end{mplibcode}
+  \fi%
+}%
+
+%18
+\NewDocumentCommand\BuildPatternDixHuit{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    Somme=0;
+    for k=0 upto Etape-1:
+    A[k]=(0,0)+Somme*5mm*(2,-1);
+    for l=0 upto k:
+    fill polygone(A[k],A[k]+5mm*(2,0),A[k]+5mm*(2,1),A[k]+5mm*(1,1),A[k]+5mm*(1,2),A[k]+5mm*(0,2)) withcolor LightGreen;
+    endfor;
+    for l=0 upto k:
+    trace polygone(A[k],A[k]+5mm*(2,0),A[k]+5mm*(2,1),A[k]+5mm*(1,1),A[k]+5mm*(1,2),A[k]+5mm*(0,2));
+    trace chemin(A[k]+5mm*(1,0),A[k]+5mm*(1,1),A[k]+5mm*(0,1));
+    endfor;
+    Somme:=Somme+1;
+    endfor;
+  \end{mplibcode}
+  \fi
+}
+
+%15
+\NewDocumentCommand\BuildPatternQuinze{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    Somme=0;
+    trace (fullcircle scaled 3mm);
+    for k=0 upto Etape-1:
+    A[k]=(0,0)+Somme*4mm*(1,0);
+    %for l=0 upto k:
+    fill ((unitsquare scaled 3mm) shifted(A[k]+4mm*(1,0)-(center (unitsquare scaled 3mm)))) withcolor 0.7white;
+    trace ((unitsquare scaled 3mm) shifted(A[k]+4mm*(1,0)-(center (unitsquare scaled 3mm))));
+    trace (fullcircle scaled 3mm) shifted(A[k]+4mm*(1,-1));
+    trace (fullcircle scaled 3mm) shifted(A[k]+4mm*(1,1));
+    trace (fullcircle scaled 3mm) shifted(A[k]+4mm*(2,0));
+    %endfor;
+    Somme:=Somme+2;
+    endfor;
+  \end{mplibcode}
+  \fi%
+}%
+
+%14
+\NewDocumentCommand\BuildPatternQuatorze{}{%
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    pair A[];
+    Etape:=\useKV[Pattern]{Etape};
+    A[0]=(0,0);
+    for l=0 upto Etape-1:
+    for m=0 upto 5:
+    draw (unitsquare scaled 5mm) shifted(A[0]+5mm*(-m,l));
+    endfor;
+    endfor;
+    draw (unitsquare scaled 5mm) shifted(A[0]+5mm*(-5,Etape));
+  \end{mplibcode}
+  \fi%
+}%
+
+%6
+\NewDocumentCommand\BuildPatternSix{}{%
+  \ifluatex%
+    \begin{Allumettes}[Echelle=0.35]
+      Etape=\useKV[Pattern]{Etape};
+      pair A[],B[],C[],D[],E[];
+      A0=(0,0);
+      B0-A0=u*(1,0);
+      C0=rotation(B0,A0,60);
+      picture UnitTriangle;
+      UnitTriangle=image(
+      trace Allu(A0,B0);
+      trace Allu(B0,C0);
+      trace Allu(C0,A0);
+      );
+      currentpicture:=nullpicture;
+      for k=0 upto Etape-1:
+      for l=0 upto k:
+      trace UnitTriangle shifted(A0+k*(B0-A0)+l*(C0-B0));
+      endfor;
+      endfor;
+    \end{Allumettes}    
+  \fi%
+}%
+
+%5
+\NewDocumentCommand\BuildPatternCinq{}{%
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      pair A[];
+      Etape:=\useKV[Pattern]{Etape};
+      A0=(0,0);
+      for k=Etape-1 upto Etape-1:
+      drawoptions(withcolor LightSteelBlue);
+      fill (fullcircle scaled 3mm) shifted A[0];
+      for l=0 upto k:
+      for m=1 upto k+2:
+      fill (fullcircle scaled 3mm) shifted(A[0]+5mm*(l,m));
+      fill symetrie((fullcircle scaled 3mm) shifted(A[0]+5mm*(l,m)),A[0],A[0]+(-1,1));
+      endfor;
+      endfor;
+      fill (fullcircle scaled 3mm) shifted(A[0]+5mm*(-1,k+2));
+      fill symetrie((fullcircle scaled 3mm) shifted(A[0]+5mm*(-1,k+2)),A[0],A[0]+(-1,1));
+      % trace
+      drawoptions();
+      trace (fullcircle scaled 3mm) shifted A[0];
+      for l=0 upto k:
+      for m=1 upto k+2:
+      trace (fullcircle scaled 3mm) shifted(A[0]+5mm*(l,m));
+      trace symetrie((fullcircle scaled 3mm) shifted(A[0]+5mm*(l,m)),A[0],A[0]+(-1,1));
+      endfor;
+      endfor;
+      trace (fullcircle scaled 3mm) shifted(A[0]+5mm*(-1,k+2));
+      trace symetrie((fullcircle scaled 3mm) shifted(A[0]+5mm*(-1,k+2)),A[0],A[0]+(-1,1));
+      endfor;    
+    \end{mplibcode}
+  \fi%
+}
+
+\NewDocumentCommand\BuildPatternQuatre{}{%
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      %
+      fill ((unitsquare scaled 5mm) shifted (5mm*0*(1,1))) withcolor LightSteelBlue;
+      trace ((unitsquare scaled 5mm) shifted (5mm*0*(1,1)));
+      for k=1 upto Etape:
+      for l=1 upto k:
+      fill ((unitsquare scaled 5mm) shifted (5mm*l*(1,1))) withcolor LightSteelBlue;
+      fill ((unitsquare scaled 5mm) shifted (5mm*l*(1,-1)))withcolor LightSteelBlue;
+      fill ((unitsquare scaled 5mm) shifted (5mm*l*(-1,1))) withcolor LightSteelBlue;
+      fill ((unitsquare scaled 5mm) shifted (5mm*l*(-1,-1))) withcolor LightSteelBlue;
+      endfor;
+      endfor;
+      %
+      for k=1 upto Etape:
+      for l=1 upto k:
+      trace ((unitsquare scaled 5mm) shifted (5mm*l*(1,1)));
+      trace ((unitsquare scaled 5mm) shifted (5mm*l*(1,-1)));
+      trace ((unitsquare scaled 5mm) shifted (5mm*l*(-1,1)));
+      trace ((unitsquare scaled 5mm) shifted (5mm*l*(-1,-1)));
+      endfor;
+      endfor;
+      %
+    \end{mplibcode}
+  \fi%
+}%
+
+\NewDocumentCommand\BuildPatternTrois{}{%
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      %
+      for k=1 upto Etape:
+      for l=Etape downto k:
+      fill ((unitsquare scaled 5mm) shifted (5mm*(Etape-l+1,k-1))) withcolor LightSteelBlue;
+      endfor;
+      endfor;
+      for k=1 upto Etape:
+      for l=Etape downto k:
+      trace ((unitsquare scaled 5mm) shifted (5mm*(Etape-l+1,k-1))) withcolor white;
+      endfor;
+      endfor;
+      %
+    \end{mplibcode}
+  \fi%
+}%
+
+\NewDocumentCommand\BuildPatternDeux{}{%
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      Etape:=\useKV[Pattern]{Etape};
+      %
+      input PfCSolid;
+      % 
+      intensite:=1.5;
+      Ferme[0]:=false;
+      outcolor:=LightSteelBlue;
+      incolor:=white;
+      nb:=1;subh:=1;
+      creux:=true;
+      % 
+      Initialisation(2500,40,20,50);
+      Objetcube0("a=0.25");
+      for k=1 upto Etape:
+      TR:=(0,2*k,0);
+      ObjetDeplacement1(0);
+      nbobj:=1;
+      for l=1 upto k-1:
+      TR:=(0,0.25*l,0);
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](1);
+      endfor;
+      for l=1 upto k-1:
+      TR:=(0,0.25*(k-1),0.25*l);
+      nbobj:=nbobj+1;
+      ObjetDeplacement[nbobj](1);
+      endfor;
+      endfor;
+      %nbobj=13;
+      DessineFusion;
+    \end{mplibcode}
+  \fi%
+}%
+
+\NewDocumentCommand\BuildPatternUn{}{%
+  \ifluatex%
+    \mplibforcehmode%
+    \begin{mplibcode}
+      u:=5mm;
+      pair A[],O[];
+      path cc[],dd[];
+      Etape=\useKV[Pattern]{Etape};
+      %
+      k:=Etape;
+      O[k]=(0,0);
+      dd[k]=unitsquare scaled (k*u);
+      cc[k]=dd[k] shifted (O[k]-center(dd[k]));
+      trace cc[k];
+      for l=1 upto 4:
+      A[l]:=point l of cc[k];
+      endfor;
+      %horizontales et verticales
+      for m=1 upto k-1:
+      trace ((m/k)[A1,A4])--((m/k)[A2,A3]);
+      trace ((m/k)[A1,A2])--((m/k)[A4,A3]);
+      endfor;
+    \end{mplibcode}
+  \fi%
+}%

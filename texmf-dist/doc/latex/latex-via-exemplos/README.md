@@ -12,8 +12,11 @@ First, compile the following files, using pdflatex, xelatex, ou lualatex:
 latex-via-exemplos-fig.tex,
 latex-via-exemplos-poster.tex,
 latex-via-exemplos-slides.tex,
-latex-via-exemplos-certificado.tex
-
+latex-via-exemplos-certificado.tex,
+latex-via-exemplos-cracha.tex,
+latex-via-exemplos-folder,
+latex-via-exemplos-todonotes
+    
 For example, will compile using pdflatex as
 
     pdflatex latex-via-exemplos-fig
@@ -21,8 +24,12 @@ For example, will compile using pdflatex as
     pdflatex latex-via-exemplos-slides
     pdflatex latex-via-exemplos-slides
     pdflatex latex-via-exemplos-certificado
-
-Note that latex-via-exemplos-slides.tex are compiled twice.    
+    pdflatex latex-via-exemplos-cracha
+    pdflatex latex-via-exemplos-folder
+    pdflatex latex-via-exemplos-todonotes
+    pdflatex latex-via-exemplos-todonotes
+    
+Note that latex-via-exemplos-slides.tex and latex-via-exemplos-todonotes.tex are compiled twice.
 
 The next step is to compile latex-via-exemplos.tex 
 using XeLaTeX (or LuaLaTeX) as
@@ -33,16 +40,16 @@ using XeLaTeX (or LuaLaTeX) as
     xelatex latex-via-exemplos
     xelatex latex-via-exemplos
 
-The latex-via-exemplos is two sided document.
+The latex-via-exemplos is one sided document.
 
-To generate one sided version, compile latex-via-exemplos-oneside.tex
+To generate two sided version, compile latex-via-exemplos-twosides.tex
 using XeLaTeX (or LuaLaTeX) as
 
-    xelatex latex-via-exemplos-oneside
-    bibtex latex-via-exemplos-oneside
-    makeindex latex-via-exemplos-oneside
-    xelatex latex-via-exemplos-oneside
-    xelatex latex-via-exemplos-oneside
+    xelatex latex-via-exemplos-twosides
+    bibtex latex-via-exemplos-twosides
+    makeindex latex-via-exemplos-twosides
+    xelatex latex-via-exemplos-twosides
+    xelatex latex-via-exemplos-twosides
 
 **Note:** 
 The linux user will use shell script "makedoc.sh" to compile at once as

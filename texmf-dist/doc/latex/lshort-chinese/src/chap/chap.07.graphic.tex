@@ -205,8 +205,8 @@
 
 \begin{itemize}
   \item \texttt{color/draw/fill=\Arg{color}} 为 \cmd{draw} 或 \cmd{fill} 等命令指定颜色。
-  \texttt{draw} 和 \texttt{fill} 分别指定填充和描边的颜色，而 \texttt{color} 同时指定，
-  可以省略 \texttt{color=} 直接写颜色名称。
+  \texttt{draw} 和 \texttt{fill} 分别指定描边和填充的颜色，而 \texttt{color} 同时指定，
+  也可以省略 \texttt{color=} 直接写颜色名称。
 \end{itemize}
 \begin{example}
 \begin{tikzpicture}[thick]
@@ -338,8 +338,8 @@
 \ref{subsec:tikz-draw} 小节中的参数可用于 \cmd{node} 命令的配置。除此之外，\cmd{node} 还有一些特定的参数：
 \begin{itemize}
   \item \texttt{anchor=\Arg{position}} 令结点的某个角落 \Arg{position} 与 \Arg{coordinate} 对应。
-  \item \texttt{centered / above / below / left / right / above left / ... \oarg*{=\Arg{length}}} \\
-  与 \texttt{anchor} 等效的选项。可选的 \Arg{length} 为节点相对于 \Arg{coordinate} 的距离。
+  \item \texttt{centered}/\texttt{above}/\texttt{below}/\texttt{left}/\texttt{right}/\texttt{above left}/\ldots \oarg*{=\Arg{length}} \\
+  与 \texttt{anchor} 等效的选项。可选的 \Arg{length} 为结点相对于 \Arg{coordinate} 的距离。
 \end{itemize}
 \begin{example}
 \begin{tikzpicture}
@@ -356,7 +356,7 @@
   \cmd{use\-tikz\-library}\marg*{shapes.geometric} 可用更多的形状。
   \item \texttt{text=\Arg{color}}
   结点文字的颜色。
-  \item \texttt{node font=\Arg{font command}}
+  \item \texttt{node font=\marg*{\Arg{font command}}}
   结点文字的字体，形如 \cmd{bfseries} 或 \cmd{itshape} 等。
 \end{itemize}
 \begin{example}
@@ -372,9 +372,9 @@
 \end{example}
 
 \begin{itemize}
-  \item \texttt{inner sep=\Arg{length} / outer sep=\Arg{length}}
+  \item \texttt{inner sep=\Arg{length}} / \texttt{outer sep=\Arg{length}}
   结点边界向外和向内的额外距离。
-  \item \texttt{minimum size=\Arg{length} / minimum height=\Arg{length} / minimum width=\Arg{length}} \\
+  \item \texttt{minimum size=\Arg{length}} / \texttt{minimum height=\Arg{length}} / \texttt{minimum width=\Arg{length}} \\
   结点的最小大小或最小高度/宽度。
 \end{itemize}
 
@@ -389,7 +389,7 @@
 \end{tikzpicture}
 \end{example}
 
-\cmd{node} 命令的一种等效用法是在 \cmd{draw} 等命令的路径中使用 \texttt{node}，不仅可以对某个位置标记节点，还能够对线标记：
+\cmd{node} 命令的一种等效用法是在 \cmd{draw} 等命令的路径中使用 \texttt{node}，不仅可以对某个位置标记结点，还能够对线标记：
 \begin{example}
 \begin{tikzpicture}
 \draw (2,1.5) node[above] {$A$}
@@ -447,7 +447,7 @@
 \end{command}
 上述语法定义了 \cmd{a} 为变量，在 \marg{commands} 中使用 \cmd{a} 完成循环。
 
-\Arg{list} 可以直接将所有值写出来，如 1,2,3,4；也可以写成省略形式，如 1,2,\ldots,10。
+\Arg{list} 可以直接将所有值写出来，如 \texttt{1,2,3,4}；也可以写成省略形式，如 \texttt{1,2,...,10}。
 \begin{example}
 \begin{tikzpicture}
 \draw (0,0)--(5,0);

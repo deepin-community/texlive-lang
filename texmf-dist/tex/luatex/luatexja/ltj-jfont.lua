@@ -3,7 +3,7 @@
 --
 luatexbase.provides_module({
   name = 'luatexja.jfont',
-  date = '2022-08-20',
+  date = '2023-04-06',
   description = 'Loader for Japanese fonts',
 })
 
@@ -43,7 +43,7 @@ local font_metric_table = ltju.font_metric_table -- [font number] -> jfm_name, j
 
 luatexbase.create_callback("luatexja.load_jfm", "data", function (ft, jn) return ft end)
 
-local jfm_spec, jfm_name, jfm_var, jfm_ksp
+local jfm_spec, jfm_name, jfm_var, jfm_ksp, jfm_pci
 local defjfm_res
 local jfm_dir, is_def_jfont, vert_activated, auto_enable_vrt2
 
@@ -288,7 +288,7 @@ do
          jfm_name, jfm_spec = 'ujis', 'ujis'
       end
       for j,v in ipairs(metrics) do if v.name==jfm_spec then return j end end
-      luatexja.load_lua('jfm-' .. jfm_name .. '.lua')
+      defjfm_res=nil; luatexja.load_lua('jfm-' .. jfm_name .. '.lua')
       if defjfm_res then
          defjfm_res.name = jfm_spec; table.insert(metrics, defjfm_res)
          return #metrics
@@ -323,7 +323,7 @@ do
       update_jfm_cache(j, f.size); check_callback_order()
       local sz = metrics[j].size_cache[f.size]
       local fmtable = { jfm = j, size = f.size, var = jfm_var,
-                        with_kanjiskip = jfm_ksp,
+                        with_kanjiskip = jfm_ksp, protect_compat_ig = jfm_pci,
                         zw = sz.zw, zh = sz.zh,
                         chars = sz.chars, char_type = sz.char_type,
                         kanjiskip = sz.kanjiskip, xkanjiskip = sz.xkanjiskip,
@@ -397,20 +397,31 @@ do
     local jf_field          = C(jf_field_char^1)
     local jf_assignment     = jf_field * ws * equals * ws * jf_field
     local jf_switch         = P'-' * jf_field * Cc(false) + P'+'^-1 * jf_field * Cc(true)
-    local jf_feature_expr   = Cg(jf_assignment + jf_switch) * ws * comma^0 * ws
+    local jf_feature_expr   =
+        P{
+             'FE',
+             FE = Cg(V'AT'+ jf_assignment + jf_switch) * ws * comma^0 * ws,
+             AT = jf_field * ws * equals * ws * Cf(Ct'' * P'{' * ws * (V'FE')^0 * P'}', rawset),
+        }
     local jf_feature_list   = ws * ( P'{' * ws * jf_feature_expr^0 * P'}' + jf_feature_expr^0 )
     local jf_list           = C((1-slash)^1) * (slash * Cf(Ct'' * jf_feature_list, rawset))^-1
     local jf_value          = (1 - semicolon)^1
+    local norm
+    norm = function (t)
+      local flag
+      if type(t)=='table' then
+        for i,v in pairs(t) do
+          flag=true
+          if v=='true' then t[i]=true elseif v=='false' then t[i]=false
+          elseif type(v)=='table' then norm(v) end
+        end
+        return flag and t
+      end
+    end
     local function rem(name,value)
       if name=='jfm' then
-        local flag, t; jfm_name, t = lpegmatch(jf_list, value)
-        if type(t)=='table' then
-          for i,v in pairs(t) do
-            flag=true
-            if v=='true' then t[i]=true elseif v=='false' then t[i]=false end
-            end
-        end
-        luatexja.jfont.jfm_feature = flag and t
+        local t; jfm_name, t = lpegmatch(jf_list, value)
+        luatexja.jfont.jfm_feature = norm(t)
       elseif name=='jfmvar' then jfm_var = value end
       return ''
     end
@@ -451,6 +462,7 @@ do
          -- print('NN>', name)
       end
       jfm_ksp = (is_feature_specified(name,'ltjksp')~=false)
+      jfm_pci = (is_feature_specified(name,'ltjpci')~=false)
       if jfm_dir == 'tate' then
          vert_activated = (is_feature_specified(name,'vert')~=false) and (is_feature_specified(name,'vrt2')~=false)
          auto_enable_vrt2
@@ -619,11 +631,23 @@ function luatexja.jfont.clear_alt_font(bfnt)
 end
 
 ------ used in ltjp.suppress_hyphenate_ja callback
-function luatexja.jfont.replace_altfont(pf, pc)
-   local a = alt_font_table[pf]
-   return a and a[pc] or pf
+do
+   local compat_ig = {}
+   for i=0xf900, 0xfaff do compat_ig[i] = true end
+   for i=0x2f800, 0x2fa1f do compat_ig[i] = true end
+   local protect_glyph  = node.direct.protect_glyph
+--
+   local getfont, setfont = node.direct.getfont, node.direct.setfont
+   function luatexja.jfont.replace_altfont(a, pc, p)
+      local pf = get_attr(p, a); pf = (pf and pf>0 and pf) or getfont(p) 
+      local af = alt_font_table[pf]
+      pf = af and af[pc] or pf; setfont(p, pf)
+      if compat_ig[pc] and font_metric_table[pf].protect_compat_ig then
+         protect_glyph(p)
+      end
+      return pf
+   end
 end
-
 ------ for LaTeX interface
 
 local alt_font_table_latex = {}

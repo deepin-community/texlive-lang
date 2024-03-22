@@ -9,9 +9,9 @@ HTML = ${SRC:%.tex=%.html} ${SRC:%.tex=%.css}
 all: ${PDF} ${HTML}
 
 %.pdf: %.tex
-	pdflatex $<
+	lualatex-dev $<
 	while ( grep -q '^LaTeX Warning: Label(s) may have changed' $*.log) \
-	do pdflatex $<; done
+	do lualatex-dev $<; done
 
 
 %.html: %.tex
@@ -29,7 +29,7 @@ clean:
 	*.4ht *.4ct *.4tc *.tmp *.idv *.lg *.xref
 
 distclean: clean
-	$(RM) ${PDF} ${HTML}
+	$(RM) ${PDF} ${HTML} *.html
 
 archive:  all clean
 	COPYFILE_DISABLE=1 tar  -czvf ../$(PACKAGE).tgz --exclude '*~' \

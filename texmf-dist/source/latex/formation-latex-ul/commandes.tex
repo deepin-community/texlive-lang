@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -13,11 +13,11 @@
 \label{chap:commandes}
 
 {\LaTeX} est un ensemble de macro-commandes conçu pour faciliter
-l'utilisation du système {\TeX}. Dès lors, il est assez naturel de
-permettre à l'usager de définir à son tour ses propres commandes. Il
-suffit généralement d'avoir rédigé quelques documents --- ou quelques
-chapitres d'un long document --- avec {\LaTeX} pour réaliser combien
-cette possibilité est de nature à faciliter le travail.
+l'utilisation du système {\TeX}. Dès lors, les utilisateurs peuvent à
+leur tour définir des commandes. Il suffit généralement d'avoir rédigé
+quelques documents --- ou quelques chapitres d'un long document ---
+avec {\LaTeX} pour réaliser combien cette possibilité est de nature à
+faciliter le travail.
 
 La définition de nouvelles commandes et de nouveaux environnements
 peut servir à créer des extensions à {\LaTeX} --- c'est d'ailleurs ce
@@ -36,8 +36,8 @@ trois raisons suivantes:
 
 \begin{exemple}
   \label{ex:commandes:intro}
-  Nous avons créé ou modifié des commandes pour chacune des raisons
-  ci-dessus dans la préparation du présent document.
+  J'ai créé ou modifié des commandes pour chacune des raisons
+  ci-dessus dans la préparation du présent ouvrage.
   \begin{enumerate}
   \item Une nouvelle commande \cmdprint{\doc} facilite et systématise
     l'insertion de liens vers la documentation. D'un seul appel, elle
@@ -46,13 +46,13 @@ trois raisons suivantes:
     précédé de l'icône {\faBookmark}.
   \item Une nouvelle commande sémantique \cmdprint{\pkg} sert pour la
     mise en forme des noms de paquetages. Ainsi, leur présentation est
-    toujours la même et si nous souhaitons en changer, il suffit de
-    modifier la définition de la commande.
+    toujours la même et, si je devais souhaiter en changer, il me
+    suffirait de modifier la définition de la commande.
   \item La redéfinition de la commande \cmd{\chaptitlefont} de la
     classe \class{memoir} permet de modifier la police et la mise en
     forme des titres de chapitres.
   \end{enumerate}
-  Nous reviendrons sur les détails de ces exemples dans la suite du
+  Je reviendrai sur les détails de ces exemples dans la suite du
   chapitre. %
   \qed
 \end{exemple}
@@ -64,8 +64,7 @@ trois raisons suivantes:
 Les commandes \cmd{\newcommand} et \cmd{\renewcommand} permettent
 respectivement de définir une nouvelle commande et de redéfinir une
 commande existante --- c'est-à-dire d'en modifier la définition. On
-place généralement les appels à ces commandes dans le préambule du
-document.
+place généralement ces définitions dans le préambule du document.
 
 \subsection{Commandes sans arguments}
 \label{sec:commandes:commandes:sans_arg}
@@ -79,14 +78,14 @@ plus simples à créer. La syntaxe des commandes \cmd{\newcommand} et
 \renewcommand{`\bs\meta{nom\_commande}'}`\marg{définition}'
 \end{lstlisting}
 Le premier argument, \bs\meta{nom\_commande}, est le nom de la
-commande, avec le symbole \bs. Ce nom doit être différent de celui
-de toute commande active\footnote{%
+commande, avec le symbole «\bs». Pour \cmdprint{\newcommand}, ce nom
+doit être différent de celui de toute commande active dans le
+document\footnote{%
   Les commandes actives dans un document sont les commandes de base de
   {\TeX} et {\LaTeX} ainsi que les commandes de tous les paquetages
-  chargés dans le préambule.} %
-dans le document dans le cas de \cmdprint{\newcommand}. À l'inverse,
-une commande active doit nécessairement porter le même nom lorsque
-l'on fait appel à \cmdprint{\renewcommand}.
+  chargés dans le préambule.}. %
+À l'inverse, avec \cmdprint{\renewcommand}, le nom doit déjà être pris
+par une commande active.
 
 Le second argument, \meta{définition}, contient la définition de la
 commande. Il peut s'agir de caractères à insérer dans le texte, de
@@ -102,20 +101,20 @@ commandes à exécuter ou d'une combinaison de tout cela.
 \begin{lstlisting}
 \newcommand{\R}{\mathbb{R}}
 \end{lstlisting}
-  Ainsi, si l'on souhaite pour une raison quelconque modifier la
-  représentation de l'ensemble des nombres réels, il suffit de
+  Comme cela, si vous souhaitez pour une raison quelconque modifier la
+  représentation de l'ensemble des nombres réels, il vous suffit de
   modifier la définition de la commande \cmdprint{\R} pour que le
   changement prenne effet dans tout le document. %
   \qed
 \end{exemple}
 
 \begin{exemple}
-  Tel que mentionné à l'\autoref{ex:commandes:intro}, nous avons
-  modifié la police des titres de chapitres dans le présent document
-  en redéfinissant la commande \cmdprint{\chaptitlefont} de la classe
+  Tel que mentionné à l'\autoref{ex:commandes:intro}, j'ai modifié la
+  police des titres de chapitres dans le présent document en
+  redéfinissant la commande \cmdprint{\chaptitlefont} de la classe
   \class{memoir}. Pour obtenir des titres de chapitres sans
   empattements, en caractères gras, de dimension \cmdprint{\Huge} et
-  alignés à gauche, on trouve dans le préambule du document la
+  alignés à gauche, le préambule du document contient la
   déclaration
 \begin{lstlisting}
 \renewcommand{\chaptitlefont}{\normalfont%
@@ -164,27 +163,27 @@ doivent apparaitre.
   \item le texte de l'hyperlien qui sera placé au fil du texte;
   \item le nom du fichier de documentation à placer dans la marge dans
     une police non proportionnelle;
-  \item l'URL vers le fichier de documentation en ligne.
+  \item l'adresse URL vers le fichier de documentation en ligne.
   \end{enumerate}
   Voici une version simplifiée de la définition de la commande:
 \begin{lstlisting}
 \newcommand{\doc}[3]{%
-  \href{#3}{#1~\raisebox{-0.2ex}{\faExternalLink}}%
+  \href{#3}{#1~\faExternalLink*}%
   \marginpar{\faBookmark~\texttt{#2}}}
 \end{lstlisting}
   La commande \cmd{\href} qui permet d'insérer un hyperlien dans le
   texte provient du paquetage \pkg{hyperref} \citep{hyperref}. Les
-  commandes \cmdprint{\faEx\-ter\-nal\-Link} et \cmdprint{\faBookmark}
-  proviennent du paquetage \pkg{fontawesome} \citep{fontawesome}; elles
-  insèrent dans le texte des icônes de la police libre %
-  \link{https://fortawesome.com/}{Font~Awesome}. %
+  commandes \cmdprint{\faEx\-ter\-nal\-Link*} et \cmdprint{\faBookmark}
+  proviennent du paquetage \pkg{fontawesome5} \citep{fontawesome5};
+  elles insèrent dans le texte des icônes de la police libre %
+  \link{https://fontawesome.com}{Font~Awesome}. %
 
   Avec la définition ci-dessus, la déclaration
 \begin{lstlisting}
 \doc{documentation}{hyperref}{%
-  http://texdoc.net/pkg/hyperref}
+  https://texdoc.net/pkg/hyperref}
 \end{lstlisting}
-  produit: \doc{hyperref}{http://texdoc.net/pkg/hyperref}. %
+  produit: \doc{hyperref}{https://texdoc.net/pkg/hyperref}. %
   \qed
 \end{exemple}
 
@@ -201,7 +200,8 @@ marqué par la déclaration \cmdprint{\begin\marg{...}} et, parfois, des
   que tel; la fin, marquée par la déclaration
   \cmdprint{\end\marg{...}}.
 
-On crée ou modifie des environnements avec les commandes
+Les commandes suivantes servent à créer ou à modifier des
+environnements:
 \begin{lstlisting}
 \newenvironment`\marg{nom\_env}\oarg{narg}\marg{début\_déf}\marg{fin\_déf}'
 \renewenvironment`\marg{nom\_env}\oarg{narg}\marg{début\_déf}\marg{fin\_déf}'
@@ -234,8 +234,8 @@ Les nombreux arguments sont les suivants:
 
 \begin{exemple}
   \label{ex:commandes:citation}
-  On souhaite composer les citations hors paragraphe de la
-  manière suivante:
+  Créons un environnement pour composer les citations hors paragraphe
+  de la manière suivante:
   \begin{quote}
     \small\itshape%
     Texte en italique, dans une police de taille inférieure au texte
@@ -251,7 +251,8 @@ Les nombreux arguments sont les suivants:
 \end{lstlisting}
 
   Pour automatiquement composer toutes les citations de la même
-  manière, il suffit de créer un nouvel environnement \Ie{citation}:
+  manière, il suffit de créer un nouvel environnement, disons
+  \Ie{citation}:
 \begin{lstlisting}
 \newenvironment{citation}%
   {\begin{quote}\small\itshape}%
@@ -309,7 +310,7 @@ Les nombreux arguments sont les suivants:
     reprises dans un document, modifier sa définition pour plutôt
     composer les sigles en majuscules.
   \end{enumerate}
-  Utiliser le gabarit de document \fichier{exercice\_gabarit.tex} pour
+  Utiliser le gabarit de document \fichier{exercice-gabarit.tex} pour
   créer et tester les commandes ci-dessus.
   \begin{sol}
     \begin{enumerate}
@@ -321,10 +322,10 @@ Les nombreux arguments sont les suivants:
 \end{exercice}
 
 \begin{exercice}
-  Nous n'avons pas abordé dans le chapitre une fonctionnalité plus
-  avancée de \cmd{\newcommand} et \cmd{\renewcommand}, soit celle de
-  pouvoir définir des commandes dont un argument est optionnel ou,
-  plus précisément, de donner une valeur par défaut à un argument.
+  Je n'ai pas abordé dans le chapitre une fonctionnalité plus avancée
+  de \cmd{\newcommand} et \cmd{\renewcommand}, soit celle de pouvoir
+  définir des commandes dont un argument est optionnel ou, plus
+  précisément, de donner une valeur par défaut à un argument.
 
   La syntaxe réellement complète de \cmd{\newcommand} et
   \cmd{\renewcommand} est la suivante:
@@ -349,9 +350,9 @@ Les nombreux arguments sont les suivants:
 \end{lstlisting}
     la déclaration à deux arguments
 \begin{lstlisting}
-\doc{hyperref}{http://texdoc.net/pkg/hyperref}
+\doc{hyperref}{https://texdoc.net/pkg/hyperref}
 \end{lstlisting}
-    produit toujours \doc{hyperref}{http://texdoc.net/pkg/hyperref}.
+    produit toujours \doc{hyperref}{https://texdoc.net/pkg/hyperref}.
   \end{sol}
 \end{exercice}
 
@@ -376,7 +377,7 @@ Les nombreux arguments sont les suivants:
   \begin{sol}
     La définition suivante donne les résultats demandés:
 \begin{lstlisting}
-\newcommand{citation}
+\newenvironment{citation}
   {\begin{quote}
      \begin{tabularx}{\linewidth}{X}
        \toprule\small\sffamily}%
@@ -384,9 +385,8 @@ Les nombreux arguments sont les suivants:
      \end{tabularx}
    \end{quote}}
 \end{lstlisting}
-    On remarquera dans le troisième argument la présence de la
-    commande de fin de ligne {\bs\bs} qui doit absolument précéder
-    \cmdprint{\bottomrule}.
+    Dans le troisième argument, la présence de la commande de fin de
+    ligne {\pixbsbs} doit précéder \cmdprint{\bottomrule}.
   \end{sol}
 \end{exercice}
 

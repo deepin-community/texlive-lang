@@ -8,7 +8,7 @@ to the newsletter “La Lettre GUTenberg” of GUTenberg, the French TeX User Gr
 
 Release
 -------
-2023-01-14 v0.9.6
+2023-05-21 v0.9.7
 
 Development
 -----------

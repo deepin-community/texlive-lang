@@ -4,7 +4,7 @@
 % LGR Greek font encoding definitions
 % ===================================
 %
-% :Copyright: © 2010 -- 2022 Günter Milde
+% :Copyright: © 2010 -- 2023 Günter Milde
 % :Licence:   This work may be distributed and/or modified under the
 %             conditions of the `LaTeX Project Public License`_, either
 %             version 1.3 of this license or any later version.
@@ -58,6 +58,12 @@
 %                      (there is no capital Koppa in LGR).
 % 2.0    2020-10-13    Move common alias definitions to ``greek-fontenc.def``.
 % 2.1    2022-06-14    Support the correct spelling ``\guillemet…`` for « ».
+% 2.2    2023-02-28    Fix character used for ano ``\textanoteleia`` and
+%                      ``\textperiodcentered``.
+% 2.3    2023-06-01    Fix Unicode errors with "new" ``\MakeUppercase``.
+% 2.4    2023-08-15    Add LGR-specific definitions for "capital" accent
+%                      for the ``\MakeUppercase`` fix in babel-greek_.
+% 2.5    2023-09-12    Small formatting and documentation fixes.
 % ====== ============  ========================================================
 %
 % Usage
@@ -97,8 +103,8 @@
 % ::
 
 \ProvidesFile{lgrenc.def}
-[2022/06/14 2.1 LGR Greek font encoding definitions]
-% Copyright © 2010 Günter Milde
+[2023-09-12 2.5 LGR Greek font encoding definitions]
+% Copyright © 2010 -- 2023 Günter Milde
 % This file is part of the "greek-fontenc" package.
 % It may be distributed and/or modified under the
 % conditions of the "LaTeX Project Public License", either
@@ -127,7 +133,7 @@
 % Greek Alphabet
 % """"""""""""""
 %
-% Greek letters are accessible by the Latin transcription, but the mapping is
+% Greek letters are accessible by the Latin transliteration, but the mapping is
 % specific to the LGR font encoding.
 %
 % The LICR macros provide a way to access the symbols independent of the
@@ -225,7 +231,7 @@
 \DeclareTextSymbol{\textStigma}{LGR}{22}      % Ϛ in some fonts ϹΤ ligature
 \DeclareTextSymbol{\textSampi}{LGR}{23}       % Ϡ
 \DeclareTextSymbol{\textsampi}{LGR}{27}       % ϡ
-\DeclareTextSymbol{\textanoteleia}{LGR}{38}   % ·
+\DeclareTextSymbol{\textanoteleia}{LGR}{59}   % ·
 \DeclareTextSymbol{\texterotimatiko}{LGR}{63} % ;
 \DeclareTextSymbol{\textdigamma}{LGR}{147}    % ϝ (ucs) \digamma used by amsmath for math-macro
 \DeclareTextSymbol{\textDigamma}{LGR}{195}    % Ϝ (ucs)
@@ -255,8 +261,8 @@
   \PackageError{greek-fontenc}{character \string#1 not available \MessageBreak
     in 8-bit TeX}
     {Use XeTeX/LuaTeX if you need to distinguish the symbol from the letter.\MessageBreak
-     The package `textalpha' with `normalize-symbols' maps the GREEK SYMBOL\MessageBreak
-     character to the corresponding GREEK LETTER.\MessageBreak
+     The `normalize-symbols' option of babel-greek or package `textalpha'\MessageBreak
+     maps the GREEK SYMBOL character to the corresponding GREEK LETTER.\MessageBreak
      Press <return> to proceed (dropping the symbol from the document).}
 }
 
@@ -264,8 +270,8 @@
   \PackageError{greek-fontenc}{character \string#1 not available in text mode}
     {Use #2 or XeTeX/LuaTeX if you need to distinguish\MessageBreak
      the symbol from the letter.\MessageBreak
-     The package `textalpha' with `normalize-symbols' maps the GREEK SYMBOL\MessageBreak
-     character to the corresponding GREEK LETTER.\MessageBreak
+     The `normalize-symbols' option of babel-greek or package `textalpha'\MessageBreak
+     maps the GREEK SYMBOL character to the corresponding GREEK LETTER.\MessageBreak
      Press <return> to proceed (dropping the symbol from the document).}
 }
 
@@ -274,9 +280,9 @@
 \ProvideTextCommand{\textThetasymbol}{LGR}{\LGR@TextSymbolUnavailable{Theta symbol}} % ϴ
 
 \ProvideTextCommand{\textthetasymbol}  {LGR}{\LGR@TextSymbolOnlyMath{theta symbol}{$\vartheta$}}         % ϑ
-\ProvideTextCommand{\textphisymbol}    {LGR}{\LGR@TextSymbolOnlyMath{phi symbol}{$\phi$}}		 % ϕ
-\ProvideTextCommand{\textpisymbol}     {LGR}{\LGR@TextSymbolOnlyMath{pi symbol}{$\varpi$}}		 % ϖ
-\ProvideTextCommand{\textrhosymbol}    {LGR}{\LGR@TextSymbolOnlyMath{rho symbol}{$\varrho$}}		 % ϱ
+\ProvideTextCommand{\textphisymbol}    {LGR}{\LGR@TextSymbolOnlyMath{phi symbol}{$\phi$}}                % ϕ
+\ProvideTextCommand{\textpisymbol}     {LGR}{\LGR@TextSymbolOnlyMath{pi symbol}{$\varpi$}}               % ϖ
+\ProvideTextCommand{\textrhosymbol}    {LGR}{\LGR@TextSymbolOnlyMath{rho symbol}{$\varrho$}}             % ϱ
 \ProvideTextCommand{\textepsilonsymbol}{LGR}{\LGR@TextSymbolOnlyMath{lunate epsilon symbol}{$\epsilon$}} % ϵ
 
 % Other
@@ -293,7 +299,7 @@
 \DeclareTextSymbol{\textendash}{LGR}{0}          % EN DASH
 \DeclareTextSymbol{\textquoteleft}{LGR}{28}      % ‘
 \DeclareTextSymbol{\textquoteright}{LGR}{29}     % ’
-\DeclareTextSymbol{\textperiodcentered}{LGR}{38} % · = \textanoteleia
+\DeclareTextSymbol{\textperiodcentered}{LGR}{59} % · = \textanoteleia
 \DeclareTextSymbol{\textcompwordmark}{LGR}{118}  % ZERO WIDTH NO JOINER
 \DeclareTextSymbol{\textemdash}{LGR}{127}        % EM DASH
 
@@ -390,7 +396,7 @@
 %
 % Babel's ``lgrenc.def`` has some definitions to prevent surprises with
 % macros that expect a Latin script. These definitions are problematic in a
-% font-encoding definition file as they require ``\textlatin`` which is
+% font-encoding definition file as they require ``\ensureascii`` which is
 % defined in ``babel.def``. They were moved to ``greek.ldf``.
 %
 % Diacritics
@@ -436,14 +442,14 @@
 \DeclareTextAccent{\accvaria}{LGR}{96} % βαρεῖα (grave)
 \DeclareTextAccent{\accperispomeni}{LGR}{126} % περισπωμένη (circonflex/tilde)
 
-% The sub-iota__ is input after the base character. In LGR fonts, ligatures are
+% The `mute iota`__ is input after the base character. In LGR fonts, ligatures are
 % defined for pre-composed characters, the postfix ligature does not interfere
 % with kerning::
 
-\DeclareTextSymbol{\prosgegrammeni}{LGR}{8}  % ι "capital" sub-iota
-\DeclareTextSymbol{\ypogegrammeni}{LGR}{124} % ͺ "small" sub-iota
+\DeclareTextSymbol{\prosgegrammeni}{LGR}{8}  % ι adscript mute iota (spacing)
+\DeclareTextSymbol{\ypogegrammeni}{LGR}{124} % ͺ subscript mute iota (combining)
 
-% __ http://en.wikipedia.org/wiki/Hypogegrammeni
+% __ http://en.wikipedia.org/wiki/Iota_subscript
 %
 % Composite diacritics::
 
@@ -469,8 +475,8 @@
 \DeclareTextAccent{\u}{LGR}{30}               % BREVE (Greek vrachy)
 \DeclareTextAccent{\=}{LGR}{31}               % MACRON
 
-% Aliases
-% """""""
+% Symbol Macros
+% """""""""""""
 %
 % The standard _`symbol macros` are exclusively used for Greek diacritics
 % in LGR::
@@ -479,6 +485,15 @@
 \DeclareTextCommand{\'}{LGR}{\acctonos}
 \DeclareTextCommand{\`}{LGR}{\accvaria}
 \DeclareTextCommand{\~}{LGR}{\accperispomeni}
+
+% The ``\uclclist`` extension in `babel-greek`_ converts standard symbol
+% macros to "capital accents". In Greek typographic tradition they are
+% dropped::
+
+\ProvideTextCommand{\accACUTE}{LGR}{\LGR@hiatus}
+\ProvideTextCommand{\accGRAVE}{LGR}{\@firstofone}
+\ProvideTextCommand{\accTILDE}{LGR}{\@firstofone}
+
 
 % Common Greek font encoding definitions
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -496,7 +511,7 @@
 % """"""""""""""""""""
 %
 % Composite accents can be input as sequence of simple diacritics (in
-% arbitrary order) via named macro, symbol macro and "transcription
+% arbitrary order) via named macro, symbol macro and "transliteration
 % characters", e.g. ``\accdialytica\accvaria\textalpha``, ``\"\'\textalpha``,
 % ``\"'\textalpha``, or ``\'"\textalpha``.
 %
@@ -849,6 +864,42 @@
 % UPPERCASE
 % ~~~~~~~~~
 %
+% letters without pre-composed uppercase version
+% """"""""""""""""""""""""""""""""""""""""""""""
+%
+% The default ``\MakeUppercase`` (2022-version) emits "composing" Unicode
+% characters for letters with diacritics but no matching pre-composed
+% capital equivalent. We drop diacritics to prevent compilation errors.
+% The ``\DeclareUppercaseMapping`` macro is new in the 2023 LaTeX release::
+
+\ifdefined\DeclareUppercaseMapping
+  \DeclareUppercaseMapping{"0390}{\accdialytikatonos{\textiota}}             % ΐ
+  \DeclareUppercaseMapping{"03B0}{\accdialytikatonos{\textupsilon}}          % ΰ
+  \DeclareUppercaseMapping{"1F50}{\accpsili{\textupsilon}}                   % ὐ
+  \DeclareUppercaseMapping{"1F52}{\accpsilivaria{\textupsilon}}              % ὒ
+  \DeclareUppercaseMapping{"1F54}{\accpsilioxia{\textupsilon}}               % ὔ
+  \DeclareUppercaseMapping{"1F56}{\accpsiliperispomeni{\textupsilon}}        % ὖ
+  \DeclareUppercaseMapping{"1FB6}{\accperispomeni{\textalpha}}               % ᾶ
+  \DeclareUppercaseMapping{"1FB7}{\accperispomeni{\textalpha}\ypogegrammeni} % ᾷ
+  \DeclareUppercaseMapping{"1FC6}{\accperispomeni{\texteta}}                 % ῆ
+  \DeclareUppercaseMapping{"1FC7}{\accperispomeni{\texteta}\ypogegrammeni}   % ῇ
+  \DeclareUppercaseMapping{"1FD2}{\accdialytikavaria{\textiota}}             % ῒ
+  \DeclareUppercaseMapping{"1FD3}{\accdialytikatonos{\textiota}}             % ΐ
+  \DeclareUppercaseMapping{"1FD6}{\accperispomeni{\textiota}}                % ῖ
+  \DeclareUppercaseMapping{"1FD7}{\accdialytikaperispomeni{\textiota}}       % ῗ
+  \DeclareUppercaseMapping{"1FE2}{\accdialytikavaria{\textupsilon}}          % ῢ
+  \DeclareUppercaseMapping{"1FE3}{\accdialytikatonos{\textupsilon}}          % ΰ
+  \DeclareUppercaseMapping{"1FE4}{\accpsili{\textrho}}                       % ῤ
+  \DeclareUppercaseMapping{"1FE6}{\accperispomeni{\textupsilon}}             % ῦ
+  \DeclareUppercaseMapping{"1FE7}{\accdialytikaperispomeni{\textupsilon}}    % ῧ
+  \DeclareUppercaseMapping{"1FF6}{\accperispomeni{\textomega}}               % ῶ
+  \DeclareUppercaseMapping{"1FF7}{\accperispomeni{\textomega}\ypogegrammeni} % ῷ
+\fi
+
+
+% Hiatus
+% """"""
+%
 % The `common Greek font encoding definitions`_ in ``greek-fontenc.def`` extend
 % the `uclclist` with Greek LICR macros. Here, we add LGR specific "hiatus"
 % handling.
@@ -920,22 +971,22 @@
 %
 % .. _README: README.html
 % .. _alphabeta: alphabeta.sty.html
-% .. _athnum: http://ctan.org/pkg/athnum
-% .. _Babel: http://ctan.org/pkg/babel
-% .. _babel-greek: http://ctan.org/pkg/babel-greek
+% .. _athnum: https://ctan.org/pkg/athnum
+% .. _Babel: https://ctan.org/pkg/babel
+% .. _babel-greek: https://ctan.org/pkg/babel-greek
 % .. _babel patch: http://www.eutypon.gr/eutypon/pdf/e2008-20/e20-a03.pdf
-% .. _fntguide: http://mirror.ctan.org/macros/latex/base/fntguide.pdf
-% .. _fontenc:  http://ctan.org/pkg/fontenc
-% .. _hyperref: http://ctan.org/pkg/hyperref
-% .. _ibycus: http://ctan.org/pkg/ibycus-babel
+% .. _fntguide: https://mirrors.ctan.org/macros/latex/base/fntguide.pdf
+% .. _fontenc:  https://ctan.org/pkg/fontenc
+% .. _hyperref: https://ctan.org/pkg/hyperref
+% .. _ibycus: https://ctan.org/pkg/ibycus-babel
 % .. _LaTeX Project Public License: http://www.latex-project.org/lppl.txt
-% .. _lgrx: http://ctan.org/pkg/lgrx
-% .. _ltxcmds: http://ctan.org/pkg/ltxcmds
-% .. _teubner: http://ctan.org/pkg/teubner
+% .. _lgrx: https://ctan.org/pkg/lgrx
+% .. _ltxcmds: https://ctan.org/pkg/ltxcmds
+% .. _teubner: https://ctan.org/pkg/teubner
 % .. _teubner-doc:
-%     http://mirror.ctan.org/macros/latex/contrib/teubner/teubner-doc.pdf
+%     https://mirrors.ctan.org/macros/latex/contrib/teubner/teubner-doc.pdf
 % .. _textalpha: textalpha.sty.html
-% .. _ucs: http://ctan.org/pkg/unicode
-% .. _xunicode: http://ctan.org/pkg/xunicode
+% .. _ucs: https://ctan.org/pkg/unicode
+% .. _xunicode: https://ctan.org/pkg/xunicode
 % .. _ltxbugs 4399:
 %     https://www.latex-project.org/cgi-bin/ltxbugs2html?pr=latex%2F4399&search=

@@ -1,6 +1,6 @@
 %% File `memhangul-x.sty`
 %%
-%% (C) Copyright 2006-2021 Kangsoo Kim <modviv2k15 at gmail com>
+%% (C) Copyright 2006-2023 Kangsoo Kim <modviv2k15 at gmail com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,8 +14,8 @@
 %%    part of oblivoir v2
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2021/09/21}
-\def\fileversion{11.12}
+\def\filedate{2023/03/08}
+\def\fileversion{23.03}
 \ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
 %\typeout{Hangul Typography for (x)oblivoir}
 
@@ -66,7 +66,11 @@
 \newif\if@pdfbookmark{\@pdfbookmarkfalse}
 \DeclareOption{pdfbookmark}{\@pdfbookmarktrue}
 \newif\if@polyglos\@polyglosfalse
-\DeclareOption{polyglossia}{\@polyglostrue}
+\newif\if@babelhangul\@babelhangulfalse
+\newif\if@babelvacant\@babelvacantfalse
+\DeclareOption{polyglossia}{\@polyglostrue\@babelhangulfalse\@babelvacantfalse}
+\DeclareOption{babelhangul}{\@polyglostrue\@babelhangultrue\@babelvacantfalse}
+\DeclareOption{babelvacant}{\@polyglostrue\@babelhangultrue\@babelvacanttrue}
 
 \ifxetex
 %%% xetexko options
@@ -125,26 +129,73 @@
 
 \ProcessOptions \relax
 
+\newif\if@@babelkorfontdeclared\@@babelkorfontdeclaredfalse
+
 \if@polyglos
-  \RequirePackage{polyglossia}
-  \RequirePackage{xparse}
-%%% \sethangulfont{FONTNAME} or \sethangulfont[tt]{FONTNAME}[FEATURES]
-  \NewDocumentCommand\sethangulfont{omo}{%
-    \IfValueTF{#1}{%
-      \IfValueTF{#3}{%
-      	\expandafter\newfontfamily\csname hangulfont#1\endcsname
-		{#2}[#3]}{%
-		\expandafter\newfontfamily\csname hangulfont#1\endcsname
-		{#2}}%
-	}%
-	{%
-      \IfValueTF{#3}{%
-      	\newfontfamily\hangulfont{#2}[#3]%
-    	}{%
-	    \newfontfamily\hangulfont{#2}%
-    	}%
+	\if@babelhangul
+	  \if@babelvacant \else
+		 \ifluatex
+  		\RequirePackage{babel}
+  		\AtEndPreamble{
+  			\babelprovide[import, onchar=ids fonts]{korean}
+				\if@@babelkorfontdeclared\else
+				\babelfont[korean]{rm}{UnBatang}
+				\fi
+  		}		
+  		\ProvideDocumentCommand\setobmainfont{mo}{%
+  			\IfValueTF{#2}{%
+  				 \babelfont{rm}[#2]{#1}}%
+  				{\babelfont{rm}{#1}}}
+  		\ProvideDocumentCommand\setobsansfont{mo}{%
+  			\IfValueTF{#2}{%
+  				 \babelfont{sf}[#2]{#1}}%
+  				{\babelfont{sf}{#1}}}
+  		\ProvideDocumentCommand\setobmonofont{mo}{%
+  			\IfValueTF{#2}{%
+  				 \babelfont{tt}[#2]{#1}}%
+  				{\babelfont{tt}{#1}}}
+  		\ProvideDocumentCommand\setkomainfont{mo}{%
+  			\IfValueTF{#2}{%
+  				 \babelfont[korean]{rm}[#2]{#1}}%
+  				{\babelfont[korean]{rm}{#1}}%
+				\@@babelkorfontdeclaredtrue
+				}
+  		\ProvideDocumentCommand\setkosansfont{mo}{%
+  			\IfValueTF{#2}{%
+  				 \babelfont[korean]{sf}[#2]{#1}}%
+  				{\babelfont[korean]{sf}{#1}}}
+  		\ProvideDocumentCommand\setkomonofont{mo}{%
+  			\IfValueTF{#2}{%
+  				 \babelfont[korean]{tt}[#2]{#1}}%
+  				{\babelfont[korean]{tt}{#1}}}
+		 \else\ifxetex
+		   \RequirePackage{fontspec}
+		   \setmainfont{UnBatang}
+		   \XeTeXlinebreaklocale="ko"
+		   \fi
+		 \fi
+		\fi
+\else
+    \RequirePackage{polyglossia}
+    \RequirePackage{xparse}
+  %%% \sethangulfont{FONTNAME} or \sethangulfont[tt]{FONTNAME}[FEATURES]
+    \NewDocumentCommand\sethangulfont{omo}{%
+      \IfValueTF{#1}{%
+        \IfValueTF{#3}{%
+        	\expandafter\newfontfamily\csname hangulfont#1\endcsname
+  		{#2}[#3]}{%
+  		\expandafter\newfontfamily\csname hangulfont#1\endcsname
+  		{#2}}%
   	}%
+  	{%
+        \IfValueTF{#3}{%
+        	\newfontfamily\hangulfont{#2}[#3]%
+      	}{%
+  	    \newfontfamily\hangulfont{#2}%
+      	}%
+    	}%
     }
+  \fi
 \else
 \ifluatex
   \@ifpackageloaded{luatexko}{}{\RequirePackage{luatexko}}

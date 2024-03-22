@@ -5,10 +5,10 @@
 
 The package provides:
 - roman uppercase letters in mathematical mode according to French rule (can be optionnally disabled),
-- optionally lowercase Greek letters in upright shape,
 - correct spacing in math mode after commas, before a semicolon and around square brackets,
-- some useful macros and aliases for symbols used in France : `\infeg`, `\supeg`, `\paral`,...
-- several macros for writing french operator names like pgcd, ppcm, Card, rg, Vect,...
+- some useful macros and aliases for symbols used in France: `\infeg`, `\supeg`, `\paral`,...
+- several macros for writing French operator names like pgcd, ppcm, Card, rg, Vect,...
+- optionally lowercase Greek letters in upright shape.
 
 
 ## Documentation

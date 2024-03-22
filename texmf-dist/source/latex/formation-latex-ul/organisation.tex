@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -22,12 +22,11 @@ d'organisation d'un document.
 \section{Choix d'une classe}
 \label{sec:organisation:classe}
 
-La toute première chose à faire au moment de se lancer dans la
-rédaction d'un document avec {\LaTeX} consiste normalement à choisir
-une classe. Nous avons déjà expliqué à la \autoref{sec:bases:classes}
-comment spécifier la classe à utiliser. Cette section présente les
-différences entre les classes ainsi que les principales options
-disponibles.
+La première chose à faire au moment de se lancer dans la rédaction
+d'un document avec {\LaTeX} consiste normalement à choisir une classe.
+Vous avez déjà appris à la \autoref{sec:bases:classes} comment spécifier
+la classe à utiliser. Cette section présente les différences entre les
+classes ainsi que les principales options disponibles.
 
 Les classes standards sont \class{article}, \class{report},
 \class{book}, \class{letter} et \class{slides}.
@@ -48,16 +47,16 @@ Les classes standards sont \class{article}, \class{report},
   le bord extérieur et le titre de chapitre (page paire) ou le titre
   de section (page impaire). Le titre apparait sur une page de titre.
 \item[\normalfont\class{letter}] Lettres et correspondance. Bien que
-  puissante, cette classe est plus rarement utilisée. Nous n'en traitons
+  puissante, cette classe est plus rarement utilisée. Je n'en traite
   pas davantage dans ce document.
 \item[\normalfont\class{slides}] Diapositives simples pour des
   présentations. La \autoref{sec:trucs:diapositives} traite plus en
   détail de la production de diapositives.
 \end{description}
 
-On trouvera un sommaire des principales caractéristiques des classes
-\class{article}, \class{report} et \class{book} dans le
-\autoref{tab:organisation:classes}. De plus, les figures
+Le \autoref{tab:organisation:classes} fournit un sommaire des
+principales caractéristiques des classes \class{article},
+\class{report} et \class{book}. De plus, les figures
 \ref{fig:organisation:classes:article}--\ref{fig:organisation:classes:book}
 fournissent des exemples de mise en page pour ces trois classes.
 
@@ -116,30 +115,28 @@ fournissent des exemples de mise en page pour ces trois classes.
   \label{fig:organisation:classes:book}
 \end{figure}
 
-Cet ouvrage fait une large place à la classe \class{memoir}
-\citep{memoir}, une extension de la classe standard \class{book} qui
-facilite à plusieurs égards la préparation de documents d'allure
-professionnelle dans {\LaTeX}. Nous recommandons d'utiliser cette
-classe en lieu et place de la classe \class{book}, ou même de la
-classe \class{article} (voir ci-dessous).
+Cet ouvrage fait une large place à la classe qui est utilisée pour le
+composer: la classe \class{memoir} \citep{memoir}. Il s'agit d'une
+extension de la classe standard \class{book} qui facilite à plusieurs
+égards la préparation de documents d'allure professionnelle dans
+{\LaTeX}. Je recommande d'utiliser cette classe en lieu et place de la
+classe \class{book}, ou même de la classe \class{article} (voir
+ci-dessous).
 
 La classe \class{memoir} incorpore d'office plus de 30 des paquetages
 les plus populaires\footnote{%
-  Consulter la section~18.24 de la documentation de \class{memoir}
+  Consultez la section~18.24 de la documentation de \class{memoir}
   pour la liste ou encore le journal de la compilation (\emph{log})
   d'un document utilisant la classe.}. %
 La classe fait partie des distributions {\LaTeX} modernes; elle
 devrait être installée et disponible sur tout système. Elle est livrée
 avec une %
-\doc{memoir}{http://texdoc.net/pkg/memoir} %
+\doc{memoir}{https://texdoc.net/pkg/memoir} %
 exhaustive: le manuel d'instructions fait près de 600~pages! Il peut
 être utile de s'y référer de temps à autre pour réaliser une mise en
 page particulière.
 
-Les auteurs de thèses et de mémoires déposés à l'Université Laval
-doivent utiliser la classe \class{ulthese}; voir l'\autoref{chap:ulthese}.
-
-On rappelle que l'on charge une classe de document au début du
+Rappellons que l'on charge une classe de document au début du
 préambule avec la commande
 \begin{lstlisting}
 \documentclass`\oarg{options}\marg{classe}'
@@ -149,13 +146,10 @@ plus courantes sont les suivantes.
 \begin{description}
 \item[\mdseries \code{10pt}, \code{11pt}, \code{12pt}] Taille de la
   police du document en points. La valeur par défaut est \code{10pt}.
-  Nous recommandons d'utiliser plutôt \code{11pt}. C'est la taille par
-  défaut avec la classe \class{ulthese}.
+  Je recommande d'utiliser plutôt \code{11pt}.
 \item[\mdseries \code{oneside}, \code{twoside}] Disposition du
   document en recto seulement ou en recto verso. Ces options ne sont
-  utiles que pour modifier la disposition par défaut de la classe. Les
-  thèses et mémoires de l'Université Laval sont produits en recto
-  seulement.
+  utiles que pour modifier la disposition par défaut de la classe.
 \item[\mdseries \code{openright}, \code{openany}] Position de la
   première page des chapitres toujours à droite (page impaire) ou
   immédiatement après la dernière page du chapitre précédent. Avec la
@@ -172,9 +166,9 @@ plus courantes sont les suivantes.
 D'autres options permettent de contrôler la position du titre, la
 disposition en une ou deux colonnes, ou encore la position des
 équations hors paragraphe. \citet{Thurnherr:class-options} offre une
-présentation succincte des options standards. Le chapitre~1 de la %
-\doc{memoir}{http://texdoc.net/pkg/memoir} %
-de \class{memoir} traite en plus des ajouts propres à cette classe.
+présentation succincte des options standards. Le chapitre~1 de la
+documentation de \class{memoir} traite en plus des ajouts propres à
+cette classe.
 
 
 
@@ -188,53 +182,53 @@ titre, mais celui-ci est parfois affiché sur une page de titre
 séparée.
 
 Toutes ces considérations relevant essentiellement de la mise en page,
-{\LaTeX} s'en charge pour nous. L'auteur n'a qu'à spécifier la
-strucure logique du document à l'aide des commandes de la présente
-section.
+{\LaTeX} s'en charge pour vous. Vous n'avez qu'à spécifier la strucure
+logique du document à l'aide des commandes de la présente section.
 
 \subsection{Titre et page de titre}
 \label{sec:organisation:parties:titre}
 
 {\LaTeX} rend très simple la composition du titre d'un article
 scientifique ou d'une page de titre simple (classes \class{report},
-\class{book}, \class{memoir}). En premier lieu, on spécifie,
-habituellement dans le préambule, le titre du document, le nom du ou
-des auteurs et la date de publication avec les commandes suivantes:
+\class{book}, \class{memoir}).
+
+En premier lieu, vous devez spécifier, habituellement dans le
+préambule, le titre du document, le nom du ou des auteurs et la date
+de publication avec les commandes suivantes:
 \begin{lstlisting}
 \title`\marg{Titre du document}'
-\author`\marg{Prénom Nom {\bs\bs} Affiliation {\bs\bs} Adresse}'
+\author`\marg{Prénom Nom {\pixbsbs} Affiliation {\pixbsbs} Adresse}'
 \date`\marg{Date ou autre texte}'
 \end{lstlisting}
-Un long titre sera scindé automatiquement. L'auteur peut aussi scinder
-le titre manuellement en insérant la commande {\bs\bs} aux points de
+Un long titre sera scindé automatiquement. Vous pouvez aussi scinder
+le titre manuellement en insérant la commande «\pixbsbs» aux points de
 coupure. %
-Si l'ouvrage comporte deux auteurs ou plus, on insère les informations
+Si l'ouvrage comporte deux auteurs ou plus, insérez les informations
 dans la commande \cmd{\author} les unes après les autres en séparant
 chaque entrée par la commande \cmdprint{\and}. %
 La commande \cmd{\date} insère le texte donné en argument (qu'il
 s'agisse d'une date ou non) à l'endroit prévu à cet effet par
 {\LaTeX}. Si l'on omet la commande, {\LaTeX} insère la date du jour au
-moment de la compilation. Pour ne pas afficher la date, on laisse
-l'argument vide:
+moment de la compilation. Pour ne pas afficher la date, laissez
+simplement l'argument vide:
 \begin{lstlisting}
 \date{}
 \end{lstlisting}
 
 Dans les articles scientifiques, le nom d'un auteur est fréquemment
 suivi d'un appel de note renvoyant à des remerciements à un organisme
-subventionnaire ou à quelque autre information additionnelle sur
-l'auteur. On insère une telle note et son appel à l'endroit approprié
-dans les commandes \cmd{\title} ou \cmd{\author} avec la commande
+subventionnaire ou à quelque autre information sur l'auteur. On insère
+une telle note et son appel à l'endroit approprié dans les commandes
+\cmd{\title} ou \cmd{\author} avec la commande \cmd{\thanks}:
 \begin{lstlisting}
 \thanks`\marg{Texte}'
 \end{lstlisting}
 
 Les commandes ci-dessus ne permettent que de saisir les informations
 relatives au titre. Pour produire le titre il faut, en second lieu,
-insérér dans le corps du document la commande
-\begin{lstlisting}
-\maketitle
-\end{lstlisting}
+insérér dans le corps du document la commande \cmd{\maketitle}. La
+commande insère le titre à l'endroit où elle apparait dans le code
+source.
 
 \begin{exemple}
   \label{ex:organisation:titre}
@@ -245,16 +239,15 @@ insérér dans le corps du document la commande
     \lstinputlisting[lastline=19]{auxdoc/exemple-titre.tex}
   \end{demo}
 
-  La date de publication apparaissant dans l'illustration de la
-  \autoref*{fig:organisation:titre} est celle de la compilation
-  puisque la commande \cmdprint{\date} n'apparait pas dans le code
-  source.
+  La date de publication qui apparait dans la page composée est celle
+  de la compilation puisque la commande \cmdprint{\date} n'apparait
+  pas dans le code source.
 
-  On remarquera également que nous avons placé un symbole de
-  commentaire \% immédiatement après le nom de l'auteur dans le code
-  source. Tel qu'expliqué à la \autoref{sec:bases:caracteres:espaces},
-  c'est pour éviter que {\LaTeX} ne transforme le retour à la ligne avant
-  la commande \cmd{\thanks} en une espace entre le nom et l'appel de
+  Remarquez également que j'ai placé un symbole de commentaire «\%»
+  immédiatement après le nom de l'auteur dans le code source. Tel
+  qu'expliqué à la \autoref{sec:bases:caracteres:espaces}, c'est pour
+  éviter que {\LaTeX} ne transforme le retour à la ligne avant la
+  commande \cmd{\thanks} en une espace entre le nom et l'appel de
   note.
 
   (Le paquetage \pkg{lorem} utilisé dans cet exemple permet
@@ -269,13 +262,13 @@ insérér dans le corps du document la commande
   \qed
 \end{exemple}
 
-Nous avons mentionné plus haut que {\LaTeX} peut aussi produire
+J'ai mentionné plus haut que {\LaTeX} peut aussi produire
 automatiquement la page de titre d'un rapport ou d'un livre. Il est
 toutefois peu probable qu'elle convienne, surtout dans le cas d'un
-livre. Une option plus flexible existe: les environnements
+livre. Des options plus flexibles existent: les environnements
 \Ie{titlepage} (classes standards) et \Ie{titlingpage} (classe
-\class{memoir}) permettent de définir librement une page de
-titre:
+\class{memoir}). Ces environnements permettent de définir librement
+une page de titre:
 \begin{demo}
   \begin{minipage}{0.48\linewidth}
 \begin{lstlisting}
@@ -293,25 +286,18 @@ titre:
 \end{lstlisting}
   \end{minipage}
 \end{demo}
-L'auteur contrôle alors entièrement la disposition et la
-composition des éléments de la page de titre. Nous renvoyons le
-lecteur au chapitre~4 de la %
-\doc{memoir}{http://texdoc.net/pkg/memoir} %
+Vous contrôlez alors entièrement la disposition et la composition des
+éléments de la page de titre. Consultez le chapitre~4 de la %
+\doc{memoir}{https://texdoc.net/pkg/memoir} %
 de \class{memoir} pour une liste de bonnes pratiques en matière de
 composition de page de titre et pour des exemples détaillés.
-
-Comme c'est souvent le cas dans les universités, le format de la page
-de titre des thèses et mémoires de l'Université Laval est
-prédéterminé. La classe \class{ulthese} fournit donc ses propres
-commandes de composition; consulter sa %
-\doc{ulthese}{http://texdoc.net/pkg/ulthese}.
 
 \subsection{Résumé}
 \label{sec:organisation:parties:resume}
 
 Les articles scientifiques et les rapports comportent souvent un
 résumé, habituellement composé en retrait des marges gauche et droite
-et dans une police plus petite. On produit le résumé avec
+et dans une police plus petite. Le résumé est produit avec
 l'environnement \Ie{abstract} des classes \class{article},
 \class{report} ou \class{memoir}:
 \begin{lstlisting}
@@ -320,16 +306,12 @@ l'environnement \Ie{abstract} des classes \class{article},
 \end{abstract}
 \end{lstlisting}
 
-Il est plutôt rare que les livres comportent un résumé ou alors, comme
-pour les thèses et mémoires de l'Université Laval, celui-ci
-est simplement traité comme un chapitre normal non numéroté.
-
 \subsection{Sections}
 \label{sec:organisation:parties:sections}
 
-Les commandes ci-dessous servent à découper un document en sections
+Vous pouvez diviser un document en sections
 qui seront automatiquement numérotées par {\LaTeX} de manière
-séquentielle:
+séquentielle avec les commandes suivantes:
 \begin{lstlisting}
 \part`\oarg{titre court}\marg{titre}'
 \chapter`\oarg{titre court}\marg{titre}'
@@ -339,10 +321,10 @@ séquentielle:
 \paragraph`\oarg{titre court}\marg{titre}'
 \subparagraph`\oarg{titre court}\marg{titre}'
 \end{lstlisting}
-Les commandes forment, dans l'ordre où elles sont données, une
-hiérarchie des titres d'un document\footnote{%
-  Nous n'avons jamais utilisé les niveaux de division
-  \cmdprint{\paragraph} et \cmdprint{\subparagraph}.}. %
+Les commandes forment, dans l'ordre ci-dessus, une hiérarchie des
+titres d'un document\footnote{%
+  Je n'ai jamais utilisé les niveaux de division \cmdprint{\paragraph}
+  et \cmdprint{\subparagraph}.}. %
 Tel que mentionné précédemment, la commande \cmd{\chapter} n'est pas
 disponible avec la classe \class{article}.
 
@@ -352,11 +334,12 @@ argument optionnel un \meta{titre court}; c'est ce dernier qui
 apparaitra dans la table des matières et dans les entêtes de page, le cas
 échéant.
 
-Toutes les commandes existent en version suivie d'une \verb=*= qui
-supprime la numérotation ainsi que l'insertion éventuelle dans la
-table des matières (plus de détails à la \autoref{sec:organisation:tdm}).
+Toutes les commandes existent en version étoilée (nom suivi de
+«\verb=*=») qui supprime la numérotation ainsi que l'insertion
+éventuelle dans la table des matières (plus de détails à la
+\autoref{sec:organisation:tdm}).
 
-\tipbox{Éviter d'utiliser des sous-sous-sections numérotées (commande
+\tipbox{Évitez d'utiliser des sous-sous-sections numérotées (commande
   \cmdprint{\subsubsection}) dans un livre. Cela résulte en une
   numérotation à quatre niveaux qui s'avère difficile à suivre pour le
   lecteur.}
@@ -389,8 +372,8 @@ commandes
 \mainmatter
 \backmatter
 \end{lstlisting}
-qui sont disponibles avec les classes \class{book}, \class{memoir} et
-\class{ulthese}, permettent d'identifier ces trois parties. Le
+qui sont disponibles avec les classes \class{book} et \class{memoir},
+permettent d'identifier ces trois parties. Le
 \autoref{tab:organisation:livre} résume l'effet de chaque commande.
 
 \begin{table}
@@ -421,9 +404,9 @@ qui sont disponibles avec les classes \class{book}, \class{memoir} et
 \section{Table des matières}
 \label{sec:organisation:tdm}
 
-Dans la mesure où l'on a bien identifié les différentes divisions d'un
-ouvrage avec les commandes mentionnées à la section précédente, la
-production de la table des matières est on ne peut plus simple avec
+Dans la mesure où vous avez bien identifié les différentes divisions
+d'un ouvrage avec les commandes mentionnées à la section précédente,
+la production de la table des matières est on ne peut plus simple avec
 {\LaTeX}: il suffit d'insérer la commande
 \begin{lstlisting}
 \tableofcontents
@@ -454,46 +437,26 @@ avec la visionneuse Aperçu de macOS.
   compilations consécutives du document.}
 
 Par défaut, une section non numérotée ne figure pas dans la table des
-matières. Si l'on souhaite néanmoins l'y insérer, il faut utiliser la
-commande suivante:
+matières. Si l'y insérer néanmoins, vous devez utiliser la commande
+suivante:
 \begin{lstlisting}
 \addtocontentsline{toc}`\marg{niveau}\marg{titre}'
 \end{lstlisting}
 où \meta{niveau} est le nom de la commande de division sans le
 caractère {\bs} (\code{chapter}, \code{section}, etc.) et \meta{titre}
-est le texte qui apparaitra dans la table des matières.
+est le texte qui doit figurer dans la table des matières.
 
-\begin{exemple}
-  Selon les normes de présentation visuelle de la Faculté des études
-  supérieures et postdoctorales pour les thèses et mémoires de
-  l'Université Laval, les résumés, la liste des abbréviations et des
-  sigles, les remerciements et l'avant-propos doivent être composés
-  comme des chapitres normaux non numérotés. Cependant, ils doivent
-  apparaitre dans la table des matières. Pour ce faire, les gabarits
-  fournis avec la classe \class{ulthese} comportent des lignes de la
-  forme:
-\begin{lstlisting}
-\chapter*{Résumé}
-\phantomsection\addcontentsline{toc}{chapter}{Résumé}
-\end{lstlisting}
-  La commande \cmd{\phantomsection} est rendue nécessaire (ou
-  recommandée) par le paquetage \pkg{hyperref} qui est chargé dans le
-  préambule. %
-  \qed
-\end{exemple}
-
-Outre une table des matières, les ouvrages scientifiques
-comportent parfois une liste des figures et une liste des tableaux. On
-obtient celles-ci avec les commandes
+Outre une table des matières, les ouvrages scientifiques comportent
+parfois une liste des figures et une liste des tableaux. {\LaTeX} les
+produit automatiquement avec les commandes
 \begin{lstlisting}
 \listoffigures
 \listoftables
 \end{lstlisting}
 
-Dans les classes \class{memoir} et \class{ulthese}, les commandes
-ci-dessus insèrent leur propre titre de section dans la table des
-matière (autrement dit, la table des matières apparait dans la table
-des matières). Les versions
+Dans la classe \class{memoir}, les commandes ci-dessus insèrent leur
+propre titre de section dans la table des matière (autrement dit, la
+table des matières apparait dans la table des matières). Les versions
 \begin{lstlisting}
 \tableofcontents*
 \listoffigures*
@@ -507,20 +470,20 @@ parties dans la table des matières.
 \label{sec:organisation:renvois}
 
 Un document d'une certaine ampleur contiendra souvent des renvois à
-une section, un tableau, une équation, voire une page
-spécifique. Évidemment, le numéro de la section, du tableau, de
-l'équation ou de la page est susceptible de changer au fil de la
-rédaction du document. C'est pourquoi l'auteur ne devrait
-\emph{jamais} insérer les revois manuellement dans le texte. C'est une
-tâche qu'il vaut mieux confier à l'ordinateur.
+une section, un tableau, une équation, voire une page spécifique.
+Évidemment, le numéro de la section, du tableau, de l'équation ou de
+la page est susceptible de changer au fil de la rédaction du document.
+C'est pourquoi vous ne devriez \emph{jamais} insérer les revois
+manuellement dans le texte. C'est une tâche qu'il vaut mieux confier à
+l'ordinateur.
 
 \subsection{Étiquettes et renvois}
 \label{sec:organisation:renvois:etiquettes}
 
 Les renvois automatiques dans {\LaTeX} reposent sur un système
 d'étiquettes attribuées à des éléments de contenu et de référencement
-par ces étiquettes. Ainsi, pour renvoyer le lecteur à un élément de
-contenu, il faut d'abord le nommer en insérant la commande
+par ces étiquettes. Ainsi, pour effectuer un renvoi vers un élément de
+contenu, il faut d'abord nommer celui-ci en insérant la commande
 \begin{lstlisting}
 \label`\marg{nom}'
 \end{lstlisting}
@@ -534,7 +497,7 @@ n'importe où dans le document avec la commande
 \begin{lstlisting}
 \ref`\marg{nom}'
 \end{lstlisting}
-Pour renvoyer à la page où se trouve l'élément, on utilise la commande
+Pour renvoyer à la page où se trouve l'élément, utilisez la commande
 \begin{lstlisting}
 \pageref`\marg{nom}'
 \end{lstlisting}
@@ -567,22 +530,19 @@ Tel que vu à la section \ref{sec:definitions}, on a...
   \qed
 \end{exemple}
 
-\tipbox{Un long document contiendra vraisemblablement un grand nombre
-  d'étiquettes et de renvois. Afin de s'y retrouver et pour éviter les
-  doublons, adopter une manière systématique et mnémotechnique de
-  nommer les éléments.
-
-  Pour le présent document, nous avons utilisé un système d'étiquettes
-  de la forme suivante:
-  \begin{itemize}
-  \item \cmdprint{chap:\meta{chapitre}} pour les chapitres;
-  \item \cmdprint{sec:\meta{chapitre}:\meta{section}} pour
-    les sections;
-  \item \cmdprint{tab:\meta{chapitre}:\meta{tableau}} pour
-    les tableaux;
-  \item \cmdprint{eq:\meta{chapitre}:\meta{equation}} pour
-    les équations.
-  \end{itemize}}
+Un long document contiendra vraisemblablement un grand nombre
+d'étiquettes et de renvois. Afin de vous y retrouver et pour réduire
+les risques de doublons, adoptez une manière systématique et
+mnémotechnique de nommer les éléments. Par exemple, pour le présent
+document, j'ai utilisé un système d'étiquettes de la forme
+suivante:
+\begin{itemize}
+\item \cmdprint{chap:\meta{chapitre}} pour les chapitres;
+\item \cmdprint{sec:\meta{chapitre}:\meta{section}} pour les sections;
+\item \cmdprint{tab:\meta{chapitre}:\meta{tableau}} pour les tableaux;
+\item \cmdprint{eq:\meta{chapitre}:\meta{equation}} pour les
+  équations.
+\end{itemize}
 
 \subsection{Production des renvois}
 \label{sec:organisation:renvois:production}
@@ -595,15 +555,15 @@ LaTeX Warning: Label(s) may have changed. Rerun to get
 cross-references right.
 \end{verbatim}
 
-On prendra également garde aux alertes suivantes dans le journal de
+Prenez également garde aux alertes suivantes dans le journal de
 compilation. Elles identifient des correctifs à apporter dans le
 système d'étiquettes et de renvois. D'abord, le message
 \begin{verbatim}
 LaTeX Warning: There were undefined references.
 \end{verbatim}
 indique qu'une ou plusieurs commandes \cmd{\ref} renvoient à un
-\meta{nom} qui n'est pas défini avec \cmd{\label}. On trouvera alors
-dans le document le caractère \textbf{?} en lieu et place du renvoi. À
+\meta{nom} qui n'est pas défini avec \cmd{\label}. Le document
+contiendra alors le caractère \textbf{?} en lieu et place du renvoi. À
 l'inverse, le message
 \begin{verbatim}
 LaTeX Warning: There were multiply-defined labels.
@@ -629,7 +589,6 @@ pratique en consultation électronique d'un document.
   produit maintenant le type de renvoi illustré à la
   \autoref{fig:organisation:renvoi-hyperref}. Le texte en couleur
   contrastante est un hyperlien vers le titre de la section.
-
   \begin{figure}
     \centering
     \fbox{\includegraphics[viewport=124 550 484 664,clip=true,width=0.98\linewidth]{auxdoc/exemple-renvoi-hyperref}}
@@ -644,7 +603,7 @@ pratique en consultation électronique d'un document.
 L'inconvénient avec la procédure illustrée dans l'exemple précédent,
 c'est que seul le numéro de la référence est transformé en hyperlien.
 La zone disponible pour cliquer s'en trouve plutôt restreinte. Une
-fonctionnalité du paquetage \pkg{hyperref} --- à laquelle nous avons eu
+fonctionnalité du paquetage \pkg{hyperref} --- à laquelle j'ai eu
 recours dans le présent document --- permet d'agrandir cette zone. La
 commande
 \begin{lstlisting}
@@ -656,11 +615,11 @@ numéro du renvoi.
 
 \begin{exemple}
   \label{ex:organisation:renvoi-autoref}
-  On reprend le texte de l'\autoref{ex:organisation:renvoi}, mais en
+  Reprenons le texte de l'\autoref{ex:organisation:renvoi}, mais en
   utilisant cette fois la commande \cmd{\autoref} pour insérer un
-  renvoi dans le texte. On remarque que le mot «section» a été
-  supprimé du code source pour laisser à la commande le soin d'insérer
-  le vocable approprié dans le document.
+  renvoi dans le texte. Remarquez que le mot «section» a été supprimé
+  du code source pour laisser à la commande le soin d'insérer
+  l'étiquette appropriée dans le document.
 \begin{lstlisting}[emph={\label,\autoref}]
 \section{Définitions}
 \label{sec:definitions}
@@ -673,10 +632,6 @@ vitae, felis.
 
 Tel que vu à la \autoref{sec:definitions}, on a...
 \end{lstlisting}
-  Comme on peut le voir à la
-  \autoref{fig:organisation:renvoi-autoref}, le mot «section» ainsi
-  que son numéro forment maintenant l'hyperlien.
-
   \begin{figure}
     \centering
     \fbox{\includegraphics[viewport=124 550 484 664,clip=true,width=0.98\linewidth]{auxdoc/exemple-renvoi-autoref}}
@@ -684,6 +639,8 @@ Tel que vu à la \autoref{sec:definitions}, on a...
       l'\autoref{ex:organisation:renvoi-autoref}}
     \label{fig:organisation:renvoi-autoref}
   \end{figure}
+  La \autoref{fig:organisation:renvoi-autoref} montre que le mot
+  «section» ainsi que son numéro forment maintenant l'hyperlien.
   \qed
 \end{exemple}
 
@@ -697,7 +654,7 @@ additionnels sur la gestion des hyperliens dans un document PDF.
 Lorsque le préambule et le corps du texte demeurent relativement
 courts (peu de commandes spéciales et moins d'une vingtaine de pages
 de texte), il demeure assez simple et convivial d'en faire l'édition
-dans un seul fichier à l'aide de son éditeur de texte favori.
+dans un seul fichier à l'aide de votre éditeur de texte favori.
 
 Cependant, si le préambule devient long et complexe ou, surtout,
 lorsque l'ampleur du document augmente jusqu'à compter un grand nombre
@@ -717,15 +674,15 @@ fichier dans un document {\LaTeX}. La syntaxe de la commande est
 \begin{lstlisting}
 \input`\marg{fichier}'
 \end{lstlisting}
-où le nom du fichier à insérer est \meta{fichier}\code{.tex}. On
-laisse donc tomber l'extension \code{.tex}, qui est implicite. Le
-contenu du fichier est inséré tel quel dans le document, comme s'il
-avait été saisi dans le fichier qui contient l'appel à \cmd{\input}.
+où le nom du fichier à insérer est \meta{fichier}\code{.tex}.
+L'extension \code{.tex} est donc implicite. Le contenu du fichier est
+inséré tel quel dans le document, comme s'il avait été saisi dans le
+fichier qui contient l'appel à \cmd{\input}.
 
 Le procédé est surtout utile pour sauvegarder séparément des bouts de
-code qui gênent l'édition du texte (figures, longs
-tableaux) ou qui sont communs entre plusieurs documents (licence
-d'utilisation, auteur et affiliation).
+code qui gênent l'édition du texte (figures, longs tableaux) ou qui
+sont communs entre plusieurs documents (licence d'utilisation, auteurs
+et affiliations).
 
 La commande peut aussi être utilisée dans le préambule pour charger
 une partie ou l'ensemble de celui-ci. Cela permet de composer un même
@@ -736,38 +693,39 @@ effet dans tous les documents.
 \subsection{Insertion de parties d'un document}
 \label{sec:organisation:include:include}
 
-Il est recommandé de segmenter tout document d'une certaine ampleur
+Je vous recommande de segmenter tout document d'une certaine ampleur
 dans des fichiers \verb=.tex= distincts pour chaque partie ---
-habituellement un fichier par chapitre. Le document complet est
-composé à l'aide d'un fichier maitre qui contient le préambule
-{\LaTeX} et un ensemble d'appels à la commande \cmdprint{\include}
-pour réunir les parties dans un tout.
+habituellement un fichier par chapitre. Vous composerez ensuite le
+document complet à l'aide d'un fichier maitre qui contient le
+préambule {\LaTeX} et un ensemble d'appels à la commande
+\cmdprint{\include} pour réunir les parties dans un tout.
 
 La syntaxe de \cmd{\include} est
 \begin{lstlisting}
 \include`\marg{fichier}'
 \end{lstlisting}
 où le nom du fichier à insérer est \meta{fichier}\code{.tex}. Ici
-aussi on laisse tomber l'extension \code{.tex} qui est implicite.
+aussi l'extension \code{.tex} est implicite.
 
 Comme \cmd{\input}, la commande \cmd{\include} insère le contenu d'un
 autre fichier dans un document. Toutefois, l'insertion d'un fichier
-avec \cmd{\include} débute toujours une nouvelle page. On utilisera
-donc cette commande principalement pour insérer des chapitres entiers
-plutôt que seulement des portions de texte. De plus, un fichier inséré
-avec \cmd{\include} peut contenir des appels à \cmd{\input}, mais pas
-à \cmd{\include}.
+avec \cmd{\include} débute toujours une nouvelle page. Cette commande
+sert donc principalement pour insérer des chapitres entiers plutôt que
+seulement des portions de texte. De plus, un fichier inséré avec
+\cmd{\include} peut contenir des appels à \cmd{\input}, mais pas à
+\cmd{\include}.
 
 \begin{exemple}
   La \autoref{fig:organisation:maitre} présente un exemple type de
-  fichier maitre. On y utilise la commande \cmd{\include} pour
-  composer un document chapitre par chapitre.
+  fichier maitre qui fait appel à la commande \cmd{\include} pour
+  composer un document chapitre par chapitre. %
+  \qed
 
   \begin{figure}
     \centering
     \begin{minipage}{0.75\linewidth}
 \begin{lstlisting}[numbers=left, numberstyle=\tiny]
-\documentclass{ulthese}
+\documentclass{memoir}
   [...]
 
 \begin{document}
@@ -792,22 +750,21 @@ avec \cmd{\include} peut contenir des appels à \cmd{\input}, mais pas
       contiennent le texte des trois premiers chapitres.}
     \label{fig:organisation:maitre}
   \end{figure}
-  \qed
 \end{exemple}
+
+\subsection{Compilation partielle}
+\label{sec:organisation:include:compilation}
 
 Le principal avantage de \cmd{\include} par rapport à \cmd{\input}
 réside dans le fait que {\LaTeX} peut préserver entre les compilations
 les informations telles que les numéros de pages, de sections ou
 d'équations, ainsi que les renvois et les références bibliographiques.
 Cela permet, par exemple, de compiler le texte d'un seul chapitre ---
-plutôt que le document entier --- et néanmoins obtenir une image
+plutôt que le document entier --- et de néanmoins obtenir une image
 représentative du chapitre. Procéder ainsi accélère significativement
 la compilation des documents longs ou complexes.
 
-\subsection{Compilation partielle}
-\label{sec:organisation:include:compilation}
-
-La commande \cmd{\includeonly}, que l'on utilise exclusivement dans le
+La commande \cmd{\includeonly}, qui est employée exclusivement dans le
 préambule, sert à spécifier le ou les fichiers à compiler tout en
 préservant la numérotation et les références. Sa syntaxe est
 \begin{lstlisting}
@@ -816,12 +773,6 @@ préservant la numérotation et les références. Sa syntaxe est
 où \meta{liste\_fichiers} contient les noms des fichiers à
 inclure dans la compilation, séparés par des virgules et sans
 l'extension \code{.tex}.
-
-\tipbox{Utiliser des noms de fichiers qui permettent de facilement
-  identifier leur contenu. Par exemple, un nom comme
-  \fichier{rappels.tex} identifie clairement le contenu du fichier et
-  il résiste mieux aux changements à l'ordre des chapitres que
-  \fichier{chapitre1.tex}.}
 
 Lors de l'utilisation de la commande \cmd{\includeonly}, toute la
 numérotation dans les fichiers \meta{liste\_fichiers} suivra celle
@@ -860,7 +811,11 @@ nécessaire.
 L'\autoref{ex:include} illustre mieux le cycle typique
 d'utilisation des commandes \cmd{\include} et \cmd{\includeonly}.
 
-
+\tipbox{Utilisez des noms de fichiers qui permettent de facilement
+  identifier leur contenu. Par exemple, un nom comme
+  \fichier{rappels.tex} identifie clairement le contenu du fichier et
+  il résiste mieux aux changements à l'ordre des chapitres que
+  \fichier{chapitre1.tex}.}
 
 %%%
 %%% Exercices
@@ -878,7 +833,7 @@ d'utilisation des commandes \cmd{\include} et \cmd{\includeonly}.
 \end{Filesave}
 
 \begin{exercice}[nosol]
-  Utiliser le fichier \fichier{exercice\_parties.tex}.
+  Utiliser le fichier \fichier{exercice-parties.tex}.
   \begin{enumerate}
   \item Étudier la structure du document dans le code source.
   \item Ajouter un titre et un auteur au document à l'aide des
@@ -899,7 +854,7 @@ d'utilisation des commandes \cmd{\include} et \cmd{\includeonly}.
 \end{exercice}
 
 \begin{exercice}[nosol]
-  Utiliser le fichier \fichier{exercice\_renvois.tex}.
+  Utiliser le fichier \fichier{exercice-renvois.tex}.
   \begin{enumerate}
   \item Insérer dans le texte un renvoi au numéro d'une section.
   \item Activer le paquetage \pkg{hyperref} avec l'option
@@ -911,13 +866,13 @@ d'utilisation des commandes \cmd{\include} et \cmd{\includeonly}.
 \begin{exercice}[nosol]
   \label{ex:include}
   Cet exercice fait appel au fichier maitre
-  \fichier{exercice\_include.tex} et à plusieurs fichiers auxiliaires.
+  \fichier{exercice-include.tex} et à plusieurs fichiers auxiliaires.
   Schématiquement, le document est composé ainsi:
 
   \medskip
   \begin{minipage}{\linewidth}
     \dirtree{%
-      .1 exercice\_include.tex.
+      .1 exercice-include.tex.
       .2 {\textbackslash}input pagetitre.tex.
       .2 {\textbackslash}include rpresentation.tex.
       .3 {\textbackslash}includegraphics console-screenshot.pdf.
@@ -951,7 +906,7 @@ d'utilisation des commandes \cmd{\include} et \cmd{\includeonly}.
 \begin{lstlisting}
 \includegraphics[width=\textwidth]{console-screenshot}
 \end{lstlisting}
-    en supprimant le symbole \% au début de la ligne. Compiler de
+    en supprimant le symbole «\%» au début de la ligne. Compiler de
     nouveau le document deux fois.
 
     Les modifications ont eu pour effet d'ajouter une page au
@@ -966,10 +921,10 @@ d'utilisation des commandes \cmd{\include} et \cmd{\includeonly}.
 
 \begin{exercice}[nosol]
   Déplacer dans un fichier \fichier{preambule.tex} toutes les lignes
-  du préambule du fichier \fichier{exercice\_include.tex} utilisé à
+  du préambule du fichier \fichier{exercice-include.tex} utilisé à
   l'exercice précédent, à l'exception de celles relatives à la page
   titre (titre, auteur, date). Insérer le préambule dans
-  \fichier{exercice\_include.tex} avec la commande \cmd{\input}.
+  \fichier{exercice-include.tex} avec la commande \cmd{\input}.
 \end{exercice}
 
 \Closesolutionfile{solutions}

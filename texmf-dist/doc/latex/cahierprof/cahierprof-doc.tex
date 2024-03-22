@@ -1,0 +1,339 @@
+\documentclass[a4paper,french,10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{commandes}
+\usepackage{tcolorbox}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{minted}
+\usepackage{xcolor}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% En tête du document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Les marges de mon document.
+\geometry{margin=1.2cm,head=0.6cm,headsep=10pt,foot=.6cm}
+
+\title{
+  cahierprof.sty\\
+  Un cahier de textes en \LaTeX{} pour les professeurs
+}
+\author{
+  Raphaël Giromini\\
+  \texttt{raphael.giromini -- at -- gmail.com}
+}
+\date{Version 1.0 -- 1er septembre 2023}
+
+\setminted{frame=single,linenos,numbersep=6pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Début du document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+
+\section*{Résumé}
+\noindent
+Le package \texttt{cahierprof} permet de créer un cahier de texte du professeur,
+constitué de deux éléments:
+\begin{itemize}
+  \item un calendrier scolaire annuel (de septembre à juillet) avec une semaine
+    par par page;
+  \item un tableau des élèves répartis par classe (pour les absences et/ou les
+    notes).
+\end{itemize}
+Merci à Frédéric Bréal pour ses conseils, ses idées et ses relectures attentives
+du package.
+
+\subsection*{Nouveautés de la version 1.0}
+\begin{itemize}
+  \item La date du lundi de Pâques se calcule automatiquement.
+  \item Option \texttt{samedi}, qui permet d'afficher un emploi tu temps
+    hebdomadaire du lundi au samedi.
+  \item Possibilité d'utiliser un fichier personnel dans la commande
+    \mintinline{latex}|\ListeEleves|.
+  \item Création des commandes \mintinline{latex}|\setFin|\texttt{*}, où
+    \texttt{*} correspond à \texttt{Toussaint}, \texttt{Noel}, \texttt{Hiver} ou
+    \texttt{Printemps}, qui permet de définir des dates spécifiques de fin de
+    vacances. 
+  \item Création de commandes pour définir les dates du diplôme national du
+    brevet et du baccalauréat: \mintinline{latex}|\setDNB|,
+    \mintinline{latex}|\setBac|, \mintinline{latex}|\setBacPhilo|,
+    \mintinline{latex}|\setBacFrancais|, \mintinline{latex}|\setGO|.
+\end{itemize}
+
+\section*{Versions antérieures}
+
+\subsection*{Nouveautés de la version 0.92}
+\begin{itemize}
+  \item Correction de la gestion des années bissextiles.
+  \item Correction de l'affichage de la semaine lorsque le quantième du lundi
+    est 29.
+  \item Création de la commande \mintinline{latex}|\setNombreSemaines| pour
+    fixer le nombre de semaine à afficher.\\
+    Si cette commande n'est pas utilisée, 36 semaines sont affichées par défaut.
+  \item Création de la commandes \mintinline{latex}|\setRentree| pour configurer
+    le lundi de la rentrée scolaire.
+  \item Création des commandes \mintinline{latex}|\setDebut|\texttt{*}, où
+    \texttt{*} correspond à \texttt{Toussaint}, \texttt{Noel}, \texttt{Hiver} ou
+    \texttt{Printemps} et gestion automatique de la date de la fin des petites
+    vacances.
+  \item Création de la commande \mintinline{latex}|\setLundiPaques| pour
+    fixer la date du lundi de Pâques et gestion automatique des dates du jeudi
+    de l'ascension et du lundi de Pentecôte en fonction de la date du lundi de
+    Pâques.\\
+    À noter: jusqu'à l'année 2040, la date du lundi de Pâque est gérée
+    automatiquement.
+\end{itemize}
+
+\vfil
+\begin{center}
+  \begin{minipage}{.8\linewidth}
+    \begin{tcolorbox}[colback=white, colframe=green!75!black]
+      \tableofcontents
+    \end{tcolorbox}
+  \end{minipage}
+\end{center}
+\vfil
+
+\newpage
+
+\section{Calendrier des semaines de cours -- 
+  commande \texttt{\textbackslash{}EmploiDuTemps}}
+Pour créer un calendrier scolaire hebdomadaire; il faut définir en préambule la
+date du premier lundi de l'année scolaire, avec la commande 
+\mintinline{latex}|\setLundiRentree{JJ}{MM}{YYYY}|, où \texttt{JJ} est le
+quantième du mois; \texttt{MM} est le mois et \texttt{YYYY} est l'année de la
+rentrée.
+\begin{minted}{latex}
+% Le lundi de la semaine de la rentrée est le 4 septembre 2023
+\setLundiRentree{4}{9}{2023}
+\end{minted}
+
+La commande \mintinline{latex}|\EmploiDuTemps| va permettre de de créer le
+tableau de la semaine. Cette commande a un seul argument qui contient la
+description d'une semaine type (sous la forme d'un \texttt{tabularx}) comme dans
+l'exemple ci-dessous:
+\begin{minted}{latex}
+\EmploiDuTemps{
+  %     & Lundi & Mardi & Mercr.    & Jeudi & Vend. \\
+  8h    &       & 1G    &           & 1G    &       \\ [1.5cm] \cline{1-2}\cline{4-6}
+  9h    &       &       & TSTMG     & TSTMG &       \\ [1.5cm] \hline
+  10h   & 1G    & 2nde  & 1G        &       &       \\ [1.5cm] \hline
+  11h   &       &       & 2nde A.P. &       & 1G    \\ [1.5cm] \hline\hline
+  13h30 &       & 1G    &           &       & 2nde  \\ [1.5cm] \cline{1-5}
+  14h30 &       &       & 1G (A/B)  &       &       \\ [1.5cm] \hline
+  15h30 &       &       & 2 euro    &       &       \\ [1.5cm] \hline
+  16h30 &       &       &           &       &       \\ [1.5cm] \hline
+}
+\end{minted}
+Cette commande va générer 36 semaines de cours à compter du premier lundi de
+l'année scolaire.
+
+Pour afficher un nombre différent de semaines, il faut passer dans le préambule
+la commande \mintinline{latex}|\setNombreSemaines{N}|, où \texttt{N} est le
+nombre entier de semaines.
+\begin{minted}{latex}
+% On ne veut que 10 semaines de cours ! 
+\setNombreSemaines{10}
+\end{minted}
+
+\subsection{Emploi du temps du lundi au samedi -- 
+  option \texttt{samedi} ou \texttt{\textbackslash{}Samedi}}
+
+Par défaut, l'emploi du temps est du lundi au vendredi. Mais il est possible
+d'avoir un emploi du temps du lundi au samedi avec l'option \texttt{samedi},
+dans la déclaration du package.
+\begin{minted}{latex}
+\usepackage[samedi]{cahierprof}
+\end{minted}
+Cette option peut également être activée par la commande
+\mintinline{latex}|\setSamedi|. Ne pas oublier de déclarer un Emploi du temps à
+sept colonnes
+\begin{minted}{latex}
+% Déclaration du samedi (sans utiliser l'option du package)
+\setSamedi
+% Emploi du temps sur sept colonnes.
+\EmploiDuTemps{
+  %     & Lundi & Mardi & Merc.     & Jeudi & Vend. & Sam. \\
+  8h    &       & 1G    &           & 1G    &       &      \\ [1.5cm] \cline{1-2}\cline{4-7}
+  9h    &       &       & TSTMG     & TSTMG &       &      \\ [1.5cm] \hline
+  10h   & 1G    & 2nde  & 1G        &       &       & 2nde \\ [1.5cm] \cline{1-6}
+  11h   &       &       & 2nde A.P. &       & 1G    &      \\ [1.5cm] \hline\hline
+  13h30 &       & 1G    &           &       &       &      \\ [1.5cm] \hline
+  14h30 &       &       & 1G A/B    &       &       &      \\ [1.5cm] \hline
+  15h30 &       &       & 2 euro    &       &       &      \\ [1.5cm] \hline
+  16h30 &       &       &           &       &       &      \\ [1.5cm] \hline
+}
+\end{minted}
+
+\subsection{Séance bimestrielles -- commande \texttt{\textbackslash{}sem}}
+
+Certaines séances sont bimestriels (tous les 15 jours), suivant la parité de la
+semaine. Pour cela il existe la commande \mintinline{latex}|\sem| qui prend
+deux arguments: la séance en semaine impair, puis la séance en semaine pair.
+
+\begin{minted}{latex}
+% L'aide personnalisée en seconde n'a lieu que les semaines impaires
+\sem{2nde (A.P.)}{}
+% L'aide personnalisée en première est divisée en deux groupes bimestiels. 
+1G A.P. (Groupe~\sem{A}{B})
+\end{minted}
+
+\subsection{Gestion des vacances scolaires}
+
+Le package \texttt{cahierprof} permet de gérer les vacances scolaires
+Les vacances scolaires (de Toussaint, de Noel, d'hiver et de printemps). Selon
+les zones (et les années) il faut définir en préambule le premier samedi de
+chaque vacances, sous la forme \mintinline{latex}|\setDebutToussaint{JJ}{MM}|
+où \texttt{JJ} est le quantième du samedi du début des vacances et \texttt{MM}
+le mois du début des vacances. 
+\begin{minted}{latex}
+% Début de chaque vacances scolaire pour l'année en cours (le samedi).
+\setDebutToussaint{21}{10}
+\setDebutNoel{23}{12}
+\setDebutHiver{10}{2}
+\setDebutPrintemps{6}{4}
+\end{minted}
+Chacune de ces petites vacances dure automatiquement 15 jours. Cependant, il est
+possible de définir des dates spécifiques, sous la forme
+\mintinline{latex}|\setFinToussaint{JJ}{MM}| où \texttt{JJ} est le quantième du
+lundi de la fin des vacances et \texttt{MM} le mois de la fin des vacances.
+\begin{minted}{latex}
+% Fin de chaque vacances scolaire pour l'année en cours (le lundi).
+% Optionnel
+\setFinToussaint{6}{11}
+\setFinNoel{8}{1}
+\setFinHiver{26}{2}
+\setFinPrintemps{22}{4}
+\end{minted}
+
+\subsection{Gestion des examens -- commandes \texttt{\textbackslash{}setDNB} et
+  \texttt{\textbackslash{}setBac}
+}
+
+On peut définir des dates pour les examens: diplôme national du brevet (DNB), le
+les épreuves finales du baccalauréat, l'épreuve de philosophie, l'épreuve de
+français et le grand oral. 
+
+Pour le diplôme national du brevet (DNB), les dates des épreuves sont définies
+par la commande \mintinline{latex}|\setDNB{JD}{JF}{YY}|, où \texttt{JD} est le
+quantième du début du DNB, \texttt{JF} est le quantième de la fin du DNB et
+\texttt{MM} est le mois du DNB. Pour ces jours, la date sera sur fond vert et la
+mention \colorbox{green}{$\star$DNB$\star$} sera ajoutée après la date.
+\begin{minted}{latex}
+% Le DNB a lieu les 24 et 25 juin.
+\setDNB{24}{25}{6}
+\end{minted}
+Pour les épreuves du baccalauréat:
+\begin{itemize}
+  \item les jours des épreuves finales du baccalauréat sont définie par la
+    commande \mintinline{latex}|\setBac{JD}{JF}{MM}|, où \texttt{JD} est le
+    quantième du début des épreuves, \texttt{JF} est le quantième de la fin des
+    épreuves et \texttt{MM} est le mois des épreuves;
+  \item le jour de l'épreuve de philosophie est définie par la commande
+    \mintinline{latex}|\setBacPhilo{JJ}{MM}|, où \texttt{JJ} est le quantième et
+    \texttt{MM} est le mois de l'épreuve de philosophie;
+  \item le jour de l'épreuve de français est définie par la commande
+    \mintinline{latex}|\setBacfrancais{JJ}{MM}|, où \texttt{JJ} est le quantième
+    et \texttt{MM} est le mois de l'épreuve de français.
+  \item Les jours des épreuves de grand oral sont définie par la commande
+    \mintinline{latex}|\setGO{JD}{JF}{MM}|, où \texttt{JD} est le quantième du
+    début des épreuves, \texttt{JF} est le quantième de la fin des épreuves et
+    \texttt{MM} est le mois des épreuves.
+\end{itemize}
+Pour ces jours, la date sera sur fond vert et la mention
+\colorbox{green}{$\star$Bac$\star$} ou bien \colorbox{green}{$\star$GO$\star$}
+sera ajoutée après la date.
+\begin{minted}{latex}
+% Les épreuves finales du bac ont lieu du 18 au 20 mars
+\setBac{18}{20}{3}
+% L'épreuve de philosophie a lieu le 11 juin
+\setBacPhilo{11}{6}
+% L'épreuve de français a lieu le 12 jun
+\setBacFrancais{12}{6}
+% Le Grand Oral a lieu du 17 au 28 juin
+\setGO{17}{28}{6}
+\end{minted}
+
+
+
+\subsection{Gestion des jours fériés}
+
+Les jours fériés sont les jours de fêtes légales énumérés par l’article
+L.~3133-1 du code du travail: 1er janvier, lundi de Pâques, 1er mai, 8 mai,
+Ascension, lundi de Pentecôte, 14 juillet, Assomption (15 août), Toussaint, 11
+novembre et 25 décembre. Pour ces jours, La date sera sur fond gris et la
+mention \colorbox{lightgray}{$\star$Férié$\star$} sera ajoutée après la date.
+
+La date du lundi de Pâques est définie par celle du calendrier grégorien
+occidental (la date utilisée par l'éducation nationale), calculé automatiquement
+par la méthode de Butcher-Meeus. Cependant, il est possible de fixer un autre
+lundi de Pâques, en utilisant, dans le préambule, la commande
+\mintinline{latex}|\setLundiPaques{JJ}{MM}| où \texttt{JJ} est le jour et
+\texttt{MM} est le mois du lundi de Pâques. L'ascension a lieu 38 jours après le
+lundi de Pâques. Par défaut, le vendredi de l'ascension est considéré comme
+férié. Le lundi de Pentecôte a lieu 10 jours après le vendredi de l'ascension.
+
+Dans tous les cas, les dates de l'ascension et de la Pentecôte sont
+automatiquement calculées à partir de la date du lundi de Pâques.
+
+\begin{minted}{latex}
+% Et si le lundi de Pâques était un 17 mars ?
+\setLundiPaques{17}{3}
+\end{minted}
+
+\section{Tableau d'appel et de notes des classes -- commande
+\texttt{\textbackslash{}Classe}}
+
+La commande \mintinline{latex}|\Classe| permet de générer des tableaux
+d'appels des classes.\\
+Cette commande prend trois arguments:
+\begin{itemize}
+  \item le nom de la classe;
+  \item le nombre de fois que l'on voit les élèves dans la semaine;
+  \item la liste des élèves séparés par des virgules.
+\end{itemize}
+Par exemple:
+\begin{minted}{latex}
+% La classe de seconde a 4 séances dans la semaine 
+\Classe{Seconde}{4}{
+  Élève Seconde 1,
+  Élève Seconde 2,
+  Élève Seconde 3,
+  Élève Seconde 4,
+  Élève Seconde 5
+}
+% La classe de 1e STMG a 2 séances dans la semaine 
+\Classe{1 STMG}{2}{
+  Élève STMG 1,
+  Élève STMG 2,
+  Élève STMG 3,
+  Élève STMG 4,
+  Élève STMG 5
+}
+\end{minted}
+
+\subsection{Liste des élèves -- commande \texttt{\textbackslash{}ListeEleves}}
+
+La commande \mintinline{latex}|\ListeEleves{<fichier>}| permet d'insérer le
+contenu du \texttt{<fichier>}. Si aucun fichier n'est spécifié, le package créé
+un fichier \texttt{ListeEleves.tex} avec la liste (numérotés) de l'ensemble des
+élèves réparti par classe, puis insérer dans le cahier de texte cette liste
+(penser à compiler deux fois).
+
+\begin{minted}{latex}
+% Liste des élèves, sauvée dans le fichier ListeEleves.tex,
+% créée à partir des \Classe{}{}{}. Penser à compiler deux fois.
+\ListeEleves{}
+\end{minted}
+
+\section{Un exemple complet}
+
+L'exemple ci-dessous du cahier de texte est compilé dans
+\texttt{cahierprof-exemple.pdf}
+
+\inputminted{latex}{cahierprof-exemple.tex}
+
+\end{document}

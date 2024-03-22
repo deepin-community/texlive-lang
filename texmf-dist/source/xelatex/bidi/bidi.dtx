@@ -5,7 +5,7 @@
 %<*readme>
 ___________________
 The bidi package
-v39.7
+v39.8
 
 This package provides a convenient interface for typesetting
 bidirectional texts in Plain TeX and LaTeX, using XeTeX engine.
@@ -30,7 +30,7 @@ The announcements for the new releases of the package will
 also appear in the Discussions space under the Announcements
 category.
   
-Current version release date: 2023/01/18
+Current version release date: 2023/08/02
 
 ___________________________________________
 Vafa Khalighi
@@ -267,7 +267,7 @@ by Vafa Khalighi.
 \documentclass{ltxdoc}
 \input{bidi-doc-preamble.ltx}
 \hypersetup{%
-  pdftitle={Source documentation for version 39.7 of the bidi
+  pdftitle={Source documentation for version 39.8 of the bidi
                 package}%
 }
 \EnableCrossrefs
@@ -286,7 +286,7 @@ by Vafa Khalighi.
 % \GetFileInfo{\jobname.dtx}
 % \title{\textcolor{blue!65!black}{\Huge The \textsf{bidi} \textit{Package}}\\
 %\LARGE Bidirectional typesetting in plain \TeX{} and \LaTeX, using \XeTeX{} engine\\[5pt]
-%\large Source documentation for \textcolor{blue!65!black}{version 39.7}}
+%\large Source documentation for \textcolor{blue!65!black}{version 39.8}}
 % \author{Vafa Khalighi\thanks{Thanks to the bidi-tex GitHub organization consisted of David Carlisle and other members of the  {\LaTeX} team to maintain the package in the period 2018--2020.}}
 %\setcounter{page}{0}
 %\thispagestyle{empty}
@@ -296,7 +296,7 @@ by Vafa Khalighi.
 %\textcolor{blue!65!black}{\Huge The \textsf{bidi} \textit{Package}}
 %
 %\Large
-%Source documentation for \textcolor{blue!65!black}{version 39.7}}
+%Source documentation for \textcolor{blue!65!black}{version 39.8}}
 %
 %\vskip 0pt plus 3fill
 %\textit{\large to my Master, \textbf{Ferdowsi The Great}}
@@ -345,7 +345,7 @@ by Vafa Khalighi.
 %\iffalse
 %<*table>
 %\fi
-%% \CheckSum{58794}
+%% \CheckSum{58884}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1989,7 +1989,35 @@ by Vafa Khalighi.
 %\fi
 % \section{File \texttt{beamerbaseauxtemplates-xetex-bidi.def}}
 %    \begin{macrocode}
-\ProvidesFile{beamerbaseauxtemplates-xetex-bidi.def}[2022/06/06 v0.2 bidi adaptations for beamerbaseauxtemplates package for XeTeX engine]
+\ProvidesFile{beamerbaseauxtemplates-xetex-bidi.def}[2023/08/02 v0.3 bidi adaptations for beamerbaseauxtemplates package for XeTeX engine]
+\bidi@csundef{beamer@@tmpop@subsection in toc@sections numbered}
+
+\bidi@csundef{beamer@@tmpop@subsubsection in toc@sections numbered}
+
+\bidi@csundef{beamer@@tmpop@section in toc@subsections numbered}
+
+\bidi@csundef{beamer@@tmpop@subsection in toc@subsections numbered}
+
+\bidi@csundef{beamer@@tmpop@subsubsection in toc@subsections numbered}
+
+\defbeamertemplate{subsection in toc}{sections numbered}
+{\leavevmode\bidi@beamer@leftskip=2.5em\inserttocsubsection\par}
+
+\defbeamertemplate{subsubsection in toc}{sections numbered}
+{\leavevmode\normalsize\usebeamerfont{subsection in toc}\bidi@beamer@leftskip=3.5em\usebeamerfont{subsubsection in toc}%
+  \inserttocsubsubsection\par}
+  
+\defbeamertemplate{section in toc}{subsections numbered}
+{\leavevmode\bidi@beamer@leftskip=2em\inserttocsection\par}
+
+\defbeamertemplate{subsection in toc}{subsections numbered}
+{\leavevmode\bidi@beamer@leftskip=2em\rlap{\hskip-2em\inserttocsectionnumber.\inserttocsubsectionnumber}\inserttocsubsection\par}
+
+\defbeamertemplate{subsubsection in toc}{subsections numbered}
+{\leavevmode\normalsize\usebeamerfont{subsection in
+    toc}\bidi@beamer@leftskip=3em\usebeamerfont{subsubsection in toc}%
+  \inserttocsubsubsection\par}
+  
 \bidi@csundef{beamer@@tmpop@section in toc@circle}
 
 \bidi@csundef{beamer@@tmpop@subsection in toc@circle}
@@ -2033,7 +2061,7 @@ by Vafa Khalighi.
 \bidi@csundef{beamer@@tmpop@enumerate mini template@square}
 
 \defbeamertemplate{section in toc}{square}
-{\leavevmode\bidi@beamer@leftskip=1.75ex%
+{\leavevmode\bidi@beamer@leftskip=3ex%
   \llap{{%
     \usebeamerfont*{section number projected}%
     \usebeamercolor[bg]{section number projected}%
@@ -2047,8 +2075,8 @@ by Vafa Khalighi.
       \hskip-2.25ex%
       \vrule width2.25ex height1.85ex depth.4ex%
     \fi
-    }}%
-  \kern1.25ex\inserttocsection\par}
+    }\kern1.25ex}%
+  \inserttocsection\par}
   
 \defbeamertemplate{subsection in toc}{square}
 {\leavevmode\bidi@beamer@leftskip=5ex\llap{{%
@@ -2148,6 +2176,28 @@ by Vafa Khalighi.
   }}%
 }
 
+\bidi@csundef{beamer@@tmpop@section in toc@ball unnumbered}
+
+\bidi@csundef{beamer@@tmpop@subsection in toc@ball unnumbered}
+
+\bidi@csundef{beamer@@tmpop@subsubsection in toc@ball unnumbered}
+
+\defbeamertemplate{section in toc}{ball unnumbered}
+{\leavevmode\bidi@beamer@leftskip=2.25ex%
+  \llap{%
+    \raise0.1ex\beamer@usesphere{section number projected}{bigsphere}\kern1.25ex}%
+  \inserttocsection\par}
+
+\defbeamertemplate{subsection in toc}{ball unnumbered}
+{\leavevmode\bidi@beamer@leftskip=5.1ex\llap{%
+    \raise0.2ex\beamer@usesphere{subsection number projected}{smallsphere}\kern1ex}\inserttocsubsection\par}
+
+\defbeamertemplate{subsubsection in toc}{ball unnumbered}
+{\leavevmode\normalsize\usebeamerfont{subsection in
+    toc}\bidi@beamer@leftskip=8.2ex\usebeamerfont{subsubsection in toc}%
+  \llap{%
+    \beamer@usesphere{subsubsection number projected}{smallsphere}\kern0.75ex}\inserttocsubsubsection\par}
+    
 \bidi@csundef{beamer@@tmpop@section in toc@ball}
 
 \bidi@csundef{beamer@@tmpop@subsection in toc@ball}
@@ -2217,6 +2267,22 @@ by Vafa Khalighi.
     \bidi@beamer@ragged%
     \usebeamerfont{block body example}%
 }%
+
+\bidi@csundef{beamer@@tmpop@caption@caption name own line}
+
+\defbeamertemplate{caption}{caption name own line}
+{%
+  \begin{minipage}{\textwidth}
+    \leavevmode
+    \bidi@beamer@ragged
+  {%
+    \usebeamercolor[fg]{caption name}%
+    \usebeamerfont*{caption name}%
+    \insertcaptionname%
+    }\\
+      \insertcaption
+    \end{minipage}
+}
 
 %    \end{macrocode}
 % \iffalse
@@ -2430,7 +2496,7 @@ by Vafa Khalighi.
 %\fi
 % \section{File \texttt{beamerbaseframecomponents-xetex-bidi.def}}
 %    \begin{macrocode}
-\ProvidesFile{beamerbaseframecomponents-xetex-bidi.def}[2023/01/18 v0.5 bidi adaptations for beamerbaseframecomponents package for XeTeX engine]
+\ProvidesFile{beamerbaseframecomponents-xetex-bidi.def}[2023/08/02 v0.6 bidi adaptations for beamerbaseframecomponents package for XeTeX engine]
 \renewcommand{\setbeamersize}[1]{%
   \beamer@dogeometryfalse%
   \setkeys{beamer@margin}{#1}%
@@ -2589,7 +2655,7 @@ by Vafa Khalighi.
     \endgroup%
   }
   \def\@oddfoot{{\normalcolor{\hfil%
-    \setbox\beamer@tempbox=\hbox{\usebeamertemplate***{navigation symbols}\hskip-\Gm@rmargin\hskip2pt}%
+    \setbox\beamer@tempbox=\hbox{\usebeamertemplate***{navigation symbols}\hskip-\bidi@beamer@Gm@rmargin\hskip2pt}%
     \ht\beamer@tempbox=0pt%
     \dp\beamer@tempbox=0pt%
     \box\beamer@tempbox}}}
@@ -4589,9 +4655,9 @@ by Vafa Khalighi.
 % \section{File \texttt{bidi.sty}}
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\def\bididate{2023/01/18}
-\def\bidi@version{39.7}
-\def\bidi@releasename{Serge Lang}
+\def\bididate{2023/08/02}
+\def\bidi@version{39.8}
+\def\bidi@releasename{Donald Ervin Knuth}
 \newcommand*{\bidireleasename}{\bidi@releasename}
 \ProvidesPackage{bidi}[\bididate\space v\bidi@version\space (Release \bidi@releasename)\space
 Bidirectional typesetting in plain TeX and LaTeX]
@@ -4679,7 +4745,7 @@ Bidirectional typesetting in plain TeX and LaTeX]
 }
 \newcommand*{\@bidi@pdfcustomproperties}{%
   This is the bidi package, Version \bidi@version\space (Release \bidi@releasename),
-  Released January 18, 2023. 
+  Released August 2, 2023. 
 }
 \newcommand*{\bidi@beamer@ragged}{}
 \@RTLmainfalse
@@ -4923,10 +4989,10 @@ Bidirectional typesetting in plain TeX and LaTeX]
 %\fi
 % \section{File \texttt{bidi.tex}}
 %    \begin{macrocode}
-\def\bididate{2023/01/18}
+\def\bididate{2023/08/02}
 \catcode`@=11
-\def\bidi@version{39.7}
-\def\bidi@releasename{Serge Lang}
+\def\bidi@version{39.8}
+\def\bidi@releasename{Donald Ervin Knuth}
 \def\bidireleasename{\bidi@releasename}
 \let \protect \relax
 \newlinechar`\^^J
@@ -5029,7 +5095,7 @@ Bidirectional typesetting in plain TeX and LaTeX]
 }
 \def\@bidi@pdfcustomproperties{%
   This is the bidi package, Version \bidi@version\space (Release \bidi@releasename),
-  Released January 18, 2023. 
+  Released August 2, 2023. 
 }
 \def\bidi@pdfm@mark{%
   \special{pdf:%
@@ -12545,7 +12611,7 @@ bidi implementation of tufte title]
 %\fi
 % \section{File \texttt{extrafootnotefeatures-xetex-bidi.def}}
 %    \begin{macrocode}
-\ProvidesFile{extrafootnotefeatures-xetex-bidi.def}[2023/01/18 v2.5 bidi extra footnote features for XeTeX engine]
+\ProvidesFile{extrafootnotefeatures-xetex-bidi.def}[2023/08/02 v2.6 bidi extra footnote features for XeTeX engine]
 \newdimen\bidi@columnwidth
 \def\bidi@floathook{%
   \bidi@columnwidth\columnwidth
@@ -12872,7 +12938,7 @@ bidi implementation of tufte title]
   \fi
 }
 \def\bidi@reinsertfootnote#1#2#3{%
-  \ifvoid#1
+  \ifvoid#1%
   \else
     \insert\footins{#2#3}%
   \fi
@@ -25885,7 +25951,8 @@ to\rtside{\box\bslice\hfil}}
 %\fi
 % \section{File \texttt{tocloft-xetex-bidi.def}}
 %    \begin{macrocode}
-\ProvidesFile{tocloft-xetex-bidi.def}[2010/07/25 v0.2 bidi adaptations for tocloft package for XeTeX engine]
+\ProvidesFile{tocloft-xetex-bidi.def}[2023/08/02 v0.3 bidi adaptations for tocloft package for XeTeX engine]
+\renewcommand{\cftpnumalign}{\if@RTL l\else r\fi}
 \let\cftdot\@SepMark
 \if@cfthaspart
 \renewcommand*{\l@part}[2]{

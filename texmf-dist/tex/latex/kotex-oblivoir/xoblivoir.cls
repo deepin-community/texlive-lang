@@ -1,6 +1,6 @@
-%% File `xoblivoir.cls`
+%% File `xoblivoir.cls` = alias of oblivoir.cls
 %%
-%% (C) Copyright 2006-2021 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2023 Kangsoo Kim <karnes at ktug org>
 %% (C) Copyright 2013      Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the

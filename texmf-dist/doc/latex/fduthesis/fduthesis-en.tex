@@ -6,7 +6,7 @@
 %%
 %% fduthesis.dtx
 %% 
-%%     Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
+%%     Copyright (C) 2017--2023 by Xiangdong Zeng <xdzeng96@gmail.com>
 %% 
 %%     This work may be distributed and/or modified under the
 %%     conditions of the LaTeX Project Public License, either
@@ -58,7 +58,7 @@
   \textbf{The \textsf{fduthesis} Class \\
     \LaTeX{} Thesis Template for Fudan University}}}
 \author{Xiangdong Zeng}
-\date{2022/09/04\quad v0.8%
+\date{2023/05/27\quad v0.9a%
   \thanks{\url{https://github.com/stone-zeng/fduthesis}.}}
 
 \begin{document}
@@ -130,8 +130,8 @@ divided into the following three types:
     indicated by \rexptarget\rexpstar{}.
   \item Those can be only used in \emph{English templates} are
     indicated by \rexptarget\expstar{}.
-  \item If they do not have special characters afterwards, then
-    you can use them in both Chinese and English templates.
+  \item If they do not have marks afterwards, then you can use
+    them in both Chinese and English templates.
 \end{itemize}
 
 \section{Installation}
@@ -161,7 +161,7 @@ manually, the recommended way is to use the TDS ZIP file:
     {TDS ZIP file} for \cls{fduthesis};
   \item Copy all the files in \file{fduthesis.tds.zip} into the
     local TDS directory of \TeX{} distribution.
-  \item Run \bashcmd{mktexlsr} to update the ls-R database.
+  \item Run \texttt{mktexlsr} to update the ls-R database.
 \end{itemize}
 \subsubsection{Development version}
 
@@ -175,8 +175,8 @@ you can use the install script:
     \begin{shellexample}[gobble=5,alsoletter={.},morekeywords={git,clone}]
       git clone https://github.com/stone-zeng/fduthesis.git
     \end{shellexample}
-  \item Run \file{install-win.bat} (on Windows) or \file{install-linux.sh} (on Linux),
-    then all the necessary files will be found in the \file{thesis} folder.
+  \item Run \file{install-win.bat} (Windows) or \file{install-unix.sh} (Linux or macOS),
+    all the necessary files will be found in the \file{thesis} folder then.
 \end{itemize}
 
 \subsubsection{Overleaf}
@@ -607,14 +607,15 @@ will be helpful:
 \end{threeparttable}
 \end{table}
 
-\begin{function}[added=2018-01-25]{style/bib-backend}
+\begin{function}[added=2018-01-25,updated=2023-05-11]{style/bib-backend}
   \begin{fdusyntax}[gobble=4,emph={[1]bib-backend}]
     bib-backend = (*<bibtex|biblatex>*)
   \end{fdusyntax}
   Specify the backend or driver of bibliography processing.
   \BibTeX{} and \pkg{natbib} package will be used if you choose
   \opt{bibtex}, while \biber{} and \pkg{biblatex} will be used
-  if you choose \opt{biblatex}.
+  if you choose \opt{biblatex}. If not specified, the citations
+  and references will not be processed.
 \end{function}
 
 \begin{function}[added=2017-10-28,updated=2018-01-25]{style/bib-style}
@@ -939,7 +940,7 @@ In addition, command \tn{caption} must be put inside float
 environments (e.g.\ \env{table} and \env{figure}).
 
 \paragraph{Citations}
-\begin{function}{\cite}
+\begin{function}[updated=2021-09-20]{\cite}
   \begin{fdusyntax}[gobble=4,deletetexcs={\cite},morekeywords={\cite}]
     \cite(*\marg{bib key}*)
     \cite(*\oarg{page number}\marg{bib key}*)
@@ -986,7 +987,7 @@ environments (e.g.\ \env{table} and \env{figure}).
       Knuth\textsuperscript{[\C1]} states &
       \verbcite[citet]{texbook} &
       \verbcite[authornumcite]{texbook} \\
-    With page and author &
+    With page \& author &
       Knuth\textsuperscript{[\C1]42} states &
       \verbcite[citet][42]{texbook} &
       \verbcite[authornumcite][42]{texbook} \\
@@ -1015,7 +1016,7 @@ environments (e.g.\ \env{table} and \env{figure}).
       \verbcite[citep]{texbook} &
       \verbcite{texbook} \\
     Multiple &
-      (\C{Knuth}, \C{1986}; \C{Mittelbach et al.}, \C{2004}) &
+      (\C{Knuth}, \C{1986}; \C{Mittelbach et~al.}, \C{2004}) &
       \verbcite[citep]{texbook,companion} &
       \verbcite{texbook,companion} \\
     With page &
@@ -1026,7 +1027,7 @@ environments (e.g.\ \env{table} and \env{figure}).
       \C{Knuth} (\C{1986}) &
       \verbcite[citet]{texbook} &
       Same as left \\
-    With page and author &
+    With page \& author &
       \C{Knuth} (\C{1986})\textsuperscript{42} &
       \verbcite[citet][42]{texbook} &
       Same as left \\
@@ -1148,6 +1149,15 @@ Back matter contains bibliography, declaration page, etc.
   \kvopt{bib-backend}{bibtex}, then \tn{printbibliography} is
   provided by \pkg{biblatex} and the available options can be
   found in its documentation.
+\end{function}
+
+\begin{function}[added=2023-02-06]{acknowledgements}
+  \begin{fdusyntax}[gobble=4,emph={[2]acknowledgements}]
+    \begin{acknowledgements}
+      (*\meta{acknowledgements}*)
+    \end{acknowledgements}
+  \end{fdusyntax}
+  Acknowledgements.
 \end{function}
 
 \section{Packages dependencies}

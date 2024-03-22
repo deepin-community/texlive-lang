@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright 1989-2005 Johannes L. Braams and any individual authors
+% Copyright 1989-2024 Johannes L. Braams and any individual authors
 % listed elsewhere in this file.  All rights reserved.
 % 
 % This file is part of the Babel system.
@@ -16,35 +16,30 @@
 % 
 % This work has the LPPL maintenance status "maintained".
 % 
-% The Current Maintainer of this work is Johannes Braams.
-% 
-% The list of all files belonging to the Babel system is
-% given in the file `manifest.bbl. See also `legal.bbl' for additional
-% information.
-% 
+% The Current Maintainer of this work is Javier Bezos.
+%
 % The list of derived (unpacked) files belonging to the distribution
 % and covered by LPPL is defined by the unpacking scripts (with
 % extension .ins) which are part of the distribution.
 % \fi
-%\CheckSum{305}
 % \iffalse
 %    Tell the \LaTeX\ system who we are and write an entry on the
 %    transcript.
 %<*dtx>
 \ProvidesFile{norsk.dtx}
 %</dtx>
-%<code>\ProvidesLanguage{norsk}
+%<code>\ProvidesLanguage{norwegian}
+%<nynorsk>\ProvidesLanguage{nynorsk}
+%<norsk>\ProvidesLanguage{norsk}
 %\fi
 %\ProvidesFile{norsk.dtx}
-        [2012/08/06 v2.0i Norsk support from the babel system]
+        [2024/01/26 v2.0j Norwegian support from the babel system]
 %\iffalse
 %%File `norsk.dtx'
 %% Babel package for LaTeX version 2e
-%% Copyright (C) 1989 - 2005
+%% Copyright (C) 1989 - 2024
 %%           by Johannes Braams, TeXniek
-%
-%% Please report errors to: J.L. Braams
-%%                          babel at braams.cistron.nl
+%%           by Javier Bezos
 %
 %    This file is part of the babel system, it provides the source
 %    code for the Norwegian language definition file.  Contributions
@@ -83,6 +78,7 @@
 %    with \LaTeX} 
 % \changes{norsk-1.2h}{1996/10/10}{Moved the definition of
 %    \cs{atcatcode} right to the beginning.}
+% \changes{norsk-2.0j}{2024/01/23}{Dual load norwegian/norsk}
 %
 %
 %  \section{The Norwegian language}
@@ -162,9 +158,19 @@
 % \changes{norsk-1.2d}{1994/06/26}{Now use \cs{@nopatterns} to produce
 %    the warning}
 %    \begin{macrocode}
-\ifx\l@norsk\@undefined
-    \@nopatterns{Norsk}
-    \adddialect\l@norsk0\fi
+\expandafter\ifx\csname l@\CurrentOption\endcsname\relax
+  \def\bbl@tempa#1{% 
+    \ifx#1\@undefined\else
+      \expandafter\adddialect\csname l@\CurrentOption\endcsname#1%
+    \fi}% Last wins:
+  \bbl@tempa\l@nynorsk
+  \bbl@tempa\l@norsk
+  \bbl@tempa\l@norwegian
+\fi
+\expandafter\ifx\csname l@\CurrentOption\endcsname\relax
+  \@nopatterns{\CurrentOption}
+  \expandafter\adddialect\csname l@\CurrentOption\endcsname\z@
+\fi
 %    \end{macrocode}
 %
 %  \begin{macro}{\norskhyphenmins}
@@ -186,10 +192,6 @@
 %    Now we have to decide which version of the captions should be
 %    made available. This can be done by checking the contents of
 %    |\CurrentOption|. 
-%    \begin{macrocode}
-\def\bbl@tempa{norsk}
-\ifx\CurrentOption\bbl@tempa
-%    \end{macrocode}
 %
 %    The next step consists of defining commands to switch to (and
 %    from) the Norwegian language.
@@ -209,55 +211,8 @@
 % \changes{norsk-2.0g}{1996/04/01}{Replaced `Glossary' by its
 %    translation} 
 %    \begin{macrocode}
-  \def\captionsnorsk{%
-    \def\prefacename{Forord}%
-    \def\refname{Referanser}%
-    \def\abstractname{Sammendrag}%
-    \def\bibname{Bibliografi}%     or Litteraturoversikt
-    %                              or Litteratur or Referanser
-    \def\chaptername{Kapittel}%
-    \def\appendixname{Tillegg}%    or Appendiks
-    \def\contentsname{Innhold}%
-    \def\listfigurename{Figurer}%  or Figurliste
-    \def\listtablename{Tabeller}%  or Tabelliste
-    \def\indexname{Register}%
-    \def\figurename{Figur}%
-    \def\tablename{Tabell}%
-    \def\partname{Del}%
-    \def\enclname{Vedlegg}%
-    \def\ccname{Kopi sendt}%
-    \def\headtoname{Til}% in letter
-    \def\pagename{Side}%
-    \def\seename{Se}%
-    \def\alsoname{Se ogs\aa{}}%
-    \def\proofname{Bevis}%
-    \def\glossaryname{Ordliste}%
-    }
-\else
-%    \end{macrocode}
-% \end{macro}
-%
-%    For the `nynorsk' version of these definitions we just add a
-%    ``dialect''.
-%    \begin{macrocode}
-  \adddialect\l@nynorsk\l@norsk
-%    \end{macrocode}
-%
-% \begin{macro}{\captionsnynorsk}
-%    The macro |\captionsnynorsk| defines all strings used in the four
-%    standard documentclasses provided with \LaTeX, but using a
-%    different spelling than in the command |\captionsnorsk|.
-% \changes{norsk-1.1a}{1992/02/16}{Added \cs{seename}, \cs{alsoname} and
-%    \cs{prefacename}}
-% \changes{norsk-1.1b}{1993/07/15}{\cs{headpagename} should be
-%    \cs{pagename}}
-% \changes{norsk-1.2g}{1996/04/01}{Replaced `Proof' by its
-%    translation} 
-% \changes{norsk-2.0e}{2000/09/20}{Added \cs{glossaryname}}
-% \changes{norsk-2.0g}{1996/04/01}{Replaced `Glossary' by its
-%    translation} 
-% \changes{norks-2.0h}{2001/01/12}{Changed \cs{ccname} and \cs{alsoname}}
-%    \begin{macrocode}
+\def\bbl@tempa{nynorsk}
+\ifx\CurrentOption\bbl@tempa
   \def\captionsnynorsk{%
     \def\prefacename{Forord}%
     \def\refname{Referansar}%
@@ -282,8 +237,55 @@
     \def\proofname{Bevis}%
     \def\glossaryname{Ordliste}%
     }
+\else
+  \@namedef{captions\CurrentOption}{%
+    \def\prefacename{Forord}%
+    \def\refname{Referanser}%
+    \def\abstractname{Sammendrag}%
+    \def\bibname{Bibliografi}%     or Litteraturoversikt
+    %                              or Litteratur or Referanser
+    \def\chaptername{Kapittel}%
+    \def\appendixname{Tillegg}%    or Appendiks
+    \def\contentsname{Innhold}%
+    \def\listfigurename{Figurer}%  or Figurliste
+    \def\listtablename{Tabeller}%  or Tabelliste
+    \def\indexname{Register}%
+    \def\figurename{Figur}%
+    \def\tablename{Tabell}%
+    \def\partname{Del}%
+    \def\enclname{Vedlegg}%
+    \def\ccname{Kopi sendt}%
+    \def\headtoname{Til}% in letter
+    \def\pagename{Side}%
+    \def\seename{Se}%
+    \def\alsoname{Se ogs\aa{}}%
+    \def\proofname{Bevis}%
+    \def\glossaryname{Ordliste}%
+    }
 \fi
 %    \end{macrocode}
+% \end{macro}
+%
+%    For the `nynorsk' version of these definitions we just add a
+%    ``dialect''.
+%    \begin{macrocode}
+%    \end{macrocode}
+%
+% \begin{macro}{\captionsnynorsk}
+%    The macro |\captionsnynorsk| defines all strings used in the four
+%    standard documentclasses provided with \LaTeX, but using a
+%    different spelling than in the command |\captionsnorsk|.
+% \changes{norsk-1.1a}{1992/02/16}{Added \cs{seename}, \cs{alsoname} and
+%    \cs{prefacename}}
+% \changes{norsk-1.1b}{1993/07/15}{\cs{headpagename} should be
+%    \cs{pagename}}
+% \changes{norsk-1.2g}{1996/04/01}{Replaced `Proof' by its
+%    translation} 
+% \changes{norsk-2.0e}{2000/09/20}{Added \cs{glossaryname}}
+% \changes{norsk-2.0g}{1996/04/01}{Replaced `Glossary' by its
+%    translation} 
+% \changes{norks-2.0h}{2001/01/12}{Changed \cs{ccname} and \cs{alsoname}}
+%
 % \end{macro}
 %
 % \begin{macro}{\datenorsk}
@@ -431,24 +433,13 @@
 %    \begin{macrocode}
 \ldf@finish\CurrentOption
 %</code>
+% Finally, We create  a few proxy files.
+%
+%    \begin{macrocode}
+%<*norsk|nynorsk>
+\input norwegian.ldf\relax
+%</norsk|nynorsk>
 %    \end{macrocode}
 %
 % \Finale
-%%
-%% \CharacterTable
-%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
-%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
-%%   Digits        \0\1\2\3\4\5\6\7\8\9
-%%   Exclamation   \!     Double quote  \"     Hash (number) \#
-%%   Dollar        \$     Percent       \%     Ampersand     \&
-%%   Acute accent  \'     Left paren    \(     Right paren   \)
-%%   Asterisk      \*     Plus          \+     Comma         \,
-%%   Minus         \-     Point         \.     Solidus       \/
-%%   Colon         \:     Semicolon     \;     Less than     \<
-%%   Equals        \=     Greater than  \>     Question mark \?
-%%   Commercial at \@     Left bracket  \[     Backslash     \\
-%%   Right bracket \]     Circumflex    \^     Underscore    \_
-%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
-%%   Right brace   \}     Tilde         \~}
-%%
 \endinput

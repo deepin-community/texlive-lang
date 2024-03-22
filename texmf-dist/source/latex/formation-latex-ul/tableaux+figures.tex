@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -13,17 +13,18 @@
 \label{chap:tableaux}
 
 Les tableaux et graphiques ne sont pas les éléments de texte les plus
-simples et rapides à créer avec {\LaTeX}. Les traitements de texte
-brillent, ici, avec leurs interfaces graphiques permettant de composer
-un tableau ou un graphique simple pièce par pièce avec la souris.
+simples et rapides à créer avec {\LaTeX}. À ce chapitre, les
+traitements de texte brillent avec leurs interfaces graphiques
+permettant de composer un tableau ou un graphique simple pièce par
+pièce avec la souris.
 
 En revanche, pour ce type de contenu comme pour tout autre, {\LaTeX}
 fait ce qu'on lui demande, sans tenter de deviner notre pensée ou,
 pire, de prétendre savoir mieux que nous ce que nous voulons faire. À
-ce chapitre, les traitements de texte ne brillent plus! Quiconque a
-déjà eu de la difficulté à contrôler les bordures d'un tableau, la
-hauteur des lignes ou la largeur des colonnes dans un traitement de
-texte comprendra combien l'exercice de composition d'un tableau avec
+ce chapitre, les traitements de texte ne brillent plus! Si vous avez
+déjà éprouvé de la difficulté à contrôler les bordures d'un tableau,
+la hauteur des lignes ou la largeur des colonnes dans un traitement de
+texte, vous savez combien l'exercice de composition d'un tableau avec
 ces outils peut rapidement devenir frustrant.
 
 Avant de discuter de la création ou de l'insertion de tableaux, de
@@ -47,7 +48,7 @@ horizontaux et verticaux.
 
 C'est une mauvaise idée, une pratique à éviter. Vraiment!
 
-Comparer les deux tableaux ci-dessous. Le premier est mis en forme
+Comparez les deux tableaux ci-dessous. Le premier est mis en forme
 selon une approche classique supportée depuis toujours par {\LaTeX}:
 filets doubles en entête et en pied de tableau, filets simples entre
 chaque ligne et entre les colonnes.
@@ -102,33 +103,33 @@ délimiter les colonnes?
 Tel que mentionné ci-dessus, le paquetage \pkg{booktabs} ajoute des
 fonctionnalités à {\LaTeX} pour améliorer la qualité typographique des
 tableaux. Dans la %
-\doc{booktabs}{http://texdoc.net/pkg/booktabs} %
+\doc{booktabs}{https://texdoc.net/pkg/booktabs} %
 du paquetage, son auteur énonce quelques règles à suivre pour la mise
 en forme des tableaux:
 \begin{enumerate}
-\item ne \emph{jamais} utiliser de filets verticaux. Si l'information
+\item Ne \emph{jamais} utiliser de filets verticaux. Si l'information
   du côté gauche du tableau semble si différente de celle du côté
   droit qu'un filet vertical apparait absolument nécessaire, scinder
   simplement l'information dans deux tableaux;
-\item ne jamais utiliser de filets doubles;
-\item placer les unités (\$, cm, {\textdegree}C, etc.) dans le titre
+\item Ne jamais utiliser de filets doubles;
+\item Placer les unités (\$, cm, {\textdegree}C, etc.) dans le titre
   de la colonne plutôt qu'après chaque valeur dans le corps du
   tableau;
-\item toujours inscrire un chiffre du côté gauche du séparateur
+\item Toujours inscrire un chiffre du côté gauche du séparateur
   décimal: $0,1$ et non $,1$ (pratique plus répandue en anglais, où le
   séparateur décimal est le point);
-\item ne pas utiliser un symbole pour représenter une valeur
+\item Ne pas utiliser un symbole pour représenter une valeur
   répétée (comme $''$ ou ---). Laisser un blanc ou répéter la
   valeur s'il subsiste une ambiguïté.
 \end{enumerate}
 
-Nous recommandons évidemment de suivre ces règles et c'est pourquoi la
-présente documentation ainsi que les fichiers d'exemples font usage
-des commandes de \pkg{booktabs}.
+Je recommande évidemment de suivre ces règles et c'est pourquoi le
+présent ouvrage ainsi que les fichiers d'exemples font usage des
+commandes de \pkg{booktabs}.
 
 Les fonctionnalités de \pkg{booktabs} sont intégrées à la classe
-\class{memoir} et, par conséquent, à \class{ulthese}. Il n'est donc pas
-nécessaire de charger le paquetage avec ces deux classes.
+\class{memoir}. Il n'est donc pas nécessaire de charger le paquetage
+si vous utlisez cette classe.
 
 
 
@@ -137,9 +138,9 @@ nécessaire de charger le paquetage avec ces deux classes.
 
 Peu importe l'outil informatique utilisé, la création d'un tableau
 requiert toujours de préciser à l'ordinateur le nombre de colonnes que
-contiendra le tableau, l'entête du tableau le cas échéant et le contenu
-des différentes cellules. Cette dernière étape nécessite à son tour
-une convention pour indiquer les passages à la colonne suivante
+contiendra le tableau, l'entête du tableau, le cas échéant, et le
+contenu des différentes cellules. Cette dernière étape nécessite à son
+tour une convention pour indiquer les passages à la colonne suivante
 ainsi que le passage à la ligne suivante.
 
 On crée des tableaux dans {\LaTeX} principalement avec les
@@ -152,12 +153,12 @@ dernier fourni par le paquetage \pkg{tabularx} ou par la classe
 \begin{tabularx}`\marg{largeur}\marg{format}' `\meta{lignes}' \end{tabularx}
 \end{lstlisting}
 La signification des arguments\footnote{%
-  Nous avons omis un argument optionnel à peu près jamais utilisé
-  servant à spécifier l'alignement vertical du tableau par rapport à
-  la ligne de base externe.} %
-est la suivante. Nous ne traitons ici que les options les plus souvent
+  J'ai omis un argument optionnel rarement utilisé servant à spécifier
+  l'alignement vertical du tableau par rapport à la ligne de base
+  externe.} %
+est la suivante. Je ne traite ici que les options les plus souvent
 utilisées. Pour une liste plus exhaustive, consulter la %
-\doc{memoir}{http://texdoc.net/pkg/memoir} %
+\doc{memoir}{https://texdoc.net/pkg/memoir} %
 de la classe \class{memoir} (chapitre 11) ou %
 \citet[section
 \link{https://fr.wikibooks.org/wiki/LaTeX/Tableaux}{Tableaux}]{wikilivres:latex}.
@@ -172,13 +173,12 @@ de la classe \class{memoir} (chapitre 11) ou %
     \renewcommand{\makelabel}[1]{\meta{#1}\hfill}}
 %
 \item[largeur] Largeur hors tout d'un tableau avec les environnements
-  \Pe{tabular*} et \Pe{tabularx}. Autrement, avec l'environnement
-  \Pe{tabular}, la largeur d'un tableau est déterminée automatiquement
-  pour contenir tout le tableau, quitte à dépasser dans la marge de
-  droite.
+  \Pe{tabular*} et \Pe{tabularx}. Dans l'environnement \Pe{tabular},
+  la largeur d'un tableau est déterminée automatiquement pour contenir
+  tout le tableau, quitte à dépasser dans la marge de droite.
 
   La largeur du tableau est généralement exprimée en fraction de la
-  largeur du bloc de texte (longueur \cmd{!textwidth}). Par exemple,
+  largeur du bloc de texte (longueur \cmd{\textwidth}). Par exemple,
   les déclarations suivantes définissent respectivement des tableaux
   occupant toute la largeur d'une page et 80~\% de la largeur de la
   page:
@@ -212,8 +212,8 @@ de la classe \class{memoir} (chapitre 11) ou %
 \begin{tabular}{lrp{5cm}}
 \end{lstlisting}
   définit un tableau à trois colonnes dont le contenu de la première
-  est aligné à gauche; celui de la seconde est aligné à droite; celui de
-  la troisième est en texte libre dans une cellule de 5~cm de largeur.
+  est aligné à gauche; celui de la deuxième est aligné à droite; celui de
+  la troisième est en texte libre dans une cellule d'une largeur de 5~cm.
 
   Avec la déclaration
 \begin{lstlisting}
@@ -229,8 +229,8 @@ de la classe \class{memoir} (chapitre 11) ou %
   une pratique à proscrire.
   %
 \item[lignes] Le contenu des cellules du tableau. Les entrées des
-  cellules sont séparées par le symbole \verb=&= et les lignes par
-  {\pixbsbs}. Une cellule peut être vide.
+  cellules sont séparées par le symbole «\verb=&=» et les lignes par
+  «\pixbsbs». Une cellule peut être vide.
 \end{list}
 
 Outre du texte, les lignes de contenu peuvent contenir certaines
@@ -242,14 +242,14 @@ premier lieu, la commande
 permet de fusionner les \meta{n} cellules suivantes en une seule de
 format \meta{fmt} et d'y placer \meta{texte}. Cette commande ne peut
 apparaitre qu'au début d'une ligne ou après un symbole de changement
-de colonne \verb=&=. Elle est souvent utilisée avec une valeur de
+de colonne «\verb=&=». Elle est souvent utilisée avec une valeur de
 \meta{n} égale à 1 pour changer le format d'une cellule, par exemple
 pour centrer le titre d'une colonne qui est autrement alignée à gauche
 ou à droite.
 
 Ensuite, les commandes suivantes\footnote{%
   Ce sont les commandes de \pkg{booktabs} et \class{memoir} auxquelles
-  nous faisions référence à la \autoref{sec:tableaux:booktabs}.} %
+  je faisais référence à la \autoref{sec:tableaux:booktabs}.} %
 servent à insérer des filets horizontaux dans un tableau:
 \begin{lstlisting}
 \toprule
@@ -264,7 +264,7 @@ lignes; \cmd{\cmidrule}\marg{m-n} insère un filet horizontal comme
 \cmdprint{\midrule} de la gauche de la colonne \meta{m} à la droite de
 la colonne \meta{n}; enfin, \cmd{\bottomrule} insère un filet
 horizontal épais précédé d'un espace vertical à la fin d'un tableau.
-Une fin de ligne {\bs\bs} doit obligatoirement précéder chacune de ces
+Une fin de ligne «\pixbsbs» doit obligatoirement précéder chacune de ces
 commandes, sauf évidemment \cmdprint{\toprule}.
 
 La hauteur des lignes d'un tableau est déterminée automatiquement en
@@ -272,7 +272,9 @@ fonction du contenu de celles-ci.
 
 \begin{exemple}
   \label{exemple:tableaux:tabular:1}
-  Considérer le tableau suivant:
+  Dans le tableau ci-dessous, la première
+  colonne est alignée à gauche et toutes les autres sont alignées à
+  droite. La largeur totale du tableau est ajustée à son contenu.
   \begin{center}
     \begin{tabular}{lrrr}
       \toprule
@@ -285,10 +287,8 @@ fonction du contenu de celles-ci.
       \bottomrule
     \end{tabular}
   \end{center}
-  La largeur du tableau est ajustée au contenu, la première colonne
-  est alignée à gauche et toutes les autres, à droite. Le code
-  ci-dessous permet de créer ce tableau. Remarquer comment les lignes
-  de contenu sont définies.
+  Le code ci-dessous permet de créer ce tableau. Observez comment les
+  lignes de contenu sont définies.
 \begin{lstlisting}
 \begin{tabular}{lrrr}
   \toprule
@@ -306,9 +306,8 @@ fonction du contenu de celles-ci.
 
 \begin{exemple}
   \label{exemple:tableaux:tabular:2}
-  On souhaite modifier le tableau de
-  l'\autoref{exemple:tableaux:tabular:1}  pour obtenir le tableau
-  suivant:
+  Modifions le tableau de l'\autoref{exemple:tableaux:tabular:1} pour
+  obtenir le tableau suivant:
   \begin{center}
     \begin{tabularx}{\textwidth}{Xrrr}
       \toprule
@@ -332,8 +331,8 @@ fonction du contenu de celles-ci.
 \begin{tabularx}{\textwidth}{Xrrr}
   \toprule
   \multicolumn{1}{c}{Produit} &
-    \rule[-8pt]{0mm}{24pt} Quantité &
-    Prix unitaire (\$) & Prix (\$) \\
+  \rule[-8pt]{0mm}{24pt} Quantité &
+  Prix unitaire (\$) & Prix (\$) \\
   \midrule
   Vis à bois    & 2 & 9,90 & 19,80 \\
   Clous vrillés & 5 & 4,35 & 21,75 \\
@@ -344,8 +343,9 @@ fonction du contenu de celles-ci.
 \end{lstlisting}
   L'environnement \Ie{tabularx} sert à créer un tableau de largeur
   définie et la commande \cmd{\multicolumn}, à centrer le titre de la
-  première colonne. On augmente la hauteur de l'entête à l'aide d'une
-  réglure invisible (\autoref{sec:boites:rulebox}). %
+  première colonne. La hauteur de l'entête a été augmentée à l'aide
+  d'une réglure invisible (\autoref{sec:boites:rulebox}) insérée
+  quelque part sur la ligne. %
   \qed
 \end{exemple}
 
@@ -354,23 +354,21 @@ fonction du contenu de celles-ci.
 \label{sec:tableaux:figures}
 
 Il est possible de tracer des figures simples directement avec
-{\LaTeX}. Par «simple» on entend: des figures se limitant pour
+{\LaTeX}. Par «simple» j'entends: des figures se limitant pour
 l'essentiel à du texte, des lignes, des flèches, des ronds et des
-ovales. C'est parfois amplement suffisant et, en définitive, assez
+ovales. C'est parfois amplement suffisant et, en définitive, c'est assez
 pratique puisque le code source d'une figure se trouve alors dans le
 même format que le reste du document.
 
-Pour la création de figures et de graphiques plus complexes, on aura généralement
+Pour créer des figures et des graphiques plus complexes, on a généralement
 recours à des logiciels spécialisés externes. {\LaTeX} est ensuite en
 mesure d'importer des graphiques dans les formats standards tels que PDF, JPEG
 ou PNG, voire même d'insérer dans un document une ou plusieurs pages
 d'un document PDF.
 
 Couvrir les détails de la création et de la manipulation d'images
-dépasse largement la portée du présent document. Le reste de cette
-section ne présente que les principales fonctionnalités. Le lecteur
-qui souhaite en savoir plus pourra se référer aux sources de documentation habituelles figurant à la
-bibliographie.
+dépasse largement la portée du présent ouvrage. Le reste de cette
+section ne présente que les principales fonctionnalités.
 
 
 \subsection{Figures {\LaTeX}}
@@ -387,24 +385,24 @@ simples à modifier; nul besoin de recourir à un logiciel externe pour
 le moindre petit changement. Autre avantage: la police du texte
 de la figure sera le même que celle du document.
 
-Pour tracer une figure avec l'environnement \Pe{picture}, on crée
+Le tracage d'une figure avec l'environnement \Pe{picture} requiert
 d'abord une grille (invisible) d'une dimension quelconque dans l'unité
-de mesure de son choix (autrement dit: les lignes de la grille
+de mesure de votre choix (autrement dit: les lignes de la grille
 peuvent être distantes aussi bien de \code{1pt} que de \code{1cm}).
-Ensuite, on dispose des éléments sur la grille en donnant les
+Ensuite, vous disposez des éléments sur la grille en donnant les
 coordonnées du point d'ancrage et, le cas échéant, les dimensions de
-l'élément, la distance à parcourir ou quelqu'autre information pour
+l'élément, la distance à parcourir ou quelque autre information pour
 compléter l'élément. C'est souvent plus simple d'esquisser d'abord un modèle au
 crayon sur du papier quadrillé.
 
 La figure ci-dessous illustre ce qu'il est possible de faire avec
 l'environnement \Pe{picture}. La consultation du code commenté
-correspondant devrait permettre de comprendre les principes de base de
+correspondant devrait vous permettre de comprendre les principes de base de
 la création de figures. Autrement, l'annexe~D de la %
-\doc{memoir}{http://texdoc.net/pkg/memoir} %
+\doc{memoir}{https://texdoc.net/pkg/memoir} %
 de \class{memoir} fournit une bonne introduction à \Pe{picture}.
 
-(Nous avons tracé la grille en filigrane dans la figure afin de
+(J'ai tracé la grille en filigrane dans la figure afin de
 faciliter la comparaison entre le code et le résultat.)
 
 \setlength{\unitlength}{7mm}
@@ -509,7 +507,8 @@ faciliter la comparaison entre le code et le résultat.)
 Il existe quelques outils pour tracer des figures plus complexes
 directement avec {\TeX}, dont PSTricks \citep{pstricks}
 ou le système Ti\emph{k}Z/\textsc{pgf} \citep{tikz}.
-Ce dernier gagne beaucoup en popularité depuis quelques années.
+Ce dernier est maintenant assez populaire pour aspirer au statut
+d'outil standard dans le monde de {\LaTeX}.
 
 
 \subsection{Importation d'images}
@@ -520,7 +519,7 @@ dans un document {\LaTeX} en utilisant l'un ou l'autre des paquetages
 \pkg{graphics} ou \pkg{graphicx} \citep{graphicx} en combinaison avec
 un moteur {\TeX} moderne tel que pdf{\LaTeX} ou {\XeLaTeX}. Les
 fonctionnalités des deux paquetages sont les mêmes, seules les
-syntaxes des commandes diffèrent. Nous présenterons les commandes de
+syntaxes des commandes diffèrent. Je présente les commandes de
 \pkg{graphicx}, plus modernes et conviviales.
 
 La commande de base pour importer des images dans un document {\LaTeX} est
@@ -537,14 +536,13 @@ Les \meta{options} de \cmd{\includegraphics}, nombreuses, permettent
 de redimensionner une image, de la faire pivoter ou encore de n'en
 importer qu'une partie. L'exemple ci-dessous présente les principales
 fonctionnalités; consulter la %
-\doc{grfguide}{http://texdoc.net/pkg/graphics/} %
+\doc{graphics}{https://texdoc.net/pkg/graphics} %
 pour les détails et d'autres options.
 
 \begin{exemple}
   Le fichier \fichier{ul\_p.pdf} contenant le logo de l'Université
-  Laval en couleur et en format vectoriel est distribué avec la
-  présente documentation ainsi qu'avec la classe \class{ulthese}. La
-  simple commande
+  Laval en couleur et en format vectoriel est distribué avec le
+  présent ouvrage. La simple commande
 \begin{lstlisting}
 \includegraphics{ul_p}
 \end{lstlisting}
@@ -577,7 +575,7 @@ pour les détails et d'autres options.
     \end{texample}
   \end{demo}
   (Il est préférable d'utiliser une seule de \code{width} ou
-  \code{height}. Autrement, ajouter l'option
+  \code{height}. Autrement, ajoutez l'option
   \lstinline|keepaspectratio=true| pour éviter de déformer l'image.)
 
   L'option \code{angle} permet de faire pivoter l'image dans le sens
@@ -703,8 +701,8 @@ les moteurs pdf{\LaTeX} ou {\XeLaTeX}, le très pratique paquetage
 \begin{lstlisting}
 \includepdf`\oarg{options}\marg{fichier}'
 \end{lstlisting}
-Les \meta{options} sont très nombreuses; consulter la %
-\doc{pdfpages}{http://texdoc.net/pkg/pdfpages/}.
+Les \meta{options} sont très nombreuses; consultez la %
+\doc{pdfpages}{https://texdoc.net/pkg/pdfpages}.
 
 \begin{exemple}
   Il n'est pas rare que les couvertures avant et arrière d'un document
@@ -720,7 +718,6 @@ Les \meta{options} sont très nombreuses; consulter la %
 \end{exemple}
 
 
-
 \section{Éléments flottants}
 \label{sec:tableaux:floats}
 
@@ -731,26 +728,25 @@ positionner sur la page et dans le document plus ou moins
 automatiquement en fonction d'un algorithme prédéfini. C'est une
 fonctionnalité très évoluée de {\LaTeX}.
 
-Pourquoi voudrait-on laisser {\LaTeX} décider où un élément de contenu
-devrait se retrouver dans notre document? D'abord et avant tout pour
-les tableaux et les figures.
-
-En effet, les tableaux et les figures occupent souvent beaucoup
-d'espace vertical dans la page. S'il ne reste plus assez de place pour
-y afficher un tel élément de contenu, {\LaTeX} devra le déplacer au
-début de la page suivante et cela risque de produire une page
-inesthétique car insuffisamment remplie\footnote{%
+Pourquoi voudriez-vous laisser {\LaTeX} décider où un élément de
+contenu devrait se retrouver dans votre document? D'abord et avant
+tout pour les tableaux et les figures. En effet, les tableaux et les
+figures occupent souvent beaucoup d'espace vertical dans la page.
+S'il ne reste plus assez de place pour y afficher un tel élément de
+contenu, {\LaTeX} devra le déplacer au début de la page suivante et
+cela risque de produire une page inesthétique car insuffisamment
+remplie\footnote{%
   \emph{Underful \cs{vbox}} dans le jargon de {\TeX}.}. %
 Les traitements de texte génèrent sans rechigner des pages à demi
 remplies dans de telles situations.
 
-En définissant un élément comme flottant, on laisse plutôt à
-{\LaTeX} la possibilité de le disposer au meilleur endroit en fonction
+Définir un élément comme flottant laisse plutôt à {\LaTeX} la
+possibilité de le disposer au meilleur endroit en fonction
 de la taille de l'élément, du contenu du document et de diverses
 règles typographiques.
 
-On crée des éléments flottants avec les environnements \Ie{table}
-et \Ie{figure}:
+Les environnements \Ie{table} et \Ie{figure} permettent de crer des
+éléments flottants:
 \begin{lstlisting}
 \begin{table}`\oarg{pos}'  `\meta{tableau}' \end{table}
 \begin{figure}`\oarg{pos}' `\meta{figure}' \end{figure}
@@ -790,14 +786,14 @@ suivantes dans l'argument \meta{pos};
 \end{description}
 La valeur par défaut de l'argument \meta{pos} est \code{tbp}. La
 section~10.4 de la %
-\doc{memoir}{http://texdoc.net/pkg/memoir/} %
+\doc{memoir}{https://texdoc.net/pkg/memoir} %
 de \class{memoir} explique plus en détail la signification des valeurs
-ci-dessus. Le lecteur qui voudrait vraiment \emph{tout} savoir sur la
-disposition des éléments flottants pourra consulter
+ci-dessus. Si vous voulez vraiment \emph{tout} savoir sur la
+disposition des éléments flottants, consultez
 \cite{Mittelbach:floats:2014}.
 
 \begin{exemple}
-  On reprend le tableau de l'\autoref{exemple:tableaux:tabular:1}, mais cette
+  Reprenons le tableau de l'\autoref{exemple:tableaux:tabular:1}, mais cette
   fois défini à l'intérieur d'un environnement \Pe{table}:
 \begin{lstlisting}
 \begin{table}
@@ -827,8 +823,8 @@ disposition des éléments flottants pourra consulter
       \bottomrule
     \end{tabular}
   \end{table}
-  Remarquer où {\LaTeX} a automatiquement placé le tableau dans le
-  document en fonction des règles précitées. %
+  {\LaTeX} a automatiquement placé le tableau dans le document en
+  fonction des règles précitées. %
   \qed
 \end{exemple}
 
@@ -865,8 +861,8 @@ contraire il est disposé comme un paragraphe normal.
 \tipbox{Les anciennes version du style français de \pkg{babel} utilisaient
   les étiquettes plus neutres «\textsc{Tab.}» et «\textsc{Fig.}»
   dans les légendes des tableaux et figures. Pour utiliser --- comme
-  dans le présent document --- ces versions plutôt que les versions
-  par défaut ajouter dans le préambule les commandes de la
+  dans le présent document --- ces versions plutôt que les nouvelles
+  versions par défaut, ajoutez dans le préambule les commandes de la
   \autoref{fig:tableaux+figures:captionsfrench}.}
 
 \begin{figure}
@@ -881,20 +877,19 @@ contraire il est disposé comme un paragraphe normal.
   \label{fig:tableaux+figures:captionsfrench}
 \end{figure}
 
-Pour faire référence à un tableau ou à une figure dans le texte, il
-faut utiliser le système de renvois automatiques de {\LaTeX}
-(\autoref{sec:organisation:renvois}). On attribue une étiquette à l'élément
-flottant en plaçant la commande \cmd{\label} dans le texte de la
-commande \cmd{\caption} ou dans son voisinage immédiat. Les commandes
-\cmd{\ref} ou \cmd{\autoref} servent ensuite à insérer des renvois dans
-le texte.
-
-L'exemple suivant présente finalement la recette complète pour composer
-un tableau et une figure dans {\LaTeX}, légende et renvoi inclus.
+Les références à un tableau ou à une figure dans le texte sont
+insérées dans un document avec le système de renvois automatiques de
+{\LaTeX} (\autoref{sec:organisation:renvois}). Pour attribuer une
+étiquette à l'élément flottant, placez la commande \cmd{\label} dans
+le texte de la commande \cmd{\caption} ou dans son voisinage immédiat.
+Les commandes \cmd{\ref} ou \cmd{\autoref} servent ensuite à insérer
+des renvois dans le texte.
 
 \begin{exemple}
-  Le code source de la \autoref{fig:tableaux:captions} crée
-  le \autoref{tab:tableaux:captions}.
+  Voici la recette complète pour composer un tableau et une figure
+  dans {\LaTeX}, légende et renvoi inclus. Le code source de la
+  \autoref{fig:tableaux:captions} crée le
+  \autoref{tab:tableaux:captions}.
   \begin{figure}
 \begin{lstlisting}
 \begin{table}
@@ -999,7 +994,7 @@ Lorsqu'une figure ou un tableau compte plusieurs éléments, comme à
 l'exemple précédent, il peut être souhaitable d'ajouter pour chacun
 une sous-légende. L'\autoref{ex:tableaux:subcaptions} explique
 comment y parvenir. La section~10.9 de la %
-  \doc{memoir}{http://texdoc.net/pkg/memoir} %
+  \doc{memoir}{https://texdoc.net/pkg/memoir} %
 de \class{memoir} comporte de nombreux détails additionnels sur les
 sous-légendes.
 
@@ -1022,7 +1017,7 @@ sous-légendes.
 \begin{exercice}
   Reproduire le tableau ci-dessous à l'aide d'un environnement
   \Pe{tabular}. Utiliser le gabarit de document
-  \fichier{exercice\_gabarit.tex}.
+  \fichier{exercice-gabarit.tex}.
 
   La première colonne est alignée à gauche, la seconde est un bloc de
   texte de $7,5$~cm et la troisième est alignée à droite. Le symbole
@@ -1100,10 +1095,10 @@ sous-légendes.
   pour l'ensemble du flottant, mais aussi des sous-légendes pour
   chaque tableau ou figure.
 
-  Avec les classes \class{ulthese} et \class{memoir}, la production de
-  sous-légendes requiert d'abord de déclarer, dans le préambule du
-  document, son intention d'en créer pour les environnements flottants
-  \Pe{table} ou \Pe{figure} avec, selon le cas, les commandes
+  Avec la classe \class{memoir}, la production de sous-légendes
+  requiert d'abord de déclarer, dans le préambule du document, son
+  intention d'en créer pour les environnements flottants \Pe{table} ou
+  \Pe{figure} avec, selon le cas, les commandes
 \begin{lstlisting}
 \newsubfloat{table}
 \newsubfloat{figure}
@@ -1114,11 +1109,11 @@ sous-légendes.
 \end{lstlisting}
   de la même manière que \cmd{\caption}.
 
-  Le fichier \fichier{exercice\_subcaption.tex} contient la structure
+  Le fichier \fichier{exercice-subcaption.tex} contient la structure
   de base pour composer deux tableaux côte à côte. Ajouter des
   sous-légendes à l'intérieur de l'environnement flottant.
   \begin{sol}
-    Tout d'abord, remarquer que la commande
+    Tout d'abord, vous remarquerez que la commande
 \begin{lstlisting}
 \newsubfloat{table}
 \end{lstlisting}
@@ -1148,7 +1143,7 @@ sous-légendes.
 \end{exercice}
 
 \begin{exercice}
-  Utiliser le fichier \fichier{exercice\_gabarit.tex} pour composer un
+  Utiliser le fichier \fichier{exercice-gabarit.tex} pour composer un
   document qui insère, disons, la page couverture du présent document
   à l'aide des fonctionnalités du paquetage \pkg{pdfpages} décrites à
   la \autoref{sec:tableaux:figures:pdfpages}.
@@ -1167,7 +1162,7 @@ sous-légendes.
 \end{exercice}
 
 \begin{exercice}[nosol]
-  Le document \fichier{exercice\_demo.tex} contient plusieurs éléments
+  Le document \fichier{exercice-demo.tex} contient plusieurs éléments
   flottants, tableaux et figures. Examiner le code et modifier
   l'argument optionnel de position d'un flottant pour voir son effet
   sur la mise en page du document.

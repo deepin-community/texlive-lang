@@ -1,0 +1,171 @@
+%%%
+% Op\'erations pos\'es à trou
+%%%
+%% D'après https://tex.stackexchange.com/questions/277246/drawing-a-circle-around-the-numbers-in-xlop-package
+
+%\begin{document}%
+%
+%\end{document}
+
+\newcommand\PfCchiffre[2]{\tikz[remember picture] \node[inner sep=0pt](#1){#2};}
+
+\newcommand\PfCentoure[2]{\tikz[remember picture,overlay] \node[preaction={draw={\useKV[ClesOperations]{CouleurCadre}},ultra thick,opacity=1,
+transform canvas={xshift=0em,yshift=0em}},rectangle,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\newcommand\PfCchiffreclip[2]{%
+  \ifboolKV[ClesOperations]{Solution}{%
+    \xintFor* ##1 in{\xintSeq{1}{\PfCListeTroulen}}\do{%
+      \xintifboolexpr{\thedivxlop==\PfCListeTrou[##1]}{%
+        \color{PfCSolOp}}{}%
+    }%
+  }{}%
+  \tikz[remember picture] \node[inner sep=0pt](#1){#2};%
+}%
+
+\newcommand\PfCentoureclip[2]{\tikz[remember picture,overlay] \node[preaction={draw={\useKV[ClesOperations]{CouleurCadre}},ultra thick,opacity=1,
+transform canvas={xshift=0em,yshift=0em}},rectangle,fill=PfCSolOp,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\newcounter{divxlop}%
+%\newcounter{mulxlop}%
+%\newcounter{addxlop}%
+%\newcounter{subxlop}%
+
+\setKVdefault[ClesOperations]{Solution=false,CouleurCadre=LightSteelBlue,CouleurSolution=red,CouleurFond=white,CouleurVirgule=white,Listes=false}
+\defKV[ClesOperations]{Liste=\setKV[ClesOperations]{Listes}\xdef\PfCFooListeTrou{#1}}%
+
+\newcommand\Division[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{divxlop}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}}%
+  \ifboolKV[ClesOperations]{Listes}{%
+    \setsepchar{,}\ignoreemptyitems%
+    \readlist*\PfCListeTrou{\PfCFooListeTrou}%
+    \reademptyitems%
+    %,displayintermediary=all
+    \opidiv[lineheight=1.75em,columnwidth=1.5em,voperator=bottom,operandstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},intermediarystyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},remainderstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop}]{#2}{#3}%
+    \ifboolKV[ClesOperations]{Solution}{}{%
+      \foreachitem\compteur\in\PfCListeTrou{%
+        \xdef\PfCRetiensTrou{\PfCListeTrou[\compteurcnt]}%
+        \PfCentoureclip{A\PfCRetiensTrou}{A\PfCRetiensTrou}%
+      }%
+    }%
+  }{%
+      \opidiv[lineheight=1.5em,columnwidth=1.25em,displayintermediary=all,voperator=bottom,intermediarystyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},remainderstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop}]{#2}{#3}%
+    \foreach \i in {1,...,\thedivxlop}{%
+      \PfCentoure{A\i}{A\i}%
+    }%
+  }%
+}%
+
+\newcommand\DivisionD[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{divxlop}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}\colorlet{PfCCouleurVirgule}{PfCSolOp}}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}\colorlet{PfCCouleurVirgule}{\useKV[ClesOperations]{CouleurVirgule}}}%
+  \opdiv[decimalsepsymbol={,},lineheight=1.5em,columnwidth=1.5em,displayintermediary=all,voperator=bottom,intermediarystyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},remainderstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
+  \foreach \i in {1,...,\thedivxlop}{%
+    \PfCentoure{A\i}{A\i}%
+  }%
+}%
+
+\newcommand\Multiplication[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{divxlop}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}\colorlet{PfCCouleurVirgule}{PfCSolOp}}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}\colorlet{PfCCouleurVirgule}{\useKV[ClesOperations]{CouleurVirgule}}}%
+  \ifboolKV[ClesOperations]{Listes}{%
+  \setsepchar{,}\ignoreemptyitems%
+  \readlist*\PfCListeTrou{\PfCFooListeTrou}%
+  \reademptyitems%
+  \begingroup
+  \setlength{\baselineskip}{1.75em}
+  \StrLen{#3}[\PfCLongueurFacteurDeux]
+  \ifnum\PfCLongueurFacteurDeux=1\relax
+  \opset{lineheight=\baselineskip} % nécessaire
+  \else
+  \opset{lineheight=\baselineskip,displayintermediary=all,displayshiftintermediary=all} % nécessaire
+  \fi
+  \opmul[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom,operandstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},intermediarystyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
+  \endgroup%
+  \ifboolKV[ClesOperations]{Solution}{}{%
+    \foreachitem\compteur\in\PfCListeTrou{%
+      \xdef\PfCRetiensTrou{\PfCListeTrou[\compteurcnt]}%
+      \PfCentoureclip{A\PfCRetiensTrou}{A\PfCRetiensTrou}%
+    }%
+  }%
+  }{%
+  \begingroup
+  \setlength{\baselineskip}{2em}
+  \StrLen{#3}[\PfCLongueurFacteurDeux]
+  \ifnum\PfCLongueurFacteurDeux=1\relax
+  \opset{lineheight=\baselineskip} % nécessaire
+  \else
+  \opset{lineheight=\baselineskip,displayintermediary=all,displayshiftintermediary=all} % nécessaire
+  \fi
+  \opmul[decimalsepsymbol={,},lineheight=2em,columnwidth=1.5em,voperator=bottom,intermediarystyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
+  \foreach \i in {1,...,\thedivxlop}{%
+    \PfCentoure{A\i}{A\i}%
+  }%
+  \endgroup
+  }
+}%
+
+\newcommand\Addition[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{divxlop}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\opset{carryadd,carrystyle=\color{PfCSolOp}\scriptsize}\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}\colorlet{PfCCouleurVirgule}{PfCSolOp}}{\opset{carryadd=false}\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}\colorlet{PfCCouleurVirgule}{\useKV[ClesOperations]{CouleurVirgule}}}%
+  \ifboolKV[ClesOperations]{Listes}{%
+    \setsepchar{,}\ignoreemptyitems%
+    \readlist*\PfCListeTrou{\PfCFooListeTrou}%
+    \reademptyitems%
+    \opadd[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom,operandstyle.1=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},operandstyle.2=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
+    \ifboolKV[ClesOperations]{Solution}{}{%
+      \foreachitem\compteur\in\PfCListeTrou{%
+        \xdef\PfCRetiensTrou{\PfCListeTrou[\compteurcnt]}%
+        \PfCentoureclip{A\PfCRetiensTrou}{A\PfCRetiensTrou}%
+      }%
+    }%
+  }{%
+    \opadd[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom,resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}
+    \foreach \i in {1,...,\thedivxlop}{%
+      \PfCentoure{A\i}{A\i}%
+    }%
+  }%
+}%
+
+\newcommand\Soustraction[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{divxlop}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\opset{carrysub,carrystyle=\color{PfCSolOp}\scriptsize}\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}\colorlet{PfCCouleurVirgule}{PfCSolOp}}{\opset{carrysub=false}\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}\colorlet{PfCCouleurVirgule}{\useKV[ClesOperations]{CouleurVirgule}}}%
+  \ifboolKV[ClesOperations]{Listes}{%
+    \setsepchar{,}\ignoreemptyitems%
+    \readlist*\PfCListeTrou{\PfCFooListeTrou}%
+    \reademptyitems%
+    \opsub[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom,operandstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle=\stepcounter{divxlop}\PfCchiffreclip{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
+    \ifboolKV[ClesOperations]{Solution}{}{%
+      \foreachitem\compteur\in\PfCListeTrou{%
+        \xdef\PfCRetiensTrou{\PfCListeTrou[\compteurcnt]}%
+        \PfCentoureclip{A\PfCRetiensTrou}{A\PfCRetiensTrou}%
+      }%
+    }%
+  }{%
+    \opsub[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom,resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
+    \foreach \i in {1,...,\thedivxlop}{%
+      \PfCentoure{A\i}{A\i}
+    }%
+  }%
+}%
+
+\NewDocumentCommand\MultiAddition{om}{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{divxlop}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\opset{carryadd,carrystyle=\color{PfCSolOp}\scriptsize}\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}\colorlet{PfCCouleurVirgule}{PfCSolOp}}{\opset{carryadd=false}\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}\colorlet{PfCCouleurVirgule}{\useKV[ClesOperations]{CouleurVirgule}}}%
+  \opmanyadd[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,vmanyoperator=bottom,resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]#2
+  \foreach \i in {1,...,\thedivxlop}{%
+    \PfCentoure{A\i}{A\i}%
+  }%
+}%

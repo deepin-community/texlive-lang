@@ -2,9 +2,9 @@
 %%% \chaptertoc for oblivoir
 %%% part of kotex-oblivoir package.
 %%%
-%%% written by Nova de Hi
+%%% written by Nova de Hi and Kangsoo Kim
 %%%
-\ProvidesPackage{obchaptertoc}[2020/09/03, v2.0]
+\ProvidesPackage{obchaptertoc}[2024/01/30, v4.0]
 \RequirePackage{l3keys2e}
 
 \ExplSyntaxOn
@@ -196,22 +196,26 @@
 \ChapterTOCafterskiptrue
 
 \newcommand\chaptertoc{
-  \begingroup
-  \chaptertocfont
   \let\@orig@markboth\markboth
-  \renewcommand\markboth[2]{}
-  \setcounter{@memmarkcntra}{\value{tocdepth}}
-  \let\changetocdepth\@gobble
-  \normalchangetocdepth{-10}
-  \cftinsertcode{start-\thetocmarker}{\normalchangetocdepth{\theobchaptocmaxdepth}}
-  \cftinsertcode{end-\thetocmarker}{\normalchangetocdepth{-10}}
-  \let\tocheadstart\relax
-  \let\printtoctitle\@gobble
-  \let\aftertoctitle\relax
-  %%% formatting chaptertoc
-  \@ChapterTOCFormat
-  \tableofcontents*
+  \let\@orig@thispagestyle\thispagestyle
+  \begingroup
+      \chaptertocfont
+      \renewcommand\markboth[2]{}
+      \renewcommand\thispagestyle[1]{}
+      \setcounter{@memmarkcntra}{\value{tocdepth}}
+      \let\changetocdepth\@gobble
+      \normalchangetocdepth{-10}
+      \cftinsertcode{start-\thetocmarker}{\normalchangetocdepth{\theobchaptocmaxdepth}}
+      \cftinsertcode{end-\thetocmarker}{\normalchangetocdepth{-10}}
+      \let\tocheadstart\relax
+      \let\printtoctitle\@gobble
+      \let\aftertoctitle\relax
+      %%% formatting chaptertoc
+      \@ChapterTOCFormat
+      \tableofcontents*
   \endgroup
+  \let\thispagestyle\@orig@thispagestyle
+  \let\markboth\@orig@markboth
   \setcounter{tocdepth}{\value{@memmarkcntra}}
   \m@mindentafterchapter
   \ifChapterTOCafterskip
@@ -221,3 +225,5 @@
 }
 
 \endinput
+
+%%% version 3.0: pagestyle bug fixed

@@ -1,14 +1,15 @@
 #!/usr/bin/env perl
-# $Id: tlmgr.pl 63068 2022-04-18 05:58:07Z preining $
-#
-# Copyright 2008-2022 Norbert Preining
+# $Id: tlmgr.pl 69653 2024-01-31 21:52:46Z karl $
+# Copyright 2008-2024 Norbert Preining
 # This file is licensed under the GNU General Public License version 2
 # or any later version.
+# 
+# TeX Live Manager.
 
 use strict; use warnings;
 
-my $svnrev = '$Revision: 63068 $';
-my $datrev = '$Date: 2022-04-18 07:58:07 +0200 (Mon, 18 Apr 2022) $';
+my $svnrev = '$Revision: 69653 $';
+my $datrev = '$Date: 2024-01-31 22:52:46 +0100 (Wed, 31 Jan 2024) $';
 my $tlmgrrevision;
 my $tlmgrversion;
 my $prg;
@@ -36,7 +37,7 @@ our $allowed_verify_args_regex = qr/^(none|main|all)$/i;
 
 END {
   if ($opts{"pause"}) {
-    print "Press Enter to exit the program.\n";
+    print "\n$prg: Pausing at end of run as requested; press Enter to exit.\n";
     <STDIN>;
   }
 }
@@ -51,7 +52,7 @@ BEGIN {
     $Master =~ s!\\!/!g;
     $Master =~ s![^/]*$!../../..!
       unless ($Master =~ s!/texmf-dist/scripts/texlive/tlmgr\.pl$!!i);
-    $bindir = "$Master/bin/win32";
+    $bindir = "$Master/bin/windows";
     $kpsewhichname = "kpsewhich.exe";
     # path already set by wrapper batchfile
   } else {
@@ -64,7 +65,7 @@ BEGIN {
     $kpsewhichname = "kpsewhich";
   }
   if (-r "$bindir/$kpsewhichname") {
-    # if not in bootstrapping mode => kpsewhich exists, so use it to get $Master
+    # not in bootstrapping mode => kpsewhich exists, so use it to get $Master
     chomp($Master = `kpsewhich -var-value=TEXMFROOT`);
   }
 
@@ -96,7 +97,7 @@ use TeXLive::TLWinGoo;
 use TeXLive::TLDownload;
 use TeXLive::TLConfFile;
 use TeXLive::TLCrypto;
-TeXLive::TLUtils->import(qw(member info give_ctan_mirror win32 dirname
+TeXLive::TLUtils->import(qw(member info give_ctan_mirror wndws dirname
                             mkdirhier copy debug tlcmp repository_to_array));
 use TeXLive::TLPaper;
 
@@ -245,7 +246,7 @@ my %action_specification = (
     "function" => \&action_paper
   },
   "path" => {
-    "options"  => { "w32mode" => "=s" },
+    "options"  => { "windowsmode|w32mode" => "=s" },
     "run-post" => 0,
     "function" => \&action_path
   },
@@ -263,7 +264,7 @@ my %action_specification = (
     "options" => {
       "all" => 1,
       "fileassocmode" => "=i",
-      "w32mode" => "=s",
+      "windowsmode|w32mode" => "=s",
     },
     "run-post" => 0,
     "function" => \&action_postaction
@@ -520,7 +521,7 @@ sub main {
     # and on Windows our Config.pm can apparently interfere, so always
     # skip it there.  Or if users have NOPERLDOC set in the environment.
     my @noperldoc = ();
-    if (win32() || $ENV{"NOPERLDOC"}) {
+    if (wndws() || $ENV{"NOPERLDOC"}) {
       @noperldoc = ("-noperldoc", "1");
     } else {
       if (!TeXLive::TLUtils::which("perldoc")) {
@@ -621,7 +622,9 @@ for the full story.\n";
     tldie("$prg: Try --help if you need it.\n");
   }
 
-  #
+  # nice to have the version if debugging.
+  debug("tlmgr version $tlmgrversion\n");
+
   # the main tree we will be working on
   $::maintree = $Master;
   if ($opts{"usermode"}) {
@@ -633,6 +636,7 @@ for the full story.\n";
       chomp($::maintree = `kpsewhich -var-value TEXMFHOME`);
     }
   }
+  debug("maintree=$::maintree\n");
 
   # besides doing normal logging if -logfile is specified, we try to log
   # package related actions (install, remove, update) to
@@ -689,7 +693,9 @@ for the full story.\n";
   # if we are asked to use persistent connections try to start it here
   ddebug("tlmgr:main: do persistent downloads = $opts{'persistent-downloads'}\n");
   if ($opts{'persistent-downloads'}) {
-    TeXLive::TLUtils::setup_persistent_downloads() ;
+    TeXLive::TLUtils::setup_persistent_downloads(
+      "$Master/tlpkg/installer/curl/curl-ca-bundle.crt"
+    ) ;
   }
   if (!defined($::tldownload_server)) {
     debug("tlmgr:main: ::tldownload_server not defined\n");
@@ -829,7 +835,8 @@ sub execute_action {
 
 
 # run CMD with notice to the user and if exit status is nonzero, complain.
-# return exit status.
+# log output with logcommand (tlmgr-commands.log).
+# return F_OK or F_ERROR.
 # 
 sub do_cmd_and_check {
   my $cmd = shift;
@@ -843,9 +850,10 @@ sub do_cmd_and_check {
   if ($opts{"dry-run"}) {
     $ret = $F_OK;
     $out = "";
-  } elsif (win32() && (! -r "$Master/bin/win32/luatex.dll")) {
+  } elsif (wndws() && (! -r "$Master/bin/windows/luatex.dll")) {
     # deal with the case where only scheme-infrastructure is installed
-    # on Windows, thus no luatex.dll is available and the wrapper cannot be started
+    # on Windows, thus no luatex.dll is available and the wrapper cannot
+    # be started
     tlwarn("Cannot run wrapper due to missing luatex.dll\n");
     $ret = $F_OK;
     $out = "";
@@ -854,34 +862,34 @@ sub do_cmd_and_check {
   }
   $out =~ s/\n+$//; # trailing newlines don't seem interesting
   my $outmsg = "output:\n$out\n--end of output of $cmd.\n";
-  if ($ret == $F_OK) {
+  if ($ret == 0) {
     info("done running $cmd.\n") unless $cmd =~ /^fmtutil/;
     logcommand("success, $outmsg");
     ddebug("$cmd $outmsg");
-    return ($F_OK);
   } else {
     info("\n");
     tlwarn("$prg: $cmd failed (status $ret), output:\n$out\n");
     logcommand("error, status: $ret, $outmsg");
-    return ($F_ERROR);
+    $ret = $F_ERROR;
   }
+  return $ret;
 }
 
 # run external programs (mktexlsr, updmap-sys, etc.) as specified by the
-# keys in the RET hash.  We return the number of unsuccessful runs, zero
-# if all ok.
+# keys in the ::execute_actions hash. We return the number of
+# unsuccessful runs, zero if all ok.
 #
 # If the "map" key is specified, the value may be a reference to a list
 # of map command strings to pass to updmap, e.g., "enable Map=ascii.map".
 #
 sub handle_execute_actions {
+  debug("starting handle_execute_actions\n");
   my $errors = 0;
 
   my $sysmode = ($opts{"usermode"} ? "-user" : "-sys");
   my $fmtutil_cmd = "fmtutil$sysmode";
   my $status_file = TeXLive::TLUtils::tl_tmpfile();
   my $fmtutil_args = "$common_fmtutil_args --status-file=$status_file";
-
 
   # if create_formats is false (NOT the default) we add --refresh so that
   # only existing formats are recreated
@@ -892,10 +900,6 @@ sub handle_execute_actions {
 
   if ($::files_changed) {
     $errors += do_cmd_and_check("mktexlsr");
-    if (defined($localtlpdb->get_package('context'))
-	    && (-x "$bindir/texlua" || -x "$bindir/texlua.exe")) {
-      $errors += do_cmd_and_check("mtxrun --generate");
-    }
     $::files_changed = 0;
   }
 
@@ -987,7 +991,7 @@ sub handle_execute_actions {
       for my $e (keys %updated_engines) {
         debug ("updating formats based on $e\n");
         $errors += do_cmd_and_check
-                    ("$fmtutil_cmd --byengine $e --no-error-if-no-format $fmtutil_args");
+          ("$fmtutil_cmd --byengine $e --no-error-if-no-format $fmtutil_args");
         read_and_report_fmtutil_status_file($status_file);
         unlink($status_file);
       }
@@ -1006,14 +1010,14 @@ sub handle_execute_actions {
 
     # now go back to the hyphenation patterns and regenerate formats
     # based on the various language files
-    # this of course will in some cases duplicate fmtutil calls,
+    # this will in some cases duplicate fmtutil calls,
     # but it is much easier than actually checking which formats
     # don't need to be updated
-
+    #
     if ($regenerate_language) {
       for my $ext ("dat", "def", "dat.lua") {
         my $lang = "language.$ext";
-        if (! TeXLive::TLUtils::win32()) {
+        if (! TeXLive::TLUtils::wndws()) {
           # Use full path for external command, except on Windows.
           $lang = "$TEXMFSYSVAR/tex/generic/config/$lang";
         }
@@ -1029,8 +1033,9 @@ sub handle_execute_actions {
     # --refresh existing formats to avoid generating new ones.
     if ($::regenerate_all_formats) {
       info("Regenerating existing formats, this may take some time ...");
-      # --refresh might already be in $invoke_fmtutil, but we don't care
-      $errors += do_cmd_and_check("$fmtutil_cmd --refresh --all $fmtutil_args");
+      # --refresh might already be in $fmtutil_args, but that's ok.
+      my $args = "--refresh --all";
+      $errors += do_cmd_and_check("$fmtutil_cmd $args $fmtutil_args");
       read_and_report_fmtutil_status_file($status_file);
       unlink($status_file);
       info("done\n");
@@ -1038,16 +1043,68 @@ sub handle_execute_actions {
     }
   }
 
+  # lmtx/context cache creation/update. This variable is set, in
+  # TLPDB::install_package, when the context package is updated or installed.
+  if (defined $::context_cache_update_needed
+      && $::context_cache_update_needed) {
+    if ($opts{"dry-run"}) {
+      debug("dry-run, skipping context cache update\n");
+    } else {
+      my $progext = ($^O =~ /^MSWin/i ? ".exe" : "");
+      $errors +=
+        TeXLive::TLUtils::update_context_cache($bindir, $progext,
+                                               \&run_postinst_logcommand);
+    }
+    $::context_cache_update_needed = 0;
+  }
+
   # undefine the global var, otherwise in GUI mode the actions
   # are accumulating
   undef %::execute_actions;
 
+  debug("finished handle_execute_actions, errors=$errors\n");
   if ($errors > 0) {
-    # should we return warning here?
+    # warning might suffice sometimes, but safer to return error.
     return $F_ERROR;
   } else {
     return $F_OK;
   }
+}
+
+# Run CMD with output logged via logcommand().  We use this for the
+# ConTeXt cache updates (above); since they are so verbose, we want the
+# output to be only in tlmgr-commands.log, not tlmgr.log or the terminal.
+# 
+# This is the same result as do_cmd_and_check, which we use for the
+# other postaction commands (fmtutil, etc.); the difference is that for
+# context, we want to share the code to actually do the updates with
+# install-tl, so there is a common routine TLUtils::update_context_cache,
+# and thus we have to handle the logging differently.
+# 
+# Another approach would be to move do_cmd_and_check to TLUtils and
+# have install-tl call that. Perhaps that would be cleaner, but then
+# there is tlmgr-specific stuff that would have to be conditionalized.
+# So, not great either way. Maybe someday we will merge install-tl and tlmgr.
+# 
+# As a result, the logging text here surrounding the output is mostly a
+# duplicate of what's in do_cmd_and_check.
+# 
+sub run_postinst_logcommand {
+  my ($cmd) = @_;
+  logpackage("command: $cmd");
+  logcommand("running $cmd");
+  my $ret = TeXLive::TLUtils::run_cmd_with_log ($cmd, \&logcommand_bare);
+  my $outmsg = "\n--end of output of $cmd";
+  if ($ret == 0) {
+    info("done running $cmd.\n") unless $cmd =~ /^fmtutil/;
+    logcommand("$outmsg (success).\n");
+  } else {
+    info("\n");
+    tlwarn("$prg: $cmd failed (status $ret), see $commandlogfile\n");
+    logcommand("$outmsg (failure, status $ret");
+    $ret = 1;
+  }
+  return $ret;
 }
 
 sub read_and_report_fmtutil_status_file {
@@ -1502,58 +1559,58 @@ sub action_path {
   }
   init_local_db();
   my $winadminmode = 0;
-  if (win32()) {
+  if (wndws()) {
     #
-    # for w32 we do system wide vs user setting detection as follows:
-    # - if --w32mode is NOT given,
+    # for windows we do system wide vs. user setting detection as follows:
+    # - if --windowsmode is NOT given,
     #   - if admin
     #     --> honor opt_w32_multi_user setting in tlpdb
     #   - if not admin
     #     - if opt_w32_multi_user == NO
     #       --> do user path adjustment
     #     - if opt_w32_multi_user == YES
-    #       --> do nothing, warn that the setting is on, suggest --w32mode user
-    # - if --w32mode admin
+    #       --> do nothing, warn the setting is on, suggest --windowsmode user
+    # - if --windowsmode admin
     #   - if admin
     #     --> ignore opt_w32_multi_user and do system path adjustment
     #   - if non-admin
     #     --> do nothing but warn that user does not have privileges
-    # - if --w32mode user
+    # - if --windowsmode user
     #   - if admin
     #     --> ignore opt_w32_multi_user and do user path adjustment
     #   - if non-admin
     #     --> ignore opt_w32_multi_user and do user path adjustment
-    if (!$opts{"w32mode"}) {
+    if (!$opts{"windowsmode"}) {
       $winadminmode = $localtlpdb->option("w32_multi_user");
       if (!TeXLive::TLWinGoo::admin()) {
         if ($winadminmode) {
-          tlwarn("The TLPDB specifies system wide path adjustments\nbut you don't have admin privileges.\nFor user path adjustment please use\n\t--w32mode user\n");
+          tlwarn("The TLPDB specifies system wide path adjustments\nbut you don't have admin privileges.\nFor user path adjustment please use\n\t--windowsmode user\n");
           # and do nothing
           return ($F_ERROR);
         }
       }
     } else {
-      # we are in the block where a --w32mode argument is given
+      # we are in the block where a --windowsmode argument is given
       # we reverse the tests:
       if (TeXLive::TLWinGoo::admin()) {
         # in admin mode we simply use what is given on the cmd line
-        if ($opts{"w32mode"} eq "user") {
+        if ($opts{"windowsmode"} eq "user") {
           $winadminmode = 0;
-        } elsif ($opts{"w32mode"} eq "admin") {
+        } elsif ($opts{"windowsmode"} eq "admin") {
           $winadminmode = 1;
         } else {
-          tlwarn("$prg: unknown --w32admin mode: $opts{w32mode}, should be 'admin' or 'user'\n");
+          tlwarn("$prg: unknown --windowsmode mode: $opts{windowsmode}, should be 'admin' or 'user'\n");
           return ($F_ERROR);
         }
       } else {
         # we are non-admin
-        if ($opts{"w32mode"} eq "user") {
+        if ($opts{"windowsmode"} eq "user") {
           $winadminmode = 0;
-        } elsif ($opts{"w32mode"} eq "admin") {
-          tlwarn("$prg: You don't have the privileges to work in --w32mode admin\n");
+        } elsif ($opts{"windowsmode"} eq "admin") {
+          tlwarn("$prg: You don't have the privileges to work in --windowsmode admin\n");
           return ($F_ERROR);
         } else {
-          tlwarn("$prg: unknown --w32admin mode: $opts{w32mode}, should be 'admin' or 'user'\n");
+          tlwarn("$prg: unknown --windowsmode mode: $opts{windowsmode}, should be 'admin' or 'user'\n");
           return ($F_ERROR);
         }
       }
@@ -1561,9 +1618,9 @@ sub action_path {
   }
   my $ret = $F_OK;
   if ($what =~ m/^add$/i) {
-    if (win32()) {
+    if (wndws()) {
       $ret |= TeXLive::TLUtils::w32_add_to_path(
-        $localtlpdb->root . "/bin/win32",
+        $localtlpdb->root . "/bin/windows",
         $winadminmode);
       # ignore this return value, since broadcase_env might return
       # nothing in case of errors, and there is no way around it.
@@ -1576,9 +1633,9 @@ sub action_path {
         $localtlpdb->option("sys_info"));
     }
   } elsif ($what =~ m/^remove$/i) {
-    if (win32()) {
+    if (wndws()) {
       $ret |= TeXLive::TLUtils::w32_remove_from_path(
-        $localtlpdb->root . "/bin/win32",
+        $localtlpdb->root . "/bin/windows",
         $winadminmode);
       # ignore this return value, since broadcase_env might return
       # nothing in case of errors, and there is no way around it.
@@ -2257,7 +2314,7 @@ sub action_backup {
     if ($clean_mode) {
       clear_old_backups ($pkg, $opts{"backupdir"}, $opts{"clean"}, $opts{"dry-run"}, 1);
     } else {
-      # for now default to xz and allow overriding with env var
+      # for now default to xz and allow overriding with envvar
       my $compressorextension = $Compressors{$::progs{'compressor'}}{'extension'};
       my $tlp = $localtlpdb->get_package($pkg);
       my $saving_verb = $opts{"dry-run"} ? "would save" : "saving";
@@ -2338,7 +2395,9 @@ sub write_w32_updater {
   my $root = $localtlpdb->root;
   my $temp = "$root/temp";
   TeXLive::TLUtils::mkdirhier($temp);
-  tlwarn("$prg: Backup option not implemented for infrastructure update.\n") if ($opts{"backup"});
+  tlwarn("$prg: warning: backup option not implemented for infrastructure "
+         . " update on Windows; continuing anyway.\n") 
+    if ($opts{"backup"});
   if ($media eq 'local_uncompressed') {
     tlwarn("$prg: Creating updater from local_uncompressed currently not implemented!\n");
     tlwarn("$prg: But it should not be necessary!\n");
@@ -3291,7 +3350,7 @@ sub action_update {
         }
         $updated{$pkg} = 1;
         next;
-      } elsif (win32() && ($pkg =~ m/$CriticalPackagesRegexp/)) {
+      } elsif (wndws() && ($pkg =~ m/$CriticalPackagesRegexp/)) {
         # we pretend that the update happened
         # in order to calculate file changes properly
         $updated{$pkg} = 1;
@@ -3375,8 +3434,11 @@ sub action_update {
       if ($pkg =~ m/$CriticalPackagesRegexp/) {
         debug("Not removing critical package $pkg\n");
       } else {
-        $localtlpdb->remove_package($pkg, 
-          "remove-warn-files" => \%do_warn_on_move);
+        if (! $localtlpdb->remove_package($pkg, 
+                "remove-warn-files" => \%do_warn_on_move)) {
+          info("aborted\n") unless $::machinereadable;
+          next;
+        }
       }
       if ($remotetlpdb->install_package($pkg, $localtlpdb)) {
         # installation succeeded because we got a reference
@@ -3395,7 +3457,7 @@ sub action_update {
             my $parentobj = $localtlpdb->get_package($parent);
             if (!defined($parentobj)) {
               # well, in this case we might have hit a package that only
-              # has .ARCH package, like psv.win32, so do nothing
+              # has .ARCH package, like psv.windows, so do nothing
               debug("$prg: .ARCH package without parent, not announcing postaction\n");
             } else {
               debug("$prg: announcing parent execute action for $pkg\n");
@@ -3410,7 +3472,7 @@ sub action_update {
         # TODO
         logpackage("failed update: $pkg ($rev -> $mediarevstr)");
         tlwarn("$prg: Installation of new version of $pkg failed, trying to unwind.\n");
-        if (win32()) {
+        if (wndws()) {
           # w32 is notorious for not releasing a file immediately
           # we experienced permission denied errors
           my $newname = $unwind_package;
@@ -3524,7 +3586,6 @@ sub action_update {
 
   print "end-of-updates\n" if $::machinereadable;
 
-  #
   # check that if updates to the critical packages are present all of
   # them have been successfully updated
   my $infra_update_done = 1;
@@ -3557,7 +3618,7 @@ sub action_update {
         my @found_pkgs = $localtlpdb->find_file($k);
         if ($#found_pkgs >= 0) {
           my $bad_file = 1;
-          if (win32()) {
+          if (wndws()) {
             # on w32 the packages have not been removed already,
             # so we check that the only package listed in @found_pkgs
             # is the one we are working on ($pkg)
@@ -3583,7 +3644,7 @@ sub action_update {
       }
     }
 
-    if (!win32()) {
+    if (!wndws()) {
       for my $f (@infra_files_to_be_removed) {
         # TODO actually unlink the stuff
         #unlink("$Master/$f");
@@ -3614,7 +3675,7 @@ sub action_update {
   }
 
   # infra update and tlmgr restart on w32 is done by the updater batch script
-  if (win32() && $opts{'self'} && !$opts{"list"} && @critical) {
+  if (wndws() && $opts{'self'} && !$opts{"list"} && @critical) {
     info("$prg: Preparing TeX Live infrastructure update...\n");
     for my $f (@infra_files_to_be_removed) {
       debug("file scheduled for removal $f\n");
@@ -3629,7 +3690,7 @@ sub action_update {
   }
 
   # only when we are not dry-running we restart the program
-  if (!win32() && $restart_tlmgr && !$opts{"dry-run"} && !$opts{"list"}) {
+  if (!wndws() && $restart_tlmgr && !$opts{"dry-run"} && !$opts{"list"}) {
     info("$prg: Restarting to complete update ...\n");
     debug("restarting tlmgr @::SAVEDARGV\n");
     # cleanup temp files before re-exec-ing tlmgr
@@ -3920,6 +3981,7 @@ sub action_install {
     if (!$opts{"dry-run"}) {
       if ($remotetlpdb->install_package($pkg, $localtlpdb,
             ($packs{$pkg} ? $packs{$pkg} : undef) )) {
+        # installation succeeded because we got a reference
         logpackage("${re}install: $pkg$tagstr");
       } else {
         logpackage("failed ${re}install: $pkg$tagstr");
@@ -4760,11 +4822,11 @@ sub action_option {
       # ignore generate_update which is no longer used or needed.
       next if ($o eq "generate_updmap");
       # ignore some things which are w32 specific
-      next if ($o eq "desktop_integration" && !win32());
-      next if ($o eq "file_assocs" && !win32());
-      next if ($o eq "w32_multi_user" && !win32());
+      next if ($o eq "desktop_integration" && !wndws());
+      next if ($o eq "file_assocs" && !wndws());
+      next if ($o eq "w32_multi_user" && !wndws());
       #
-      if (win32()) {
+      if (wndws()) {
         next if ($o =~ m/^sys_/);
       }
       if (defined $TLPDBOptions{$o}) {
@@ -4828,7 +4890,7 @@ sub action_option {
             # when running w32 do not allow that a non-admin users sets
             # this from false to true
             my $do_it = 0;
-            if (win32()) {
+            if (wndws()) {
               if (admin()) {
                 $do_it = 1;
               } else {
@@ -4925,7 +4987,7 @@ sub action_option {
       }
     }
     if (!$found) {
-      tlwarn("$prg: option $what not supported!\n");
+      tlwarn("$prg: Option not supported: $what\n");
       return ($F_ERROR);
     }
   }
@@ -4937,9 +4999,9 @@ sub action_option {
 #
 sub action_platform {
   my $ret = $F_OK;
-  my @extra_w32_packs = qw/tlperl.win32 tlgs.win32
+  my @extra_w32_packs = qw/tlperl.windows tlgs.windows
                            collection-wintools
-                           dviout.win32 wintools.win32/;
+                           dviout.windows wintools.windows/;
   if ($^O =~ /^MSWin/i) {
     warn("action `platform' not supported on Windows\n");
     # return an error here so that we don't go into post-actions
@@ -5011,7 +5073,7 @@ sub action_platform {
         }
       }
     }
-    if (TeXLive::TLUtils::member('win32', @todoarchs)) {
+    if (TeXLive::TLUtils::member('windows', @todoarchs)) {
       # install the necessary w32 stuff
       for my $p (@extra_w32_packs) {
         info("install: $p\n");
@@ -5069,7 +5131,7 @@ sub action_platform {
         }
       }
     }
-    if (TeXLive::TLUtils::member('win32', @todoarchs)) {
+    if (TeXLive::TLUtils::member('windows', @todoarchs)) {
       for my $p (@extra_w32_packs) {
         info("remove: $p\n");
         $localtlpdb->remove_package($p) if (!$opts{"dry-run"});
@@ -5315,7 +5377,7 @@ Error message from creating MainWindow:
 # Return zero if successful, nonzero if failure.
 # 
 sub uninstall_texlive {
-  if (win32()) {
+  if (wndws()) {
     printf STDERR "Please use \"Add/Remove Programs\" from the Control Panel "
                   . "to uninstall TeX Live!\n";
     return ($F_ERROR);
@@ -5427,7 +5489,8 @@ sub action_recreate_tlpdb {
     next if $dirent eq ".";
     next if $dirent eq "..";
     next unless -d "$Master/bin/$dirent";
-    if (-r "$Master/bin/$dirent/kpsewhich" || -r "$Master/bin/$dirent/kpsewhich.exe") {
+    if (-r "$Master/bin/$dirent/kpsewhich"
+        || -r "$Master/bin/$dirent/kpsewhich.exe") {
       push @archs, $dirent;
       debug("$prg: skipping directory $Master/bin/$dirent, no kpsewhich there\n");
     }
@@ -5499,7 +5562,7 @@ sub init_tltree {
 
   # if we are on W32, die (no find).  
   my $arch = $localtlpdb->platform();
-  if ($arch eq "win32") {
+  if ($arch eq "windows") {
     tldie("$prg: sorry, cannot check this on Windows.\n");
   }
 
@@ -5516,6 +5579,7 @@ sub init_tltree {
 }
 
 sub action_check {
+  ddebug("starting action_check\n");
   my $svn = defined($opts{"use-svn"}) ? $opts{"use-svn"} : 0;
   my $what = shift @ARGV;
   $what || ($what = "all");
@@ -5776,6 +5840,7 @@ sub check_runfiles {
 # check executes
 #
 sub check_executes {
+  ddebug("starting check_executes\n");
   my $Master = $localtlpdb->root;
   my (%maps,%langcodes,%fmtlines);
   for my $pkg ($localtlpdb->list_packages) {
@@ -5799,8 +5864,10 @@ sub check_executes {
       }
     }
   }
+
+  ddebug(" check_executes: checking maps\n");
   my %badmaps;
-  foreach my $mf (keys %maps) {
+  foreach my $mf (sort keys %maps) {
     my @pkgsfound = @{$maps{$mf}};
     if ($#pkgsfound > 0) {
       tlwarn("$prg: map file $mf is referenced in the executes of @pkgsfound\n");
@@ -5840,9 +5907,11 @@ sub check_executes {
       print "\t$mf (execute in @{$badmaps{$mf}})\n";
     }
   }
+
+  ddebug(" check_executes: checking hyphcodes\n");
   my %badhyphcodes;
   my %problemhyphen;
-  foreach my $lc (keys %langcodes) {
+  foreach my $lc (sort keys %langcodes) {
     next if ($lc eq "zerohyph.tex");
     my @found = $localtlpdb->find_file("texmf-dist/tex/generic/hyph-utf8/loadhyph/$lc");
     if ($#found < 0) {
@@ -5868,7 +5937,7 @@ sub check_executes {
   #    print "\t$mf (@{$problemhyphen{$mf}})\n";
   #  }
   #}
-  #
+
   # what should be checked for the executes? we could check
   # - the existence of the engine in bin/i386-linux or all $arch
   # - the existence of the format name link/bat
@@ -5879,8 +5948,9 @@ sub check_executes {
   my %missingengines;
   my %missinginis;
   my @archs_to_check = $localtlpdb->available_architectures;
-  for (keys %fmtlines) {
-    my %r = TeXLive::TLUtils::parse_AddFormat_line("$_");
+  ddebug("archs_to_check: @archs_to_check\n");
+  for (sort keys %fmtlines) {
+    my %r = TeXLive::TLUtils::parse_AddFormat_line($_);
     if (defined($r{"error"})) {
       die "$r{'error'}, parsing $_, package(s) @{$fmtlines{$_}}";
     }
@@ -6005,7 +6075,7 @@ sub check_file {
     return 1;
   } else {
     # not -r, so check for the extensions .bat and .exe on windoze-ish.
-    if ($a =~ /win[0-9]|.*-cygwin/) {
+    if ($a =~ /windows|win[0-9]|.*-cygwin/) {
       if (-r "$f.exe" || -r "$f.bat") {
         return 1;
       }
@@ -6038,7 +6108,7 @@ sub check_depends {
     # For each package, check that it is a dependency of some collection.
     if (! exists $coll_deps{$pkg}) {
       # Except that schemes and our ugly Windows packages are ok.
-      push (@no_dep, $pkg) unless $pkg =~/^scheme-|\.win32$/;
+      push (@no_dep, $pkg) unless $pkg =~/^scheme-|\.windows$/;
     }
 
     # For each dependency, check that we have a package.
@@ -6136,7 +6206,7 @@ sub check_texmfdbs {
 # explicitly run the various post actions, e.g.,
 # on a client system or overriding global settings.
 # 
-# tlmgr postaction [--w32mode=user|admin] [--fileassocmode=1|2] [--all]
+# tlmgr postaction [--windowsmode=user|admin] [--fileassocmode=1|2] [--all]
 #    [install|remove] [shortcut|fileassoc|script] [<pkg>...]
 
 sub action_postaction {
@@ -6156,9 +6226,9 @@ sub action_postaction {
     tlwarn("$prg: action postaction needs as second argument one from 'shortcut', 'fileassoc', 'script'\n");
     return;
   }
-  if (win32()) {
-    if ($opts{"w32mode"}) {
-      if ($opts{"w32mode"} eq "user") {
+  if (wndws()) {
+    if ($opts{"windowsmode"}) {
+      if ($opts{"windowsmode"} eq "user") {
         if (TeXLive::TLWinGoo::admin()) {
           debug("Switching to user mode on user request\n");
           TeXLive::TLWinGoo::non_admin();
@@ -6166,13 +6236,13 @@ sub action_postaction {
         # in user mode we also switch TEXMFSYSVAR to TEXMFVAR since
         # xetex.pl, but maybe others are writing to TEXMFSYSVAR
         chomp($ENV{"TEXMFSYSVAR"} = `kpsewhich -var-value TEXMFVAR`);
-      } elsif ($opts{"w32mode"} eq "admin") {
+      } elsif ($opts{"windowsmode"} eq "admin") {
         if (!TeXLive::TLWinGoo::admin()) {
-          tlwarn("$prg: you don't have the permissions for --w32mode=admin\n");
+          tlwarn("$prg: you don't have permission for --windowsmode=admin\n");
           return;
         }
       } else {
-        tlwarn("$prg: action postaction --w32mode can only be 'admin' or 'user'\n");
+        tlwarn("$prg: action postaction --windowsmode can only be 'admin' or 'user'\n");
         return;
       }
     }
@@ -6191,7 +6261,7 @@ sub action_postaction {
     @todo = $localtlpdb->expand_dependencies("-only-arch", $localtlpdb, @todo);
   }
   if ($type =~ m/^shortcut$/i) {
-    if (!win32()) {
+    if (!wndws()) {
       tlwarn("$prg: action postaction shortcut only works on windows.\n");
       return;
     }
@@ -6205,7 +6275,7 @@ sub action_postaction {
       }
     }
   } elsif ($type =~ m/^fileassoc$/i) {
-    if (!win32()) {
+    if (!wndws()) {
       tlwarn("$prg: action postaction fileassoc only works on windows.\n");
       return;
     }
@@ -6540,7 +6610,7 @@ sub action_key {
     chomp (my $TEXMFSYSCONFIG = `kpsewhich -var-value=TEXMFSYSCONFIG`);
     my $local_keyring = "$Master/tlpkg/gpg/repository-keys.gpg";
     if ($arg eq 'list') {
-      debug("running $::gpg --list-keys\n");
+      debug("running: $::gpg --list-keys\n");
       system("$::gpg --list-keys");
       return $F_OK;
     } elsif ($arg eq 'remove') {
@@ -6919,7 +6989,7 @@ sub init_local_db {
   # - if we are on Windows, it does not start with Drive:[\/]
   if (! ( $location =~ m!^(https?|ftp)://!i  || 
           $location =~ m!$TeXLive::TLUtils::SshURIRegex!i ||
-          (win32() && (!(-e $location) || ($location =~ m!^.:[\\/]!) ) ) ) ) {
+          (wndws() && (!(-e $location) || ($location =~ m!^.:[\\/]!) ) ) ) ) {
     # seems to be a local path, try to normalize it
     my $testloc = abs_path($location);
     # however, if we were given a url, that will get "normalized" to the
@@ -7334,9 +7404,56 @@ and the repository are not compatible:
     }
   }
 
+  # Check for remote main db being *older* than what we have seen
+  # before, to avoid wrongly removing packages because a stale mirror
+  # happens to be chosen.
+  # 
+  # The check we employ is heuristic: texlive-scripts is updated practically
+  # every day. We compare the locally-installed texlive-scripts with the
+  # remote revision, and if that does not line up, we error out.
+  # 
+  # We only do this check if the remote database contains texlive-scripts
+  # otherwise sub-repos (like tlgpg) will fail.
+  # Alternative approaches:
+  # - loop over all installed packages and take the maximum of revisions found
+  # - on every update, save the last seen remote main revision into
+  #   00texlive.installation
+  #
+  if ($is_main) {
+    my $rtlp = $remotetlpdb->get_package("texlive-scripts");
+    my $ltlp = $localtlpdb->get_package("texlive-scripts");
+    my $local_revision;
+    my $remote_revision;
+    if (!defined($rtlp)) {
+      # remote db does not contain texlive-scripts, so we skip all checks
+      debug("Remote database does not contain the texlive-scripts package, "
+            . "skipping version consistency check\n");
+      $remote_revision = 0;
+    } else {
+      $remote_revision = $rtlp->revision;
+    }
+    if (!defined($ltlp)) {
+      info("texlive-scripts package not found (?!), "
+           . "skipping version consistency check\n");
+      $local_revision = 0;
+    } else {
+      $local_revision = $ltlp->revision;
+    }
+    debug("texlive-scripts remote revision $remote_revision, "
+          . "texlive-scripts local revision $local_revision\n");
+    if ($remote_revision > 0 && $local_revision > $remote_revision) {
+      info("fail load $location\n") if ($::machinereadable);
+      return(undef, <<OLD_REMOTE_MSG);
+Remote database (revision $remote_revision of the texlive-scripts package)
+seems to be older than the local installation (rev $local_revision of
+texlive-scripts); please use a different mirror and/or wait a day or two.
+OLD_REMOTE_MSG
+    }
+  }
+
   # check for being frozen
   if ($remotetlpdb->config_frozen) {
-    my $frozen_msg = <<FROZEN;
+    my $frozen_msg = <<FROZEN_MSG;
 TeX Live $TeXLive::TLConfig::ReleaseYear is frozen
 and will no longer be routinely updated.  This happens when a new
 release is made, or will be made shortly.
@@ -7344,7 +7461,7 @@ release is made, or will be made shortly.
 For general status information about TeX Live, see its home page:
 https://tug.org/texlive
 
-FROZEN
+FROZEN_MSG
     # don't die here, we want to allow updates even if tlnet is frozen!
     tlwarn($frozen_msg);
   }
@@ -7631,9 +7748,16 @@ sub logpackage {
 }
 sub logcommand {
   if ($commandlogfile) {
-    $commandslogged++;
+    $commandslogged++; # not really counting commands logged, but calls
     my $tim = localtime();
     print COMMANDLOG "[$tim] @_\n";
+  }
+}
+# without the timestamp
+sub logcommand_bare {
+  if ($commandlogfile) {
+    $commandslogged++;
+    print COMMANDLOG "@_\n";
   }
 }
 
@@ -7707,7 +7831,7 @@ sub check_for_critical_updates {
     my $localrev = $tlp->revision;
     my $mtlp = $mediatlpdb->get_package($pkg);
     if (!defined($mtlp)) {
-      debug("Very surprising, $pkg is not present in the remote tlpdb.\n");
+      debug("Surprising, $pkg not present in remote tlpdb.\n");
       next;
     }
     my $remoterev = $mtlp->revision;
@@ -8780,9 +8904,9 @@ settings.
 
 =over 4
 
-=item B<path [--w32mode=user|admin] add>
+=item B<path [--windowsmode=user|admin] add>
 
-=item B<path [--w32mode=user|admin] remove>
+=item B<path [--windowsmode=user|admin] remove>
 
 On Unix, adds or removes symlinks for executables, man pages, and info
 pages in the system directories specified by the respective options (see
@@ -8794,21 +8918,21 @@ command must be rerun as needed.
 On Windows, the registry part where the binary directory is added or
 removed is determined in the following way:
 
-If the user has admin rights, and the option C<--w32mode> is not given,
+If the user has admin rights, and the option C<--windowsmode> is not given,
 the setting I<w32_multi_user> determines the location (i.e., if it is
 on then the system path, otherwise the user path is changed).
 
-If the user has admin rights, and the option C<--w32mode> is given, this
+If the user has admin rights, and the option C<--windowsmode> is given, this
 option determines the path to be adjusted.
 
-If the user does not have admin rights, and the option C<--w32mode>
+If the user does not have admin rights, and the option C<--windowsmode>
 is not given, and the setting I<w32_multi_user> is off, the user path
 is changed, while if the setting I<w32_multi_user> is on, a warning is
 issued that the caller does not have enough privileges.
 
-If the user does not have admin rights, and the option C<--w32mode>
+If the user does not have admin rights, and the option C<--windowsmode>
 is given, it must be C<user> and the user path will be adjusted. If a
-user without admin rights uses the option C<--w32mode admin> a warning
+user without admin rights uses the option C<--windowsmode admin> a warning
 is issued that the caller does not have enough privileges.
 
 =back
@@ -8907,13 +9031,13 @@ Options:
 
 =over 4
 
-=item B<--w32mode=[user|admin]>
+=item B<--windowsmode=[user|admin]>
 
-If the option C<--w32mode> is given the value C<user>, all actions will
+If the option C<--windowsmode> is given the value C<user>, all actions will
 only be carried out in the user-accessible parts of the
 registry/filesystem, while the value C<admin> selects the system-wide
 parts of the registry for the file associations.  If you do not have
-enough permissions, using C<--w32mode=admin> will not succeed.
+enough permissions, using C<--windowsmode=admin> will not succeed.
 
 =item B<--fileassocmode=[1|2]>
 
@@ -10240,7 +10364,7 @@ This script and its documentation were written for the TeX Live
 distribution (L<https://tug.org/texlive>) and both are licensed under the
 GNU General Public License Version 2 or later.
 
-$Id: tlmgr.pl 63068 2022-04-18 05:58:07Z preining $
+$Id: tlmgr.pl 69653 2024-01-31 21:52:46Z karl $
 =cut
 
 # test HTML version: pod2html --cachedir=/tmp tlmgr.pl >/tmp/tlmgr.html
@@ -10250,4 +10374,4 @@ $Id: tlmgr.pl 63068 2022-04-18 05:58:07Z preining $
 ### tab-width: 2
 ### indent-tabs-mode: nil
 ### End:
-# vim:set tabstop=2 expandtab: #
+# vim:set tabstop=2 shiftwidth=2 expandtab: #

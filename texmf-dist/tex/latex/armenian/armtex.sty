@@ -2,11 +2,11 @@
 %%
 %% This is the `armtex.sty' file (LaTeX package for writing in Armenian).
 %%
-%% This file is a part of the ArmTeX project [2022/08/14 v3.0-beta4]
+%% This file is a part of the ArmTeX project [2024/01/13 v3.0-beta5]
 %%
 %% ArmTeX is a system for writing in Armenian with plain TeX and/or LaTeX(2e).
 %%
-%% Copyright 1997 - 2022:
+%% Copyright 1997 - 2024:
 %%   Serguei Dachian (Serguei.Dachian_AT_univ-lille.fr),
 %%   Arnak Dalalyan  (arnak.dalalyan_AT_ensae.fr),
 %%   Vardan Akopian  (vakopian_AT_yahoo.com).
@@ -38,7 +38,7 @@
 %%
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{armtex}
-  [2022/08/14 v3.0-beta4 armtex.sty (LaTeX package for writing in Armenian)]
+  [2024/01/13 v3.0-beta5 armtex.sty (LaTeX package for writing in Armenian)]
 \RequirePackage{kvoptions}
 
 
@@ -87,7 +87,6 @@
                                     \ArmTeX@Savedseries
                                     \ArmTeX@Savedshape
                                     \relax}
-\def\ArmTeX@Armdischyph{\discretionary{\char123}{}{}}
 \def\ArmTeX@MathError#1{%
   \PackageError{ArmTeX}
     {The command \protect #1 is not available in math mode}
@@ -248,10 +247,8 @@
   \fi\ \number\year~\armto\armdot}
 \def\armdate{\let\today\armtoday}
 \def\armdateoff{\let\today\ArmTeX@Savedtoday}
-\def\armhyph{\let\-\ArmTeX@Armdischyph
-             \let\@dischyph\ArmTeX@Armdischyph}
-\def\armhyphoff{\let\-\ArmTeX@Saveddischyph
-                \let\@dischyph\ArmTeX@Saveddischyph}
+\def\armhyph{\defaulthyphenchar=123}
+\def\armhyphoff{\defaulthyphenchar=\ArmTeX@SavedDHC}
 \def\armalph#1{\expandafter\@armalph\csname c@#1\endcsname}
 \def\Armalph#1{\expandafter\@Armalph\csname c@#1\endcsname}
 \def\armalphs{\let\@alph\@armalph
@@ -353,10 +350,16 @@
 %
 % Do some savings.
 %
-\let\ArmTeX@Savedexclam\!%
-\let\ArmTeX@Savedbar\|%
-\let\ArmTeX@Savedstar\*%
-\let\ArmTeX@Saveddischyph\-%
+\def\ArmTeX@Save#1#2{%
+  \ifcsname #1 \endcsname
+    \expandafter\let\expandafter #2\csname #1 \endcsname
+  \else
+    \expandafter\let\expandafter #2\csname #1\endcsname
+\fi}
+\ArmTeX@Save{!}{\ArmTeX@Savedexclam}
+\ArmTeX@Save{|}{\ArmTeX@Savedbar}
+\ArmTeX@Save{*}{\ArmTeX@Savedstar}
+\edef\ArmTeX@SavedDHC{\the\defaulthyphenchar}
 \let\ArmTeX@Savedtoday\today
 \let\ArmTeX@Savedencoding\encodingdefault
 \let\ArmTeX@Savedfamily\familydefault
@@ -413,9 +416,9 @@
 \fi
 %
 \ifx\ArmTeX@Notdots\null\else
-  \def\vdots{\vbox{\baselineskip4\p@ \lineskiplimit\z@
+  \DeclareRobustCommand{\vdots}{\vbox{\baselineskip4\p@ \lineskiplimit\z@
     \kern6\p@\hbox{$\ldotp$}\hbox{$\ldotp$}\hbox{$\ldotp$}}}%
-  \def\ddots{\mathinner{\mkern1mu\raise7\p@
+  \DeclareRobustCommand{\ddots}{\mathinner{\mkern1mu\raise7\p@
     \vbox{\kern7\p@\hbox{$\ldotp$}}\mkern2mu
     \raise4\p@\hbox{$\ldotp$}\mkern2mu\raise\p@\hbox{$\ldotp$}\mkern1mu}}%
 \fi

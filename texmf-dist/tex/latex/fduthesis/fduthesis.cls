@@ -6,7 +6,7 @@
 %%
 %% fduthesis.dtx  (with options: `class')
 %% 
-%%     Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
+%%     Copyright (C) 2017--2023 by Xiangdong Zeng <xdzeng96@gmail.com>
 %% 
 %%     This work may be distributed and/or modified under the
 %%     conditions of the LaTeX Project Public License, either
@@ -43,7 +43,7 @@
 %%                                 and README.md.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2020/10/01]
-\GetIdInfo $Id: fduthesis.dtx 0.8 2022-09-04 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
+\GetIdInfo $Id: fduthesis.dtx 0.9a 2023-05-27 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
   {Thesis template for Fudan University}
 \ProvidesExplClass{\ExplFileName}
   {\ExplFileDate}{\ExplFileVersion}{\ExplFileDescription}
@@ -76,23 +76,22 @@
   }
 \box_new:N   \l__fdu_tmpa_box
 \clist_new:N \l__fdu_tmpa_clist
-\clist_new:N \l__fdu_tmpb_clist
 \dim_new:N   \l__fdu_tmpa_dim
-\dim_new:N   \l__fdu_tmpb_dim
 \skip_new:N  \l__fdu_tmpa_skip
 \tl_new:N    \l__fdu_tmpa_tl
 \tl_new:N    \l__fdu_tmpb_tl
-\int_new:N \g__fdu_thesis_type_int
+\tl_new:N \g__fdu_thesis_type_tl
 \clist_new:N \g__fdu_to_ctexbook_clist
 \clist_new:N \g__fdu_to_hyperref_clist
 \bool_new:N \g__fdu_twoside_bool
 \bool_set_true:N \g__fdu_twoside_bool
 \bool_new:N \g__fdu_draft_bool
 \tl_new:N \g__fdu_config_tl
-\cs_generate_variant:Nn \file_input:n     { V  }
-\cs_generate_variant:Nn \int_to_arabic:n  { v  }
-\cs_generate_variant:Nn \keys_define:nn   { nx }
-\cs_generate_variant:Nn \tl_map_inline:nn { xn }
+\cs_generate_variant:Nn \file_input:n          { V   }
+\cs_generate_variant:Nn \int_to_arabic:n       { v   }
+\cs_generate_variant:Nn \keys_define:nn        { nx  }
+\cs_generate_variant:Nn \prop_item:Nn          { No  }
+\cs_generate_variant:Nn \regex_replace_all:nnN { nnc }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { Vn } { T, TF }
 \cs_new:Npn \__fdu_quad:  { \skip_horizontal:n { 1 em } }
 \cs_new:Npn \__fdu_qquad: { \skip_horizontal:n { 2 em } }
@@ -150,11 +149,10 @@
 \cs_new:Npn \__fdu_info:nx     { \msg_info:nnx     { fduthesis } }
 \keys_define:nn { fdu / option }
   {
-    type .choice:,
-    type .value_required:n = true,
     type .choices:nn =
       { doctor, master, bachelor }
-      { \int_set_eq:NN \g__fdu_thesis_type_int \l_keys_choice_int },
+      { \tl_set_eq:NN \g__fdu_thesis_type_tl \l_keys_choice_tl },
+    type .value_required:n = true,
     type .initial:n = bachelor,
     oneside .value_forbidden:n = true,
     twoside .value_forbidden:n = true,
@@ -258,13 +256,15 @@
   {
     font .choices:nn =
       { garamond, libertinus, lm, palatino, times, times*, none }
-      { \tl_set_eq:NN \g__fdu_fontset_tl \l_keys_choice_tl }
+      { \tl_set_eq:NN \g__fdu_fontset_tl \l_keys_choice_tl },
+    font .value_required:n = true,
   }
 \keys_define:nn { fdu / style }
   {
     cjk-font .choices:nn =
       { adobe, fandol, founder, mac, sinotype, sourcehan, windows, none }
-      { \tl_set_eq:NN \g__fdu_cjk_fontset_tl \l_keys_choice_tl }
+      { \tl_set_eq:NN \g__fdu_cjk_fontset_tl \l_keys_choice_tl },
+    cjk-font .value_required:n = true,
   }
 \cs_new_protected:Npn \__fdu_setmainfont:nn #1#2
   { \__fontspec_main_setmainfont:nn {#2} {#1} }
@@ -312,76 +312,10 @@
           { \use:c { __fdu_set #1 font:nn } {##2} { ##1, ##3 } }
       }
   }
-\clist_map_inline:nn { main, sans, mono, math    } { \__fdu_set_font_helper:n {#1} }
-\clist_map_inline:nn { CJKmain, CJKsans, CJKmono } { \__fdu_set_font_helper:n {#1} }
-\tl_new:N \g__fdu_font_family_libertinus_serif_tl
-\tl_new:N \g__fdu_font_family_libertinus_sans_tl
-\tl_new:N \g__fdu_font_style_libertinus_rm_tl
-\tl_new:N \g__fdu_font_style_libertinus_bf_tl
-\tl_new:N \g__fdu_font_style_libertinus_it_tl
-\tl_new:N \g__fdu_font_style_libertinus_bfit_tl
-\tl_new:N \g__fdu_font_style_libertinus_bfsl_tl
-\tl_new:N \g__fdu_font_family_xits_tl
-\tl_new:N \g__fdu_font_style_xits_rm_tl
-\tl_new:N \g__fdu_font_style_xits_bf_tl
-\tl_new:N \g__fdu_font_style_xits_it_tl
-\tl_new:N \g__fdu_font_style_xits_bfit_tl
-\tl_new:N \g__fdu_font_name_libertinus_serif_tl
-\tl_new:N \g__fdu_font_name_libertinus_sans_tl
-\tl_new:N \g__fdu_font_name_libertinus_math_tl
-\tl_new:N \g__fdu_font_name_xits_tl
-\tl_new:N \g__fdu_font_name_xits_math_rm_tl
-\tl_new:N \g__fdu_font_name_xits_math_bf_tl
-\fontspec_font_if_exist:nTF { LibertinusSerif-Regular.otf }
-  {
-    \tl_set:Nn \g__fdu_font_family_libertinus_serif_tl { LibertinusSerif }
-    \tl_set:Nn \g__fdu_font_family_libertinus_sans_tl  { LibertinusSans  }
-    \tl_set:Nn \g__fdu_font_family_libertinus_math_tl  { LibertinusMath  }
-    \tl_set:Nn \g__fdu_font_style_libertinus_rm_tl     { Regular         }
-    \tl_set:Nn \g__fdu_font_style_libertinus_bf_tl     { Bold            }
-    \tl_set:Nn \g__fdu_font_style_libertinus_it_tl     { Italic          }
-    \tl_set:Nn \g__fdu_font_style_libertinus_bfit_tl   { BoldItalic      }
-    \fontspec_font_if_exist:nTF { LibertinusSans-BoldOblique.otf }
-      { \tl_set:Nn \g__fdu_font_style_libertinus_bfsl_tl { BoldOblique } }
-      { \tl_set:Nn \g__fdu_font_style_libertinus_bfsl_tl { Bold        } }
-  }
-  {
-    \tl_set:Nn \g__fdu_font_family_libertinus_serif_tl { libertinusserif }
-    \tl_set:Nn \g__fdu_font_family_libertinus_sans_tl  { libertinussans  }
-    \tl_set:Nn \g__fdu_font_family_libertinus_math_tl  { libertinusmath  }
-    \tl_set:Nn \g__fdu_font_style_libertinus_rm_tl     { regular         }
-    \tl_set:Nn \g__fdu_font_style_libertinus_bf_tl     { bold            }
-    \tl_set:Nn \g__fdu_font_style_libertinus_it_tl     { italic          }
-    \tl_set:Nn \g__fdu_font_style_libertinus_bfit_tl   { bolditalic      }
-    \tl_set:Nn \g__fdu_font_style_libertinus_bfsl_tl   { bolditalic      }
-  }
-\fontspec_font_if_exist:nTF { XITS-Regular.otf }
-  {
-    \tl_set:Nn \g__fdu_font_family_xits_tl        { XITS             }
-    \tl_set:Nn \g__fdu_font_style_xits_rm_tl      { Regular          }
-    \tl_set:Nn \g__fdu_font_style_xits_bf_tl      { Bold             }
-    \tl_set:Nn \g__fdu_font_style_xits_it_tl      { Italic           }
-    \tl_set:Nn \g__fdu_font_style_xits_bfit_tl    { BoldItalic       }
-    \tl_set:Nn \g__fdu_font_name_xits_math_rm_tl  { XITSMath-Regular }
-    \tl_set:Nn \g__fdu_font_name_xits_math_bf_tl  { XITSMath-Bold    }
-  }
-  {
-    \tl_set:Nn \g__fdu_font_family_xits_tl        { xits          }
-    \tl_set:Nn \g__fdu_font_style_xits_rm_tl      { regular       }
-    \tl_set:Nn \g__fdu_font_style_xits_bf_tl      { bold          }
-    \tl_set:Nn \g__fdu_font_style_xits_it_tl      { italic        }
-    \tl_set:Nn \g__fdu_font_style_xits_bfit_tl    { bolditalic    }
-    \tl_set:Nn \g__fdu_font_name_xits_math_rm_tl  { xits-math     }
-    \tl_set:Nn \g__fdu_font_name_xits_math_bf_tl  { xits-mathbold }
-  }
-\tl_set:Nx \g__fdu_font_name_libertinus_serif_tl
-  { \g__fdu_font_family_libertinus_serif_tl - \g__fdu_font_style_libertinus_rm_tl }
-\tl_set:Nx \g__fdu_font_name_libertinus_sans_tl
-  { \g__fdu_font_family_libertinus_sans_tl  - \g__fdu_font_style_libertinus_rm_tl }
-\tl_set:Nx \g__fdu_font_name_libertinus_math_tl
-  { \g__fdu_font_family_libertinus_math_tl  - \g__fdu_font_style_libertinus_rm_tl }
-\tl_set:Nx \g__fdu_font_name_xits_tl
-  { \g__fdu_font_family_xits_tl - \g__fdu_font_style_xits_rm_tl }
+\clist_map_inline:nn { main, sans, mono, math }
+  { \__fdu_set_font_helper:n {#1} }
+\clist_map_inline:nn { CJKmain, CJKsans, CJKmono }
+  { \__fdu_set_font_helper:n {#1} }
 \cs_new_protected:Npn \__fdu_load_font_garamond:
   {
     \__fdu_setmainfont:nn { EBGaramond }
@@ -392,13 +326,12 @@
         ItalicFont     = *-Italic,
         BoldItalicFont = *-BoldItalic
       }
-    \__fdu_setsansfont:nn { \g__fdu_font_family_libertinus_sans_tl }
+    \__fdu_setsansfont:nn { LibertinusSans }
       {
         Extension      = .otf,
-        UprightFont    = *-\g__fdu_font_style_libertinus_rm_tl,
-        BoldFont       = *-\g__fdu_font_style_libertinus_bf_tl,
-        ItalicFont     = *-\g__fdu_font_style_libertinus_it_tl,
-        BoldItalicFont = *-\g__fdu_font_style_libertinus_bfsl_tl
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
       }
     \__fdu_setmonofont:nn { lmmonolt10 }
       {
@@ -412,21 +345,20 @@
   }
 \cs_new_protected:Npn \__fdu_load_font_libertinus:
   {
-    \__fdu_setmainfont:nn { \g__fdu_font_family_libertinus_serif_tl }
+    \__fdu_setmainfont:nn { LibertinusSerif }
       {
         Extension      = .otf,
-        UprightFont    = *-\g__fdu_font_style_libertinus_rm_tl,
-        BoldFont       = *-\g__fdu_font_style_libertinus_bf_tl,
-        ItalicFont     = *-\g__fdu_font_style_libertinus_it_tl,
-        BoldItalicFont = *-\g__fdu_font_style_libertinus_bfit_tl
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
       }
-    \__fdu_setsansfont:nn { \g__fdu_font_family_libertinus_sans_tl }
+    \__fdu_setsansfont:nn { LibertinusSans }
       {
         Extension      = .otf,
-        UprightFont    = *-\g__fdu_font_style_libertinus_rm_tl,
-        BoldFont       = *-\g__fdu_font_style_libertinus_bf_tl,
-        ItalicFont     = *-\g__fdu_font_style_libertinus_it_tl,
-        BoldItalicFont = *-\g__fdu_font_style_libertinus_bfsl_tl
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
       }
     \__fdu_setmonofont:nn { lmmonolt10 }
       {
@@ -436,7 +368,7 @@
         ItalicFont     = *-oblique,
         BoldItalicFont = *-boldoblique
       }
-    \__fdu_setmathfont:nn { \g__fdu_font_name_libertinus_math_tl .otf } { }
+    \__fdu_setmathfont:nn { LibertinusMath-Regular.otf } { }
   }
 \cs_new_protected:Npn \__fdu_load_font_lm:
   { \__fdu_setmathfont:nn { latinmodern-math.otf } { } }
@@ -450,14 +382,13 @@
         ItalicFont     = *-italic,
         BoldItalicFont = *-bolditalic
       }
-    \__fdu_setsansfont:nn { \g__fdu_font_family_libertinus_sans_tl }
+    \__fdu_setsansfont:nn { LibertinusSans }
       {
         Extension      = .otf,
-        UprightFont    = *-\g__fdu_font_style_libertinus_rm_tl,
-        BoldFont       = *-\g__fdu_font_style_libertinus_bf_tl,
-        ItalicFont     = *-\g__fdu_font_style_libertinus_it_tl,
-        BoldItalicFont = *-\g__fdu_font_style_libertinus_bfsl_tl,
-        Scale          = MatchUppercase
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        Scale          = MatchUppercase,
       }
     \__fdu_setmonofont:nn { lmmonolt10 }
       {
@@ -471,13 +402,13 @@
   }
 \cs_new_protected:Npn \__fdu_load_font_times:
   {
-    \__fdu_setmainfont:nn { \g__fdu_font_family_xits_tl }
+    \__fdu_setmainfont:nn { XITS }
       {
-        Extension          = .otf,
-        UprightFont        = *-\g__fdu_font_style_xits_rm_tl,
-        BoldFont           = *-\g__fdu_font_style_xits_bf_tl,
-        ItalicFont         = *-\g__fdu_font_style_xits_it_tl,
-        BoldItalicFont     = *-\g__fdu_font_style_xits_bfit_tl
+        Extension      = .otf,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
       }
     \__fdu_setsansfont:nn { texgyreheros }
       {
@@ -496,16 +427,16 @@
         BoldItalicFont = *-bolditalic,
         Ligatures      = CommonOff
       }
-    \__fdu_setmathfont:nn { \g__fdu_font_name_xits_math_rm_tl .otf }
-      { BoldFont = \g__fdu_font_name_xits_math_bf_tl .otf }
+    \__fdu_setmathfont:nn { XITSMath-Regular.otf }
+      { BoldFont = XITSMath-Bold.otf }
   }
 \cs_new_protected:cpn { __fdu_load_font_ times* : }
   {
     \__fdu_setmainfont:nn { Times~ New~ Roman    } { }
     \__fdu_setsansfont:nn { Arial                } { }
     \__fdu_setmonofont:nn { Courier~ New         } { }
-    \__fdu_setmathfont:nn { \g__fdu_font_name_xits_math_rm_tl .otf }
-      { BoldFont = \g__fdu_font_name_xits_math_bf_tl .otf }
+    \__fdu_setmathfont:nn { XITSMath-Regular.otf }
+      { BoldFont = XITSMath-Bold.otf }
   }
 \cs_new_protected:Npn \__fdu_load_cjk_font_adobe:
   {
@@ -631,19 +562,7 @@
     font-size .choice:,
     font-size .value_required:n = true,
     font-size / -4 .code:n = { },
-    font-size /  5 .code:n =
-      {
-        \RenewDocumentCommand \tiny         { } { \zihao {  7 } }
-        \RenewDocumentCommand \scriptsize   { } { \zihao { -6 } }
-        \RenewDocumentCommand \footnotesize { } { \zihao {  6 } }
-        \RenewDocumentCommand \small        { } { \zihao { -5 } }
-        \RenewDocumentCommand \normalsize   { } { \zihao {  5 } }
-        \RenewDocumentCommand \large        { } { \zihao { -4 } }
-        \RenewDocumentCommand \Large        { } { \zihao { -3 } }
-        \RenewDocumentCommand \LARGE        { } { \zihao { -2 } }
-        \RenewDocumentCommand \huge         { } { \zihao {  2 } }
-        \RenewDocumentCommand \Huge         { } { \zihao {  1 } }
-      },
+    font-size /  5 .code:n = { \ctex_file_input:n { ctex-c5size.clo } },
     fullwidth-stop .choice:,
     fullwidth-stop .value_required:n = true,
     fullwidth-stop / catcode .code:n =
@@ -734,20 +653,28 @@
         fixskip     = true
       }
   }
+\cs_new_protected:Npn \__fdu_sanitize_chapter_title:n #1
+  {
+    \tl_clear:N \l__fdu_tmpa_tl
+    \tl_set:No \l__fdu_tmpa_tl {#1}
+    \tl_remove_all:Nn \l__fdu_tmpa_tl { \quad }
+  }
 \cs_new_protected:Npn \__fdu_chapter:n #1
   {
+    \__fdu_sanitize_chapter_title:n {#1}
     \group_begin:
       \ctexset { chapter / numbering = false }
-      \chapter {#1}
-      \__fdu_chapter_header:n {#1}
+      \chapter [ \l__fdu_tmpa_tl ] {#1}
     \group_end:
+    \__fdu_chapter_header:n {#1}
   }
 \cs_generate_variant:Nn \__fdu_chapter:n { V }
 \cs_new_protected:Npn \__fdu_chapter_no_toc:n #1
   {
-    \chapter *           {#1}
+    \chapter * {#1}
+    \__fdu_sanitize_chapter_title:n {#1}
+    \pdfbookmark [0] { \l__fdu_tmpa_tl } { toc }
     \__fdu_chapter_header:n {#1}
-    \pdfbookmark [0] {#1} { toc }
   }
 \cs_generate_variant:Nn \__fdu_chapter_no_toc:n { V }
 \cs_new_protected:Npn \__fdu_chapter_header:n #1
@@ -804,7 +731,6 @@
       { \__fdu_symbol:n { \int_eval:n { "24EB - 11 + #1 } } }
       { \__fdu_symbol:n { \int_eval:n { "2776 -  1 + #1 } } }
   }
-\cs_new_eq:NN \__fdu_fn_symbol_libertinus_sans:n \__fdu_fn_symbol_libertinus:n
 \cs_new:Npn \__fdu_fn_symbol_pifont:n #1
   { \ding { \int_eval:n { 171 + #1 } } }
 \cs_new:Npn \__fdu_fn_symbol_pifont_neg:n #1
@@ -836,18 +762,18 @@
           { \int_use:N #1 }
         \c__fdu_fn_style_libertinus_tl
           {
-            \fontspec { \g__fdu_font_name_libertinus_serif_tl .otf }
+            \fontspec { LibertinusSerif-Regular.otf }
             \__fdu_fn_symbol_libertinus:n {#1}
           }
         \c__fdu_fn_style_libertinus_neg_tl
           {
-            \fontspec { \g__fdu_font_name_libertinus_serif_tl .otf }
+            \fontspec { LibertinusSerif-Regular.otf }
             \__fdu_fn_symbol_libertinus_neg:n {#1}
           }
         \c__fdu_fn_style_libertinus_sans_tl
           {
-            \fontspec { \g__fdu_font_name_libertinus_sans_tl .otf }
-            \__fdu_fn_symbol_libertinus_sans:n {#1}
+            \fontspec { LibertinusSans-Regular.otf }
+            \__fdu_fn_symbol_libertinus:n {#1}
           }
         \c__fdu_fn_style_pifont_tl
           { \__fdu_fn_symbol_pifont:n {#1} }
@@ -859,17 +785,17 @@
           { \__fdu_fn_symbol_pifont_sans_neg:n {#1} }
         \c__fdu_fn_style_xits_tl
           {
-            \fontspec { \g__fdu_font_name_xits_tl .otf }
+            \fontspec { XITS-Regular.otf }
             \__fdu_fn_symbol_xits:n {#1}
           }
         \c__fdu_fn_style_xits_sans_tl
           {
-            \fontspec { \g__fdu_font_name_xits_tl .otf }
+            \fontspec { XITS-Regular.otf }
             \__fdu_fn_symbol_xits_sans:n {#1}
           }
         \c__fdu_fn_style_xits_sans_neg_tl
           {
-            \fontspec { \g__fdu_font_name_xits_tl .otf }
+            \fontspec { XITS-Regular.otf }
             \__fdu_fn_symbol_xits_sans_neg:n {#1}
           }
       }
@@ -900,7 +826,7 @@
   }
 \cs_new_eq:NN \__fdu_thm_ntheorem_style:n \theoremstyle
 \cs_new_eq:NN \__fdu_thm_ntheorem_new:w   \newtheorem
-\RenewDocumentCommand \newtheorem { s o m m }
+\DeclareDocumentCommand \newtheorem { s o m m }
   {
     \IfBooleanTF {#1}
       { \tl_set:Nn \l__fdu_thm_qed_tl { \ensuremath { \QED } } }
@@ -971,16 +897,8 @@
 \cs_generate_variant:Nn \fdu_thm_set_qed:n         { V }
 \cs_generate_variant:Nn \fdu_thm_set_header_font:n { V }
 \cs_generate_variant:Nn \fdu_thm_set_body_font:n   { V }
-\captionsetup [ figure ]
-  {
-    font     = small,
-    labelsep = quad
-  }
-\captionsetup [ table  ]
-  {
-    font     = { small, sf },
-    labelsep = quad
-  }
+\captionsetup [ figure ] { font = small,         labelsep = quad }
+\captionsetup [ table  ] { font = { small, sf }, labelsep = quad }
 \cs_set:Npn \thefigure
   { \thechapter - \__fdu_arabic:n { figure } }
 \cs_set:Npn \thetable
@@ -997,14 +915,29 @@
   { title, author, supervisor, department, major }
   { \tl_new:c { l__fdu_info_ #1 _en_tl } }
 \clist_new:N \l__fdu_info_keywords_en_clist
-\int_new:N \l__fdu_info_degree_type_int
+\tl_new:N \l__fdu_info_degree_type_tl
+\tl_new:N \l__fdu_info_title_sanitized_tl
+\tl_new:N \l__fdu_info_title_en_sanitized_tl
+\cs_new_protected:Npn \__fdu_set_title:nn #1#2
+  {
+    \tl_set:cn { l__fdu_info_ #1 _tl           } {#2}
+    \tl_set:cn { l__fdu_info_ #1 _sanitized_tl } {#2}
+    \tl_replace_all:cnn { l__fdu_info_ #1 _sanitized_tl } { \\ } { ~ }
+    \regex_replace_all:nnc
+      { \s+ } { \ }
+      { l__fdu_info_ #1 _sanitized_tl }
+    \regex_replace_all:nnc
+      { ([\x{4e00}-\x{9fff}]) \s+ ([\x{4e00}-\x{9fff}]) } { \1 \2 }
+      { l__fdu_info_ #1 _sanitized_tl }
+  }
 \keys_define:nn { fdu / info }
   {
     degree      .choices:nn  =
       { academic, professional }
-      { \int_set_eq:NN \l__fdu_info_degree_type_int \l_keys_choice_int },
-    title       .tl_set:N    = \l__fdu_info_title_tl,
-    title*      .tl_set:N    = \l__fdu_info_title_en_tl,
+      { \tl_set_eq:NN \l__fdu_info_degree_type_tl \l_keys_choice_tl },
+    degree      .value_required:n = true,
+    title       .code:n      = { \__fdu_set_title:nn { title    } {#1} },
+    title*      .code:n      = { \__fdu_set_title:nn { title_en } {#1} },
     date        .tl_set:N    = \l__fdu_info_date_tl,
     author      .tl_set:N    = \l__fdu_info_author_tl,
     author*     .tl_set:N    = \l__fdu_info_author_en_tl,
@@ -1026,39 +959,27 @@
     logo      .tl_set:N    = \l__fdu_cover_logo_tl,
     logo-size .clist_set:N = \l__fdu_cover_logo_size_clist
   }
-\bool_new:N \l__fdu_secret_bool
 \tl_new:N \l__fdu_info_secret_level_tl
 \keys_define:nn { fdu / info }
   {
     secret-level .choices:nn  =
       { none, i, ii, iii }
-      {
-        \int_compare:nTF { \l_keys_choice_int >= 2 }
-          {
-            \bool_set_true:N \l__fdu_secret_bool
-            \tl_set:Nn \l__fdu_info_secret_level_tl
-              {
-                \clist_item:Nn \c__fdu_secret_clist
-                  { \l_keys_choice_int - 1 }
-              }
-          }
-          { \bool_set_false:N \l__fdu_secret_bool }
-      },
+      { \tl_set_eq:NN \l__fdu_info_secret_level_tl \l_keys_choice_tl },
     secret-level .value_required:n = true,
     secret-year  .tl_set:N = \l__fdu_info_secret_year_tl
   }
 \cs_new_protected:Npn \__fdu_spread_box:nn #1#2
   {
     \mode_leave_vertical:
-    \hbox_to_wd:nn {#1}
-      { \tl_map_inline:xn {#2} { ##1 \hfil } \unskip }
+    \hbox_to_wd:nn {#1} { \tl_map_inline:nn {#2} { ##1 \hfil } \unskip }
   }
+\cs_generate_variant:Nn \__fdu_spread_box:nn { no }
 \cs_new_protected:Npn \__fdu_center_box:nn #1#2
   {
     \mode_leave_vertical:
     \hbox_to_wd:nn {#1} { \hfil #2 \hfil }
   }
-\cs_generate_variant:Nn \__fdu_center_box:nn  { Vn }
+\cs_generate_variant:Nn \__fdu_center_box:nn { Vn }
 \cs_new:Npn \__fdu_fixed_width_box:nn #1#2
   { \parbox {#1} {#2} }
 \cs_new:Npn \__fdu_fixed_width_center_box:nn #1#2
@@ -1069,18 +990,6 @@
     \dim_set:Nn #1 { \box_wd:N \l__fdu_tmpa_box }
   }
 \cs_generate_variant:Nn \__fdu_get_text_width:Nn { NV }
-\cs_new:Npn \__fdu_get_max_text_width:NN #1#2
-  {
-    \group_begin:
-      \clist_set_eq:NN \l__fdu_tmpa_clist #2
-      \bool_until_do:nn { \clist_if_empty_p:N \l__fdu_tmpa_clist }
-        {
-          \clist_pop:NN \l__fdu_tmpa_clist \l__fdu_tmpa_tl
-          \__fdu_get_text_width:NV \l__fdu_tmpa_dim \l__fdu_tmpa_tl
-          \dim_gset:Nn #1 { \dim_max:nn {#1} { \l__fdu_tmpa_dim } }
-        }
-    \group_end:
-  }
 \cs_new:Npn \__fdu_blank_underline:n #1
   { \rule [ -0.5 ex ] {#1} { 0.4 pt } }
 \cs_new:Npn \__fdu_line_spread:N #1
@@ -1089,28 +998,37 @@
   { \linespread {#1} \selectfont }
 \cs_new_protected:Npn \__fdu_cover_id:
   {
-    \__fdu_fixed_width_box:nn { 120 pt }
-      {
-        \bool_if:NT \l__fdu_secret_bool
-          {
-            \group_begin:
-              \sffamily
-              \__fdu_cover_id_aux:n { secret_level }
-              \c__fdu_name_secret_star_tl
-              \l__fdu_info_secret_year_tl
-            \group_end:
-            \par
-          }
-        \__fdu_cover_id_aux:n { school_id  } \par
-        \__fdu_cover_id_aux:n { student_id }
-      }
-    \hbox_to_wd:nn { -24 pt } { }
+    \tl_if_eq:NnTF \l__fdu_info_secret_level_tl { none }
+      { \__fdu_cover_id_tabular:n { } }
+      { \__fdu_cover_id_tabular:n { \__fdu_cover_secret: \\ } }
+  }
+\cs_new_protected:Npn \__fdu_cover_id_tabular:n #1
+  {
+    \exp_args:Nnx \begin{tabular} { \c__fdu_cover_id_align_tl }
+      #1
+      \__fdu_cover_id_aux:n { school_id  } \\
+      \__fdu_cover_id_aux:n { student_id }
+    \end{tabular}
   }
 \cs_new:Npn \__fdu_cover_id_aux:n #1
   {
-    \tl_use:c { c__fdu_name_ #1 _tl }
-    \c__fdu_fwid_colon_tl
+    \tl_use:c { c__fdu_name_ #1 _tl } &
     \tl_use:c { l__fdu_info_ #1 _tl }
+  }
+\tl_const:Nn \c__fdu_cover_id_align_tl
+  { l @ { \c__fdu_fwid_colon_tl } l @ { } }
+\cs_new:Npn \__fdu_cover_secret:
+  {
+    \multicolumn { 2 } { l }
+      {
+        \sffamily
+        \c__fdu_name_secret_level_tl
+        \c__fdu_fwid_colon_tl
+        \prop_item:No \c__fdu_secret_prop
+          { \l__fdu_info_secret_level_tl }
+        \c__fdu_name_secret_star_tl
+        \l__fdu_info_secret_year_tl
+      }
   }
 \cs_new_protected:Npn \__fdu_cover_logo:
   {
@@ -1129,71 +1047,53 @@
   }
 \cs_new_protected:Npn \__fdu_cover_type:
   {
-    \tl_set:Nx \l__fdu_tmpa_tl
-      {
-        \clist_item:Nn \c__fdu_thesis_type_clist
-          { \g__fdu_thesis_type_int }
-      }
-    \__fdu_spread_box:nn { 0.45 \textwidth } { \l__fdu_tmpa_tl }
+    \prop_get:NVN \c__fdu_thesis_type_prop
+      \g__fdu_thesis_type_tl \l__fdu_tmpa_tl
+    \__fdu_spread_box:no { 0.45 \textwidth } { \l__fdu_tmpa_tl }
   }
 \cs_new_protected:Npn \__fdu_cover_degree:
   {
-    \int_compare:nT { \g__fdu_thesis_type_int != 3 }
+    \tl_if_eq:NnF \g__fdu_thesis_type_tl { bachelor }
       {
         \c__fdu_fwid_left_paren_tl
-        \clist_item:Nn \c__fdu_degree_type_clist
-          { \l__fdu_info_degree_type_int }
+        \prop_item:No \c__fdu_degree_type_prop
+          { \l__fdu_info_degree_type_tl }
         \c__fdu_fwid_right_paren_tl
       }
   }
 \cs_new_protected:Npn \__fdu_cover_info:
   {
-    \tl_set:Nx \l__fdu_cover_info_left_width_tl
-      {
-        \int_case:nn { \l__fdu_info_degree_type_int }
-          {
-            { 1 } { 6 em }
-            { 2 } { 9 em }
-          }
-      }
-    \begin{minipage} [ c ] { \textwidth }
-      \centering \zihao { 4 }
-      \clist_set:Nx \l__fdu_tmpa_clist
+    \group_begin:
+      \zihao { 4 }
+      \tl_if_eq:NnT \l__fdu_info_degree_type_tl { professional }
         {
-          \c__fdu_name_department_tl,
-          \int_case:nn { \l__fdu_info_degree_type_int }
+          \tl_set_eq:NN
+            \c__fdu_name_major_tl \c__fdu_name_major_professional_tl
+        }
+      \clist_clear:N \l__fdu_tmpa_clist
+      \clist_map_inline:nn { department, major, author, supervisor, date }
+        {
+          \clist_gput_right:Nn \l__fdu_tmpa_clist
             {
-              { 1 } { \c__fdu_name_major_tl              }
-              { 2 } { \c__fdu_name_major_professional_tl }
-            },
-          \c__fdu_name_author_tl,
-          \c__fdu_name_supervisor_tl,
-          \c__fdu_name_date_tl,
+              \exp_args:Nx \__fdu_cover_info_left:n
+                { \tl_use:c { c__fdu_name_ ##1 _tl } }
+              &
+              \tl_use:c { l__fdu_info_ ##1 _tl }
+            }
         }
-      \clist_set:Nx \l__fdu_tmpb_clist
-        {
-          { \l__fdu_info_department_tl },
-          { \l__fdu_info_major_tl      },
-          { \l__fdu_info_author_tl     },
-          { \l__fdu_info_supervisor_tl },
-          { \l__fdu_info_date_tl       }
-        }
-      \__fdu_get_max_text_width:NN \l__fdu_tmpb_dim \l__fdu_tmpb_clist
-      \bool_until_do:nn
-        { \clist_if_empty_p:N \l__fdu_tmpa_clist }
-        {
-          \clist_pop:NN \l__fdu_tmpa_clist \l__fdu_tmpa_tl
-          \clist_pop:NN \l__fdu_tmpb_clist \l__fdu_tmpb_tl
-          \__fdu_spread_box:nn
-            { \l__fdu_cover_info_left_width_tl }
-            { \l__fdu_tmpa_tl }
-          \c__fdu_fwid_colon_tl
-          \__fdu_center_box:Vn \l__fdu_tmpb_dim { \l__fdu_tmpb_tl }
-          \skip_vertical:n { 1 ex }
-        }
-    \end{minipage}
+      \exp_args:Nnx \begin{tabular} { \c__fdu_cover_info_align_tl }
+        \clist_use:Nn \l__fdu_tmpa_clist { \\ [ 1 ex ] }
+      \end{tabular}
+    \group_end:
   }
-\tl_new:N \l__fdu_cover_info_left_width_tl
+\tl_const:Nn \c__fdu_cover_info_align_tl
+  { c @ { \c__fdu_fwid_colon_tl } c }
+\cs_new_protected:Npn \__fdu_cover_info_left:n #1
+  {
+    \tl_if_eq:NnTF \l__fdu_info_degree_type_tl { professional }
+      { \__fdu_spread_box:nn { 9 em } {#1} }
+      { \__fdu_spread_box:nn { 6 em } {#1} }
+  }
 \cs_new_protected:Npn \__fdu_cover_signature:N #1
   {
     \clist_map_inline:Nn #1
@@ -1322,22 +1222,24 @@
 \NewDocumentCommand \makecoveri { }
   {
     \thispagestyle { empty }
+    \tl_set:Nn \thepage { A }
     \UseInstance { fdu / cover } { cover-i-default }
   }
 \NewDocumentCommand \makecoverii { }
   {
     \thispagestyle { empty }
-    \clist_if_empty:NF \l__fdu_info_instructors_clist
+    \tl_set:Nn \thepage { B }
+    \clist_if_empty:NTF \l__fdu_info_instructors_clist
+      { \hbox:n { } }
       { \UseInstance { fdu / cover } { cover-ii-default } }
   }
 \NewDocumentCommand \makecoveriii { }
   {
     \cleardoublepage
+    \thispagestyle { empty }
+    \tl_set:Nn \thepage { C }
     \tl_if_empty:NTF \l__fdu_declaration_page_tl
-      {
-        \thispagestyle { empty }
-        \UseInstance { fdu / cover } { cover-iii-default }
-      }
+      { \UseInstance { fdu / cover } { cover-iii-default } }
       { \includepdf { \l__fdu_declaration_page_tl } }
   }
 \DeclareCoverTemplate { cover-i   }
@@ -1370,7 +1272,8 @@
     type     / format      = \zihao {  2 },
     degree   / format      = \zihao {  4 },
     title    / format      = \zihao { -2 } \bfseries,
-    title-en / format      = \__fdu_line_spread:n { 1.2 } \zihao { 4 } \bfseries,
+    title-en / format      =
+      \__fdu_line_spread:n { 1.2 } \zihao { 4 } \bfseries,
     id       / bottom-skip = 0 pt plus 1.6 fill,
     logo     / bottom-skip = 0 pt plus 0.3 fill,
     type     / bottom-skip = -18 pt,
@@ -1387,7 +1290,7 @@
 \DeclareInstance { fdu / cover } { cover-ii-default } { cover-ii }
   {
     title     / content =
-      \__fdu_spread_box:nn { 7 em } { \c__fdu_name_instructors_tl },
+      \__fdu_spread_box:no { 7 em } { \c__fdu_name_instructors_tl },
     name-list / content =
       \clist_use:Nn \l__fdu_info_instructors_clist { \par },
     title     / format  = \zihao { 2 } \sffamily,
@@ -1535,7 +1438,8 @@
     \parbox [t] { \dim_eval:n { \textwidth - \l__fdu_tmpa_dim } }
       {
         \clist_use:Nn #2 {#3} \par
-        \cs_gset:Npx \__fdu_keywords_prevdepth: { \dim_use:N \tex_prevdepth:D }
+        \cs_gset:Npx \__fdu_keywords_prevdepth:
+          { \dim_use:N \tex_prevdepth:D }
       }
   }
 \cs_new_protected:Npn \__fdu_clc_jel:nn #1#2
@@ -1564,7 +1468,13 @@
     \dim_set_eq:NN \LTpre  \c_zero_dim
     \dim_set_eq:NN \LTpost \c_zero_dim
   }
-\bool_new:N \l__fdu_bibtex_bool
+\NewDocumentEnvironment { acknowledgements } { }
+  { \__fdu_acknowledgements_begin: } { }
+\cs_new_protected:Npn \__fdu_acknowledgements_begin:
+  {
+    \__fdu_chapter:V \c__fdu_name_acknowledgements_tl
+  }
+\tl_new:N \l__fdu_bib_backend_tl
 \tl_new:N \l__fdu_bib_style_tl
 \tl_new:N \l__fdu_bib_gb_style_tl
 \tl_new:N \l__fdu_cite_style_tl
@@ -1574,9 +1484,13 @@
     bib-backend .choice:,
     bib-backend .value_required:n = true,
     bib-backend / bibtex   .code:n =
-      { \bool_set_true:N  \l__fdu_bibtex_bool },
+      { \tl_set:Nn \l__fdu_bib_backend_tl { bibtex } },
     bib-backend / biblatex .code:n =
-      { \bool_set_false:N \l__fdu_bibtex_bool },
+      {
+        \tl_set:Nn \l__fdu_bib_backend_tl { biblatex }
+        \NewDocumentCommand \addbibresource { m }
+          { \clist_gput_right:Nn \l__fdu_bib_resource_clist {#1} }
+      },
     bib-style .choice:,
     bib-style .value_required:n = true,
     bib-style / numerical    .code:n =
@@ -1599,23 +1513,25 @@
   }
 \ctex_at_end_preamble:n
   {
-    \bool_if:NT \l__fdu_bibtex_bool
+    \tl_if_eq:NnT \l__fdu_bib_backend_tl { bibtex }
       {
         \tl_if_empty:NTF \l__fdu_bib_style_tl
           {
             \RequirePackage [ sort & compress ] { gbt7714 }
-            \exp_args:No \bibliographystyle { gbt7714- \l__fdu_bib_gb_style_tl }
+            \exp_args:No \bibliographystyle
+              { gbt7714- \l__fdu_bib_gb_style_tl }
           }
           {
             \RequirePackage [ sort & compress ] { natbib }
-            \exp_args:NV \bibliographystyle \l__fdu_bib_style_tl
+            \exp_args:No \bibliographystyle
+              { \l__fdu_bib_style_tl }
           }
         \__fdu_bibtex_setup:
       }
   }
 \__fdu_gadd_ltxhook:nn { env/document/begin }
   {
-    \bool_if:NF \l__fdu_bibtex_bool
+    \tl_if_eq:NnT \l__fdu_bib_backend_tl { biblatex }
       {
         \__fdu_biblatex_pre_setup:
         \RequirePackage { biblatex }
@@ -1648,11 +1564,6 @@
   }
 \__fdu_msg_new:nn { invalid-option-in-bibtex }
   { Option(s)~ "#1"~ are~ invalid~ in~ BibTeX. }
-\bool_if:NF \l__fdu_bibtex_bool
-  {
-    \NewDocumentCommand \addbibresource { m }
-      { \clist_gput_right:Nn \l__fdu_bib_resource_clist {#1} }
-  }
 \cs_new_protected:Npn \__fdu_biblatex_pre_setup:
   {
     \cs_undefine:N \addbibresource
@@ -1702,7 +1613,7 @@
           { \textendash \penalty \hyphenpenalty }
       }
   }
-\NewDocumentCommand \hypersetup { m }
+\DeclareDocumentCommand \hypersetup { m }
   { \fdu_hyperref_setup:n {#1} }
 \cs_new_protected:Npn \fdu_hyperref_setup:n #1
   { \clist_gput_right:Nn \g__fdu_to_hyperref_clist {#1} }
@@ -1770,14 +1681,15 @@
         bookmarksnumbered = true,
         psdextra          = true,
         unicode           = true,
-        pdftitle    = \l__fdu_info_title_tl,
+        pdftitle    = \l__fdu_info_title_sanitized_tl,
         pdfauthor   = \l__fdu_info_author_tl,
         pdfkeywords = \l__fdu_info_keywords_clist,
         pdfcreator  = \c__fdu_name_pdf_creator_tl
       }
     \exp_args:NV \hypersetup \g__fdu_to_hyperref_clist
     \fdu_allow_url_break:
-    \bool_if:NF \l__fdu_bibtex_bool { \BiblatexManualHyperrefOn }
+    \tl_if_eq:NnT \l__fdu_bib_backend_tl { biblatex }
+      { \BiblatexManualHyperrefOn }
   }
 \ctex_at_end_package:nn { hyperref }
   {

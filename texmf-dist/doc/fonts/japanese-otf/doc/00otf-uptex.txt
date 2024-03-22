@@ -1,5 +1,5 @@
 [ Title ]
-japanese-otf-uptex Ver.0.27  2022/02/16
+japanese-otf-uptex Ver.0.30  2023/10/08
 
 
 [ Abstract ]
@@ -45,9 +45,12 @@ script/sp_list_k.txt : a list of characters on supplementary planes in UniKS-UTF
 script/CheckDVICode.pm : perl module checking category of characters
 script/umkpkana.pl   : perl script making pl, ovp for proportional kana
 script/umkvpkana.pl  : perl script making pl, ovp for proportional kana
+script/umkcidtfm.pl  : perl script making tfm for CIDx macros
+script/umkcidvf.pl   : perl script making vf for CIDx macros
 
 sty/otf.sty   : basic style file
 sty/mlutf.sty : style file for multi option
+sty/mlcid.sty : style file for multi option
 
 test/uplatex/* : test samples.
 
@@ -120,10 +123,12 @@ Ref. https://github.com/t-tk/japanese-otf-uptex/issues/3
 
 
 [ About Unicode base multi-weight fonts ]
-japanese-otf-uptex Ver.0.26 has introduced new virtual fonts for
-\UTF{}, \UTFC{}, \UTFT{}, \UTFK{} macros. They are Unicode base
-(conventionally subfont scheme) and support multi-weight fonts
-(seven sets of family/series for all languages,
+japanese-otf-uptex Ver.0.26 has introduced new virtual fonts
+for \UTF{}, \UTFC{}, \UTFT{}, \UTFK{} macros.
+In addition, japanese-otf-uptex Ver.0.29 has introduced new virtual fonts
+for \CID{}, \CIDC{}, \CIDT{}, \CIDK{} macros.
+They are Unicode/CID base (conventionally subfont scheme) and
+support multi-weight fonts (seven sets of family/series for all languages,
 conventionally two sets of family/series for Chinese and Korean).
 The feature also requires new dviware which support fall back of CJK virtual fonts.
   明朝体・細字　　  \mcfamily\ltseries  ml
@@ -134,6 +139,7 @@ The feature also requires new dviware which support fall back of CJK virtual fon
   ゴシック体・極太  \gtfamily\ebseries  ge
   丸ゴシック体　　  \mgfamily           mgr
 Ref. https://github.com/t-tk/japanese-otf-uptex/issues/4
+https://github.com/t-tk/japanese-otf-uptex/issues/8
 
 japanese-otf-uptex Ver.0.27 has introduced new virtual fonts for
 Chinese/Korean plain texts to support multi-weight fonts.
@@ -480,4 +486,62 @@ https://github.com/t-tk/japanese-otf-uptex
     Add new tests for CK multi-weight plain texts.
   COPYRIGHT ::
     Update year.
+2023.02.23 Ver0.28
+  sty/otf.sty, sty/mlutf.sty ::
+    Bump version number.
+    Set option autodetect-engine default.
+    Add a new option 'platex' to check if engine is platex.
+  umkjvf, umakeotf{,_brsg,_jis04,_pre,_prop},
+  script/{CheckDVICode,MakeSPList}.pm,
+  script/{mktfm_sp,mkutf32list,mkutfvf_sp,umk{,v}pkana}.pl ::
+    Update header comments.
+  script/CheckDVICode.pm, script/sp_list_j.txt,
+  test/uplatex/sp_jp_{utf,text}.tex ::
+    Update references:
+    Unicode Blocks-15.0.0.txt (Date: 2022-01-28, 20:58:00 GMT [KW])
+    Adobe-Japan1-7 cid2code.txt (Version 05/18/2022).
+  script/{CheckDVICode,MakeSPList}.pm, script/umk{,v}pkana}.pl,
+  umkjvf, umakeotf_prop ::
+    Support Kana Letter Small Ko defined by Unicode 15.0.
+  test/uplatex/Makefile, test/uplatex/utfmacro-kozuka.map,
+  test/uplatex/{uotftest-utf8,upkanatest1}.tex ::
+    Add new tests for Small Kana Extension & Adobe fonts.
+  COPYRIGHT ::
+    Update year.
+2023.06.25 Ver0.29
+  sty/otf.sty, sty/mlutf.sty, sty/mlcid.sty ::
+    Bump version number.
+  sty/otf.sty ::
+    Add a new option 'noruby' not to use kana glyphs optimized for ruby.
+    Fix bug on *brsgnmlminl, *nmlgotheb.
+    Fix issue related to \kanjishape   ## Thank @aminophen san.
+      Ref. https://github.com/texjporg/japanese-otf-mirror/issues/7
+  sty/otf.sty, sty/mlcid.sty,
+  umakeotf, script/umkcid{tfm,vf}.pl ::
+    Introduce Unicode base multi-weight virtual fonts
+    for \CID{}, \CIDC{}, \CITT{}, \CIDK{}.
+  test/uplatex/{uotftest-utf8,uotf-sp-utf8,otfscale}.tex ::
+    Add option 'dvipdfmx' to document class declaration.
+  test/uplatex/Makefile, test/uplatex/uotftest-utf8.tex ::
+    Add a new test for option 'noruby'.
+  test/uplatex/Makefile,
+  test/uplatex/utfmacro-{kozuka,haranoaji,ibmplex}.map,
+  test/uplatex/uotf-cid-{h,v}.tex,
+  test/uplatex/cid_{jp,gb,cns,ks}_{h,v}.tex ::
+    Add a new test for multi-weight \CID{}, \CIDC{}, \CIDT{}, \CIDK{}.
+2023.10.08 Ver0.30
+  sty/otf.sty, sty/mlutf.sty, sty/mlcid.sty ::
+    Bump version number.
+  sty/otf.sty ::
+    Fix issue related to ruby of extra bold.   ## Thank 流橋 利樹 san.
+      Ref. https://okumuralab.org/tex/mod/forum/discuss.php?d=3068#p22269
+    Fix issue related to insertion of penalty before \CID{}   ## Thank @aminophen san.
+      Ref. https://github.com/t-tk/japanese-otf-uptex/issues/8#issuecomment-1741634553
+  basepl/mjvf-upnm{kor,sch,tch}{,-slim}.cnf, script/sp_list_c.txt,
+  script/mkutf32list.pl, script/umkcid{tfm,vf}.pl, test/uplatex/sp_gb_utf.tex ::
+    Update references:
+    Unicode Blocks-15.1.0.txt (Date: 2023-07-28, 15:47:20 GMT)
+    Adobe-GB1-6 cid2code.txt (Version 09/21/2023).
+  test/uplatex/uotftest-utf8.tex ::
+    Add tests for ruby with okumacro.sty and pxrubrica.sty .
 

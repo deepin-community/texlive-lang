@@ -83,6 +83,6 @@ the 3-clause BSD license (see [LICENSE](./LICENSE)).
 
 ## Release Date
 
-2021-12-11
+2023-02-26
 
 Hironobu Yamashita

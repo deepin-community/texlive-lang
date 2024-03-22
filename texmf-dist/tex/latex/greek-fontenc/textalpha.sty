@@ -3,53 +3,16 @@
 % Greek symbols in text
 % *********************
 %
-% :Copyright: © 2010 Günter Milde
+% :Version:   2.5 (changelog_)
+%
+% :Copyright: © 2010, 2023 Günter Milde
+%
 % :Licence:   This work may be distributed and/or modified under the
 %             conditions of the `LaTeX Project Public License`_, either
 %             version 1.3 of this license or any later version.
 %
-% :Abstract:  Provide a set of ``\text*`` macros for Greek characters
-%             in text mode.
+% :Abstract:  Provide a set of LICR macros for Greek characters in text mode.
 %
-% :Identification:
-%  ::
-
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{textalpha}
-[2020/10/30 2.0 macros for Greek letters in text]
-
-% .. note::
-%
-%    The package was renamed from `textgreek` to `textalpha` to prevent
-%    confusion with the textgreek_ package by Leonard Michlmayr.
-%
-%
-% Changelog:
-%   .. class:: borderless
-%
-%   ====== ========== =========================================================
-%   0.1    2010-06-16 initial version
-%   0.2    2012-06-27 support for compound Unicode definitions outside LGR
-%   0.3    2013-05-03 new accent macro names with ``lgrxenc.def`` 0.7
-%   0.4    2013-05-28 use ``lgrenc.def`` from greek-fontenc.
-%   0.5    2013-09-11 move to greek-fontenc_,
-%          ..         support XeTeX/LuaTeX, add breve below accents.
-%   0.11   2013-11-28 compatibility with Xe/LuaTeX in 8-bit mode.
-%   0.12   2014-12-12 fix auxiliary macro names,
-%                     define symbol macros for breathing accents.
-%   0.13   2015-09-04 Option normalize-symbols_: support for symbol variants.
-%          ..         Option keep-semicolon_: use semicolon as erotimatiko
-%                     in LGR.
-%   0.13.2 2016-02-05 Support for standard Unicode text font encoding "TU"
-%                     (new in fontspec v2.5a).
-%   0.13.4 2019-07-11 Auxiliary command for subscript iota.
-%   0.14   2020-02-28 Update test for Unicode fonts.
-%                     Rename ``greek-euenc`` to ``tuenc-greek``.
-%                     Don't use ``\LastDeclaredEncoding``.
-%   1.0    2020-09-25 Also set ``\encodingdefault`` with ``\greekscript``.
-%   2.0    2020-10-30 Load ``tuenc-greek.def`` with Xe/LuaTeX by default.
-%          ..         Load ``puenc-greek.def`` if used with `hyperref`_.
-%   ====== ========== =========================================================
 %
 % .. contents::
 %
@@ -69,7 +32,7 @@
 %   definitions.
 %
 % * Otherwise, the `LGR font encoding`_ is set as `default font encoding`
-%   (cf. fntguide_ section 5.3) for Greek.
+%   (cf. [fntguide]_ section 5.3) for Greek.
 %
 % Advantages:
 %
@@ -86,8 +49,10 @@
 %   + natively by XeTeX/LuaTeX for Unicode fonts.
 %
 %     If 8-bit font encodings like LGR are used alongside Unicode fonts, text
-%     input can be done via the Latin transcription or LICR but *not via
+%     input can be done via the Latin transliteration or LICR but *not via
 %     literal Unicode characters* (see test-tuenc-greek.tex_).
+%
+% .. _limitations:
 %
 % .. Attention:: The macros work well in any font encoding for single symbols.
 %    However, with 8-bit TeX engines, the automatic font-encoding switches
@@ -97,7 +62,7 @@
 %    Therefore, Greek text should be written with the help of babel_ or
 %    polyglossia_ (setting the language to ``greek``) or wrapped in the
 %    provided ``ensuregreek`` macro.  Using babel_ or polyglossia_ also helps
-%    to ensure correct hyphenation of Greek text.
+%    to ensure correct hyphenation and upcasing of Greek text.
 %
 %
 % Usage
@@ -109,13 +74,13 @@
 %
 %      \usepackage{textalpha}
 %
-% eventually with the options_ to normalize symbols variants
+% eventually with the options to `normalize symbols variants`_
 %
 % .. code:: latex
 %
 %      \usepackage[normalize-symbols]{textalpha}
 %
-% and/or to use the semicolon as erotimatiko_ also in 8-bit TeX
+% and/or to `use the semicolon as erotimatiko`_ also in 8-bit TeX
 %
 % .. code:: latex
 %
@@ -125,9 +90,13 @@
 % To give ``textalpha.sty`` a chance of finding out which `font encodings`_
 % are used, load it after fontspec_ and/or fontenc_.
 %
+% Documentation
+% =============
 %
+% A HTML rendering of the literal source is available as
+% `<textalpha.sty.html>`_ (you may be reading it just now).
 %
-% For detailled examples see `<textalpha-doc.tex>`_ and `<textalpha-doc.pdf>`_
+% For detailed examples see `<textalpha-doc.tex>`_ and `<textalpha-doc.pdf>`_
 % (8-bit TeX and XeTeX/LuaTeX in 8-bit compatibility mode) as well as
 % `<test-tuenc-greek.tex>`_ and `<test-tuenc-greek.pdf>`_ (XeTeX/LuaTeX with
 % Unicode fonts).
@@ -139,8 +108,18 @@
 % Implementation
 % ==============
 %
+% Identification
+% --------------
+% ::
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{textalpha}[2023-09-12 2.5 macros for Greek letters in text]
+
+
 % Options
 % -------
+%
+% .. _normalize symbols variants:
 %
 % normalize-symbols
 % """""""""""""""""
@@ -168,6 +147,9 @@
 \newif\iftextalpha@normalizeSymbols
 \DeclareOption{normalize-symbols}{\textalpha@normalizeSymbolstrue}
 
+
+% .. _use the semicolon as erotimatiko:
+%
 % keep-semicolon
 % """"""""""""""
 %
@@ -191,14 +173,15 @@
 
 \ProcessOptions\relax
 
-% .. _font encoding:
-%
+
 % Symbol macros for breathings
 % ----------------------------
 %
-% In the Latin transcription provided by LGR, breathing accents (Dasia and
+% In the Latin transliteration provided by LGR, breathing accents (Dasia and
 % Psili) are input as < and >. Provide the corresponding NFSS macro accents.
 % (Used below for LGR, TU, and PU, if these font encodings are defined)::
+
+\providecommand*{\IfFormatAtLeastTF}[3]{#3} % new in 2020
 
 \newcommand{\textalpha@define@breathings}[1]{
   \DeclareTextCommand{\<}{#1}{\accdasia}
@@ -210,8 +193,30 @@
   \DeclareTextCompositeCommand{\<}{#1}{'}{\accdasiaoxia}
   \DeclareTextCompositeCommand{\<}{#1}{`}{\accdasiavaria}
   \DeclareTextCompositeCommand{\<}{#1}{~}{\accdasiaperispomeni}
+
+  \IfFormatAtLeastTF{2022/06/01}{}{% else
+    \DeclareTextCompositeCommand{\<}{#1}{^^9f}{\LGR@hiatus}
+    \DeclareTextCompositeCommand{\>}{#1}{^^9f}{\LGR@hiatus}
+  }
+
+% Also define "mixed" composites (required due to the fix for
+% ``\MakeUppercase`` below::
+
+  % \MakeUppercse: \>~a, \<~a
+  % \DeclareTextCompositeCommand{\accpsili}{#1}{~}{\accpsiliperispomeni}
+  % \DeclareTextCompositeCommand{\accdasia}{#1}{~}{\accdasiaperispomeni}
 }
 
+% Fix 2022 \MakeUppercase::
+
+\ifdefined\DeclareCaseChangeEquivalent % new in 2023
+  \DeclareCaseChangeEquivalent{\<}{\CaseSwitch{\<}{\LGR@accdropped}{\<}{\<}}
+  \DeclareCaseChangeEquivalent{\>}{\CaseSwitch{\>}{\LGR@hiatus}{\>}{\>}}
+\fi
+
+
+% .. _font encoding:
+%
 % Font encodings
 % --------------
 %
@@ -231,62 +236,61 @@
 % .. _LGR font encoding: README.html#lgr
 %
 % Ensure a Greek-supporting font encoding exists and supports Greek LICR
-% macros:
-%
-% * Load the Greek LICR definitions for Unicode if the font encoding TU
-%   is detected.
-% * If none of TU or LGR is declared, load ``tuenc.def`` with
-%   Xe/LuaTeX and ``lgrenc.def`` else.
-%
-% ::
+% macros::
 
 \ifdefined \UnicodeEncodingName % set by LaTeX for Unicode-aware engines
   \input{tuenc-greek.def}
   \textalpha@define@breathings{\UnicodeEncodingName}
 \else
-  \@ifl@aded{def}{lgrenc}{}{% else
-    \input{lgrenc.def}
+  \@ifl@aded{def}{lgrenc}
+    {}
+    {\input{lgrenc.def}
   }
-  \textalpha@define@breathings{LGR}
-  % Hiatus feature (see greek-fontenc.def and babel-greek (greek.ldf))
-  \DeclareTextCompositeCommand{\<}{LGR}{^^9f}{\LGR@hiatus}
-  \DeclareTextCompositeCommand{\>}{LGR}{^^9f}{\LGR@hiatus}
 \fi
 
 % LGR may also be used in a document compiled with Xe/LuaTeX
-% (enables use of 8-bit TeX fonts and input via the Latin transcription).
+% (enables use of 8-bit TeX fonts and input via the Latin transliteration).
 % Add setup for breathings::
 
-\@ifl@aded{def}{lgrenc}{
-  \textalpha@define@breathings{LGR}
-  % Hiatus feature (see greek-fontenc.def and babel-greek (greek.ldf))
-  \DeclareTextCompositeCommand{\<}{LGR}{^^9f}{\LGR@hiatus}
-  \DeclareTextCompositeCommand{\>}{LGR}{^^9f}{\LGR@hiatus}
-}{}
+\@ifl@aded{def}{lgrenc}
+  {\textalpha@define@breathings{LGR}}
+  {}
 
-% The package hyperref_ defines the PU font encoding which also supports
-% (monotonic) Greek. It currently misses polytonic greek, archaic symbols,
+% The package hyperref_ defines the PU font encoding and adds some
+% LICR commands for monotonic Greek (in punenc-greekbasick.def).
+% Add support for polytonic Greek, archaic symbols,
 % and the ``\greekscript`` and ``\ensuregreek`` TextCommands::
 
 \AtBeginDocument{
-  \@ifl@aded{def}{puenc}{
-    \makeatletter % required inside \AtBeginDocument
-    \input{puenc-greek.def}
-    \textalpha@define@breathings{PU}
-    \pdfstringdefDisableCommands{\let\TextOrMath\@firstoftwo}
-    \makeatother
-  }{}
+  \@ifl@aded{def}{puenc}
+    {\@ifl@aded{def}{puenc-greek}
+      {}% already loaded (e.g. by babel-greek)
+      {\edef\RestoreAtCatcode{\catcode`@=\the\catcode`@\relax}%
+       \makeatletter
+       \input{puenc-greek.def}
+       \RestoreAtCatcode
+      }%
+     \textalpha@define@breathings{PU}
+     \pdfstringdefDisableCommands{\let\TextOrMath\@firstoftwo}
+    }
+    {}
 }
 
-% The package textcomp defines the TS1 font encoding with the MICRO SIGN
-% named ``\texmu``. Provide the alias ``\textmicro``::
+% The TS1 font encoding (available by default since 2022) provides a
+% MICRO SIGN under the name ``\textmu`` but we use this name for the
+% GREEK SMALL LETTER MU.
+% The new macro ``\textmicro`` selects the character from TS1 fonts
+% and is not capitalised with ``\MakeUppercase``::
 
-\AtBeginDocument{
-  \@ifl@aded{def}{ts1enc}{
-    \DeclareTextSymbol{\textmicro}{TS1}{181} % micro sign
-    \DeclareTextSymbolDefault{\textmicro}{TS1}
-  }{}
-}
+\DeclareTextSymbol{\textmicro}{TS1}{181} % micro sign
+\DeclareTextSymbolDefault{\textmicro}{TS1}
+
+% Use it for the MICRO SIGN character::
+
+\ifdefined\DeclareUnicodeCharacter
+  \DeclareUnicodeCharacter{00B5}{\textmicro} % micro sign
+\fi
+
 
 % Default declarations
 % --------------------
@@ -314,7 +318,7 @@
 % an alternative definition (see [fntguide_])::
 
 \ProvideTextCommandDefault{\greekscript}{\fontencoding{LGR}\selectfont
-      \def\encodingdefault{\greekfontencoding}}
+      \def\encodingdefault{LGR}}
 
 
 % The ``\ensuregreek`` command can be used to ensure that its argument is set in
@@ -382,14 +386,15 @@
 \DeclareTextSymbolDefault{\textkappa}{LGR}
 \DeclareTextSymbolDefault{\textlambda}{LGR}
 \DeclareTextSymbolDefault{\textmu}{LGR}
+\DeclareTextSymbolDefault{\textmugreek}{LGR}    % (puenc.def)
 \DeclareTextSymbolDefault{\textnu}{LGR}
 \DeclareTextSymbolDefault{\textxi}{LGR}
 \DeclareTextSymbolDefault{\textomicron}{LGR}
 \DeclareTextSymbolDefault{\textpi}{LGR}
 \DeclareTextSymbolDefault{\textrho}{LGR}
 \DeclareTextSymbolDefault{\textsigma}{LGR}
-\DeclareTextSymbolDefault{\textvarsigma}{LGR}
-\DeclareTextSymbolDefault{\textfinalsigma}{LGR} % alias for \textvarsigma
+\DeclareTextSymbolDefault{\textfinalsigma}{LGR}
+\DeclareTextSymbolDefault{\textvarsigma}{LGR}   % alias for \textfinalsigma
 \DeclareTextSymbolDefault{\textautosigma}{LGR}  % char 115 in LGR
 \DeclareTextSymbolDefault{\texttau}{LGR}
 \DeclareTextSymbolDefault{\textupsilon}{LGR}
@@ -397,6 +402,7 @@
 \DeclareTextSymbolDefault{\textchi}{LGR}
 \DeclareTextSymbolDefault{\textpsi}{LGR}
 \DeclareTextSymbolDefault{\textomega}{LGR}
+
 
 % Additional Greek symbols
 % """"""""""""""""""""""""
@@ -418,6 +424,7 @@
 \DeclareTextSymbolDefault{\textkoppa}{LGR}       % ϟ Greek small letter koppa
 \DeclareTextSymbolDefault{\textkoppagreek}{LGR}  % ϟ (puenc.def)
 \DeclareTextSymbolDefault{\textKoppa}{LGR}       % ϟ Greek letter koppa (numeral koppa)
+\DeclareTextSymbolDefault{\textKoppagreek}{LGR}  % ϟ (puenc.def)
 \DeclareTextSymbolDefault{\textqoppa}{LGR}       % ϙ (archaic koppa)
 \DeclareTextSymbolDefault{\textQoppa}{LGR}       % Ϙ (archaic Koppa)
 \DeclareTextSymbolDefault{\textStigma}{LGR}      % Ϛ ϹΤ ligature in some fonts
@@ -439,6 +446,7 @@
 \DeclareTextSymbolDefault{\textnumeralsigngreek}{LGR} % (puenc.def)
 \DeclareTextSymbolDefault{\textaristerikeraia}{LGR}   % ͵ (Aristeri keraia)
 \DeclareTextSymbolDefault{\textnumeralsignlowergreek}{LGR} % (puenc.def)
+
 
 % variant shape symbols
 % '''''''''''''''''''''
@@ -479,6 +487,7 @@
 \DeclareTextAccentDefault{\accdasia}{LGR}
 \DeclareTextAccentDefault{\accpsili}{LGR}
 \DeclareTextAccentDefault{\acctonos}{LGR}
+\DeclareTextAccentDefault{\accoxia}{LGR}
 \DeclareTextAccentDefault{\accvaria}{LGR}
 \DeclareTextAccentDefault{\accperispomeni}{LGR}
 \DeclareTextAccentDefault{\accdialytika}{LGR}
@@ -500,8 +509,8 @@
 
 % Postfix accents::
 
-\DeclareTextSymbolDefault{\ypogegrammeni}{LGR} % "small" sub-iota
-\DeclareTextSymbolDefault{\prosgegrammeni}{LGR}  % "capital" sub-iota
+\DeclareTextSymbolDefault{\ypogegrammeni}{LGR} % subscript mute iota (combining)
+\DeclareTextSymbolDefault{\prosgegrammeni}{LGR}  % adscript mute iota (spacing)
 
 % Other accents in LGR::
 
@@ -525,7 +534,9 @@
 % """"""""""""""""""""""""
 %
 % The text command ``\textsemicolon`` inserts ``\texterotimatiko``
-% in LGR font encoding and a "normal" semicolon else::
+% in LGR font encoding and a "normal" semicolon else.
+% In math mode, it inserts the "normal" semicolon also if the text font
+% encoding is LGR::
 
 \ProvideTextCommandDefault{\textsemicolon}{;}
 \ProvideTextCommand{\textsemicolon}{LGR}{\texterotimatiko}
@@ -536,26 +547,83 @@
 
 \iftextalpha@keepSemicolon
   \catcode`;=\active
-  \newcommand{;}{\textsemicolon}
+  \newcommand{;}{\TextOrMath{\textsemicolon}{\char59}}
 \fi
 
 
-
+% TODO
+% ====
+%
+% * Load ``lgrenc.def`` rsp. ``tuenc-greek.def`` after the common definitions
+%   and after ``puenc-greek.def``?
+%
+%    If an encoding-specific command is defined for more than one encoding,
+%    then it will execute fastest in the encoding in which it was defined
+%    last since its top-level definition will be set up to execute in that
+%    encoding without any overhead.
+%
+%    ...
+%
+%    For the same reason default declarations should never come last since
+%    they are implemented as a special encoding themselves (with the name "?").
+%    Specifying them last would simply mean to make those encoding-specific
+%    commands equally inefficient in all encodings.
+%
+%    -- source2e.pdf, chapter "ltoutenc.dtx",
+%       subsection "The order of declarations".
+%
+%
+% Changelog
+% =========
+%
+% .. class:: borderless
+%
+% ====== =========== ========================================================
+% 0.1    2010-06-16  initial version
+% 0.2    2012-06-27  support for compound Unicode definitions outside LGR
+% 0.3    2013-05-03  new accent macro names with ``lgrxenc.def`` 0.7
+% 0.4    2013-05-28  use ``lgrenc.def`` from greek-fontenc.
+% 0.5    2013-09-11  move to greek-fontenc_,
+% ..                 support XeTeX/LuaTeX, add breve below accents.
+% 0.11   2013-11-28  compatibility with Xe/LuaTeX in 8-bit mode.
+% 0.12   2014-12-12  fix auxiliary macro names,
+%                    define symbol macros for breathing accents.
+% 0.13   2015-09-04  Option normalize-symbols_: support for symbol variants.
+% ..                 Option keep-semicolon_: use semicolon as erotimatiko
+%                    in LGR.
+% 0.13.2 2016-02-05  Support for standard Unicode text font encoding "TU"
+%                    (new in fontspec v2.5a).
+% 0.13.4 2019-07-11  Auxiliary command for subscript iota.
+% 0.14   2020-02-28  Update test for Unicode fonts.
+%                    Rename ``greek-euenc`` to ``tuenc-greek``.
+%                    Don't use ``\LastDeclaredEncoding``.
+% 1.0    2020-09-25  Also set ``\encodingdefault`` with ``\greekscript``.
+% 2.0    2020-10-30  Load ``tuenc-greek.def`` with Xe/LuaTeX by default.
+% ..                 Load ``puenc-greek.def`` if used with `hyperref`_.
+% 2.2    2023-02-28  Don't use ``\makeatother`` in ``\AtBeginDocument``.
+% 2.2.1  2023-03-08  Documentation update.
+% 2.2.2  2023-03-17  Don't map active `;` to ``\textsemicolon`` in math mode.
+% 2.4    2023-08-16  Map character 00B5 MICRO SIGN to ``\textmicro``.
+% ..                 Fix upcasing of Greek letters with ``\<`` and ``\>``.
+% 2.5    2023-09-12  Support the ``\accoxia`` alias.
+% ====== =========== ========================================================
+%
+%
 % .. References
 %    ----------
 % .. _LaTeX Project Public License: http://www.latex-project.org/lppl.txt
-% .. _CB fonts: http://ctan.org/pkg/cbgreek-complete
-% .. _babel: http://ctan.org/pkg/babel
+% .. _CB fonts: https://ctan.org/pkg/cbgreek-complete
+% .. _babel: https://ctan.org/pkg/babel
 % .. _e-TeX: http://www.tex.ac.uk/cgi-bin/texfaq2html?label=etex
-% .. _fontenc: http://ctan.org/pkg/fontenc
-% .. _fontspec: http://ctan.org/pkg/fontspec
-% .. _fntguide: http://mirror.ctan.org/macros/latex/base/fntguide.pdf
-% .. _greek-fontenc: http://ctan.org/pkg/greek-fontenc
-% .. _greek-inputenc: http://ctan.org/pkg/greek-inputenc
-% .. _hyperref: http://ctan.org/pkg/hyperref
-% .. _inputenc: http://ctan.org/pkg/inputenc
-% .. _polyglossia: http://ctan.org/pkg/polyglossia
-% .. _textgreek: http://ctan.org/pkg/textgreek
-% .. _xunicode: http://ctan.org/pkg/xunicode
+% .. _fontenc: https://ctan.org/pkg/fontenc
+% .. _fontspec: https://ctan.org/pkg/fontspec
+% .. _fntguide: https://mirrors.ctan.org/macros/latex/base/fntguide.pdf
+% .. _greek-fontenc: https://ctan.org/pkg/greek-fontenc
+% .. _greek-inputenc: https://ctan.org/pkg/greek-inputenc
+% .. _hyperref: https://ctan.org/pkg/hyperref
+% .. _inputenc: https://ctan.org/pkg/inputenc
+% .. _polyglossia: https://ctan.org/pkg/polyglossia
+% .. _textgreek: https://ctan.org/pkg/textgreek
+% .. _xunicode: https://ctan.org/pkg/xunicode
 %
 % .. _erotimatiko: https://en.wikipedia.org/wiki/Question_mark#Erotimatiko

@@ -1,11 +1,5 @@
 % \iffalse meta-comment
 %
-% Copyright 1989-2005 Johannes L. Braams and any individual authors
-% listed elsewhere in this file.  All rights reserved.
-% 
-% This file is part of the Babel system.
-% --------------------------------------
-% 
 % It may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
 % of this license or (at your option) any later version.
@@ -16,26 +10,20 @@
 % 
 % This work has the LPPL maintenance status "maintained".
 % 
-% The Current Maintainer of this work is Johannes Braams.
-% 
-% The list of all files belonging to the Babel system is
-% given in the file `manifest.bbl. See also `legal.bbl' for additional
-% information.
+% The Current Maintainer of this work is Udi Fogiel.
 % 
 % The list of derived (unpacked) files belonging to the distribution
 % and covered by LPPL is defined by the unpacking scripts (with
 % extension .ins) which are part of the distribution.
 % \fi
-% \CheckSum{3345}
 %
 % \iffalse meta-comment
-%% Hebrew language definition and additional packages.
-%% Copyright (C) 1997 -- 2005 Boris Lavva.
+% Hebrew language definition and additional packages.
+% Copyright (C) 1997 -- 2005 Boris Lavva and Johannes Braams.
 %
-%% Babel package for LaTeX version 2e
-%% Copyright (C) 1989 -- 2005 by Johannes Braams,
-%%                            TeXniek
-%%                            All rights reserved.
+% Copyright (C) 2023 Udi Fogiel.
+%			     All rights reserved.
+%
 %<*calendar>
 %% TeX & LaTeX macros for computing Hebrew date from Gregorian one
 %% Copyright (C) 1991 by Michail Rozman, misha@iop.tartu.ew.su
@@ -48,17 +36,23 @@
 %<hebrew>\ProvidesFile{hebrew.ldf}
 %<rightleft>\ProvidesFile{rlbabel.def}
 %<calendar>\ProvidesPackage{hebcal}
+%<newcode>\ProvidesPackage{hebrew_newcode}	 
+%<pccode>\ProvidesPackage{hebrew_p}
+%<oldcode>\ProvidesPackage{hebrew_oldcode}
 %<*driver>
 \ProvidesFile{hebrew.drv}
 %</driver>
 % \fi
 % \ProvidesFile{hebrew.dtx}
-        [2005/03/30 v2.3h %
+        [2023/08/22 v2.4a %
 % \iffalse
 %<hebrew>         Hebrew language definition from the babel system
 %<rightleft>         Right-to-Left support from the babel system
 %<calendar>         Hebrew calendar
 %<driver>         Driver file for hebrew support
+%<newcode>	 Package for backwards compatibility	 
+%<pccode>	Package for backwards compatibility
+%<oldcode>	Package for backwards compatibility
 % \fi
     Hebrew language support from the babel system]
 %
@@ -105,15 +99,12 @@
 \CodelineIndex
 \RecordChanges
 \title{Hebrew language support from the \babel\ system}
-\author{Boris Lavva}
+\author{Boris Lavva\and Udi Fogiel}
 \date{Printed \today}
 \begin{document}
    \maketitle
    \tableofcontents
    \DocInput{hebrew.dtx}
-   \DocInput{hebinp.dtx}
-   \DocInput{hebrew.fdd}
-   \DocInput{heb209.dtx}
    \clearpage
    \def\filename{index}
    \PrintIndex
@@ -230,6 +221,13 @@
 %    CAUTION: the changes to \pkg{hebcal.sty} make it dependent on
 %    \pkg{babel} and not useable as a stand-alone package. Is this a
 %    problem? (by Ron Artstein)}
+% \changes{hebrew~2.4}{2023/08/16}{
+%    Moving hebinp and hebrew.fdd to a seperate package. 
+%    Changing the default input encoding to utf8 and
+%    default font encoding to NHE8.
+%    Merging heb209 and hebrew.dtx.
+%    Fixed bugs in \everypar and 
+%    checked that \cs{l@chapter} is defined (Udi Fogiel)}
 %
 % \section{The Hebrew language}\label{sec:hebrew}
 %
@@ -249,18 +247,16 @@
 %    \end{description}
 %
 %    Additional Hebrew input and font encoding definition files that
-%    should be included and used with \file{hebrew.ldf} are:
+%    should be included and used with \file{hebrew.ldf} are
+%    the files were moved to the hebrew-fonts package): 
 %    \begin{description}
 %    \item[\file{hebinp.dtx}] provides Hebrew input encodings, such as
-%          ISO 8859-8, MS Windows codepage 1255 or IBM PC codepage 862
-%          (see Section~\ref{sec:hebinp} on page~\pageref{sec:hebinp}).
+%          ISO 8859-8, MS Windows codepage 1255 or IBM PC codepage 862.
 %    \item[\file{hebrew.fdd}] contains Hebrew font encodings, related
 %          font definition files and \pkg{hebfont} package that
-%          provides Hebrew font switching commands (see
-%          Section~\ref{sec:hebfdd} on page~\pageref{sec:hebfdd} for
-%          further details).
+%          provides Hebrew font switching commands.
 %    \end{description}
-%
+%    
 %    \LaTeX~2.09 compatibility files are included with
 %    \file{heb209.dtx} and gives possibility to compile existing
 %    \LaTeX~2.09 Hebrew documents with small (if any) changes (see
@@ -376,42 +372,49 @@
 % \changes{hebrew-2.3h}{2004/02/20}{Make LHE the default encoding for
 %    compatibility reasons}
 %    \begin{macrocode}
-\providecommand{\HeblatexEncoding}{LHE}%
-\providecommand{\HeblatexEncodingFile}{lheenc}%
+% \changes{hebrew~2.4}{2023/08/16}{Make NHE8 the default font encoding}
+% \changes{hebrew~2.4a}{2023/08/16}{Better handeling for font encoding}
+\@ifundefined{HeblatexEncoding}
+  {
+	\@ifl@aded{def}{nhe8enc}
+		{
+		  \providecommand*\HeblatexEncoding{NHE8}
+		  \providecommand*\HeblatexEncodingFile{nhe8enc}
+		}
+		{
+		  \@ifl@aded{def}{he8enc}
+		  	{
+		  	  \providecommand*\HeblatexEncoding{HE8}
+		  	  \providecommand*\HeblatexEncodingFile{he8enc}
+		  	}
+		  	{
+		  	  \@ifl@aded{def}{lheenc}
+		  	  	{
+		  	  	  \providecommand*\HeblatexEncoding{LHE}
+		  	  	  \providecommand*\HeblatexEncodingFile{lheenc}
+		  	  	}
+		  	  	{
+		  	  	  \providecommand*\HeblatexEncoding{NHE8}
+		  		  \providecommand*\HeblatexEncodingFile{nhe8enc}
+		  		  
+		  	  	}
+		  	}
+		}
+  }{}
+\@ifl@aded{def}{\HeblatexEncodingFile}{}
+		{\input{\HeblatexEncodingFile.def}}
+
 \newcommand{\heblatex@set@encoding}[2]{
 }
-\AtEndOfPackage{%
-  \@ifpackageloaded{fontenc}{%
-    \@ifl@aded{def}{%
-      \HeblatexEncodingFile}{\def\hebrewencoding{\HeblatexEncoding}}{}%
-  }{%
-    \input{\HeblatexEncodingFile.def}%
-    \def\hebrewencoding{\HeblatexEncoding}%
-  }}
+
+\edef\hebrewencoding{\HeblatexEncoding}
+\def\heb@NHEenc{NHE8}
+\ifx\heb@NHEenc\hebrewencoding
+	\def\@brackets#1#2#3{#1#2#3}
+\fi
 %    \end{macrocode}
 %  \end{macro}
-%
-%    We also need to load inputenc package with one of the Hebrew
-%    input encodings. By default, we set up the |8859-8| codepage.
-%    If an user wants to use many input encodings in the same
-%    document, for example, the MS Windows Hebrew codepage |cp1255|
-%    and the standard IBM PC Russian codepage |cp866|, he/she has to
-%    load the corresponding file \emph{before} the hebrew package
-%    too. This may be done in the following way:
-%    \begin{quote}
-%      |\usepackage[cp1255,cp866]{inputenc}|\\
-%      |\usepackage[hebrew,russian,english]{babel}|
-%    \end{quote}
-%
-%    An user can switch input encodings in the document using the
-%    command |\inputencoding|, for example, to use the |cp1255|:
-%    \begin{quote}
-%       |\inputencoding{cp1255}|
-%    \end{quote}
-%    \begin{macrocode}
-\AtEndOfPackage{%
-  \@ifpackageloaded{inputenc}{}{\RequirePackage[8859-8]{inputenc}}}
-%    \end{macrocode}
+% \changes{hebrew~2.4}{2023/08/16}{Assuming utf8 as default input encoding.}
 %
 %    The next step consists of defining commands to switch to (and
 %    from) the Hebrew language.
@@ -803,6 +806,17 @@
 %    |\p@enumiii|; instead, we let the language environment determine an
 %    explicit definition.
 %    \begin{macrocode}
+\ifx\heb@NHEenc\HeblatexEncoding
+\def\label#1{\@bsphack
+  \if@rl
+    \protected@write\@auxout{}%
+         {\string\newlabel{#1}{{\beginR\@currentlabel\endR}{\thepage}}}%
+  \else
+    \protected@write\@auxout{}%
+         {\string\newlabel{#1}{{\beginL\@currentlabel\endL}{\thepage}}}%
+  \fi
+  \@esphack}
+\else
 \def\label#1{\@bsphack
   \if@rl
     \def\p@enumiii{\p@enumii)\theenumii(}%
@@ -814,6 +828,7 @@
          {\string\newlabel{#1}{{\beginL\@currentlabel\endL}{\thepage}}}%
   \fi
   \@esphack}
+\fi
 %    \end{macrocode}
 %    NOTE: it appears that the definition of |\label| is
 %    language-independent and thus belongs in \pkg{rlbabel.def}, but
@@ -1384,14 +1399,17 @@
 % \end{macro}
 %
 %    Take care of Right-to-Left indentation in every paragraph.
-%    Originally, \cs{noindent} was redefined for right-to-left by
-%    Yaniv Bargury, then the implementation was rewritten by Alon Ziv
-%    using an idea by Chris Rowley: \cs{noindent} now works
-%    unmodified.
+%    The old approach had conflicts with amsthm, so I addapted
+%    the code from the bidi package by Vafa Khalighi.
+%
+%
 %    \begin{macrocode}
-\def\rl@everypar{\if@rl{\setbox\z@\lastbox\beginR\usebox\z@}\fi}
-\let\o@everypar=\everypar
-\def\everypar#1{\o@everypar{\rl@everypar#1}}
+\def\heb@rl@everypar{{\setbox\z@\lastbox\if@rl\beginR\else\beginL\fi\ifvoid\z@\else\usebox\z@\fi}}
+\let\heb@o@everypar=\everypar
+\newtoks\heb@n@everypar
+\heb@n@everypar\expandafter{\the\heb@o@everypar}
+\heb@o@everypar{\heb@rl@everypar\the\heb@n@everypar}
+\let\everypar=\heb@n@everypar
 %    \end{macrocode}
 %
 % \begin{macro}{\hmbox}
@@ -1880,6 +1898,7 @@
 \@ifclassloaded{letter}{}{%
 \@ifclassloaded{slides}{}{%
   \@ifclassloaded{article}{}{%
+  \@ifundefined{l@chapter}{}{%
     \renewcommand*\l@chapter[2]{%
       \ifnum \c@tocdepth >\m@ne
       \addpenalty{-\@highpenalty}%
@@ -1894,7 +1913,7 @@
          #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss#2}\par
          \penalty\@highpenalty
       \endgroup
-      \fi}}}}
+      \fi}}}}}
 %    \end{macrocode} 
 % \end{macro}
 %
@@ -2285,8 +2304,13 @@
 %    We should explicitly use \cs{L} and \cs{R} commands in
 %    \cs{underline}d text.
 %    \begin{macrocode}
-\let\@@@underline=\underline
-\def\underline#1{\@@@underline{\if@rl\R{#1}\else #1\fi}}
+\DeclareRobustCommand\underline[1]{%
+  \relax
+  \ifmmode\@@underline{#1}%
+  \else
+\if@rl $\@@underline{\hbox{\beginR#1\endR}}\m@th$\relax
+\else
+$\@@underline{\hbox{#1}}\m@th$\relax\fi\fi}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -3307,6 +3331,114 @@
 %</calendar>
 %    \end{macrocode}
 % \end{macro}
+%
+% \providecommand\dst{\textsc{docstrip}}
+% \providecommand\babel{\textsf{babel}}
+% \GetFileInfo{heb209.dtx}
+%
+% \changes{heb209~1.0a}{1998/01/06}{%
+%    Initial version. Provides hebrew\_newcode, hebrew\_oldcode and
+%    hebrew\_p style files for \LaTeX~2.09 (by Boris Lavva)}
+%
+% \section{Hebrew in \LaTeX~2.09 compatibility mode}\label{sec:heb209}
+%
+% |\documentstyle| command in the preamble of \LaTeX\ document
+% indicates that it is a \LaTeX~2.09 document, and should be processed
+% in \emph{compatibility mode}. In such documents, one of the following
+% three Hebrew style options can be included:
+% \begin{enumerate}
+% \item \texttt{hebrew\_newcode} indicates that document will use UNIX
+% ISO 8859-8 or Windows cp1255 input encoding, i.e.\ \emph{Alef}
+% letter will be represented as 224.
+% \item \texttt{hebrew\_p} indicates that document is encoded with IBM
+% PC cp862 encoding, i.e.\ \emph{Alef} letter will be represented as
+% 128.
+% \item \texttt{hebrew\_oldcode} indicates that document uses old 7-bit
+% encoding, as defined in Israeli Standard 960, i.e.\ \emph{Alef} is
+% character number 96.
+% \end{enumerate}
+% Note, that other hebrew-related styles, such as \texttt{hebcal} can
+% be included \emph{after} the abovenamed Hebrew style option, for
+% example:
+% \begin{quote}
+% |\documentstyle[12pt,hebrew_p,hebcal]{report}|.
+% \end{quote}
+%
+% Any Hebrew document which compiled under \LaTeX~2.09 should compile
+% under compatibility mode, unless it uses low-level commands such as
+% |\tenrm|.
+%
+% \subsection{The {\normalfont\dst{}} modules}
+%
+% The following modules are used in the implementation to direct
+% \dst{} in generating the external files:
+% \begin{center}
+% \begin{tabular}{ll}
+%   newcode  & produce \texttt{hebrew\_newcode.sty} \\
+%   pccode   & produce \texttt{hebrew\_p.sty} \\
+%   oldcode  & produce \texttt{hebrew\_oldcode.sty}
+% \end{tabular}
+% \end{center}
+%
+% \StopEventually{}
+%
+% \iffalse
+% \subsection{A driver for this document}
+%
+%    The next bit of code contains the documentation driver file for
+%    \TeX{}, i.e., the file that will produce the documentation you
+%    are currently reading. It will be extracted from this file by 
+%    the \dst{} program.
+%
+%    \begin{macrocode}
+%<*driver>
+\documentclass{ltxdoc}
+\title{Hebrew \LaTeX~2.09 compatibility style files}
+\author{Boris Lavva}
+\date{Printed \today}
+\begin{document}
+   \maketitle
+   \DocInput{heb209.dtx}
+\end{document}
+%</driver>
+%    \end{macrocode}
+% \fi
+%
+% \subsection{Obsolete style files}
+%
+%    For each of the Hebrew \LaTeX~2.09 Hebrew styles, we produce a
+%    file which uses correct input encoding and calls \babel\ with
+%    Hebrew and English language options.
+%    This means that any styles which say |\input hebrew_newcode.sty|
+%    or |\documentstyle[|\ldots|hebrew_newcode|\ldots|]{|\ldots|}|
+%    should still work.
+%
+%    \begin{macrocode}
+%<*newcode|pccode|oldcode>
+\NeedsTeXFormat{LaTeX2e}
+%</newcode|pccode|oldcode>
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%<*newcode>
+\@obsoletefile{hebrew.sty}{hebrew_newcode.sty}
+\RequirePackage[8859-8]{inputenc}
+%</newcode>
+%<*pccode>
+\@obsoletefile{hebrew.sty}{hebrew_p.sty}
+\RequirePackage[cp862]{inputenc}
+%</pccode>
+%<*oldcode>
+\@obsoletefile{hebrew.sty}{hebrew_oldcode.sty}
+\RequirePackage[si960]{inputenc}
+%</oldcode>
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%<*newcode|pccode|oldcode>
+\RequirePackage[english,hebrew]{babel}
+%</newcode|pccode|oldcode>
+%    \end{macrocode}
 %
 % \Finale
 %%

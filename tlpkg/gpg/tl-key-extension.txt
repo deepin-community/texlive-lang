@@ -1,4 +1,4 @@
-$Id: tl-key-extension.txt 60823 2021-10-21 18:17:33Z karl $
+$Id: tl-key-extension.txt 64337 2022-09-11 00:37:43Z preining $
 (Public domain.)
 
 How to update TeX Live distribution signing key
@@ -28,7 +28,17 @@ gpg -a --export $KEYID > texlive.asc
 rm -rf $GNUPGHOME
 unset GNUPGHOME
 
-gpg --send-keys $KEYID
+# send keys
+# make sure that .gnupg/dirmngr.conf does NOT contain hkp-cacert lines!!!
+
+# keys.openpgp.org
+gpg --export $KEYID |  curl -T - https://keys.openpgp.org
+# this will give an URL to associate key with email, visit it!
+
+# ubuntu key server
+gpg --send-key --keyserver hkp://keyserver.ubuntu.com:80 $KEYID
+
+
 
 # update TeX Live repository
 export GNUPGHOME=/home/texlive/Master/tlpkg/gpg # wherever svn checkout

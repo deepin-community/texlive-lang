@@ -308,7 +308,7 @@
       <题干>
     \end{question}
   \end{ccnusyntax}
-  选择题和填空题题干环境。
+  选择题和填空题题干环境。键值列表设置见~\ref{subsubsec:参数-题干} 节
 \end{function}
 
 \begin{function}{problem 环境}
@@ -317,7 +317,7 @@
       <题干>
     \end{problem}
   \end{ccnusyntax}
-  解答题题干环境。
+  解答题题干环境。键值列表设置见~\ref{subsubsec:参数-题干} 节
 \end{function}
 
 \cls{question} 和 \cls{problem} 环境的区别仅在于若 \kvopt{show-points}{true} （下面会介绍这个键值），则 \cls{question} 的题干会紧接在分数后而  \cls{problem} 的题干会在分数后新起一段后开始。
@@ -461,7 +461,7 @@
     \fillin(*\oarg{键值列表}*)(*\oarg{答案}*)
     \fillin*(*\oarg{键值列表}*)(*\oarg{答案}*)
   \end{ccnusyntax}
-  填空（下划线或括号）。\meta{答案} 可以受~\ref{subsubsec:参数-题干} 节的 \cmd{question/show-answer} 键值控制隐藏。\meta{键值列表} 见~\ref{subsubsec:参数-填空题} 节。\tn{fillin} 不可换行，但是会自动根据内容深度提升基线（比如排版分数不会“压线”）；\tn{fillin*} 可以自动换行但是没有前者的功能，且 \tn{fillin*} 的换行功能只适用于 \kvopt{fillin/type}{line}、\kvopt{fillin/type}{paren} 和 \kvopt{fillin/type}{blank}。
+  填空（下划线或括号）。\meta{答案} 可以受~\ref{subsubsec:参数-题干} 节的 \cmd{question/show-answer} 键值控制隐藏。\meta{键值列表} 见~\ref{subsubsec:参数-填空题} 节。\tn{fillin} 不可换行，但是会自动根据内容深度提升基线（比如排版分数不会“压线”），但无法自动换行；\tn{fillin*} 可以自动换行但是没有前者的提升基线的功能，且 \tn{fillin*} 的换行功能只适用于 \kvopt{fillin/type}{line}、\kvopt{fillin/type}{paren} 和 \kvopt{fillin/type}{blank}。
 \end{function}
 
 注意，\tn{fillin} 命令经过处理，|\fillin[<1>]| 表示 |\fillin[<答案>]|（而不是通常定义两个可选参数命令，若只写一个的时候默认为第一个参数），而如果仅仅改变 \tn{fillin} 的类型（见下）而不输入答案，则需要使用 |\fillin[type=paren][]|。这样设计是考虑到：大部分时候都是无答案和输入答案两种情况，而单独改某一个 \tn{fillin} 的类型的情况很少，一般都是一些题目统一改，这个时候在需要修改的 \tn{fillin} 之前使用
@@ -505,7 +505,7 @@
     fillin/type = paren,
     paren/show-paren = true
   }
-  \newcommand{\true}{$\surd$}
+  \newcommand{\true}{$\checkmark$}
   \newcommand{\false}{$\times$}
 
   \begin{question}
@@ -992,6 +992,20 @@
 \end{function}
 
 
+
+\subsubsection{页面设置}
+
+\cls{exam-zh} 根据是 |a3paper| 还是 |a4paper| 有不同页面设置，而为了能够实现用户接口，将页面设置部分放在了 \tn{AtEndPreamble} 命令中，所以用户如果想要修改页面设置，也需要在导言区使用
+
+\begin{latexcode}
+  \AtEndPreamble{%
+    \geometry{
+      ...
+    }
+  }
+\end{latexcode}
+将用户设置放在 \cls{exam-zh} 的默认设置后从而使其产生作用。
+
 \subsection{参数设置}
 
 \begin{function}{\examsetup}
@@ -1156,8 +1170,8 @@
 \end{function}
 
 \begin{function}[added = 2022-09-12]{page/head-content}
-  \begin{ccnusyntax}[emph={[1]foot-content}]
-    foot-content = (*\meta{页眉格式}*)
+  \begin{ccnusyntax}[emph={[1]head-content}]
+    head-content = (*\meta{页眉格式}*)
   \end{ccnusyntax}
   页眉内容设置。内容为 \pkg{fancyhdr} 宏包的页眉命令，比如
 \begin{latexcode}
@@ -2011,9 +2025,9 @@
   控制 \tn{paren} 答案的显示与否。注意和 \opt{question/show-answer} 的先后顺序可能会影响结果。
 \end{function}
 
-\begin{function}[added = 2022-07-15]{paren/show-paren}
+\begin{function}[added = 2022-07-15,updated = 2022-12-25]{paren/show-paren}
   \begin{ccnusyntax}[emph={[1]show-paren}]
-    show-paren = (*\TFF*)
+    show-paren = (*\TTF*)
   \end{ccnusyntax}
   是否显示 \tn{paren} 命令的括号。
 \end{function}

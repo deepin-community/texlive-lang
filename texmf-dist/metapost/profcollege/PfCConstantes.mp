@@ -18,3 +18,19 @@ orangevif=(1,0.25,0.1);
 vert=(0,1,0);
 jaune=rouge+vert;
 gris=0.8*white;
+
+%coloriage et lumière
+vardef Hsv(expr CC)=%CC couleur donnée en hsv d'après http://en.wikipedia.org/wiki/HSL_color_space
+  save $;
+  color $;
+  SSw:=floor(redpart(CC)/60);
+  SSh:=SSw mod 6;
+  SSf:=(redpart(CC)/60)-floor(SSw);
+  SSs:=greenpart((CC));
+  SSv:=bluepart((CC));
+  SSp:=SSv*(1-SSs);
+  SSq:=SSv*(1-SSf*SSs);
+  SSt:=SSv*(1-(1-SSf)*SSs);
+  if SSh=0: $=(SSv,SSt,SSp) elseif SSh=1:$=(SSq,SSv,SSp) elseif SSh=2:$=(SSp,SSv,SSt) elseif SSh=3:$=(SSp,SSq,SSv) elseif SSh=4:$=(SSt,SSp,SSv) elseif SSh=5:$=(SSv,SSp,SSq) fi;
+  $
+enddef;

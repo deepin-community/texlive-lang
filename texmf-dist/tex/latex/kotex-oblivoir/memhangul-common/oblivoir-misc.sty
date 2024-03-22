@@ -1,12 +1,14 @@
 %% file oblivoir-misc.sty
 %% part of oblivoir class
 %%
-%% (c) 2022 Kangsoo Kim 
+%% (c) 2022-2023 Kangsoo Kim 
 %%
 %% 2022-03-01, 03-06
 %% 2022-04-07, bugfix
+%% 2023-02-14, tikzpagenodes-conflict fixed
+%% 2023-03-08, hverse environment
 %%
-\ProvidesPackage{oblivoir-misc}[2022/04/07 version0.3]
+\ProvidesPackage{oblivoir-misc}[2023/02/14 version0.4]
 
 \RequirePackage{etoolbox}
 
@@ -37,6 +39,17 @@
     \pgfkeys{/tikz/overlay/.add code={}{\setpagenode}}
   }{}
 }
+
+
+%%% showtrims and tikzpagenode
+%%% http://www.ktug.org/xe/index.php?mid=KTUG_open_board&document_srl=229299
+\AtEndPreamble{
+	\ifshowtrims
+	\@ifpackageloaded{tikzpagenodes}{%
+		\def\current@textarea@top{(\paperheight-\textheight-\lowermargin-\trimtop)}}{}
+	\fi
+}
+
 
 %%% \texthl
 %%% from oblivoir-patch2.sty, 2021
@@ -118,6 +131,45 @@
 %	}
   }
 }
+
+%%%%
+%%%% 2023-03-08, hverse
+%%%% write external file and read in.
+%%%%
+
+\tl_set:Nx \temp_filename_tl { \jobname.hverse }
+\ior_new:N \l_txp_file
+
+\skip_set:Nn \stanzaskip { .63\onelineskip }
+
+\NewDocumentEnvironment {hverse} {o}
+{
+	\exp_args:Nx \verbatimoutput {\temp_filename_tl}
+}
+{
+	\endverbatimoutput
+	
+	\begin{verse}
+	
+	\exp_args:NNx \ior_open:Nn \l_txp_file {\temp_filename_tl}
+	
+	\ior_str_map_inline:Nn \l_txp_file
+	{
+		\tl_if_empty:nTF { ##1 } 
+		{
+			\par\vskip\stanzaskip
+		}
+		{
+			##1 \\
+		}
+	}
+	\ior_close:N \l_txp_file
+	
+	\end{verse}
+}
+
+
 \ExplSyntaxOff
+
 
 \endinput

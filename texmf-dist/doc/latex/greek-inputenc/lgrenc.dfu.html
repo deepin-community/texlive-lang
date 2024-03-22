@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.20b.dev: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="dcterms.rights" content="© 2010 … 2023 Günter Milde" />
 <title>lgrenc.dfu</title>
-<meta name="dcterms.rights" content="© 2010 Günter Milde" />
-<link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+<link rel="schema.dcterms" href="http://purl.org/dc/terms/"/>
 <style type="text/css">
 
 /* Minimal style sheet for the HTML output of Docutils.                    */
 /*                                                                         */
 /* :Author: Günter Milde, based on html4css1.css by David Goodger          */
-/* :Id: $Id$               */
-/* :Copyright: © 2015 Günter Milde.                                        */
+/* :Id: $Id$                                                               */
+/* :Copyright: © 2015, 2021 Günter Milde.                                  */
 /* :License: Released under the terms of the `2-Clause BSD license`_,      */
 /*    in short:                                                            */
 /*                                                                         */
@@ -24,89 +25,72 @@
 /*                                                                         */
 /* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
 
-/* This CSS2.1_ stylesheet defines rules for Docutils elements without    */
-/* HTML equivalent. It is required to make the document semantic visible. */
-/*                                                                        */
-/* .. _CSS2.1: http://www.w3.org/TR/CSS2                                  */
-/* .. _validates: http://jigsaw.w3.org/css-validator/validator$link       */
-
-/* alignment of text and inline objects inside block objects*/
-.align-left   { text-align: left; }
-.align-right  { text-align: right; }
-.align-center { clear: both; text-align: center; }
-.align-top    { vertical-align: top; }
-.align-middle { vertical-align: middle; }
-.align-bottom { vertical-align: bottom; }
+/* This CSS3 stylesheet defines rules for Docutils elements without        */
+/* HTML equivalent. It is required to make the document semantics visible. */
+/*                                                                         */
+/* .. _validates: http://jigsaw.w3.org/css-validator/validator$link        */
 
 /* titles */
-h1.title, p.subtitle {
-  text-align: center;
-}
-p.admonition-title,
 p.topic-title,
-p.sidebar-title,
-p.rubric,
+p.admonition-title,
 p.system-message-title {
   font-weight: bold;
 }
-h1 + p.subtitle,
-h1 + p.section-subtitle {
-  font-size: 1.6em;
+p.sidebar-title,
+p.rubric {
+  font-weight: bold;
+  font-size: larger;
 }
-h2 + p.section-subtitle { font-size: 1.28em; }
+p.rubric {
+  color: maroon;
+}
 p.subtitle,
 p.section-subtitle,
 p.sidebar-subtitle {
   font-weight: bold;
   margin-top: -0.5em;
 }
-p.sidebar-title,
-p.rubric {
-  font-size: larger;
+h1 + p.subtitle {
+  font-size: 1.6em;
 }
-p.rubric { color: maroon; }
 a.toc-backref {
-  color: black;
-  text-decoration: none; }
+  color: inherit;
+  text-decoration: none;
+}
 
 /* Warnings, Errors */
-div.caution p.admonition-title,
-div.attention p.admonition-title,
-div.danger p.admonition-title,
-div.error p.admonition-title,
-div.warning p.admonition-title,
-div.system-messages h1,
-div.error,
-span.problematic,
-p.system-message-title {
+.system-messages h2,
+.system-message-title,
+span.problematic {
   color: red;
 }
 
-/* inline literals */
-span.docutils.literal {
+/* Inline Literals */
+.docutils.literal {
   font-family: monospace;
   white-space: pre-wrap;
 }
-/* do not wraph at hyphens and similar: */
+/* do not wrap at hyphens and similar: */
 .literal > span.pre { white-space: nowrap; }
 
 /* Lists */
 
 /* compact and simple lists: no margin between items */
-.simple  li, .compact li,
-.simple  ul, .compact ul,
-.simple  ol, .compact ol,
-.simple > li p, .compact > li p,
-dl.simple > dd, dl.compact > dd {
+.simple  li, .simple  ul, .simple  ol,
+.compact li, .compact ul, .compact ol,
+.simple  > li p, dl.simple  > dd,
+.compact > li p, dl.compact > dd {
   margin-top: 0;
   margin-bottom: 0;
 }
+/* Nested Paragraphs */
+p:first-child { margin-top: 0; }
+p:last-child { margin-bottom: 0; }
+details > p:last-child { margin-bottom: 1em; }
 
 /* Table of Contents */
-div.topic.contents { margin: 0; }
-div.topic.contents ul {
+.contents ul.auto-toc { /* section numbers present */
   list-style-type: none;
-  padding-left: 1.5em;
 }
 
 /* Enumerated Lists */
@@ -116,32 +100,41 @@ ol.upperalpha { list-style: upper-alpha }
 ol.lowerroman { list-style: lower-roman }
 ol.upperroman { list-style: upper-roman }
 
-dt span.classifier { font-style: italic }
-dt span.classifier:before {
+/* Definition Lists and Derivatives */
+dt .classifier { font-style: italic }
+dt .classifier:before {
   font-style: normal;
   margin: 0.5em;
   content: ":";
 }
-
-/* Field Lists and drivatives */
+/* Field Lists and similar */
 /* bold field name, content starts on the same line */
+dl.field-list,
+dl.option-list,
+dl.docinfo {
+  display: flow-root;
+}
 dl.field-list > dt,
 dl.option-list > dt,
-dl.docinfo > dt,
-dl.footnote > dt,
-dl.citation > dt {
+dl.docinfo > dt {
   font-weight: bold;
   clear: left;
   float: left;
   margin: 0;
   padding: 0;
-  padding-right: 0.5em;
+  padding-right: 0.2em;
 }
 /* Offset for field content (corresponds to the --field-name-limit option) */
 dl.field-list > dd,
 dl.option-list > dd,
 dl.docinfo > dd {
-  margin-left:  9em; /* ca. 14 chars in the test examples */
+  margin-left:  9em; /* ca. 14 chars in the test examples, fit all Docinfo fields */
+}
+/* start nested lists on new line */
+dd > dl:first-child,
+dd > ul:first-child,
+dd > ol:first-child {
+  clear: left;
 }
 /* start field-body on a new line after long field names */
 dl.field-list > dd > *:first-child,
@@ -151,284 +144,363 @@ dl.option-list > dd > *:first-child
   width: 100%;
   margin: 0;
 }
-/* field names followed by a colon */
-dl.field-list > dt:after,
-dl.docinfo > dt:after {
-  content: ":";
-}
 
 /* Bibliographic Fields (docinfo) */
-pre.address { font: inherit; }
-dd.authors > p { margin: 0; }
+dl.docinfo pre.address {
+  font: inherit;
+  margin: 0.5em 0;
+}
+dl.docinfo > dd.authors > p { margin: 0; }
 
 /* Option Lists */
-dl.option-list { margin-left: 40px; }
 dl.option-list > dt { font-weight: normal; }
 span.option { white-space: nowrap; }
 
 /* Footnotes and Citations  */
-dl.footnote.superscript > dd {margin-left: 1em; }
-dl.footnote.brackets > dd {margin-left: 2em; }
-dl > dt.label { font-weight: normal; }
-a.footnote-reference.brackets:before,
-dt.label > span.brackets:before { content: "["; }
-a.footnote-reference.brackets:after,
-dt.label > span.brackets:after { content: "]"; }
-a.footnote-reference.superscript,
-dl.footnote.superscript > dt.label {
+
+.footnote, .citation { margin: 1em 0; } /* default paragraph skip (Firefox) */
+/* hanging indent */
+.citation { padding-left: 2em; }
+.footnote { padding-left: 1.7em; }
+.footnote.superscript { padding-left: 1.0em; }
+.citation > .label { margin-left: -2em; }
+.footnote > .label { margin-left: -1.7em; }
+.footnote.superscript > .label { margin-left: -1.0em; }
+
+.footnote > .label + *,
+.citation > .label + * {
+  display: inline-block;
+  margin-top: 0;
+  vertical-align: top;
+}
+.footnote > .backrefs + *,
+.citation > .backrefs + * {
+  margin-top: 0;
+}
+.footnote > .label + p, .footnote > .backrefs + p,
+.citation > .label + p, .citation > .backrefs + p {
+  display: inline;
+  vertical-align: inherit;
+}
+
+.backrefs { user-select: none; }
+.backrefs > a { font-style: italic; }
+
+/* superscript footnotes */
+a[role="doc-noteref"].superscript,
+.footnote.superscript > .label,
+.footnote.superscript > .backrefs {
   vertical-align: super;
   font-size: smaller;
+  line-height: 1;
 }
-dt.label > span.fn-backref { margin-left: 0.2em; }
-dt.label > span.fn-backref > a { font-style: italic; }
+a[role="doc-noteref"].superscript > .fn-bracket,
+.footnote.superscript > .label > .fn-bracket {
+  /* hide brackets in display but leave for copy/paste */
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+}
+[role="doc-noteref"].superscript + [role="doc-noteref"].superscript {
+  padding-left: 0.15em; /* separate consecutive footnote references */
+  /* TODO: unfortunately, "+" also selects with text between the references. */
+}
 
-/* Line Blocks */
-div.line-block { display: block; }
-div.line-block div.line-block {
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 40px;
+/* Alignment */
+.align-left   {
+  text-align: left;
+  margin-right: auto;
 }
+.align-center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.align-right  {
+  text-align: right;
+  margin-left: auto;
+}
+.align-top    { vertical-align: top; }
+.align-middle { vertical-align: middle; }
+.align-bottom { vertical-align: bottom; }
 
-/* Figures, Images, and Tables */
-.figure.align-left,
-img.align-left,
-object.align-left,
-table.align-left {
-  margin-right: auto;
-}
-.figure.align-center,
-img.align-center,
-object.align-center {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
-table.align-center {
-  margin-left: auto;
-  margin-right: auto;
-}
-.figure.align-right,
-img.align-right,
-object.align-right,
-table.align-right {
-  margin-left: auto;
-}
 /* reset inner alignment in figures and tables */
-/* div.align-left, div.align-center, div.align-right, */
-table.align-left, table.align-center, table.align-right
-{ text-align: inherit }
-
-/* Admonitions and System Messages */
-div.admonition,
-div.system-message,
-div.sidebar{
-  margin: 40px;
-  border: medium outset;
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-/* Sidebar */
-div.sidebar {
-  width: 30%;
-  max-width: 26em;
-  float: right;
-  clear: right;
+figure.align-left, figure.align-right,
+table.align-left, table.align-center, table.align-right {
+  text-align: inherit;
 }
 
 /* Text Blocks */
-blockquote,
-div.topic,
-pre.literal-block,
-pre.doctest-block,
-pre.math,
-pre.code {
-  margin-left: 1.5em;
-  margin-right: 1.5em
+.topic { margin: 1em 2em; }
+.sidebar,
+.admonition,
+.system-message {
+  margin: 1em 2em;
+  border: thin solid;
+  padding: 0.5em 1em;
 }
-pre.code .ln { color: gray; } /* line numbers */
+div.line-block { display: block; }
+div.line-block div.line-block, pre { margin-left: 2em; }
+
+/* Code line numbers: dropped when copying text from the page */
+pre.code .ln { display: none; }
+pre.code code:before {
+  content: attr(data-lineno); /* …, none) fallback not supported by any browser */
+  color: gray;
+}
 
 /* Tables */
-table { border-collapse: collapse; }
+table {
+  border-collapse: collapse;
+}
 td, th {
-  border-style: solid;
-  border-color: silver;
+  border: thin solid silver;
   padding: 0 1ex;
-  border-width: thin;
 }
-td > p:first-child, th > p:first-child { margin-top: 0; }
-td > p, th > p { margin-bottom: 0; }
-
-table > caption {
-  text-align: left;
-  margin-bottom: 0.25em
-}
-
-table.borderless td, table.borderless th {
+.borderless td, .borderless th {
   border: 0;
   padding: 0;
   padding-right: 0.5em /* separate table cells */
 }
 
+table > caption {
+  text-align: left;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+table.captionbelow {
+  caption-side: bottom;
+}
+
+/* Document Header and Footer */
+header { border-bottom: 1px solid black; }
+footer { border-top: 1px solid black; }
+
+/* Images are block-level by default in Docutils */
+/* New HTML5 block elements: set display for older browsers */
+img, header, footer, main, aside, nav, section, figure, video, details {
+  display: block;
+}
+/* inline images */
+p img, p video, figure img, figure video {
+  display: inline;
+}
+
 </style>
 <style type="text/css">
 
-/* CSS31_ style sheet for the output of Docutils HTML writers.             */
-/* Rules for easy reading and pre-defined style variants.		   */
+/* CSS3_ style sheet for the output of Docutils HTML5 writer.  */
+/* Generic responsive design for all screen sizes.                         */
 /*                                                                         */
-/* :Author: Günter Milde, based on html4css1.css by David Goodger          */
-/* :Id: $Id$               */
-/* :Copyright: © 2015 Günter Milde.                                        */
+/* :Author: Günter Milde                                                   */
+/*                                                                         */
+/* :Id: $Id$                                                               */
+/* :Copyright: © 2021 Günter Milde.                                        */
 /* :License: Released under the terms of the `2-Clause BSD license`_,      */
 /*    in short:                                                            */
 /*                                                                         */
 /*    Copying and distribution of this file, with or without modification, */
 /*    are permitted in any medium without royalty provided the copyright   */
 /*    notice and this notice are preserved.                                */
-/*    	     	      	     	 					   */
+/*                                                                         */
 /*    This file is offered as-is, without any warranty.                    */
 /*                                                                         */
 /* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
-/* .. _CSS3: http://www.w3.org/TR/CSS3		        		   */
+/* .. _CSS3: https://www.w3.org/Style/CSS/                                 */
+
+/* Note:     								   */
+/* This style sheet is provisional:					   */
+/* the API is not settled and may change with any minor Docutils version.  */
 
 
-/* Document Structure */
-/* ****************** */
 
-/* "page layout" */
+/* General Settings */
+/* ================ */
+
+
+* { box-sizing: border-box; }
+
 body {
-  margin: 0;
-  background-color: #dbdbdb;
-}
-div.document {
-  line-height:1.3;
-  counter-reset: table;
-  /* counter-reset: figure; */
-  /* avoid long lines --> better reading */
-  /* OTOH: lines should not be too short because of missing hyphenation, */
-  max-width: 50em;
-  padding: 1px 2%; /* 1px on top avoids grey bar above title (mozilla) */
+  background-color: #fafaf6;
   margin: auto;
+  --field-indent: 6.6em; /* indent of fields in field lists */
+  --sidebar-margin-right: 0; /* adapted in media queries below */
+}
+main {
+  counter-reset: figure table;
+}
+body > * {
   background-color: white;
+  line-height: 1.6;
+  padding: 0.5rem calc(29% - 7.2rem); /* go from 5% to 15% (8.15em/54em) */
+  margin: auto;
+  max-width: 100rem;
+}
+sup, sub { /* avoid additional inter-line space for lines with sup/sub */
+  line-height: 1;
 }
 
-/* Sections */
-
-/* Transitions */
-
-hr.docutils {
-  width: 80%;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  clear: both;
-}
-
-/* Paragraphs               */
-/* ==========               */
-
-/* vertical space (parskip) */
-p, ol, ul, dl,
+/* Vertical Space (Parskip) */
+p, ol, ul, dl, li,
 div.line-block,
-table{
+.topic,
+.footnote, .citation,
+div > math,
+table {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
 h1, h2, h3, h4, h5, h6,
-dl > dd {
+dl > dd, details > p:last-child {
   margin-bottom: 0.5em;
 }
 
-/* Lists                    */
-/* ==========               */
-
-/* Definition Lists         */
-
-dl > dd > p:first-child { margin-top: 0; }
-/* :last-child is not part of CSS 2.1 (introduced in CSS 3) */
-dl > dd > p:last-child  { margin-bottom: 0; }
-
-/* lists nested in definition lists */
-/* :only-child is not part of CSS 2.1 (introduced in CSS 3) */
-dd > ul:only-child, dd > ol:only-child { padding-left: 1em; }
-
-/* Description Lists */
-/* styled like in most dictionaries, encyclopedias etc. */
-dl.description > dt {
-  font-weight: bold;
-  clear: left;
-  float: left;
-  margin: 0;
-  padding: 0;
-  padding-right: 0.5em;
+/* Indented Blocks */
+blockquote, figure, .topic {
+  margin: 1em 2%;
+  padding-left: 1em;
+}
+div.line-block div.line-block,
+pre, dd, dl.option-list {
+  margin-left: calc(2% + 1em);
 }
 
-/* Field Lists */
+/* Object styling */
+/* ============== */
 
-/* example for custom field-name width */
-dl.field-list.narrow > dd {
-  margin-left: 5em;
+footer, header {
+  font-size: small;
+}
+
+/* Frontmatter */
+div.dedication {
+  padding: 0;
+  margin: 1.4em 0;
+  font-style: italic;
+  font-size: large;
+}
+.dedication p.topic-title {
+  display: none;
+}
+
+blockquote p.attribution,
+.topic p.attribution {
+  text-align: right;
+}
+
+/* Table of Contents */
+nav.contents ul {
+  padding-left: 1em;
+}
+ul.auto-toc > li > p { /* hanging indent */
+  padding-left: 1em;
+  text-indent: -1em;
+}
+main > nav.contents  ul:not(.auto-toc) {
+  list-style-type: square;
+}
+main > nav.contents  ul ul:not(.auto-toc) {
+  list-style-type: disc;
+}
+main > nav.contents  ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B29\ ';
+}
+main > nav.contents  ul ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B1D\ ';
+}
+main > nav.contents  ul ul ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B2A\ ';
+}
+nav.contents ul > li::marker {
+  color: grey;
+}
+
+/* Transitions */
+hr {
+  margin: 1em 10%;
+}
+
+/* Lists */
+
+ul, ol {
+  padding-left: 1.1em; /* indent by bullet width (Firefox, DejaVu fonts) */
+}
+dl.field-list > dd,
+dl.docinfo > dd {
+  margin-left: var(--field-indent); /* adapted in media queries or HTML */
+}
+dl.option-list > dd {
+  margin-left: 20%;
 }
 /* run-in: start field-body on same line after long field names */
 dl.field-list.run-in > dd p {
   display: block;
 }
-
-/* Bibliographic Fields */
-
-/* generally, bibliographic fields use special definition list dl.docinfo */
-/* but dedication and abstract are placed into "topic" divs */
-div.abstract p.topic-title {
-  text-align: center;
+/* "description style" like in most dictionaries, encyclopedias etc. */
+dl.description {
+  display: flow-root;
 }
-div.dedication {
-  margin: 2em 5em;
-  text-align: center;
-  font-style: italic;
-}
-div.dedication p.topic-title {
-  font-style: normal;
-}
-
-/* Citations */
-dl.citation dt.label {
+dl.description > dt {
+  clear: left;
+  float: left;
+  margin: 0;
+  padding: 0;
+  padding-right: 0.3em;
   font-weight: bold;
 }
-span.fn-backref {
-  font-weight: normal;
+dl.description > dd:after {
+  display: table;
+  content: "";
+  clear: left; /* clearfix for empty descriptions */
+}
+/* start lists nested in description/field lists on new line */
+dd > dl:first-child,
+dd > ul:first-child,
+dd > ol:first-child {
+  clear: left;
 }
 
-/* Text Blocks           */
-/* ============          */
+/* disclosures */
+details { padding-left: 1em; }
+summary { margin-left: -1em; }
 
-/* Literal Blocks           */
-
-/* Block Quotes             */
-
-blockquote > table,
-div.topic > table {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-blockquote p.attribution,
-div.topic p.attribution {
-  text-align: right;
-  margin-left: 20%;
+/* Footnotes and Citations */
+.footnote {
+  font-size: small;
 }
 
-/* Tables                   */
-/* ======                   */
+/* Images, Figures, and Tables */
+img {
+  display: block;
+}
+p > img, p > a > img,
+figure > img, figure > a > img {
+  display: inline;
+}
 
-/* th { vertical-align: bottom; } */
+figcaption,
+table > caption {
+  /*   font-size: small; */
+  font-style: italic;
+}
+figcaption > .legend {
+  font-size: small;
+  font-style: initial;
+}
+figure.numbered > figcaption > p:before {
+  counter-increment: figure;
+  content: "Figure " counter(figure) ": ";
+  font-weight: bold;
+  font-style: initial;
+}
 
-table tr { text-align: left; }
-
-/* "booktabs" style (no vertical lines) */
-table.booktabs {
-  border: 0;
+table tr {
+  text-align: left;
+  vertical-align: baseline;
+}
+table.booktabs { /* "booktabs" style (no vertical lines) */
   border-top: 2px solid;
   border-bottom: 2px solid;
-  border-collapse: collapse;
 }
 table.booktabs * {
   border: 0;
@@ -436,74 +508,45 @@ table.booktabs * {
 table.booktabs th {
   border-bottom: thin solid;
 }
-
-/* numbered tables (counter defined in div.document) */
 table.numbered > caption:before {
   counter-increment: table;
   content: "Table " counter(table) ": ";
   font-weight: bold;
+  font-style: initial;
 }
 
-/* Explicit Markup Blocks   */
-/* ======================   */
-
-/* Footnotes and Citations  */
-/* -----------------------  */
-
-/* line on the left */
-dl.footnote {
-  padding-left: 1ex;
-  border-left: solid;
-  border-left-width: thin;
+/* Admonitions and System Messages */
+.admonition,
+div.system-message {
+  border: thin solid silver;
+  margin: 1em 2%;
+  padding: 0.5em 1em;
+}
+.caution p.admonition-title,
+.attention p.admonition-title,
+.danger p.admonition-title,
+.warning p.admonition-title,
+div.error {
+  color: maroon;
+}
+div.system-message > p > span.literal {
+  overflow-wrap: break-word;
 }
 
-/* Directives               */
-/* ----------               */
-
-/* Body Elements            */
-/* ~~~~~~~~~~~~~            */
-
-/* Images and Figures */
-
-/* let content flow to the side of aligned images and figures */
-.figure.align-left,
-img.align-left,
-object.align-left {
-  display: block;
-  clear: left;
-  float: left;
-  margin-right: 1em
+/* Literal and Code */
+pre.literal-block, pre.doctest{
+  padding: 0.2em;
+  overflow-x: auto;
 }
-.figure.align-right,
-img.align-right,
-object.align-right {
-  display: block;
-  clear: right;
-  float: right;
-  margin-left: 1em
+.literal-block, .doctest, span.literal {
+  background-color: #f6f9f8;
 }
-/* Stop floating sidebars, images and figures at section level 1,2,3 */
-h1, h2, h3 { clear: both; }
-
-/* Sidebar */
-
-/* Move into the margin. In a layout with fixed margins, */
-/* it can be moved into the margin completely.		 */
-div.sidebar {
-  width: 30%;
-  max-width: 26em;
-  margin-left: 1em;
-  margin-right: -5.5%;
-  background-color: #ffffee ;
+.system-message span.literal {
+  background-color: inherit;
 }
 
-/* Code                     */
-
-pre.code { padding: 0.7ex }
-pre.code, code { background-color: #eeeeee }
-pre.code .ln { color: gray; } /* line numbers */
 /* basic highlighting: for a complete scheme, see */
-/* http://docutils.sourceforge.net/sandbox/stylesheets/ */
+/* https://docutils.sourceforge.io/sandbox/stylesheets/ */
 pre.code .comment, code .comment { color: #5C6576 }
 pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
 pre.code .literal.string, code .literal.string { color: #0C5404 }
@@ -511,197 +554,317 @@ pre.code .name.builtin, code .name.builtin { color: #352B84 }
 pre.code .deleted, code .deleted { background-color: #DEB0A1}
 pre.code .inserted, code .inserted { background-color: #A3D289}
 
-/* Math                     */
-/* styled separately (see math.css for math-output=HTML) */
-
-/* Epigraph                 */
-/* Highlights               */
-/* Pull-Quote               */
-/* Compound Paragraph       */
-/* Container                */
-
-/* can be styled in a custom stylesheet */
-
-/* Document Header and Footer */
-
-div.footer, div.header {
-  clear: both;
+/* Hyperlink References */
+a {
+  text-decoration: none; /* for chromium */
+  /* Wrap links at any place, if this is the only way to prevent overflow */
+  overflow-wrap: break-word;
+}
+.contents a, a.toc-backref, a.citation-reference {
+  overflow-wrap: inherit;
+}
+/* Undecorated Links (see also minimal.css) */
+/* a.citation-reference, */
+.citation a.fn-backref {
+  color: inherit;
+}
+a:hover {
+  text-decoration: underline;
+}
+*:hover > a.toc-backref:after {
+  content: " \2191"; /* ↑ UPWARDS ARROW */
+  color: grey;
+}
+*:hover > a.self-link:after {
+  content: "\1F517"; /* LINK SYMBOL */
+  color: grey;
   font-size: smaller;
+  margin-left: 0.2em;
+}
+/* highlight the target of the current URL */
+section:target > h2, section:target > h3, section:target > h4,
+section:target > h5, section:target > h6,
+.contents :target,
+.contents:target > .topic-title,
+[role="doc-biblioentry"]:target > .label,
+[role="doc-biblioref"]:target,
+[role="note"]:target, /* Docutils 0.18 ... 0.19 */
+[role="doc-footnote"]:target, /* Docutils >= 0.20 */
+[role="doc-noteref"]:target {
+  background-color: #d2e6ec;
 }
 
-/* Inline Markup            */
-/* =============            */
+/* Block Alignment */
+/* Let content flow to the side of aligned images and figures */
 
-/* Emphasis                 */
-/*   em                     */
-/* Strong Emphasis          */
-/*   strong		    */
-/* Interpreted Text         */
-/*   span.interpreted  	    */
-/* Title Reference 	    */
-/*   cite		    */
-/* Inline Literals          */
-/* possible values: normal, nowrap, pre, pre-wrap, pre-line */
-/*   span.docutils.literal { white-space: pre-wrap; } */
+/* no floats around this elements */
+footer, header, hr,
+h1, h2, h3 {
+  clear: both;
+}
 
-/* Hyperlink References     */
-a { text-decoration: none; }
+img.align-left,
+video.align-left,
+figure.align-left,
+table.align-left {
+  margin-left: 0;
+  padding-left: 0;
+  margin-right: 0.5em;
+  clear: left;
+  float: left;
+}
+img.align-right,
+video.align-right,
+figure.align-right,
+table.align-right {
+  margin-left: 0.5em;
+  margin-right: 0;
+  clear: right;
+  float: right;
+}
 
-/* External Targets         */
-/*   span.target.external   */
-/* Internal Targets  	    */
-/*   span.target.internal   */
-/* Footnote References      */
-/*   a.footnote-reference   */
-/* Citation References      */
-/*   a.citation-reference   */
+/* Margin Elements */
+/* see below for screen size dependent rules */
+.sidebar,
+.marginal,
+.admonition.marginal {
+  max-width: 40%;
+  border: none;
+  background-color: #efefea;
+  margin: 0.5em var(--sidebar-margin-right) 0.5em 1em;
+  padding: 0.5em;
+  padding-left: 0.7em;
+  clear: right;
+  float: right;
+  font-size: small;
+}
+.sidebar {
+  width: 40%;
+}
+
+/* Math */
+/* for math-output=MathML (for math-output=HTML, see math.css) */
+math .boldsymbol {
+  font-weight: bold;
+}
+mstyle.mathscr, mi.mathscr {
+  font-family: STIX;
+}
+
+/* Adaptive page layout */
+/* ==================== */
+
+@media (max-width: 30em) {
+  /* Smaller margins and no floating elements for small screens */
+  /* (main text less than 40 characters/line) */
+  body > * {
+    padding: 0.5rem 5%;
+    line-height: 1.4
+  }
+  .sidebar,
+  .marginal,
+  .admonition.marginal {
+    width: auto;
+    max-width: 100%;
+    float: none;
+  }
+  dl.option-list,
+  pre {
+    margin-left: 0;
+  }
+  body {
+    --field-indent: 4em;
+  }
+  dl.field-list.narrow, dl.docinfo, dl.option-list {
+    --field-indent: 2.4em;
+  }
+  pre, pre * {
+  font-size: 0.9em;
+  /* overflow: auto; */
+  }
+}
+
+@media (min-width: 54em) {
+  /* Move ToC to the left */
+  /* Main text width before: 70% ≙ 35em ≙ 75…95 chrs (Dejavu/Times) */
+  /*                  after:      ≳ 30em ≙ 54…70 chrs (Dejavu/Times) */
+  body.with-toc {
+    padding-left: 8%;
+  }
+  body.with-toc > * {
+    margin-left: 0;
+    padding-left: 22rem; /* fallback for webkit */
+    padding-left: min(22%, 22rem);
+    padding-right: 7%;
+  }
+  main > nav.contents { /* global ToC */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: min(25%, 25em);
+    height: 100vh;
+    margin: 0;
+    background-color: #fafaf6;
+    padding: 1em 2% 0 2%;
+    overflow: auto;
+  }
+  main > nav.contents > * {
+    padding-left: 0;
+    line-height: 1.4;
+  }
+  main > nav.contents a {
+  color: inherit;
+  }
+}
+
+@media (min-width: 70em) {
+  body {
+    --field-indent: 9em;
+  }
+}
+
+@media (min-width: 77em) {
+  /* Move marginalia to 6rem from right border       */
+  /* .sidebar,                                       */
+  /* .marginal,                                      */
+  /* .admonition.marginal {                          */
+  /*   margin-right: calc(6rem - 15%);               */
+  /* }                                               */
+  /* BUG: margin is calculated for break point width */
+  /* workaround: variable + many breakpoints         */
+  body > * {
+    padding-left: 18%;
+    padding-right: 28%; /* fallback for webkit */
+    padding-right: min(28%, 28rem);
+    --sidebar-margin-right: -20rem;
+  }
+  /* limit main text to ~ 50em ≙ 85…100 characters DejaVu rsp. …120 Times */
+  body.with-toc > * {
+    padding-left: min(22%, 22rem);
+    padding-right: calc(78% - 50rem); /* fallback for webkit */
+    padding-right: min(78% - 50rem, 28rem);
+    --sidebar-margin-right: 0;
+  }
+}
+
+@media (min-width: 85em) {
+  body.with-toc > * {
+    --sidebar-margin-right: -9rem;
+  }
+}
+
+@media (min-width: 90em) {
+  /* move marginalia into the margin */
+  body > * {
+    padding-left: min(22%, 22rem);
+    --sidebar-margin-right: -23rem;
+  }
+  body.with-toc > * {
+    --sidebar-margin-right: -14rem;
+  }
+}
+
+@media (min-width: 99em) {
+  /* move marginalia out of main text area */
+  body.with-toc > * {
+    --sidebar-margin-right: -20rem;
+  }
+  body > *, body.with-toc > * { /* for webkit */
+    padding-left: 22rem;
+    padding-right: 28rem;
+  }
+  .admonition.marginal,
+  .marginal {
+    width: 40%; /* make marginal figures, ... "full width" */
+  }
+}
+
+@media (min-width: 104em) {
+  body.with-toc > * {
+    --sidebar-margin-right: -23rem;
+  }
+}
 
 </style>
 </head>
-<body>
-<div class="document" id="lgrenc-dfu">
+<body class="with-toc">
+<main id="lgrenc-dfu">
 <h1 class="title">lgrenc.dfu</h1>
-<p class="subtitle" id="greek-unicode-support-with-inputenc">Greek Unicode support with inputenc</p>
-<dl class="docinfo">
-<dt class="copyright">Copyright</dt>
-<dd class="copyright">© 2010 Günter Milde</dd>
-<dt class="licence">Licence</dt>
+<p class="subtitle" id="greek-utf-8-support-with-inputenc">Greek UTF-8 support with inputenc</p>
+<dl class="docinfo simple">
+<dt class="copyright">Copyright<span class="colon">:</span></dt>
+<dd class="copyright">© 2010 … 2023 Günter Milde</dd>
+<dt class="licence">Licence<span class="colon">:</span></dt>
 <dd class="licence"><p>This work may be distributed and/or modified under the
 conditions of the <a class="reference external" href="http://www.latex-project.org/lppl.txt">LaTeX Project Public License</a>, either
 version 1.3 of this license or any later version.</p>
 </dd>
-<dt class="identification">Identification</dt>
-<dd class="identification"><pre class="literal-block">\ProvidesFile{lgrenc.dfu}[2019/07/11 1.7 UTF-8 support for Greek]</pre>
-</dd>
 </dl>
-<p>Based on a <a class="reference external" href="http://www.eutypon.gr/eutypon/pdf/e2008-20/e20-a03.pdf">babel patch</a> by Werner Lemberg, with input from the <a class="reference external" href="http://www.ctan.org/pkg/ucs">ucs</a>
-package (<span class="docutils literal">ucsencs.def</span>) by Dominique Unruh and <span class="docutils literal">CB.enc</span> by
-Apostolos Syropoulos.</p>
-<dl>
-<dt>Changelog:</dt>
-<dd><table class="borderless">
-<colgroup>
-<col style="width: 7%" />
-<col style="width: 15%" />
-<col style="width: 79%" />
-</colgroup>
-<tbody>
-<tr><td><p>0.1</p></td>
-<td><p>2010-06-16</p></td>
-<td><p>initial version</p></td>
-</tr>
-<tr><td><p>0.2</p></td>
-<td><p>2012-06-27</p></td>
-<td><p>support for accented Greek characters with <a class="reference external" href="http://mirrors.ctan.org/macros/latex/contrib/lgrx/textalpha.sty.html">textalpha</a></p></td>
-</tr>
-<tr><td><p>0.3</p></td>
-<td><p>2013-05-03</p></td>
-<td><p>new accent macro names with lgrxenc.def 0.7</p></td>
-</tr>
-<tr><td><p>1.3</p></td>
-<td><p>2013-05-24</p></td>
-<td><p>moved to greek-inputenc.</p></td>
-</tr>
-<tr><td><p>1.4</p></td>
-<td><p>2013-07-16</p></td>
-<td><p>bugfix for GREEK SMALL LETTER RHO WITH PSILI/DASIA,</p></td>
-</tr>
-<tr><td><!--  -->
-</td>
-<td></td>
-<td><p>drop “greek” from macro names for ancient characters,</p></td>
-</tr>
-<tr><td><!--  -->
-</td>
-<td></td>
-<td><p><span class="docutils literal">\ypogegrammeni</span> and <span class="docutils literal">\prosgegrammeni</span> instead of <span class="docutils literal">|</span></p></td>
-</tr>
-<tr><td><p>1.4.1</p></td>
-<td><p>2013-07-18</p></td>
-<td><p>bugfix: wrong breathings psilioxia -&gt; dasiaoxia</p></td>
-</tr>
-<tr><td><p>1.5</p></td>
-<td><p>2014-09-14</p></td>
-<td><p>Use named accent macros for Greek accents</p></td>
-</tr>
-<tr><td><p>1.6</p></td>
-<td><p>2015-08-05</p></td>
-<td><p>Fix output of accented characters with “textalpha” if the
-current font encoding is not LGR (wrap in ensuregreek),</p></td>
-</tr>
-<tr><td><!--  -->
-</td>
-<td></td>
-<td><p>Map GREEK … SYMBOL characters.</p></td>
-</tr>
-<tr><td><p>1.7</p></td>
-<td><p>2019-07-11</p></td>
-<td><p>Remove some duplicate definitions (punctuation, Euro).</p></td>
-</tr>
-</tbody>
-</table>
-</dd>
-</dl>
-<div class="section" id="usage">
-<h1>Usage</h1>
-<p>Requires comprehensive LGR font encoding definitions from <a class="reference external" href="http://www.ctan.org/pkg/greek-fontenc">greek-fontenc</a>:</p>
-<pre class="code latex literal-block"><code><span class="keyword">\usepackage</span><span class="name attribute">[LGR,T1]</span><span class="name builtin">{</span>fontenc<span class="name builtin">}</span> <span class="comment">% define LGR and T1 encodings
-</span><span class="keyword">\usepackage</span><span class="name attribute">[utf8]</span><span class="name builtin">{</span>inputenc<span class="name builtin">}</span>  <span class="comment">% standard UTF-8 input encoding</span></code></pre>
-<p>By default, text containing Greek Unicode characters must be marked as
-requiring a font encoding that supports Greek script, e.g. by setting the
-language to <span class="docutils literal">greek</span> or <span class="docutils literal">polutonikogreek</span>. This is a generic feature of
-<a class="reference external" href="http://www.ctan.org/pkg/inputenc">inputenc</a>’s <cite>utf8</cite> option (an equivalent restriction holds for the Cyrillic
-script).</p>
-<p>With the <a class="reference external" href="http://mirrors.ctan.org/macros/latex/contrib/lgrx/textalpha.sty.html">textalpha</a> or <a class="reference external" href="http://mirrors.ctan.org/macros/latex/contrib/lgrx/alphabeta.sty.html">alphabeta</a> packages of the <a class="reference external" href="http://www.ctan.org/pkg/greek-fontenc">greek-fontenc</a> package,
-Greek Unicode literals can be used without special markup also in non-Greek
-documents:</p>
-<pre class="code latex literal-block"><code><span class="keyword">\usepackage</span><span class="name attribute">[utf8]</span><span class="name builtin">{</span>inputenc<span class="name builtin">}</span>   <span class="comment">% standard UTF-8 input encoding
-</span><span class="keyword">\usepackage</span><span class="name attribute">[T1]</span><span class="name builtin">{</span>fontenc<span class="name builtin">}</span>      <span class="comment">% use T1 font encoding as default
-</span><span class="keyword">\usepackage</span><span class="name builtin">{</span>textalpha<span class="name builtin">}</span>        <span class="comment">% define LGR font encoding as Greek default</span></code></pre>
-<p>With the <span class="docutils literal"><span class="pre">normalize-symbols</span></span> option to <a class="reference external" href="http://mirrors.ctan.org/macros/latex/contrib/lgrx/textalpha.sty.html">textalpha</a> or <a class="reference external" href="http://mirrors.ctan.org/macros/latex/contrib/lgrx/alphabeta.sty.html">alphabeta</a>,
-GREEK … SYMBOL characters are mapped to the corresponding letters
-(requires <a class="reference external" href="http://www.ctan.org/pkg/greek-fontenc">greek-fontenc</a> &gt;= 0.13):</p>
-<pre class="code latex literal-block"><code><span class="keyword">\usepackage</span><span class="name attribute">[utf8]</span><span class="name builtin">{</span>inputenc<span class="name builtin">}</span>
-<span class="keyword">\usepackage</span><span class="name attribute">[T1]</span><span class="name builtin">{</span>fontenc<span class="name builtin">}</span>
-<span class="keyword">\usepackage</span><span class="name attribute">[normalize-symbols]</span><span class="name builtin">{</span>textalpha<span class="name builtin">}</span></code></pre>
-</div>
-<div class="section" id="character-declarations">
-<h1>Character Declarations</h1>
+<p>Based on a <a class="reference external" href="http://www.eutypon.gr/eutypon/pdf/e2008-20/e20-a03.pdf">babel patch</a> by Werner Lemberg, with input from
+the <a class="reference external" href="https://ctan.org/pkg/ucs">ucs</a> package (<span class="docutils literal">ucsencs.def</span>) by Dominique Unruh
+and <span class="docutils literal">CB.enc</span> by Apostolos Syropoulos.</p>
+<nav class="contents" id="contents" role="doc-toc">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a></p></li>
+<li><p><a class="reference internal" href="#implementation" id="toc-entry-2">Implementation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#latin-1-supplement-t1" id="toc-entry-3">Latin-1 Supplement (T1)</a></p></li>
+<li><p><a class="reference internal" href="#ipa-extensions-t3" id="toc-entry-4">IPA Extensions (T3)</a></p></li>
+<li><p><a class="reference internal" href="#spacing-modifier-letters" id="toc-entry-5">Spacing Modifier Letters</a></p></li>
+<li><p><a class="reference internal" href="#greek-and-coptic" id="toc-entry-6">Greek and Coptic</a></p></li>
+<li><p><a class="reference internal" href="#greek-extended" id="toc-entry-7">Greek Extended</a></p></li>
+<li><p><a class="reference internal" href="#general-punctuation" id="toc-entry-8">General Punctuation</a></p></li>
+<li><p><a class="reference internal" href="#currency-symbols" id="toc-entry-9">Currency Symbols</a></p></li>
+<li><p><a class="reference internal" href="#letterlike-symbols" id="toc-entry-10">Letterlike Symbols</a></p></li>
+<li><p><a class="reference internal" href="#ancient-greek-numbers" id="toc-entry-11">Ancient Greek Numbers</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#changelog" id="toc-entry-12">Changelog</a></p></li>
+<li><p><a class="reference internal" href="#references" id="toc-entry-13">References</a></p></li>
+</ul>
+</nav>
+<section id="usage">
+<h2><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Usage</a></h2>
+<p>See the <a class="reference external" href="greek-inputenc.html#usage">greek-inputenc documentation</a>.</p>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Implementation</a></h2>
+<p>Identification:</p>
+<pre class="literal-block">\ProvidesFile{lgrenc.dfu}[2023-03-21 1.9 UTF-8 support for Greek]</pre>
 <p>Some characters exist in other font encodings too. Care has been taken
 to ensure the definitions match with other <span class="docutils literal">*.dfu</span> and <span class="docutils literal">*enc.def</span>
 files.</p>
-<p>Wrap definition in <span class="docutils literal">\ensuregreek</span> if a Unicode character is mapped to two
-characters (letter+sub-iota) or with non-Greek accents to make sure these
-characters work in any font encoding if the <a class="reference external" href="http://mirrors.ctan.org/macros/latex/contrib/lgrx/textalpha.sty.html">textalpha</a> package is used.</p>
-<div class="section" id="latin-1-supplement-t1">
-<h2>Latin-1 Supplement (T1)</h2>
+<p>If a Unicode character is mapped to two macros (accent+letter or
+letter+sub-iota), we wrap the definition in <span class="docutils literal">\ensuregreek</span> to make sure
+these characters work in any font encoding if the <a class="reference external" href="https://mirrors.ctan.org/macros/latex/contrib/lgrx/textalpha.sty.html">textalpha</a> package is
+used.</p>
+<section id="latin-1-supplement-t1">
+<h3><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Latin-1 Supplement (T1)</a></h3>
 <pre class="literal-block">\DeclareUnicodeCharacter{00A8}{\textasciidieresis}   % ¨
 \DeclareUnicodeCharacter{00AB}{\guillemotleft}       % «
 \DeclareUnicodeCharacter{00AF}{\textasciimacron}     % ¯
 \DeclareUnicodeCharacter{00B4}{\textasciiacute}      % ´
 \DeclareUnicodeCharacter{00B7}{\textperiodcentered}  % · = ano teleia
 \DeclareUnicodeCharacter{00BB}{\guillemotright}      % »</pre>
-</div>
-<div class="section" id="ipa-extensions-t3">
-<h2>IPA Extensions (T3)</h2>
+</section>
+<section id="ipa-extensions-t3">
+<h3><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">IPA Extensions (T3)</a></h3>
 <pre class="literal-block">\DeclareUnicodeCharacter{0259}{\textschwa}           % ə</pre>
-</div>
-<div class="section" id="spacing-modifier-letters">
-<h2>Spacing Modifier Letters</h2>
+</section>
+<section id="spacing-modifier-letters">
+<h3><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">Spacing Modifier Letters</a></h3>
 <pre class="literal-block">\DeclareUnicodeCharacter{02D8}{\textasciibreve}      % ˘</pre>
-</div>
-<div class="section" id="greek-and-coptic">
-<h2>Greek and Coptic</h2>
+</section>
+<section id="greek-and-coptic">
+<h3><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">Greek and Coptic</a></h3>
 <pre class="literal-block">% NR    Unicode Name                                        %   babel name, PU name
 % 0370  GREEK CAPITAL LETTER HETA                           % Ͱ
 % 0371  GREEK SMALL LETTER HETA                             % ͱ
 % 0372  GREEK CAPITAL LETTER ARCHAIC SAMPI                  % Ͳ
 % 0373  GREEK SMALL LETTER ARCHAIC SAMPI                    % Ͳ
-% TODO: replace PU names by ucs names in next version:
-\DeclareUnicodeCharacter{0374}{\textnumeralsigngreek}       % ʹ \anwtonos
-\DeclareUnicodeCharacter{0375}{\textnumeralsignlowergreek}  % ͵ \katwtonos
-% \DeclareUnicodeCharacter{0374}{\textdexiakeraia}          % ʹ \anwtonos, \textnumeralsigngreek
-% \DeclareUnicodeCharacter{0375}{\textaristerikeraia}       % ͵ \katwtonos, \textnumeralsignlowergreek
+\DeclareUnicodeCharacter{0374}{\textdexiakeraia}            % ʹ \anwtonos, \textnumeralsigngreek
+\DeclareUnicodeCharacter{0375}{\textaristerikeraia}         % ͵ \katwtonos, \textnumeralsignlowergreek
 % 0376  GREEK CAPITAL LETTER PAMPHYLIAN DIGAMMA             % Ͷ
 % 0377  GREEK SMALL LETTER PAMPHYLIAN DIGAMMA               % ͷ
 
@@ -711,8 +874,8 @@ characters work in any font encoding if the <a class="reference external" href="
 % 037D  GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL     %
 \DeclareUnicodeCharacter{037E}{\texterotimatiko}            % ; \textquestion
 
-\DeclareUnicodeCharacter{0384}{\acctonos{ }}                % ΄
-\DeclareUnicodeCharacter{0385}{\accdialytikatonos{ }}       % ΅ \textdialytikatonos
+\DeclareUnicodeCharacter{0384}{\acctonos{}}                 % ΄
+\DeclareUnicodeCharacter{0385}{\accdialytikatonos{}}        % ΅ \textdialytikatonos
 \DeclareUnicodeCharacter{0386}{\ensuregreek{\acctonos\textAlpha}}         % Ά
 \DeclareUnicodeCharacter{0387}{\textanoteleia}              % · \anoteleia
 \DeclareUnicodeCharacter{0388}{\ensuregreek{\acctonos\textEpsilon}}       % Έ
@@ -799,7 +962,7 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{03DB}{\textstigma}            % ϛ \stigma
 \DeclareUnicodeCharacter{03DC}{\textDigamma}           % Ϝ \Digamma
 \DeclareUnicodeCharacter{03DD}{\textdigamma}           % ϝ \ddigamma
-%03DE GREEK LETTER KOPPA                               % Ϟ \textKoppagreek
+\DeclareUnicodeCharacter{03DE}{\textKoppa}             % Ϟ \textKoppagreek
 \DeclareUnicodeCharacter{03DF}{\textkoppa}             % ϟ \koppa, \textqoppa [sic!]
 \DeclareUnicodeCharacter{03E0}{\textSampi}             % Ϡ \Sampi
 \DeclareUnicodeCharacter{03E1}{\textsampi}             % ϡ \sampi
@@ -809,9 +972,20 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{03F1}{\textrhosymbol}         % ϱ $\varrho$ GREEK RHO SYMBOL
 \DeclareUnicodeCharacter{03F4}{\textThetasymbol}       % ϴ GREEK CAPITAL THETA SYMBOL
 \DeclareUnicodeCharacter{03F5}{\textepsilonsymbol}     % ϵ $\epsilon$ GREEK LUNATE EPSILON SYMBOL</pre>
-</div>
-<div class="section" id="greek-extended">
-<h2>Greek Extended</h2>
+</section>
+<section id="greek-extended">
+<h3><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">Greek Extended</a></h3>
+<p>Different conventions exist for the treatment of the mute iota with
+uppercase letters. The traditional typographic form and the most common
+used in Greece is a subscript.</p>
+<p>Pre-composed capital letters with <a class="reference external" href="https://en.wikipedia.org/wiki/Iota_subscript">mute iota</a> decompose to the base letter
+and COMBINING GREEK YPOGEGRAMMENI (U+0345) even if they are named
+… WITH [… AND] PROSGEGRAMMENI for “historic reasons”
+<a class="citation-reference" href="#nicholas-03" id="citation-reference-1" role="doc-biblioref">[Nicholas-03]</a> <a class="citation-reference" href="#haralambous-98" id="citation-reference-2" role="doc-biblioref">[Haralambous-98]</a>.</p>
+<p>Upper case glyphs with adscript are a stylistic choice, to be provided
+by the font. LGR encoded fonts provide a ligature mechanism to select the
+correspongind pre-composed character if Alpha, Eta, or Omega
+(with or without other diacritics) are followed by <span class="docutils literal">\ypogegrammeni</span>.</p>
 <pre class="literal-block">\DeclareUnicodeCharacter{1F00}{\ensuregreek{\accpsili\textalpha}}            % ἀ
 \DeclareUnicodeCharacter{1F01}{\ensuregreek{\accdasia\textalpha}}            % ἁ
 \DeclareUnicodeCharacter{1F02}{\ensuregreek{\accpsilivaria\textalpha}}       % ἂ
@@ -942,14 +1116,14 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1F85}{\ensuregreek{\accdasiaoxia\textalpha\ypogegrammeni}}   % ᾅ
 \DeclareUnicodeCharacter{1F86}{\ensuregreek{\accpsiliperispomeni\textalpha\ypogegrammeni}} % ᾆ
 \DeclareUnicodeCharacter{1F87}{\ensuregreek{\accdasiaperispomeni\textalpha\ypogegrammeni}} % ᾇ
-\DeclareUnicodeCharacter{1F88}{\ensuregreek{\accpsili\textAlpha\prosgegrammeni}}      % ᾈ
-\DeclareUnicodeCharacter{1F89}{\ensuregreek{\accdasia\textAlpha\prosgegrammeni}}      % ᾉ
-\DeclareUnicodeCharacter{1F8A}{\ensuregreek{\accpsilivaria\textAlpha\prosgegrammeni}} % ᾊ
-\DeclareUnicodeCharacter{1F8B}{\ensuregreek{\accdasiavaria\textAlpha\prosgegrammeni}} % ᾋ
-\DeclareUnicodeCharacter{1F8C}{\ensuregreek{\accpsilioxia\textAlpha\prosgegrammeni}}  % ᾌ
-\DeclareUnicodeCharacter{1F8D}{\ensuregreek{\accdasiaoxia\textAlpha\prosgegrammeni}}  % ᾍ
-\DeclareUnicodeCharacter{1F8E}{\ensuregreek{\accpsiliperispomeni\textAlpha\prosgegrammeni}} % ᾎ
-\DeclareUnicodeCharacter{1F8F}{\ensuregreek{\accdasiaperispomeni\textAlpha\prosgegrammeni}} % ᾏ
+\DeclareUnicodeCharacter{1F88}{\ensuregreek{\accpsili\textAlpha\ypogegrammeni}}       % ᾈ
+\DeclareUnicodeCharacter{1F89}{\ensuregreek{\accdasia\textAlpha\ypogegrammeni}}       % ᾉ
+\DeclareUnicodeCharacter{1F8A}{\ensuregreek{\accpsilivaria\textAlpha\ypogegrammeni}}  % ᾊ
+\DeclareUnicodeCharacter{1F8B}{\ensuregreek{\accdasiavaria\textAlpha\ypogegrammeni}}  % ᾋ
+\DeclareUnicodeCharacter{1F8C}{\ensuregreek{\accpsilioxia\textAlpha\ypogegrammeni}}   % ᾌ
+\DeclareUnicodeCharacter{1F8D}{\ensuregreek{\accdasiaoxia\textAlpha\ypogegrammeni}}   % ᾍ
+\DeclareUnicodeCharacter{1F8E}{\ensuregreek{\accpsiliperispomeni\textAlpha\ypogegrammeni}} % ᾎ
+\DeclareUnicodeCharacter{1F8F}{\ensuregreek{\accdasiaperispomeni\textAlpha\ypogegrammeni}} % ᾏ
 
 \DeclareUnicodeCharacter{1F90}{\ensuregreek{\accpsili\texteta\ypogegrammeni}}         % ᾐ
 \DeclareUnicodeCharacter{1F91}{\ensuregreek{\accdasia\texteta\ypogegrammeni}}         % ᾑ
@@ -959,14 +1133,14 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1F95}{\ensuregreek{\accdasiaoxia\texteta\ypogegrammeni}}     % ᾕ
 \DeclareUnicodeCharacter{1F96}{\ensuregreek{\accpsiliperispomeni\texteta\ypogegrammeni}} % ᾖ
 \DeclareUnicodeCharacter{1F97}{\ensuregreek{\accdasiaperispomeni\texteta\ypogegrammeni}} % ᾗ
-\DeclareUnicodeCharacter{1F98}{\ensuregreek{\accpsili\textEta\prosgegrammeni}}        % ᾘ
-\DeclareUnicodeCharacter{1F99}{\ensuregreek{\accdasia\textEta\prosgegrammeni}}        % ᾙ
-\DeclareUnicodeCharacter{1F9A}{\ensuregreek{\accpsilivaria\textEta\prosgegrammeni}}   % ᾚ
-\DeclareUnicodeCharacter{1F9B}{\ensuregreek{\accdasiavaria\textEta\prosgegrammeni}}   % ᾛ
-\DeclareUnicodeCharacter{1F9C}{\ensuregreek{\accpsilioxia\textEta\prosgegrammeni}}    % ᾜ
-\DeclareUnicodeCharacter{1F9D}{\ensuregreek{\accdasiaoxia\textEta\prosgegrammeni}}    % ᾝ
-\DeclareUnicodeCharacter{1F9E}{\ensuregreek{\accpsiliperispomeni\textEta\prosgegrammeni}} % ᾞ
-\DeclareUnicodeCharacter{1F9F}{\ensuregreek{\accdasiaperispomeni\textEta\prosgegrammeni}} % ᾟ
+\DeclareUnicodeCharacter{1F98}{\ensuregreek{\accpsili\textEta\ypogegrammeni}}         % ᾘ
+\DeclareUnicodeCharacter{1F99}{\ensuregreek{\accdasia\textEta\ypogegrammeni}}         % ᾙ
+\DeclareUnicodeCharacter{1F9A}{\ensuregreek{\accpsilivaria\textEta\ypogegrammeni}}    % ᾚ
+\DeclareUnicodeCharacter{1F9B}{\ensuregreek{\accdasiavaria\textEta\ypogegrammeni}}    % ᾛ
+\DeclareUnicodeCharacter{1F9C}{\ensuregreek{\accpsilioxia\textEta\ypogegrammeni}}     % ᾜ
+\DeclareUnicodeCharacter{1F9D}{\ensuregreek{\accdasiaoxia\textEta\ypogegrammeni}}     % ᾝ
+\DeclareUnicodeCharacter{1F9E}{\ensuregreek{\accpsiliperispomeni\textEta\ypogegrammeni}}  % ᾞ
+\DeclareUnicodeCharacter{1F9F}{\ensuregreek{\accdasiaperispomeni\textEta\ypogegrammeni}}  % ᾟ
 
 \DeclareUnicodeCharacter{1FA0}{\ensuregreek{\accpsili\textomega\ypogegrammeni}}       % ᾠ
 \DeclareUnicodeCharacter{1FA1}{\ensuregreek{\accdasia\textomega\ypogegrammeni}}       % ᾡ
@@ -976,14 +1150,14 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1FA5}{\ensuregreek{\accdasiaoxia\textomega\ypogegrammeni}}   % ᾥ
 \DeclareUnicodeCharacter{1FA6}{\ensuregreek{\accpsiliperispomeni\textomega\ypogegrammeni}} % ᾦ
 \DeclareUnicodeCharacter{1FA7}{\ensuregreek{\accdasiaperispomeni\textomega\ypogegrammeni}} % ᾧ
-\DeclareUnicodeCharacter{1FA8}{\ensuregreek{\accpsili\textOmega\prosgegrammeni}}      % ᾨ
-\DeclareUnicodeCharacter{1FA9}{\ensuregreek{\accdasia\textOmega\prosgegrammeni}}      % ᾩ
-\DeclareUnicodeCharacter{1FAA}{\ensuregreek{\accpsilivaria\textOmega\prosgegrammeni}} % ᾪ
-\DeclareUnicodeCharacter{1FAB}{\ensuregreek{\accdasiavaria\textOmega\prosgegrammeni}} % ᾫ
-\DeclareUnicodeCharacter{1FAC}{\ensuregreek{\accpsilioxia\textOmega\prosgegrammeni}}  % ᾬ
-\DeclareUnicodeCharacter{1FAD}{\ensuregreek{\accdasiaoxia\textOmega\prosgegrammeni}}  % ᾭ
-\DeclareUnicodeCharacter{1FAE}{\ensuregreek{\accpsiliperispomeni\textOmega\prosgegrammeni}} % ᾮ
-\DeclareUnicodeCharacter{1FAF}{\ensuregreek{\accdasiaperispomeni\textOmega\prosgegrammeni}} % ᾯ
+\DeclareUnicodeCharacter{1FA8}{\ensuregreek{\accpsili\textOmega\ypogegrammeni}}       % ᾨ
+\DeclareUnicodeCharacter{1FA9}{\ensuregreek{\accdasia\textOmega\ypogegrammeni}}       % ᾩ
+\DeclareUnicodeCharacter{1FAA}{\ensuregreek{\accpsilivaria\textOmega\ypogegrammeni}}  % ᾪ
+\DeclareUnicodeCharacter{1FAB}{\ensuregreek{\accdasiavaria\textOmega\ypogegrammeni}}  % ᾫ
+\DeclareUnicodeCharacter{1FAC}{\ensuregreek{\accpsilioxia\textOmega\ypogegrammeni}}   % ᾬ
+\DeclareUnicodeCharacter{1FAD}{\ensuregreek{\accdasiaoxia\textOmega\ypogegrammeni}}   % ᾭ
+\DeclareUnicodeCharacter{1FAE}{\ensuregreek{\accpsiliperispomeni\textOmega\ypogegrammeni}} % ᾮ
+\DeclareUnicodeCharacter{1FAF}{\ensuregreek{\accdasiaperispomeni\textOmega\ypogegrammeni}} % ᾯ
 
 \DeclareUnicodeCharacter{1FB0}{\ensuregreek{\u\textalpha}}                            % ᾰ
 \DeclareUnicodeCharacter{1FB1}{\ensuregreek{\&#64;tabacckludge=\textalpha}}               % ᾱ
@@ -996,13 +1170,13 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1FB9}{\ensuregreek{\&#64;tabacckludge=\textAlpha}}               % Ᾱ
 \DeclareUnicodeCharacter{1FBA}{\ensuregreek{\accvaria\textAlpha}}                     % Ὰ
 \DeclareUnicodeCharacter{1FBB}{\ensuregreek{\acctonos\textAlpha}}                     % Ά
-\DeclareUnicodeCharacter{1FBC}{\ensuregreek{\textAlpha\prosgegrammeni}}               % ᾼ
-\DeclareUnicodeCharacter{1FBD}{\accpsili{ }}                                          % ᾽
+\DeclareUnicodeCharacter{1FBC}{\ensuregreek{\textAlpha\ypogegrammeni}}                % ᾼ
+\DeclareUnicodeCharacter{1FBD}{\accpsili{}}                                           % ᾽
 \DeclareUnicodeCharacter{1FBE}{\textcompwordmark\prosgegrammeni}                      % ι
-\DeclareUnicodeCharacter{1FBF}{\accpsili{ }}                                          % ᾿
+\DeclareUnicodeCharacter{1FBF}{\accpsili{}}                                           % ᾿
 
-\DeclareUnicodeCharacter{1FC0}{\accperispomeni{ }}                                    % ῀
-\DeclareUnicodeCharacter{1FC1}{\accdialytikaperispomeni{ }}                           % ῁
+\DeclareUnicodeCharacter{1FC0}{\accperispomeni{}}                                     % ῀
+\DeclareUnicodeCharacter{1FC1}{\accdialytikaperispomeni{}}                            % ῁
 \DeclareUnicodeCharacter{1FC2}{\ensuregreek{\accvaria\texteta\ypogegrammeni}}         % ῂ
 \DeclareUnicodeCharacter{1FC3}{\ensuregreek{\texteta\ypogegrammeni}}                  % ῃ
 \DeclareUnicodeCharacter{1FC4}{\ensuregreek{\acctonos\texteta\ypogegrammeni}}         % ῄ
@@ -1012,10 +1186,10 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1FC9}{\ensuregreek{\acctonos\textEpsilon}}                   % Έ
 \DeclareUnicodeCharacter{1FCA}{\ensuregreek{\accvaria\textEta}}                       % Ὴ
 \DeclareUnicodeCharacter{1FCB}{\ensuregreek{\acctonos\textEta}}                       % Ή
-\DeclareUnicodeCharacter{1FCC}{\ensuregreek{\textEta\prosgegrammeni}}                 % ῌ
-\DeclareUnicodeCharacter{1FCD}{\accpsilivaria{ }}                                     % ῍
-\DeclareUnicodeCharacter{1FCE}{\accpsilioxia{ }}                                      % ῎
-\DeclareUnicodeCharacter{1FCF}{\accpsiliperispomeni{ }}                               % ῏
+\DeclareUnicodeCharacter{1FCC}{\ensuregreek{\textEta\ypogegrammeni}}                  % ῌ
+\DeclareUnicodeCharacter{1FCD}{\accpsilivaria{}}                                      % ῍
+\DeclareUnicodeCharacter{1FCE}{\accpsilioxia{}}                                       % ῎
+\DeclareUnicodeCharacter{1FCF}{\accpsiliperispomeni{}}                                % ῏
 
 \DeclareUnicodeCharacter{1FD0}{\ensuregreek{\u\textiota}}                             % ῐ
 \DeclareUnicodeCharacter{1FD1}{\ensuregreek{\&#64;tabacckludge=\textiota}}                % ῑ
@@ -1027,9 +1201,9 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1FD9}{\ensuregreek{\&#64;tabacckludge=\textIota}}                % Ῑ
 \DeclareUnicodeCharacter{1FDA}{\ensuregreek{\accvaria\textIota}}                      % Ὶ
 \DeclareUnicodeCharacter{1FDB}{\ensuregreek{\acctonos\textIota}}                      % Ί
-\DeclareUnicodeCharacter{1FDD}{\accdasiavaria{ }}                                     % ῝
-\DeclareUnicodeCharacter{1FDE}{\accdasiaoxia{ }}                                      % ῞
-\DeclareUnicodeCharacter{1FDF}{\accdasiaperispomeni{ }}                               % ῟
+\DeclareUnicodeCharacter{1FDD}{\accdasiavaria{}}                                      % ῝
+\DeclareUnicodeCharacter{1FDE}{\accdasiaoxia{}}                                       % ῞
+\DeclareUnicodeCharacter{1FDF}{\accdasiaperispomeni{}}                                % ῟
 
 \DeclareUnicodeCharacter{1FE0}{\ensuregreek{\u\textupsilon}}                          % ῠ
 \DeclareUnicodeCharacter{1FE1}{\ensuregreek{\&#64;tabacckludge=\textupsilon}}             % ῡ
@@ -1044,9 +1218,9 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1FEA}{\ensuregreek{\accvaria\textUpsilon}}                   % Ὺ
 \DeclareUnicodeCharacter{1FEB}{\ensuregreek{\acctonos\textUpsilon}}                   % Ύ
 \DeclareUnicodeCharacter{1FEC}{\ensuregreek{\accdasia\textRho}}                       % Ῥ
-\DeclareUnicodeCharacter{1FED}{\accdialytikavaria{ }}                                 % ῭
-\DeclareUnicodeCharacter{1FEE}{\accdialytikatonos{ }}                                 % ΅
-\DeclareUnicodeCharacter{1FEF}{\accvaria{ }}                                          % `
+\DeclareUnicodeCharacter{1FED}{\accdialytikavaria{}}                                  % ῭
+\DeclareUnicodeCharacter{1FEE}{\accdialytikatonos{}}                                  % ΅
+\DeclareUnicodeCharacter{1FEF}{\accvaria{}}                                           % `
 
 \DeclareUnicodeCharacter{1FF2}{\ensuregreek{\accvaria\textomega\ypogegrammeni}}       % ῲ
 \DeclareUnicodeCharacter{1FF3}{\ensuregreek{\textomega\ypogegrammeni}}                % ῳ
@@ -1057,12 +1231,12 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{1FF9}{\ensuregreek{\acctonos\textOmicron}}                   % Ό
 \DeclareUnicodeCharacter{1FFA}{\ensuregreek{\accvaria\textOmega}}                     % Ὼ
 \DeclareUnicodeCharacter{1FFB}{\ensuregreek{\acctonos\textOmega}}                     % Ώ
-\DeclareUnicodeCharacter{1FFC}{\ensuregreek{\textOmega\prosgegrammeni}}               % ῼ
-\DeclareUnicodeCharacter{1FFD}{\acctonos{ }}                                          % ´
-\DeclareUnicodeCharacter{1FFE}{\accdasia{ }}                                          % ῾</pre>
-</div>
-<div class="section" id="general-punctuation">
-<h2>General Punctuation</h2>
+\DeclareUnicodeCharacter{1FFC}{\ensuregreek{\textOmega\ypogegrammeni}}                % ῼ
+\DeclareUnicodeCharacter{1FFD}{\acctonos{}}                                           % ´
+\DeclareUnicodeCharacter{1FFE}{\accdasia{}}                                           % ῾</pre>
+</section>
+<section id="general-punctuation">
+<h3><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">General Punctuation</a></h3>
 <pre class="literal-block">\DeclareUnicodeCharacter{2013}{\textendash}        % –
 \DeclareUnicodeCharacter{2014}{\textemdash}        % —
 \DeclareUnicodeCharacter{2018}{\textquoteleft}     % ‘
@@ -1071,25 +1245,122 @@ characters work in any font encoding if the <a class="reference external" href="
 \DeclareUnicodeCharacter{2030}{\textperthousand}   % ‰
 \DeclareUnicodeCharacter{2039}{\guilsinglleft}     % ‹
 \DeclareUnicodeCharacter{203A}{\guilsinglright}    % ›</pre>
-</div>
-<div class="section" id="currency-symbols">
-<h2>Currency Symbols</h2>
+</section>
+<section id="currency-symbols">
+<h3><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">Currency Symbols</a></h3>
 <pre class="literal-block">\DeclareUnicodeCharacter{20AC}{\texteuro}               % €</pre>
-</div>
-<div class="section" id="letterlike-symbols">
-<h2>Letterlike Symbols</h2>
+</section>
+<section id="letterlike-symbols">
+<h3><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">Letterlike Symbols</a></h3>
 <pre class="literal-block">\DeclareUnicodeCharacter{2126}{\textohm}           % Ω OHM SIGN</pre>
-</div>
-<div class="section" id="ancient-greek-numbers">
-<h2>Ancient Greek Numbers</h2>
+</section>
+<section id="ancient-greek-numbers">
+<h3><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">Ancient Greek Numbers</a></h3>
 <p>TODO: map also other number characters to corresponding Greek letters?
-See also the <a class="reference external" href="http://www.ctan.org/pkg/grnumalt">grnumalt</a> package:</p>
+See also the <a class="reference external" href="https://ctan.org/pkg/grnumalt">grnumalt</a> package:</p>
 <pre class="literal-block">\DeclareUnicodeCharacter{10144}{\textpentedeka}    % GREEK ACROPHONIC ATTIC FIFTY
 \DeclareUnicodeCharacter{10145}{\textpentehekaton} % GREEK ACROPHONIC ATTIC FIVE HUNDRED
 \DeclareUnicodeCharacter{10146}{\textpenteqilioi}  % GREEK ACROPHONIC ATTIC FIVE THOUSAND
 \DeclareUnicodeCharacter{10147}{\textpentemuria}   % GREEK ACROPHONIC ATTIC FIFTY THOUSAND</pre>
+</section>
+</section>
+<section id="changelog">
+<h2><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">Changelog</a></h2>
+<table class="borderless">
+<tbody>
+<tr><td><p>0.1</p></td>
+<td><p>2010-06-16</p></td>
+<td><p>Initial version.</p></td>
+</tr>
+<tr><td><p>0.2</p></td>
+<td><p>2012-06-27</p></td>
+<td><p>Support for accented Greek characters with <a class="reference external" href="https://mirrors.ctan.org/macros/latex/contrib/lgrx/textalpha.sty.html">textalpha</a>.</p></td>
+</tr>
+<tr><td><p>0.3</p></td>
+<td><p>2013-05-03</p></td>
+<td><p>New accent macro names with lgrxenc.def 0.7.</p></td>
+</tr>
+<tr><td><p>1.3</p></td>
+<td><p>2013-05-24</p></td>
+<td><p>Moved to greek-inputenc.</p></td>
+</tr>
+<tr><td><p>1.4</p></td>
+<td><p>2013-07-16</p></td>
+<td><p>Bugfix for GREEK SMALL LETTER RHO WITH PSILI/DASIA.</p></td>
+</tr>
+<tr><td><!--  -->
+</td>
+<td></td>
+<td><p>Drop “greek” from macro names for ancient characters.</p></td>
+</tr>
+<tr><td><!--  -->
+</td>
+<td></td>
+<td><p>Use <span class="docutils literal">\ypogegrammeni</span> and <span class="docutils literal">\prosgegrammeni</span>
+instead of <span class="docutils literal">|</span>.</p></td>
+</tr>
+<tr><td><p>1.4.1</p></td>
+<td><p>2013-07-18</p></td>
+<td><p>Bugfix: wrong breathings psilioxia -&gt; dasiaoxia.</p></td>
+</tr>
+<tr><td><p>1.5</p></td>
+<td><p>2014-09-14</p></td>
+<td><p>Use named accent macros for Greek accents.</p></td>
+</tr>
+<tr><td><p>1.6</p></td>
+<td><p>2015-08-05</p></td>
+<td><p>Fix output of accented characters with “textalpha” if the
+current font encoding is not LGR (wrap in ensuregreek).</p></td>
+</tr>
+<tr><td><!--  -->
+</td>
+<td></td>
+<td><p>Map GREEK … SYMBOL characters.</p></td>
+</tr>
+<tr><td><p>1.7</p></td>
+<td><p>2019-07-11</p></td>
+<td><p>Remove some duplicate definitions (punctuation, Euro).</p></td>
+</tr>
+<tr><td><p>1.8</p></td>
+<td><p>2023-02-21</p></td>
+<td><p>Add <span class="docutils literal">\textKoppa</span> (mapped to <span class="docutils literal">\textkoppa</span> in LGR).
+(Required by the new <span class="docutils literal">\MakeUppercase</span> implementation.
+Maps to small koppa as there is no capital koppa in LGR.)</p></td>
+</tr>
+<tr><td><!--  -->
+</td>
+<td></td>
+<td><p>Use <span class="docutils literal">\ypogegrammeni</span> for mute iota also with capitals.</p></td>
+</tr>
+<tr><td><!--  -->
+</td>
+<td></td>
+<td><p>Use <span class="docutils literal">\textdexiakeraia</span> and <span class="docutils literal">\textaristerikeraia</span> for
+the Greek numeral signs.</p></td>
+</tr>
+<tr><td><p>1.9</p></td>
+<td><p>2023-03-21</p></td>
+<td><p>Empty argument instead of space for “spacing accents”.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="references">
+<h2><a class="toc-backref" href="#toc-entry-13" role="doc-backlink">References</a></h2>
+<div role="list" class="citation-list">
+<div class="citation" id="haralambous-98" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#citation-reference-2">Haralambous-98</a><span class="fn-bracket">]</span></span>
+<p>Yannis Haralambous
+<cite>From Unicode to Typography, a Case Study: the Greek Script</cite>, 1998.
+<a class="reference external" href="https://hal.science/hal-02101618">https://hal.science/hal-02101618</a></p>
+</div>
+<div class="citation" id="nicholas-03" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#citation-reference-1">Nicholas-03</a><span class="fn-bracket">]</span></span>
+<p>Nick Nicholas <cite>Titlecase and Adscripts</cite> 2003.
+<a class="reference external" href="https://opoudjis.net/unicode/unicode_adscript.html">https://opoudjis.net/unicode/unicode_adscript.html</a></p>
 </div>
 </div>
-</div>
+</section>
+</main>
 </body>
 </html>

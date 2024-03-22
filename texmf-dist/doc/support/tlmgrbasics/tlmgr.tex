@@ -12,7 +12,7 @@
 \author{edited by Bob Tennent\thanks{\scriptsize Derived
 from the man page \texttt{tlmgr.1} and licensed under
 the GNU General Public Licence, Version 2 or later.}\\
-\url{rdt@cs.queensu.ca}}
+\url{rdtennent@gmail.com}}
 
 \usepackage[headheight=14pt]{geometry}
 \usepackage{fancyhdr}
@@ -42,7 +42,8 @@ collections and packages, but each package is included in
 exactly one collection, no more and no less. A \TeX\,Live
 installation can be customized and managed at any level.
 
-We will describe usage of \texttt{tlmgr} in the
+
+This report describes usage of \texttt{tlmgr} in the
 command-line interface. There are graphical front-ends
 for \texttt{tlmgr}: \texttt{tlshell}, \texttt{tlcockpit}
 and, for Macs, a \TeX\,Live Utility; these must
@@ -54,8 +55,8 @@ consult the documentation here:
 \end{center}
 
 
+\section{Command-Line Usage}
 
-\section{Usage}
 
 \begin{quote}
   \texttt{tlmgr} 
@@ -64,7 +65,6 @@ consult the documentation here:
   \verb|[|\textit{action-specific options}\verb|]|  
   \verb|[|\textit{operands}\verb|]|
 \end{quote}
-
 The actions and relevant action-specific options and
 operands are described in Section~\ref{Actions}. The global
 options are described in Section~\ref{GlobalOptions}.
@@ -148,6 +148,10 @@ are not touched.
 
 Searches locally installed packages and displays all filenames
 containing \texttt{cabin}.
+
+\item\texttt{tlmgr search -global -file t2aenc.def} 
+
+Searches the "installation medium" (normally the net) data base for the file \texttt{t2aenc.def}.
 
 \item\texttt{tlmgr conf}\par
 
@@ -261,7 +265,7 @@ List all filenames containing \textsl{what}.
 
 \item\texttt{-global}\par 
 
-Search the \TeX\,Live Database of the installation medium,
+Search the \TeX\,Live Database of the installation medium (normally the net),
 instead of the local installation.
 
 \item\texttt{-word}\par 
@@ -510,6 +514,20 @@ Do not remove dependent packages.
 Uninstalls all of \TeX\,Live, asking for confirmation unless
 \texttt{-force} is also specified.
 
+\item\texttt{-force}\par
+
+By default, removal of a package or collection that is a dependency of another collection or
+scheme is not allowed. With this option, the package will be removed unconditionally. Use
+with care.
+
+A package that has been removed using the \texttt{-force} option (despite being listed in an
+installed collection or scheme) will not subsequently be updated, and will be mentioned 
+in the output of \texttt{tlmgr update -list}
+as having been
+forcibly
+removed.
+
+
 \end{description}
 
 \begin{sloppypar}
@@ -613,8 +631,8 @@ All three of these options are on by default.
 \paragraph{Usage:}
 
 \begin{list}{}{}
- \item     \texttt{tlmgr path [-w32mode=user|admin] add}
- \item     \texttt{tlmgr path [--w32mode=user|admin] remove}
+ \item     \texttt{tlmgr path [-windowsmode=user|admin] add}
+ \item     \texttt{tlmgr path [--windowsmode=user|admin] remove}
 \end{list}
 
 On Unix, adds or removes symlinks for executables, man
@@ -630,32 +648,32 @@ added or removed is determined in the following way:
 \begin{itemize}
 
 \item If the user has admin rights, and the option
-\texttt{-w32mode} is not given, the setting
-\texttt{w32\_multi\_user} determines the location (i.e.,
+\texttt{-windowsmode} is not given, the setting
+\texttt{windows\_multi\_user} determines the location (i.e.,
 if it is on the system path, otherwise the user path is
 changed).
 
 \item If the user has admin rights, and the option
-\texttt{-w32mode} is given, this option determines the path
+\texttt{-windowsmode} is given, this option determines the path
 to be adjusted.
 
 \item If the user does not have admin rights, and the
-option \texttt{-w32mode} is not given, and the setting
-\texttt{w32\_multi\_user} is off, the user path is changed,
-while if the setting \texttt{w32\_multi\_user} is on, a
+option \texttt{-windowsmode} is not given, and the setting
+\texttt{windows\_multi\_user} is off, the user path is changed,
+while if the setting \texttt{windows\_multi\_user} is on, a
 warning is issued that the caller does not have enough
 privileges.
 
 \item If the user does not have admin rights, and the option
-\texttt{-w32mode} is given, it must be \texttt{user} and
+\texttt{-windowsmode} is given, it must be \texttt{user} and
 the user path will be adjusted. If a user without admin
-rights uses the option \texttt{-w32mode admin} a warning
+rights uses the option \texttt{-windowsmode admin} a warning
 is issued that the caller does not have enough privileges.
 \end{itemize}
 
 \clearpage
 
-\subsection{The \texttt{paper} Action}
+\subsection{The {\tt paper} Action}
 \label{paper}
 
 \paragraph{Usage}
@@ -673,7 +691,7 @@ With a \textit{program} given as the first argument and a paper size as the last
 
 \clearpage
 
-\subsection{The \texttt{conf} Action}
+\subsection{The {\tt conf} Action}
 \label{conf}
 \paragraph{Usage}
 \begin{list}{}{}

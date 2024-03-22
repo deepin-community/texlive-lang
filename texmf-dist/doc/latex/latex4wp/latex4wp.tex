@@ -4,89 +4,116 @@
 % by Guido Gonzato, guido.gonzato (at) gmail.com
 %
 % This document was written with the Jed editor,
-% http://www.jedsoft.org/jed, and the new LaTeX mode
+% https://www.jedsoft.org/jed, and the new LaTeX mode
 % available from CTAN mirrors, e.g.
-% http://www.ctan.org/tex-archive/support/jed
+% https://www.ctan.org/pkg/jed
 %
-% Last updated: January 7, 2015
+% Last updated: August 28, 2023
 
-% debug
-% \overfullrule=15pt
+% \RequirePackage[l2tabu,orthodox]{nag} % LaTeX syntax check
 
 \documentclass[a4paper,11pt]{article}
-\usepackage[margin=3cm]{geometry}
-\usepackage{color}     % coloured stuff
-\usepackage{ifpdf}     % ps/pdf output
-\ifpdf
-  \usepackage[pdftex]{graphicx}
-  \pdfcompresslevel=9
-\else
-  \usepackage{graphicx}
-\fi
-\usepackage{alltt}     % like verbatim, but obeys LaTeX commands
-\usepackage{dcolumn}   % aligning numbers to digital position
-\usepackage{url}       % urls and links
-\usepackage{colortbl}  % colour tables
-\usepackage{pifont}    % dinglist
-\usepackage{fancyvrb}  % fancy verbatim
+% packages
+\usepackage[export]{adjustbox}  % images on centre or right
+\usepackage{alltt}         % like verbatim, but obeys LaTeX commands
+\usepackage{booktabs}      % better looking tables
 \usepackage{boxedminipage} % what it says
-\usepackage{framed}    % frames around stuff
-\usepackage{rotating}  % rotate stuff
-\usepackage[colorlinks,
-            urlcolor=blue,
-	    filecolor=magenta,
-	    linkcolor=darkred,
-	    hyperfootnotes=false]{hyperref} % browseable links
-% \usepackage{fancyhdr}  % fancy headers and footers
-\usepackage{marvosym}  % Euro sign and other nice characters
-\usepackage[gen]{eurosym} % Euro sign
-\usepackage{mflogo}    % Metafont logo
-\usepackage{setspace}  % custom line spacing
-\usepackage{tabularx}  % extended tabular environment
-\usepackage{exa}       % local package for typesetting LaTeX examples
-\usepackage{enumerate} % optional args for enumerate environment
-\usepackage{wrapfig}   % wrapping text around figures
-\usepackage[normalem]{ulem} % underline styles - !!! NOT IN MINT
-\usepackage{slashbox}  % slashed box in tables - !!! NOT IN MINT
-\usepackage{paralist}  % paragraph lists
-\usepackage[version=3]{mhchem} % chemical formulae - !!! NOT IN MINT
-\usepackage{lettrine}  % dropped capitals
-
-\urlstyle{same} % urls in default font
+\usepackage{xcolor}        % coloured stuff
+\usepackage{colortbl}      % colour tables
+\usepackage{comment}       % comment out text
+\usepackage{contour}       % outlined text
+\usepackage{diagbox}       % diagonal through boxes
+\usepackage{dcolumn}       % aligning numbers to digital position
+\usepackage{endnotes}      % footnotes at the end of sections
+\usepackage{enumerate}     % optional args for enumerate environment
+\usepackage{exa}           % local package for typesetting LaTeX examples
+\usepackage{fancyhdr}      % fancy headers and footers
+\usepackage{fancyvrb}      % fancy verbatim
+\usepackage{forloop}       % loops
+\usepackage{framed}        % frames around stuff
+\usepackage[%
+a4paper,%
+outer=2.2cm,%
+inner=3cm,%
+top=2.7cm,%
+bottom=2.7cm]%
+           {geometry}      % page geometry
+\usepackage{graphicx}      % including graphics files
+\usepackage[colorlinks,urlcolor=blue,
+	    filecolor=magenta,linkcolor=darkred,
+	    hyperfootnotes=false]
+  {hyperref}               % browseable links
+\usepackage{latexdemo}     % showing examples
+\usepackage{lettrine}      % dropped capitals
+% \usepackage{lmodern}       % Type 1 Latin Modern font
+\usepackage{libertine}     % nice font
+\usepackage{listings}      % syntax highlighting
+% marvosym must be loaded before eurosym
+\usepackage{marvosym}      % Euro sign and other nice characters
+\usepackage{multicol}      % multiple columns
+\usepackage[gen]{eurosym}  % Euro sign
+\usepackage{mflogo}        % Metafont logo
+% mhchem is included in texlive-science
+\usepackage[version=4]%
+  {mhchem}                 % chemical formulae
+\usepackage{paralist}      % paragraph lists
+\usepackage{pifont}        % dinglist
+\usepackage[icon=note,color={1 1 0}]
+           {pdfcomment}    % popup comments in PDF
+\usepackage{pdfpages}      % insert external PDF pages
+\usepackage{rotating}      % rotate stuff
+\usepackage{setspace}      % custom line spacing
+\usepackage{subcaption}    % subfigures and subcaptions
+\usepackage{tabularx}      % extended tabular environment
+% \usepackage{tcolorbox}     % coloured boxes
+% clashes with something - too bad
+\usepackage{tikz}          % graphics
+\usepackage[normalem]%
+  {ulem}                   % underline styles
+\usepackage{upquote}       % fix quotes in verbatim output
+\usepackage{url}           % urls and links
+\usepackage{wrapfig}       % wrapping text around figures
 
 % --- Definitions and new commands ---
 
-\def\version {1.0.10}
-\def\bs      {\textbackslash}
-\def\unix    {\textsc{Unix}}
-% \def\warning {\marginpar{\Huge{\textcolor{red}{\Stopsign}}}}
-\def\note    {\marginpar{\Huge{\textcolor{magenta}{\Writinghand}}}}
-\def\PS      {\textsc{PostScript}}
+\renewcommand{\ttdefault}{cmtt} % better looking
+
+\pdfcompresslevel=9
+\urlstyle{same}            % urls are printed in default font
+\pagestyle{fancy}
+
+\def\version {1.2}
+
+\newcommand{\Bs}{\textbackslash}
+\newcommand{\unix}{\textsc{Unix}}
+\newcommand{\PS}{\textsc{PostScript}}
 \definecolor {darkred}{rgb}{0.75,0,0}
+\newcommand  {\copyleft}{\reflectbox{\textcopyright}}
 
-\hyphenation{lo-cal-tex-mf land-sca-pe}
+\hyphenation{lo-cal-tex-mf land-sca-pe Post-Script}
 
-\newcounter{fnsym}
+\newcounter{fnsym}      % footnote symbols
 \setcounter{fnsym}{1}
-%\newcounter{tmpbaselineskip}
-%\setlength{tmpbaselineskip}{\value{\baselineskip}}
 
 \newenvironment{margins}[2]
-{ 
-  \begin{list}{} {
+{ % begin def
+  \begin{list}{}
+  {
     \setlength{\leftmargin}{#1}
     \setlength{\rightmargin}{#2}
-  } \item }
+  } \item
+} % end def
 {\end{list}}
 
 \newenvironment{warn}
 { % beg def
   \medskip
+  \noindent
   \begin{minipage}[t]{0.1\linewidth}
     \vspace{0pt}
     \textcolor{magenta}{\Huge{\Pointinghand}}
   \end{minipage}%
-  \begin{minipage}[t]{0.88\textwidth}
+  \begin{minipage}[t]{0.85\textwidth}
     \vspace{0pt}
     \begin{small}
       \begin{spacing}{0.97}
@@ -98,7 +125,7 @@
   \medskip
 }
 
-\newcommand{\package}[1]
+\newcommand{\Pkg}[1]
 {\textsf{#1}}
 
 \newcommand{\parm}[1]
@@ -107,11 +134,11 @@
 \newcommand{\cmdparm}[1]
 {\textit{#1}}
 
-\newcommand{\env}[1]
+\newcommand{\Env}[1]
 {\texttt{#1}}
 
 \newcommand{\cmd}[1]
-{\texttt{\bs{}#1}}
+{\texttt{\Bs{}#1}}
 
 \newcommand{\cmdline}[1]
 {\texttt{#1}}
@@ -125,7 +152,7 @@
 \newcommand{\app}[1]
 {\texttt{#1}}
 
-\newcommand{\file}[1]
+\newcommand{\File}[1]
 {\texttt{#1}}
 
 \newcommand{\style}[1]
@@ -134,23 +161,25 @@
 \newcommand{\ltx}[1]
 {\texttt{#1}}
 
+% I want to use the dagger sign as footnote symbol
+% \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\setcounter{footnote}{2}
+
 % --- end of definitions and new commands ---
+
 % ok, let's start
 
 \begin{document}
 
+\renewcommand{\democodeprefix}{}
+\renewcommand{\demoresultprefix}{}
+
 \pagenumbering{roman}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{3pt}
 
 \title{\LaTeX{} for Word Processor Users\\version \version}
 
-\author{Guido Gonzato, Ph.D.\\
-\texttt{guido.gonzato@gmail.com}}
-
-% I want to use the dagger sign as footnote symbol
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-\setcounter{footnote}{2}
+\author{Guido Gonzato, PhD\\
+\texttt{guido.gonzato at gmail.com}}
 
 \date{\today}
 
@@ -172,11 +201,14 @@
 
 \end{abstract}
 
-\begin{footnotesize}
+\bigskip
+
+\begin{multicols}{2}
+  \small
   \tableofcontents
   \listoftables
   \listoffigures
-\end{footnotesize}
+\end{multicols}
 
 % INTRODUCTION
 
@@ -191,15 +223,12 @@ basic understanding of \LaTeX{} and of its basic commands. In this
 guide, I'll explain how to replace a word processor effectively using
 \LaTeX.
 
-Word processors are the `killer app' in modern office automation.
-They're perceived to be easier than \LaTeX{} as they have a friendly
-WYSIWYG interface, and the average secretary will learn to use them in
-a relatively short time. The problem is, these beasts keep growing
-slow, bloated,\footnote{once upon a time, I wrote my thesis on a 128k
-RAM, Z80-based home computer. The word processor WordStar and my
-thesis fit on a single CP/M-bootable 720K floppy, with lots of room to
-spare!} buggy, crash-prone, expensive, virus ridden, and incompatible
-with each other. Not to talk about their default output quality.
+Word processors are perceived to be easier than \LaTeX{} since they
+have a friendly WYSIWYG interface, and the average secretary will
+learn to use them in a relatively short time. The problem is, these
+beasts keep growing slow, bloated, and unusable. People who had to
+write long texts with lots of tables and figures know what I'm talking
+about.
 
 \LaTeX{} is an excellent alternative (in some cases, it is the
 \emph{only} viable alternative); but it's not much intuitive for those
@@ -208,14 +237,24 @@ accustomed to WYSIWYG.
 To sum up, sometimes you may want to use word processor-like
 features---but using \LaTeX. It would be nice to know how to obtain
 some effects with \LaTeX{} when you know how to get them with your
-once-favourite \texttt{:-)} word processor.
+word processor.
 
-That's why I wrote this quick reference. As I said, it assumes some
-basic \LaTeX{} knowledge; if it's not the case, I suggest that you go
-to \url{http://www.ctan.org/starter.html} and download 
-\href{http://www.ctan.org/tex-archive/info/lshort/}{The (Not So) Short
-Introduction to \LaTeX2e{}}. Another good primer is
-\url{http://en.wikibooks.org/wiki/LaTeX/}.
+That's why I wrote this quick reference, which is meant to be a
+concept-by-concept guide.  As I said, it assumes some basic \LaTeX{}
+knowledge; if it's not the case, I suggest that you have a look at one of
+the following guides:
+
+\begin{itemize}
+
+\item \href{https://www.ctan.org/tex-archive/info/lshort/}{The
+(Not So) Short Introduction to \LaTeX2e{}}
+
+\item \href{https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes}
+{Learn LaTeX in 30 minutes}
+
+\item \url{https://en.wikibooks.org/wiki/LaTeX/}
+
+\end{itemize}
 
 In the following sections, we shall navigate through the menus and
 menu items of an imaginary word processor, finding out the
@@ -236,45 +275,57 @@ how to install them. More about packages in
 Section~\ref{sec:packages}.
 
 Packages and other \TeX{}-related material are available at many sites
-that constitute the CTAN: the Comprehensive TeX Archive Network. I
-already mentioned \url{http://www.ctan.org}; this site has a wide list
-of mirrors. From now on, \href{http://www.ctan.org}{CTAN:} means `your
-favourite CTAN mirror here, starting from the \TeX{} directory'. For
-instance, you can get \LaTeX{} for your platform from
-\href{http://www.tex.ac.uk/tex-archive/systems}{CTAN://systems} (e.g.,
-\url{http://www.tex.ac.uk/tex-archive/systems/}).
+that constitute the Comprehensive TeX Archive Network (CTAN), whose
+web site is \url{https://www.ctan.org}.
 
-To write your documents, you will need a good text editor. A better
-choice for beginners is a \emph{\LaTeX{} IDE}: an editor dedicated
-to writing \LaTeX{} source, with preview and many facilities.
+From now on, \href{https://www.ctan.org}{CTAN:} means `your
+favourite CTAN mirror here, starting from the \TeX{} directory'. For
+instance, you can get this document from
+\href{https://www.ctan.org/pkg/latex4wp}{CTAN://latex4wp}, which
+corresponds to \url{https://www.ctan.org/pkg/latex4wp}.
+
+To write your documents, you will need a good UTF-8 enabled text
+editor. A better choice for beginners is a \emph{\LaTeX{} IDE}: an
+editor dedicated to writing \LaTeX{} source, with output preview
+and many other facilities.
 
 I suggest that you install one of the programs listed below; all of
 them are Free/Open Source software.
 
 \begin{itemize}
 
+  \item TeXstudio (multiplatform; GNU/Linux AppImage and portable app for
+  Windows available):\\
+  \url{https://www.texstudio.org}
+
+  \item TeXworks (multiplatform; GNU/Linux AppImage available):\\
+  \url{https://tug.org/texworks/} (included in TeX Live)
+
   \item Texmaker (multiplatform):\\
-  \url{http://www.xm1math.net/texmaker/index.html}
+  \url{https://www.xm1math.net/texmaker/index.html}
 
-  \item TeXstudio (multiplatform):\\
-  \url{http://texstudio.sourceforge.net/}
-
-  \item TeXworks (multiplatform):\\
-  \url{http://tug.org/texworks/}
-  
-%  \item LyX, an almost-WYSIWYG \LaTeX{} editor (multiplatform):\\
-%  \url{http://www.lyx.org/}
-  
   \item TeXShop (Mac OS X):\\
-  \url{http://www.uoregon.edu/~koch/texshop/}
-  
+  \url{https://www.uoregon.edu/koch/texshop/}
+
   \item TeXnicCenter (Windows):\\
-  \url{http://www.texniccenter.org/}
-    
+  \url{https://www.texniccenter.org/}
+
 \end{itemize}
 
-Information about \LaTeX{} on the Mac can be found at
-\url{http://www.esm.psu.edu/mac-tex/}.
+Finally, I assume modern \LaTeX{} usage, i.e.\ PDF output using
+\app{pdflatex} or \app{xelatex} or \app{lualatex}. The same goes for
+graphics inclusion; no \PS{} or EPS files will be considered.
+
+% -----
+
+\subsubsection{Typographic Conventions}
+
+Throughout this document, I'll be using the facilities provided by the
+\href{https://www.ctan.org/pkg/latexdemo}{CTAN://latexdemo} package to
+typeset \LaTeX{} snippets along with their output.  Occasionally,
+\ltx{latexdemo} does not work properly; in those cases, I'll be using a
+local modification of the old
+\href{https://www.ctan.org/pkg/example}{CTAN://example} package.
 
 % -----
 
@@ -282,22 +333,22 @@ Information about \LaTeX{} on the Mac can be found at
 
 \subsubsection{Editor-Supported Features}
 
-\LaTeX{} is just a formatter: things like cut and paste, search and
+\LaTeX{} is just a typesetter: things like cut and paste, search and
 replace etc. are delegated to the editor. Table~\ref{tab:editing}
 summarises the main commands of popular editors for geeks: GNU
 \app{emacs} and \app{vim} with their native key bindings, and
 \app{jed} configured for Borland IDE key bindings.
 
 \begin{table}[htbp]
-\begin{center}
-\begin{tabular}{|lccc|} \hline
+\centering
+\begin{tabular}{lccc} \hline
 \textbf{Action} & \textbf{Emacs} & \textbf{Vim} & \textbf{Jed} \\
-\hline
+\toprule
 command mode & \texttt{Alt-X} & \texttt{ESC} & \texttt{Alt-X} \\
 insert mode & n/a & \texttt{i a o O} & n/a \\
 line editor mode & n/a & \texttt{:} & n/a \\
 %\hline
-\multicolumn{4}{|c|}{\textit{\rule{0pt}{0.3cm}file operations}} \\
+\multicolumn{4}{c}{\textit{\rule{0pt}{0.3cm}file operations}} \\
 %\hline
 open file & \texttt{Ctrl-X Ctrl-F} & \texttt{:e} & \texttt{Ctrl-KE}\\
 insert file & \texttt{Ctrl-Xi} & \texttt{:r} & \texttt{Ctrl-KR}\\
@@ -309,7 +360,7 @@ undo & \texttt{Ctrl-XU} & \texttt{u} & \texttt{Ctrl-U}\\
 redo & \texttt{Ctrl-\^} & \texttt{Ctrl-R} & \texttt{Ctrl-G Ctrl-U}\\
 exit & \texttt{Ctrl-X Ctrl-C} & \texttt{:qa!} & \texttt{Ctrl-KX}\\
 %\hline
-\multicolumn{4}{|c|}{\textit{\rule{0pt}{0.3cm}moving around}}\\
+\multicolumn{4}{c}{\textit{\rule{0pt}{0.3cm}moving around}}\\
 %\hline
 word left & \texttt{Alt-B} & \texttt{b} & \texttt{Ctrl-A}\\
 word right & \texttt{Alt-F} & \texttt{w} & \texttt{Ctrl-F}\\
@@ -321,7 +372,7 @@ start of buffer & \texttt{Alt-<} & \texttt{1G} & \texttt{Ctrl-QR}\\
 end of buffer & \texttt{Alt->} & \texttt{G} & \texttt{Ctrl-QC}\\
 line n. & \texttt{Alt-G n.} & \texttt{n.G} & \texttt{Ctrl-QI}\\
 %\hline
-\multicolumn{4}{|c|}{\textit{\rule{0pt}{0.3cm}deleting}}\\
+\multicolumn{4}{c}{\textit{\rule{0pt}{0.3cm}deleting}}\\
 %\hline
 character left & \texttt{Ctrl-H} & \texttt{X} & \texttt{BS}\\
 character right & \texttt{Ctrl-D} & \texttt{x} & \texttt{Alt-G}\\
@@ -330,22 +381,21 @@ word right & \texttt{Alt-D} & \texttt{dw} &\texttt{Ctrl-T} \\
 end of line & \texttt{Ctrl-K} & \texttt{d\$} & \texttt{Ctrl-QY} \\
 line & \texttt{Ctrl-A Ctrl-K} & \texttt{dd} & \texttt{Ctrl-Y} \\
 %\hline
-\multicolumn{4}{|c|}{\textit{\rule{0pt}{0.3cm}search \& replace}}\\
+\multicolumn{4}{c}{\textit{\rule{0pt}{0.3cm}search \& replace}}\\
 %\hline
 search & \texttt{Ctrl-S text} & \texttt{/text} & \texttt{Ctrl-QS}\\
 replace & \texttt{Alt-\%} & \texttt{:s/old/new/g} & \texttt{Ctrl-QA}\\
 %\hline
-\multicolumn{4}{|c|}{\textit{\rule{0pt}{0.3cm}blocks}}\\
+\multicolumn{4}{c}{\textit{\rule{0pt}{0.3cm}blocks}}\\
 %\hline
 start selection & \texttt{Ctrl-SPACE} & \texttt{v} & \texttt{Ctrl-KB} \\
 cut & \texttt{Ctrl-W} & \texttt{D} & \texttt{Ctrl-KY} \\
 copy & \texttt{Alt-W} & \texttt{Y} & \texttt{Ctrl-KH} \\
 paste & \texttt{Ctrl-Y} & \texttt{P} & \texttt{Ctrl-KC} \\
-\hline
+\bottomrule
 \end{tabular}
 \caption{Useful key bindings for Emacs, Vim, and Jed in IDE mode.}
 \label{tab:editing}
-\end{center}
 \end{table}
 
 % -----
@@ -355,54 +405,56 @@ paste & \texttt{Ctrl-Y} & \texttt{P} & \texttt{Ctrl-KC} \\
 \subsubsection{Adding Packages}
 \label{sec:packages}
 
-The following information applies to \app{TeX Live}, which ships with
-most GNU/Linux distributions. It may also work on MacTeX, but I have
-no first-hand experience. Instructions for MiK\TeX{} (probably the
-most popular implementation for Windows) will follow below.
+The following information applies to
+\href{https://www.tug.org/texlive/}{TeX Live}, a comprehensive \TeX{}
+system that ships with most GNU\-/Linux distributions. It should also
+work on \href{https://www.tug.org/mactex/}{MacTeX}, but I have no
+first-hand experience. Instructions for
+\href{https://miktex.org/}{MiKTeX} (probably the most popular
+implementation for Windows) will follow below.
 
 A large collection of \LaTeX{} packages is natively supported; for
-instance, Ubuntu provides lots of \app{texlive-*} packages. Please
-note the ambiguity: we're talking of \texttt{.deb} \emph{packages}
-containing \LaTeX{} \emph{packages}.
+instance, Debian-based GNU/Linux variants provide lots of
+\app{texlive-*} packages. Please note the ambiguity: we're talking of
+\File{.deb} \emph{packages} containing \LaTeX{} \emph{packages}.
 
 If you need to install an unsupported package, do the following.
 
 \begin{enumerate}
 
   \item create this directory structure:
-  
-  \begin{verbatim}
-  $ mkdir -p ~/texmf/tex/latex
-  \end{verbatim}
-  
+
+  \cmdline{\$ mkdir -p \~{}/texmf/tex/latex}
+
   Under this directory, new packages will be installed.
 
   \item get the package (typically as a zip-compressed directory) from
   your favourite CTAN mirror; let's call it \app{foo.zip}
-  
+
   \item unpack it in the right place:
-  
+
   \begin{verbatim}
   $ mkdir ~/texmf/tex/latex/foo
   $ mv foo.zip ~/texmf/tex/latex/foo
   $ cd ~/texmf/tex/latex/foo ; unzip foo.zip
   \end{verbatim}
- 
-  \item If no \texttt{.sty} file exists, run the command
-  \texttt{latex foo.ins} or \texttt{latex foo.dtx} to create it;
-  
-  \item run the command \cmdline{texhash \~{}/texmf}.
-    
+
+  \item If no \ltx{.sty} file exists, run the command
+  \cmdline{latex foo.ins} or \cmdline{latex foo.dtx} to create it;
+
+  \item run the command \cmdline{texhash \~{}/texmf}
+
 \end{enumerate}
 
-To add a package to MiK\TeX, create the directory
-\path{\latex\newpackage} under \path{C:\localtexmf\tex\} and put the
-relevant files in there. Proceed as above, then run MiKTeX Options and
-click on the `Refresh now' button. Alternatively, issue the command
-\cmdline{initexmf -u}. That's it!
+To add a package to MiK\TeX, you may use the MiK\TeX{} console or a
+command line procedure. Create the directory \path{\latex\newpackage}
+under \path{C:\localtexmf\tex\} and put the relevant files in there.
+Proceed as above, then run MiKTeX Options and click on the `Refresh
+now' button. Alternatively, issue the command \cmdline{initexmf -u}.
+That's it!
 
 Once a package is installed, you make it available in your documents
-adding a line under the \texttt{documentclass} declaration:
+adding a line under the \ltx{documentclass} declaration:
 
 \begin{verbatim}
 \usepackage{foo}
@@ -414,25 +466,26 @@ adding a line under the \texttt{documentclass} declaration:
 \label{sec:infopage}
 
 `Man' and `Info' pages are command-line sources of documentation for
-software, widely employed in \unix{} and Linux systems. If your
-\LaTeX{} distributions lacks the \file{latex2e.info} info page, do the
+software, widely employed in \unix{} and GNU/Linux systems. If your
+\LaTeX{} distributions lacks the \File{latex2e.info} info page, do the
 following:
 
 \begin{enumerate}
-  
+
   \item download it from
-  \url{http://tug.ctan.org/info/latex2e-help-texinfo/latex2e.info};
-  
+  \url{https://tug.ctan.org/info/latex2e-help-texinfo/latex2e.info};
+
   \item run these commands:
-  
+
   \begin{verbatim}
-  $ sudo cp latex2e.info /usr/share/info/
+  $ gzip latex2e.info
+  $ sudo cp latex2e.info.gz /usr/share/info/
   $ sudo ginstall-info latex2e.info dir
   \end{verbatim}
-   
+
 \end{enumerate}
 
-Now, \cmdline{info latex} or \cmdline{info latex2e} is available.
+Now, \cmdline{info latex2e} is available.
 
 % -----
 
@@ -446,24 +499,16 @@ Before we start, please keep this in mind:
 
   \item get used to \emph{structuring} your documents: think in terms of
   parts, chapters, sections, and so on. This holds true even if you're
-  not writing a scientific paper.
+  not writing a scientific paper;
 
-  \item \LaTeX{} explicitly discourages the user from messing about with
-  formatting parameters. Don't worry too much about the \emph{looks}
-  of what you're writing, concentrate on the \emph{contents}.
+  \item \LaTeX{} is designed to produce output of the highest possible quality. The less you mess with formatting parameters, the better;
+
+  \item that said, there are times when you do want to break the rules. If you know what you are doing, that's fine. This guide breaks the rules a lot.
 
 \end{enumerate}
 
 Applying these simple rules, your printed material will magically look
 professional.
-
-That said, this guide (which breaks the second rule somehow!) will
-help you overcome the second rule. So, you will also be able to
-compose unstructured material such as circulars, notices, poster, etc.
-
-
-\bigskip
-{\color{blue} \dingline{45}}
 
 % -----
 
@@ -473,7 +518,7 @@ compose unstructured material such as circulars, notices, poster, etc.
 
 Obviously, some entries of this menu have nothing to do with \LaTeX{}:
 \entry{File}{Open}, \entry{File}{Save}, \entry{File}{Close} depend on
-the editor. 
+the editor.
 
 % -----
 
@@ -491,6 +536,14 @@ This is the \LaTeX{} equivalent of a blank page:
 % This is a comment. Write your stuff here.
 \end{document}
 \end{Verbatim}
+
+% \begin{source}
+%\\documentclass\{article\}
+%\\thispagestyle\{empty\} % no page number
+%\\begin\{document\}
+% This is a comment. Write your stuff here.
+%\\end\{document\}
+% \end{source}
 
 As documents written in \LaTeX{} are inherently structured, this is a
 more realistic example:
@@ -517,7 +570,7 @@ This is the end of the document. Please go to Section
 \ref{sec:start} to read it again.
 \begin{thebibliography}{99}
 \bibitem{Gonzato} Gonzato G. \textit{\LaTeX{} for Word Processor
-Users}. CTAN, 2001--2015.
+Users}. CTAN, 2001--2023.
 \end{thebibliography}
 \end{document}
 \end{Verbatim}
@@ -535,28 +588,29 @@ formats:
 
 \begin{itemize}
 
-  \item \app{\TeX4ht} is probably the best \LaTeX{} to HTML converter:\\
-  \url{http://tug.org/tex4ht}
+  \item \app{\TeX4ht} is probably the best \LaTeX{} to HTML/XML
+  converter:\\
+  \url{https://tug.org/tex4ht}
 
   \item \app{latex2html}, another converter to HTML:\\
-    \url{http://saftsack.fs.uni-bayreuth.de/~latex2ht/},\\
-    \href{http://www.ctan.org/tex-archive/support/latex2html}
-    {CTAN://support/latex2html}
-    
+    \href{https://www.ctan.org/pkg/latex2html}
+    {CTAN://latex2html}
+
   \item \app{latex2rtf}, a converter to Rich Text Format:\\
-  \href{http://www.ctan.org/tex-archive/support/latex2rtf}
-  {CTAN://support/latex2rtf}
+  \href{https://www.ctan.org/pkg/latex2rtf}
+  {CTAN://latex2rtf}
 
   \item \app{detex} (a command line converter) removes all \LaTeX{} tags and
   outputs plain text:\\
-  \url{http://www.cs.purdue.edu/homes/trinkle/detex/}, \\
-  \href{http://www.ctan.org/tex-archive/support/detex}
-  {CTAN://support/detex/}
+  \url{https://github.com/pkubowicz/opendetex}, \\
+  \href{https://www.ctan.org/pkg/detex}
+  {CTAN://detex/}
 
-  
 \end{itemize}
 
-See also Section~\ref{sec:prpreview} for details on PDF creation.
+But please read Section~\ref{sec:import} to learn what \app{Pandoc}
+can do fo you. See also Section~\ref{sec:prpreview} for details on PDF
+creation.
 
 % -----
 
@@ -573,40 +627,124 @@ of this guide.
 % FILE/IMPORT
 
 \subsection{\entry{File}{Import}}
+\label{sec:import}
 
-These tools convert from other formats to \LaTeX{}:
+This is taken from the home page of \app{Pandoc},
+\url{https://pandoc.org}:
 
-\begin{itemize}
+\begin{quote}
+  If you need to convert files from one markup format into another,
+  pandoc is your swiss-army knife.
+\end{quote}
 
-  \item \app{rtf2latex}: 
-  \href{http://www.ctan.org/tex-archive/support/rtf2latex}
-  {CTAN://support/rtf2latex}
-  
-  \item \app{html2latex}: 
-  \href{http://www.ctan.org/tex-archive/support/html2latex}
-  {CTAN://support/html2latex}
-  
-  \item \app{wvware} is a set of tools that convert from MS Word to
-  several formats including \LaTeX{};
-  \url{http://wvware.sourceforge.net}
-  
-  \item the free word processor Abiword, \url{http://www.abiword.org},
-  imports MS Word and can export \LaTeX.
-  
-  \item \app{txt2tex}: 
-  \href{http://www.ctan.org/tex-archive/support/txt2tex}
-  {CTAN://support/txt2tex} does a fairly good job at converting plain
-  text files into \LaTeX.
-  
-\end{itemize}
+\app{Pandoc} is an outstanding converter that produces excellent
+\LaTeX{} output, and much more. It's an invaluable tool when you need
+to write (or convert) documents in multiple formats.
 
-Other \texttt{*2latex} converters are available at the same address.
+\app{Pandoc}'s native format is an extended version of
+\href{https://en.wikipedia.org/wiki/Markdown}{Markdown}, which
+translates smoothly into good \LaTeX. For example, this is a document
+written in Markdown:
 
-Another interesting extension is OOoLatex, a set of macros for
-OpenOffice: \url{http://ooolatex.sourceforge.net/}. Libreoffice users
-have an equivalent extension called TexMaths,
-\url{http://roland65.free.fr/texmaths/}.
+\begin{Verbatim}[fontsize=\small]
+---
+title: |
+  This is the title: \
+  now write the rest
+author: Guido Gonzato
+date: August 2023
+abstract: |
+  This is the abstract.
+...
 
+<!--- This is a comment. -->
+
+[comment]: # (This too is a comment)
+
+# Section
+
+This is **bold text**, this is *emphasized text*, this is normal text.
+
+If you're bored, go to [The End].
+
+## Subsection
+
+This is `verbatim text`.
+
+# The End
+
+My dad used to say:
+
+> Damn, Pandoc has not been invented yet!
+
+but not it has.
+
+<!--- end of pandoc_template.md -->
+\end{Verbatim}
+
+To turn this document into a standalone \LaTeX{} source, type:
+
+\begin{Verbatim}[fontsize=\small]
+pandoc -s pandoc_template.md -o pandoc_template.tex
+\end{Verbatim}
+
+To typeset this source to PDF using \LaTeX, type:
+
+\begin{Verbatim}[fontsize=\small]
+$ pandoc --toc \
+  -V urlcolor=blue -V toccolor=red \
+  -V geometry:margin=2cm \
+  pandoc_template.md -o pandoc_template.pdf
+\end{Verbatim}
+
+The \cmdparm{-V} lines are used to specify options; please consult
+\app{Pandoc}'s documentation.
+
+You can use \app{Pandoc} to convert lots of different formats to
+\LaTeX. For example:
+
+\begin{Verbatim}[fontsize=\small]
+$ pandoc -s index.html -o index.tex
+$ pandoc -s text.docx -o text.tex
+$ pandoc -s text2.rtf -o text2.tex
+$ ...and so son.
+\end{Verbatim}
+
+The \cmdparm{-s} flag means ``standalone'', i.e.\ the output file is a
+complete \LaTeX{} document.
+
+% There are other tools that convert from other formats to \LaTeX{}:
+
+% \begin{itemize}
+
+%   \item \app{rtf2latex}:
+%   \href{https://www.ctan.org/pkg/rtf2latex}
+%   {CTAN://support/rtf2latex}
+
+%   \item \app{html2latex}:
+%   \href{https://www.ctan.org/pkg/html2latex}
+%   {CTAN://support/html2latex}
+
+%   \item \app{wvware} is a set of tools that convert from MS Word to
+%   several formats including \LaTeX{};
+%   \url{https://wvware.sourceforge.net}
+
+%   \item the free word processor Abiword, \url{https://www.abiword.org},
+%   imports MS Word and can export \LaTeX.
+
+%   \item \app{txt2tex}:
+%   \href{https://www.ctan.org/pkg/txt2tex}
+%   {CTAN://support/txt2tex} does a fairly good job at converting plain
+%   text files into \LaTeX.
+
+% \end{itemize}
+
+% Other \File{*2latex} converters are available at the same address.
+
+% Another interesting extension is OOoLatex, a set of macros for
+% OpenOffice: \url{https://ooolatex.sourceforge.net/}. Libreoffice users
+% have an equivalent extension called TexMaths,
+% \url{https://roland65.free.fr/texmaths/}.
 
 % -----
 
@@ -616,32 +754,20 @@ have an equivalent extension called TexMaths,
 \label{sec:pagesetup}
 
 The normal method for setting paper size, orientation, and margins, is
-to use parameters in \cmd{documentclass}. Paper size can be
+to use parameters in \cmd{docu\-ment\-class}. Paper size can be
 \parm{a4paper}, \parm{a5paper}, \parm{b5paper}, \parm{letterpaper},
-\parm{legalpaper}, \parm{executivepaper}; orientation is
-\parm{portrait} by default, or optionally \parm{landscape}. For
-example, 
+\parm{legalpaper}, \parm{executi\-ve\-pa\-per}; orientation is
+\parm{por\-trait} by default, or optionally \parm{land\-scape}. For
+example,
 
 \begin{Verbatim}[fontsize=\small]
 \documentclass[a5paper,landscape,12pt]{article}
 \end{Verbatim}
 
 Document-wide margins are set with the \cmd{setlength} command, which
-is used to change the value of variables and counters:
-
-\begin{Verbatim}[fontsize=\small]
-\setlength{\leftmargin}{2cm}
-\setlength{\rightmargin}{2cm}
-\setlength{\oddsidemargin}{2cm}
-\setlength{\evensidemargin}{2cm}
-\setlength{\topmargin}{-1cm}
-\setlength{\textwidth}{18cm}
-\setlength{\textheight}{25cm}
-\end{Verbatim}
-
-The \package{geometry} package allows for complete control of
-parameters such as paper size, margins width, and so on.
-\package{geometry} has far too many options to list them all, and
+is used to change the value of variables and counters. It's better to use
+the \href{https://www.ctan.org/pkg/geometry}{geometry} package, which allows for complete control of parameters such as paper size, margins width, and so on.
+\Pkg{geometry} has far too many options to list them all, and
 you're invited to read its documentation. A fairly complete example of
 its usage is shown below. In this example, some parameters are not
 compatible with each other, and are there for purpose of argument
@@ -682,13 +808,13 @@ Options can also be set this way:
 \subsubsection{\entry{Page Setup}{Headers and Footers}}
 \label{sec:headers_footers}
 
-The \package{fancyhdr} package provides the new command
-\cmd{pagestyle\{fancy\}}. This will create a header reporting the
-current section (\style{chapter} in \style{book.cls}) and subsection,
-and a footer with the page number: pretty fancy indeed. Headers and
-footers can obviously be customised. They are made of three parts: a
-left-aligned part, a centre-aligned part, and a right-aligned part. To
-set those, use the commands like in this example:
+The \href{https://www.ctan.org/pkg/fancyhdr}{fancyhdr} package provides the new command \cmd{pagestyle\{fancy\}}. This will create a header reporting the
+current section (or \style{chapter} in \style{book.cls}) and
+subsection, and a footer with the page number: pretty fancy indeed.
+Headers and footers can obviously be customised. They are made of
+three parts: a left-aligned part, a centre-aligned part, and a
+right-aligned part. To set those, use the commands like in this
+example:
 
 \begin{Verbatim}[fontsize=\small]
 \usepackage{fancyhdr}
@@ -696,32 +822,10 @@ set those, use the commands like in this example:
 \lhead{} % empty
 \chead{Hello, world!}
 \rhead{Page \thepage} % page number
-\lfoot{}              
+\lfoot{}
 \cfoot{\textbf{Hello!}}
 \rfoot{}
 \end{Verbatim}
-
-% -----
-
-% FILE/PRINTER SETUP
-
-\subsection{\entry{File}{Printer Setup}}
-
-This is highly OS-dependent, and definitely outside of the scopes of
-\LaTeX{}. Assuming that you're using a \unix-like system, these tips
-may come in handy:
-
-\begin{itemize}
-
-  \item \cmdline{lpr -P printername} prints to the specified printer;
-  
-  \item \cmdline{lpr -\# 10} prints 10 copies;
-  
-  \item \cmdline{lpr -r} removes the file after printing it
-
-\end{itemize}
-
-See below for more tips.
 
 % -----
 
@@ -730,30 +834,10 @@ See below for more tips.
 \subsection{\entry{File}{Print Preview}}
 \label{sec:prpreview}
 
-When the \LaTeX{} input file is ready, you have several options:
+That's very simple: produce a \File{PDF} file directly with \app{pdflatex},
+\app{xelatex}, or \app{lualatex}, then use your favourite PDF viewer.
 
-\begin{itemize}
-
-  \item convert it to \file{.dvi} (\cmdline{latex file.tex}) and previewing
-    it with \app{xdvi}, \app{yap} or other DVI previewer;
-    
-  \item convert the \file{.dvi} to \PS{} with \app{dvips}, then use
-    some variant of \app{Ghostview};
-    
-  \item producing a \file{.pdf} file with \app{dvipdf} or directly
-  with \app{pdflatex}.
-  
-\end{itemize}
-
-In my opinion, producing a \file{.pdf} file is the best option, as it
-makes for widest portability.
-
-While \app{dvipdf} is just a script that converts the \file{.dvi} to
-\file{.ps} then to \file{.pdf}, using \app{pdflatex} is more
-interesting. In fact, some packages like \package{hyperref} and
-\package{url} make the resulting \file{.pdf} file browseable; see
-Section~\ref{sec:hyperlink}. However, \note{} using \app{pdflatex} you
-might experience problems with other packages. More details in
+Some packages like \href{https://www.ctan.org/pkg/hyperref}{hyperref} and \href{https://www.ctan.org/pkg/url}{url} make the resulting PDF file browseable; see Section~\ref{sec:hyperlink}. However, using \app{pdflatex} you might experience problems with other packages. More details in
 Section~\ref{sec:figure}.
 
 % -----
@@ -762,8 +846,7 @@ Section~\ref{sec:figure}.
 
 \subsection{\entry{File}{Print}}
 
-Simply use \cmdline{lpr file.ps} from the command line, or via the
-\entry{File}{Print} menu entry of your previewer.
+Simply use the \entry{File}{Print} menu entry of your PDF viewer..
 
 % -----
 
@@ -771,18 +854,20 @@ Simply use \cmdline{lpr file.ps} from the command line, or via the
 
 \subsection{\entry{File}{Versions}}
 
-Although the \package{version} package provides basic facilities for
-versioning \LaTeX{} sources, using external tools is usually a better
-choice.
+Several programs for revision control and collaborative
+writing are available. While old-style geeks may want to use a single-user
+tool like RCS, more powerful and multi-user tools like Subversion, Git,
+Mercurial etc.\ are preferable. Git is probably the most commonly used, and some documentation about \LaTeX{} integration is here:
 
-There are lots of programs for revision control and collaborative
-writing. While old-style geeks may want to use a single-user tool like
-RCS (I do), more powerful and multi-user tools like Subversion, Git,
-Mercurial etc.\ may be preferable. Some of them are integrated with
-the editor.
 
-An introduction to \LaTeX{} and Subversion is here:\\
-\url{http://tug.org/pracjourn/2007-3/kalderon-svnmulti/}.
+\begin{itemize}
+
+\item \url{https://www.desy.de/~bargheer/gitintro/git.html}
+
+\item \url{https://www.math.cmu.edu/~gautam/sj/blog/20130929-git-quickstart.html}
+
+\end{itemize}
+
 
 % -----
 
@@ -802,14 +887,16 @@ in \LaTeX{} is to enclose the text either between braces, or in an
 environment. For example, to apply the bold attribute to a portion of
 text you will use one of the following:
 
-\begin{example}
+\begin{DefineCode}
 this is \textbf{bold text;}\\
 this is also
 {\bfseries bold text;}\\
 \begin{bfseries}
 this is bold text, too!
 \end{bfseries}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
@@ -822,7 +909,7 @@ have the word `PostScript' automatically expanded. This is an editor
 feature, but there's a rough \LaTeX{} equivalent:
 
 \begin{Verbatim}[fontsize=\small]
-\def\PS    {\textsc{PostScript}}
+\newcommand{\PS}{\textsc{PostScript}}
 \end{Verbatim}
 
 which will insert the equivalent of \verb|\textsc{PostScript}|
@@ -844,25 +931,28 @@ whenever you type \verb|\PS|. Beware, case is important.
 \begin{itemize}
 
   \item a non-breakable space is set with \textasciitilde{} (tilde)
-  
+
   \item to force a line break, use \cmd{linebreak} or \cmd{newline};
   see below for details
-  
-  \item to start a new paragraph use a blank line, or \cmd{\bs} (possibly
-  followed by an optional space, as in \cmd{\bs[1cm]}), or \cmd{par}
-  
+
+  \item to start a new paragraph use a blank line, or \cmd{\Bs} (possibly
+  followed by an optional space, as in \cmd{\Bs[1cm]}), or \cmd{par}
+
   \item finally, for a page break use \cmd{newpage} or \cmd{clearpage}
-  
+
 \end{itemize}
 
 Unlike \cmd{newline}, \cmd{linebreak} stretches the line to the
 margins:
 
-\begin{example}
+\begin{DefineCode}
 I am stretched!\linebreak
 But I am not.\newline
+Another line.\\
 Ok, now you get it.
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Besides, \cmd{clearpage} differs from \cmd{newpage} in that it prints
 all pending \emph{floats}, that is figures and tables. Floats will be
@@ -874,26 +964,28 @@ explained in Section~\ref{sec:figure}.
 
 \subsection{\entry{Insert}{Enumerated List}}
 
-Bulleted and enumerated lists correspond to the \env{itemize} and
-\env{enumerate} environments. To customise the bullet in a list
+Bulleted and enumerated lists correspond to the \Env{itemize} and
+\Env{enumerate} environments. To customise the bullet in a list
 environment, you can specify it as an argument to \cmd{item}:
 
-\begin{example}
+\begin{DefineCode}
 \begin{itemize}
   \item[*] with an asterisk;
   \item[-] with a dash;
   \item[.] with a dot.
 \end{itemize}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Another way is to redefine the style of the
-\emph{counters}\footnote{each text element numbered by \LaTeX{}
-(sections, lists, figures, etc.) has a counter associated with it.}
-hat refer to the digits in the first- to fourth-level lists. These
-counters are \cmd{labelitemi}, \cmd{labelitemii}, \cmd{labelitemiii}
-and \cmd{labelitemiv} for itemised lists; \cmd{labelenumi},
-\cmd{labelenumii}, \cmd{labelenumiii} and \cmd{labelenumiv} for
-enumerated lists.
+\emph{counters}\footnote{each text element that is numbered by
+\LaTeX{} (sections, lists, figures, etc.) has a counter associated
+with it.} that refer to the digits in the first- to fourth-level
+lists. These counters are \cmd{labelitemi}, \cmd{labelitemii},
+\cmd{labelitemiii} and \cmd{labelitemiv} for itemised lists;
+\cmd{la\-bel\-enumi}, \cmd{labelenumii}, \cmd{labelenumiii} and
+\cmd{labele\-num\-iv} for enumerated lists.
 
 There are several styles: \cmd{arabic} for `normal' numbers,
 \cmd{roman} for lower-case roman numerals (e.g., viii is 8),
@@ -901,7 +993,7 @@ There are several styles: \cmd{arabic} for `normal' numbers,
 for lower- and upper-case letters, and \cmd{fnsymbol} that I will not
 explain for now:
 
-\begin{example}
+\begin{DefineCode}
 \begin{itemize}
 \renewcommand{\labelitemi}{*}
 \renewcommand{\labelitemii}{-}
@@ -913,12 +1005,14 @@ explain for now:
   \end{itemize}
   \item first level, item 3
 \end{itemize}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 To use, say, roman numbers and uppercase letters in enumerated lists,
 do this:
 
-\begin{example}
+\begin{DefineCode}
 \begin{enumerate}
 \renewcommand{\labelenumi}
   {\Alph{enumi}}
@@ -932,27 +1026,30 @@ do this:
   \end{enumerate}
   \item first level, item 3
 \end{enumerate}
-\end{example}
+\end{DefineCode}
 
-Alternatively, use the \package{enumerate} package. It redefines the
-\env{enumerate} environment with the ability to specify an optional
-argument. Any occurrence of one of the characters \texttt{A a I i 1}
-will produce the value of the counter, using (respectively)
+\PrintDemo{style=parallel}
+
+Alternatively, use the \href{https://www.ctan.org/pkg/enumerate}{enumerate}
+package. It redefines the \Env{enumerate} environment with the ability to specify an optional argument. Any occurrence of one of the characters \ltx{A a I i 1} will produce the value of the counter, using (respectively)
 \cmd{Alph}, \cmd{alph}, \cmd{Roman}, \cmd{roman}, or \cmd{arabic}. To
 include some text, enclose it in braces:
 
-\begin{example}
+\begin{DefineCode}
 \begin{enumerate}[{Example} I.]
-  \item First example.\label{item:first}
+  \item First example.
+    \label{item:first}
   \item Second example.
   \item Last example.
     Go to Item~\ref{item:first}.
 \end{enumerate}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 To change the number of an enumerated item, just redefine its counter:
 
-\begin{example}
+\begin{DefineCode}
 \begin{enumerate}
   \setcounter{enumi}{2}
   \item Example 3.
@@ -960,13 +1057,14 @@ To change the number of an enumerated item, just redefine its counter:
   \setcounter{enumi}{5}
   \item Example 6.
 \end{enumerate}
-\end{example}
+\end{DefineCode}
 
-Lists within paragraphs are implemented by the \package{paralist}
-package, which provides the \env{inparaenum} environment:
+\PrintDemo{style=parallel}
 
-\begin{example}
-I'll throw in a list of items: 
+Lists within paragraphs are implemented by the \href{https://www.ctan.org/pkg/paralist}{paralist} package, which provides the \Env{in\-pa\-rae\-num} environment:
+
+\begin{DefineCode}
+I'll throw in a list of items:
 \begin{inparaenum}
   \item apples,
   \item pears, and
@@ -980,17 +1078,19 @@ with letters:
   \item pears, and
   \item oranges. The first item is \ref{first}.
 \end{inparaenum}
-\end{example}
+\end{DefineCode}
 
-As seen above, the characters \texttt{A a I i 1} can be used to modify
-the counter. \package{paralist} can do much more, and I suggest that
+\PrintDemo{style=parallel}
+
+As seen above, the characters \ltx{A a I i 1} can be used to modify
+the counter. \Pkg{paralist} can do much more, and I suggest that
 you read its documentation.
 
 % Finally, to change the indentation and distance between items you do:
 
 % There are many counters associated with countable things like
 % \cmd{section}, \cmd{page}, \cmd{table}, and so on: these have the same name
-% of the environment or command that produces the number, but no leading \bs.
+% of the environment or command that produces the number, but no leading \Bs.
 
 % To force a counter to a given number, do something like this:
 
@@ -1011,16 +1111,16 @@ you read its documentation.
 \subsection{\entry{Insert}{Special Character}}
 
 First of all, let's remind that some characters have a special meaning
-in \LaTeX{}. They must be entered either with a leading \bs, or using
+in \LaTeX{}. They must be entered either with a leading \Bs, or using
 them in math mode, or even writing special commands: see
 Table~\ref{tab:characters}.
 
 \begin{table}
-\begin{center}
-  \begin{tabular}{ll}
-  \hline
-  \textbf{Character} & \textbf{\LaTeX{} Sequence} \\
-  \hline
+\centering
+  \begin{tabular}{cl}
+  \toprule
+  \textbf{Special Character} & \textbf{\LaTeX{} Sequence} \\
+  \midrule
   \$ & \verb|\$| or \verb|\textdollar| \\
   \& & \verb|\&| \\
   \% & \verb|\%| \\
@@ -1029,7 +1129,7 @@ Table~\ref{tab:characters}.
   \} & \verb|\}| or \verb|\textbraceright| \\
   $<$ & \verb|$<$| or \verb|\textless| \\
   $>$ & \verb|$>$| or \verb|\textgreater| \\
-  \bs & \verb|\textbackslash| \\
+  \Bs & \verb|\textbackslash| \\
   \textbar & \verb|\textbar| \\
   \textbullet & \verb|\textbullet| \\
   \textdaggerdbl & \verb|\textdaggerdbl| \\
@@ -1044,54 +1144,53 @@ Table~\ref{tab:characters}.
   \texttrademark & \verb|\texttrademark| \\
   \textordfeminine & \verb|\textordfeminine| \\
   \textordmasculine & \verb|\textordmasculine| \\
-  \hline
+  \bottomrule
   \end{tabular}
   \caption{How to obtain some special characters.}
   \label{tab:characters}
-\end{center}
 \end{table}
 
 Another way to enter special characters is using their ASCII code and
 the \cmd{char} command. For example, you could insert the characters
-\texttt{\char36 \char38 \char94 \char126} entering \cmd{char36}
+\ltx{\char36 \char38 \char94 \char126} entering \cmd{char36}
 \cmd{char38} \cmd{char94} \cmd{char126}.
 
 There are packages that provide thousands of unusual characters and
-symbols. For instance, \package{pifont} provides the commands
-\cmd{ding}, \cmd{dingfill}, \cmd{dingline}, and \cmd{dinglist}. The
-first command produces the Dingbat character of the specified code.
-The other commands are equivalent to the \cmd{fill}, \cmd{line}, and
-\cmd{list} commands and environment, but use the Dingbat code given as
+symbols. For instance, \href{https://www.ctan.org/pkg/pifont}{pifont} provides the commands \cmd{ding}, \cmd{dingfill}, \cmd{dingline}, and \cmd{dinglist}. The first command produces the Dingbat character of the specified code. The other commands are equivalent to the \cmd{fill}, \cmd{line}, and \cmd{list} commands and environment, but use the Dingbat code given as
 parameter:
 
-\begin{example}
+\begin{DefineCode}
 \begin{dinglist}{43}
   \item one
   \item two
   \item three
 \end{dinglist}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Another nice variant is this:
 
-\begin{example}
+\begin{DefineCode}
 \begin{dingautolist}{172}
   \item one
   \item two
   \item three
 \end{dingautolist}
-\end{example}
+\end{DefineCode}
 
-There are far too many symbols to mention them all in this guide.
+\PrintDemo{style=parallel}
+
+There are way too many symbols to mention them all in this guide.
 Rather, I'll point you to `The Comprehensive \LaTeX{} Symbol List' at
-\href{http://www.ctan.org/tex-archive/info/symbols/comprehensive}
-{CTAN://info/symbols/comprehensive}.
+\href{https://www.ctan.org/tex-archive/info/symbols/comprehensive}
+{CTAN://comprehensive}.
 
 % -----
 
 \subsubsection{The \euro{} Sign}
 
-The official Euro sign is provided by the \package{eurosym} package,
+The official Euro sign is provided by the \href{https://www.ctan.org/pkg/eurosym}{eurosym} package,
 which can be used in two ways:
 
 \begin{verbatim}
@@ -1102,10 +1201,10 @@ which can be used in two ways:
 Both provide the \cmd{euro} command, which produces \euro. The actual
 shape of the symbol depends on the declaration: the \verb|[gen]|
 option provides a symbol that works with all font styles; the second
-declaration produces \officialeuro. Please note the difference. The
-latter shape can always be obtained with \cmd{officialeuro}.
+declaration produces \officialeuro. Please note the subtle difference.
+The latter shape can always be obtained with \cmd{officialeuro}.
 
-Another package that provides the Euro sign is \package{marvosym},
+Another package that provides the Euro sign is \href{https://www.ctan.org/pkg/marvosym}{marvosym},
 which also provides many more fine characters. You get \EUR{} with
 \cmd{EUR}.
 
@@ -1116,29 +1215,84 @@ which also provides many more fine characters. You get \EUR{} with
 \subsection{\entry{Insert}{Formula}}
 
 \LaTeX{} is particularly strong at typesetting math. To insert math
-symbols in the main text, you must enclose them between \texttt{\$}:
+symbols in the main text (\emph{inline mode}), you must enclose them between \ltx{\$}:
 
-\begin{example}
+\begin{DefineCode}
 I like math: $x^n + y^n \neq
-z^n \forall n \neq 2$
+z^n\ \forall n \neq 2$
 is my favourite theorem.
-\end{example}
+\end{DefineCode}
 
-The environments \env{displaymath} and \env{equation} typeset formulae
-aside from the text. The latter adds an equation number for later
-reference:
+\PrintDemo{style=parallel}
 
-\begin{example}
+The environments \Env{displaymath} and \Env{equation} typeset formulae
+aside from the text; this is called \emph{display mode}. \Env{equation} adds an equation number for later reference:
+
+\begin{DefineCode}
 Fermat's Last Theorem is
 defined as:
 \begin{equation}
-x^n + y^n \neq z^n
-\forall n \neq 2 
+x^n + y^n \neq
+z^n\ \forall n \neq 2
 \label{eq:fermat}
 \end{equation}
 Can you prove
 Eq.~\ref{eq:fermat}?
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+% TO DO (maybe): cite LaTeX equation editors, e.g. EqualX
+
+% -----
+
+\subsection{Using SymPy}
+
+Programming languages and spreadsheets use a standard syntax to enter
+math formulae. Using a great Python library called
+\href{https://www.sympy.org}{SymPy}, you can get \LaTeX{} formulae
+from math expressions. You don't have to be proficient in Python;
+just use the standard math syntax.
+
+This is a sample SymPy session. We want to obtain the \LaTeX{}
+code for the expression $\left(\frac{x}{2} - \frac{2
+y}{3}\right)^{3}$ and for its expansion $\frac{x^{3}}{8} - \frac{x^{2}
+y}{2} + \frac{2 x}{3}y^{2} - \frac{8 y^{3}}{27}$:
+
+\begin{Verbatim}
+In [1]: from sympy import *
+
+In [2]: init_session()
+IPython console for SymPy 1.9 (Python 3.10.6-64-bit) (ground
+types: python)
+
+These commands were executed:
+>>> from __future__ import division
+>>> from sympy import *
+>>> x, y, z, t = symbols('x y z t')
+>>> k, m, n = symbols('k m n', integer=True)
+>>> f, g, h = symbols('f g h', cls=Function)
+>>> init_printing()
+
+Documentation can be found at https://www.sympy.org
+
+In [3]: expr = (x/2 - 2*y/3)**3
+
+In [4]: latex(expr)
+Out[4]: '\\left(\\frac{x}{2} - \\frac{2 y}{3}\\right)^{3}'
+
+In [5]: latex(expr.expand())
+Out[5]: '\\frac{x^{3}}{8} - \\frac{x^{2} y}{2} + \\frac{2 x}{3}
+y^{2} - \\frac{8 y^{3}}{27}'
+\end{Verbatim}
+
+Now you can copy and paste the resulting formulae into your editor,
+only changing \ltx{\Bs{}\Bs} to \ltx{\Bs}.
+
+If you are reasonably proficient in Python, you may be interested in
+the \href{https://www.ctan.org/pkg/python}{python} \LaTeX{} package and the
+\href{https://mech.fsv.cvut.cz/~stransky/en/software/latexexpr/}{LaTeX
+Expression project} module.
 
 % -----
 
@@ -1152,14 +1306,16 @@ optional parameter \verb|[n]| modifies the footnote number. The
 and other punctuation signs that follow the word.
 
 To use a symbol or arbitrary text instead of a number, redefine the
-counter associated with \cmd{footnote}:
+counter associated with \cmd{foot\-no\-te}:
 
-% can't use example, it uses minipages!
+% here we cheat: can't use example, it uses minipages!
 \medskip
 
+\noindent
 \begin{minipage}[c]{0.5\textwidth}
   \begin{Verbatim}[fontsize=\small]
-\renewcommand{\thefootnote}{read me!}
+\renewcommand{\thefootnote}%
+{read me!}
 This footnote\footnote
 {I mean this one.}
 says it all.
@@ -1179,6 +1335,7 @@ replaced by nice symbols:
 
 \medskip
 
+\noindent
 \begin{minipage}[c]{0.5\textwidth}
   \begin{Verbatim}[fontsize=\small]
 \renewcommand{\thefootnote}
@@ -1194,7 +1351,7 @@ The end.\footnote[8]{At last!}
 \end{minipage}%
 \begin{boxedminipage}[c]{0.5\textwidth}
   \renewcommand{\thempfootnote}
-  {\Roman{footnote}}
+  {\Roman{mpfootnote}}
   This\footnote{The first.}
   is the first footnote,
   and this\footnote{The second.}
@@ -1207,21 +1364,22 @@ The end.\footnote[8]{At last!}
 \medskip
 
 Note the \verb|\fnsymbol{footnote}| thing. It uses 9 symbols
-associated with the values 1{\ldots}9 of the \texttt{footnote}
-counter: \fnsymbol{fnsym} \stepcounter{fnsym} \fnsymbol{fnsym}
-\stepcounter{fnsym} \fnsymbol{fnsym} \stepcounter{fnsym}
-\fnsymbol{fnsym} \stepcounter{fnsym} \fnsymbol{fnsym}
-\stepcounter{fnsym} \fnsymbol{fnsym} \stepcounter{fnsym}
-\fnsymbol{fnsym} \stepcounter{fnsym} \fnsymbol{fnsym}
-\stepcounter{fnsym} \fnsymbol{fnsym}.
+associated with the values 1{\ldots}9 of the \ltx{footnote}
+counter: \forloop{fnsym}{1}{\value{fnsym} < 10}{\fnsymbol{fnsym}~}
 
-% gosh. How do you write the `for ()' loop in TeX?
+% \fnsymbol{fnsym} \stepcounter{fnsym} \fnsymbol{fnsym}
+% \stepcounter{fnsym} \fnsymbol{fnsym} \stepcounter{fnsym}
+% \fnsymbol{fnsym} \stepcounter{fnsym} \fnsymbol{fnsym}
+% \stepcounter{fnsym} \fnsymbol{fnsym} \stepcounter{fnsym}
+% \fnsymbol{fnsym} \stepcounter{fnsym} \fnsymbol{fnsym}
+% \stepcounter{fnsym} \fnsymbol{fnsym}.
 
 To make several references to the same footnote, don't write its
 number explicitly. Rather, do this:
 
 \medskip
 
+\noindent
 \begin{minipage}[c]{0.5\textwidth}
   \begin{Verbatim}[fontsize=\small]
 This\footnote{the first.}
@@ -1240,27 +1398,29 @@ This\footnote{the first.} \newcounter{myfootnote}%
 \setcounter{myfootnote}{\value{mpfootnote}}%
 and this\footnote{the second.} are footnotes: please read note%
 \footnotemark[\value{myfootnote}] again.
-% This footnote\footnote{I mean this one.} says it all. Please read 
+% This footnote\footnote{I mean this one.} says it all. Please read
 % note\footnotemark[\value{mpfootnote}] again.
 \end{boxedminipage}
 
 \medskip
 
-Warning: minipages use their own counters, \texttt{mpfootnote} and
-\texttt{thempfootnote}.
+Warning: minipages use their own counters, \ltx{mpfootnote} and
+\ltx{themp\-foot\-note}.
 
 % -----
 
-\subsubsection{Footnotes at End of Document}
+\subsubsection{Footnotes and Endnotes}
 
-The \package{endnotes} package lets you move all footnotes at the end
-of the document. You'll have to add this line to the preamble:
+The \href{https://www.ctan.org/pkg/endnotes}{endnotes} package provides a new command, \cmd{endnote}, which you use instead of \cmd{footnote} to write footnotes that are printed after a \cmd{theendnotes} command.\endnote{This is an endnote.} This is useful when you want to print footnotes at the end of a chapter or section.
+
+You can also move all footnotes at the end of the document. You'll
+have to add this line to the preamble:
 
 \begin{Verbatim}[fontsize=\small]
 \let\footnote=\endnote
 \end{Verbatim}
 
-and these lines as the last thing in your document:
+and add these lines as the last thing in your document:
 
 \begin{Verbatim}[fontsize=\small]
 \newpage
@@ -1272,8 +1432,7 @@ and these lines as the last thing in your document:
 \endgroup
 \end{Verbatim}
 
-Other commands are available, please read the \file{endnotes.sty}
-source.
+\theendnotes
 
 % -----
 
@@ -1294,14 +1453,11 @@ document:
 \end{Verbatim}
 
 % TO DO: \renewcommand{\contentsname}{Table of Contents}
-
 % TO DO: how to customise the table of contents.
-
-% The table of contents can be customised. 
-
+% The table of contents can be customised.
 % \setcounter{tocdepth}{3}
 
-% http://stackoverflow.com/questions/544051/how-does-one-change-the-paragraph-formatting-in-latex
+% https://stackoverflow.com/questions/544051/how-does-one-change-the-paragraph-formatting-in-latex
 
 
 % -----
@@ -1312,7 +1468,7 @@ document:
 \label{sec:space}
 
 This entry doesn't actually exist in any word processor I am aware of.
-This is in fact a limitation that \LaTeX{} fills in a very elegant
+This is in fact a limitation that \LaTeX{} fills in a very simple
 way.
 
 \emph{Space filling} is used to center text horizontally, vertically,
@@ -1321,14 +1477,16 @@ and requires a lot of trial end error. Use a combination of \cmd{null}
 or \verb|~| to set fixed marks, followed by \cmd{vfill} and
 \cmd{hfill} like in this example:
 
-\begin{example}
+\begin{DefineCode}
 one \hfill two\\
 \vfill
 ~ \hfill three \hfill ~\\
 \vfill
 four \hfill five
 \null
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Normally, \LaTeX{} won't let you insert blank spaces at your will: two
 or more are considered a single space. However, if you do want to make
@@ -1336,10 +1494,12 @@ your document look messy, use \verb|~| to make a non-breakable space.
 
 Also, use the command \cmd{hspace} like in this example:
 
-\begin{example}
+\begin{DefineCode}
 This is a \hspace{2cm}
 2-cm-wide hole.
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
@@ -1347,15 +1507,15 @@ This is a \hspace{2cm}
 
 \subsection{\entry{Insert}{Tabs}}
 
-The \env{tabbing} environment provides a rough equivalent to the
+The \Env{tabbing} environment provides a rough equivalent to the
 action of the TAB key, and it's used to align text in columns. These
 are the most commonly used commands:
 
 \begin{center}
   \begin{tabular}{ll}
-    \hline
+    \toprule
     \textbf{Command} & \textbf{Action} \\
-    \hline
+    \midrule
     \verb|\=| & Sets a tab stop \\
     \verb|\>| & Advances to the next tab stop \\
     \verb|\+| & Sets the left margin one tab stop to the right \\
@@ -1363,30 +1523,32 @@ are the most commonly used commands:
     \verb|\\| & Ends a line \\
     \verb|\pushtabs| & Saves all tab stop positions \\
     \verb|\poptabs| & Restores previously saved tab stop positions \\
-    \hline
+    \bottomrule
   \end{tabular}
 \end{center}
 
 This example shows some of the available commands:
 
-\begin{example}
+\begin{DefineCode}
 \begin{tabbing}
 % let's set the tab positions
-~ \hspace{1cm} \= ~ \hspace{2cm} \= 
-~ \hspace{3cm} \= \kill % discard text
+~ \hspace{1cm} \= ~ \hspace{1.7cm} \=
+~ \hspace{2.2cm} \= \kill % discard text
 Zero \> One \> Two \> Three \\
 Zero \> One \> \> Three \+ \\ % go right
 Zero \> Two \> Three \- \\ % go left
 Zero \> One \> Two \\
 \pushtabs % save tab positions
-new tab 1{\ldots} \= new tab 2 \\
+new tab 1{\dots} \= new tab 2 \\
 new \> tab \\
 \poptabs  % restore tab positions
 Zero \> One \> Two \> Three
 \end{tabbing}
-\end{example}
+\end{DefineCode}
 
-See also the \env{tabular} and \env{table} environments.
+\PrintDemo{style=parallel}
+
+See also the \Env{tabular} and \Env{table} environments.
 
 % -----
 
@@ -1397,34 +1559,38 @@ See also the \env{tabular} and \env{table} environments.
 
 The commands \cmd{label}, \cmd{ref}, and \cmd{pageref} are all you
 need to insert labels in the text and do cross referencing. The
-standard format of labels is the \texttt{prefix:suffix} form, where
-\texttt{prefix} is one of the following: \texttt{cha} for chapters,
-\texttt{eq} for equations, \texttt{fig} for figures, \texttt{sec} for
-(sub)sections, and \texttt{tab} for tables.
+standard format of labels is the \ltx{prefix:suffix} form, where
+\ltx{prefix} is one of the following: \ltx{cha} for chapters,
+\ltx{eq} for equations, \ltx{fig} for figures, \ltx{sec} for
+(sub)sections, and \ltx{tab} for tables.
 
 References to a page (section, table, figure, etc.) number can be
 obtained using \cmd{label} and \cmd{ref} as in this example:
 
-\begin{example}
+\begin{DefineCode}
 \paragraph{Example.}
 \label{par:example}
 This paragraph appears
 in Section~\ref{par:example}
 on page~\pageref{par:example}.
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Of course, you may use your own prefixes. For example, take this
 enumerated list:
 
-\begin{example}
+\begin{DefineCode}
 \begin{enumerate}
-  \item{first step: skip to 
+  \item{first step: skip to
   \ref{item:end} \label{item:start}}
   \item{another step (unreferenced)}
   \item{end: go back to
   \ref{item:start} \label{item:end}}
 \end{enumerate}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
@@ -1432,7 +1598,8 @@ enumerated list:
 
 \subsection{\entry{Insert}{Margin Notes}}
 
-Very simple: use \verb|\marginpar{text}|. 
+Very\marginpar{\emph{Note!}} simple: use \verb|\marginpar{text}|.
+This feature is not commonly used with word processors.
 
 % -----
 
@@ -1442,27 +1609,31 @@ Very simple: use \verb|\marginpar{text}|.
 
 A text frame is used to define a part of text that does not break
 across pages. To place a text frame on a fixed position on the page,
-use the \package{textpos} package, as shown in the example listed in
-fig.~\ref{fig:poster} (see Appendix~\ref{ap:templates}).
+use the \href{https://www.ctan.org/pkg/textpos}{textpos} package,
+as shown in the example listed in fig.~\ref{fig:poster} (see Appendix~\ref{ap:templates}).
 
-\setlength{\fboxsep}{5mm}
+\setlength{\fboxsep}{3mm}
 
 \begin{center}
   \begin{minipage}[c]{0.4\linewidth}
     If you don't need to specify a fixed position, then use the
-    \env{minipage} (miniature page) environment. This text is enclosed
+    \Env{minipage} (miniature page) environment. This text is enclosed
     in a minipage{\ldots}
+  \end{minipage}
+  % empty minipage
+  \begin{minipage}[c]{0.1\linewidth}
+  ~
   \end{minipage}
   \begin{boxedminipage}[c]{0.4\linewidth}
     {\ldots}and this is some other text enclosed in a
-    \env{boxedminipage} environment, provided by the package of same
+    \Env{boxedminipage} environment, provided by the package of same
     name.
 \end{boxedminipage}
 \end{center}
 
 \setlength{\fboxsep}{3pt} % default
 
-I remind you what a \env{minipage} declaration looks like:
+I remind you what a \Env{minipage} declaration looks like:
 
 \begin{verbatim}
 \begin{minipage}[position]{width}
@@ -1470,7 +1641,7 @@ I remind you what a \env{minipage} declaration looks like:
 \end{minipage}
 \end{verbatim}
 
-In a \env{boxedminipage}, the space between the frame and the text is
+In a \Env{boxedminipage}, the space between the frame and the text is
 set with this command:
 
 \begin{verbatim}
@@ -1479,44 +1650,107 @@ set with this command:
 
 % -----
 
+% INSERT/IMAGE
+
+\subsection{\entry{Insert}{Image}}
+\label{sec:image}
+
+Please note: an \emph{image} and a \emph{figure} are not the same thing! Please see Section~\ref{sec:figure} for details.
+
+Images can be inserted as PDF, JPG, PNG, and TIFF files. If you need to insert \PS{} or EPS files, then you're a geek and you surely know how to convert these formats to PDF.
+
+The almighty \href{https://www.ctan.org/pkg/graphicx}{graphicx} package provides the \cmd{includegraphics} command:
+
+\begin{DefineCode}
+This is a lovely picture
+
+\includegraphics[width=3cm]{piper.jpg}
+
+of a guy playing the pipes.
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+Parameters \ltx{height}, \ltx{scale}, and \ltx{angle} can also be specified. \ltx{width} can be set to exact units as above, or related to text or line width:
+
+\begin{verbatim}
+width=\textwidth     % width of text on page
+width=\linewidth     % width of text in current environment
+width=0.5\linewidth  % half of line width
+\end{verbatim}
+
+To centre or right-align an image, use the \href{https://www.ctan.org/pkg/adjustbox}{adjustbox} package and add this line to your document:
+
+\begin{verbatim}
+\usepackage[export]{adjustbox}
+\end{verbatim}
+
+The \Pkg{adjustbox} package adds options \ltx{left}, \ltx{right}, \ltx{center}, \ltx{outer}, and \ltx{inner} to \cmd{inclu\-de\-gra\-phics}. The latter two options apply to multi-column text.
+
+\begin{DefineCode}
+This is a lovely picture
+
+\includegraphics%
+[width=3cm,right]{piper.jpg}
+
+of a guy playing the pipes.
+\end{DefineCode}
+
+Needless to say, bitmap images don't have the same quality as PDF vector images; besides, they can make the resulting output file quite large.
+
+% -----
+
 % INSERT/FIGURE
 
 \subsection{\entry{Insert}{Figure}}
 \label{sec:figure}
 
-(The reference guide for graphic inclusion in \LaTeX{} is `Using
-Imported Graphics in \LaTeX2e', a.k.a. \texttt{epslatex.ps}.)
-
-A `figure' can be not only a picture, but also a portion of text, a
-table, etc.\ that you put in a \env{figure} environment. This is an
-example:
+Inserting a \emph{figure} is not the same as inserting an \emph{image}. In fact, a figure is not necessarily an image; it has no fixed position on the page; it usually has a caption; and it can be referenced to. All this is accomplished with the \Env{figure} environment. Two examples of figure follow.
 
 \begin{figure}[htbp]
   \begin{minipage}[c]{0.6\textwidth}
   \begin{Verbatim}[fontsize=\small]
 \begin{figure}[htbp]
-% [htbp] specifies the 
-% preferred placement: here, top,
-% bottom, or separate page.
-  \begin{center}
+% [htbp] specifies the preferred placement:
+% here, top, bottom, or separate page.
+  \centering
   \texttt{=8-)}
-  \end{center}
-  \caption{A smiley representing 
+  \caption{A smiley representing
   the author of this guide.}
   \label{fig:mysmiley}
 \end{figure}
   \end{Verbatim}
   \end{minipage}%
   \begin{boxedminipage}[c]{0.4\textwidth}
-      \begin{center}
-      \texttt{=8-)}
-      \end{center}
+      \centering
+      \large{ \texttt{=8-)} }
       \caption{A smiley representing the author of this guide.}
       \label{fig:mysmiley}
   \end{boxedminipage}
 \end{figure}
 
-Please \note note that figures are not guaranteed to appear exactly
+\begin{figure}[htbp]
+  \begin{minipage}[c]{0.38\textwidth}
+  \begin{Verbatim}[fontsize=\small]
+\begin{figure}[htbp]
+\centering
+\includegraphics%
+[width=0.7\textwidth, angle=-90]%
+{gnuplot.pdf}
+\caption{A Gnuplot graph.}
+\label{fig:gnuplot}
+\end{figure}
+  \end{Verbatim}
+  \end{minipage}%
+  \begin{minipage}[c]{0.58\textwidth}
+    \centering
+    \includegraphics[width=0.7\textwidth, angle=-90]{gnuplot.pdf}
+    \caption{A Gnuplot graph.}
+    \label{fig:gnuplot}
+  \end{minipage}
+\end{figure}
+
+Please note that figures are not guaranteed to appear exactly
 where you write the code! In fact, the main difference with word
 processors is that figures don't have a fixed placement; they `float'
 to the optimal position that \LaTeX{} finds for them. So, the text
@@ -1524,115 +1758,80 @@ shouldn't refer to a figure like `the figure below' or `the figure
 above'; use `\verb|see fig.~\ref{fig:label}|' instead.
 
 Owing to this property, figures and tables are called \emph{floats}.
-If you do need to position a float exactly, use the \package{here}
-package that provides an optional placement argument \texttt{H}
-(meaning, ``right HERE!'').
+If you do need to position a float exactly, use the \href{https://www.ctan.org/pkg/here}{here} package that provides an optional placement argument \ltx{H} (meaning, ``right HERE!'').
 
-Given a picture in Encapsulated \PS{} (\texttt{.eps}) format, you
-insert it in a \LaTeX{} source file using the \package{graphicx}
-package and commands like those shown in fig.~\ref{fig:gnuplot}.
+To include figures side by side, use the \href{https://www.ctan.org/pkg/subcaption}{subcaption} package that provides the \ltx{subfigure} environment (after Figure~\ref{fig:gnuplot}):
 
-\medskip
+\lstset{language=TeX}
 
-\begin{figure}[htbp]
-  \begin{minipage}[c]{0.5\textwidth}
-  \begin{Verbatim}[fontsize=\small]
-\begin{figure}
-\begin{center}
-\fbox{\includegraphics
-[width=0.5\textwidth, angle=-90]
-{gnuplot.ps}}
-\caption{A Gnuplot graph.}
-\label{fig:gnuplot}
-\end{center}
+\begin{lstlisting}
+\begin{figure}[h]
+  % first subfigure
+  \begin{subfigure}{0.5\textwidth} % half figure for 1st subfigure
+    \includegraphics[width=0.9\linewidth]{piper.jpg}
+    \caption{Caption of 1st subfigure.}
+    \label{fig:subfig1}
+  \end{subfigure}
+  % second subfigure
+  \begin{subfigure}{0.5\textwidth}
+    \includegraphics[width=0.9\linewidth, angle=-90]%
+    {gnuplot.pdf}
+    \caption{Caption of 2nd subfigure.}
+    \label{fig:subfig2}
+  \end{subfigure}
+  % whole figure
+  \caption{Caption of the figure with two images.}
+  \label{fig:image2}
 \end{figure}
-  \end{Verbatim}
-  \end{minipage}%
-  \begin{minipage}[c]{0.5\textwidth}
-    \begin{center}
-      % I cheat! PDF only.
-      \fbox{\includegraphics[width=0.6\textwidth, angle=-90]{gnuplot.pdf}}
-    \caption{A Gnuplot graph.}
-    \label{fig:gnuplot}
-    \end{center}
-  \end{minipage}
+\end{lstlisting}
+
+\begin{figure}[h]
+
+% first subfigure
+\begin{subfigure}{0.45\textwidth} % half figure for 1st subfigure
+  \includegraphics[width=0.9\linewidth]{piper.jpg}
+  \caption{Caption of 1st subfigure.}
+  \label{fig:subfig1}
+\end{subfigure}
+% second subfigure
+\begin{subfigure}{0.45\textwidth}
+  \includegraphics[width=0.7\linewidth, angle=-90]{gnuplot.pdf}
+  \caption{Caption of 2nd subfigure.}
+  \label{fig:subfig2}
+\end{subfigure}
+
+\caption{A figure with two subfigures.}
+\label{fig:image2}
+
 \end{figure}
-
-When you typeset your document with \cmd{latex} then \app{dvips},
-graphic inclusion only works with \texttt{EPS} files; \app{pdflatex}
-accepts JPG, PNG, and of course PDF files. The latter choice might be
-preferable for most users.
-
-There are several packages that convert common graphic formats like
-\file{.jpg}, \file{.gif}, \file{.png} etc. to \file{.eps} and/or
-\file{.pdf}; for example, ImageMagik (\url{http://www.imagemagik.org})
-and The GIMP (\url{http://www.gimp.org}). However, these applications
-produce huge \PS{} files.
-
-Best results are obtained using applications that wrap the bitmap,
-turning it into a compact \PS{} file. You'll want to use \app{jpeg2ps}
-(\url{http://www.pdflib.com/jpeg2ps/index.html}) or \app{bmeps}
-(\href{http://www.ctan.org/tex-archive/support/bmeps}
-{CTAN://support/bmeps}). The former is often the best choice for
-wrapping \file{.jpg} files, but the latter handles more graphics
-formats.
-
-If you wish to make both \file{.pdf} and \file{.ps} from the same
-source file, include these commands:
-
-\begin{Verbatim}[fontsize=\small]
-\usepackage{ifpdf}
-...
-% include the right options
-\ifpdf
-  \usepackage[pdftex]{graphicx}
-  \pdfcompresslevel=9
-\else
-  \usepackage{graphicx}
-\fi
-...
-% include the right graphic file
-\ifpdf
-  \includegraphics{file.png}
-\else
-  \includegraphics{file.eps}
-\fi
-\end{Verbatim}
-
-\begin{warn}
-
-  If you have more than 18 figures without text between them, you'll
-  get the `Too many unprocessed floats' \LaTeX{} error. The quickest
-  way to solve this problem is to put \cmd{clearpage} after three or
-  four figures.
-
-\end{warn}
 
 % -----
 
 \subsubsection{Wrapping Floats}
 
-For a magazine-like layout, use the \package{wrapfig} package:
+For a magazine-like layout, use the \href{https://www.ctan.org/pkg/wrapfig}{wrapfig} package:
 
-\begin{example}
+\begin{DefineCode}
 If you meet this guy, give him some money.
 
 \begin{wrapfigure}[4]{l}[5pt]{2cm}
-{\Huge
- \texttt{=8-)}
+{\huge
+ ~\texttt{=8-)}
 }
 \end{wrapfigure}
 
-The reason may not be apparent to you,
+The reason may not be clear to you,
 but I can assure that your money
 will end up in good hands.
 I say again, if you meet this guy,
 give him some money: he knows how to
 use it properly. OK?
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 The parameters are the number of lines to be narrowed, the figure
-placement, the overhang, and the figure width.
+placement (like in \ltx{htbp}, the overhang, and the figure width.
 
 % -----
 
@@ -1640,100 +1839,117 @@ placement, the overhang, and the figure width.
 
 \subsection{\entry{Insert}{Shapes}}
 
-\LaTeX{} provides a \env{picture} environment whithin which you use
-commands like \cmd{circle}, \cmd{oval} and so on. In my opinion,
-drawing pictures without a graphical environment is just too hard, and
-\env{picture} has several limitations too. It's much better to use a
-couple of great programs, both free and open source: the vector
-drawing program Inkscape, \url{https://inkscape.org/}, along with
-Pstoedit, \url{http://www.pstoedit.net/}.
+\href{https://github.com/pgf-tikz/pgf}{PGF/TikZ} PGF is a powerful package for generating graphics programmatically. This is a minimal example:
+
+\begin{DefineCode}
+\begin{tikzpicture}
+\draw[red,thick] (-2,-1) -- (2,1);
+\draw[green,thick] (-2, 1) -- (2,-1);
+\draw[blue,ultra thick] (0, 0) circle
+  (1cm) node{\huge \LaTeX};
+\end{tikzpicture}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+but you can do miracles, as shown at the \href{https://tikz.net/}{TikZ.net} page.
+
+If you prefer to use a WYSIWYG graphics program, I recommend that you start with Inkscape, \url{https://inkscape.org/}. This program is \LaTeX{} aware, i.e.\ it can interact with \LaTeX{} to typeset formulae and text.
 
 Start Inkscape and draw any shape you wish using its tools. To insert
-text rendered by \LaTeX, select \menu{Extensions/Render/LaTeX
-formula...}, insert your text as in fig.~\ref{fig:ink1}, then click on
-Apply.
+text rendered by \LaTeX, select \menu{Extensions/Text/Formula (pdflatex)...} or \menu{Extensions/Render/Mathematics/LaTeX (pdflatex)...}, insert your text as in fig.~\ref{fig:ink1}, then click on Apply.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.6\textwidth]{inkscape-tb.png}
+  \includegraphics[width=0.75\textwidth]{inkscape-tb.png}
   \caption{Inserting a \LaTeX{} formula.}
   \label{fig:ink1}
 \end{figure}
 
 Your \LaTeX-rendered text will be included as a graphics object, and
-you'll be able to edit it as you wish. The resulting picture can be
-exported to several formats supported by \LaTeX, such as PDF, PNG, and
-many others. More information here:
-\url{http://www.ctan.org/tex-archive/info/svg-inkscape}.
+you'll be able to edit it as you wish (Figure~\ref{fig:ink2}). The resulting picture can be exported to several formats supported by \LaTeX, such as PDF, PNG, and many others.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.6\textwidth]{inkscape.png}
+  \includegraphics[width=\textwidth]{inkscape.png}
   \caption{A \LaTeX{} object can be edited as desired.}
   \label{fig:ink2}
 \end{figure}
 
-If you wish to do real magic, then check out the following
-packages/programs:
+Many graphics programs provide \LaTeX-friendly output, both programmatically and interactively. The first that spring to mind are:
 
 \begin{itemize}
-  
-  \item \package{pgf} is a \TeX{} macro package for generating
-  graphics:\\
-  \url{http://sourceforge.net/projects/pgf/}
-  
-  \item \package{GLE} (Graphics Layout Engine) is a graphics
-  scripting language designed for creating publication quality graphs,
-  plots, diagrams, figures and slides:\\
+
+  \item \Pkg{GLE} (Graphics Layout Engine) is a graphics scripting language   designed for creating publication quality figures. [\dots] GLE relies on \LaTeX{} for text output and supports mathematical formulae in graphs and figures:\\
   \url{www.gle-graphics.org}
-  
-  \item Asymptote is a powerful descriptive vector graphics language
-  that provides a natural coordinate-based framework for technical
-  drawing:\\
-  \url{http://asymptote.sourceforge.net/}
-  
-  \item ePiX, a collection of batch utilities for GNU/Linux and
-  similar platforms, creates mathematically accurate figures, plots,
-  and movies using easy-to-learn syntax:\\
-  \url{http://mathcs.holycross.edu/~ahwang/current/ePiX.html};
-  
-  \item \package{pstricks} is a set of macros that allow the inclusion
-  of PostScript drawings in \LaTeX{} documents:\\
-  \url{http://tug.org/PSTricks/main.cgi/}
-  
+
+  \item \Pkg{Asymptote} is a powerful descriptive vector graphics language that provides a natural coordi\-na\-te-based framework for technical drawing. Labels and equations are typeset with \LaTeX:\\
+  \url{https://asymptote.sourceforge.net/}
+
+  \item \Pkg{LaTeXDraw} is a graphical drawing editor for \LaTeX:\\
+  \url{https://latexdraw.sourceforge.net/}
+
+  \item \Pkg{Graphviz} takes descriptions of graphs in a simple text language, and make diagrams for inclusion in \LaTeX:\\
+  \url{https://graphviz.org}.
+
 \end{itemize}
 
-These packages let you make publication-quality \PS{} drawings in
+These packages let you make publication-quality drawings in
 \LaTeX. Many more are available; search the web for ``LaTeX vector
 graphics''.
 
 Many more kinds of `shapes' can also be inserted. To whet your
 appetite, please visit the \TeX{} Showcase page,
-\url{http://www.tug.org/texshowcase/}.
+\url{https://www.tug.org/texshowcase/}.
+
+% -----
+
+\subsection{\entry{Insert}{Page}}
+\label{sec:inspage}
+
+Inserting external PDF pages without producing overfull errors is
+easily done with the \href{https://www.ctan.org/pkg/pdfpages}{pdfpages}
+package. The following command:
+
+\begin{Verbatim}[fontsize=\small]
+\includepdf[fitpaper]{pandoc_template.pdf}
+\end{Verbatim}
+
+includes the PDF document that was made by \app{Pandoc}
+(Section~\ref{sec:import}).
+
+\includepdf[fitpaper]{pandoc_template.pdf}
+
+Obviously, \Pkg{pdfpages} can do much more and its documentation
+is a good read.
 
 % -----
 
 % INSERT/LINE
 
-\subsection{\entry{Insert}{Line}}
+\subsection{\entry{Insert}{Rule}}
 
 Draw lines of any length and thickness with \cmd{rule}:
 
-\begin{example}
+\begin{DefineCode}
 This is a page-wide
 rule:\\
 \rule{\linewidth}{1pt}
 but this one is shorter
 and thicker:\\
 \rule{2cm}{2mm}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Another interesting `line' is that made of dots (\cmd{dotfill}), often
 used to relate things. This is how it's done:
 
-\begin{example}
+\begin{DefineCode}
 Total price \dotfill \euro~10
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
@@ -1742,10 +1958,8 @@ Total price \dotfill \euro~10
 \subsection{\entry{Insert}{Hyperlink}}
 \label{sec:hyperlink}
 
-The \package{hyperref} package lets you write URLs and other external
-references. When used together with \app{dvipdf} or \app{pdflatex},
-\package{hyperref} lets you make browseable \file{.pdf} documents! For
-instance, this document uses this declaration:
+The \href{https://www.ctan.org/pkg/hyperref}{hyperref} package lets you write URLs and other external references, making the PDF output browseable.
+For instance, this document uses this declaration:
 
 \begin{Verbatim}[fontsize=\small]
 \usepackage[colorlinks,
@@ -1757,19 +1971,21 @@ instance, this document uses this declaration:
 
 Let's see an example:
 
-\begin{example}
+\begin{DefineCode}
 The \hypertarget{ctan}{CTAN} main site
-is \url{http://www.ctan.org}, a.k.a
-\href{http://www.ctan.org}{CTAN://}.
+is \url{https://www.ctan.org}, a.k.a
+\href{https://www.ctan.org}{CTAN://}.
 
 Listen to \href{run:midifile.mid}
 {this MIDI file}.
 
 Click \hyperlink{ctan}{here} to go
 back to the top.
-\end{example}
+\end{DefineCode}
 
-As you can see, the \cmd{url} command typesets its contents using a
+\PrintDemo{style=parallel}
+
+By default, the \cmd{url} command typesets its contents using a
 monospace font. To use the same font as the remaining text, use the
 command:
 
@@ -1777,26 +1993,15 @@ command:
 \urlstyle{same}
 \end{Verbatim}
 
-after the \cmd{hyperref} declaration.
+after the \cmd{hyperref} declaration, as this document does.
 
 The \cmd{hypertarget} and \cmd{hyperlink} commands provide internal
 links, just like HTML; \cmd{href} creates links to URLs or external
-files. Note the \texttt{run:} parameter: you can run external programs
-like multimedia players, office applications, whatever. As far as I
-know, this feature only works in Adobe Reader, Okular, and Evince.
+files. Note the \ltx{run:} parameter: you can run external programs
+like multimedia players, office applications, whatever. This feature
+only works with some PDF readers, though.
 
-On Linux and possibly other \unix{} variants, you'll have to instruct
-your favourite PDF reader what to run when an external file is
-referenced. Insert lines like the following in your \file{.mailcap} or
-\file{/etc/mailcap}:
-
-\begin{verbatim}
-audio/midi;/usr/bin/timidity %s
-audio/*; xmms %s
-video/*; xine -pfhq %s
-\end{verbatim}
-
-Please read \package{hyperref}'s documentation for further examples
+Please read \Pkg{hyperref}'s documentation for further examples
 and possibilities.
 
 % -----
@@ -1805,8 +2010,36 @@ and possibilities.
 
 \subsection{\entry{Insert}{Comment}}
 
-This is done inserting \% before each line, or by using the package
-\package{comment} that provides the environment of the same name.
+This is done inserting \% before each line, or by using the \href{https://www.ctan.org/pkg/comment}{comment} package
+that provides \ltx{\Bs{}comment}, \ltx{\Bs{}endcomment},
+and the \ltx{comment} environment:
+
+\begin{DefineCode}
+This text % boring example
+\begin{comment}
+what a boring example
+\end{comment}
+is just an example.
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+Pop-ups comments in PDF output are provided by the \Pkg{pdfcomment} package. This document uses this declaration:
+
+\begin{Verbatim}
+\usepackage[icon=note,color={1 1 0}]{pdfcomment}
+\end{Verbatim}
+
+\begin{DefineCode}
+This text is nothing special
+\pdfmargincomment{yup, definitely.},
+but it contains a couple of \pdfmarkupcomment{nice}%
+{simple, more than nice} comments.
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+Please note that not all PDF viewers can display pop-up comments correctly.
 
 % -----
 
@@ -1816,9 +2049,9 @@ This is done inserting \% before each line, or by using the package
 
 In general, the main format properties of a document are set with
 parame\-ters in \cmd{document\-class}: default font size (10, 11, or
-12pt), paper (\texttt{a4paper}, \texttt{a5paper}, \texttt{b5paper},
-\texttt{letterpaper}, \texttt{legalpaper}, \texttt{executivepaper}),
-and orientation (\texttt{portrait}, \texttt{landscape}). For example, 
+12pt), paper (\ltx{a4paper}, \ltx{a5paper}, \ltx{b5paper},
+\ltx{letterpaper}, \ltx{legalpaper}, \ltx{executivepaper}),
+and orientation (\ltx{portrait}, \ltx{landscape}). For example,
 
 \begin{Verbatim}[fontsize=\small]
 \documentclass[a5paper,landscape,12pt]{article}
@@ -1833,25 +2066,25 @@ Section~\ref{sec:extsizes}.
 
 \subsection{\entry{Format}{Line Spacing}}
 
-The package \package{setspace} provide the environments
-\env{singlespace}, \env{onehalfspace}, and \env{double\-space}. In
-addition, the environment/command \cmd{spacing}\cmdparm{\{amount\}}
-will set the spacing to the specified amount:
+The \href{https://www.ctan.org/pkg/setspace}{setspace} package provides the environments \Env{singlespace}, \Env{onehalfspace}, and \Env{double\-space}. In addition, the environment/command \cmd{spacing}\cmdparm{\{amount\}}
+will set the spacing to the specified a\-mount:
 
-\begin{example}
+\begin{DefineCode}
 \begin{spacing}{2.5}
 These two lines \\
 are crazily spaced!
 \end{spacing}
 \begin{spacing}{1}
 Much better, these lines\\
-have a pretty space.
+are spaced normally.
 \end{spacing}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 To apply line spacing to the whole document, use the
-\cmd{linespread\{factor\}} command in the preamble. Default value of
-\texttt{factor} is 1; larger values give larger line spacing (1.6 is
+\cmd{linespread\{fac\-tor\}} command in the preamble. Default value of
+\ltx{factor} is 1; larger values give larger line spacing (1.6 is
 roughly double line spacing).
 
 % -----
@@ -1867,10 +2100,11 @@ in \ltx{docu\-ment\-class} (10, 11, or 12 pt); see
 Table~\ref{tab:font_sizes2}.
 
 \begin{table}[htbp]
-\begin{center}
-\begin{tabular}{lll} \hline
+\centering
+\begin{tabular}{lll}
+\toprule
 \textbf{Text attribute} & \textbf{Environment form} & \textbf{Example} \\
-\hline
+\midrule
 \cmd{textnormal} & \verb|textnormal| & main document font \\
 \cmd{textrm} & \verb|rmfamily| & \textrm{roman} \\
 \cmd{textit} & \verb|itshape| & \textit{italics} \\
@@ -1891,11 +2125,10 @@ Table~\ref{tab:font_sizes2}.
 \cmd{mathit} & n/a & $\mathit{x^n + y^n \neq z^n \forall n \neq 2}$ \\
 \cmd{mathnormal} & n/a & $\mathnormal{x^n + y^n \neq z^n \forall n \neq 2}$ \\
 \cmd{mathcal} & n/a & $\mathcal{x^n + y^n \neq z^n \forall n \neq 2}$ \\
-\hline
+\bottomrule
 \end{tabular}
 \caption{Font attributes.}
 \label{tab:properties}
-\end{center}
 \end{table}
 
 Please note the difference between italics and emphasised text.
@@ -1906,16 +2139,20 @@ Please note the difference between italics and emphasised text.
 Also, please note that subscript is normally used in math mode only.
 The trick to use it in normal text is:
 
-\begin{example}
-this is 
-$_{\mbox{\footnotesize{subscript}}}$
-\end{example}
+\begin{DefineCode}
+this is
+$_{\mbox{\footnotesize%
+{subscript}}}$
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 \begin{table}[ht]
-\begin{center}
-\begin{tabular}{ll} \hline
+\centering
+\begin{tabular}{ll}
+\toprule
 \textbf{Font size} & \textbf{Example} \\
-\hline
+\midrule
 \verb|tiny| & \tiny{sample text} \\
 \verb|scriptsize| & \scriptsize{sample text} \\
 \verb|footnotesize| & \footnotesize{sample text} \\
@@ -1926,19 +2163,18 @@ $_{\mbox{\footnotesize{subscript}}}$
 \verb|LARGE| & \LARGE{sample text} \\
 \verb|huge| & \huge{sample text} \\
 \verb|Huge| & \Huge{sample text} \\
-\hline
+\bottomrule
 \end{tabular}
-\caption{Font sizes}
+\caption{Font sizes.}
 \label{tab:font_sizes}
-\end{center}
 \end{table}
 
 \begin{table}[ht]
-\begin{center}
+\centering
   \begin{tabular}{llll}
-  \hline
+  \toprule
   Default font size & 10pt & 11pt & 12pt \\
-  \hline
+  \midrule
   \ltx{tiny} & 5 & 6 & 6 \\
   \ltx{scriptsize} & 7 & 8 & 8 \\
   \ltx{footnotesize} & 8 & 9 & 10 \\
@@ -1949,11 +2185,10 @@ $_{\mbox{\footnotesize{subscript}}}$
   \ltx{LARGE} & 17.2 & 17.28 & 20.74 \\
   \ltx{huge} & 20.7 & 20.74 & 24.88 \\
   \ltx{Huge} & 24.8 & 24.88 &  24.88 \\
-  \hline
+  \bottomrule
   \end{tabular}
-  \caption{Actual font size in pt}
+  \caption{Actual font size in pt.}
   \label{tab:font_sizes2}
-\end{center}
 \end{table}
 
 % -----
@@ -1961,17 +2196,22 @@ $_{\mbox{\footnotesize{subscript}}}$
 \subsubsection{Superscript and Subscript in Chemical Formulae}
 
 Most chemical formulae could be entered as math formulae, using
-\verb|^| and \verb|_| to obtain superscript and subscript. The
-\env{mhchem} package provides a simpler command, though. Digits are
-printed as subscripts by default, as superscript when preceded by
+\verb|^| and \verb|_| to obtain superscript and subscript, but the \href{https://www.ctan.org/pkg/mhchem}{mhchem}
+package provides a simpler command. Digits are printed as
+subscripts by default, and are printed as superscript when preceded by
 \verb|^|. Formulae must be enclosed in the \cmd{ce} command:
 
-\begin{example}
+\begin{DefineCode}
 \ce{H2O + CO2 -> H2CO3}\\
 \ce{CaCO3 -> Ca^2+ + CO3^2-}\\
 \ce{CO3^2- + H2CO3 -> 2 HCO3^-}\\
-\ce{CaCO3 + H2CO3 -> Ca^2+ + 2HCO3^-}
-\end{example}
+\ce{CaCO3 + H2CO3 -> Ca^2+ + 2 HCO3^-}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+Alternatively, you could use the \href{https://www.ctan.org/pkg/chemformula}{chemformula} package that
+uses a similar syntax.
 
 % -----
 
@@ -1979,17 +2219,19 @@ printed as subscripts by default, as superscript when preceded by
 
 Normally, \uline{underline} is not used. It's just a relic of the old
 teletype era, and it doesn't look really good. If you still want to
-use underline, the \package{ulem} package provides some fancy styles:
+use underline, the \href{https://www.ctan.org/pkg/ulem}{ulem} package provides some fancy styles:
 
-\begin{example}
+\begin{DefineCode}
 \uline{important}
 \uuline{urgent}
 \uwave{boat}
 \sout{wrong}
 \xout{removed}
-\end{example}
+\end{DefineCode}
 
-Beware: \package{ulem} redefines the \cmd{emph} command, which will be
+\PrintDemo{style=parallel}
+
+Beware: \Pkg{ulem} redefines the \cmd{emph} command, which will be
 replaced by underline. To avoid this behaviour, use this declaration:
 
 \begin{verbatim}
@@ -2004,10 +2246,8 @@ replaced by underline. To avoid this behaviour, use this declaration:
 \subsubsection{\entry{Format}{Character Size}}
 \label{sec:extsizes}
 
-If the standard font sizes aren't enough for you, the package
-\package{extsizes} may be handy. It provides `extended' versions of
-the standard document classes, with support for sizes 8--12, 14, 17,
-and 20 pt.
+If the standard font sizes aren't enough for you, the \href{https://www.ctan.org/pkg/extsizes}{extsizes} package
+may be handy. It provides `extended' versions of the standard document classes, with support for sizes 8--12, 14, 17, and 20 pt.
 
 For example, let's suppose you want to typeset an article using a 17
 pt font. You'll use this document preamble:
@@ -2016,7 +2256,7 @@ pt font. You'll use this document preamble:
 \documentclass[17pt]{extarticle}
 \end{Verbatim}
 
-Another way to get big fonts is to use the package \package{type1cm},
+Another way to get big fonts is to use the \href{https://www.ctan.org/pkg/type1cm}{type1cm} package,
 which provides commands like the following:
 
 \begin{Verbatim}[fontsize=\small]
@@ -2028,21 +2268,20 @@ No Smoking
 
 Parameters are font size and baseline. Yet another approach is this:
 
-\begin{example}
+\begin{DefineCode}
 \resizebox{!}{1cm}{1-cm tall}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 \lettrine{D}{ropped} capitals at the start of a paragraph can be
-obtained using the \package{lettrine} package, which provides a fully
-customisable \cmd{lettrine} command. This paragraph uses the default
-behaviour:
+obtained using the \href{https://www.ctan.org/pkg/lettrine}{lettrine} package, which provides a fully customisable \cmd{lettrine} command. This paragraph uses the default behaviour:
 
 \begin{verbatim}
 \lettrine{D}{ropped} capitals at the start...
 \end{verbatim}
 
 % -----
-
 
 % FORMAT/FONT
 
@@ -2053,89 +2292,58 @@ when needed by the \MF{} subsystem. This ensures portability and
 yields very good results. However, many of us are accustomed to other
 fonts: Times, Helvetica, Sans Serif{\ldots}
 
-Fortunately, \LaTeX{} can use \PS{} fonts. Try using one of the
-following packages: \package{avant}, \package{avangar},
-\package{bookman}, \package{chancery}, \package{charter},
-\package{courier}, \package{helvet}, \package{helvetic},
-\package{ncntrsbk}, \package{newcent}, \package{palatcm},
-\package{palatino}, \package{pifont}, \package{times},
-\package{utopia}, \package{zapfchan}. Insert \verb|\usepackage{times}|
-and enjoy the results. The only caveat is that \LaTeX{} handles maths
-at its best only with Computer Modern fonts: using \PS{} fonts might
-render your formulas slightly less appealing.
+Fortunately, several \LaTeX{} engines can use \PS{} Type 1 and Open Type OTF fonts. Try using one of the following packages: \Pkg{avant}, \Pkg{avangar},
+\Pkg{bookman}, \Pkg{chancery}, \Pkg{charter}, \Pkg{courier}, \Pkg{helvet}, \Pkg{helvetic}, \Pkg{ncntrsbk}, \Pkg{newcent}, \Pkg{palatcm},
+\Pkg{palatino}, \Pkg{pifont}, \Pkg{times},\Pkg{utopia}, \Pkg{zapfchan}. Insert \verb|\usepackage{times}| and enjoy the results. This document uses \Pkg{libertine}.
 
-The packages above set the font for the whole document. To use a \PS{}
+The only caveat is that \LaTeX{} handles maths at its best only with Computer Modern fonts: using other fonts might render your formulas slightly less appealing.
+
+A world of possibilities is available when you use \ltx{xelatex}, which supports Unicode, OpenType and TrueType fonts. Please visit the \href{https://tug.org/FontCatalogue/}{LaTeX Font Catalogue} and enjoy.
+
+The packages above set the font for the whole document. To use a
 font for a region of text only, specify the font family as in the
 example below. Common font families are listed in
-Table~\ref{tab:font_families}. 
+Table~\ref{tab:font_families}; but beware, some font shapes may be
+unavailable on some systems!
 
-\begin{warn}
-  Beware, some font shapes may be unavailable on some systems!
-\end{warn}
-
-\begin{example}
+\begin{DefineCode}
 This is Computer Modern Roman,
 {\fontfamily{phv}\selectfont
 this is Helvetica!}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 \begin{table}
-\begin{center}
+\centering
   \begin{tabular}{ll}
-  \hline
+  \toprule
   \textmd{Family} & \textmd{Name}\\
-  \hline
-  \texttt{cmr} & Computer Modern Roman\\
-  \texttt{cmss} &
+  \midrule
+  \ltx{cmr} & Computer Modern Roman\\
+  \ltx{cmss} &
   {\fontfamily{cmss}\selectfont Computer Modern Sans Serif}\\
-  \texttt{cmtt} &
+  \ltx{cmtt} &
   {\fontfamily{cmtt}\selectfont Computer Modern Typewriter}\\
-  \texttt{pag} &
+  \ltx{pag} &
   {\fontfamily{pag}\selectfont Avantgarde}\\
-  \texttt{pbk} &
+  \ltx{pbk} &
   {\fontfamily{pbk}\selectfont Bookman}\\
-  \texttt{phv} &
+  \ltx{phv} &
   {\fontfamily{phv}\selectfont Helvetica}\\
-  \texttt{pnc} &
+  \ltx{pnc} &
   {\fontfamily{pnc}\selectfont New Century Schoolbook}\\
-  \texttt{ppl} &
+  \ltx{ppl} &
   {\fontfamily{ppl}\selectfont Palatino}\\
-  \texttt{ptm} &
+  \ltx{ptm} &
   {\fontfamily{ptm}\selectfont Times}\\
-  \texttt{pcr} &
+  \ltx{pcr} &
   {\fontfamily{pcr}\selectfont Courier}\\
-  \hline
+  \bottomrule
   \end{tabular}
   \caption{Common font families.}
   \label{tab:font_families}
-\end{center}
 \end{table}
-
-\medskip
-
-Yet another possibility is replacing a standard \LaTeX{} font with a
-\PS{} one: for example, you may want to use Avantgarde whenever
-Computer Modern Sans Serif would appear. These commands can be renewed
-as in the example below:
-
-\begin{itemize}
-
-  \item \verb|\rmdefault| (roman)
-  \item \verb|\sfdefault| (sans serif)
-  \item \verb|\ttdefault| (typewriter)
-  \item \verb|\bfdefault| (boldface)
-  \item \verb|\mddefault| (medium)
-  \item \verb|\itdefault| (italics)
-  \item \verb|\sldefault| (slanted)
-  \item \verb|\scdefault| (small caps)
-  \item \verb|\updefault| (upright)
-
-\end{itemize}
-
-\begin{Verbatim}[fontsize=\small]
- % Avantgarde replaces sans serif
-\renewcommand{\sfdefault}{pag}
-\end{Verbatim}
 
 % -----
 
@@ -2144,11 +2352,9 @@ as in the example below:
 \subsubsection{\entry{Format}{Character Colour}}
 \label{sec:charcol}
 
-You can colour words using the package \package{color} and appropriate
-commands. Predefined colours are black, white, red, green, blue, cyan,
-magenta, and yellow; you can also define your own.
+You can colour words using the \href{https://www.ctan.org/pkg/color}{color} package and appropriate commands. Predefined colours are black, white, red, green, blue, cyan, magenta, and yellow; you can also define your own.
 
-\begin{example}
+\begin{DefineCode}
 \textcolor{red}{This is red.}\\
 \color{blue}
 This text is blue!\\
@@ -2161,10 +2367,32 @@ This is my shade of green!\\
 \colorbox{cyan}{A cyan box}\\
 \fcolorbox{blue}{green}
 {A green box in a blue frame}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Moreover, the command \cmd{pagecolor} lets you specify{\ldots} guess
 what?
+
+% -----
+
+\subsubsection{\entry{Format}{Character Outline}}
+\label{sec:charoutline}
+
+If coloured text is not fancy enough, you can also have outlined
+(contoured) text using the \href{https://www.ctan.org/pkg/contour}{contour} package. The \cmd{contour} command creates 16 copies of the text (or a number you specify):
+
+\begin{DefineCode}
+\contourlength{0.5pt}
+\Large
+\textcolor{blue}{\contour{red}
+{Blue text, thin red outline}}
+\contourlength{2pt}
+\textcolor{white}{\contour[32]{blue}
+{White text, thick blue outline}}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
@@ -2190,22 +2418,25 @@ Environments have this general form:
 \end{Verbatim}
 
 For example, if you want to center a paragraph you'll use the
-\env{center} environment:
+\Env{center} environment:
 
-\begin{example}
+\begin{DefineCode}
 \begin{center}
 this text is centered
 \end{center}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Standard environments are listed in Table~\ref{tab:environments}. In the
 following sections, I'll show you what to use and when.
 
 \begin{table}[p]
-\begin{center}
-\begin{tabular}{ll} \hline
+\centering
+\begin{tabular}{ll}
+\toprule
 \textbf{Environment} & \textbf{Purpose} \\
-\hline
+\midrule
 \ltx{abstract} & abstract\\
 \ltx{array} & Math arrays\\
 \ltx{center} & Centered lines\\
@@ -2234,11 +2465,10 @@ following sections, I'll show you what to use and when.
 \ltx{titlepage} & For hand crafted title pages\\
 \ltx{verbatim} & Simulating typed input\\
 \ltx{verse} & For poetry and other things\\
-\hline
+\bottomrule
 \end{tabular}
 \caption{Standard \LaTeX{} environments.}
 \label{tab:environments}
-\end{center}
 \end{table}
 
 % -----
@@ -2248,9 +2478,9 @@ following sections, I'll show you what to use and when.
 \subsubsection{\entry{Paragraph}{Horizontal Alignment}}
 
 By default, the text is justified. To get left--aligned,
-right--aligned or centered text, use the \env{flushleft},
-\env{flushright} and \env{center} environments. The commands
-\cmd{raggedright}, \cmd{ragged\-left}, and \cmd{centering} are
+right--aligned or centered text, use the \Env{flushleft},
+\Env{flushright} and \Env{center} environments. The commands
+\cmd{raggedright}, \cmd{ragged\-left}, and \cmd{cen\-te\-ring} are
 equivalent to their correspondent environments, but they do not start
 a new paragraph.
 
@@ -2270,40 +2500,43 @@ between paragraphs.
 If you need more space, use the command
 \cmd{vskip}\{\textit{parameter}\} as in this example:
 
-% \begin{margins}{-1cm}{-0.5cm}
-\begin{example}
+\begin{DefineCode}
 These paragraphs will be
 separated by 1.3 cm:\\
 \vskip 1.3cm
 there is a 1.3 cm gap above me.
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Note that \cmd{vskip} only works between paragraphs. What if you
 wanted to start a page after an additional margin of, say, 1.5 cm?
 You'll have to use \cmd{null}, which sets a `mark' in the text:
 
-\begin{example}
+\begin{DefineCode}
 \null
 \vskip 1.3 cm
 This text comes after 1.3 cm...
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Finally, the command \cmd{vfill} is used to add empty lines between
 two paragraphs so that the second paragraph goes exactly to the bottom
-of the page. For example, 
+of the page. For example,
 
 % \begin{example} will not work here
 \medskip
 
-\begin{minipage}[c]{0.49\textwidth}
+\begin{minipage}[c]{0.45\textwidth}
   \begin{Verbatim}[fontsize=\small]
-  This appears at the top of 
+  This appears at the top of
   the page{\ldots}
   \vfill
   {\ldots}and this at the bottom.
   \end{Verbatim}
 \end{minipage}
-\begin{boxedminipage}[c]{0.49\textwidth}
+\begin{boxedminipage}[c]{0.45\textwidth}
   This appears at the top of
   the page{\ldots}
   \vskip 1.3 cm
@@ -2316,14 +2549,14 @@ of the page. For example,
 
 \subsubsection{\entry{Paragraph}{Margins}}
 
-Normally, the margins are set for the whole document as seen in
+Normally, margins are set for the whole document as seen in
 Section~\ref{sec:pagesetup}. Redefining them for a section of text
 will not work: if you want to set a paragraph's margins, you'll have
 to create a new environment like in the following example:
 
 \begin{Verbatim}[fontsize=\small]
 \newenvironment{margins}[2]
-{ 
+{
   \begin{list}{} {
     \setlength{\leftmargin}{#1}
     \setlength{\rightmargin}{#2}
@@ -2333,14 +2566,16 @@ to create a new environment like in the following example:
 
 Then you will use the new environment:
 
-\begin{example}
+\begin{DefineCode}
 As you can see, this paragraph
 has normal margins.
 \begin{margins}{0.5cm}{1cm}
  But please note that this
- paragraph has custom margins. 
+ paragraph has custom margins.
 \end{margins}
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
@@ -2349,7 +2584,7 @@ has normal margins.
 \subsubsection{\entry{Paragraph}{Indentation}}
 
 To set the amount of indentation of the first line of a paragraph, we
-redefine the value of the \cmd{parindent} counter. In the following
+redefine the value of the \cmd{par\-in\-dent} counter. In the following
 example, we set a 1-cm indentation:
 
 \begin{Verbatim}[fontsize=\small]
@@ -2371,16 +2606,11 @@ paragraphs is set by the \cmd{parskip} counter:
 \subsubsection{\entry{Paragraph}{Border and Shade}}
 
 To get framed (bordered) paragraphs or words, you have the choice of
-using the \package{framed} package or the \cmd{parbox} command. The
-package \package{calc} is required in the latter case.
+using the \href{https://www.ctan.org/pkg/framed}{framed} package or the \cmd{parbox} command. The \href{https://www.ctan.org/pkg/calc}{calc} package is required in the latter case.
 
-This is the simplest method, using \package{framed}:
+This is the simplest method, using \Pkg{framed}:
 
-% \begin{example} will not work here
-\medskip
-
-\begin{minipage}[c]{0.5\textwidth}
-  \begin{Verbatim}[fontsize=\small]
+\begin{DefineCode}
   \setlength{\FrameRule}{2pt}
   \setlength{\FrameSep}{5pt}
   \begin{framed}
@@ -2392,26 +2622,11 @@ This is the simplest method, using \package{framed}:
     this is a shaded paragraph,
     do you like it?
   \end{shaded}
-  \end{Verbatim}
-\end{minipage}%
-\begin{minipage}[c]{0.5\textwidth}
-\setlength{\FrameRule}{2pt}
-\setlength{\FrameSep}{5pt}
-\begin{framed}
-  this is a framed paragraph!
-\end{framed}
-\definecolor{shadecolor}{rgb}
-  {0.9,1,1}
-  \begin{shaded}
-    this is a shaded paragraph,
-    do you like it?
-  \end{shaded}
-\end{minipage}
+\end{DefineCode}
 
-\medskip
+\PrintDemo{style=parallel}
 
-Equivalently, use the \package{boxedminipage} package and the equally
-named environment. For those who want to know more: the commands
+Equivalently, use the \href{https://www.ctan.org/pkg/boxedminipage}{boxedminipage} package and the equally named environment. For those who want to know more: the commands
 
 \begin{Verbatim}[fontsize=\small]
 \framebox{
@@ -2421,14 +2636,14 @@ named environment. For those who want to know more: the commands
 }
 \end{Verbatim}
 
-are functionally equivalent to the \env{boxedminipage} environment.
+are functionally equivalent to the \Env{boxedminipage} environment.
 
 % This example uses \cmd{parbox}:
 
 % \begin{example}
 % \noindent
 % \fbox{
-%   \parbox{\linewidth 
+%   \parbox{\linewidth
 %     -2 \fboxsep -2 \fboxrule}
 %   {again, a framed paragraph!}
 % }
@@ -2440,19 +2655,23 @@ remaining text. Obviously, you can specify the width as you like.
 Finally, to frame something adapting the frame to the width of the
 text:
 
-\begin{example}
-this is a 
+\begin{DefineCode}
+this is a
 \framebox[\width]{framed}
 word
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Modifying the parameter, you can adjust the frame width:
 
-\begin{example}
+\begin{DefineCode}
 this is another
 \framebox[2\width][r]{framed}
 word
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Note that the second optional parameter specifies the alignment (to
 the right in this example).
@@ -2466,7 +2685,7 @@ the right in this example).
 Now that you have a bordered paragraph, you'll want to set its colour
 too. Do this:
 
-\begin{example}
+\begin{DefineCode}
 \colorbox{yellow}{
   \begin{minipage}
   {0.8\linewidth}
@@ -2474,7 +2693,9 @@ too. Do this:
   is yellow!
   \end{minipage}
 }
-\end{example}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 Just as an example, we set the minipage colour for only the 80\% of
 its width. More about colours in Section~\ref{sec:charcol}.
@@ -2487,8 +2708,8 @@ its width. More about colours in Section~\ref{sec:charcol}.
 
 The commands \cmd{twocolumn} and \cmd{onecolumn} start a new page and
 set the number of columns; they can also be used as parameters in
-\cmd{documentclass}. If this is not enough for you, the package 
-\package{multicols} provides an environment of the same name. I could
+\cmd{documentclass}. If this is not enough for you, the \href{https://www.ctan.org/pkg/multicols}{multicols} package
+provides an environment of the same name. I could
 have set this section in two columns with these commands:
 
 \begin{Verbatim}[fontsize=\small]
@@ -2509,24 +2730,48 @@ is excluded from the environment.
 
 \section{The \menu{Table} Menu}
 
-Quite a complex subject{\ldots} A \emph{table} is a float (as
-explained in Section~\ref{sec:figure}) that must fit on one page. It
-usually contains a \env{tabular} environment, even though other
-possibilities exist. By default, a table adjusts its width to match
-the width of its contents.
+Welcome to hell---kind of.
 
-Let me stress that the \env{table} environment is a float, but
-\env{tabular} is not. Keep this in mind if you want to write informal
-tabular material, i.e. without label and caption.
+Just like an \emph{image} is not a \emph{figure} (Section~\ref{sec:image}), a \emph{\Env{tabular} environment} is not a \emph{table}. A \LaTeX{} table is a float (as explained in Section~\ref{sec:figure}) that must fit on one page; it has a caption, and it usually contains a \Env{tabular} environment. The latter is typeset using the special syntax explained below.
 
-This is the general format of a table:
+Default \LaTeX{} tabular material is defined as follows:
 
-\begin{Verbatim}[fontsize=\footnotesize]
-\begin{table}[htbp] % placement: here, top, bottom, separate page
-% \begin{small}     % sets the table font
-\begin{center}      % optional
-% 4-column table; alignment is left, centered, right, fixed width
-\begin{tabular}{|l|c|rp{4cm}|} 
+\begin{DefineCode}
+\begin{tabular}{|l|c r|} % left, centre, right alignment
+% three columns, items separated by (ugly) vertical bars
+\hline
+1 & 2 & 3 \\ % end of line
+\hline       % horizontal line
+a &   & c \\ % second column is blank
+one & two & three \\
+\hline
+\end{tabular}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+where the definition specifies vertical bars, alignment, and number of columns. Each line in the tabular contains elements separated by \texttt{\&}.
+
+The \href{https://www.ctan.org/pkg/booktabs}{booktabs} package provides better-looking tabular material:
+
+\begin{DefineCode}
+\begin{tabular}{lcr}
+\toprule
+1 & 2 & 3 \\
+\midrule
+a &   & c \\
+one & two & three \\
+\bottomrule
+\end{tabular}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
+
+The following mess is the general format of tabular material:
+
+\begin{DefineCode}
+% 4-column tabular; alignment is left, centered, right, fixed width
+\begin{tabular}{lc|rp{4cm}|}
 \hline              % horizontal line
 \textbf{Left} & \textbf{Centre} & \textbf{Right} & \textbf{4 cm}\\
 \hline
@@ -2534,155 +2779,98 @@ row 1, col 1 & row 1, col 2 & row 1, col 3 & row 1, col 4\\
 \cline{1-2}         % horizontal line spanning columns 1-2
 row 2, col 1 & row 2, col 2 & row 2, col 3 & row 2, col 4\\
 \cline{1-2}
-\multicolumn{2}{|c|}{spanning two columns} & row 3, col 3 & 
+\multicolumn{2}{|c|}{spanning two columns} & row 3, col 3 &
 row 3, col 4\\
 \cline{1-3}
 row 4, col 1 & row 4, col 2 & row 4, col 3 & ~ \hfill right\\
 % force a space with "\ "
 row 5, col 1 & row 5, col 2 & row 5, col 3 & left \hfill ~\\
-row 5, col 1 & row 5, col 2 & row 5, col 3 & 
+row 5, col 1 & row 5, col 2 & row 5, col 3 &
 ~ \hfill centre \hfill ~\\
 \hline
 \end{tabular}
-\caption{A sample table.}
-% labels are used for cross references;
-% for example, "see Table~\ref{tab:sampletab}"
-\label{tab:sampletab}
-\end{center}
-% \end{small}
-\end{table}
-\end{Verbatim}
+\end{DefineCode}
 
-Table~\ref{tab:sampletab} shows the result.
+\PrintDemo{style=stacked}
 
-\begin{table}[htbp] % placement: here, top, bottom, separate page
-% \begin{tiny}
-\begin{center}      % optional
-% 4-column table; alignment is left, centered, right, fixed width
-\begin{tabular}{|l|c|rp{4cm}|} 
-\hline              % horizontal line
-\textbf{Left} & \textbf{Centre} & \textbf{Right} & \textbf{4 cm}\\
-\hline
-row 1, col 1 & row 1, col 2 & row 1, col 3 & row 1, col 4\\
-\cline{1-2}         % horizontal line spanning columns 1-2
-row 2, col 1 & row 2, col 2 & row 2, col 3 & row 2, col 4\\
-\cline{1-2}
-\multicolumn{2}{|c|}{spanning two columns} & row 3, col 3 & 
-row 3, col 4\\
-\cline{1-3}
-row 4, col 1 & row 4, col 2 & row 4, col 3 & ~ \hfill right\\
-% force a space with "\ "
-row 5, col 1 & row 5, col 2 & row 5, col 3 & left \hfill ~\\
-row 5, col 1 & row 5, col 2 & row 5, col 3 & 
-~ \hfill centre \hfill ~\\
-\hline
-\end{tabular}
-\caption{A sample table.}
-% labels are used for cross references;
-% for example, "see Table~\ref{tab:sampletab}"
-\label{tab:sampletab}
-\end{center}
-% \end{small}
-\end{table}
+Sometimes, a tabular is too wide and won't fit on the page. The first solution is using the \href{https://www.ctan.org/pkg/longtable}{longtable} package, which provides a multi-page version of Pkg{tabular}. Besides, the  \href{https://www.ctan.org/pkg/rotating}{rotating} package provides the new environment \Env{sideways} that can be used to rotate a tabular (or a single cell) sideways or by a specified angle.
 
-Sometimes, a table is too wide and won't fit on the page. In that
-case, the \package{rotating} package provides the new environment
-\env{sidewaystable}. Also, \package{rotating} makes it possible to
-rotate the contents of a cell by a specified angle. Finally, the
-\package{tabularx} package lets one specify tables of fixed width: the
-\texttt{X} column specifier indicates that a column can be spread as
+The \href{https://www.ctan.org/pkg/tabularx}{tabularx} package lets you specify tabular columns of fixed width: the \ltx{X} column specifier indicates that a column can be spread as
 needed.
 
 Here's an example:
 
-% \begin{example} will not work here
-\medskip
-
-\begin{minipage}[c]{0.7\textwidth}
-  \begin{Verbatim}[fontsize=\small]
-  \begin{sidewaystable}
+\begin{DefineCode}
+  \begin{sideways}
     \begin{tabularx}{7.5cm}{|l|X|X|}
       \hline
-      \textbf{normal} & \textbf{tilted} & 
+      \textbf{normal} & \textbf{tilted} &
       \textbf{wider}\\
       \hline
-      normal & \rotatebox{30}{I'm tilted!} & 
+      normal & \rotatebox{30}%
+      {I'm tilted!} &
       I'm wider\\
       \hline
     \end{tabularx}
-  \end{sidewaystable}
-\end{Verbatim}
-\end{minipage}%
-\begin{minipage}[c]{0.3\textwidth}
-% here we cheat. Tabularx won't work inside a minipage,
-% so let's load the picture.
-\ifpdf
-  \includegraphics{tbx.pdf}
-\else
-  \includegraphics{tbx.eps}
-\fi
+  \end{sideways}
+\end{DefineCode}
 
-\end{minipage}
+\PrintDemo{style=parallel}
 
-\medskip
+Other useful packages are \Pkg{longtable}, \Pkg{supertabular}, and
+\Pkg{xtab}.
 
-The \note standard \env{tabular} environment cannot span more than one
-page! There are some packages that overcome this limitation: you will
-want to try out \package{longtable}, \package{supertabular}, and
-\package{xtab}.
+To enable colours in tables, you use the \href{https://www.ctan.org/pkg/colortbl}{colortbl} package:
 
-To enable colours in tables, you use the \package{colortbl} package:
-
-\begin{example}
+\begin{DefineCode}
 Colour by row:\\\vskip 2mm
-\begin{tabular}{|l|c|r|}
-  \hline
+\begin{tabular}{lcr}
   \rowcolor{cyan}
   one & two & three\\
   \rowcolor{green}
   one & two & three\\
   \rowcolor{yellow}
   one & two & three\\
-  \hline
 \end{tabular}
-\end{example}
+\end{DefineCode}
 
-\begin{example}
+\PrintDemo{style=parallel}
+
+\begin{DefineCode}
 Colour by column:\\\vskip 2mm
 \begin{tabular}
-  {|>{\columncolor{cyan}}l|
+  {>{\columncolor{cyan}}l
   >{\color{red}
-  \columncolor{green}}c|
-  >{\columncolor{yellow}}r|}
-  \hline
+  \columncolor{green}}c
+  >{\columncolor{yellow}}r}
   one & two & three\\
   one & two & three\\
   one & two & three\\
-  \hline
 \end{tabular}
-\end{example}
+\end{DefineCode}
 
-To conclude the subject, a neat little trick. If you think that
-writing \LaTeX{} tables is too complicated, you could be relieved by
-OpenOffice Calc and Calc2LaTeX. The former is the well-known free
-spreadsheet, while the latter is a plugin that that lets you turn a
-cell range into a \LaTeX{} table. Links:
-\url{http://www.openoffice.org/}, 
-\url{http://calc2latex.sourceforge.net/}.
+\PrintDemo{style=parallel}
 
+% To conclude the subject, a neat little trick. If you think that
+% writing \LaTeX{} tables is too complicated, you could be relieved by
+% OpenOffice Calc and Calc2LaTeX. The former is the well-known free
+% spreadsheet, while the latter is a plugin that that lets you turn a
+% cell range into a \LaTeX{} table. Links:
+% \url{https://www.openoffice.org/},
+% \url{https://calc2latex.sourceforge.net/}.
 
 % -----
 
 \subsection{\entry{Table}{Line Spacing}}
 
-A line adjusts itself to the height of the text it contains. To add
-some space \emph{before} a line, the trick is to start it with a
-\texttt{\textbackslash{}rule} of 0 length and specified height. To add
+A table line adjusts itself to the height of the text it contains. To
+add some space \emph{before} a line, the trick is to start it with a
+\ltx{\textbackslash{}rule} of 0 length and specified height. To add
 space \emph{after} a line, use
-\texttt{\textbackslash{}\textbackslash{}} followed by optional space.
+\ltx{\textbackslash{}\textbackslash{}} followed by optional space.
 Here is an example:
 
-\begin{example}
+\begin{DefineCode}
 \begin{tabular}{lll}
 one & two & three\\
 0.3 centimeters & \textbf{after} &
@@ -2692,50 +2880,33 @@ one & two & three\\
 \rule{0pt}{1.2cm}1.2 centimeters &
   \textbf{before} & this line\\
 \end{tabular}
-\end{example}
+\end{DefineCode}
 
-% -----
-
-\subsection{\entry{Table}{Rule Width}}
-
-% TO DO: \setlength{\arrayrulewidth}{<width>}
-
-\begin{example}
-\begin{tabular}{|lll|}
-\hline
-%\setlength{\arrayrulewidth}{5pt}
-one & two & three\\
-\hline
-four & five & six\\
-%\setlength{\arrayrulewidth}{1pt}
-\hline
-\end{tabular}
-\end{example}
+\PrintDemo{style=parallel}
 
 % -----
 
 \subsection{\entry{Table}{Aligning Numbers}}
 
 A special case of a tabular environment is when we want to align
-numbers with respect to the decimal positions. 
+numbers with respect to the decimal positions.
 
 The simplest method is using the \ltx{@} column specifier, which in
 practice is useful in tables containing only numbers. The column
-separator \texttt{\&} is replaced by the decimal dot:
+separator \ltx{\&} is replaced by the decimal dot:
 
-\begin{example}
+\begin{DefineCode}
 \begin{tabular}{r@{.}l}
  3&14159\\
  1&61803\\
  1&41421\\
  100&00000
 \end{tabular}
-\end{example}
+\end{DefineCode}
 
-Alternatively, use the \package{dcolumn} package, which adds the
-\texttt{D} column specifier. \texttt{D} has three arguments: the
-separator to use in the \LaTeX{} source and in output (usually the
-same, `.'), and the number of digits to the right of the decimal place
+\PrintDemo{style=parallel}
+
+Alternatively, use the \href{https://www.ctan.org/pkg/dcolumn}{dcolumn} package, which adds the \ltx{D} column specifier. \ltx{D} has three arguments: the separator to use in the \LaTeX{} source and in output (usually the same, `.'), and the number of digits to the right of the decimal place
 indicator. Optionally, the third argument can specify the number of
 digits to the left and to the right of the decimal place indicator,
 separated by a dot. Lastly, if the third argument is -1, the material
@@ -2744,76 +2915,62 @@ of the column is centered around the separator.
 All material in the table is typeset in math mode. To insert headings,
 you'll have to put the text in an \cmd{mbox}.
 
-% \begin{example} will not work here
-\medskip
-
-\begin{minipage}[c]{0.5\textwidth}
-  \begin{Verbatim}[fontsize=\small]
-  \begin{tabular}{|D{.}{,}{4.2}|%
-  D{.}{.}{5}|D{.}{.}{-1}|}
-  \hline
+\begin{DefineCode}
+  \begin{tabular}{D{.}{,}{4.2}%
+  D{.}{.}{5}D{.}{.}{-1}}
+  \toprule
   \mbox{One} & \mbox{Two} &
   \mbox{Three}\\
   10.33 & 10.33 & 10.33\\
   1000 & 1000 & 1000\\
   5.1 & 5.1 & 5.1\\
   3.14 & 3.14159 & 3.14159\\
-  \hline
+  \bottomrule
   \end{tabular}
-  \end{Verbatim}
-\end{minipage}%
-\begin{minipage}[c]{0.5\textwidth}
-\begin{tabular}{|D{.}{,}{4.2}|%
-D{.}{.}{5}|D{.}{.}{-1}|}
-\hline
-\mbox{One} & \mbox{Two} &
-\mbox{Three}\\
-10.33 & 10.33 & 10.33\\
-1000 & 1000 & 1000\\
-5.1 & 5.1 & 5.1\\
-3.14 & 3.14159 & 3.14159\\
-\hline
-\end{tabular}
-\end{minipage}
+\end{DefineCode}
+
+\PrintDemo{style=parallel}
 
 % -----
 
-\subsection{Using \package{slashbox}}
+\subsection{Using \Pkg{diagbox}}
 
-This package add the \cmd{backslashbox} command:
+This package add the \cmd{diagbox} command:
 
-\medskip
-
-\begin{minipage}[c]{0.5\textwidth}
-  \begin{Verbatim}[fontsize=\small]
+\begin{DefineCode}
 \begin{tabular}{|l|l|l|}
-  \hline
-  \backslashbox[2cm]{Lesson}{Date} & 
+  \toprule
+  \diagbox{Lesson}{Date} &
   Monday & Tuesday\\
-  \hline
+  \midrule
   Stratigraphy & room A & room A\\
   Chemistry & room B & Lab $\alpha$\\
-  Physics & room C & Lab $\beta$\\
-  \hline
+  Physics & room C & Lab $\delta$\\
+  \bottomrule
 \end{tabular}
-\end{Verbatim}
-\end{minipage}%
-\begin{minipage}[c]{0.5\textwidth}
-\begin{tabular}{|l|l|l|}
-  \hline
-  \backslashbox[2cm]{Lesson}{Date} & 
-  Monday & Tuesday\\
-  \hline
-  Stratigraphy & room A & room A\\
-  Chemistry & room B & Lab $\alpha$\\
-  Physics & room C & Lab $\beta$\\
-  \hline
-\end{tabular}
-\end{minipage}
+\end{DefineCode}
 
-\medskip
+\PrintDemo{style=parallel}
 
-% \emph{TODO: mention \cmd{newcolumntype} and \package{floatflt}}
+% -----
+
+\subsection{\LaTeX{} Table Generators}
+
+Let's face it, inserting tabular material is quite a chore.
+Fortunately, there are web sites that allow you to create \LaTeX{}
+code for tabular material in a visual way. Try these:
+
+\begin{itemize}
+
+  \item \url{https://www.tablesgenerator.com/}
+
+  \item \url{https://www.latex-tables.com/}
+
+  \item \url{https://tableconvert.com/latex-generator}
+
+  \item \url{https://products.aspose.app/tex/latex-table-generator}
+
+\end{itemize}
 
 % -----
 
@@ -2822,15 +2979,15 @@ This package add the \cmd{backslashbox} command:
 For many people, data files are the bread and butter of everyday's
 work. Most data files are simply ASCII text with columns of numbers,
 but some people use spreadsheets. Nearly all spreadsheet applications
-can export sheets in the ASCII-based \file{.csv} file format; values
+can export sheets in the ASCII-based \File{.csv} file format; values
 are usually separated by the `;' character.
 
 Converting a data file into a \LaTeX{} table is quite a tedious
 process. The following script for \unix{} will convert a datafile with
 an arbitrary number of columns to a table. It will also work on
-\file{.csv} files.
+\File{.csv} files.
 
-\begin{Verbatim}[fontsize=\small]  
+\begin{Verbatim}[fontsize=\small]
 #!/bin/sh
 
 # dat2tex.sh: converts tabular data to a tabular environment
@@ -2874,13 +3031,11 @@ $AWK '{if (1 == FNR) { \
 \subsection{\entry{Tools}{Mail Merges}}
 
 This useful and time-saving tool is implemented in \LaTeX{} by the
-\package{textmerg} package. Let's consider a simple document, in which
-the name, surname, and title of people we're writing to may vary. The
-remaining text does not change.
+\href{https://www.ctan.org/pkg/textmerg}{textmerg} package. Let's consider a simple document, in which the name, surname, and title of people we're writing to may vary. The remaining text does not change.
 
 We'll define three \emph{fields}, which are the variable part of the
 text: \cmd{Name}, \cmd{Surname}, and \cmd{Title}. Their values will be
-gathered from an external file, \file{data.dat}.
+gathered from an external file, \File{data.dat}.
 
 \begin{Verbatim}[fontsize=\small]
 \documentclass{article}
@@ -2902,7 +3057,7 @@ for illustration. It's preceded by a minus sign, which indicates that
 it can be empty in the data file. Simply put, we want to separate the
 records using empty lines.
 
-The file \file{data.dat} reads:
+The file \File{data.dat} reads:
 
 \begin{Verbatim}[fontsize=\small]
 Guido
@@ -2930,9 +3085,8 @@ for each recipient.
 
 If making mail merges was easy, making labels is even trivial. Let's
 suppose you want to make 20 equal labels on a 3$\times$8 peel--off
-label sheet. The package to use, predictably, is called
-\package{labels}. In this example, we'll make 10 plain labels and 10
-boxed labels:
+label sheet. The package to use, predictably, is called \href{https://www.ctan.org/pkg/labels}{labels}.
+In this example, we'll make 10 plain labels and 10 boxed labels:
 
 \begin{Verbatim}[fontsize=\small]
 \documentclass[a4paper,12pt]{article}
@@ -2950,16 +3104,16 @@ boxed labels:
 \begin{document}
   \addresslabel[\large] % optional arguments
   {\textbf{Guido Gonzato}, Ph.D.\\
-  \textsl{Linux system manager}}
+  \textsl{GNU/Linux Sysadmin}}
   % now on to the boxed labels
   \boxedaddresslabel[\fboxsep=4mm\fboxrule=1mm]
   {\textbf{Guido Gonzato}, Ph.D.\\
-  \textsl{Linux system manager}}
+  \textsl{GNU/Linux Sysadmin}}
 \end{document}
 \end{Verbatim}
 
 % You'll also have to choose the correct paper size and adjust the page
-% margins (use \package{geometry}; omitted in this example).
+% margins (use \Pkg{geometry}; omitted in this example).
 
 To make labels containing different addresses, you may use either an
 external file or insert the addresses in the main file:
@@ -2994,7 +3148,7 @@ external file or insert the addresses in the main file:
 \end{document}
 \end{Verbatim}
 
-It is left to you to combine \package{textmerg} and \package{labels}!
+It is left to you to combine \Pkg{textmerg} and \Pkg{labels}!
 
 % -----
 
@@ -3006,15 +3160,16 @@ It is left to you to combine \package{textmerg} and \package{labels}!
 supported. By language support I mean the translation of terms like
 `Chapter' or `Index', correct hyphenation, and the possibility of
 inserting characters like `\c c' or `\'e' directly via your keyboard.
-(The normal way being typing \texttt{\bs{}c c} and \texttt{\bs{}'e}.)
+(The normal way being typing \ltx{\Bs{}c c} and \ltx{\Bs{}'e}.)
 
-Your \LaTeX{} distribution contains a file called \file{language.dat}
-(usually \path{$TEXMF/tex/generic/config/language.dat} that contains a
+Your \LaTeX{} distribution contains a file called \File{language.dat}
+(usually \path{$TEXMF/tex/generic/con\-fig/language.dat} that contains a
 list of languages. Editing this file you choose the languages for
 which you want hyphenation patterns.
 
 If you are not a native English speaker, you'll want to use the
-package \package{babel} as in the following example:
+\href{https://www.ctan.org/pkg/babel}{babel} package as in the following
+example:
 
 \begin{Verbatim}[fontsize=\small]
 \usepackage[italian,english]{babel}
@@ -3022,53 +3177,22 @@ package \package{babel} as in the following example:
 
 \begin{warn}
 
-  \package{babel} alters the way some characters behave in a
-  language-dependent way. If you experience odd problems, insert the
-  offending characters using the \cmd{charXX} syntax.
+  \Pkg{babel} alters the way some characters behave in a
+  language-dependent way. If you get odd pro\-blems with some
+  characters, try and insert them using the \cmd{charXX} syntax.
 
 \end{warn}
 
-In addition, to type accented letters and in general non-standard
-ASCII characters\footnote{in computer jargon, `standard ASCII
-characters' are the characters whose code is included between 32
-(space) and 126 (tilde).} you may want to use the packages
-\package{inputenc} and \package{fontenc}. In most cases, UTF-8 is the
-right choice: remember to enable it in your editor too!
+In addition, to type accented letters and in general UTF-8 characters you
+may have to use enable UTF-8 in your editor.  Besides, packages
+\Pkg{inputenc} and \Pkg{fontenc} were needed before 2018:
 
 \begin{Verbatim}[fontsize=\small]
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \end{Verbatim}
 
-A different way of inserting accented letters is configuring your
-editor to type those for you. For example, I set up my editor of
-choice (\app{jed}) to have it insert \texttt{\bs{}'e} whenever I type
-`\'e'. I included this in my \file{.jedrc}:
-
-{\small
-\begin{alltt}
-define latex_mode_hook ()
-\{
-  set_abbrev_mode (1);
-  if ( () = abbrev_table_p ("LaTeX") )
-    use_abbrev_table ("LaTeX");
-#ifdef WIN32
-  % prevent clash with movement keys
-  undefinekey ("\`a\`a", "LaTeX-Mode");
-  definekey (" \bs\bs`a", "\`a\`a", "LaTeX-Mode");
-#else
-  local_setkey (" \bs\bs`a",     "\`a");
-#endif
-  local_setkey (" \bs\bs'e",     "\'e");
-  local_setkey (" \bs\bs`e",     "\`e");
-  local_setkey (" \bs\bs`\bs\bs{}i\{\}", "\`\i");
-  local_setkey (" \bs\bs`o",     "\`o");
-  local_setkey (" \bs\bs`u",     "\`u");
-\}
-\end{alltt}
-}
-
-Please consult your editor's documentation.
+Since 2018, \LaTeX{} defaults to UTF-8 input.
 
 % -----
 
@@ -3090,7 +3214,7 @@ The above declaration instructs \LaTeX{} not to hyphen the word
 in \cmd{mbox}:
 
 \begin{Verbatim}[fontsize=\small]
-Do not hyphen \mbox{internationalisation}, please. I'm a masochistic.
+Do not hyphen \mbox{internationalisation}, please. I'm a masochistic man.
 \end{Verbatim}
 
 % -----
@@ -3107,9 +3231,9 @@ you can use \app{ispell} this way:
 shell> ispell -t mydocument.tex
 \end{Verbatim}
 
-The \texttt{-t} switch instructs \app{ispell} to ignore \TeX{} and
+The \cmdparm{-t} switch instructs \app{ispell} to ignore \TeX{} and
 \LaTeX{} commands. If your language is not English, specify the
-appropriate dictionary with the \texttt{-d} switch:
+appropriate dictionary with the \cmdparm{-d} switch:
 
 \begin{Verbatim}[fontsize=\small]
 shell> ispell -d italiano -t mydocument.tex
@@ -3123,35 +3247,42 @@ shell> ispell -d italiano -t mydocument.tex
 
 There are many ways of getting help with \LaTeX{}, both online and offline.
 The best place to start is the CTAN site,
-\url{http://www.ctan.org/tex-archive/info/}.
+\url{https://www.ctan.org/tex-archive/info/}.
 
 \begin{itemize}
 
   \item \verb|info latex| (\unix{} systems) gives a concise but very complete
     on-line summary of commands and concepts;
-    
-  \item \url{http://www.ctan.org/tex-archive/info/LatexHelpBook/} is a very
-    nice help system for \LaTeX{}, fully integrated with Windows.
-    
+
+  \item \url{https://www.ctan.org/tex-archive/info/LatexHelpBook/} is a very
+    nice help system for \LaTeX{}, ful\-ly integrated with Windows.
+
   \item don't forget the
-  \url{http://groups.google.com/group/comp.text.tex/topics} newsgroup:
+  \url{https://groups.google.com/group/comp.text.tex/topics} newsgroup:
   it's an invaluable source of help.
-  
+
 \end{itemize}
 
-As of 2015, most GNU/Linux distributions ship with \app{TeXLive},
-probably the most complete \TeX/\LaTeX{} systems. A lot of
-documentation is provided; on my Ubuntu machine, it's found in
-\path{/usr/share/doc/texlive-doc/}.
+As of this writing, most GNU/Linux distributions ship with \app{TeXLive}, the
+most complete \TeX/\LaTeX{} systems. A lot of documentation is
+provided; on my Ubuntu machine, it's found in
+\path{/usr/share/doc/texlive-doc/}. Besides, the \cmd{texdoc} command is
+very useful. For example:
+
+\begin{Verbatim}[fontsize=\small]
+shell> texdoc fancyvrb
+\end{Verbatim}
+
+will open the \Pkg{fancyvrb} documentation.
 
 % -----
 
 \section{The End}
 
-This document is copyleft \textcopyright{} Guido Gonzato, 2001--2015,
-and released under the GNU Free Documentation Licence. I really hope
-you'll find this guide useful. For any suggestions or comments, please
-feel free to contact me.
+This document is copyleft \copyleft{} Guido Gonzato, and released
+under the GNU Free Documentation Licence. I really hope you'll find
+this guide useful. For any suggestions or comments, please feel free
+to contact me.
 
 \newpage
 
@@ -3162,7 +3293,7 @@ feel free to contact me.
 \section{Document Templates}
 \label{ap:templates}
 
-A template for the class \texttt{article} was presented in
+A template for the class \ltx{article} was presented in
 Section~\ref{sec:filenew}. More examples are shown in the following
 figures.
 
@@ -3292,6 +3423,7 @@ Thank you for being my friend.
 \setlength{\TPboxrulesize}{1pt}  % box line width
 % start everything near the top-left corner
 \textblockorigin{0mm}{0mm}
+\thispagestyle{empty} % no page number
 
 \begin{document}
 \setlength{\parindent}{0pt}
@@ -3311,7 +3443,7 @@ Thank you for being my friend.
 \end{center}
 \end{textblock}
 \begin{textblock}{6}(10,1)
-  \includegraphics[width=6cm,angle=-90]{gnuplot.ps}
+  \includegraphics[width=6cm,angle=-90]{gnuplot.pdf}
   This picture is at (10,1). Note that rotating it
   by -90 makes it overflow the margin.
 \end{textblock}
@@ -3323,7 +3455,7 @@ which is located at that point, rather than the top-left corner.
 \begin{textblock}{3,4}(6,4)
 The dimensions of this block are 3$\times$4 cm.
 Its origin is position (6,4) on the page. Note that the text
-overflows the margin in some cases; you'll want to 
+overflows the margin in some cases; you'll want to
 use the \texttt{minipage} environment to prevent that.
 \end{textblock}
 \end{document}

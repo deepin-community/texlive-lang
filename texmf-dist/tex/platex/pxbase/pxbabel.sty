@@ -1,7 +1,7 @@
 %%
 %% This is file 'pxbabel.sty'.
 %% 
-%% Copyright (c) 2008-2021 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2008-2023 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{pxbabel}[2021/05/31 v1.3 PX Babel interface for CJK]
+\ProvidesPackage{pxbabel}[2023/02/25 v1.4 PX Babel interface for CJK]
 \def\pxbb@pkgname{pxbabel}
 
 %--------------------------------------- general
@@ -45,6 +45,10 @@
       (You must load 'otf' package before this package.)\MessageBreak
     \fi
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\bxPreamble\def\pxbb@err@ivval#1#2{%
+  \PackageError\pxbb@pkgname
+   {Invalid value for '#1': #2}%
+   {\@eha}}
 
 %--------------------------------------- Processing package options
 
@@ -97,12 +101,24 @@
 \bxIfExpToEqualX{\mcdefault}{mc}{}{\pxbb@stdjaencodingtrue}% default
 \DeclareOption{stdjaencoding}{\pxbb@stdjaencodingtrue}
 \DeclareOption{nostdjaencoding}{\pxbb@stdjaencodingfalse}
-\newbool{pxbb@patchutfcmds}\pxbb@patchutfcmdstrue
+\newbool{pxbb@patchutfcmds}
 \DeclareOption{patchutfcmds}{\pxbb@patchutfcmdstrue}
 \DeclareOption{nopatchutfcmds}{\pxbb@patchutfcmdsfalse}
-\newbool{pxbb@forcedeluxemulti}
-\DeclareOption{forcedeluxemulti}{\pxbb@forcedeluxemultitrue}
-\DeclareOption{noforcedeluxemulti}{\pxbb@forcedeluxemultifalse}
+\chardef\pxbb@deluxemulti@@false=0
+\chardef\pxbb@deluxemulti@@old=1
+\chardef\pxbb@deluxemulti@@new=2
+\chardef\pxbb@deluxemulti@@true=2
+\chardef\pxbb@deluxemulti\pxbb@deluxemulti@@false
+\define@key{pxbabel}{deluxemulti}[true]{%
+  \bxIfcsdef{pxbb@deluxemulti@@#1}{%
+    \letcs\pxbb@deluxemulti{pxbb@deluxemulti@@#1}%
+  }{\pxbb@err@ivval{deluxemulti}{#1}}}
+\DeclareOption{nodeluxemulti}{%
+  \chardef\pxbb@deluxemulti\pxbb@deluxemulti@@false}
+\DeclareOption{forcedeluxemulti}{%
+  \chardef\pxbb@deluxemulti\pxbb@deluxemulti@@old}
+\DeclareOption{noforcedeluxemulti}{%
+  \chardef\pxbb@deluxemulti\pxbb@deluxemulti@@false}
 % (<lang_id>, +<lang_id>)
 \bxPreamble\let\pxbb@last@lang\relax
 \bxForEachIn\pxbb@cjk@langid@list\do{%
@@ -132,13 +148,10 @@
 
 %% \ifpxbb@otf
 %% \ifpxbb@otfmulti
-%% \ifpxbb@pxotf
 \newbool{pxbb@otf}
 \newbool{pxbb@otfmulti}
-\newbool{pxbb@pxotf}
 \@ifpackageloaded{otf}{\pxbb@otftrue}{}
 \@ifpackageloaded{mlutf}{\pxbb@otfmultitrue}{}
-\@ifpackageloaded{pxotf}{\pxbb@otfmultitrue\pxbb@pxotftrue}{}
 
 %% \ifpxbb@otfdeluxe
 \newbool{pxbb@otfdeluxe}
@@ -152,33 +165,28 @@
 % The feature 'switchfont' requires multi-CJK support.
 \ifpxbb@switchfont
   \ifpxbb@otfmulti\else
-    \ifupTeX\else
+    \ifnativeupTeX\else
       \pxbb@warn@nocjk
       \pxbb@switchfontfalse
 \fi\fi\fi
 % Check if 'patchutfcmds' is available.
-\if \ifpxbb@switchfont
-      \ifupTeX
-        \ifpxbb@otf
-          \ifx\patchcmd\@undefined F\else T\fi
-        \else F\fi
-      \else F\fi
-    \else F\fi F%
-  \pxbb@patchutfcmdsfalse
+\ifpxbb@patchutfcmds
+  \PackageWarningNoLine\pxbb@pkgname
+   {Option 'patchutfcmds' is abolished}
 \fi
-% Check if 'forcedeluxemulti' is available.
-\ifpxbb@forcedeluxemulti
-  \ifupTeX\else
+% Check if 'deluxemulti' is available.
+\ifnum\pxbb@deluxemulti=\pxbb@deluxemulti@@false\else
+  \ifnativeupTeX\else
     \PackageWarningNoLine\pxbb@pkgname
      {Option 'forcedeluxemulti' is invalid, since\MessageBreak
-      the engine is not upTeX}
-    \pxbb@forcedeluxemultifalse
+      the engine is not upLaTeX}
+    \let\pxbb@deluxemulti\pxbb@deluxemulti@@false
   \fi
   \ifpxbb@otfmulti\else
     \PackageWarningNoLine\pxbb@pkgname
      {Option 'forcedeluxemulti' is invalid, since\MessageBreak
       package 'otf' is not loaded with 'multi'}
-    \pxbb@forcedeluxemultifalse
+    \let\pxbb@deluxemulti\pxbb@deluxemulti@@false
   \fi
 \fi
 
@@ -362,14 +370,14 @@
 
 \fi                     %----</otfmulti>
 
-\ifupTeX                %----<*upTeX>
+\ifnativeupTeX          %----<*upTeX>
 
 %% preparations
 \bxRequireDefinition{pxbasenc}
 \pxBDHookEncSwitchOTF
+\pxEncSwitchOTF
 
 %% declarations for upTeX standatd CJK fonts
-\ifpxbb@pxotf\else
 \pxDeclareBasicCJKEncoding{J20}{J30}% UniJIS
 \pxDeclareBasicCJKFamily{J20}{!upjpnrm-h}{!upjpngt-h}{*gt}{*gt}
 \pxDeclareBasicCJKFamily{J30}{!upjpnrm-v}{!upjpngt-v}{*gt}{*gt}
@@ -390,7 +398,6 @@
   \pxDeclareExtraCJKFamily{#1}{\mcdefault}{*mc}{*mc}%
   \pxDeclareExtraCJKFamily{#1}{\gtdefault}{*gt}{*gt}}
 \endgroup
-\fi
 
 %% declarations for upTeX + otf deluxe CJK fonts
 \ifpxbb@otfdeluxe
@@ -433,7 +440,7 @@
 \pxDeclareKanjiFamily{J34}{mg}
 \pxDeclareBasicCJKShape{J34}{mg}{m}{!upnmlmgothrn-v}
 
-\ifpxbb@forcedeluxemulti
+\ifnum\pxbb@deluxemulti=\pxbb@deluxemulti@@old
 
 % UniKS
 \pxDeclareBasicCJKShape{J21}{hmc}{l}{!utfkml--h}
@@ -492,7 +499,66 @@
 \pxDeclareKanjiFamily{J33}{mg}
 \pxDeclareBasicCJKShape{J33}{mg}{m}{!utftmgr--v}
 
-\fi % pxbb@forcedeluxemulti
+\else\ifnum\pxbb@deluxemulti=\pxbb@deluxemulti@@new
+
+% UniKS
+\pxDeclareBasicCJKShape{J21}{hmc}{l}{!upnmkorminl-h}
+\pxDeclareBasicCJKShape{J21}{hmc}{m}{!upnmkorminr-h}
+\pxDeclareBasicCJKShape{J21}{hmc}{bx}{!upnmkorminb-h}
+\pxDeclareBasicCJKShape{J21}{hgt}{m}{!upnmkorgothr-h}
+\pxDeclareBasicCJKShape{J21}{hgt}{bx}{!upnmkorgothb-h}
+\pxDeclareBasicCJKShape{J21}{hgt}{eb}{!upnmkorgotheb-h}
+\pxDeclareKanjiFamily{J21}{mg}
+\pxDeclareBasicCJKShape{J21}{mg}{m}{!upnmkormgothr-h}
+
+\pxDeclareBasicCJKShape{J31}{hmc}{l}{!upnmkorminl-v}
+\pxDeclareBasicCJKShape{J31}{hmc}{m}{!upnmkorminr-v}
+\pxDeclareBasicCJKShape{J31}{hmc}{bx}{!upnmkorminb-v}
+\pxDeclareBasicCJKShape{J31}{hgt}{m}{!upnmkorgothr-v}
+\pxDeclareBasicCJKShape{J31}{hgt}{bx}{!upnmkorgothb-v}
+\pxDeclareBasicCJKShape{J31}{hgt}{eb}{!upnmkorgotheb-v}
+\pxDeclareKanjiFamily{J31}{mg}
+\pxDeclareBasicCJKShape{J31}{mg}{m}{!upnmkormgothr-v}
+
+% UniGB
+\pxDeclareBasicCJKShape{J22}{hmc}{l}{!upnmschminl-h}
+\pxDeclareBasicCJKShape{J22}{hmc}{m}{!upnmschminr-h}
+\pxDeclareBasicCJKShape{J22}{hmc}{bx}{!upnmschminb-h}
+\pxDeclareBasicCJKShape{J22}{hgt}{m}{!upnmschgothr-h}
+\pxDeclareBasicCJKShape{J22}{hgt}{bx}{!upnmschgothb-h}
+\pxDeclareBasicCJKShape{J22}{hgt}{eb}{!upnmschgotheb-h}
+\pxDeclareKanjiFamily{J22}{mg}
+\pxDeclareBasicCJKShape{J22}{mg}{m}{!upnmschmgothr-h}
+
+\pxDeclareBasicCJKShape{J32}{hmc}{l}{!upnmschminl-v}
+\pxDeclareBasicCJKShape{J32}{hmc}{m}{!upnmschminr-v}
+\pxDeclareBasicCJKShape{J32}{hmc}{bx}{!upnmschminb-v}
+\pxDeclareBasicCJKShape{J32}{hgt}{m}{!upnmschgothr-v}
+\pxDeclareBasicCJKShape{J32}{hgt}{bx}{!upnmschgothb-v}
+\pxDeclareBasicCJKShape{J32}{hgt}{eb}{!upnmschgotheb-v}
+\pxDeclareKanjiFamily{J32}{mg}
+\pxDeclareBasicCJKShape{J32}{mg}{m}{!upnmschmgothr-v}
+
+% UniCNS
+\pxDeclareBasicCJKShape{J23}{hmc}{l}{!upnmtchminl-h}
+\pxDeclareBasicCJKShape{J23}{hmc}{m}{!upnmtchminr-h}
+\pxDeclareBasicCJKShape{J23}{hmc}{bx}{!upnmtchminb-h}
+\pxDeclareBasicCJKShape{J23}{hgt}{m}{!upnmtchgothr-h}
+\pxDeclareBasicCJKShape{J23}{hgt}{bx}{!upnmtchgothb-h}
+\pxDeclareBasicCJKShape{J23}{hgt}{eb}{!upnmtchgotheb-h}
+\pxDeclareKanjiFamily{J23}{mg}
+\pxDeclareBasicCJKShape{J23}{mg}{m}{!upnmtchmgothr-h}
+
+\pxDeclareBasicCJKShape{J33}{hmc}{l}{!upnmtchminl-v}
+\pxDeclareBasicCJKShape{J33}{hmc}{m}{!upnmtchminr-v}
+\pxDeclareBasicCJKShape{J33}{hmc}{bx}{!upnmtchminb-v}
+\pxDeclareBasicCJKShape{J33}{hgt}{m}{!upnmtchgothr-v}
+\pxDeclareBasicCJKShape{J33}{hgt}{bx}{!upnmtchgothb-v}
+\pxDeclareBasicCJKShape{J33}{hgt}{eb}{!upnmtchgotheb-v}
+\pxDeclareKanjiFamily{J33}{mg}
+\pxDeclareBasicCJKShape{J33}{mg}{m}{!upnmtchmgothr-v}
+
+\fi\fi % pxbb@deluxemulti
 
 \fi % pxbb@otfdeluxe
 
@@ -537,33 +603,6 @@
 
 \fi                     %----</upTeX>
 
-%--------------------------------------- Patch to '\UTF' etc.
-\ifpxbb@patchutfcmds
-
-%% \pxbb@set@encoding
-\edef\pxbb@set@encoding{%
-  \noexpand\iftdir \noexpand\kanjiencoding{\cy@encoding}%
-  \noexpand\else   \noexpand\kanjiencoding{\ct@encoding}%
-  \noexpand\fi
-}
-
-%% apply the patch
-\@for\pxbb@tmpa:={%
-  UTF,UTFK,UTFC,UTFT,UTFM,CID,CIDK,CIDC,CIDT%
-}\do{%
-  \ifcsdef{\pxbb@tmpa\space}{%then
-    \expandafter\patchcmd\csname \pxbb@tmpa\space\endcsname{%from
-      \begingroup\edef\reserved@a
-    }{%to
-      \begingroup\pxbb@set@encoding\edef\reserved@a
-    }{}{%failure
-      \PackageWarningNoLine\pxbb@pkgname
-       {Cannot patch to '\@backslashchar\pxbb@tmpa_'}%
-    }%
-  }{}%
-}
-
-\fi
 %--------------------------------------- Other user commands
 
 %%<*> \cjklanguagename{<lang_id>}

@@ -81,38 +81,34 @@ nykyaikaisia \englanti{True Type}- ja \englanti{Open Type} \=/fontteja,
 mitä alkuperäinen Latex ja Tex eivät osaa.
 
 Lualatexilla ja Xelatexilla ei ole ohjelmien käyttäjän kannalta
-suurtakaan eroa -- ei välttämättä mitään näkyvää eroa. Miksi sitten on
-olemassa kaksi, ulkoisesti lähes samanlaista kääntäjää? Tärkein syy
-taitaa olla se, että Xelatex tehtiin ensin. Tarkoituksena oli saada
-Unicode\-/ merkistön tuki ja fonttiasiat ajan tasalle. Myöhemmin jotkut
-ajattelivat, että Lua\-/ ohjelmointikieli täytyy saada mukaan. Sillä on
-merkitystä joillekuille laajennuspakettien tekijöille. Lua\-/ kielen
-sisällyttäminen oikeastaan pakotti kirjoittamaan koko homman uusiksi.
-Toteutuksissa on muitakin sisäisiä eroja. Xelatex oli pitkään suositumpi
-ja paremmin tuettu eri laajennuspaketeissa, mutta erot ovat sittemmin
-tasoittuneet.
+suurtakaan eroa -- ei välttämättä mitään näkyvää eroa. Xelatex tehtiin
+ensin, ja tarkoituksena oli saada Unicode\-/ merkistön tuki ja
+fonttiasiat ajan tasalle. Myöhemmin jotkut ajattelivat, että Lua\-/
+ohjelmointikieli täytyy saada mukaan, koska ominaisuudesta on hyötyä
+joillekuille laajennuspakettien tekijöille. Lua\-/ kielen
+sisällyttäminen oikeastaan pakotti kirjoittamaan koko kääntäjän koodin
+uusiksi, ja syntyi Lualatex.
 
-Latex\-/ kokeilun alkutaipaleella voi vaikka arpoa kolikon avulla,
-kumpaa kääntäjää käyttää, sillä niiden erot eivät ihan helposti tule
-esiin. Jotkin harvat laajennuspaketit eivät toimi Lualatexissa, kun taas
-toiset eivät toimi Xelatexissa. Joskus saattaa jopa tulla vastaan
-yksittäinen, kehityksestä ehkä jälkeen jäänyt paketti, joka ei toimi
-kummassakaan vaan ainoastaan perinteisillä kääntäjillä (\koodi{latex},
-\koodi{pdflatex}).
+Kääntäjien toteutuksissa on muitakin sisäisiä eroja, esimerkiksi
+fonttien käsittelyssä. Xelatex oli pitkään suositumpi ja paremmin tuettu
+eri laajennuspaketeissa, mutta erot ovat sittemmin tasoittuneet. Lua\-/
+ohjelmointikieli on alkanut vaikuttaa Lualatexin eduksi. On joitakin
+laajennuspaketteja tai niiden yksittäisiä ominaisuuksia, jotka vaativat
+toimiakseen Lualatexin. Sen tulevaisuus vaikuttaa valoisammalta.
 
-Joissakin tilanteissa eri kääntäjien tekemissä pdf\-/ dokumenteissa
-näkyy pieniä eroja. Ainakin yksittäisissä fonttien asetuksissa ja
-joidenkin Unicode\-/ merkkien käsittelyssä on eroja. Tämänkin oppaan
-tekstissä mainitaan pari pientä ominaisuutta, jotka toimivat vain
-toisella kääntäjällä: toiset Lualatexilla, toiset Xelatexilla.
+Latexin käytön alkutaipaleella voi vaikka arpoa kolikon avulla, kumpaa
+kääntäjää käyttää, sillä niiden erot eivät ihan helposti tule esiin.
+Kääntäjän vaihtaminen on joka tapauksessa helppoa. Tässä oppaassa
+mainitaan siellä täällä pari ominaisuutta, jotka toimivat vain toisella
+kääntäjällä: toiset Lualatexilla, toiset Xelatexilla.
 
 \subsection{Latex yläkäsitteenä}
 
-Jotta kaikki olisi mahdollisimman sekavaa, ''Latex'' toimii myös
+Jotta kaikki olisi mahdollisimman sekavaa, \emph{Latex} toimii myös
 yleisnimityksenä tälle kaikelle. Se esiintyy ilmauksissa kuten
 ''Toteutin dokumentin Latexilla'' tai ''Tämä artikkeli on tehty
 Latexilla''. Ilmaukset sitten tarkoittavat suunnilleen seuraavanlaista:
-Henkilöllä on asennettuna tietokoneelle Latex\-/ jakelukokonaisuus
+Henkilöllä on asennettuna tietokoneelle jokin Latex\-/ jakelukokonaisuus
 (kuten Tex Live). Hän on kirjoittanut tekstieditorilla (kuten
 \textsc{gnu} Emacsilla) tekstitiedoston, jossa on dokumentin sisältö ja
 Latex\-/ merkintäkielisiä komentoja mutta ehkä myös joitakin Tex\-/
@@ -126,7 +122,8 @@ dokumenttiensa leipätekstissä ladontajärjestelmän logoja kuten \TeX{} ja
 \LaTeX{}. Usein teksteissä näkyy myös logojen pohjalta mukailtuja
 kirjoitusasuja TeX ja LaTeX.
 
-Kielenhuoltajien suositusten mukaan logojen eikä erikoisten
+Kielenhuollon suositusten\footnote{Kotimaisten kielten keskus:
+  \url{https://www.kotus.fi/}} mukaan logojen eikä erikoisten
 kIRjoiTusAsuJen paikka ei ole asiatyylisten tekstilajien leipätekstissä.
 Nimet ovat osa kielen järjestelmää ja käyttäytyvät normaalissa tekstissä
 sen mukaisesti. Niinpä tässä oppaassa käytetään erisnimiä kielenhuollon
@@ -138,21 +135,16 @@ siitä, että kyse on tietokonekoodista.
 \section{Asentaminen tietokoneelle}
 \label{luku/asentaminen}
 
-Latex pitää tietysti asentaa tietokoneelle, jotta sitä voisi käyttää.
-Miten edellisessä luvussa kuvattu sekava kokonaisuus saadaan ehjänä
-omalle tietokoneelle? Onneksi muut ovat jo ratkaisseet sen ongelman.
-
 Tavallisin tapa Latexin käyttöönottoon on jonkin Latexin jakelupaketin
 asentaminen. Jakelupaketti sisältää Latexin perusosien lisäksi paljon
-laajennuspaketteja ja niiden ohjekirjoja. Kaikkea ei koskaan tarvitse,
+laajennuspaketteja ja niiden ohjekirjoja. Kaikkea ei kukaan tarvitse,
 mutta kun yllättävä tarve tulee tai lukee vinkkejä verkkokeskusteluista,
 on mukavaa huomata, että paketti olikin itsellä jo valmiina. Siksi
 kokonaisen jakelupaketin asentaminen on helpoin tapa.
 
-\textsc{gnu}/Linuxissa ja muissa Unix\-/ tyyppisissä
-käyttöjärjestelmissä käytetään yleensä Tex Live \=/nimistä jakelua. Se
-on todennäköisesti saatavilla käyttöjärjestelmäjakelun
-pakettivarastoista. Esimerkiksi Debianiin%
+Linuxissa ja muissa Unix\-/ tyyppisissä käyttöjärjestelmissä käytetään
+yleensä Tex Live \=/nimistä jakelua. Se on todennäköisesti saatavilla
+käyttöjärjestelmäjakelun pakettivarastoista. Esimerkiksi Debianiin%
 \footnote{\url{https://www.debian.org/}} ja sen kaltaisiin järjestelmiin
 on asennuspaketti ''texlive-full'', joka asentaa kaiken helposti ja
 kerralla.
@@ -165,16 +157,20 @@ yleensä Mactex\-/ nimistä jakelua.
 
 \subsection{Tekstieditori}
 
-Omien dokumenttien ja Latex\-/ merkintäkielen kirjoittamiseen kannattaa
+Lähdetiedostot eli Latex\-/ merkintäkieltä sisältävät tiedostot (luku
+\ref{luku/lähdetiedosto}) ovat puhdasta tekstiä, tekstitiedostoja, joita
+kirjoitetaan ja muokataan tekstieditorilla. Kirjoittamiseen kannattaa
 käyttää kunnollista tekstieditoria, koska se on tärkein työkalu ja sen
-kanssa ollaan eniten tekemisissä. Pyri löytämään sellainen editori, joka
-osaa värjätä tekstiä Latexin tai Texin tekstipiirteiden mukaisesti.
-Väreillä ei sinänsä ole merkitystä, mutta editorin laadusta se yleensä
-kertoo paljon. Jos editori tuntee erilaisten ohjelmointi\-/{} ja
-merkintäkielten luonnetta ja osaa merkitä kielen avainsanoja
-havainnollisilla väreillä, se todennäköisesti on tehty tehokkaaseen
-ohjelmointiin ja muuhun vastaavaan työskentelyyn. Ihan yksinkertaisiin
-editoreihin ei tuollaisia ominaisuuksia yleensä tehdä.
+kanssa ollaan eniten tekemisissä.
+
+Pyri löytämään sellainen editori, joka osaa värjätä tekstiä Latexin tai
+Texin tekstipiirteiden mukaisesti. Väreillä ei sinänsä ole merkitystä,
+mutta editorin laadusta se yleensä kertoo paljon. Jos editori tuntee
+erilaisten ohjelmointi\-/{} ja merkintäkielten luonnetta ja osaa merkitä
+kielen avainsanoja havainnollisilla väreillä, se todennäköisesti on
+tehty tehokkaaseen ohjelmointiin ja muuhun vastaavaan työskentelyyn.
+Ihan yksinkertaisiin editoreihin ei tuollaisia ominaisuuksia yleensä
+tehdä.
 
 \subsection{Pdf-katselin}
 
@@ -229,10 +225,10 @@ latexmk -xelatex  teksti.tex
 \noindent
 Työskentelyä erityisen paljon helpottava valitsin on \koodi{\=/pvc}. Kun
 tuo valitsin on mukana komennossa, Latexmk jää tarkkailemaan annettua
-Latex\-/ tiedostoa, ja kun se huomaa tiedoston muuttuneen, se kääntää
-tiedoston automaattisesti uudelleen. Kirjoittajan ei siis tarvitse muuta
-kuin tallentaa tiedosto tekstieditorista, ja tarkkailutilassa oleva
-Latexmk kääntää sen aina itsestään.
+Latex\-/ lähdetiedostoa, ja kun se huomaa tiedoston muuttuneen, se
+kääntää tiedoston automaattisesti uudelleen. Kirjoittajan ei siis
+tarvitse muuta kuin tallentaa tiedosto tekstieditorista, ja
+tarkkailutilassa oleva Latexmk kääntää sen aina itsestään.
 
 Muitakin hyödyllisiä toimintoja on mukana. Seuraavista esimerkeistä
 ensimmäinen komento poistaa kääntämisen aikana luodut
@@ -254,15 +250,18 @@ lainkaan, käännetään kaikki nykyisessä hakemistossa olevat
 
 Latexmk\-/ ohjelmalle voi tehdä asetustiedoston, johon voi kirjoittaa
 omaan käyttöön sopivat asetukset. Asetustiedosto sijoitetaan
-tiedostojärjestelmässä käyttäjän kotihakemistoon. Esimerkki
+tiedostojärjestelmässä käyttäjän kotihakemistossa olevaan
+asetustiedostohakemistoon (\koodi{\textasciitilde /.config}). Esimerkki
 \ref{esim/latexmkrc} näyttää, mitä se voisi ehkä sisältää.
 
 \begin{esimerkki*}
 \begin{koodilohko}
-$pdf_mode = 4; # 4=lualatex, 5=xelatex
+$pdf_mode = 4;   # 4=lualatex, 5=xelatex
 $lualatex = 'lualatex -interaction=nonstopmode -shell-escape %O %S';
 $xelatex  = 'xelatex  -interaction=nonstopmode -shell-escape %O %S';
-$clean_ext = 'snm nav xdv bbl run.xml';
+push @generated_exts, "run.xml";
+push @generated_exts, "nav";
+push @generated_exts, "snm";
 $pdf_previewer = 'okular %S';
 \end{koodilohko}
   \caption{Latexmk\-/ ohjelman asetustiedosto (\koodi{\textasciitilde
@@ -284,13 +283,13 @@ joidenkin laajennuspakettien toimintaan.\footnote{Ainakin
   tarvitsevat \koodi{-shell-escape}\-/ toiminnon (luku
   \ref{luku/asiasanat}).}
 
-Esimerkin \ref{esim/latexmkrc} neljännellä rivillä luetellaan
-kääntämisen aikana syntyvien väliaikaistiedostojen päätteitä. Latexmk\-/
-ohjelma tuntee yleisimmät väliaikaistiedostot (\koodi{log}, \koodi{aux},
-\koodi{out} ym.), mutta tällä asetuksella mukaan voi lisätä
-harvinaisempia, joita se ei tunne. Viides rivi määrittää pdf\-/
-katseluohjelman, joka käynnistetään, kun käytetään valitsimia
-\koodi{\=/pv} tai \koodi{\=/pvc}.
+Esimerkin \ref{esim/latexmkrc} riveillä 4--6 on komennot, joilla
+lisätään kääntämisen aikana mahdollisesti syntyvien
+väliaikaistiedostojen päätteitä. Latexmk\-/ ohjelma tuntee yleisimmät
+väliaikaistiedostot (\koodi{log}, \koodi{aux}, \koodi{out} ym.), mutta
+näillä komennoilla mukaan voi lisätä harvinaisempia, joita se ei tunne.
+Viimeinen rivi määrittää pdf\-/ katseluohjelman, joka käynnistetään, kun
+käytetään valitsimia \koodi{\=/pv} tai \koodi{\=/pvc}.
 
 \subsection{Texdoc}
 
@@ -301,19 +300,21 @@ kaikkien hyödyllisten laajennuspakettien kaikkia ominaisuuksia.
 Tex Live \=/jakelun (luku \ref{luku/asentaminen}) mukana tulee mainio
 komentotulkissa toimiva komento \koodi{texdoc}, jolla voi hakea ja avata
 omaan järjestelmään asennettuja Latex\-/ aiheisia ohjeita. Jos vaikka
-haluaa tutustua esimerkissä \ref{esim/ensimmäinen}
-(s.~\pageref{esim/ensimmäinen}) mainittavaan \paketti{fontspec}\-/
-pakettiin syvällisemmin, tarvitsee vain komentaa \koodi{texdoc
-  fontspec}, ja paketin pdf\-/ muotoinen ohjekirja avautuu.
+haluaa tutustua esimerkissä \ref{esim/ensimmäinen} mainittavaan
+\paketti{fontspec}\-/ pakettiin syvällisemmin, tarvitsee vain komentaa
+\koodi{texdoc fontspec}, ja paketin pdf\-/ muotoinen ohjekirja avautuu.
 
 \section{Lähdetiedostot}
+\label{luku/lähdetiedosto}
 
-Seuraavassa ovat ohjeet alkuun pääsemiseksi. Luodaan yksinkertainen
-Latex\-/ lähdetiedosto, jota voi käyttää harjoitteluun ja pohjana omille
-töille. Tallenna esimerkin \ref{esim/ensimmäinen} sisältö tekstieditorin
-avulla tiedostoon vaikkapa nimellä \koodi{teksti.\katk tex}. Käännä eli
-lado se pdf\-/ tiedostoksi käyttämällä jotakin seuraavista komennoista
-(valitse yksi):
+Latexin lähdetiedostot eli lähdedokumentit ovat tekstitiedostoja eli
+puhdasta tekstiä. Esimerkissä \ref{esim/ensimmäinen} on tyypillisen
+dokumentin vähimmäissisältö, jota voi käyttää harjoitteluun sekä
+myöhemminkin pohjana omille töille.
+
+Tallenna esimerkin sisältö tekstieditorin avulla tiedostoon vaikkapa
+nimellä \koodi{teksti.\katk tex}. Käännä eli lado se pdf\-/ tiedostoksi
+käyttämällä jotakin seuraavista komennoista (valitse yksi):
 
 \begin{koodilohkosis}
 lualatex teksti.tex
@@ -324,7 +325,10 @@ latexmk -xelatex  teksti.tex
 
 \noindent
 Tuloksena pitäisi olla tiedosto \koodi{teksti.\katk pdf}, jota voi
-ihailla jollakin pdf\-/ tiedostojen katseluun tarkoitetulla ohjelmalla.
+ihailla jollakin pdf\-/ tiedostojen katseluohjelmalla. Kääntämisen
+aikana syntyy automaattisesti muitakin tiedostoja, jotka on tarkoitettu
+lähinnä kääntäjän omaan väliaikaiseen käyttöön. Niitä ei tarvitse
+säilyttää.
 
 Esimerkin \ref{esim/ensimmäinen} ensimmäisellä rivillä määritellään
 dokumenttiluokka \luokka{article}, joka on tietynlainen sivupohja tai

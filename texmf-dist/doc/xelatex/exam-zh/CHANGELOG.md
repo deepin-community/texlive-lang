@@ -5,6 +5,55 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.27] - 2023-06-27
+
+### Added
+
+- 完善 `enumerate` 环境的三层的间距控制
+
+
+## [0.1.26] - 2023-06-22
+
+
+### Fixed
+
+- 修复 `choices` 环境的 `columns` 失效问题（#I7FBVF）
+
+
+
+## [0.1.25] - 2023-05-25
+
+### Changed
+
+- 修改 `\sim*` 的效果为原来的 `\sim`(I6Z0MD)
+
+
+## [0.1.24] - 2023-05-11
+
+### Fixed
+
+- 修复 TeXLive2023 造成的师生两版编译失效问题
+
+## [0.1.23] - 2022-12-20
+
+### Changed
+
+- `\paren` 默认更改为 `show`
+
+
+## [0.1.22] - 2022-09-30
+
+### Fixed
+
+- 修复 `foot-content` 中无法使用命令的问题（#I5NNR8）
+
+## [0.1.21] - 2022-09-24
+
+### Fixed
+
+- 修复 `question` 环境结合 `\fillin` 的 label 对齐问题
+
+
 ## [0.1.20] - 2022-09-18
 
 ### Added

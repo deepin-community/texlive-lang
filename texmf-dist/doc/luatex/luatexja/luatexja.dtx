@@ -596,21 +596,21 @@ and \emph{Japanese fonts} for fonts used in \textbf{JAchar}.
 %<ja>\paragraph{プロジェクトWiki} プロジェクトWikiは構築中である．
 %<*en>
 \begin{itemize}
-\item \url{https://osdn.jp/projects/luatex-ja/wiki/FrontPage%28en%29} (English)
-\item \url{https://osdn.jp/projects/luatex-ja/wiki/FrontPage} (Japanese)
-\item \url{https://osdn.jp/projects/luatex-ja/wiki/FrontPage%28zh%29} (Chinese)
+\item \url{https://github.com/luatexja/luatexja/wiki/Home(en)} (English)
+\item \url{https://github.com/luatexja/luatexja/wiki} (Japanese)
+\item \url{https://github.com/luatexja/luatexja/wiki/Home(zh)} (Chinese)
 \end{itemize}
 %</en>
 %<*ja>
 \begin{itemize}
-\item \url{https://osdn.jp/projects/luatex-ja/wiki/FrontPage}（日本語）
-\item \url{https://osdn.jp/projects/luatex-ja/wiki/FrontPage%28en%29}（英語）
-\item \url{https://osdn.jp/projects/luatex-ja/wiki/FrontPage%28zh%29}（中国語）
+\item \url{https://github.com/luatexja/luatexja/wiki}（日本語）
+\item \url{https://github.com/luatexja/luatexja/wiki/Home(en)}（英語）
+\item \url{https://github.com/luatexja/luatexja/wiki/Home(zh)}（中国語）
 \end{itemize}
 %</ja>
 
-%<en>This project is hosted by OSDN.
-%<ja>本プロジェクトはOSDNのサービスを用いて運営されている．
+%<en>This project is hosted by GitHub.
+%<ja>本プロジェクトはGitHubのサービスを用いて運営されている．
 
 %<en>\paragraph{Members}\
 %<ja>\clearpage\paragraph{開発メンバー}\
@@ -675,11 +675,10 @@ CTAN (in the \texttt{macros/luatex/generic/luatexja} directory), and
 the following distributions:
   \begin{itemize}
   \item \href{https://www.tug.org/texlive/}{\TeX~Live} (in \texttt{texmf-dist/tex/luatex/luatexja})
-  \item \href{http://w32tex.org/}{W32\TeX}\ (in \texttt{luatexja.tar.xz})
   \item MiK\TeX\ (in \texttt{luatexja.tar.xz})
   \end{itemize}
 Harano Aji fonts are also available in these distributions
-(\texttt{haranoaji} in \TeX~Live and MiK\TeX, and \texttt{luatexja.tar.xz} in W32\TeX).
+(\texttt{haranoaji} in \TeX~Live and MiK\TeX).
 %</en>
 %<*ja>
 現在，\LuaTeX-jaはCTAN (\texttt{macros/luatex/generic/luatexja})に収録されている他，
@@ -687,10 +686,9 @@ Harano Aji fonts are also available in these distributions
   \begin{itemize}
   \item MiK\TeX\ (\texttt{luatexja.tar.lzma})
   \item \TeX~Live (\texttt{texmf-dist/tex/luatex/luatexja})
-  \item W32\TeX\ (\texttt{luatexja.tar.xz})
   \end{itemize}
 これらのディストリビューションは原ノ味フォントも収録している
-（\TeX~Live, MiK\TeX では\texttt{haranoaji}，W32\TeX では\texttt{luatexja.tar.xz}）.
+（\TeX~Live, MiK\TeX では\texttt{haranoaji}）.
 %</ja>
 
 %<*en>
@@ -724,11 +722,11 @@ by specifying \texttt{Renderer=Harfbuzz}~etc.\ (\Pkg{fontspec}) or~{mode=harf} (
 \begin{itemize}
 \item Clone the Git repository by
 \begin{lstlisting}
-$ git clone git://git.osdn.jp/gitroot/luatex-ja/luatexja.git
+$ git clone https://github.com/luatexja/luatexja.git
 \end{lstlisting}
-\item Download the \texttt{tar.gz} archive of HEAD in the \texttt{master} branch from
+\item Download the \texttt{zip} archive of HEAD in the \texttt{master} branch from
 \begin{flushleft}
-\url{http://git.osdn.jp/view?p=luatex-ja/luatexja.git;a=snapshot;h=HEAD;sf=tgz}.
+\url{https://github.com/luatexja/luatexja/archive/refs/heads/master.zip}.
 \end{flushleft}
 \end{itemize}
 
@@ -742,11 +740,11 @@ the forefront of development is not the \texttt{master} branch.
 \begin{itemize}
 \item Gitリポジトリを次のコマンドでクローンする：
 \begin{lstlisting}
-$ git clone git://git.osdn.jp/gitroot/luatex-ja/luatexja.git
+$ git clone https://github.com/luatexja/luatexja.git
 \end{lstlisting}
-\item \texttt{master} ブランチのスナップショット（\texttt{tar.gz} 形式）をダウンロードする：
+\item \texttt{master} ブランチのスナップショット（\texttt{zip} 形式）をダウンロードする：
 \begin{flushleft}
-\url{http://git.osdn.jp/view?p=luatex-ja/luatexja.git;a=snapshot;h=HEAD;sf=tgz}.
+\url{https://github.com/luatexja/luatexja/archive/refs/heads/master.zip}.
 \end{flushleft}
 \end{itemize}
 \texttt{master} ブランチ（従って，CTAN内のアーカイブも）はたまにしか更新されないことに注意．
@@ -828,43 +826,6 @@ For changes from \pTeX, see Subsection~\ref{ssec:chgptex}.
 \item \LuaTeX-jaは動作が\pTeX に比べて非常に遅い．
   コードを調整して徐々に速くしているが，まだ満足できる速度ではない．
   また，和文フォントを読み込むために多量のメモリを消費することにも注意が必要である．
-%</ja>
-
-\item%
-%<*en>
-\textbf{(Outdated) note for MiK\TeX\ users}\quad
-\LuaTeX-ja requires that several CMap files%
-\footnote{\texttt{UniJIS2004-UTF32-\{H,V\}} and \texttt{Adobe-Japan1-UCS2}.}
-must be found from \LuaTeX.
-Strictly speaking, those CMaps are needed
-only in the first run of \LuaTeX-ja after installing or updating.
-But it seems that MiK\TeX\ does not satisfy this condition,
-so you will encounter an error like the following:
-%</en>
-%<*ja>
-\LuaTeX-jaが動作するためには，\emph{導入・更新後の初回起動時に}
-\texttt{UniJIS2004-UTF32-\{H,V\}}, \texttt{Adobe-Japan1-UCS2}という3つのCMapが
-\LuaTeX によって見つけられることが必要である．
-しかし古いバージョンのMiK\TeX ではそのようになっていないので，次のエラーが発生するだろう：
-%</ja>
-\begin{lstlisting}
-! LuaTeX error ...iles (x86)/MiKTeX 2.9/tex/luatex/luatexja/ltj-rmlgbm.lua
-bad argument #1 to 'open' (string expected, got nil)
-\end{lstlisting}
-
-%<*en>
-If so, please execute a batch file which is written on
-\href{https://osdn.jp/projects/luatex-ja/wiki/FrontPage%28en%29}{ the Project Wiki (English)}.
-This batch file creates a temporary directory, copy CMaps in it,
-run a test file which loads \LuaTeX-ja in this directory,
-and finally delete the temporary directory.
-%</en>
-%<*ja>
-そのような場合には，
-\href{https://osdn.jp/projects/luatex-ja/wiki/FrontPage%28en%29}{%
-  プロジェクトWiki英語版トップページ}中に書かれているバッチファイルを
-実行して欲しい．このバッチファイルは，作業用ディレクトリにCMap達を
-コピーし，その中で\LuaTeX-jaの初回起動を行い，作業用ディレクトリを消す作業をしている．
 %</ja>
 
 \item
@@ -3526,7 +3487,10 @@ causes a error.  We denote control sequences which are defined in
 %<*en>
 \begin{description}
 \item[\meta{JFM name}]
-  The name of a (horizontal) JFM. \LuaTeX-ja searches and loads \texttt{jfm-\meta{JFM name}.lua}.
+  The name of a (horizontal) JFM. \LuaTeX-ja searches and loads \texttt{jfm-\meta{JFM name}.lua}
+  \footnote{When \LuaTeX-ja (version~20230409 or later)
+    is used under \LaTeXe, \LuaTeX-ja searches a JFM also in directories
+    which are specified in \cs{input@path}.}.
 \item[\meta{JFM features}]
   An optional comma-separated list of JFM options.
   Enclosing braces (\verb+{}+) are optional, but this does not escape any characters.
@@ -3552,7 +3516,9 @@ because their \meta{identifier} are different.
 %<*ja>
 \begin{description}
 \item[\meta{JFM name}]
-  （横組用）JFMの名称．\LuaTeX-jaは\texttt{jfm-\meta{JFM name}.lua}というファイルを探索して読み込む．
+  （横組用）JFMの名称．\LuaTeX-jaは\texttt{jfm-\meta{JFM name}.lua}というファイルを探索して読み込む
+  \footnote{\LuaTeX-ja 20230409.0以降では，\LaTeXe 下で読み込まれた場合には
+    \cs{input@path}で指定された箇所も加えてJFMを探索する．}．
 \item[\meta{JFM features}]
   省略可能なコンマ区切りリスト．全体を囲む \verb+{}+ は省略可能であるが，
   囲ったからといって\meta{JFM features}の中で使用可能な文字が増えるわけではない．
@@ -3859,7 +3825,7 @@ JFM中における\texttt{kanjiskip\_natural}, \texttt{kanjiskip\_stretch},\
 「JFM由来のグルーの他に，\Param{kanjiskip}の自然長/伸び量/縮み量の一部が
 同じ場所に挿入される」という状況が起こりうる．
 この機能を無効化し，バージョン20150922.0以前と同じような組版を得るためには，
-他のOpenType機能と同じように\texttt{-ltjksp}指定を行えば良い（\autoref{fig:ltjksp}参照）．
+他のOpenType機能と同じように\>\mbox{\texttt{-ltjksp}}\>指定を行えば良い（\autoref{fig:ltjksp}参照）．
 なお，
 \begin{lstlisting}
  \jfont\G=HaranoAjiMincho-Regular:jfm=ujis;-ltjksp;+ltjksp at \zw
@@ -3875,7 +3841,7 @@ JFM中における\texttt{kanjiskip\_natural}, \texttt{kanjiskip\_stretch},\
 \texttt{kanjiskip\_shrink} keys (Page~\pageref{pg:ksp_nat}) makes tha
 \LuaTeX-ja inserts not only a glue which is specified by a JFM, and also
 the natural width/stretch part/shrink part of \Param{kanjiskip}.
-This functionality is disabled by \texttt{-ltjksp} specification,
+This functionality is disabled by \mbox{\texttt{-ltjksp}} specification,
 as shown in~\autoref{fig:ltjksp}.
 %</en>
 \begin{figure}
@@ -3888,8 +3854,54 @@ as shown in~\autoref{fig:ltjksp}.
 \G\leavevmode%
 \vrule\hbox to 15\zw{あ「い」う，えお}\vrule
 \end{LTXexample}
-\caption{\texttt{ltjksp} `feature''}
+\caption{\texttt{ltjksp} ``feature''}
 \label{fig:ltjksp}
+\end{figure}
+
+%<*ja>
+\paragraph{\texttt{ltjpci}「機能」}
+\label{pg:ltjpci}
+\Pkg{luaotfload}~v3.19以降では，標準でUnicode（文字から作られるノードたち）がNFCに正規化される
+ようになっている．これにより，ソース中でたとえば「か」と合成用濁点(\texttt{U+3099})を続けて入力した場合，
+両者それぞれからノードが生成されるが，結果的には「が」を表す1ノードになるわけである．
+
+しかし，NFCに正規化することで，
+たとえば「\UTF{FA19}」(\texttt{U+FA19})が「神」(\texttt{U+795E})にというふうに，
+CJK互換漢字がCJK統合漢字に変換されてしまうという問題がある．
+異体字セレクタを用いればこのようなことは起きないが，古くからあるフォントでは異体字セレクタをサポートしていない．
+
+以上の事情に対応するため，\LuaTeX-jaでは，標準で
+\emph{CJK互換漢字・CJK互換漢字補助の文字には\Pkg{luaotfload}パッケージによる処理は働かない}ようにしている．
+この機能を無効化するには，他のOpenType機能と同じように\texttt{-ltjpci}指定を行えば良い（\autoref{fig:ltjpci}参照）．
+\texttt{ltjksp}と同様に，\texttt{-ltjpci}, \texttt{+ltjpci}を複数回指定した場合は，
+最後に指定したものが有効となる．
+%</ja>
+%<*en>
+\paragraph{\texttt{ltjpci} ``feature''}
+\label{pg:ltjpci}
+By default, The \Pkg{luaotfload} package (since v3.19) normalizes Unicode sequences to NFC.
+However, this normalization converts CJK compatibility ideographs to their canonical equivalents,
+such as ``\UTF{FA19}''~(\texttt{U+FA19}) to ``神''. One can use variation selectors,
+but old fonts does not support them.
+
+So, \emph{\LuaTeX-ja now protects CJK compatibility ideographs from processing
+ by the \Pkg{luaotfload} package by defualt}.
+This functionality is disabled by \mbox{\texttt{-ltjpci}} specification,
+as shown in~\autoref{fig:ltjpci}.
+%</en>
+\begin{figure}
+\begin{LTXexample}[width=12\zw]
+\def\TEST{\leavevmode\char"FA10\char"FA12\char"FA15
+  \char"FA19.か\char"3099.は\char"309A.\par}
+\jfont\A=HaranoAjiMincho-Regular:jfm=ujis; at 15pt
+\A\TEST % default
+\jfont\G=HaranoAjiMincho-Regular:jfm=ujis;-ltjpci at 15pt
+\G\TEST % ltjpci off
+\jfont\H=HaranoAjiMincho-Regular:jfm=ujis;-normalize at 15pt
+\H\TEST % normalization off
+\end{LTXexample}
+\caption{\texttt{ltjpci} ``feature''}
+\label{fig:ltjpci}
 \end{figure}
 
 %<en>\subsection{\cs{tfont}}
@@ -3965,9 +3977,6 @@ A font defined by~\cs{tfont} differs the following points from that by~\cs{jfont
 
  In this situation, \LuaTeX-ja performs all replacements which is defined in~\texttt{vert}
  feature for \emph{some} scripts for \emph{some} languages.
- \item Furthermore, a glyph is automatically rotated 90~degrees,
-  if it is not replaced by \texttt{vert} feature for \emph{any} script
-  for \emph{any} language, and if it is marked as `r''~or~``Tr'' in UAX~\#50.
  \item \cs{tfont} uses a vertical JFM instead of a horizontal JFM.
 \LuaTeX-ja ships following vertical JFMs:
 \begin{description}
@@ -4028,8 +4037,7 @@ A font defined by~\cs{tfont} differs the following points from that by~\cs{jfont
   このscript,~languageの組み合わせを指定することはできないので，
   \Pkg{luaotfload}そのままでは\texttt{vert}を適用させることはできない．
  }．
- \item さらに，「いかなるscript,~languageでも\texttt{vert}により置換されない」グリフ
-  のうち，UAX~\#50で``r''もしくは``Tr''と指定されているものは90度自動回転させる．
+ \item さらに，置換前と置換後のグリフがどちらも「UAX~\#50で``r''もしくは``Tr''と指定されている」ものは90度自動回転させる．
  \item \ref{ssec:math}節で述べる，数式中の和文フォントには縦組用和文フォントは指定できない．
  \item \meta{JFM name}には縦組用JFMを指定する．
 以下の縦組用JFMが\LuaTeX-jaには同梱されている．%おり，違いを\autoref{tab-difjfm-tate}に示した．
@@ -4229,7 +4237,7 @@ for Chinese or Korean typesetting.
 \jfont\testJ={psft:Ryumin-Light:cid=Adobe-Japan1-7;jfm=jis}    % Japanese
 \jfont\testD={psft:Ryumin-Light:jfm=jis}                       % default: Adobe-Japan1-7
 \jfont\testC={psft:AdobeMingStd-Light:cid=Adobe-CNS1-7;jfm=jis}% Traditional Chinese
-\jfont\testG={psft:SimSun:cid=Adobe-GB1-5;jfm=jis}             % Simplified Chinese
+\jfont\testG={psft:SimSun:cid=Adobe-GB1-6;jfm=jis}             % Simplified Chinese
 \jfont\testK={psft:Batang:cid=Adobe-Korea1-2;jfm=jis}          % Korean
 \jfont\testKR={psft:SourceHanSerifAKR9:cid=Adobe-KR-9;jfm=jis} % Korean
 \end{lstlisting}
@@ -9978,101 +9986,10 @@ u
 その行はそこで改行するようにした方がいいだろう．
 %</ja>
 
-\begin{table}[t]
-%<ja>  \caption{「基底文字＋合成用濁点・半濁点」から合成済み文字への変換をサポートする組み合わせ}
-%<en>  \caption{Normalization of Kana Character Sequences with Combining (Semi)-voiced Sound Mark}\medskip
-  \label{tab:kana_composite}
-  \def\D#1{%
-    {\fboxsep0pt\fcolorbox{cyan}{white}%
-    {\hbox to 1\zw{\hss#1}}}} %"
-  \def\DC#1{\D{\unitlength=1\zw
-     \begin{picture}(1,0)
-       \put(0.5,0.38){\arc[0,15]{0.25}}\put(0.5,0.38){\arc[30,45]{0.25}}\put(0.5,0.38){\arc[60,75]{0.25}}
-       \put(0.5,0.38){\arc[90,105]{0.25}}\put(0.5,0.38){\arc[120,135]{0.25}}\put(0.5,0.38){\arc[150,165]{0.25}}
-       \put(0.5,0.38){\arc[180,195]{0.25}}\put(0.5,0.38){\arc[210,225]{0.25}}\put(0.5,0.38){\arc[240,255]{0.25}}
-       \put(0.5,0.38){\arc[270,285]{0.25}}\put(0.5,0.38){\arc[300,315]{0.25}}\put(0.5,0.38){\arc[330,345]{0.25}}
-     \end{picture}\llap{#1\kern-.7\zw}}}
-  \def\CDJ#1#2{$\mbox{\D{\char"#1}}+\mbox{\DC{゛}}\rightarrow \mbox{\D{\char"#2}}$}
-  \def\CHJ#1#2{$\mbox{\D{\char"#1}}+\mbox{\DC{゜}}\rightarrow \mbox{\D{\char"#2}}$}
-  \small\centering
-  \begin{tabular}{@{}llllll@{}}
-  \CDJ{3046}{3094}&
-  \CDJ{304B}{304C}&
-  \CDJ{304D}{304E}&
-  \CDJ{304F}{3050}&
-  \CDJ{3051}{3052}&
-  \CDJ{3053}{3054}\\
-  \CDJ{3055}{3056}&
-  \CDJ{3057}{3058}&
-  \CDJ{3059}{305A}&
-  \CDJ{305B}{305C}&
-  \CDJ{305D}{305E}&
-  \CDJ{305F}{3060}\\
-  \CDJ{3061}{3062}&
-  \CDJ{3064}{3065}&
-  \CDJ{3066}{3067}&
-  \CDJ{3068}{3069}&
-  \CDJ{306F}{3070}&
-  \CDJ{3072}{3073}\\
-  \CDJ{3075}{3076}&
-  \CDJ{3078}{3079}&
-  \CDJ{307B}{307C}&
-  \CDJ{309D}{309E}&
-  \CDJ{30A6}{30F4}&
-  \CDJ{30AB}{30AC}\\
-  \CDJ{30AD}{30AE}&
-  \CDJ{30AF}{30B0}&
-  \CDJ{30B1}{30B2}&
-  \CDJ{30B3}{30B4}&
-  \CDJ{30B5}{30B6}&
-  \CDJ{30B7}{30B8}\\
-  \CDJ{30B9}{30BA}&
-  \CDJ{30BB}{30BC}&
-  \CDJ{30BD}{30BE}&
-  \CDJ{30BF}{30C0}&
-  \CDJ{30C1}{30C2}&
-  \CDJ{30C4}{30C5}\\
-  \CDJ{30C6}{30C7}&
-  \CDJ{30C8}{30C9}&
-  \CDJ{30CF}{30D0}&
-  \CDJ{30D2}{30D3}&
-  \CDJ{30D5}{30D6}&
-  \CDJ{30D8}{30D9}\\
-  \CDJ{30DB}{30DC}&
-  \CDJ{30EF}{30F7}&
-  \CDJ{30F0}{30F8}&
-  \CDJ{30F1}{30F9}&
-  \CDJ{30F2}{30FA}&
-  \CDJ{30FD}{30FE}\\
-  \CHJ{306F}{3071}&
-  \CHJ{3072}{3074}&
-  \CHJ{3075}{3077}&
-  \CHJ{3078}{307A}&
-  \CHJ{307B}{307D}&
-  \CHJ{30CF}{30D1}\\
-  \CHJ{30D2}{30D4}&
-  \CHJ{30D5}{30D7}&
-  \CHJ{30D8}{30DA}&
-  \CHJ{30DB}{30DD}
-  \end{tabular}
-\end{table}
-%<*en>
-\subsection{Composition of Kana from Combining Character Sequences}
-In (u)\pTeX, Hiragana and Katakana in the NFD form%
-\footnote{namely, character sequences which contains
-  ``COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK''~(\texttt{U+3099}) and
- ``COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK''~(\texttt{U+309A}).}
-are normalized to precomposed characters before (u)\pTeX\ looks into the input line.
-Character sequences which are involved in this normalization are shown in \autoref{tab:kana_composite}.
-
-The above normalization process is also performed in \LuaTeX-ja version~20220103.0 or later, because
-fonts might not have these transformation as an OpenType feature.
-%</en>
-
 %<*ja>
-\subsection{濁点・半濁点付き仮名文字の正規化}
+\subsection{濁点・半濁点付き仮名の正規化→\Pkg{luaotfload}~v3.19以降ではそちらで}
 \TeX~Live~2016以降の(u)\pTeX では，合成用濁点(\texttt{U+3099})・合成用半濁点(\texttt{U+309A})を用いて
-表現された平仮名・片仮名を合成済み文字に変換する（具体的には\autoref{tab:kana_composite}の組み合わせ）という処理を行っている．
+表現された平仮名・片仮名を合成済み文字に変換するという処理を行っている．
 この処理を行っている要因としては，
 \begin{itemize}
   \item 無用なトラブルを避けるため．
@@ -10082,14 +9999,14 @@ fonts might not have these transformation as an OpenType feature.
   合成用濁点・半濁点は利用できない．そのため上記の変換処理はさらに前から行われていた．
 \end{itemize}
 
-一方，\LuaTeX(-ja)では入力の変換は基本的に行わず，文字の合成は使用しているフォントのOpenType機能に委ねるという立場である．
-しかし，\autoref{tab:kana_composite}に挙げた変換はUnicode正規化の範疇であり，この内容を持っているフォントは多くない．
-よって，前段落で述べた2つの理由（と\upTeX との互換性という意味も込めて）も考慮して，
-バージョン20220103.0以降では，\LuaTeX-jaは入力行に対して\autoref{tab:kana_composite}の変換を行う．
+\LuaTeX(-ja)では入力の変換は基本的に行わず，
+文字の合成は使用しているフォントのOpenType機能に委ねるという立場であったが，
+\Pkg{luaotfload}~v3.19以降では，標準でNFCへのUnicode正規化を行っている．
+そのため，バージョン2023****.0以降では，\LuaTeX-jaによる自前の変換\footnote{バージョン20220103.0で実装した．}は
+行わないようにしている．
 %</ja>
-  
-%<*ja>
 
+%<*ja>
 %<en>\section{Insertion of JFM glues, \Param{kanjiskip} and \Param{xkanjiskip}}
 %<ja>\section{JFMグルーの挿入，\Param{kanjiskip}と\Param{xkanjiskip}}
 \label{sec-jfmglue}
@@ -11958,7 +11875,7 @@ ISO 32000-1:2008, \textit{Document management -- Portable document format -- Par
       1.7}, 2008. \newblock
 \url{http://www.iso.org/iso/iso\_catalogue/catalogue_tc/catalogue\_detail.htm?csnumber=51502}
 \bibitem{tc18ltja} 北川弘典．「\LuaTeX-jaの近況」，\TeX Conf~2018．
-  \url{https://osdn.net/projects/luatex-ja/wiki/Documentation/attach/tc18ltja.pdf}
+  \url{https://raw.githubusercontent.com/h-kitagawa/presentations/main/tc18ltja.pdf}
 \bibitem{bxghost} Takuto ASAKURA. \newblock The \textsf{BXghost} Package. \url{https://github.com/wtsnjp/BXghost}
 \end{thebibliography}
 

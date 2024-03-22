@@ -1,0 +1,93 @@
+%%%
+% Engrenages
+%%%
+\newtoks\tokPfCEngrenages%
+\def\UpdatetoksEngrenages#1/#2\nil{\addtotok\tokPfCEngrenages{#1,#2,}}%
+
+\setKVdefault[Engrenages]{Couleur=LightSteelBlue,Unite=3mm}
+
+\NewDocumentCommand\Engrenages{o m}{%
+  \tokPfCEngrenages{}
+  \useKVdefault[Engrenages]%
+  \setKV[Engrenages]{#1}%
+  \setsepchar[*]{,*/}%
+  \ignoreemptyitems
+  \readlist*\ListePfCEngrenages{#2}%
+  \setsepchar{,}
+  \xdef\PfCFooEngrenages{}
+  \foreachitem\compteur\in\ListePfCEngrenages{%
+    \xdef\PfCFooEngrenages{\PfCFooEngrenages \ListePfCEngrenages[\compteurcnt,1],\ListePfCEngrenages[\compteurcnt,2],}%
+  }%
+  \BuildEngrenages{\PfCFooEngrenages}%
+}%
+
+\def\BuildEngrenagesCode#1{%
+  u:=\useKV[Engrenages]{Unite};
+  CouleurEngrenage=\useKV[Engrenages]{Couleur};
+  %
+  vardef LectureDonnees(text t)=
+  n:=0;k=0;l=0;
+  for p_=t:
+  n:=n+1;
+  if (n mod 2)=0:
+  l:=l+1;
+  Zz[l]=p_;
+  else:
+  k:=k+1;
+  Mm[k]=p_;
+  fi;
+  endfor;
+  enddef;
+  %
+  LectureDonnees(#1);
+  %
+  pair K;
+  K=(0,0);
+  picture EngrenageFinal;
+  EngrenageFinal=image(
+  trace Engrenage(Mm[1],Zz[1],(0,0));
+  %
+  Signe=1;
+  %
+  for w=2 upto (n div 2):
+  K:=K+pointarc(cercles((0,0),u*Mm[w]*(Zz[w-1]+Zz[w])*0.5+0.04*u),0);
+  AngleRot[w]:=360/(2*Zz[w]);
+  if w=2:
+  trace rotation(Engrenage(Mm[w],Zz[w],K),K,180-AngleRot[w]);
+  if (Zz[w] mod 2)=0:
+  Signe:=Signe*(-1);
+  fi;
+  else:
+  if (Zz[w] mod 2)=1:
+  if Signe=-1:
+  trace rotation(Engrenage(Mm[w],Zz[w],K),K,180);
+  else:
+  trace rotation(Engrenage(Mm[w],Zz[w],K),K,180-AngleRot[w]);
+  fi;
+  else:
+  Signe:=Signe*(-1);
+  if Signe=1:
+  trace rotation(Engrenage(Mm[w],Zz[w],K),K,180);
+  else:
+  trace rotation(Engrenage(Mm[w],Zz[w],K),K,180-AngleRot[w]);
+  fi;
+  fi;
+  fi;
+  endfor;
+  );
+}
+
+\NewDocumentCommand\BuildEngrenages{m}{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    input PfCEngrenages;
+    \BuildEngrenagesCode{#1}
+    trace EngrenageFinal;
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={input PfCEngrenages;\BuildEngrenagesCode{#1}}]
+    trace EngrenageFinal;
+  \end{mpost}
+  \fi
+}%

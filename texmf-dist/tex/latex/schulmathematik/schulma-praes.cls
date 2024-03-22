@@ -1,8 +1,8 @@
 % schulmathematik bundle: document class schulma-praes
-% Version 1.3
-% 12. August 2022
+% Version 1.6
+% 30. Dezember 2023
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{schulma-praes}{2022-08-12}{1.3}{Dokumentenklasse fuer Bildschirmpraesentationen}
+\ProvidesExplClass{schulma-praes}{2023-12-30}{1.6}{Dokumentenklasse fuer Bildschirmpraesentationen}
 
 \bool_new:N \g_schulma_praes_seitenzahlen_bool
 \bool_new:N \g_schulma_praes_druck_bool

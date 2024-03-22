@@ -7,7 +7,7 @@
 %% fduthesis.dtx  (with options: `doc')
 %% fduthesis-doc.dtx  (with options: `doc')
 %% 
-%%     Copyright (C) 2017--2022 by Xiangdong Zeng <xdzeng96@gmail.com>
+%%     Copyright (C) 2017--2023 by Xiangdong Zeng <xdzeng96@gmail.com>
 %% 
 %%     This work may be distributed and/or modified under the
 %%     conditions of the LaTeX Project Public License, either
@@ -44,7 +44,7 @@
 %%                                 and README.md.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2020/10/01]
-\GetIdInfo $Id: fduthesis.dtx 0.8 2022-09-04 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
+\GetIdInfo $Id: fduthesis.dtx 0.9a 2023-05-27 12:00:00Z Xiangdong Zeng <xdzeng96@gmail.com> $
   {Documentation class for fduthesis}
 \ProvidesExplClass{fdudoc}
   {\ExplFileDate}{\ExplFileVersion}{\ExplFileDescription}
@@ -667,14 +667,6 @@
         \fi
       }
   }
-\ctex_patch_cmd:Nnn \SpecialMainEnvIndex
-  { (environment) } { ~ 环境 }
-\ctex_patch_cmd:Nnn \SpecialMainEnvIndex
-  { environments: } { 环境： }
-\ctex_patch_cmd:Nnn \HDorg@SpecialEnvIndex
-  { (environment) } { ~ 环境 }
-\ctex_patch_cmd:Nnn \HDorg@SpecialEnvIndex
-  { environments: } { 环境： }
 \ctex_patch_cmd:Nnn \NAT@citexnum
   { - \NAT@penalty }
   { \textendash \NAT@penalty }
@@ -690,6 +682,8 @@
   }
 \__fdudoc_patch_cmd:Nnn \__codedoc_typeset_functions:
   { \small \ttfamily } { \footnotesize \ttfamily }
+\__fdudoc_patch_cmd:Nnn \__codedoc_typeset_expandability:
+  { & } { & \skip_horizontal:n { -0.5em } }
 \__fdudoc_preto_cmd:Nn \__codedoc_typeset_functions:
   { \MacroFont }
 \__fdudoc_patch_cmd:Nnn \__codedoc_macro_init:
@@ -757,27 +751,6 @@
         \__codedoc_macroname_prefix:o \l__codedoc_tmpa_tl
         \__codedoc_macroname_suffix:N #2
       }
-  }
-\cs_set_protected:Npn \__codedoc_special_index_module:nnnnN #1#2#3#4#5
-  {
-    \use:x
-      {
-        \exp_not:n { \__codedoc_special_index_aux:nnnnnnn {#1} {#2} }
-          \tl_if_empty:nTF {#3}
-            { { } { } { } { } }
-            {
-              \str_if_eq:eeTF {#3} { TeX }
-                {
-                  { TeX~ and~ LaTeX2e }
-                  { \string \TeX{}~ 和~ \string \LaTeXe{} }
-                }
-                { {#3} { \string \pkg {#3} } }
-              \bool_if:NTF #5
-                { { commands~ internal } { ~ 内部命令： } }
-                { { commands           } { ~ 命令：     } }
-            }
-      }
-    {#4}
   }
 \cs_new_protected:Npn \__codedoc_special_index_aux:nnnnnnn #1#2#3#4#5#6#7
   {
@@ -868,25 +841,32 @@
   BoldFont       = *-Bold,
   ItalicFont     = *-Italic,
   BoldItalicFont = *-BoldItalic]
-\setmonofont{Iosevka Slab}[
-  UprightFont    = * Light,
-  BoldFont       = * Semibold,
-  ItalicFont     = * Light Oblique,
-  BoldItalicFont = * Semibold Oblique,
-  Scale          = MatchLowercase]
+\setmonofont{lmmonolt10}[
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-oblique,
+  BoldItalicFont = *-boldoblique]
 \setmathfont{LibertinusMath-Regular.otf}
-\setCJKmainfont{Source Han Serif SC}[
-  ItalicFont     = FZKai-Z03,
-  CharacterWidth = Full]
-\setCJKsansfont{Source Han Sans SC}[
-  ItalicFont     = *,
-  CharacterWidth = Full]
-\setCJKmonofont{Source Han Sans SC}[
-  UprightFont    = * Normal,
-  BoldFont       = * Bold,
-  AutoFakeSlant  = 0.1763,  % = tan(10 deg)
-  Scale          = 0.8903,
-  CharacterWidth = Full]
+\setCJKmainfont{SourceHanSerifSC}[
+  Extension       = .otf,
+  UprightFont     = *-Regular,
+  BoldFont        = *-Bold,
+  ItalicFont      = FandolKai-Regular,
+  UprightFeatures = { CharacterWidth = Full },
+  BoldFeatures    = { CharacterWidth = Full }]
+\setCJKsansfont{SourceHanSansSC}[
+  Extension       = .otf,
+  UprightFont     = *-Regular,
+  BoldFont        = *-Bold,
+  CharacterWidth  = Full]
+\setCJKmonofont{SourceHanSansSC}[
+  Extension       = .otf,
+  UprightFont     = *-Normal,
+  BoldFont        = *-Bold,
+  AutoFakeSlant   = 0.1763, % = tan(10 deg)
+  Scale           = 0.9,
+  CharacterWidth  = Full]
 \ctexset{
   section/name        = {第,节},
   section/format+     = \raggedright,
@@ -963,8 +943,10 @@
 \RecordChanges
 \newcommand*\exptarget{\Hy@raisedlink{\hypertarget{expstar}{}}}
 \newcommand*\rexptarget{\Hy@raisedlink{\hypertarget{rexpstar}{}}}
-\newcommand*\expstar{\hyperlink{expstar}{$^^^^263b$}}
-\newcommand*\rexpstar{\hyperlink{rexpstar}{$^^^^263a$}}
+\newcommand*\expstar{%
+  \hyperlink{expstar}{\textsuperscript{\rmfamily\scshape en}}}
+\newcommand*\rexpstar{%
+  \hyperlink{rexpstar}{\textsuperscript{\rmfamily\scshape zh}}}
 \ExplSyntaxOn
 \cs_set_eq:NN \__codedoc_typeset_exp:  \expstar
 \cs_set_eq:NN \__codedoc_typeset_rexp: \rexpstar
@@ -1002,12 +984,10 @@
 \def\BibTeX{\hologo{BibTeX}}
 \def\biber{\hologo{biber}}
 \def\TikZ{Ti\emph{k}Z}
-\renewcommand*\env[1]{\textbf{\texttt{#1}}}
-\newcommand*\bashcmd[1]{\texttt{#1}}
 \lst@CCPutMacro\lst@ProcessOther{"2D}{\lst@ttfamily{-{}}{-{}}}
 \@empty\z@\@empty
 \lstdefinestyle{style@base}{
-  basewidth       = 0.5 em,
+  basewidth       = 0.525 em,
   gobble          = 3,
   lineskip        = 2 pt,
   frame           = l,
@@ -1037,17 +1017,17 @@
   emphstyle  = [2]\color{MaterialTeal}
 }
 \lstdefinestyle{style@syntax}{
-  basewidth     = 0.5 em,
-  gobble        = 6,
-  escapeinside  = {(*}{*)},
-  language      = [LaTeX]TeX,
-  alsoletter    = {*, -},
-  basicstyle    = \footnotesize\ttfamily\color{MaterialGrey900},
-  keywordstyle  = \bfseries\color{MaterialIndigo},
-  commentstyle  = \itshape\color{MaterialGrey600},
-  texcsstyle    = *\color{MaterialDeepOrange},
-  emphstyle     = [1]\color{MaterialGreen800},
-  emphstyle     = [2]\color{MaterialTeal}
+  basewidth    = 0.525 em,
+  gobble       = 6,
+  escapeinside = {(*}{*)},
+  language     = [LaTeX]TeX,
+  alsoletter   = {*, -},
+  basicstyle   = \footnotesize\ttfamily\color{MaterialGrey900},
+  keywordstyle = \bfseries\color{MaterialIndigo},
+  commentstyle = \itshape\color{MaterialGrey600},
+  texcsstyle   = *\color{MaterialDeepOrange},
+  emphstyle    = [1]\color{MaterialGreen800},
+  emphstyle    = [2]\color{MaterialTeal}
 }
 \lstnewenvironment{shellexample}[1][]{%
   \lstset{style=style@shell, #1}}{}

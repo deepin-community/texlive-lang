@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -13,12 +13,12 @@
 \label{chap:bases}
 
 Un système de mise en page tel que {\LaTeX} repose sur une logique de
-séparation entre l'apparence d'un document et sa structure. La
-personne habituée à utiliser un traitement de texte devra fort
-probablement se défaire d'une vilaine habitude: se préoccuper sans
+séparation entre l'apparence d'un document et sa structure. Si vous
+avez l'habitude d'utiliser un traitement de texte, vous devrez fort
+probablement vous défaire d'une vilaine habitude: vous préoccuper sans
 cesse, au moment de la rédaction, de la disposition du texte.
 
-Ce principe accepté, il faudra néanmoins indiquer au logiciel la
+Ce principe accepté, il vous faudra néanmoins indiquer au logiciel la
 structure du document. Avec {\LaTeX} cela s'effectue par le biais de
 diverses instructions que l'on insère au fil du texte. À la base, les
 logiciels de traitements de texte n'opèrent pas différemment, sauf
@@ -95,8 +95,8 @@ ce qui rend la lecture plus difficile.
 \label{sec:bases:saisie}
 
 Une fois le principe de séparation du contenu et de l'apparence
-compris et accepté, on veillera, lors de la saisie du texte, à
-respecter les règles simples suivantes.
+compris et accepté, veillez à respecter les règles simples suivantes
+lors de la saisie du texte.
 \begin{enumerate}
 \item On sépare les mots par une ou plusieurs \emph{espaces}. Qu'il y
   en ait une ou un millier, seule la première compte et la mise en
@@ -170,10 +170,10 @@ aucune différence!
 %
 \item On utilise des \emph{commandes} pour indiquer la structure du
   texte dans le texte. Celles-ci débutent presque toujours par
-  le symbole {\bs}. À la différence des logiciels de traitement de
+  le symbole «{\bs}». À la différence des logiciels de traitement de
   texte, les instructions de mise en forme du document sont donc
   toujours visibles et, par conséquent, modifiables facilement et sans
-  surprise (on ne se demande donc jamais où termine le gras).
+  surprise (on ne se demande donc jamais où se termine le gras).
   \begin{demo}
     \begin{texample}
 \begin{lstlisting}
@@ -195,8 +195,9 @@ mais évidemment pas dans le
 \section{Structure d'un fichier}
 \label{sec:bases:structure}
 
-Un fichier source {\LaTeX} --- dont on trouvera un exemple simple à la
-\autoref{fig:bases:parties} --- est toujours composé de deux parties.
+Un fichier source {\LaTeX} --- dont vous trouverez un exemple simple à la
+\autoref{fig:bases:parties} --- est toujours composé de deux parties:
+le préambule et le corps du document.
 
 \begin{figure}
   \centering
@@ -233,19 +234,17 @@ orci.
   globale du document (format du papier, marges, entête et pied de
   page, etc.). Il contient au minimum la commande
   \cmd{\documentclass}. Les commandes contenues dans le préambule ont
-  un effet global sur le document.
-
-  Dans l'exemple de la \autoref{fig:bases:parties}, le préambule
-  s'étend de la ligne \ref*{lst:bases:preambule_debut} à la ligne
-  \ref*{lst:bases:preambule_fin}.
-\item[Corps du document] Contenu du document en tant que tel.
-  Il débute par \verb=\begin{document}= et se termine par
+  un effet global sur le document. Les lignes
+  \ref*{lst:bases:preambule_debut}--\ref*{lst:bases:preambule_fin}
+  forment le préambule dans l'exemple de la
+  \autoref{fig:bases:parties}.
+\item[Corps du document] Contenu du document en tant que tel. Il
+  débute par \verb=\begin{document}= et se termine par
     \verb=\end{document}=. Le corps du document peut aussi contenir
-  des commandes, mais l'effet de celles-ci demeure presque toujours local.
-
-  Les lignes \ref*{lst:bases:corps_debut}--\ref*{lst:bases:corps_fin}
-  du code de la \autoref{fig:bases:parties} forment le corps du
-  document.
+  des commandes, mais l'effet de celles-ci demeure presque toujours
+  local. Les lignes
+  \ref*{lst:bases:corps_debut}--\ref*{lst:bases:corps_fin} du code de
+  la \autoref{fig:bases:parties} forment le corps du document.
 \end{description}
 
 
@@ -259,10 +258,6 @@ La première commande du préambule est normalement la déclaration de la
 \end{lstlisting}
 Les classes standards de {\LaTeX} sont \class{article},
 \class{report}, \class{book}, \class{letter} et \class{slides}. La
-classe pour les thèses et mémoires de l'Université Laval se nomme
-\class{ulthese} \citep{ulthese}. Celle-ci se base sur la classe
-\class{memoir} et, par conséquent, elle hérite de toutes ses (nombreuses)
-fonctionnalités; consulter l'\autoref{chap:ulthese}. La
 \autoref{sec:organisation:classe} traite des différences entre les
 diverses classes et des \meta{options} disponibles.
 
@@ -291,8 +286,8 @@ paquetage \pkg{babel}.
 \section{Commandes}
 \label{sec:bases:commandes}
 
-Nous avons déjà fait référence à quelques reprises au concept de
-commande {\LaTeX}. Cette section se penche sur leur syntaxe.
+J'ai déjà fait référence à quelques reprises au concept de commande
+{\LaTeX}. Cette section se penche sur leur syntaxe.
 
 Les formes générales des commandes {\LaTeX} sont:
 \begin{lstlisting}
@@ -300,14 +295,14 @@ Les formes générales des commandes {\LaTeX} sont:
 \`\meta{nomcommande}'*`\oarg{arg\_optionnel}\marg{arg\_obligatoire}'
 \end{lstlisting}
 Ici, \meta{nomcommande} est le nom de la commande. Il débute par le
-symbole {\bs} et est exclusivement formé de lettres, habituellement
-des minuscules ({\LaTeX} est sensible à la casse). La forme étoilée
-d'une commande réalise généralement une action légèrement différente
-de la version sans étoile. Par exemple, \cmd{\section} crée une
-nouvelle section numérotée, alors que \cmd{\section*} n'insère aucune
-numérotation.
+symbole «{\bs}» et il est exclusivement formé de lettres,
+habituellement des minuscules ({\LaTeX} est sensible à la casse). La
+forme étoilée d'une commande réalise généralement une action
+légèrement différente de la version sans étoile. Par exemple, la
+commande \cmd{\section} crée une nouvelle section numérotée, alors que
+\cmd{\section*} n'insère aucune numérotation.
 
-Lorsque la commande prend des arguments, les arguments obligatoires
+Lorsque la commande accepte des arguments, les arguments obligatoires
 sont placés entre accolades \verb={ }= et les arguments optionnels
 sont placés entre crochets \verb=[ ]=.
 
@@ -328,6 +323,7 @@ La portée d'une commande est limitée à la zone entre accolades
 
 \begin{exemple}
   \label{exemple:base:commandes}
+  \enlargethispage{5mm}
   Voici trois exemples de commandes {\LaTeX}: une sans argument, une
   avec un seul argument obligatoire et une commande avec deux
   arguments obligatoires et un argument optionnel.
@@ -344,11 +340,11 @@ formidable!
         formidable!
       \end{texample}
     \end{demo}
-    On constate ici l'effet de la règle mentionnée ci-dessus:
-    l'espace suivant le nom de la commande a été interprété par
-    {\LaTeX} comme un marqueur de la fin de la commande et il a été
-    supprimé du texte. Pour contourner ce problème, nous pouvons soit
-    fournir un argument vide à la commande, soit la placer en
+    Vous pouvez constater ici que l'espace suivant le nom de la
+    commande a été interprétée par {\LaTeX} comme un marqueur de la
+    fin de la commande et qu'elle a été supprimée du texte. Deux
+    possibilités pour contourner cette particularité du langage:
+    fournir un argument vide à la commande, ou placer celle-ci entre
     accolades pour limiter sa portée à elle-même:
     \begin{demo}
       \begin{texample}
@@ -446,8 +442,8 @@ trait} ou d'un caractère.
   \qed
 \end{exemple}
 
-L'utilisateur de {\LaTeX} peut définir de nouvelles commandes à
-loisir. Ceci est expliqué au \autoref{chap:commandes}.
+Vous pouvez définir des nouvelles commandes {\LaTeX} à loisir. Ceci
+est expliqué au \autoref{chap:commandes}.
 
 
 \section{Environnements}
@@ -563,20 +559,16 @@ correspondant.
 \end{table}
 
 Il existe un certain nombre de longueurs prédéfinies. Les plus utiles
-sont:
-\begin{lstlisting}
-\linewidth
-\textwidth
-\end{lstlisting}
-La première contient la largeur de la ligne de texte courante et la
-seconde, la largeur de la page courante. Dans du texte normal, les
-deux mesures sont habituellement égales.
+sont \cmd{\linewidth}, qui contient la largeur de la ligne de texte
+courante, et \cmd{\textwidth}, qui contient la largeur de la page
+courante. Dans du texte normal, les deux mesures sont habituellement
+égales.
 
 
 \section{Commentaires}
 \label{sec:bases:commentaires}
 
-Le symbole \verb=%= indique un commentaire dans le code source: tout
+Le symbole «\verb=%=» indique un commentaire dans le code source: tout
 le texte après le symbole jusqu'à la fin de la ligne est ignoré par
 {\LaTeX}.
 \begin{demo}
@@ -604,9 +596,9 @@ courant ne sont pas disponibles sur les claviers.
 \subsection{Espaces et retours à la ligne}
 \label{sec:bases:caracteres:espaces}
 
-Nous avons déjà mentionné à la \autoref{sec:bases:saisie} le
-traitement spécial réservé par {\LaTeX} aux espaces et aux retours à
-la ligne dans le code source. Ajoutons les précisions suivantes:
+J'ai déjà abordé à la \autoref{sec:bases:saisie} le traitement spécial
+réservé par {\LaTeX} aux espaces et aux retours à la ligne dans le
+code source. Les précisions suivantes s'imposent:
 \begin{itemize}
 \item seule la première espace entre deux éléments compte;
 \item les espaces en début de ligne sont ignorées;
@@ -617,7 +609,7 @@ la ligne dans le code source. Ajoutons les précisions suivantes:
 \end{itemize}
 
 Pour forcer une espace à un endroit où {\LaTeX} la supprimerait
-normalement, utiliser la commande \verb*=\ = (le symbole \bs\ suivi
+normalement, utiliser la commande \verb*=\ = (le symbole «\bs» suivi
 d'une espace, représentée ici par le symbole \verb*| |.
 \begin{demo}
   \begin{texample}
@@ -631,10 +623,10 @@ formidable!
   \end{texample}
 \end{demo}
 
-Dans le même ordre d'idées, le symbole \verb=~= insère une espace
+Dans le même ordre d'idées, le symbole «\verb=~=» insère une espace
 insécable entre deux mots, de telle sorte que {\LaTeX} ne pourra
-placer les mots sur des lignes différentes. À utiliser dans les noms ou
-entre une quantité et son unité.
+placer les mots sur des lignes différentes. Vous devriez insérer ce
+symbole dans les noms ou entre une quantité et son unité.
 \begin{demo}
   \begin{texample}
 \begin{lstlisting}
@@ -646,9 +638,9 @@ moins 200~\$.
   \end{texample}
 \end{demo}
 
-Il arrive que l'espace générée par un retour à la ligne \emph{simple}
-s'avère indésirable. Dans de tels cas, placer un symbole de
-commentaire \verb=%= à la fin de la ligne.
+Il peut arriver que l'espace générée par un retour à la ligne
+\emph{simple} s'avère indésirable. Dans de tels cas, placez un symbole
+de commentaire «\verb=%=» à la fin de la ligne.
 \begin{demo}
   \begin{texample}
 \begin{lstlisting}
@@ -685,7 +677,7 @@ interprétés comme des commandes:
 \end{center}
 
 Pour utiliser les symboles ci-dessus tels quels dans le texte, il faut
-les précéder par le symbole {\bs}:
+les précéder par le symbole «\bs»:
 \index{#@\cs{}\texttt{\#}}
 \index{$@\cs{}\texttt{\$}} %$
 \index{&@\cs{}\texttt{\&}}
@@ -767,13 +759,13 @@ voir la \autoref{sec:bases:caracteres:accents}.)
 \label{sec:bases:caracteres:guillemets}
 
 L'usage des guillemets nécessite une attention particulière dans
-{\LaTeX}. On ne devrait pas utiliser dans le code source les
-guillemets doubles (\verb="=) que l'on trouve couramment sur les
+{\LaTeX}. Vous ne devriez pas utiliser dans le code source les
+guillemets doubles «\verb="=» qui se trouvent couramment sur les
 claviers d'ordinateurs.
 
-Pour obtenir les guillemets anglais, on utilisera deux symboles
-d'accent grave côte à côte pour les guillemets ouvrants (``) et deux
-apostrophes côte à côte pour les guillemets fermants ('').
+Pour obtenir les guillemets anglais, il faut utiliser deux symboles
+d'accent grave côte à côte pour les guillemets ouvrants «``» et deux
+apostrophes côte à côte pour les guillemets fermants «''».
 \begin{demo}
   \begin{texample}
 \begin{lstlisting}[escapeinside={}]
@@ -786,9 +778,9 @@ apostrophes côte à côte pour les guillemets fermants ('').
 
 En typographie française, il convient d'utiliser les chevrons («\ »)
 comme guillemets. Avec la configuration appropriée de \pkg{babel}
-(voir la \autoref{sec:bases:francais}), il suffit d'utiliser dans le
-code source les symboles \,\verb=«=\, et \,\verb=»=\, que l'on
-retrouve normalement sur un clavier français. L'espacement requis
+(voir la \autoref{sec:bases:francais}), vous pourrez utiliser
+directement dans le code source les symboles \,\verb=«=\, et
+\,\verb=»=\, disponibles sur un clavier français. L'espacement requis
 autour des symboles est géré automatiquement.
 \begin{demo}
   \begin{texample}
@@ -843,10 +835,10 @@ pris l'habitude d'entrer directement les bons guillemets.
 On trouve en typographie soignée trois sortes de tirets de longueurs
 différentes:
 \begin{enumerate}
-\item le trait d'union (-) qui sert à relier des mots entre eux;
-\item le tiret demi-cadratin (--) qui sert à joindre deux éléments qui
+\item le trait d'union «-» qui sert à relier des mots entre eux;
+\item le tiret demi-cadratin «--» qui sert à joindre deux éléments qui
   comportent déjà des traits d'union (\emph{Trois-Rivières--Québec});
-\item le tiret cadratin (---) qui sert à identifier le changement
+\item le tiret cadratin «---» qui sert à identifier le changement
   d'interlocuteur dans les dialogues ou qui remplacent parfois les
   parenthèses dans du texte normal.
 \end{enumerate}
@@ -974,81 +966,64 @@ sur un clavier, voire même certaines ligatures si l'on utilise
 l'encodage UTF-8. La \autoref{sec:bases:francais} fournit les détails.
 
 Les commandes pour les accents demeurent utiles pour composer les
-lettres accentuées des langues européennes autres que le français. On
-trouvera la liste de ces commandes, ainsi que celles pour composer une
-multitude d'autres symboles à la section~2 de la très utile %
-\doc[\emph{Comprehensive {\LaTeX} Symbol List}]{comprehensive}{http://texdoc.net/pkg/comprehensive} %
+lettres accentuées des langues européennes autres que le français.
+Vous trouverez la liste de ces commandes, ainsi que celles pour
+composer une multitude d'autres symboles, à la section~2 de la très
+utile %
+\doc[\emph{Comprehensive {\LaTeX} Symbol
+  List}]{comprehensive}{https://texdoc.net/pkg/comprehensive} %
 \citep{comprehensive}.
 
 
 \section{{\LaTeX} en français}
 \label{sec:bases:francais}
 
-Par défaut, LaTeX prévoit la rédaction de documents en anglais.
-L'entrée de texte en français de façon simple et conviviale requiert
-de charger quelques paquetages bien choisis. Le choix dépend lui-même
-du moteur {\TeX} utilisé.
+Historiquement, {\LaTeX} était prévu pour la rédaction de documents en
+anglais. Fort heureusement, il est aujourd'hui beaucoup plus aisé de
+rédiger des documents dans d'autres langues.
 
-\subsection{Moteur pdf\TeX}
+\subsection{Approche moderne recommandée}
+\label{sec:bases:francais:xetex}
+
+La manière de loin la plus simple, et celle que je recommande
+vivement, pour rédiger des documents en français consiste à
+enregistrer le code source dans le codage de caractères %
+\href{https://fr.wikipedia.org/wiki/UTF-8}{UTF-8} %
+et à compiler avec {\XeLaTeX}. Vous pourrez ainsi entrer les lettres
+accentuées directement au clavier («\code{é}») sans devoir passer par
+les commandes {\TeX} de la section précédente («\code{{\bs}'e}»).
+
+Vous devrez aussi charger le paquetage \pkg{fontspec} \citep{fontspec}
+dans le préambule pour obtenir les lettres accentuées dans le fichier
+PDF. Cela ne représente toutefois pas véritablement une étape de
+configuration additionnelle puisque ce paquetage est fréquemment
+employé avec {\XeLaTeX} pour contrôler le chargement des polices de
+caractères (plus de détails à la \autoref{sec:trucs:polices}).
+
+\subsection{Approche tradionnelle}
 \label{sec:bases:francais:pdftex}
 
-Afin de pouvoir entrer directement les lettres accentuées dans le code
-source sans avoir recours aux commandes de la section précédente, il
-faut s'assurer que les lettres accentuées soient reconnues par
-{\LaTeX}. C'est le rôle du paquetage \pkg{inputenc} \citep{inputenc}.
-Il faut spécifier le type de codage utilisé, ce qui parfois demande
-quelques essais et erreurs. Le type de codage le plus universel en ce
-moment est l'Unicode \citep{Unicode:5.0}. C'est le type utilisé par
-défaut dans macOS et les distributions Linux; il est aussi
-disponible sous Windows. Si le fichier source est sauvegardé dans le
-format %
-\link{https://fr.wikipedia.org/wiki/UTF-8}{UTF-8} %
-de l'Unicode, on ajoutera dans le préambule la commande:
+L'approche plus traditionnelle, basée sur pdf{\LaTeX}, de rédaction de
+documents dans une langue autre que l'anglais nécessite le chargement
+de divers paquetages.
+
+Tout d'abord, il faut charger le paquetage \pkg{inputenc}
+\citep{inputenc} pour faire en sorte que les lettres accentuées seront
+reconnues par {\LaTeX}. Il faut spécifier le type de codage utilisé.
+Tel que mentionné ci-dessus, vous devriez aujourd'hui utiliser
+l'UTF-8.
 \begin{lstlisting}
 \usepackage[utf8]{inputenc}
 \end{lstlisting}
 
-Les autres types de codage les plus répandus sont
-l'\link{https://fr.wikipedia.org/wiki/Iso_8859-1}{ISO 8859-1}, ou
-Latin-1, et l'\link{https://fr.wikipedia.org/wiki/Windows-1252}{ANSI}
-de Windows. Pour utiliser ces types, on remplacera \code{utf8}
-ci-dessus par, respectivement, \code{latin1} ou \code{ansiwin}.
-
-L'entrée du texte n'est pas tout, il faut également se soucier de la
-sortie, afin que les lettres accentuées apparaissent dans le document
-final. {\LaTeX} utilise par défaut un codage de sortie des caractères
-nommé OT1. Il est recommandé de ne pas utiliser ce codage pour les
-textes en français, notamment parce que la coupure automatique ne
-fonctionnera pas pour les mots contenant des lettres accentuées. On
-préférera donc le plus récent codage T1, que l'on active avec le
-paquetage \pkg{fontenc} \citep{fontenc}:
+Après avoir configuré l'entrée des caractères, il faut également
+configurer la sortie. Pour que la coupure automatique des mots
+contenant des lettres accentuées fonctionne correctement avec
+pdf{\LaTeX}, il faut activer le codage de sortie des caractères nommé
+«T1» à l'aide du paquetage \pkg{fontenc} \citep{fontenc}.
 \begin{lstlisting}
 \usepackage[T1]{fontenc}
 \end{lstlisting}
-
-La classe \class{ulthese} charge par défaut le paquetage \pkg{fontenc}
-avec l'option T1 et les gabarits de documents fournis avec la classe
-contiennent l'instruction pour charger \pkg{inputenc}.
-
-%% hyperref n'aime pas \XeTeX dans un titre. Je peux utiliser un titre
-%% court puisqu'il ne sera pas affiché dans la tdm (c'est une
-%% sous-section).
-\subsection[Moteur XeTeX]{Moteur \XeTeX}
-\label{sec:bases:francais:xetex}
-
-Le plus récent et moderne moteur {\XeTeX} utilise par défaut des
-fichiers source en format Unicode UTF-8. Il n'y a donc rien de spécial
-à faire pour l'entrée du texte avec ce moteur.
-
-Pour la sortie, le paquetage \pkg{fontspec} \citep{fontspec} est
-requis pour obtenir les lettres accentuées dans le fichier PDF. Cela ne
-représente pas véritablement une étape de configuration additionnelle
-puisque l'on charge normalement ce paquetage avec {\XeLaTeX} pour
-contrôler le chargement des polices de caractères (plus de détails à
-la \autoref{sec:trucs:polices}).
-
-La classe \class{ulthese} charge par défaut le paquetage
-\pkg{fontspec} avec {\XeLaTeX}.
 
 \subsection{Typographie et mots clés français}
 \label{sec:bases:francais:babel}
@@ -1059,16 +1034,10 @@ faut adapter {\LaTeX} au français, qu'il s'agisse des mots clés (tels
 coupure des mots. La solution standard provient du paquetage
 \pkg{babel} \citep{babel}. Celui-ci permet de combiner plusieurs
 langues dans un même document et de passer de l'une à l'autre
-facilement. Consulter la %
-\doc{frenchb}{http://texdoc.net/pkg/babel-french/} %
-pour connaitre toutes les adaptations au français offertes par ce
-paquetage incontournable.
-
-Il est possible de configurer plusieurs options de \pkg{babel} par
-l'entremise de la commande \cmd{\frenchbsetup}.
-
-Le paquetage \pkg{babel} est chargé par défaut par la classe
-\class{ulthese}.
+facilement. Consultez la %
+\doc{frenchb}{https://texdoc.net/pkg/babel-french} %
+du paquetage \pkg{babel-french} pour connaitre toutes les adaptations
+au français offertes par ce paquetage incontournable.
 
 \subsection{Guillemets français}
 \label{sec:bases:francais:guillemets}
@@ -1080,21 +1049,20 @@ la commande
 \begin{lstlisting}
 \frenchbsetup{og=«, fg=»}
 \end{lstlisting}
-On trouve cette configuration dans les gabarits livrés avec la classe
-\class{ulthese}.
 
 \subsection{Séparateur décimal}
 \label{sec:bases:francais:virgule}
 
 Le séparateur décimal en français est la virgule et non le point. Or,
-en mode mathématique, LaTeX ajoute automatiquement une espace fine
+en mode mathématique, {\LaTeX} ajoute automatiquement une espace fine
 après une virgule comme s'il s'agissait d'une énumération.
 
 Afin de pouvoir utiliser de manière conviviale la virgule comme
-séparateur décimal en mode mathématique, on chargera le très pratique
-paquetage \pkg{icomma} \citep{icomma}. Avec ce paquetage, la virgule
-agira comme séparateur décimal en mode mathématique seulement
-lorsqu'elle est suivie d'un caractère autre que l'espace.
+séparateur décimal en mode mathématique, chargez dans vos documents le
+très pratique paquetage \pkg{icomma} \citep{icomma}. Avec ce
+paquetage, la virgule agira comme séparateur décimal en mode
+mathématique seulement lorsqu'elle est suivie d'un caractère autre que
+l'espace.
 \begin{demo}
   \begin{minipage}{0.5\linewidth}
     \begin{texample}[0.6\linewidth]
@@ -1161,11 +1129,11 @@ solutions.
     \addlinespace[0.5\normalbaselineskip]
     Typographie française & \pkg{babel} \\
     \addlinespace[0.5\normalbaselineskip]
-    Lettres accentuées dans source & \pkg{inputenc} (\LaTeX) \\
-                                   & source en UTF-8 (\XeLaTeX) \\
+    Lettres accentuées dans source & source en UTF-8 (\XeLaTeX) \\
+                                   & \pkg{inputenc} (\LaTeX) \\
     \addlinespace[0.5\normalbaselineskip]
-    Lettres accentuées dans sortie & \pkg{fontenc} (\LaTeX) \\
-                                   & \pkg{fontspec} (\XeLaTeX) \\
+    Lettres accentuées dans sortie & \pkg{fontspec} (\XeLaTeX) \\
+                                   & \pkg{fontenc} (\LaTeX) \\
     \addlinespace[0.5\normalbaselineskip]
     Virgule comme séparateur décimal & \pkg{icomma} \\
     \addlinespace[0.5\normalbaselineskip]
@@ -1192,7 +1160,7 @@ solutions.
 \end{Filesave}
 
 \begin{exercice}[nosol]
-  Utiliser le fichier \fichier{exercice\_minimal.tex}.
+  Utiliser le fichier \fichier{exercice-minimal.tex}.
   \begin{enumerate}
   \item Compiler le document avec la classe \class{article}, puis avec
     la classe \class{book}. Observer le résultat.
@@ -1203,7 +1171,7 @@ solutions.
 
 \begin{exercice}
   \label{ex:base:commandes}
-  Modifier le fichier \fichier{exercice\_commandes.tex} afin
+  Modifier le fichier \fichier{exercice-commandes.tex} afin
   de produire le texte ci-dessous.
   \begin{demo}
     \fbox{\includegraphics[viewport=108 551 502 665,clip=true,width=0.98\linewidth]{auxdoc/exercice_commandes-solution}}
@@ -1229,7 +1197,7 @@ solutions.
 
 \begin{exercice}[nosol]
   \begin{enumerate}
-  \item Compiler le fichier \fichier{exercice\_classe+paquetages.tex}.
+  \item Compiler le fichier \fichier{exercice-classe+paquetages.tex}.
   \item Changer la police du document pour 11~points, puis 12~points.
     Observer l'effet sur les marges et sur la coupure automatique des
     mots dans le document compilé.

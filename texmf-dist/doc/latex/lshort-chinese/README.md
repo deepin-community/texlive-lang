@@ -1,9 +1,14 @@
-# The Not So Short Introduction To LaTeX (Chinese Edition), v6.03
+[English](https://github.com/CTeX-org/lshort-zh-cn) | [中文](https://github.com/CTeX-org/lshort-zh-cn/blob/master/README-zh.md)
+
+# The Not So Short Introduction To LaTeX2ε (Chinese Edition)
+
+[![CTAN](https://img.shields.io/ctan/v/lshort-zh-cn)](https://ctan.org/pkg/lshort-zh-cn)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/CTeX-org/lshort-zh-cn)](https://github.com/CTeX-org/lshort-zh-cn/releases/latest)
 
 ## License
 
 This document is distributed under the **GNU Free Documentation License, version 1.3**.
-For detailed information, see the section entitled 'GNU Free Documentation License' in the document, or the source code file `fdl.tex`.
+For detailed information, see the section entitled &ldquo;GNU Free Documentation License&rdquo; in the document, or the source code file `fdl.tex`.
 
 ## Preparation for typesetting
 

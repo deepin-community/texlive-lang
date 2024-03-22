@@ -1,0 +1,190 @@
+\documentclass[a4paper]{ltxdoc}
+
+\usepackage{holtxdoc}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{tikz}
+\hypersetup{%
+  plainpages=false,%
+  bookmarksnumbered,%
+  pdftitle={The quran-en Package},%
+  pdfkeywords={quran-en, surah, ayah, juz, hizb, ruku, manzil},%
+  pdfauthor={Seiied-Mohammad-Javad Razavian},%
+  baseurl={http://mirrors.ctan.org/macros/xetex/latex/quran-en/doc/quran-en-doc.pdf},%
+}
+\usepackage[all]{quran-en}
+% because of definition of \XeTeX and \XeLaTeX symbols in bidi,
+% I should undef these macro that are also defined in holtxdoc package.
+\makeatletter
+\bidi@undef\XeTeX
+\bidi@undef\XeLaTeX
+\makeatother
+\usepackage{arabxetex}
+\makeatletter
+\bidi@BeforeBeginEnvironment{declcs}{\vspace*{-4mm}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\boxcs#1{\leftline{\fbox{\mcs{#1}}}}
+\def\mcs#1{\lr{\texttt{\textbackslash{}#1}}}
+\def\tt#1{\lr{\texttt{#1}}}
+\lstdefinestyle{BashInputStyle}{
+  language=bash,
+  basicstyle=\footnotesize\sffamily,
+  frame=tb,
+  columns=fullflexible,
+  backgroundcolor=\color{gray!10},
+}
+
+% Define box and box title style
+\tikzstyle{mybox} = [draw=black, fill=gray!20, very thick,
+    rectangle, rounded corners, inner sep=10pt, inner ysep=20pt]
+\tikzstyle{fancytitle} =[fill=gray, text=white]
+
+\def\mx#1#2{\mybox{#1}{#2}{.45\textwidth}}
+\def\mxf#1#2{\mybox{#1}{#2}{\textwidth}}
+
+\def\mybox#1#2#3{
+\begin{tikzpicture}
+\node [mybox] (box){%
+    \begin{minipage}[t]{#3}
+        #2
+    \end{minipage}
+};
+\node[fancytitle, anchor=west, right=10pt] at (box.north west) {\small \cs{#1}};
+\node (hole) [anchor=north east, left=5pt ] at (box.north east) { \tikz\fill[very thick,white] (0,0) circle (12pt); };
+\node[ ] at (hole.center) {\includegraphics[width=.05\textwidth]{quran.png}};
+\end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\includegraphics[scale=.3]{quran.png}\\
+The \xpackage{quran-en} Package\footnote{To one having devoted his life to the holy Quran}\\
+}
+\author{Seiied Mohammad Javad Razavian\\\xemail{javadr@gmail.com}}
+
+\date{\quranendate,  Version \quranenversion\footnote{First release: November 4th, 2023}}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+%\newpage
+
+\section{Introduction}
+The \xpackage{quran} package provides several macros for
+typesetting the whole or any parts of the holy Quran based on its popular divisions. That package also develops
+commands for some translations of the holy Quran including German, Engilsh, and Persian.
+Some people asked me to include the other translations into the \xpackage{quran} package,
+but because of some technical issues I decided to create new packages for other translations.
+One of these variations is \xpackage{quran-en} including several English translations of the holy Quran
+provided by \url{tanzil.net}, i.e. \emph{``ahmedali''}, \emph{``ahmedraza''}, \emph{``arberry''}, \emph{``daryabadi''}, \emph{``hilali''}, \emph{``itani''}, \emph{``maududi''}, \emph{``mubarakpuri''}, \emph{``pickthall''}, \emph{``qarai''}, \emph{``qaribullah''}, \emph{``sahih''}, \emph{``sarwar''}, \emph{``shakir''}, \emph{``wahiduddin''}, and \emph{``yusufali''}.
+
+
+\section{Loading The Package}
+The package will be loaded in the ordinary way
+\cs{usepackage[option]\{quran-en\}}.
+After loading the package, it writes some information about itself to the
+terminal and to the log file, too. The information is something like:
+
+\begin{quote}
+\begin{lstlisting}[style=BashInputStyle, language=tex, escapechar={|}]
+Package: quran-id |\quranendate| v|\quranenversion|
+English translation extension to the quran package.
+\end{lstlisting}
+\end{quote}
+
+
+\section{Options of The Package}\label{sec:qurantypesetting}
+There are several options by the names of \xoption{ahmedali}, \xoption{ahmedraza}, \xoption{arberry}, \xoption{daryabadi}, \xoption{hilali}, \xoption{itani}, \xoption{maududi}, \xoption{mubarakpuri}, \xoption{pickthall}, \xoption{qarai}, \xoption{qaribullah}, \xoption{sahih}, \xoption{sarwar}, \xoption{shakir}, \xoption{wahiduddin}, and \xoption{yusufali}.%
+%
+\foreach\x in {ahmedali,ahmedraza,arberry,daryabadi,hilali,itani,maududi,mubarakpuri,pickthall,qarai,qaribullah,sahih,sarwar,shakir,wahiduddin,yusufali,all}{%
+\marginpar{\xoption{\x}\smallskip}%
+}
+%
+If you pass any combinations of these options, you will be enabled to typeset these translations in a way
+that the \xpackage{quran} package does.
+There is also \xoption{all} option which loads all English translations provided by the \xpackage{quran-en} package.
+The package loads \xoption{ahmedali} option by default.
+
+This package is completely built on top of the \xpackage{quran} package, therefore you can pass every options
+defined in that package to the \xpackage{quran-en} package.
+
+\section{Differences between \xpackage{quran} and \xpackage{quran-en}}
+At first glance, \xpackage{quran-en}  offers all functionalities of \xpackage{quran}. Therefore,
+both packages are the same in this manner except one difference. The \xpackage{quran-en} extends the \xpackage{quran}
+by adding 16 other English translations, namely `ahmedali', `ahmedraza', `arberry', `daryabadi', `hilali', `itani', `maududi', `mubarakpuri', `pickthall', `qarai', `qaribullah', `sahih', `sarwar', `shakir', `wahiduddin', and `yusufali'. All English translations
+provided by the package are shown in table~\ref{tab:idtrans}.
+
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{|c|l|c|}
+    \toprule
+    order & \multicolumn{1}{c|}{translator} & option's name \\\midrule
+    1 & Ahmed Ali & ahmedali \\
+    2 & Ahmed Raza Khan & ahmedraza \\
+    3 & A. J. Arberry & arberry \\
+    4 & Abdul Majid Daryabadi & daryabadi \\
+    5 & Muhammad Taqi-ud-Din al-Hilali and Muhammad Muhsin Khan & hilali \\
+    6 & Talal Itani & itani \\
+    7 & Abul Ala Maududi & maududi \\
+    8 & Safi-ur-Rahman al-Mubarakpuri & mubarakpuri \\
+    9 & Mohammed Marmaduke William Pickthall & pickthall \\
+    10 & Ali Quli Qarai & qarai \\
+    11 & Hasan al-Fatih Qaribullah and Ahmad Darwish & qaribullah \\
+    12 & Saheeh International & sahih \\
+    13 & Muhammad Sarwar & sarwar \\
+    14 & Mohammad Habib Shakir & shakir \\
+    15 & Wahiduddin Khan & wahiduddin \\
+    16 & Abdullah Yusuf Ali & yusufali \\
+    \bottomrule
+\end{tabular}
+    \caption{English translations used in the package and their option's names}
+    \label{tab:idtrans}
+\end{table}
+
+\subsection{How to Change the Current English Translation}
+    The \xpackage{quran-en} package uses ahmedali's translation by default.
+    The following macro could be used to change the default English translation.
+    \begin{declcs}{enSetTrans}\marg{index}
+    \end{declcs}
+    The \meta{index} could be an integer or a name; both ``order'' and ``option's name''
+    shown in Table~\ref{tab:idtrans} are appliable. Both \cs{enSetTrans\{2\}} and \cs{enSetTrans\{ahmedraza\}}, for example,
+    have the same effect.
+
+\subsection{How to Get the Name of Current Indonesian Translation}
+    \begin{declcs}{idGetTrans}
+    \end{declcs}
+    The above macro returns the name of current Indonesian translation, i.e.  one of ``ahmedali'', ``ahmedraza'', ``arberry'', ``daryabadi'', ``hilali'', ``itani'', ``maududi'', ``mubarakpuri'', ``pickthall'', ``qarai'', ``qaribullah'', ``sahih'', ``sarwar'', ``shakir'', ``wahiduddin'', or ``yusufali''.
+
+
+\subsection{How to Typeset the Indonesian Translation}
+    It's completely similar to the \xpackage{quran} package.
+    All the following macros are usable.
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item \cs{quransurahen}
+        \item \cs{quranayahen}
+        \item \cs{quranpageen}
+        \item \cs{quranjuzen}
+        \item \cs{quranhizben}
+        \item \cs{quranquarteren}
+        \item \cs{quranrukuen}
+        \item \cs{quranmanzilen}
+        \item \cs{qurantexten}
+    \end{itemize}
+\end{multicols}
+
+    \centerline{\mxf{quransurah*}
+    {\begin{arab}\small\quransurah*\end{arab}}}
+
+    \foreach \x/\y in {ahmedali/1,ahmedraza/2,arberry/3,daryabadi/4,hilali/5,itani/6,maududi/7,mubarakpuri/8,pickthall/9,qarai/10,qaribullah/11,sahih/12,sarwar/13,shakir/14,wahiduddin/15,yusufali/16} {%
+        \centerline{\mxf{enSetTrans\{\x\}\textbackslash{}quransurahen*}
+        {\enSetTrans{\y}\quransurahen*}}
+    }
+
+\end{document}
+

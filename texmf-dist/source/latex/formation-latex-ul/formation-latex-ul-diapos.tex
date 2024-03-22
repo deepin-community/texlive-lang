@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -13,6 +13,7 @@
   \usepackage{babel}
   \usepackage[autolanguage]{numprint}
   \usepackage{amsmath}
+  \usepackage[mathrm=sym]{unicode-math}  % polices math
   \usepackage{changepage}                % page licence
   \usepackage{tabularx}                  % page licence
   \usepackage{booktabs}                  % beaux tableaux
@@ -27,10 +28,10 @@
   %%  Informations de publication
   %%  (titre et al. dans couverture-avant.tex)
   %% ==========================================
-  \renewcommand{\year}{2020}
-  \renewcommand{\month}{10}
-  \newcommand{\ctanurl}{https://ctan.org/pkg/formation-latex-ul/}
-  \newcommand{\reposurl}{https://gitlab.com/vigou3/formation-latex-ul/}
+  \renewcommand{\year}{2023}
+  \renewcommand{\month}{11}
+  \newcommand{\ctanurl}{https://ctan.org/pkg/formation-latex-ul}
+  \newcommand{\reposurl}{https://gitlab.com/vigou3/formation-latex-ul}
 
   %% =======================
   %%  Apparence du document
@@ -40,7 +41,14 @@
   \usetheme{metropolis}
   \metroset{subsectionpage=progressbar}
 
-  %% Polices de caractères pour les titres
+  %% Polices de caractères
+  \setsansfont{Fira Sans Book}
+  [
+    BoldFont = {Fira Sans SemiBold},
+    ItalicFont = {Fira Sans Book Italic},
+    BoldItalicFont = {Fira Sans SemiBold Italic}
+  ]
+  \setmathfont{Fira Math}
   \newfontfamily\titlefontOS{FiraSans}
   [
     Extension = .otf,
@@ -63,17 +71,10 @@
   [
     Scale=0.92
   ]
+  \usepackage[babel=true]{microtype}
 
   %% Police Computer Modern pour exemple de police par défaut
   \newfontfamily\CM{cmunrm.otf}
-
-  %% Mathématiques en arev et ajustement de la taille des autres
-  %% polices Fira; https://tex.stackexchange.com/a/405211/24355
-  \usepackage{arevmath}
-  \setsansfont[%
-    BoldFont = {Fira Sans SemiBold},
-    ItalicFont = {Fira Sans Book Italic},
-    BoldItalicFont = {Fira Sans SemiBold Italic}]{Fira Sans Book}
 
   %% Couleurs
   \definecolor{comments}{rgb}{0.5,0.55,0.6} % commentaires
@@ -202,6 +203,12 @@
     {\ttfamily\char`\[}\meta{#1}{\ttfamily\char`\]}}
   \newcommand{\cs}[1]{\code{\char`\\#1}}
 
+  %% Identification de la licence CC BY-SA.
+  \newcommand{\ccbysa}{\mbox{%
+    \faCreativeCommons\kern0.1em%
+    \faCreativeCommonsBy\kern0.1em%
+    \faCreativeCommonsSa}~\faCopyright[regular]\relax}
+
   %% Lien vers Gitlab dans la page de notices
   \newcommand{\viewsource}[1]{%
     \href{#1}{\faGitlab\ Voir sur GitLab}}
@@ -210,8 +217,7 @@
   %%%  Varia
   %%% =======
 
-  %% Longueurs pour la composition des pages couvertures avant et
-  %% arrière.
+  %% Longueurs pour la composition de la page couverture.
   \newlength{\banderougewidth} \newlength{\banderougeheight}
   \newlength{\bandeorwidth}    \newlength{\bandeorheight}
   \newlength{\imageheight}
@@ -232,7 +238,6 @@
 \include{suite-diapos}
 
 \include{colophon-diapos}
-\include{couverture-arriere-diapos}
 
 \end{document}
 

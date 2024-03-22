@@ -80,6 +80,8 @@ pdfkeywords={luatex, lualatex, multilingual, bidi}
 \begin{document}
 \hyphenation{Kha-li-ghi Reu-ten-auer}
 \GetFileInfo{luabidi.sty}
+% not correctly set
+\def\fileversion{0.6}
 
 \title{\lbd\\\color{myblue}Bidirectional typesetting in \LuaLaTeX}
 
@@ -226,6 +228,9 @@ The following macros are provided:
 \section{Revision Log}
 
 \begin{description}
+	\item[v. 0.6 (2023/10/01)] Fixing a bug in \cmd{\RLE} and \cmd{\LRE}; Switching \cmd{\bodydir} inside long RTL/LTR text;
+		 ensuring \cmd{\bodydir} and \cmd{\pagedir} are equal at shipout; patching lists to use a correct value of \cmd{\shapemode};
+		 Setting \cmd{\breakafterdirmode} and \cmd{\matheqdirmode} to 1. Patch kindly provided by Udi Fogiel.
 	\item[v. 0.5 (2019/10/27)] Add \cmd{\RTLfootnote}, \cmd{\LTRfootnote}, and \cmd{\hboxR}; fix \texttt{autofootnoterule} option; add \cmd{\autofootnoterule},
 	     \cmd{\leftfootnoterule}, \cmd{\rightfootnoterule} and \cmd{\textwidthfootnoterule}; add manual.
 	\item[v. 0.4 (2019/08/24)] Fix \cmd{\@ensure@RTL}.

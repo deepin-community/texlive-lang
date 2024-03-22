@@ -1885,7 +1885,7 @@ vardef Sinon=
   drawoptions();
   texto=image(
       labeloffset:=0;
-    label.lrt(LATEXSCRATCH("\, \hbox to"&decimal(LongRep[numblocrep])&"pt{\bfseries\barre sinon}"),if unknown _coinprec: (0,0) else:_coinprec fi) if print=false : withcolor blanc fi;
+    label.lrt(LATEXSCRATCH("\, \hbox to"&decimal(LongRep[numblocrep])&"pt{\bfseries\longbarre sinon}"),if unknown _coinprec: (0,0) else:_coinprec fi) if print=false : withcolor blanc fi;
   labeloffset:=3;
   );
   path cadre;
@@ -2967,11 +2967,41 @@ vardef OpMul(expr pasun,pasdeux)=
   Oop
 enddef;
 
+vardef OpMulS(expr pasun,pasdeux)=
+  save Oop; picture Oop;
+  save TAao; path TAao;
+  save LOPop; picture LOPop;
+  LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$*$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
+  TAao=OvalBox(LOPop);
+  Oop=image(
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+    draw LOPop;
+    draw TAao if print=false : withcolor coefprint*white fi;
+    );
+  Oop:=Oop shifted(-center Oop);
+  Oop
+enddef;
+
 vardef OpDiv(expr pasun,pasdeux)=
   save Oop; picture Oop;
   save TAao; path TAao;
   save LOPop; picture LOPop;
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$\div$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
+  TAao=OvalBox(LOPop);
+  Oop=image(
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+    draw LOPop;
+    draw TAao if print=false : withcolor coefprint*white fi;
+    );
+  Oop:=Oop shifted(-center Oop);
+  Oop
+enddef;
+
+vardef OpDivS(expr pasun,pasdeux)=
+  save Oop; picture Oop;
+  save TAao; path TAao;
+  save LOPop; picture LOPop;
+  LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$/$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
       fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;

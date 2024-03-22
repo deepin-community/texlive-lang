@@ -80,3 +80,14 @@ U+337B..337E(元号の組文字) の縦組み字形 12044..12041 を追加。
 UniJISup-* で追加したCIDは全てAdobe-Japan1-4の範囲("Pro", CID15443まで)に収まっているが、
 一部はAdobe-Japan1-3の範囲("Std", CID9353まで)を超えている。
 
+
+小書き仮名「こ」「コ」はオリジナルの UniJIS-UTF16-{H,V} (Version 05/18/2022) "January 18, 2023 Release"に追加された。
+UniJISup-UTF16-{H,V} はこれらを踏襲した。
+
+| AJ1-7 | variant |  character name  |  Unicode-15.0       |  |
+|-------|---------|------------------|---------------------|--|
+| 12269 | Standard, H | HIRAGANA LETTER SMALL KO | U+1B132 | 𛄲 |
+| 12270 | Standard, V | HIRAGANA LETTER SMALL KO | U+1B132 | 𛄲 |
+| 12271 | Standard, H | KATAKANA LETTER SMALL KO | U+1B155 | 𛅕 |
+| 12272 | Standard, V | KATAKANA LETTER SMALL KO | U+1B155 | 𛅕 |
+

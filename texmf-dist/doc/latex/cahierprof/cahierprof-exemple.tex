@@ -1,0 +1,125 @@
+\documentclass[a4paper,french,10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{lscape}
+\usepackage{cahierprof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Préambule 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Les marges de mon document.
+\geometry{margin=1.2cm,head=0.6cm,headsep=10pt,foot=.6cm}
+
+\title{
+  cahierprof-exemple.tex\\
+  Utilisation du cahier de textes en \LaTeX{} pour les professeurs
+}
+\author{
+  Raphaël Giromini\\
+  \texttt{raphael.giromini -- at -- gmail.com}
+}
+\date{Version 1.0 -- 1er septembre 2023}
+
+% 1er lundi de l'année scolaire (pour le cahier de texte)
+\setLundiRentree{4}{9}{2023}
+% Début de chaque vacances scolaire pour l'année en cours (le samedi).
+\setDebutToussaint{21}{10}
+\setDebutNoel{23}{12}
+\setDebutHiver{10}{2}
+\setDebutPrintemps{6}{4}
+% Les examens
+% Le DNB a lieu les 24 et 25 juin.
+% \setDNB{24}{25}{6}
+% Les épreuves finales du bac ont lieu du 18 au 20 mars
+\setBac{18}{20}{3}
+% L'épreuve de philosophie a lieu le 11 juin
+\setBacPhilo{11}{6}
+% L'épreuve de français a lieu le 12 jun
+\setBacFrancais{12}{6}
+%Le Grand Oral a lieu du 17 au 28 juin
+\setGO{17}{28}{6}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Début du document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+
+\section{Calendrier des semaines de cours}
+
+Exemple du cahier de texte à partir de l'exemple complet de
+\texttt{cahierprof-doc.tex}
+
+Le cahier de texte débute sur la page suivante au format paysage.
+
+% Emploi du temps au format tableau (tabularx).
+\begin{landscape}
+  \EmploiDuTemps{
+    %     & Lundi & Mardi & Merc.                  & Jeudi & Vend. \\
+    8h    &       & 1G    &                        & 1G    &       \\ [1.5cm] 
+    \cline{1-2}\cline{4-6}
+    9h    &       &       & TSTMG                  & TSTMG &       \\ [1.5cm] \hline
+    10h   & 1G    & 2nde  & 1G                     &       &       \\ [1.5cm] \hline
+    11h   &       &       & \sem{2nde A.P.}{}      &       & 1G    \\ [1.5cm] 
+    \hline\hline
+    13h30 &       & 1G    &                        &       & 2nde  \\ [1.5cm] \cline{1-5}
+    14h30 &       &       & 1G (Groupe~\sem{A}{B}) &       &       \\ [1.5cm] \hline
+    15h30 &       &       & 2 euro                 &       &       \\ [1.5cm] \hline
+    16h30 &       &       &                        &       &       \\ [1.5cm] \hline
+  }
+\end{landscape}
+
+\section{Liste des élèves et tableau d'appel et de notes des classes}
+
+\subsection{Liste des élèves}
+
+Affiche la liste des élèves et la sauve dans le fichier par défaut
+\texttt{ListeEleves.tex}.
+\ListeEleves{}
+
+\newpage
+
+\subsection{Tableaux des classes}
+
+% \Classe{Nom de la classe}{Nombre de séances dans la semaine}
+% {Liste des élèves séparés par une virgule}
+
+\Classe{Seconde}{4}
+{
+  Élève Seconde 1,
+  Élève Seconde 2,
+  Élève Seconde 3,
+  Élève Seconde 4,
+  Élève Seconde 5
+}
+
+\Classe{Première G}{6}
+{
+  Élève Première 1,
+  Élève Première 2,
+  Élève Première 3,
+  Élève Première 4,
+  Élève Première 5
+}
+
+\Classe{T STMG}{2}
+{
+  Élève STMG 1,
+  Élève STMG 2,
+  Élève STMG 3,
+  Élève STMG 4,
+  Élève STMG 5
+}
+
+\Classe{2 euro}{1}
+{
+  Élève Euro 1,
+  Élève Euro 2,
+  Élève Euro 3,
+  Élève Euro 4,
+  Élève Euro 5
+}
+\end{document}

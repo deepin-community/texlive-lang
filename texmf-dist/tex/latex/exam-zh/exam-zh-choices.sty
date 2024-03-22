@@ -1,7 +1,7 @@
 %
 % Copyright (c) 2022 Zeping Lee
 % Released under the LaTeX Project Public License v1.3c License.
-% Repository: https://gitee.com/zepinglee/exam-zh
+% Repository: https://gitee.com/xkwxdyy/exam-zh
 %
 
 \NeedsTeXFormat{LaTeX2e}
@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-choices} {2022-9-18} {v0.1.20}
+\ProvidesExplPackage {exam-zh-choices} {2023-06-28} {v0.1.27}
   {exam-zh choices module}
 
 \dim_new:N \l__examzh_choices_column_sep_dim
@@ -124,12 +124,14 @@
     % 用户没有输入的话就采用自动计算列数
     \int_compare:nNnT { \l__examzh_choices_columns_int } < {1}
       { \__examzh_choices_calc_columns: }
+    % 解决 columns 无效的问题
+    \keys_set:nn { exam-zh / choices } {#1}
     % 计算每个选项内容的宽度 \l__examzh_choices_item_width_dim
     \__examzh_choices_calc_item_width:
     % 输出选项
     \__examzh_print_choices:N \l__examzh_choices_seq
     % 输出正确选项
-    \__examzh_print_correctchoice:
+    % \__examzh_print_correctchoice:
     \vspace* { \l__examzh_choices_bottom_sep_skip }
   }
 

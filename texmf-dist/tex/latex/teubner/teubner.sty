@@ -5,7 +5,7 @@
 %% The original source files were:
 %%
 %% teubner.dtx  (with options: `package')
-%% Copyright 2001--2022 Claudio Beccari All rights reserved.
+%% Copyright 2001--2023 Claudio Beccari All rights reserved.
 %% 
 %%  This system is distributed in the hope that it will be useful,
 %%  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,7 +18,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2020-01-01]
 \ProvidesPackage{teubner}[%
-2022/10/03 v.5.7.3
+2023/08/25 v.5.8.3
 Extensions for Greek philology]
 \RequirePackage{iftex}
 \let\ifPDF\ifPDFTeX
@@ -64,22 +64,18 @@ Type X <return> to exit.}%
   \fontencoding{U}\fontfamily{mtr}\normalshape}
 \DeclareTextFontCommand{\textmtr}{\metricsfont}
 \RequirePackage{exscale}
-\ifx\languageattribute\undefined
- \def\GreekName{polutonikogreek}%
-\else
- \def\GreekName{greek}
- \def\strip@slash#1/#2/#3!{\edef\@tempA{#1#2#3}}
- \def\getgreekdate#1 #2 #3 #4!{\def\@tempA{#1}\expandafter\strip@slash\@tempA!}
- \expandafter\expandafter\expandafter\getgreekdate\csname ver@greek.ldf\endcsname !
- \ifnum\@tempA<20140918
-   \languageattribute{greek}{polutoniko}%
- \else
-   \languageattribute{greek}{ancient}%
- \fi
- \let\strip@slash\@undefined
- \let\getgreekdate\@undefined
+\unless\ifcsname IfFileLaterThanTF\endcsname
+  \def\IfFileLaterThanTF#1{\expandafter\@ifl@t@r\csname ver@#1\endcsname}%
 \fi
 
+\def\GreekName{greek}
+\ifx\languageattribute\undefined
+  \def\GreekName{polutonikogreek}%
+\else
+\IfFileLaterThanTF{greek.ldf}{2014-09-18}%
+  {\languageattribute{greek}{ancient}}%
+  {\languageattribute{greek}{polutoniko}}%
+\fi
 \newif\ifLipsian
 
 \providecommand*\substitutefontfamily{}%
@@ -1203,8 +1199,10 @@ $\displaystyle\left.%
 \providecommand\grtoday{}
 \RenewDocumentCommand\grtoday{ s }%
 {\bgroup\IfBooleanTF{#1}%
-{\greeknumeral*{\the\day}\space\gr@c@month\space\greeknumeral*{\the\year}}%
-{\greeknumeral{\the\day}\space\gr@c@month\space\greeknumeral{\the\year}}%
+{\greeknumeral*{\the\day}\space \gr@polutoniko@month\space
+  \greeknumeral*{\the\year}}%
+{\greeknumeral{\the\day}\space \gr@polutoniko@month\space
+  \greeknumeral{\the\year}}%
 \egroup}
 
 \DeclareTextSymbol{\Vmiria}{\GRenc@name}{5}

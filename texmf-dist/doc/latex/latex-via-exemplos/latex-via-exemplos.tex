@@ -1,11 +1,11 @@
-
 % Usar XeLaTeX ou LuaLaTeX
 % acento nao sobrevive no arquivo temporario de showexpl
 % Use diretamente do arquivo externo, ou use XeLaTeX/LuaLaTeX
 %
 \makeatletter
 \@ifclassloaded{book}{}{
-  \documentclass[12pt,a4paper,twoside,openright]{book}
+  %\documentclass[12pt,a4paper,twoside,openright]{book}
+  \documentclass[12pt,a4paper,oneside]{book}
   %  \newif\iftwosidedocument
   %  \twosidedocumenttrue
 }
@@ -39,9 +39,9 @@
 %    \let\IfFontExistsTF\iffontexists
 %  \fi
 %\else\ifLuaTeX
-  \ifx \IfFontExistsTF\undefined
-    \PackageError{\jobname}{fontspec is old}{Install updated fontspec package}
-  \fi
+%  \ifx \IfFontExistsTF\undefined
+%    \PackageError{\jobname}{fontspec is old}{Install updated fontspec package}
+%  \fi
 %\fi\fi
 
 %\ifLuaTeX 
@@ -49,7 +49,7 @@
 % patch on iffont
   \ifx \IfFontExistsTF\undefined
     %\PackageError{\jobname}{fontspec antigo}{Atualize para versão mais nova ou use XeLaTeX}
-    \PackageError{\jobname}{fontspec antigo}{Atualize para versão mais nova}
+    \PackageError{\jobname}{'fontspec' antigo}{Atualize para versão mais nova}
   \fi
   % \usepackage{etoolbox} % iffont ja carregou
   \let\iffontexists\IfFontExistsTF
@@ -113,7 +113,17 @@
 
 % \usepackage{amssymb} % para \circlearrowleft que nao tem no unicode-math
 \usepackage{amsmath}
+% \usepackage{amsbsy} % bold symbol: amsmath carrega
 
+% \boldsymbol e ambiente boldmath não funciona no unicode-math
+% Mapeando o symbf como \boldsymbol
+\makeatletter
+\AtBeginDocument{%
+  \@ifpackageloaded{unicode-math}{%
+      \let\boldsymbol\symbf
+  }{\let\symbf\boldsymbol}%
+}{}
+\makeatother
 % \usepackage{xunicode} % textcomp equiv. Old and not works on lualatex (March, 2018). Now, fontspec features are sufficient for this
 \usepackage{unicode-math} % amssymb,amsmath equiv.
 \ifLuaTeX
@@ -121,7 +131,8 @@
 \fi
 
 % Other packages
-\usepackage{xcolor,tikz} % graphics
+\usepackage[table]{xcolor} % colors, with table support
+\usepackage{tikz} % graphics
 
 % margins
 \usepackage[margin=2cm]{geometry}
@@ -153,7 +164,7 @@
 
 % \usepackage{fancyhdr}
 
-\usepackage{bm} % fórmula matematica em negrito.
+%\usepackage{bm} % fórmula matematica em negrito.
 
 \usepackage{enumerate} % controle de enumeração
 % \usepackage{hhline} % linhas duplas na tabela
@@ -188,8 +199,9 @@
 % \usepackage{algorithmicx}
 \usepackage{algpseudocode} %  arquivo de estilo de algorithmicx
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% pacotes usados nos exemplos correspondentes
-%
+%----------------------------------------------
 %\usepackage{tikz} % pacote gráfico
 \usetikzlibrary{babel} % para compatiblidade com o pacote babel, requerido por agumas bibliotecas como o cd.
 \usetikzlibrary{calc} % calc eh para efetuar calculos matematicos ou expressoes em coordenadas
@@ -198,7 +210,7 @@
 \usetikzlibrary{intersections} % interseccao entre caminhos
 \usetikzlibrary{matrix} % matriz no tikz
 \usetikzlibrary{cd} % diagrama comutativa
-
+%
 \usepackage{lettrine} % Para paragrafo no estilo biblia
 \usepackage{caption} % configurar o titulo da figura e tabela
 \usepackage{subcaption} % subfigura ou subtabela
@@ -234,6 +246,24 @@
 \usepackage{contour}
 % texto sombreado
 \usepackage{shadowtext}
+% texto em degrade (gradiente linear)
+\usepackage{gradient-text}
+%
+% texto circulado: de 2022
+\usepackage{circledtext}
+%
+% \toprule, midrule, cmidrule{}, bottomrule
+\usepackage{booktabs}
+% xtabular
+\usepackage{xtab}
+%
+% Para evaluar expressões matemáticas
+\usepackage{xfp}
+\usepackage{numerica}
+\usepackage{numerica-tables}
+
+% TODO's
+%\usepackage{todonotes} % carega xkeyval, tikz, etc
 
 %% caixa colorida usada para exemplo de certificado.
 % \usepacakge{tcolorbox}
@@ -719,11 +749,18 @@
   \begin{singlespacing}%
   \ltxlistingpreset
   % own preset
+  % disable keyval unknow 'key' error message for keyval
   \let\KV@errx@ORI\KV@errx   % Save original error handling
   \let\KV@errx\@gobble       % Ignore unknown keys
+  % If xkeyval loaded, disable its one too
+  \@ifpackageloaded{xkeyval}{%
+    \let\XKV@err@ORI\XKV@err
+    \let\XKV@err\@gobble
+  }{}   
     \expandafter\ltx@listing@setkeys\expandafter{#1}  
 %    \expandafter\ltx@listing@setkeys\expandafter{\ltx@listing@args}
-  \let\KV@errx\KV@errx@ORI   % Restore original error handling      
+  \let\KV@errx\KV@errx@ORI   % Restore original error handling for keyval
+  \@ifpackageloaded{xkeyval}{\let\XKV@err\XKV@err@ORI}{}   % Restore original error handling for xkeyval
   %\noindent
   \begin{framed} % frame the output
   \noindent
@@ -921,6 +958,10 @@
 \newcommand{\arrobasymbforindex}{$@$}
 \newcommand{\exclsymbforindex}{$!$}
 
+% Legenda a ser colocada embaixo da tabela/figura, conforme ABNT
+% \providecommand{\legend}[1]{\par \medskip #1 \smallskip}
+\providecommand{\legend}[1]{\par \medskip #1}
+
 %%%%%%%%%%%%%%%%%%%%%
 % provide some files
 %-------------------
@@ -952,14 +993,17 @@
 (\url{http://dfqm.sorocaba.ufscar.br/})} }
 % Versão preliminar: janeiro a abril de 2018
 % Primeira versão publica (0.5): abril de 2018.
-% Primiera atualizacao (0.5.1): junho de 2018.
+% Primeira atualizacao (0.5.1): junho de 2018.
 % Segunda atualização, adicionando o ABNT (0.5.2): junho de 2018.
 % Terceira atualização (0.5.3): junho de 2018.
 % Quarta atualização (0.5.4): agosto de 2019
 % Quinta atualização (0.5.6): dezembro de 2019 
 % Sexta atualização (0.5.7): julho de 2021 
-\date{Versão 0.5.8, 17 de maio de 2022}
-
+% Setima atualização (0.5.8): 17 de maio de 2022
+% Oitava atualização (0.5.9): 01 de maio de 2023
+% Nona atualização (0.5.9): 01 de maio de 2023}
+% Decima atualização
+\date{Versão 0.5.10, 23 de outubro de 2023}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Documet start here
@@ -970,7 +1014,7 @@
 
 \thispagestyle{empty}
 
-Copyright \textcopyright 2018--2022 por Sadao Massago. 
+Copyright \textcopyright 2018--2023 por Sadao Massago. 
 Todos os direitos reservados.
 Este documento é software livre; podendo ser redistribuído e/ou modificado de acordo com os termos da Licença Pública da GNU como publicado pela Free Software Foundation; versão 2 da Licença, ou (se for sua opção) qualquer versão posterior. 
 Veja \url{https://opensource.org/licenses/gpl-license}.
@@ -981,6 +1025,12 @@ A versão atual deste documento está disponível em \\
 \url{https://ctan.org/pkg/latex-via-exemplos}
 
 %%{CTAN://info/latex-via-exemplos}
+
+\clearpage\thispagestyle{empty}\cleardoublepage
+\frontmatter
+\chapter*{}
+``\emph{Ninguém é tão pobre que nada possa dar e ninguém é tão rico que não precise receber}'' 
+(Alvaro Granha Loregian)
 
 \clearpage\thispagestyle{empty}\cleardoublepage
 \frontmatter
@@ -1035,7 +1085,7 @@ Capítulo~16 discute o pacote \texttt{xcolor} especial para cores, e \texttt{tik
 
 Capítulo~17 ilustra a criação de \texttt{poster} e \texttt{slides} de apresentação.
 
-Capítulo~18 apresenta o uso de \XeLaTeX{} e Lua\LaTeX, considerado a próxima geração de \LaTeX.
+Capítulo~18 apresenta o uso de \XeLaTeX{} e Lua\LaTeX, considerado como a próxima geração de \LaTeX.
 
 Capítulo~19 apresenta a formatação no padrão ABNT.
 
@@ -1045,7 +1095,7 @@ Apêndice~B é sobre como escrever um pacote (arquivo de estilos).
 
 Apêndice~C trata de editor \LyX{} que permite elaborar documentos de forma mais visual como os editores para escritórios, em vez de editar diretamente o código fonte em \LaTeX.
 
-Apêndice~D trata da mala direta e criação do caderno de resumos, interessantes para organizadores de eventos.
+Apêndice~D trata da mala direta, criação do caderno de resumos, folhetos, etc que são interessantes para organizadores de eventos.
 
 Apêndice~E trata de pacotes úteis para elaborar provas e lista de exercícios.
 
@@ -1059,7 +1109,8 @@ Apêndice~G descreve alguns aplicativos livres interessantes que auxilia os usu�
 % Sorocaba, agosto de 2019.
 % Sorocaba, dezembro de 2019.
 % Sorocaba, julho de 2021.
-Sorocaba, maio de 2022.
+% Sorocaba, maio de 2022.
+Sorocaba, outubro de 2023.
 
 \
 
@@ -1656,8 +1707,6 @@ Para traçar linhas horizontais apenas em algumas células, usa-se o comando \te
 
 No Exemplo~\ref{ex04:cline}, o comando \texttt{multicolumn} foi usado somente para formatar a coluna (colocar linha vertical) e não para juntar células.
 
-Se precisar traçar linhas duplas ou similares na tabela, podemos usar o pacote \texttt{hhline}\index{hhline} que não entraremos em detalhes.
-
 Para alinhar os decimais, usamos o pacote \texttt{dcolumn}\index{dcolum}
 que define um novo especificador de colunas na tabela, especificado por \texttt{D\{<decimal em TeX>\}\{<decimal em PDF>\}\{<casas decimais>\}}.
  
@@ -1741,7 +1790,8 @@ Mais sobre medidas, veja a Seção~\ref{sec:medidas:unidade} e Seção~\ref{sec:
 
 O comando \verb+\footnote{texto}+ que coloca o ``texto'' no rodapé do documento funciona também dentro do \texttt{tabularx}.
 
-Note que \texttt{hhline} que produz linhas duplas e similares não funciona no \texttt{tabularx}.
+Para ajustes de tabelas de forma mais profissional, pode precisar do \texttt{booktabs}\index{booktabs} (não é da categoria \texttt{base/required}) e se precisar traçar linhas duplas ou similares na tabela, podemos usar o pacote \texttt{hhline}\index{hhline}. Também existe o pacote para tabela colorida \texttt{colortbl}\index{colortbl}  (não é da categoria \texttt{base/required}). Não entraremos em detalhes destes pacotes, mas vale observar que \texttt{hhline} não funciona no \texttt{tabularx}.
+
 
 \section{Ambiente de tabulação}
 
@@ -2085,7 +2135,7 @@ Outro exemplo: $\mathrm{tg}\theta = \frac{\mathrm{sen}\theta}{\cos\theta}$.
 %\let\mathbb\orimathbb
 
 Note que no \texttt{argmin}, o $x$ será colocado embaixo e não como índice. Para que o que foi colocado como índice fique embaixo, usa-se o comando \verb+\mathop+\index{modo matematico@{modo matemático}!basico@{básico}!\verb+\mathop+}.
-O comando \verb+\,+ usado no meio de \texttt{argmin} é um comando de espaçamento usado na fórmula que insere pequeno espaço. Mas sobre espaçamentos no modo amtemático, veja a Seção~\ref{sec:medidas:unidade} e Seção~\ref{sec:medidas} do Caítulo~\ref{chap:medidas:contadores}.
+O comando \verb+\,+ usado no meio de \texttt{argmin} é um comando de espaçamento usado na fórmula que insere pequeno espaço. Mais sobre espaçamentos no modo matemático, veja a Seção~\ref{sec:medidas:unidade} e Seção~\ref{sec:medidas} do Caítulo~\ref{chap:medidas:contadores}.
  
 Em geral, costuma definir comandos para nome das funções no \texttt{preamble} do documento para facilitar a digitação. 
 A definição de comandos e ambientes serão estudados na Seção~\ref{sec:comandos} do Capítulo~\ref{chap:novo:comando}.
@@ -2573,6 +2623,7 @@ Produzindo com comando \verb+\not+.
 \end{ltxlisting}
 %\end{LTXexample}
 %\end{singlespacing}
+
 
 \clearpage\thispagestyle{empty}\cleardoublepage
 \chapter{Definindo Comandos e Ambientes}\label{chap:novo:comando}
@@ -3805,8 +3856,9 @@ O comando \verb|\mathcal{}|\index{mathcal@\verb+\mathcal+} que não tem correspo
 Os comandos acima não funcionam para símbolos e eles não podem ser combinados.
 Por exemplo, \verb|\mathbf{\matrm{A}}| é mesmo que \verb|\mathrm{A}|. 
 
-Assim, \verb+\mathbf+ não é apropriado para escrever fórmulas em negrito. Portanto, use \verb+\bm+\index{bm@\verb+\bm+} do pacote \texttt{bm}\index{bm} para converter parte da fórmula em negrito.
-Note que, quando usa em conjunto com o \texttt{amsmath}, pode precisar colocar chaves duplas para prevenir erros em \verb+\bm+ (veja Exemplo~\ref{ex10:fontes:mat}).
+Assim, \verb+\mathbf+ não é apropriado para escrever fórmulas em negrito. Portanto, use \verb+\boldsymbol+\index{boldsymbol@\verb+\boldsymbol+} do pacote \texttt{amsmath} para converter parte da fórmula em negrito. Note que, nem todo símbolo torna negrito com \verb+\boldsymbol+. Neste caso, use o comando \verb+\pmb+\index{pmb\verb+\pmb+} que emula o negrito, escrevendo três vezes com pequeno deslocamento.
+%Note que, quando usa em conjunto com o \texttt{amsmath}, pode precisar colocar chaves duplas para prevenir erros em \verb+\bm+ 
+Veja Exemplo~\ref{ex10:fontes:mat}.
 
 O pacote \texttt{amssymb} dispõe de mais dois fontes bastante usados na matemática que são \verb+\mathfrak+\index{mathfrak@\verb+\mathfrak+} e \verb+\mathbb+\index{mathbb@\verb+\mathbb+}.
 Em geral, usa-se os pacotes \texttt{amsmath} e \texttt{amssymb} quando produz textos matemáticos.
@@ -3821,10 +3873,10 @@ no \texttt{preamble} do documento como no Exemplo~\ref{ex10:fontes:mat}.
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
 \usepackage{amssymb,amsmath}
-\usepackage{bm}
+%\usepackage{bm}
 \begin{document}
 \[ \forall x \in \mathbb{R},\mathrm{sen}^2(x)+\cos^2(x)=1 \]
-{\bfseries Para $\bm{{i=0}}$}: Por definição, $0!=1$.
+{\bfseries Para $\pmb{i=0}$}: Por definição, $0!=1$.
 \end{document}
 \end{ltxlisting}
 %\end{LTXexample}
@@ -3843,6 +3895,42 @@ Note que o \emph{seno} em inglês é \emph{sine}, abreviado para \texttt{sin} qu
 Neste caso, costuma definir o comando para não ficar digitando \texttt{mathrm} toda hora.
 De forma análoga, quando o comando produz nome não usual, como no caso de tangente que é $\tan$ no \LaTeX, mas costuma usar $\mathrm{tg}$ no Brasil, podem ser redefinidos.
 A definição e redefinição de comandos estão na Seção~\ref{sec:comandos} do Capitulo~\ref{chap:novo:comando}. 
+
+Mesmo com o texto em negrito, a equação não ficará em negrito. Para que todas as equações de um trecho fiquem em negrito, usa-se o ambiente \texttt{boldmath}\index{boldmath}. Se quer que somente alguns símbolos (ou um trecho) fique em negrito, usa-se o comando \verb+\boldsymbol+\index{boldsymbol@\verb+\boldsymbol+} do pacote \texttt{amsbsy}\index{amsbsy} que é carregaado pelo \texttt{amsmath}. Note que \verb+\mathbf+ produz alfabeto em negrito na fórmula, mas não os símbolos. Uma observação importante é que o comando \verb+\boldsymbol+ e o ambiente \verb+\boldmath+ não funcionam para \texttt{unicode-math} do Xe\LaTeX/Lua\LaTeX, sendo necessário substituir por \verb+\symbf+\index{symbf@\verb+\symbf+}. Paraa quem usa ou pretende usar \XeLaTeX{} e/ou Lua\LaTeX, uma solução é colora o código
+
+\begin{singlespacing}
+\begin{lstlisting}
+\makeatletter
+\AtBeginDocument{%
+  \@ifpackageloaded{unicode-math}{%
+      \let\boldsymbol\symbf
+  }{\let\symbf\boldsymbol}%
+}{}
+\makeatother
+\end{lstlisting}
+\end{singlespacing}
+
+no preâmbulo para que \verb+\boldsymbol+ e \verb+\symbf+ fiquem ativos com ou sem \texttt{unicode-math}
+
+Veja o Exemplo~\ref{ex10:negrito}.
+
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex06-06.tex},label=ex:06-06]
+\begin{ltxlisting}[caption={ex10-negrito.tex},label=ex10:negrito]
+\documentclass{article}
+\usepackage{amsbsy} % para símbolo em negrito
+\begin{document}
+Normal
+\[ a^2=b^2+c^2 \]
+Alguns símbolos em negrito
+\[ \boldsymbol{a}^2=b^2+c^2 \]
+Um trecho em negrito
+\[\boldsymbol{a^2=b^2+c^2}\]
+\end{document}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
 
 \clearpage\thispagestyle{empty}\cleardoublepage
 \chapter{Referências Bibliográficas e Índice Remissivo}
@@ -4215,7 +4303,7 @@ As vezes o espaçamento ajustado automaticamente não está bom e queremos fazer
 Para aumentar espaçamento entre parágrafos em um determinado ponto, como entre texto e equações altas, poderá usar o \verb+\smallskip+\index{amallskip@\verb+\smallskip+}, \verb+\medskip+\index{medskip@\verb+\medskip+} e \verb+\bigskip+\index{bigskip@\verb+\bigskip+} para ter espaçamentos maior que o padrão.
 Note que, se quer ter espaçamento maior entre texto e equações em todo o documento, deverá efetuar ajustes de parâmetros \verb+\abovedisplayskip+\index{abovedisplayskip@\verb+\abovedisplayskip+} e \verb+\belowdisplayskip+\index{belowdisplayskip@\verb+\belowdisplayskip+}.
 
-Para espaço horizontal e vertical, usa-se o \verb+\hspace{medida}+\index{hspace@\verb+\haspace+} e \verb+\vspace{medida}+\index{vspace@\verb+\vspace+} respectivamente.
+Para espaço horizontal e vertical, usa-se o \verb+\hspace{medida}+\index{hspace@\verb+\hspace+} e \verb+\vspace{medida}+\index{vspace@\verb+\vspace+} respectivamente.
 Caso estiver inserindo o espaço vertical no começo das páginas, ou espaço horizontal no começo das linhas, use a versão com ``*'' \verb+\hspace*{medida}+\index{hspace*@\verb+\hspace*+} e \verb+\vspace*{medida}+\index{vspace*@\verb+\vspace*+}.
 
 Medidas comumente usados são:
@@ -4324,6 +4412,16 @@ ou até mesmo, omitir ``\verb+=+'' e escrever como
 \verb+\widthof{<conteúdo>}+\index{widthof@\verb+\widthof+}, \verb+\heightof{<conteúdo>}+\index{heightof@\verb+\heightof+}, \verb+\depthof{<conteúdo>}+\index{depthof@\verb+\depthof+} e \verb+\totalheightof{<conteúdo>}+\index{totalheightof@\verb+\totalheightof+} 
 que retornam \texttt{width}, \texttt{height}, \texttt{depth}, e \texttt{width+depth}, respectivamente.
 
+Note que o calculo efetuado pelo pacote \texttt{calc} pode não funcionar em alguns parâmetros como medida de largura do \verb+\parbox+ e de \texttt{minipage}. Neste caso, coloque a expressão dentro do \verb+\dimexpr()+\index{dimexpr@\verb+\dimexpr+}. Note que expressão deve ficar dentro de parenteses e não chaves.
+
+Por exemplo,
+\begin{singlespacing}
+\begin{lstlisting}
+\parbox{\dimexpr(\linewidth-1cm)}{texto}
+\end{lstlisting}
+\end{singlespacing}
+efetuará calculo da largura da caixa como sendo \texttt{1cm} menor do que a largura da linha.
+
 \section{Contadores}
 
 \LaTeX{} usa diversos contadores para efetuar enumeração automática, tais como páginas, equações enumeradas, capítulos e seções, figuras, etc.
@@ -4350,9 +4448,9 @@ O estilo de enumeração \verb+\roman+ acima, podem ser
 \item[\textbackslash\texttt{arabic}]\index{arabic@\verb+\arabic+} que é 1, 2, 3 ...
 \item[\textbackslash\texttt{alph}]\index{alph@\verb+\alph+} que é a, b, c ... 
 \item[\textbackslash\texttt{Alph}]\index{Alph@\verb+\Alph+} que é A, B, C ... 
-\index[\textbackslash\texttt{roman}]\index{roman@\verb+\roman+} que é i, ii, iii ...
-\index[\textbackslash\texttt{Roman}]\index{Roman@\verb+\Roman+} que é I, II, III ...
-\index[\textbackslash\texttt{fnsymbol}]\index{fnsymbol@\verb+\fnsymbol+} que é sequencia de símbolos (pode ser usado no rodapé, se for pouco).
+\item[\textbackslash\texttt{roman}]\index{roman@\verb+\roman+} que é i, ii, iii ...
+\item[\textbackslash\texttt{Roman}]\index{Roman@\verb+\Roman+} que é I, II, III ...
+\item[\textbackslash\texttt{fnsymbol}]\index{fnsymbol@\verb+\fnsymbol+} que é sequencia de símbolos (pode ser usado no rodapé, se for pouco).
 \end{description}
 Veja Exemplo~\ref{ex12:contadores}.
 %\begin{singlespacing}
@@ -5200,7 +5298,7 @@ Com titulo.
 \end{document}
 \end{ltxlisting}
 
-\section{Ambiente com parâmetro na finalização e aplicação do comando no corpo}
+\section[Ambiente com parâmetro na finalização e aplicação do comando]{Ambiente com parâmetro na finalização e aplicação do comando no corpo}
 
 No caso de ambiente precisar usar o argumento na finalização, precisará associar a algum comando.
 Isto porque, o comando \verb+\newenvironment{ambiente}+ criará o par de comandos \verb+\ambiente+ (chamado pelo \verb+\begin{ambiente}+) e \verb+\endambiente+ (chamado pelo \verb+\end{ambiente}+) que funcionará em sincronismo. 
@@ -5281,11 +5379,26 @@ Testando o ambiente.
 \end{document}
 \end{ltxlisting}
 
-Para aplicar comandos com mais de um parâmetros, poderá recorrer ao pacote fora do \texttt{base}/\texttt{required} como o \texttt{environ}\index{environ}.
+Note que \verb+\collect@body+ não pode ser usado para ambiente que recebem quebra de linhas ou parágrafos e também não funciona para aplicar comandos com mais de um parâmetro. Para tais casos, poderá recorrer ao pacote fora do \texttt{base}/\texttt{required} como o \texttt{environ}\index{environ} na qual \verb+\BODY+ corresponde ao conteúdo do ambiente (Exemplo~\ref{ex14:comando:corpo:ambiente:environ}).
 
 % Exemplo do uso:
 % \usepackage{environ}
-% \NewEnviron{myulbox}{\underline{\BODY}}
+% \NewEnviron{myulbox}{\underline{\BODY}} {}
+\begin{lstlisting}[caption={ex14-comando-no-corpo-do-ambiente-environ.tex}, label=ex14:comando:corpo:ambiente:environ]
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{environ}
+\newcommand{\myframebox}[1]{\fbox{\parbox[\columnwidth]{#1}}}
+\NewEnviron{myfbox}{\myframebox{\BODY}} {}
+\begin{document}
+\begin{myfbox}
+Testando o ambiente.
+\end{myfbox}
+\end{document}
+\end{lstlisting}
+
 
 \section{Comandos definidos dentro do outro comando}
 
@@ -6131,7 +6244,7 @@ Da forma análoga, o pacote \texttt{calligra}\index{calligra} acrescenta o coman
 
 Para ver as fontes livres do \LaTeX{} e os pacotes correspondentes, veja o site \url{http://www.tug.dk/FontCatalogue/}.
 
-\section{Texto somente com contorno e sombreado}
+\section{Texto somente com contorno, sombreado e degradê}
 No caso de cartazes e folhetos, as vezes usamos texto somente com contorno para títulos na qual usa-se a letra grande.
 Uma forma fácil de fazer isso é usar o pacote \texttt{contour}\index{contour}
 que permite criar um contorno no elemento. 
@@ -6170,6 +6283,112 @@ Veja o Exemplo~\ref{ex15:shadow}.
 \end{ltxlisting}
 %\end{LTXexample}
 %\end{singlespacing}
+
+Para produzir o texto em degradê\index{degradê!texto}, existe o pacote novo chamado \texttt{gradient-text}\index{gradient-text} (\url{https://www.ctan.org/pkg/gradient-text}) de 2022 que implementa a aplicação do gradiente linear no texto. Caso ele não for instalável pelo gerenciador de pacotes e não souber instalar manualmente, basta abaixar o arquivo \texttt{gradient-text.sty} e deixar junto com o documento \TeX.
+
+O \texttt{gradient-text} suporta somente o modelo de cor em RGB. Para usar outros modelos de cores como pelo nome, poderá criar um novo comando com auxilio do \verb+\convertcolorspec+\index{convertcolorspec@\verb+\convertcolorspec+} do pacote \texttt{xcolor}. Note que, para que letras acentuadas sejam aceitas, requer \XeLaTeX/Lua\LaTeX.
+Veja o Exemplo~\ref{ex15:gradient-text}.
+
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-06.tex},label=ex:11-06]
+%
+% truque de uar expandafter com varios argumentos, de https://tex.stackexchange.com/questions/133753/how-do-i-have-to-invoke-expandafter-for-a-macro-with-multiple-arguments
+\begin{ltxlisting}[caption={ex15-gradient.tex},label=ex15:gradient-text]
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{xcolor}
+\usepackage{gradient-text}
+% comando que aceita cor pelo nome
+\makeatletter
+\newcommand{\inverted@gradientRGB}[3]{\gradientRGB{#3}{#1}{#2}}
+\newcommand{\gradienttext}[4][named]{%
+  \convertcolorspec{#1}{#3}{RGB}{\gradienttext@startcolor}%
+  \convertcolorspec{#1}{#4}{RGB}{\gradienttext@endcolor}%
+  \edef\gradienttext@colors{{\gradienttext@startcolor}{\gradienttext@endcolor}}
+  \expandafter\inverted@gradientRGB\gradienttext@colors{#2}
+}
+\makeatother
+\begin{document}
+Com cor em RGB: {\Huge \gradientRGB{Texto em degradê}{0,255,0}{0,0,255}}
+
+Com comando criado: {\Huge \gradienttext{Texto em degradê}{orange!50!red}{yellow}}
+\end{document}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+\section{Circulando o texto}
+O \LaTeX{} %pacote \texttt{textcomp}
+ implementa  o comando \verb+\textcircled+\index{textcircled@\verb+\textcircled+} para  números/letras com círculos.
+  O comando básico é \verb+\textcircled+\index{textcircled@\verb+\textcircled+} que coloca circulo no seu argumento.
+Veja o Exemplo~\ref{ex15:textcircled}.
+
+% exemplo baseado em
+% https://www.latex4technics.com/?note=6806YG
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-06.tex},label=ex:11-06]
+\begin{ltxlisting}[caption={ex15-textcircled.tex},label=ex15:textcircled]
+\documentclass[12pt,a4paper]{article}
+\usepackage{enumitem}
+\begin{document}
+\textcircled{\small{2}}\quad\textcircled{\small{A}}
+\begin{enumerate}
+[label=\large\protect\textcircled{\small\arabic*}]
+\item First item
+\item Second item
+\item Third item
+\end{enumerate}
+\end{document}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+Para controle mais sofisticado, existe um pacote novo \texttt{circledtext}\index{circledtext} (\url{https://www.ctan.org/pkg/circledtext}) de 2022. Caso ele não for instalável pelo gerenciador de pacotes e não souber instalar manualmente, basta abaixar o arquivo \texttt{textcircled.sty} e deixar junto com o documento \TeX.
+
+Veja o Exemplo~\ref{ex15:circledtext}.
+
+% exemplo baseado no seu manuaal
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-06.tex},label=ex:11-06]
+\begin{ltxlisting}[caption={ex15-circledtext.tex},label=ex15:circledtext]
+\circledtextset{width=1em}
+\documentclass[12pt,a4paper]{article}
+\usepackage{circledtext} % tem o comando \circledtext
+\circledtextset{resize=real}
+\usepackage{enumitem}
+\begin{document}
+\circledtextset{width=1em}
+\circledtext{8}\quad
+\circledtext{888}\quad
+\circledtext*{8}\quad
+\circledtext*{888}
+
+Algumas alterações da configuração
+
+\circledtext[boxtype=O]{12}\quad
+\circledtext[boxtype=oo ]{88}\quad
+\circledtext[boxtype=Oo ]{88}\quad
+\circledtext[boxtype=OO ]{88}\quad
+\circledtext*[boxtype=oo ]{88}\quad
+\circledtext*[boxtype=Oo ]{88}\quad
+\circledtext*[boxtype=OO ]{88}\quad
+
+%\circledtext[yscale=0.5]{15}
+\circledtext[width=3em,height=1em]{abc}
+
+\begin{enumerate}
+[label=\protect\circledtext{\arabic*}]
+\item First item
+\item Second item
+\item Third item
+\end{enumerate}
+\end{document}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+%Existe também, a opção de usar o \texttt{pifont}\index{pifont} ou o pacote \texttt{circledsteps}
 
 \section{Controle das figuras e similares}
 
@@ -6286,6 +6505,150 @@ Veja o Exemplo~\ref{ex15:pdflscape}.
 %
 %rotating (sideways,sidewaysfigure,sidewaystable) ou lscape/pdflscape? OK
 
+\section{Melhorando as tabelas}
+
+O pacote \texttt{booktabs}\index{booktabs} oferece comandos para traçar linhas horizontais com espaçamento ajustado adequadamente. Use \verb+\toprule+\index{toprule@\verb+\toprule+} para linha acima da tabela,
+\verb+\midrule{}+\index{midrule@\verb+\midrule+} e \verb+\cmidrule+\index{cmidrule@\verb+\cmidrule+} para linhas dentro da tabela e 
+\verb+\bottomrule+\index{bottomrule@\verb+\bottomrule+} para linha abaixo da tabela. No ABNT, encima e embaixo da tabela é fechada, mas não no lado esquerdo e direito. 
+
+Veja a Tablea~\ref{ex15:booktabs}).
+
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-06.tex, parte c},label=ex:11-06:c]
+\begin{ltxlisting}[caption={ex15-booktabs.tex},label=ex15:booktabs]
+\begin{table}[hbp!]
+\begin{center}
+\caption{Tabela com \texttt{booktabs}}\label{tab:booktabs}
+\begin{tabular}{ll} 
+\toprule
+   produto & preço \\
+\midrule
+   cenouras  (500g)          & R\$0,50  \\
+   cogumelos (vidro de 500g) & R\$5,00  \\
+   batata    (1Kg)           & R\$1,20  \\ \midrule % \hline
+   total & R\$6,70 \\
+   \bottomrule
+\end{tabular}
+\legend{Fonte: elaboração do autor}
+\end{center}
+\end{table}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+O comando \verb+\legend+ é da classe \texttt{abntex2}, mas se quiser usar fora dela, basta colocar o comando
+\begin{verbatim}
+\providecommand{\legend}[1]{\par \medskip #1 \smallskip}
+\end{verbatim}
+ou similar no preâmbulo do documento para definir o comando.
+
+Para tabelas longas simples, poderá usar o pacote \texttt{longtable}, mas para tabelas longas mais sofisticadas como exigido pelo ABNT, costuma usar o pacote \texttt{xtab}\index{xtab} que implementa o ambiente \texttt{xtabular}\index{xtabular}
+
+A Tabela~\ref{ex15:xtab} é tabela que ocupa várias páginas.
+Note que o termo   ``continua'' (caso ocupar duas ou mais páginas), ``continuação'' (caso ocupar três páginas) e ``conclusão'' (caso ocupar duas ou mais páginas) no cabeçalho da tabela, conforme ABNT.
+A Tabela~\ref{ex15:xtab} foi criado pelo ambiente \texttt{xtabular} do pacote \texttt{xtab} que requer duas compilações seguidas para ajustar corretamente.
+Veja a Tablea~\ref{ex15:xtab}.
+
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-06.tex, parte c},label=ex:11-06:c]
+\begin{ltxlisting}[caption={ex15-xtab.tex},label=ex15:xtab]
+\begin{center}
+\topcaption{Inflação (IPCA) e juro de poupança de 2022}\label{tab:inflacao}
+\tablefirsthead{ % cabeçalho da primeira página
+  % \PWSTlastpage é criado pelo \newcount e não pelo \newcounter (não tem prefixo 'c@')
+  \ifnum\PWSTlastpage > 1 % Se a tabela ocupar mais de uma página
+    \multicolumn{3}{r}{(continua)}\\ 
+  \fi
+  \toprule
+    & \multicolumn{2}{c}{Índice} \\  \cmidrule{2-3}
+  \textbf{Mês} & \textbf{Inflação} & \textbf{Poupança}\\ \midrule}
+\tablehead{% cabeçalho das páginas do meio  
+  \multicolumn{3}{r}{(continuação)}\\ \toprule
+    & \multicolumn{2}{c}{Índice} \\  \cmidrule{2-3}
+  \textbf{Mês} & \textbf{Inflação} & \textbf{Poupança} \\ \midrule}
+\tablelasthead{ % cabeçalho da última página
+  \multicolumn{3}{r}{(conclusão)}\\ \toprule
+    & \multicolumn{2}{c}{Índice} \\  \cmidrule{2-3}
+  \textbf{Mês} & \textbf{Inflação} & \textbf{Poupança} \\ \midrule}
+\begin{xtabular}{lrc}
+Janeiro   &  0,54 & 0,5608 \\ 
+Fevereiro &  1,01 & 0,5000 \\
+Março     &  1,62 & 0,5976 \\
+Abril     &  1,06 & 0,5558 \\
+Maio      &  0,47 & 0,6671 \\
+Junho     &  0,67 & 0,6491 \\
+Julho     & -0,68 & 0,6639 \\
+Agosto    & -0,36 & 0,7421 \\
+Setembro  & -0,29 & 0,6814 \\
+Outubro   &  0,59 & 0,6501 \\
+Novembro  &  0,41 & 0,6515 \\
+Dezembro  &  0,62 & 0,7082 \\
+\midrule
+Acumulado do ano & 5,79 & 7,8997 \\
+\bottomrule
+\end{xtabular}
+
+\legend{Fonte: \href{https://blog.nubank.com.br/ipca-2022/}{https://blog.nubank.com.br/ipca-2022/}, 
+  \href{https://brasilindicadores.com.br/poupanca/}{https://brasilindicadores.com.br/poupanca/}
+}
+\end{center}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+Para colorir linhas e ou células da tabela de forma simples, poderá carregar o pacote \texttt{xcolor} com opção \texttt{table} colocando o código
+\begin{singlespacing}
+\begin{lstlisting}
+\usepackage[table]{xcolor}
+\end{lstlisting}
+\end{singlespacing}
+
+Se for usar pacote que carrega o \texttt{xcolor} automaticamente, coloque antes do pacote correspondente.
+Se estiver usando a classe \texttt{beamer}, coloque a opção \texttt{xcolor=table} no \texttt{beamer} como em
+\begin{singlespacing}
+\begin{lstlisting}
+\documentclass[xcolor=table]{beamer}
+\end{lstlisting}
+\end{singlespacing}
+
+Com a opção \texttt{table} no \texttt{xcolor}, o pacote \texttt{colortbl}\index{colortbl} será carregado com ajustes necessários.
+Note que pacotes tais como \texttt{tikz} e \texttt{pdfpages} carregam o \texttt{xcolor}. Logo, deve colocar \verb+\usepackage[table]{xcolor}+ antes de tais pacotes para evitar erros. Outra forma de evitar erros é colocar
+\verb+\PassOptionsToPackage{table}{xcolor}+
+ logo em seguida do \verb+\documentclass{}+ para que, qualquer pacote que venha a carregar o \texttt{xcolor} passe opção \texttt{table} para ele. Neste caso, \verb+\usepackage{xcolor}+ pode ser colocado sem preocupação.
+ 
+Como exemplo,vamos colorir as linhas ímpares de cinza clara para para facilitar o acompanhamento das linhas.
+Veja a Tablea~\ref{ex15:xcolor:table}
+
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-06.tex, parte c},label=ex:11-06:c]
+\begin{ltxlisting}[caption={ex15-xcolor-table.tex},label=ex15:xcolor:table]
+\begin{table}[hbp!]
+\begin{center}
+\caption{Colorindo as linhas}\label{tab:xcolor}
+\rowcolors{2}{white}{gray!15}
+\begin{tabular}{ll} 
+\toprule
+   produto & preço \\
+\midrule
+   cenouras  (500g)          & R\$0,50  \\
+   cogumelos (vidro de 500g) & R\$5,00  \\
+   batata    (1Kg)           & R\$1,20  \\
+   beterraba (1Kg)           & R\$1,50  \\
+   alface    (1 maço)        & R\$0,50  \\
+\midrule % \hline
+   \rowcolor{blue!15}
+   total & R\$8,70 \\
+\bottomrule
+\end{tabular}
+\legend{Fonte: elaboração do autor}
+\end{center}
+\end{table}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+Para configuração de cores mais sofisticada, veja o manual do pacote \texttt{colortbl}\index{colortbl}.
+
 \section{Criando ambientes tipo figuras e tabelas}
 
 O pacote \texttt{float}\index{float} permite criar elemento flutuante do tipo figuras e tabelas.
@@ -6317,7 +6680,7 @@ Algorítimo aqui.
 
 A lista do novo elemento flutuante é criado pelo comando \verb+\listof+. Para listar algorítmos criados acima, usa-se o comando \verb+\listof{algorithm}{Lista de algorítmos}+
 
-Note que o elemento flutuante não pode dividir em páginas, sendo recomendado para figuras ou elementos menores. No caso do exemplo, o algorítimo pode ser maior, sendo recomendado dividir em páginas, como ocorre com a tabela longa. Para criar o ambiente do estilo \texttt{longtable} (tabela longa) na qual pode quebrar entre páginas, mas ficam enumeradas como os elementos flutuantes, usa-se o pacote \texttt{caption}\index{caption} que permite controlar capítulos dos elementos flutuantes e similares.
+Note que o elemento flutuante não pode dividir em páginas, sendo recomendado para figuras ou elementos menores. No caso do exemplo, o algorítimo pode ser maior, sendo recomendado dividir em páginas, como ocorre com a tabela longa. Para criar o ambiente do estilo \texttt{longtable} (tabela longa) na qual pode quebrar entre páginas, mas ficam enumeradas como os elementos flutuantes, usa-se o pacote \texttt{caption}\index{caption} que permite controlar títulos dos elementos flutuantes e similares.
 O código
 %
 \begin{singlespacing}
@@ -6341,10 +6704,10 @@ Cria o ambiente \texttt{algorithm} similar a \texttt{longtable}.
 \section{Escrevendo medidas internacionais}
 
 Para escrever medidas, requer alguns cuidados tais como usar letra romana reta (por ser abreviatura da palavra), ter pequeno espaço entre valor e medida, entre outros.
-Por exemplo, $\SI{10}{\kilo\gram}$ e não $10kg$, $\SI{5}{\litre}$ e não $5l$ e assim por diante.
-
+Por exemplo, $\qty{10}{\kilo\gram}$ e não $10kg$, $\qty{5}{\litre}$ e não $5l$ e assim por diante.
 
 Para facilitar a escrever unidades de medidas corretamente no documento, o \texttt{siunitx}\index{siunitx} providencia comandos para escrever na unidade internacional.
+Normalmente \texttt(siunitx) usará formatação usando a fonte do modo matemático, mas pode converter para usar a fonte do modo texto com o comando \verb+\sisetup{unit-mode=text}+.
 
 Para produzir o número rapidamente, tem o comando \verb+\num+\index{num@\verb+\num+}.
 O comando \verb+\ang+\index{ang@\verb+\ang+} gera ângulos rapidamente.
@@ -6358,9 +6721,10 @@ Números
 
 \num{12345.67890} \\ % espacando de 3 em 3 casas
 \num{12345,67890} \\ % ``,'' também pode ser usado para decimal
-\num{1+-2i}       \\ % ``+-'' vira $\pm$
+// +- é substituido por $\pm$
+\complexnum{1 +- 2i}       \\ % i é número complexo
 \num{.3e45}       \\ % notacao cientifica
-\num{1.654 x 2.34 x 3.430} % ``x'' vira $\times$
+\numproduct{1.654 x 2.34 x 3.430} % ``x'' vira $\times$
 
 Ângulos
 
@@ -6373,15 +6737,16 @@ Números
 %\end{LTXexample}
 %\end{singlespacing}
 
-O comando \verb+\si+\index{si@\verb+\si+} produz unidade de medida de acordo com o seu parâmetro. 
+O comando \verb+\unit+\index{unit@\verb+\unit+} produz unidade de medida de acordo com o seu parâmetro (o comando da versão 2 equivalente \verb+\si+\index{si@\verb+\si+} também continua funcionando). 
 A configuração de saída pode ser efetuado pelo parâmetro opcional.
 O \verb+\si+, assim como \verb+\num+ e \verb+\ang+, funciona tanto no modo texto como no modo matemático.
 
 Em geral, coloca-se pequeno espaço entre valor e medida.
-O comando \verb+\SI+\index{SI@\verb+\SI+} automatiza isto, além de poder colocar símbolo antes do valor.
+O comando \verb+\qty+\index{qty@\verb+\qty+} automatiza isso. O comando da versão 2 equivalente é
+\verb+\SI+\index{SI@\verb+\SI+} que pode ser usado quando \verb+\qty+ não está disponível como no caso de usar junto com o pacote \texttt{physics}, ou quer colocar símbolo antes do valor.
 
 Ele tem a forma
-\verb+\SI[opção]{valor}[simbolo anterior]{unidade}+
+\verb+\qty[opção]{valor}[simbolo anterior]{unidade}+
 Veja o Exemplo~\ref{ex15:si}.
 
 %\begin{singlespacing}
@@ -6389,33 +6754,34 @@ Veja o Exemplo~\ref{ex15:si}.
 \begin{ltxlisting}[caption={ex15-si.tex},label=ex15:si]
 Entrada literal (Neste modo, não há opção de formatação).
 
-\si{kg.m/s^2} \\
-\si{g_{polymer}~mol_{cat}.s^{-1}}
+\unit{kg.m/s^2} \\
+\unit{g_{polymer}~mol_{cat}.s^{-1}}
 
 Entrada pelo macro (permite configurar a formatação usando opção do comando ou do parâmetro do pacote).
 
-\si{\kilo\gram\per\square\second} \\
-\si{\gram_{polymer}\mol_{cat}\per\second}
+\unit{\kilo\gram\per\square\second} \\
+\unit{\gram_{polymer}\mol_{cat}\per\second}
 
 Mais exemplos\\
-\si{\kilo\gram\metre\per\square\second} \\
-\si{\gram\per\cubic\centi\metre}        \\
-\si{\square\volt\cubic\lumen\per\farad} \\
-\si{\metre\squared\per\gray\cubic\lux}  \\
-\si{\henry\second}
+\unit{\kilo\gram\metre\per\square\second} \\
+\unit{\gram\per\cubic\centi\metre}        \\
+\unit{\square\volt\cubic\lumen\per\farad} \\
+\unit{\metre\squared\per\gray\cubic\lux}  \\
+\unit{\henry\second}
 
 Medidas com valor
 
-\SI{1.23}{J.mol^{-1}.K^{-1}}  \\ % modo textual
-\SI{.23e7}{\candela}          \\ % como macros
-\SI{1.99}[R\$]{\per\kilogram} \\ % com simbolo antes
-\SI{1,345}{\coulomb\per\mole} % outro exemplo
+\qty{1.23}{J.mol^{-1}.K^{-1}}  \\ % modo textual
+\qty{.23e7}{\candela}          \\ % como macros
+\qty{1,345}{\coulomb\per\mole} % outro exemplo
+// Comando da versão 2 permite colocar elemento antes do número
+\SI[per-mode=symbol]{1.99}[R\$]{\per\kilogram} \\ % com simbolo R$ antes
 
-Colocar medida após valor usando \verb+\si+ e 
-colocar valor já com medida usando \verb+\SI+ 
+Colocar medida após valor usando \verb+\unit+ e 
+colocar valor já com medida usando \verb+\qty+ 
 pode apresentar diferença no espaçamento. \\
-\si{10\celsius} \\ % valor concatenado com medida
-\SI{10}{\celsius} % valor e medida usando macro
+\unit{10\celsius} \\ % valor concatenado com medida
+\qty{10}{\celsius} % valor e medida usando macro
 \end{ltxlisting}
 %\end{LTXexample}
 %\end{singlespacing}
@@ -6428,13 +6794,13 @@ Para saber mais, consulte o manual do pacote.
 Para conversão de medidas, 
 \verb+\giga+\index{si!giga@\verb+\giga+}, \verb+\mega+\index{si!mega@\verb+\mega+}, \verb+\kilo+\index{si!kilo@\verb+\kilo+}, \verb+\hecto+\index{si!hecto@\verb+\hecto+}, \verb+\deca+\index{si!deca@\verb+\deca+}, \verb+\deci+\index{si!deci@\verb+\deci+}, \verb+\centi+\index{si!centi@\verb+\centi+}, \verb+\milli+\index{si!milli@\verb+\milli+}, \verb+\micro+\index{si!micro@\verb+\micro+}, \verb+\nano+\index{si!nano@\verb+\nano+}, etc. são disponíveis.
 
-Exemplo: \verb+\SI{20}{\kilo\gram}+ e mesmo que \verb+\SI{20}{\kilogram}+.
+Exemplo: \verb+\qty{20}{\kilo\gram}+ e mesmo que \verb+\qty{20}{\kilogram}+.
 
 Para operar, tem o \texttt{per, square}, etc.
 
-\verb+\SI{30}{\kilo\meter\per\square\second}+
+\verb+\qty{30}{\kilo\meter\per\square\second}+
 é mesmo que 
-\verb+\SI{30}{\kilo\meter/\second^2}+
+\verb+\qty{30}{\kilo\meter/\second^2}+
 no modo padrão, mas o segundo não consegue controlar a formatação por usar forma literal em ``/'' e ``\verb+^2+''.
 
 A configuração geral de formatação pode ser feito pela opção do pacote ou pelo comando \verb+\sisetup+\index{sisetup@\verb+\sisetup+}, mas também pode especificar localmente como no Exemplo~\ref{ex15:sisetup}.
@@ -6443,13 +6809,38 @@ A configuração geral de formatação pode ser feito pela opção do pacote ou 
 %\begin{singlespacing}
 %\begin{LTXexample}[pos=b,caption={ex11-09.tex, parte c},label=ex:11-09:c]
 \begin{ltxlisting}[caption={ex15-sisetup.tex},label=ex15:sisetup]
-\SI[mode=text]{30}{\kilo\meter\per\square\second}
+\qty[mode=text]{30}{\kilo\meter\per\square\second}
 
-\SI[per-mode=power]{30}{\kilo\meter\per\square\second}
+\qty[per-mode=power]{30}{\kilo\meter\per\square\second}
 
-\SI[per-mode=symbol]{30}{\kilo\meter\per\square\second}
+\qty[per-mode=symbol]{30}{\kilo\meter\per\square\second}
 
-\SI[per-mode=fraction]{30}{\kilo\meter\per\square\second}
+\qty[per-mode=fraction]{30}{\kilo\meter\per\square\second}
+\end{ltxlisting}
+%\end{LTXexample}
+%\end{singlespacing}
+
+A nova versão, apesar de continuar com os comandos da versão 2, separa o comando para números complexos e com o produto, como pode ver no exemplo de \verb+\num+ (Exemplo~\ref{ex15:num}). Se quer que não tenha esta separação, poderá carregar no modo de versão 2, com o comando \verb+\usepackage{siunitx}[=v2]+ e usar somente os comandos da versão 2.
+
+\section{Calculando o valor de uma função}
+Para efetuar cálculo de funções matemáticas no \LaTeX, como no caso de tabelar funções nos pontos dados, podemos usar o pacote \texttt{xfp}\index{xfp} ou \texttt{numerica}\index{numerica}. O pacote \texttt{xfp} evalua a expressão matemática normalmente, enquanto que \texttt{numérica} evalua a expressão escrita na forma \TeX, permitindo que mesma expressão pode ser usado tanto para evaluar, como para exibir. Além de \texttt{numerica} ter mais recursos, o \texttt{numerica-tables}\index{numerica-tables} permmite tabelar funções rapidamente.
+
+Veja o Exemplo~\ref{ex15:xfp-e-numerica}.
+
+%\begin{singlespacing}
+%\begin{LTXexample}[pos=b,caption={ex11-08.tex},label=ex:11-08]
+\begin{ltxlisting}[caption={ex15-xfp-e-numerica.tex},label=ex15:xfp-e-numerica]
+%Supõe carregada seguintes pacotes: xfp, numerica e numerica-tables
+Expressão a ser evaluada: $\sin(\frac{\pi}{4})$
+
+Valor pelo \texttt{xfp} é $\fpeval{sin(pi/4)}$
+
+Valor pelo \texttt{numerica} (com configuração padrão) é $\eval{\sin(\frac{\pi}{4})}$,
+
+Tabelando função com \texttt{numerica-table}
+
+\tabulate[rvar=x,rstep={\frac{\pi}{10}},rows={10+1}]
+{\sin x}[x=0]
 \end{ltxlisting}
 %\end{LTXexample}
 %\end{singlespacing}
@@ -6563,8 +6954,8 @@ Veja o Exemplo~\ref{ex15:lineno}.
 %
 \begin{singlespacing}
 \noindent
-\fbox{\parbox{\linewidth-0.8em}{\hspace*{1em}
-\begin{minipage}{\linewidth-1.8em}
+\fbox{\parbox{\dimexpr(\linewidth-0.8em)}{\hspace*{1em}
+\begin{minipage}{\dimexpr(\linewidth-1.8em)}
 %\setlength{\linenumbersep}{-5pt} % default is 10pt
 \linenumbers % ativa a enumeracao das linhas
 \modulolinenumbers[3] % enumerar de 3 em 3
@@ -6585,12 +6976,13 @@ Veja o Exemplo~\ref{ex15:lineno}.
 \end{minipage}}}
 %\setlength{\linenumbersep}{10pt} % set to default
 \end{singlespacing}
+% O comando \dimexpr foi usado para efetuar calculo de dimensão dentro do parâmetro de minipage. Sem ele, não efetuará calculo de medidas.
 
 No Exemplo~\ref{ex15:lineno} foi usado o comando \verb+\lipsum+\index{lipsum@\verb+\lipsum+} que gera textos aleatórios em grego para preencher as páginas para testes. 
 Logo, precisa carregar o pacote \texttt{lipsum}\index{lipsum} no \texttt{preamble} para que o exemplo funcione.
 
 Existem vários pacotes que permitem colocar conteúdos em todas as páginas, como no caso de marca d'água. 
-Entre eles, vamos ver o caso do uso de \texttt{background}\index{background} e %, \texttt{draftwatermark}\index{draftwatermark} e
+Entre eles, vamos ver o caso do uso de \texttt{background}\index{background}, \texttt{draftwatermark}\index{draftwatermark} e
 \texttt{eso-pic}\index{eso-pic}.
 % \texttt{xwatermark}\index{xwatermark}.
 
@@ -6614,25 +7006,25 @@ O código
 Coloca a marca d'àgua ``RASCUNHO'' em todas páginas, usando o pacote \texttt{background}\index{background}.
 Note que, se quer colocar a imagem externa, basta usar o \verb+\includegraphics+ em vez de texto.
 
-%O mesmo efeito pode ser obtido pelo pacote \texttt{draftwatermark}\index{draftwatermark} como segue.
-%
-%\begin{singlespacing}
-%\begin{lstlisting}
-%\documentclass{article}
-%\usepackage{draftwatermark}
-%\usepackage{tikz}
-%\usepackage{xcolor}
-%\usepackage{graphicx}
-%\usepackage{lipsum}
-%\DraftwatermarkOptions{text={\sffamily\bfseries RASCUNHO}} % versão 2.x (nova)
-%% \SetWatermarkText{\sffamily\bfseries\Huge RASCUNHO} % versão antiga
-%\begin{document}
-%\lipsum
-%\end{document}
-%\end{lstlisting}
-%\end{singlespacing}
-%
-%O comando \verb+\DraftwatermarkOptions+ pode ser chamado no meio do documento, o que é útil para alterar a marca d'àgua ou ativar/desativar localmente.
+O mesmo efeito pode ser obtido pelo pacote \texttt{draftwatermark}\index{draftwatermark} como segue.
+
+\begin{singlespacing}
+\begin{lstlisting}
+\documentclass{article}
+\usepackage{draftwatermark}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\DraftwatermarkOptions{text={\sffamily\bfseries RASCUNHO}} % versão 2.x (nova)
+% \SetWatermarkText{\sffamily\bfseries\Huge RASCUNHO} % versão antiga
+\begin{document}
+\lipsum
+\end{document}
+\end{lstlisting}
+\end{singlespacing}
+
+O comando \verb+\DraftwatermarkOptions+ pode ser chamado no meio do documento, o que é útil para alterar a marca d'àgua ou ativar/desativar localmente.
 
 % xwatermark não está tendo manutenção, não funcionado no sitema novo.
 %No caso do \texttt{xwatermark}\index{xwatermark}, tem opção de colocar a marca d'àgua na frente, em vez do lado de trás. O código
@@ -6775,7 +7167,9 @@ traduzirá a palavra-chaves do algoritmo anterior para português brasileiro. Aj
 \end{ltxlistingout}
 \end{singlespacing} 
 
-O Pacote \texttt{algorithmicx} vem com mais dois estilos que são para linguagem Pascal e C, mas para colocar código fonte de um programa, costuma usar o pacote \texttt{listings}\index{listings} que implementa o ambiente \texttt{lstlisting}\index{lstlisting} na qual formata o código de acordo com a linguagem de programação escolhida.
+Para traçar linhas verticais para blocos indentados, poderá usar o pacote \texttt{algpseudocodex}\index{algpseudocodex} que é compatível com o \texttt{algpseudocode}.
+
+O Pacote \texttt{algorithmicx} vem com padrão, mais dois estilos que são para linguagem Pascal e C, mas para colocar código fonte de um programa, costuma usar o pacote \texttt{listings}\index{listings} que implementa o ambiente \texttt{lstlisting}\index{lstlisting} na qual formata o código de acordo com a linguagem de programação escolhida.
 
 Ele já vem com configurações para diversas idiomas,  tais como \texttt{Ada}, \texttt{Algol}, \texttt{Assember}, \texttt{awk}, \texttt{bash}, \texttt{Basic}, \texttt{C\#}, \texttt{C++}, \texttt{C}, \texttt{Cobol}, \texttt{Delphi}, \texttt{Fortran}, \texttt{Gnuplot}, \texttt{HTML}, \texttt{Java}, \texttt{Lisp}, \texttt{Logo}, \texttt{Lua}, \texttt{Make}, \texttt{Mathematica}, \texttt{Matlab}, \texttt{Metapost}, \texttt{Modula-2}, \texttt{Objective C}, \texttt{Octave}, \texttt{Pascal}, \texttt{Perl}, \texttt{PHP}, \texttt{Prolog}, \texttt{Python}, \texttt{GNU R}, \texttt{Ruby}, \texttt{SAS}, \texttt{Scilab}, \texttt{sh}, \texttt{SQL}, \texttt{TeX}, \texttt{XML}, entre vários outros.
 Se a linguagem pretendida não estiver na lista, poderá definir novos idiomas.
@@ -7342,7 +7736,7 @@ Nos exemplos a seguir, será assumido que tem o código do Exemplo~\ref{ex16:tik
 %\begin{lstlisting}[caption={ex12-02.tex}, label=ex:12-02]
 \begin{lstlisting}[caption={ex16-tikz-preamble.tex}, label=ex16:tikz:preamble]
 \usepackage{tikz} % pacote gráfico
-\usetikzlibrary{babel} % para compatiblidade com o pacote babel, requerido por agumas bibliotecas como o cd.
+\usetikzlibrary{babel} % para compatiblidade com o pacote babel, requerido por algumas bibliotecas como o cd.
 
 \usetikzlibrary{calc} % calc eh para efetuar calculos matematicos ou expressoes em coordenadas
 
@@ -7394,6 +7788,8 @@ Veja o Exemplo~\ref{ex16:tikz:draw}.
 \draw[rounded corners=8pt] (-1,-1) -- (1,-1) -- (1,-2) -- (-1,-2); % Quinas arredondadas
 \draw[red] (2,-1) |- (3,-2);% Conectando com linha vertical-horizontal
 \draw[blue] (2,-1) -| (3,-2); % Conectando com linha horizontal-vertical
+% ++(V) desloca o ponto anterior pelo (V), isto é, novo ponto é ponto nterior + (V). 
+\draw (4,0) -- ++(1,1) -- ++(1,-1) -- cycle;
 \end{tikzpicture}
 \end{center} 
 \end{ltxlisting}
@@ -7458,7 +7854,9 @@ Veja o Exemplo~\ref{ex16:tikz:coordenadas}.
   % Coordenada com rótulos (ja desenha o rotulo quando define)
   \coordinate[label=left:$X$] (X) at (3,0);
   \coordinate[label=right:$Y$] (Y) at (4,1);
-  \draw (X) -- (Y);
+  \draw (X) -- (Y); % ligando direto
+  \draw[dotted] (X) |- (Y); % ligaondo com vertical/horizontal
+  \draw[dashed] (X) -| (Y); % ligaondo com horizontal/vertical
   
   % Coordenada polar.
   % As coordenada polar é dado por (angulo:raio).
@@ -8995,7 +9393,260 @@ Também poderá usar o BibTeX em vez do BibLaTeX. Veja o Araújo (2016b) para de
   
   Para mais detalhes sobre comandos do estilo ABNT para Bib\LaTeX, veja \cite{book:biblatex-abnt:marques}.
   
+\section{ABNTexto}
+A classe \texttt{ABNTexto}\index{ABNTexto} que está na fase de desenvolvimento é uma alternativa leve para \texttt{ABNTeX2}, para diagramar em ABNT. Enquando que \texttt{ABNTeX2} usa a classe \texttt{memoir} e diversos pacotes para maior flexibilidade, \texttt{ABNTexto} usa a classe \texttt{article} e muitos poucos pacotes, deixando mais leve.
+No entanto, como ele ainda está na fase de desenvolvimento (2023), faltam comandos e podem apresentar inconveniências, o que devem ser supridas manualmente.
 
+Um exemplo de ABNTexto com uso de BibTeX é como no Exemplo~\ref{ex19:abntexto}, cuja saída é omitida.
+
+\begin{singlespacing}
+\begin{lstlisting}[caption={ex19-abntexto.tex},label={ex19:abntexto}]
+% Padrão para abntexto
+% Classe base: article
+% pacote adicional: geometry, graphicx
+% font size: 12pt
+% twoside=true
+% neste modelo, força para ser oneside (versão eletrônica)
+\documentclass[a4paper]{abntexto}
+
+\usepackage{iftex} % Para detectar o motor de TeX utilizado
+% Fontes, de acordo com o motor do TeX
+\ifPDFTeX
+  \usepackage[T1]{fontenc} % codificação da fonte em 8−bits
+  \usepackage{lmodern} % fontes latin modern
+  \usepackage[utf8]{inputenc} % acentuação direta em UTF−8
+\else
+  \usepackage{fontspec} % pacote para configurar fontes
+  \defaultfontfeatures{Ligatures=TeX}
+  % seleção das fontes desejadas pode ser colocados aqui
+\fi
+
+% idiomas
+\usepackage[english,brazil]{babel}%padrão é brazil.
+
+% pacotes matemáticas de acordo com o motor TeX
+\ifPDFTeX
+  \usepackage{amsmath,amssymb} % para matematica
+\else
+  % para matematica
+  \usepackage{unicode-math}
+  \ifLuaTeX
+    \usepackage{lualatex-math}
+  \fi
+\fi
+%Outros pacotes
+\usepackage[overload]{textcase} % para poder ter comandos de LaTeX/fórmula no titulo
+\usepackage{hyperref} % para link automático no PDF
+% Desabilitando ou redefinindo comandos que causa erros no bookmark do PDF
+\pdfstringdefDisableCommands{%
+\let\MakeUppercase\relax% desabilitando
+\def\\{ }%
+\def\and{ e }
+}
+\usepackage{pdfpages} % para incluir documento PDF (ex.: folha de aprovação)
+\usepackage{indentfirst} % se quer que o primeiro parágrafo seja indentada
+%% Se for criar o índice remissivo (opcional)
+%\usepackage{makeidx}
+%\makeindex
+% BibLaTeX
+\usepackage[
+  backend=biber,
+  % backref é util para depulação: na referências, aparece páginas onde foi citado
+  % backref=true,
+  language=auto,
+%  autolang=other, % para ambiente <otherlanguage> do babel e polygrossia
+%  autolang=langname, % somente para ambiente <language> do polygrossia.
+  % bibencoding=utf8,
+  style=abnt %authoryear,
+]{biblatex}
+\addbibresource{modelo-biblatex.bib} % arquivo bib
+
+%\addto{\captionsbrazil}{
+%    \renewcommand{\refname}{Referências}
+%}
+
+% Como classe base é article, referências bibliográficas ficam como seção. Para ser capítulo, precisa de ajustes
+\defbibheading{bibliography}[\refname]{\heading{#1}}%\chapter*{#1}}
+
+% versão * do capítulo não tem no ABNTexto. Providenciando
+\makeatletter
+\let\chapter@original\chapter% copiando o original
+\def\chapter{\@ifstar\chapter@star\chapter@nostar}
+\def\chapter@nostar#1{\chapter@original{#1}}% sem *
+\def\chapter@star#1{% com *
+  \clearpage\vspace*{\abovechapter}
+  \noindent{\Huge\bfseries #1}%
+  \par\vskip\belowchapter
+}
+
+\hypersetup{pdftitle={Exemplo de ABNTexto},
+  pdfauthor={Sadao Massago},
+  pdfsubject={Exemplo do documento em ABNT com a classe ABNTexto},
+  pdfkeywords={ABNT}{Trabalho acadêmico}{LaTeX}{ABNTexto}
+}
+
+% INICIO DO DOCUMENTO
+\begin{document}
+\begin{titlepage}
+UNIVERSIDADE FEDERAL DE SÃO CARLOS \\
+CENTRO DE CIÊNCIAS E TECNOLOGIAS PARA SUSTENTABILIDADE
+\begin{center}
+\vfill
+\Large SADAO MASSAGO
+\vfill
+{\Huge EXEMPLO DE ABNTEXTO}
+\vfill
+SOROCABA \\
+AGOSTO DE 2023
+\end{center}
+\end{titlepage}
+\pretextual
+% Folha de rosto é obrigatório no ABNT
+\begin{center}
+\vfill
+Sadao Massago
+\vfill
+{\Large\bfseries Exemplo de ABNTexto}
+\vfill
+\begin{flushright}\begin{minipage}{0.5\textwidth}
+Texto do tipo ‘‘Monografia apresentada ...’’ que depende da instituição
+\end{minipage}\end{flushright}
+\vfill
+Universidade Federal de São Carlos \\
+Centro de Ciências e Tecnologias para Sustentabilidade
+\vfill
+Orientador(a): Nome do(a) orientador(a)
+\vfill
+Sorocaba\\
+Agosto de 2023
+\end{center}
+
+%% Ficha catalográfica, caso existir, deve ficar no verso da folha de rosto
+%\newpage % Quando tiver versão definitiva, inserir aqui
+%\includepdf{fichacatalograficafinal.pdf}
+%
+%Caso exista errata. Opcional no ABNT.
+%\chapter*{Errata}
+%
+\newpage
+Folha de aprovação é obrigatório no ABNT
+%% Quando tiver a folha de aprovação devidamente assinada, incluir aqui
+%% \includepdf{folhadeaprovacaofinal.pdf}
+%
+%%\chapter*{}
+%%Dedicatória é um elemento opcional para ABNT
+%
+\chapter*{}
+Agradecimentos é opcional no ABNT, mas boa educação é agradecer aos que contribuíram para realização do trabalho.
+%
+%\chapter*{}
+%epigrafe (uma mensagem) que é opcional no ABNT.
+%
+\chapter*{Resumo}
+Resumo em português, obrigatório no ABNT.
+
+\noindent
+\textbf{Palavras-chave}: ABNT, LaTeX, ABNTexto.
+%
+\chapter*{Abstract} %Resumo em língua estrangeira (obrigatório no ABNT).
+\begin{otherlanguage}{english}
+Abstract in foreign language is required in ABNT.
+
+\noindent
+\textbf{Keywords}: ABNT, LaTeX, ABNTexto.
+\end{otherlanguage}
+%
+%\clearpage\phantomsection\pdfbookmark[chapter]{\listfigurename}{lof}
+%\heading{Lista de Figuras}% opcional no ABNT
+%\maketoc{lof}
+%
+%\clearpage\phantomsection\pdfbookmark[chapter]{\listfigurename}{lot}
+%\heading{Lista de Tabelas} % opcional no ABNT
+%\maketoc{lot}
+%
+%\chapter*{Siglas} % Lista de siglas é opcional no ABNT.
+%\begin{description}
+%\item[ABNT] Associação Brasileira de Normas Técnicas.
+%\end{description}
+%\end{siglas}
+%
+%\chapter*{Simbolos}% Lista de Símbolos é opcional no ABNT
+%\begin{description}
+%\item[$\pi$] Razão entre circunferência e raio.
+%\item[ABNT] Associação Brasileira de Normas Técnicas.
+%\end{description}
+%
+\clearpage\heading{Sumário}% Sumário é obrigatório no ABNT
+\maketoc
+%
+% CONTEÚDO PRINCIPAL
+\clearpage
+\textual\let\textual=\relax% iniciando o textual e desativando o comando
+\newgeometry{twoside=false} % forçando a ser oneside
+%
+% Como já é conteúdo textual, capítulos serão enumerados.
+\chapter{Prefácio} % prefácio (ou apresentação) é opcional no ABNT
+Prefácio aqui. Se preferir, pode incorporar na introdução.
+\clearpage
+\chapter{Introdução}
+Introdução aqui.
+\clearpage
+\chapter{Alíneas}
+Alineas é criado pelo ambiente \texttt{topics}.
+\begin{topics}
+\item \label{alinea:1} 1
+\begin{topics}
+\item a
+\item b
+\end{topics}
+\item \label{alinea:2} 2
+\end{topics}
+\clearpage
+\chapter{Legenda}
+Legenda da figura e tabelas.
+\begin{figure}[hbp!]
+\legend{figure}{Um título}
+\src{\texttt{www.site.com.br}. Acesso em 01 jan. 2020.}
+\label{fig:teste}
+\place{\includegraphics[width=0.4\linewidth]{example-image}}
+\end{figure}
+Ver \ref{fig:teste}.
+\clearpage
+\chapter{Citações}
+Para citações curtas, use \verb+\enquote{texto}\cite{key}+.
+
+Para citações longas (mais de 3 linhas), use
+\verb+\Enquote{texto\cite{key}}+ (com ``E'' maiúsculo).
+Por exemplo, 
+\Enquote{O Lua\LaTeX{} foi designado para ser o sucessor do PDF\LaTeX{} e por isso, deve ser o \LaTeX{} padrão no futuro, mas pode ser um pouco mais lento do que o Xe\LaTeX. \cite{book:sadao:2019}
+} %Enquote
+\clearpage
+\chapter{Considerações Finais}
+Conclusão do trabalho.
+% PÓS TEXTUAL
+\clearpage
+%% Referencias bibliográficas é obrigatório no ABNT
+\phantomsection\addcontentsline{toc}{chapter}{\refname}%adicionando no sumário
+\printbibliography%sem opção, para devido funcionamento em ABNTexto
+%Apêndices são opcionais no ABNT
+\clearpage
+\appendix{Primeiro Apêndice}
+Conteúdo do primeiro apêndice.
+\clearpage
+\appendix{Segundo Apêndice}
+Conteúdo do segundo apêndice.
+% Anexos são opcionais no ABNT
+\clearpage
+\annex{Primeiro Anexo}
+Conteúdo do primeiro anexo
+\annex{Segundo Anexo}
+Conteúdo do segundo anexo
+% Índice remissivo (opcional no ABNT)
+% \clearpage
+% \printindex
+\end{document}
+\end{lstlisting}
+\end{singlespacing}
 %%%%%%%%%%%%%% APÊNDICE %%%%%%%%%%
 
 \clearpage\thispagestyle{empty}\cleardoublepage
@@ -9202,7 +9853,7 @@ Comando que funcionam somente no modo texto.
 \textbullet
 %\textcopyright % use \copyright
 %\textdagger % use \dag
-%\textdaggerdbl % use ddag
+%\textdaggerdbl % use \ddag
 %\textdollar % use \$
 %\textellipsis % use \dots
 
@@ -10787,7 +11438,7 @@ ou parágrafo) com o espaço forçado.
 
 Fórmulas matemáticas dentro do texto denominado de \texttt{inlinestyle}
 (textstyle) pode ser inserido, clicando no ícone de somatório $\sum$ na barra de ferramentas, ou com menu ``insert->math->inline formula'' ou
-com a tecla <control>M. 
+com a tecla <control>M. Note que <ctrl>M dentro da fórmula matemática torna localmente como modo texto (aplicará \verb+\text{}+ do \texttt{amsmath}).
 
 Para inserir símbolos e fórmulas, podemos usar o painel matemático
 ativado quado o cursor está dentro da caixa de fórmulas.
@@ -10844,8 +11495,7 @@ Para contornar, foi definido o comando \verb+\root+ no \LyX{} que não é defini
 Para descobrir nomes de comandos \LaTeX{} que estão no ``Painel Matemático'', posicione o mouse sobre os símbolos no ``Math Panel'' (mostrado quando o cursor está na fórmula) que exibirá o nome do comando.
 
 Uma fórmula numa linha independente denominado de ``displaystyle''
-pode ser criado com Control+Shift+M ou pelo menu ``insert->math->Display
-formula''.
+pode ser criado com <Control>+<Shift>+M ou pelo menu ``insert->math->Display formula''.
 
 Para sair rapidamente de uma fórmula, pressione o ``ESC'' que posicionará o cursor logo após a fórmula em edição.
 
@@ -10888,7 +11538,7 @@ Nas fórmulas multi linhas, <control>+ENTER abre uma nova linha.
 %{]}`` produz $\left.x^{2}\right]$. As vezes, isto torna mais rápido
 %do que usar o painel de inserção de delimitadores.
 
-As fórmulas que ocupa uma linha independente tais como ``Display fórmula'' (fórmula no modo ``displaystyle''), ``AMS align environment'',
+As fórmulas que ocupam uma linha independente tais como ``Display fórmula'' (fórmula no modo ``displaystyle''), ``AMS align environment'',
 etc podem ser enumerados automaticamente.
 
 Para ativar/desativar enumeração na equação com linha independente, clique no botão direito do mouse sobre a fórmula, ou use o menu ``edit->math->toggle numbering''.
@@ -10914,7 +11564,7 @@ Para instalar, siga as instruções do site oficial
 Aqui, veremos alguns pacotes úteis para organizadores de eventos. 
 Um deles é o pacote para mala direta no \LaTeX, útil para emitir certificados e outro é para criar caderno de trabalhos apresentados.
 
-\section{Mala direta no \LaTeX}
+\section{Certificado com mala direta no \LaTeX}
 Certificados de congressos científicos pode conter fórmulas nos títulos, o que complica a mala direta nos aplicativos de escritórios.
 Assim, costumamos efetuar a mala direta no \LaTeX.
 
@@ -10992,6 +11642,21 @@ Um dos certificados gerados é como segue.
 
 % Note que, o que deixou o código complexo foi o sombreamento.
 
+\section{Gerando crachá pela mala direta}
+Crachá pode ser gerado pelo aplicativo de escritórios, mas aproveitando a mala direta visto na seção de certificados, poderá gerar crachás usando o pacote \texttt{ticket}\index{ticket} que gera cartão de visitas e similares. Este pacote dispõe de dois comandos: \verb+\ticketdefault{}+\index{ticketdefault@\verb+\ticketdefault{}+} que determina o que será colocado em todas crachás (por exemplo, nome do evento, logotipo, etc) e o comando \verb+\ticket+\index{ticket@\verb+\ticket+} que determina como crachá será gerada. Como cada crachá é gerado pelo ambiente picture, coloca os conteúdos pelo comando \verb+\put+ na posição desejada.
+Veja o Exemplo~\ref{ex:d:cracha}.
+
+\begin{singlespacing}
+\lstinputlisting[caption={ex-d-cracha.tex},label=ex:d:cracha]{latex-via-exemplos-cracha}
+\end{singlespacing}
+%
+Parte de cráchás gerados é como segue.
+\begin{framed}
+\center
+% Para recortar, use opção trim={left bottom right top},clip
+\includegraphics[page=1, width=0.7\linewidth, trim={{0.15\linewidth} {\linewidth} {0.15\linewidth} {0.05\linewidth}}, clip]{latex-via-exemplos-cracha}
+\end{framed}
+
 \section{Caderno de resumos}
 Quando recebe vários artigos e quer ``encadernar'', poderá usar a classe \texttt{combine}\index{combine} em vez de gerar PDF de cada um e grudar.
 A classe \texttt{combine} agrupa os artigos automaticamente em um único documento, gerando um ``caderno'' de artigos.
@@ -11010,7 +11675,7 @@ Assim, para aumentar a memória reservada para isso, coloque
 \reserveinserts{28} % using etex extensions
 \end{lstlisting} 
 \end{singlespacing}
-no preamble, caso ocorrer o erro do tipo ``No room for ...''.
+no preâmbulo, caso ocorrer o erro do tipo ``No room for ...''.
 Se ainda ocorrer erro, aumente o valor de $28$ para $50$, por exemplo.
 
 Note que \verb+\maketitle+ ou \texttt{titlepage} é necessário. 
@@ -11021,6 +11686,34 @@ Para usar recursos do \texttt{natbib}, carregue o pacote \texttt{combnat}\index{
  
 O modo padrão é ignorar os pacotes carregados pelos artigos. 
 Assim, todos pacotes necessários devem estar carregados no arquivo mestre (arquivo do \texttt{combine} que vai incluir artigos).
+É importante observar que na distribuição do \TeX{} recente (2023), precisa efetuar correção segundo
+%\begin{singlespacing}
+%\begin{lstlisting}
+%\makeatletter
+%  \let\document\c@ladocument\begingroup
+%\makeatother
+%\end{lstlisting} 
+%\end{singlespacing}
+%no preâmbulo conforme indicado em 
+\url{https://tex.stackexchange.com/questions/591145/extra-endgroup-error-when-using-the-combine-document-class}. Note que, colocar
+\begin{singlespacing}
+\begin{lstlisting}
+\makeatletter
+  \let\document\c@ladocument\begingroup
+\makeatother
+\end{lstlisting} 
+\end{singlespacing}
+no preâmbulo do documento não funciona devidamente, pois quando tenta carregar o pacote que depende do PDF como o \texttt{hyperref} ou pacotes gráficos no modo pdf, gera erros.
+Assim, localize e copie o arquivo \texttt{combine.cls} para onde esta o teu documento tex e efetue a alteração conforme indicado, ou seja, localize a definição de \verb+\c@ladocument+ e comente o primeiro \verb+\endgroup+ que está logo no começo do comando, na linha 232 a distribuição do \TeX{} atual (2023). Com isso, o início da definição deste comando ficará como
+\begin{singlespacing}
+\begin{lstlisting}
+\newcommand{\c@ladocument}{%
+  %\endgroup
+  \let\mainjobname\jobname            %% added
+  \def\c@lmainauxfile{\jobname.aux}   %% added 
+\end{lstlisting} 
+\end{singlespacing}
+Onde \verb+\endgroup+ do começo do comando ficou comentada.
 
 Vamos supor que artigos a serem incluídos tem a forma como no Exemplo~\ref{ex:d:conferencia}.
 
@@ -11054,10 +11747,9 @@ Então o caderno, pode ser criado como no Exemplo~\ref{ex:d:caderno}.
 
 \begin{singlespacing}
 \begin{lstlisting}[caption={ex-d-caderno.tex},label=ex:d:caderno]
-\documentclass[12pt,a5paper]{combine}
+\documentclass[12pt,a5paper,book]{combine}
 % combine supports: memoir, book, report, and article
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % If the error ``No room for ..'' occur, increase the reserved insets
 \usepackage{etex} % to use etex extensions 
 \reserveinserts{28} % using etex extensions
@@ -11075,6 +11767,7 @@ Então o caderno, pode ser criado como no Exemplo~\ref{ex:d:caderno}.
 
 % packages usados somente no corpo de anais do congresso 
 \usepackage{graphicx}
+
 \usepackage{geometry}
 \geometry{lmargin=2.5cm,rmargin=2cm,tmargin=2cm,bmargin=2cm}
 
@@ -11162,9 +11855,28 @@ Membro 2 (Instituição 2)
 Note que foi diagramado no papel \texttt{A5} para poder efetuar \texttt{booklet}\index{booklet} (colocar duas páginas em uma, reordenar para grampear no meio) no papel \texttt{A4}. 
 O processo de \texttt{booklet} costuma ser feito no aplicativo como o \texttt{jPDFTWeak} (\url{http://jpdftweak.sourceforge.net/}).
 
-%certificados.
-
 %caderno de resumos 
+
+\section{Folhetos}
+Poderá gerar os folhetos do tamanho A4 dobrado em três, usando a claasse \texttt{leaflet}\index{leaflet} que pode ser usado como se fosse a classe \texttt{article}. O folheto é obtido, imprimindo frente/verso virando ao longo da borda maior e dobrando em três.
+
+No Exemplo~\ref{ex17:folder}, foi usado o pacote \texttt{lipsum} para preencher o espaço com texto para ver como fica a aparência do folheto. Note que foi ativado a paginação para ver o fluxo.
+
+% \LTXinputExample{latex-via-exemplos-poster}
+\begin{singlespacing}
+% \lstinputlisting[caption={ex11-12.tex},label=ex:11-12]{latex-via-exemplos-poster}
+\lstinputlisting[caption={ex17-folder.tex},label=ex17:folder]{latex-via-exemplos-folder}
+\end{singlespacing}
+%
+\begin{framed}
+\center
+\includegraphics[page=1,width=0.7\linewidth]{latex-via-exemplos-folder}
+\end{framed}
+\begin{framed}
+\center
+\includegraphics[page=2,width=0.7\linewidth]{latex-via-exemplos-folder}
+\end{framed}
+
 
 \clearpage\thispagestyle{empty}\cleardoublepage
 \chapter{Para Professores}
@@ -11538,6 +12250,22 @@ Com isso, podemos compilar partes do documento, assim como todo o documento.
 
 %standalone e subfiles
 
+\section{`'Todo'' (tarefas)}
+Para inserir ``todo'' (tarefas a fazer) no documento La\TeX, existe alguns pacotes. Aqui, veremos somente o \texttt{todonotes}\index{todonotes}. O comando básico deste pacote é o \verb+\todo{}+\index{todo@\verb+\todo+} que insere anotação de tarefas na área lateral do documento, correspondente a posição desejada. O comando \verb+\todo+ aceita opções adicionais. Por exemplo, \verb+\todo[inline]{}+ adiciona nota de tarefa dentro do documento, em destaque, em vez da área lateral. Para criar lista de tarefas, usa-se o comando \verb+\listoftodos+.
+Veja o Exemplo~\ref{ex:f:todonotes}.
+
+\begin{singlespacing}
+\lstinputlisting[caption={ex-f-todonotes.tex},label=ex:f:todonotes]{latex-via-exemplos-todonotes}
+\end{singlespacing}
+%
+Documento com as notas de tarefas é como segue.
+\begin{framed}
+\center
+% Para recortar, use opção trim={left bottom right top},clip
+\includegraphics[page=1, width=0.7\linewidth, trim={{0.2\linewidth} {\linewidth} {0.1\linewidth} {0.20\linewidth}}, clip]{latex-via-exemplos-todonotes}
+\end{framed}
+
+
 % \clearpage
 \clearpage\thispagestyle{empty}\cleardoublepage
 %\phantomsection
@@ -11656,7 +12384,7 @@ O \texttt{FlowFramTk} permite desenhar o layout para usar com \texttt{flowfram},
 
 site: \url{https://tikzit.github.io/}
 
-Editor gráfico que exposta para formato \texttt{tikz} (parte do pacote \texttt{pgf}).
+Editor gráfico que exporta para o formato \texttt{tikz} (parte do pacote \texttt{pgf}).
 Ele permite criar facilmente os diagramas em \texttt{tikz} através da interface gráfica.
 
 
@@ -11665,6 +12393,9 @@ Ele permite criar facilmente os diagramas em \texttt{tikz} através da interface
 \subsection*{Asymptote\index{gráfico científico!Asymptote}}
 
 site: \url{https://sourceforge.net/projects/asymptote/}
+
+\url{https://asymptote.sourceforge.io/}
+
 
 Asymptote é uma linguagem/interpretador gráfico 2D/3D inspitado em MetaPost que permite produzir gráficos em Post Script, PDF e SVG.
 
@@ -11825,8 +12556,8 @@ converterá para pdf.
 %Convertor clássico de jpeg para eps de nível 2 ou 3 (com compressão).
 %Eu aconselho usar o Imagemagick ou sam2p.
 
-\subsection*{TeX4ht\index{convertor!TeX4ht}}
-\texttt{TeX4ht} é um convertor de \TeX/\LaTeX para HTML/XHTML, similar a Hevea, TTH, e LaTeX2HTML,  que roda em diversas plataformas.
+\subsection*{TeX4ht\index{convertor!TeX4ht} e lwarp\index{convertor!lwarp}}
+\texttt{TeX4ht} é um convertor de \TeX/\LaTeX para HTML/XHTML, similar a Hevea, TTH, e LaTeX2HTML, que roda em diversas plataformas.
 Note que todos 4 programas são de multiplataformas e cada um tem vantagens e desvantagens. 
 Hevea e TTH, não apresenta suporte decente as fórmulas matmáticas. 
 O Tex4ht implementado como pacote para TeX e o LaTeX2HTML que é escrito em perl, conseguem converter eficientemente os documentos com equações.
@@ -11839,8 +12570,9 @@ Ele particiona documentos grandes em pedaços menores e cria recurso de navegaç
 O HTML gerado por LaTeX2HTML acomoda bem em maioria dos navegadores, o que torna a escolha preferida dos profissionais.
 No entanto, Tex4ht já vem com muitas distribuições \LaTeX, incluindo o MikTeX para MS Windows.
 
-Além disso, ele permite converter para formato do Libre Office e TeXMaker e LyX usam ele para gerr arquivo de Libre Office.
+Além disso, ele permite converter para formato do Libre Office e, TeXMaker e LyX usam ele para gerar arquivo de Libre Office.
 
+O \texttt{lwarp} é conjunto de pacotes de \LaTeX{} similar a \texttt{TeX4Ht} que converte \LaTeX{} para HTML5, mas usa PDF como formato intermediário, em vez do antigo DVI usado pelo \texttt{TeX4Ht}. Isto permite usar imagens PDF diretamente no documento. As equações e figuras ficarão no formato \texttt{SVG} por padrão, mas pode usar \texttt{MathJaX} para equações. Ele não suporta \texttt{MathML} para equações ainda. O script auxiliar \texttt{lwarpmk} é usado na conversão automática das equações e imagens para SVG.
 
 %No caso de Windows, o comando htlatex.bat converte usando imagem na equação e htmlatex.bat usa MathML para fórmula. O oolatex.bat converte para formato de Libre Office.
 
@@ -12010,6 +12742,9 @@ O Scribus permite inserir ``caixa de LaTeX'', o que facilita o desenvolvimento d
 \url{https://pt.overleaf.com/}
 Serviço de web com ambiente LaTeX. Para uso pessoal é gratuito.
 
+\url{https://www.hipdf.com/}, \url{https://www.sejda.com/pdf-editor}, \url{https://www.pdfescape.com/}
+Alguns dos diversos serviços gratuitos para editar PDF online.
+
 Note que o central de repositório do (La)\TeX{} é o CTAN. Portanto, se estiver procurando algo, pode dar olhada primeiro no CTAN (\url{https://www.ctan.org/}). 
 
 % \clearpage
@@ -12027,10 +12762,11 @@ Neste texto, foram apresentados alguns dos pacotes e classes mais utilizados, ma
 
 Por exemplo, quem trabalha com fórmulas complexas, é recomendável que considere o uso do pacote \texttt{mathtools}\index{mathtools} que resolve algumas deficiências do pacote \texttt{amsmath}.
 Para criar ficha catalográfica, é interessante colocar o número total de páginas usando o pacote \texttt{lastpage}\index{lastpage}.
-Para inserir uma ou mais páginas diretamente no documento em vez de inserir como figuras, usa-se o pacote \texttt{pdfpages}.
-Quem trabalha com tabelas, pode precisar do pacote \texttt{multirow}\index{multirow} para mesclar linhas, além de vários pacotes específicos para tabelas omitidos neste documento.
+Para inserir uma ou mais páginas diretamente no documento em vez de inserir como figuras, usa-se o pacote \texttt{pdfpages}\index{pdfpages}.
+Quem trabalha com tabelas, pode precisar do pacote \texttt{multirow}\index{multirow} para mesclar linhas, \texttt{diagbox}\index{diagbox} para dividir células em diagonal, etc que não foram citados neste documento.
+%  tais como \texttt{booktab}\index{booktab}, \texttt{tabulararray}\index{tabulararray}, etc
 %Para elaborar livros: koma script, memoir, tufte-latex, bookest, willowtreebook, octavo, ElegantBook (templates), ycbook, nostarch, simplivre (multilingue), beaulivre (multilingue, colorido)
-Ainda existem pacotes específicos para xadrez, diagrama química, música, etc, além dos pacotes destinados para cada tipo de ajustes.
+Ainda existem pacotes específicos para xadrez (xskak), diagrama química (chemfig), música (abc, musixtex), etc, além dos pacotes destinados para cada tipo de ajustes de documentos.
 
 %A lista dos pacotes interessantes são longas.
 
@@ -12060,77 +12796,5 @@ Mas, pelo menos podemos tentar conhecer os pacotes e classes populares existente
 \printindex
 \end{singlespacing}
 
-%\chapter{Todo}
-%Já feito
-%\begin{itemize}
-%\item Estruturação de texto antes da estruturação de documentos. Nele, incluir o minipage, já usando o \verb+\linewidth+ como o \verb+0.5\linewidth+. OK.
-%
-%\item A seleção de fontes (família, peso, forma e tamanho) ficar depois de ver estrutura de documentos, estruturação de textos e fórmulas matemáticas usando AMS. Talvez, até mesmo depois das figuras. OK (ver se fica antes ou depois das figuras). OK
-%Neste caso, algumas seleções de fontes matemáticos (\verb+\mathrm+, \verb+\mathbb+ e \verb+\mathcal+) e o \verb+\emph+ para textos (talvés \verb+\textbf+ também) devem ser tratados antes de entrar no capítulo de configuração de fontes. OK.
-%
-%\item Medidas e espaçamentos também ficar para depois, como do item anterior. Algumas medidas como o \verb+\linewidth+ poderá ser apresentado junto ao \texttt{minipage} na  estruturação de textos. OK.
-%
-%
-%\item short name for caption. Deve ser junto aos elementos flutuantes. OK
-%\item indentfirst? OK
-%\item multicols? OK
-
-%\item comandos frágeis.
-%\item Onde tratar de babel
-%\item Onde tratar de contadores?
-%\item hifenização?
-%\item onde tratar de \verb+\makeatletter+/\verb+\makeatother+? 
-%
-%\item versão ``*''? Comentar que tem o pacote ifthen tambem?
-%
-%\item pacote \texttt{color}? Onde colocar?
-%\item alguns pacotes de fontes do base e required?
-%\item integrais múltiplas OK
-%\end{itemize}
-
-%Todo:
-%
-%\begin{itemize}
-%\item Onde tratar de poster? Deixar junto com fancybox e lpsum.
-%
-%\end{itemize}
-%
-%Da parte adicional. Decidir qual serão vistos e como agrupar.
-
-%\begin{itemize}
-%\item lmodern e mais alguns pacotes de fontes tais como  newtxtext/newtxmath, etc.
-
-% \item dsfont,
-%\item hyperref, geometry, fancyhdr, fancybox, setspace
-%\item titlesec, float, wrapfig (ou floatflt), xcolor, subfigure
-%\item caption e hyphenat
-%\item tocbibind
-%\item beamer, pgf/tikz,
-
-%\item natbib, biblatex
-
-%\item xelatex/lualatex, iffont.
-% \item O editor LyX
-% \item eso-pic, framed
-
-
-% \item Exemplo do pacote caption e listings e showexpl
-%\item arquivos de estilo.
-
-%\item \verb+\section{\texorpdfstring{$E=mc^2$}{E = mc ** 2}}+ para bookmark do PDF (hyperref)? Uso do comando \verb+\url{}+ no arquivo de BibTeX.
-
-%\item diferenca de amssymb/amsmath com unicode-math:
-%mathbb, mathcal, \verb+\int\limits+
-%item \verb+\newfontfamily+ do fontspec
-
-% \end{itemize}
-
-
-% Referencias: https://pt.wikipedia.org/wiki/Ajuda:Guia_de_edi%C3%A7%C3%A3o/F%C3%B3rmulas_TeX
-% Tem breve descricao de como editar formulas em LaTeX de forma adequada (elemento matematico por elemento matematico, apesar de pequenos inadequacoes: underbrace/overbrace, overset em vez do substack no indice da somatoria, omissao do ambiente cases, mbox em vez de mathrm)
-%
-% https://en.wikibooks.org/wiki/LaTeX/
-% Livro eletronico em ingles.
-% \printindex
 
 \end{document}

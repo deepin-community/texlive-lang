@@ -13,6 +13,7 @@
 \usepackage[defaultsups]{newpxtext}
 \usepackage[zerostyle=c,straightquotes]{newtxtt}
 \usepackage{newpxmath}
+\usepackage{color}
 \usepackage[hyperfootnotes=false]{hyperref}
 \usepackage{pxjahyper}
 \usepackage{hologo}
@@ -126,9 +127,9 @@ which aims to support proper typesetting of Japanese text
 but only supports a limited character set, JIS~X~0208 (6879 characters).
 
 \upTeX\ is developed as an extension of \pTeX\ to support full Unicode
-characters. It also includes extensions to overcome the difficulties of
-\pTeX\ in processing 8-bit Latin characters due to conflicts with
-legacy multibyte Japanese encodings.
+characters. It also includes modifications and extensions to overcome
+the difficulties of \pTeX\ in processing 8-bit Latin characters
+due to conflicts with legacy multibyte Japanese encodings.
 
 \epTeX\ and \eupTeX\ are \eTeX\ extensions of \pTeX\ and \upTeX\ respectively.
 In the current release, some extensions derived from \pdfTeX\ and \OMEGA\ are
@@ -183,17 +184,12 @@ so we focus mainly on \epTeX/\eupTeX.
 \section{\LaTeX\ on \pTeX/\upTeX\ --- \pLaTeX/\upLaTeX}
 
 %%% pLaTeX と upLaTeX ムニャムニャ
-Formats based on \LaTeX\ is called \pLaTeX\ when running on \pTeX/\epTeX,
-and called \upLaTeX\ when running on \upTeX/\eupTeX.
-In recent versions (around 2011) of \TL and its derivatives,
-the default engines of \pLaTeX\ and \upLaTeX\ are \epTeX\ and \eupTeX.
-That is, the command |platex| starts \epTeX\ (not \pTeX) with
-preloaded format |platex.fmt|.
-
+Format based on \LaTeX\ is called \pLaTeX\ when running on \pTeX,
+and called \upLaTeX\ when running on \upTeX.
 %%% カーネルが拡張されている
-In the kernel level (|platex.ltx| and |uplatex.ltx|),
-\pLaTeX\ and \upLaTeX\ adds some additional commands
-related to the followings:
+When building the format, |platex.ltx| (\pLaTeX) or
+|uplatex.ltx| (\upLaTeX) loads |latex.ltx| first
+and adds some additional commands related to the followings:
 \begin{itemize}
   \item Selection of Japanese fonts,
   \item Crop marks (called \Foreign{tombow}; トンボ) for printings,
@@ -212,7 +208,27 @@ original \LaTeX, except for the followings:
 \end{itemize}
 %%% developer レベルでは pdfTeX 拡張や pLaTeX カーネルでムニャムニャ
 For developers, additional care may be needed,
-for changes in the kernel macros and/or the absence of \pdfTeX\ features.
+for changes in the kernel macros and/or the engine difference
+(Japanese handling, absence of \pdfTeX\ features, etc).
+In recent versions of \TL and its derivatives,
+the default engines of \pLaTeX\ and \upLaTeX\ are as follows:
+\begin{center}
+\begin{tabular}{lll}
+ Date & \pLaTeX & \upLaTeX \\ \hline
+ \TL2010 & \pTeX & --- \\
+ \TL2011 & \epTeX & --- \\
+ \TL2012--2022, 2023 initial & \epTeX & \eupTeX \\
+ Since 2023-06-01 & \eupTeX\ in legacy (see below) & \eupTeX \\
+\end{tabular}
+\end{center}
+The command |platex| started \epTeX\ (not \pTeX) with preloaded format
+|platex.fmt| in \TL2022.
+Since 2023-06-01, \pLaTeX\ has switched its engine from \epTeX\ to
+\eupTeX\ in ``legacy-encoding-compatibility mode.'' It means that
+additional primitives of (\eTeXpre)\upTeX\ is available also on \pLaTeX,
+but the internal code of Japanese characters is still non-Unicode
+to keep the backward compatibility.
+Further information can be found in Section \ref{detecting-uptex}.
 
 
 \newpage
@@ -489,9 +505,11 @@ The features of each primitive can be found in Japanese edition.
  \csitem[\.{noautoxspacing}]
  \csitem[\.{postbreakpenalty}]
  \csitem[\.{prebreakpenalty}]
+ \csitem[\.{ptexfontname} \New{p4.1.0 (\TL2023)}]
  \csitem[\.{ptexlineendmode} \New{p4.0.0 (\TL2022)}]
  \csitem[\.{ptexminorversion} \New{p3.8.0 (\TL2018)}]
  \csitem[\.{ptexrevision} \New{p3.8.0 (\TL2018)}]
+ \csitem[\.{ptextracingfonts} \New{p4.1.0 (\TL2023)}]
  \csitem[\.{ptexversion} \New{p3.8.0 (\TL2018)}]
  \csitem[\.{scriptbaselineshiftfactor} \New{p3.7 (\TL2016)}]
  \csitem[\.{scriptscriptbaselineshiftfactor} \New{p3.7 (\TL2016)}]
@@ -501,6 +519,7 @@ The features of each primitive can be found in Japanese edition.
  \csitem[\.{tbaselineshift}]
  \csitem[\.{textbaselineshiftfactor} \New{p3.7 (\TL2016)}]
  \csitem[\.{tfont}]
+ \csitem[\.{tojis} \New{p4.1.0 (\TL2023)}]
  \csitem[\.{toucs} \New{p3.10.0 (\TL2022)}]
  \csitem[\.{ucs} \NewMoved{\upTeX}{p3.10.0 (\TL2022)}\footnotemark]
  \csitem[\.{xkanjiskip}]
@@ -603,6 +622,7 @@ Sync\TeX\ extension (available in \pTeX, \upTeX, \epTeX, \eupTeX):
  \csitem[\.{partokencontext} \New{\TL2022}]
  \csitem[\.{partokenname} \New{\TL2022}]
  \csitem[\.{showstream} \New{\TL2022}] % only e-(u)pTeX, not (u)pTeX
+ \csitem[\.{special} \texttt{shipout} \NewKey{230214 (\TL2023)}] % only e-(u)pTeX, not (u)pTeX
  \csitem[\.{tracingstacklevels} \New{\TL2021}]
 \end{simplelist}
 
@@ -660,9 +680,11 @@ The following primitives are extended to support Japanese characters:
 \begin{cslist}
  \csitem[\.{char} <character code>,
    \.{chardef} <control sequence>=<character code>]
-  In addition to 0--255, internal codes of Japanese characters are allowed.
-  For putting Japanese characters, a Japanese font is chosen.
-  More information can be found in \ref{chardef}.
+  In addition to 0--255, internal codes of Japanese characters
+  (see \ref{kanji-internal}) are allowed.
+  For putting Japanese characters, a Japanese font
+  (see \ref{japanese-fonts}) is chosen.
+  Further information can be found in \ref{chardef}.
 
  \csitem[\.{font}, \.{fontname}, \.{fontdimen}]
   % [TODO]
@@ -712,15 +734,15 @@ to test if a primitive |\kanjiskip| is defined.
 \end{verbatim}
 
 %%% upTeX かどうかの判定
-\subsubsection{Detecting \upTeX}
+\subsubsection{Detecting \upTeX}\label{detecting-uptex}
 
-\upTeX/\eupTeX\ are almost upward compatible
-with \pTeX/\epTeX\ respectively, however,
+\upTeX\ is almost upward compatible with \pTeX, however,
 there are two major differences:
 \begin{enumerate}
   \item Improvements in the \.{kcatcode} business,
     mainly for better handling of Latin-1 characters and CJK tokens.
-  \item Unicode as the default internal kanji encoding,
+  \item Unicode as the default internal Japanese encoding
+    (see \ref{kanji-internal}),
     for direct use of its huge character set.
 \end{enumerate}
 
@@ -732,6 +754,7 @@ The first difference can be detected by checking if
     % upTeX/e-upTeX
   \fi
 \end{verbatim}
+This can be called ``engine detection'' of \upTeX.
 
 The second difference can be detected by checking if
 the character \code{0x2121} (fullwidth space in JIS encoding)
@@ -747,10 +770,18 @@ is stored as \hex{3000} internally.
     \fi
   \fi
 \end{verbatim}
+This can be called ``encoding detection'' of \upTeX.
+
 Please note that
 the format-build setting of \verb+-kanji-internal=(sjis|euc)+ with
 \upTeX\ makes it effectively \pTeX\ regarding the character set,
 which means that only JIS~X~0208 character set is supported.
+This can be called ``legacy-encoding-compatibility mode''
+of \upTeX, where the \.{kcatcode} difference remains
+but the internal encoding difference disappears.
+This method is used in building |platex.fmt| on \eupTeX,
+since 2023-06-01. Therefore, to distinguish \upLaTeX\ from \pLaTeX,
+``engine detection'' is not enough; you should use ``encoding detection.''
 
 %%% pTeX のバージョン判定
 % [TODO] 何が有用？
@@ -803,7 +834,7 @@ is as follows:
 \end{itemize}
 
 %%% 指定のコードの和文トークンを得る方法
-\subsubsection{Creating a Japanese character token with a specified code}
+\subsubsection{Creating a Japanese character token with a specified code}\label{jtoken-tricks}
 
 Short version:
 \begin{itemize}
@@ -832,9 +863,9 @@ since \pTeX\ family does not support \.{lccode} outside 0--255.
 \end{dangerous}
 
 \.{kansuji} is an expandable primitive like \.{number} or \.{romannumeral},
-and it converts an integer into its corresponding kanji notation
+and it converts an integer into its corresponding \Foreign{kanji} notation
 called \Foreign{kansuji} (漢数字). The important point here is that
-the number-kanji mapping can be altered by \.{kansujichar}.
+the number-\Foreign{kanji} mapping can be altered by \.{kansujichar}.
 
 Example 1: equivalent to |\def\X{あ}| (JIS code \code{0x2422} is ``あ''):
 \begin{verbatim}
@@ -865,7 +896,7 @@ Regardless of their names, and unlike \hologo{XeTeX} or \hologo{LuaTeX},
 these primitives do \emph{not} necessarily take
 a Unicode value as an argument.
 These primitives in \epTeX\ and \eupTeX\ take a valid character code
-(see \ref{kanji-internal}) based on the internal kanji encoding.
+(see \ref{kanji-internal}) based on the internal Japanese encoding.
 
 \begin{simplelist}
  \csitem[\.{Uchar} <character code>]
@@ -938,24 +969,136 @@ First, some \pdfTeX-specific primitives are absent. Examples:
 %%% その他ムニャムニャ
 
 %%% ファイルの文字コードはどうするか
-\subsection{Recommendation for file encoding}
+\subsection{Recommendation for file encoding}\label{file-enc}
+
+Due to historical reasons,
+multiple encodings are commonly used for Japanese text.
+Sometimes user documents and distribution files (classes, packages)
+may have different encodings.
+Among those, the universal UTF-8 and
+three major legacy encodings (ISO-2022-JP, EUC-JP, Shift-JIS)
+are accepted as input to \pTeX\ family,
+depending on the configuration and runtime options.
+To make this possible,
+\pTeX\ family does code conversion in input and output.
+
+The details are too complicated, so here we propose
+the optimum solution for Japanese file encoding
+for package/class developers who aim to support \pTeX\ family:
 
 %%% 全部アスキーにしてしまえ
 %%% UTF-8 にしたい場合はムニャムニャ
 %%% \epTeXinputencoding を使う話
+\begin{itemize}
+ \item \underline{If you want to distribute files on CTAN/\TL, please use UTF-8.}
+   \par
+   UTF-8 files are \emph{almost always} safe enough
+   for recent \pTeX/\upTeX\ (2018--),
+   and the same files will have no problem when read by Western \TeX.
+   To secure this ``\emph{almost always}'' to ``\emph{always}'', please add
+   below at the beginning of your individual UTF-8 files:\par\quad
+   \verb+\ifx\epTeXinputencoding\undefined \else \epTeXinputencoding utf8 \fi+\par
+   it will help \pTeX\ family to read forcibly in UTF-8,
+   so it becomes \emph{always} safe for 2016--.
+ \item \underline{If you aim to support broader legacy environment of \pTeX\ specifically, ...}
+   \par
+   Extra care is required for missing features and
+   different configurations which can lead to failure of reading UTF-8.
+   There is no such thing as a perfect solution; instead,
+   you should choose between encoding in ISO-2022-JP
+   or writing in ASCII characters.
+  \begin{itemize}
+   \item Encoding in ISO-2022-JP:\par
+    All historical versions of \pTeX\ family can always read
+    ISO-2022-JP properly because it's a 7-bit encoding
+    safely distinguished from others.
+    This is why many old packages/classes widely used in Japan
+    are particularly encoded in ISO-2022-JP.\par
+    On the other hand, ISO-2022-JP is unsupported in Western \TeX;
+    also, CTAN/\TL requires some special handling of uploaded files.
+   \item Writing in ASCII characters:\par
+    Safe for Western \TeX\ and CTAN/\TL, but often requires lots of
+    {\TeX}niques and hard-to-read programmings (e.g. generating
+    Japanese tokens as in Section \ref{jtoken-tricks}, or encoding into
+    hex dump as in \Pkg{bxjalipsum.sty}, ...)
+  \end{itemize}
+  ... Annoying? Please forget that legacy environment ;-)
+\end{itemize}
+
+\begin{dangerous}
+For your information, here is the behavior of the common default
+configuration available in the latest \TL distribution (since 2023).
+\begin{itemize}
+ \def\Opt#1{\textcolor{red}{#1}}
+ \item \upTeX\ default: always properly reads \Opt{UTF-8} and ISO-2022-JP.
+ \item \pTeX\ default: always properly reads ISO-2022-JP.
+   It also properly reads \Opt{UTF-8} almost always\footnote{The
+   exception of ``almost always'' comes from a failure of guessing;
+   at the expense of properly reading a certain amount of
+   Shift-JIS and EUC-JP, there are occasional misreading of UTF-8.},
+   and successful results of ``guess-input-enc'' conversion of
+   Shift-JIS and EUC-JP.
+ \item When the command-line option \verb+-kanji=(sjis|euc)+ is
+   specified: \Opt{UTF-8} above is replaced with the given encoding.
+\end{itemize}
+\end{dangerous}
+
+\begin{dangerous}
+Note on older versions:
+\begin{itemize}
+ \item The ``guess-input-enc'' conversion status above is relatively new:
+  \begin{itemize}
+   \item In \TL2023, it is available for all platform of \TL.
+     Default on for (\eTeXpre)\pTeX, off for (\eTeXpre)\upTeX,
+     but also controlled by runtime option \code{-(no-)guess-input-enc}.
+   \item In \TL2022 and older, it was limited for Windows only;
+     also, default on for all of (\eTeXpre)(u)\pTeX.
+     For Unix it was not implemented yet.
+  \end{itemize}
+ \item In \TL2017 and older,
+   the default input encoding of (\eTeXpre)\pTeX\ was
+   Shift-JIS for Windows, UTF-8 for Unix.
+ \item The primitive \.{epTeXinputencoding} was added to
+   \epTeX/\eupTeX\ in \TL2016. Older versions does not have it.
+ \item Very old distributions by ASCII Corporation (--2009)
+   supported only legacy encodings; UTF-8 was not allowed.
+\end{itemize}
+\end{dangerous}
 
 %%% e-upTeX の入力解析：euc/sjis を語りたくないので utf8.uptex 前提
 \subsection{Input handling}
 
-For simplicity, first we introduce of input handling of \eupTeX.
-
+For simplicity, first we introduce how \upTeX\ handles the input
+when all files are UTF-8.
 %%% 文字の和文扱い・欧文扱い
 %%% 和文カテゴリーコード
 %%% \...cjktoken
+\begin{enumerate}
+ \item An input line is stored into the internal buffer.
+   (No effective code conversion here for \upTeX\footnote{To be precise,
+   it passes through a code conversion; however, this is an identity conversion
+   which has no effect because \upTeX\ defaults to internal Unicode.}.)
+ \item The input processor reads the buffer.
+   Here Japanese character tokens are distinguished from
+   ordinary 8-bit character tokens.
+ \item ... [TODO]
+\end{enumerate}
+
 %%% ちなみに e-pTeX では：euc/sjis があることにだけ触れる
+The situation is more complicated in \pTeX.
+As described in Section \ref{file-enc}, it accepts UTF-8 input;
+however, \pTeX\ uses a legacy encoding as the internal Japanese encoding
+(default: Shift-JIS on Windows, and EUC-JP otherwise).
+This means that \pTeX\ does code conversion in input and output.
+... [TODO]
 
 %%% e-upTeX の和文トークンの話：和文トークンが混ざっているので注意
 \subsection{Japanese tokens}
+
+%%% 文字トークンが和文であるかを判定する方法
+%%% (1) \meaning が kanji で始まるかどうか
+%%% (2) pTeX: 文字コードが 256 以上かどうか
+%%% (3) upTeX: 予め作っておいた \kcatcode 16--19 のトークン各々と \ifcat で比較
 
 %%% 和文組版の厳選トピック
 \section{Basic introduction to Japanese typesetting}
@@ -972,7 +1115,7 @@ between characters.
 % [TODO] もう少しだけ詳しく
 
 %%% 和文フォント
-\subsection{Japanese fonts}
+\subsection{Japanese fonts}\label{japanese-fonts}
 
 %%% 欧文とは別個
 \pTeX\ family can have 3 different ``current'' fonts at the same time;
@@ -1022,7 +1165,7 @@ corresponding to the whole valid Japanese character code range.\label{jfont}
 
 % [TODO] どこに書くか困ったので最後に：内部コードのアレな話
 %%% 和文文字コードは連続でない
-\subsection{Internal kanji encodings}\label{kanji-internal}
+\subsection{Internal Japanese encodings}\label{kanji-internal}
 
 The <character code> is a union of the following two:
 \begin{itemize}
@@ -1030,12 +1173,14 @@ The <character code> is a union of the following two:
  \item Numbers allowed for internal code of Japanese characters.
 \end{itemize}
 The former is the same as Knuthian \TeX, but the latter is a problem.
-In \upTeX/\eupTeX\ with \code{-kanji-internal=uptex} (default on),
-the range is very simple:
+
+In \upTeX\ (default internal Unicode mode), the range is very simple:
 \[ c \ge 0 \]
-However in \pTeX/\epTeX, only legacy encodings (EUC-JP as |euc|,
-or Shift-JIS as |sjis|) are available for \code{-kanji-internal}.
-In this case, the range can be represented as follows:
+
+However in \pTeX, only limited encodings are available;
+Shift-JIS as |sjis| (default for \TL Windows), or
+EUC-JP as |euc| (otherwise).
+The range can be represented as follows:
 \[
   c = 256c_1+c_2 \; (c_i\in C_i)
 \]
@@ -1048,6 +1193,7 @@ where
   \end{cases}
 \]
 Therefore, the overall range of <character code> is \emph{not} continuous.
+This is similar for ``legacy-encoding-compatibility mode'' of \upTeX.
 
 %%% 和文文字の内部コードとして有効（is_char_kanji が真）かどうかの判定
 %%% → ! Bad character code. エラーを出さないために使える
@@ -1077,7 +1223,7 @@ you can use \.{toucs} with \pTeX~p3.10.0 or later (\TL2022):
   \fi
 \end{verbatim}
 The primitive \.{toucs} converts an integer value
-from an internal \Foreign{kanji} code to a Unicode.
+from an internal Japanese code to a Unicode.
 This conversion is based on JIS-Unicode mapping table,\footnote{Defined in
 \code{jisx0208.h} of \code{ptexenc} library.} and returns $-1$
 if no mapping is available for the input integer.

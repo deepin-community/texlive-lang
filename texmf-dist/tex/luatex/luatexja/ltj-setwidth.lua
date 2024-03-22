@@ -33,7 +33,6 @@ local setheight = node.direct.setheight
 local setdepth = node.direct.setdepth
 local setlist = node.direct.setlist
 
-local node_traverse_id = node.direct.traverse_id
 local node_traverse = node.direct.traverse
 local node_copy = node.direct.copy
 local node_remove = node.direct.remove
@@ -65,6 +64,7 @@ local attr_icflag = luatexbase.attributes['ltj@icflag']
 local attr_vert_ori = luatexbase.attributes['ltj@vert@ori']
 
 local ltjf_font_extra_info = ltjf.font_extra_info
+local ltjs_orig_char_table = ltjs.orig_char_table
 
 local PACKED       = luatexja.icflag_table.PACKED
 local PROCESSED    = luatexja.icflag_table.PROCESSED
@@ -192,8 +192,15 @@ local function capsule_glyph_tate(p, met, char_data, head, dir)
       local feir = ltjf_font_extra_info[pf]
       if met.rotation and met.vert_activated then
           local f = font_getfont(pf)
-          local r, l = met.rotation[pc], f.properties and f.properties.language
-          if ((r==true) or (type(r)=="table" and not r[l])) and (get_attr(p, attr_vert_ori) or 0)<=0 then
+          local pco = ltjs_orig_char_table[p] or pc
+          local r = met.rotation[pco]
+          local l = f.properties and f.properties.language
+          r = (r==true) or (type(r)=="table" and not r[l])
+          if r then
+            r = met.rotation[pc]
+            r = (r==true) or (type(r)=="table" and not r[l])
+          end
+          if r and (get_attr(p, attr_vert_ori) or 0)<=0 then
             return capsule_glyph_tate_rot(p, met, char_data, head, dir,
               0.5*(get_ascender(pf)-get_descender(pf)))
           end
@@ -281,8 +288,7 @@ end
 
 -- 数式の位置補正
 function luatexja.setwidth.apply_ashift_math(head, last, attr_ablshift)
-   for p in node_traverse(head) do
-      local pid = getid(p)
+   for p, pid in node_traverse(head) do
       if p==last then
          return
       elseif (get_attr(p, attr_icflag) or 0) ~= PROCESSED then
@@ -309,11 +315,12 @@ do
    local attr_tablshift = luatexbase.attributes['ltj@tablshift']
    local attr_ablshift
    local disc, tex_dir
+   local traverse_glyph = node.direct.traverse_glyph
    local function ashift_disc_inner(field)
       local head = getfield(disc, field)
       if not head then return end
       local y_adjust, node_depth, adj_depth = 0, 0, 0
-      for lp in node_traverse_id(id_glyph, head) do
+      for lp in traverse_glyph(head) do
          y_adjust = get_attr(lp,attr_ablshift) or 0
          local ld = getdepth(lp)
          node_depth = max(ld + min(y_adjust, 0), node_depth)

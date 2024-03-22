@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -14,12 +14,12 @@
 
 Les bonnes pratiques dictent de séparer le contenu du texte de son
 apparence lorsque l'on utilise un système de mise en page comme
-{\LaTeX}. Néanmoins, vient un moment où l'on peut souhaiter modifier
-l'apparence générale du document ou disposer le texte d'une manière
-particulière. {\LaTeX} offre toute la flexibilité voulue, que ce soit
-pour contrôler les attributs et la taille des polices de caractères,
-disposer du texte sous forme de liste numérotée ou à puce, centrer du
-texte ou créer des notes de base de page et des citations.
+{\LaTeX}. Néanmoins, vous pourriez souhaiter modifier l'apparence
+générale du document ou disposer le texte d'une manière particulière.
+{\LaTeX} offre toute la flexibilité voulue, que ce soit pour contrôler
+les attributs et la taille des polices de caractères, disposer du
+texte sous forme de liste numérotée ou à puce, centrer du texte ou
+créer des notes de base de page et des citations.
 
 \section{Police de caractères}
 \label{sec:apparence:police}
@@ -27,14 +27,14 @@ texte ou créer des notes de base de page et des citations.
 Par défaut, tous les documents {\LaTeX} utilisent la même police de
 caractères\footnote{%
   Donald~Knuth a créé la police en même temps que {\TeX}.}, %
-{\fontfamily{lmr}\selectfont Computer Modern}. Chose qui ne manquera
-pas de surprendre les utilisateurs débutants: le système n'a pas été
-conçu pour changer facilement la police du document!
+{\fontfamily{lmr}\selectfont Computer Modern}. Chose qui ne manque
+jamais de surprendre les utilisateurs débutants: le système n'a pas
+été conçu pour changer facilement la police du document!
 
 Cela dit, il est aujourd'hui devenu assez simple d'utiliser d'autres
-polices pour son document, surtout avec les moteurs
-{\TeX} modernes comme {\XeTeX}. La \autoref{sec:trucs:polices} traite
-du sujet plus en détail.
+polices pour vos documents, surtout avec les moteurs {\TeX} modernes
+comme {\XeTeX}. La \autoref{sec:trucs:polices} traite du sujet plus en
+détail.
 
 Cette section se concentre plutôt sur le changement d'\emph{attribut}
 de la police du document, qu'il s'agisse de la famille (avec ou sans
@@ -75,41 +75,34 @@ changement d'attribut de la police.
     la police utilisée}
 \end{table}
 
-La commande
-\begin{lstlisting}
-\normalfont
-\end{lstlisting}
-permet de revenir d'un trait à la police par défaut, soit le romain,
-droit de graisse moyenne.
+La commande \cmd{\normalfont} permet de revenir d'un trait à la police
+par défaut, soit le romain, droit de graisse moyenne.
 
 \begin{exemple}
   \label{ex:apparence:police}
   La commande \cmd{\setsecheadstyle} de la classe \class{memoir}
   permet de modifier facilement le style des titres de section pour
-  tout le document. Pour obtenir des titres de section en gras sans
-  empattements, on placera dans le préambule d'un document utilisant
-  cette classe la commande suivante:
+  tout le document. La commande suivante placée dans le préambule
+  permet d'obtenir des titres de section en gras sans empattements:
 \begin{lstlisting}
 \setsecheadstyle{\normalfont\sffamily\bfseries}
 \end{lstlisting}
-  L'utilisation de \cmd{\normalfont} au début de la série de commandes
-  permet de réinitialiser le style des titres, question d'éviter
-  d'éventuels conflits avec une configuration antérieure. %
+  La commande \cmd{\normalfont} au début de l'argument permet de
+  réinitialiser le style des titres, question d'éviter d'éventuels
+  conflits avec une configuration antérieure. %
   \qed
 \end{exemple}
 
 \section{Taille du texte}
 \label{sec:apparence:taille}
 
-On se souviendra que l'on règle la taille de base du texte au
+Vous vous souviendrez que l'on règle la taille de base du texte au
 chargement de la classe du document, tel qu'expliqué à la
 \autoref{sec:bases:classes}. Les commandes du
 \autoref{tab:apparence:taille} permettent néanmoins de réduire ou
 d'agrandir la taille des caractères pour une section du texte. Les
 commandes servent également pour la configuration de l'apparence
 générale du document dans le préambule.
-
-La taille des car
 
 \begin{table}
   \centering
@@ -135,7 +128,7 @@ La taille des car
   \end{tabularx} \\
   \raggedright
   \hspace*{3em}{\footnotesize $^\dagger$ ajout de la classe
-    \class{memoir} (et donc aussi de \class{ulthese})}
+    \class{memoir}}
 \end{table}
 
 \begin{exemple}
@@ -158,8 +151,8 @@ composer les expressions et locutions en langue étrangère ou à
 détacher les titres d'{\oe}uvres du fil du texte.
 
 Évidemment, il est possible d'obtenir de l'italique avec la commande
-\cmd{\textit} du \autoref{tab:apparence:police}. Cependant, nous
-recommandons plutôt d'utiliser une commande spécifiquement dédiée à
+\cmd{\textit} du \autoref{tab:apparence:police}. Cependant, je
+recommande plutôt d'utiliser une commande spécifiquement dédiée à
 mettre en évidence une portion de texte:
 \begin{lstlisting}
 \emph`\marg{texte}'
@@ -189,9 +182,9 @@ week!}»
 
 \tipbox{Le soulignement\index{soulignement} servait pour remplacer
   l'italique à l'ère des dactylos. C'est aujourd'hui une marque de
-  typographie très rarement utilisée, voire à éviter. Ce n'est donc
-  pas pour rien qu'il n'existe pas de commande de soulignement dans
-  les classes {\LaTeX} standards.}
+  typographie très rarement utilisée, voire à éviter. C'est d'ailleurs
+  la raison pour laquelle il n'existe pas de commande de soulignement
+  dans les classes {\LaTeX} standards.}
 
 
 \section{Listes}
@@ -226,11 +219,9 @@ d'imbriquer les listes les unes dans les autres, et ce, peu importe
 leur type. {\LaTeX} se chargera d'adapter les marqueurs ou la
 numérotation jusqu'à quatre niveaux de profondeur.
 
-Illustrons ces concepts par le biais d'un exemple.
-
 \begin{exemple}
   La liste mixte suivante résume les étapes de création d'une liste
-  avec {\LaTeX}.
+  avec {\LaTeX}. Le texte qui a servi à la composer suit la liste.
   \begin{enumerate}
   \item Décider s'il s'agit d'une liste à puce ou d'une énumération;
     \begin{itemize}
@@ -253,7 +244,6 @@ Illustrons ces concepts par le biais d'un exemple.
     pour retourner au texte normal.
   \end{enumerate}
 
-  On a composé la liste ci-dessus avec le texte suivant.
   \begin{demo}
 \begin{lstlisting}[emph={enumerate,itemize}]
 \begin{enumerate}
@@ -274,34 +264,24 @@ Illustrons ces concepts par le biais d'un exemple.
 \item S'assurer de fermer tous les environnements [...]
 \end{enumerate}
 \end{lstlisting}
-  \end{demo}
   \qed
+  \end{demo}
 \end{exemple}
 
 {\LaTeX} permet de configurer à peu près toutes les facettes de la
-présentation des listes: puces, folios, alignement, espacement entre
+présentation des listes: marqueurs, folios, alignement, espacement entre
 les éléments, etc. Cette grande flexibilité implique une certaine
 complexité et la configuration des listes dépasse le cadre du présent
 document. Plusieurs paquetages facilitent toutefois la configuration
-des listes; nous recommandons à ce titre le paquetage \pkg{enumitem}
+des listes; je recommande à ce titre le paquetage \pkg{enumitem}
 \citep{enumitem}.
 
-\tipbox{Le mode français de \pkg{babel} remplace les puces par défaut
-  en anglais ({\textbullet}, {\textendash}, $\ast$ et $.$ pour chacun
-  des quatre niveaux de l'environnement \Ie{itemize}) par le tiret
-  cadratin {\textemdash}.
-
-  On peut désactiver cette fonctionnalité de \pkg{babel} en entrant
-  l'option \code{StardardItemLabels=true} dans \cmd{\frenchbsetup}
-  (\autoref{sec:bases:francais:babel}).
-
-  De plus, il est possible de modifier le symbole utilisé comme puce
-  pour l'un, l'autre ou chacun des quatre niveaux en configurant,
-  toujours via \cmd{\frenchbsetup}, les options du paquetage
-  \code{ItemLabeli}, \code{ItemLabelii}, \code{ItemLabeliii} et
-  \code{ItemLabeliv}. La \emph{Comprehensive {\LaTeX} Symbol List}
-  \citep{comprehensive} propose une immense sélection de symboles
-  pouvant faire office de puces.}
+\tipbox{Le mode français de \pkg{babel} remplace les marqueurs par
+  défaut de l'environnement \Ie{itemize} («{\textbullet}»,
+  «{\textendash}», «$\ast$» et «$.$») par le tiret cadratin
+  «{\textemdash}». La documentation de \pkg{babel-french} explique
+  comment restituer aux marqueurs les valeurs standards, ou comment
+  choisir vos propres marqueurs.}
 
 Il existe un troisième environnement, plus rarement utilisé, pour
 composer du texte sous une forme s'apparentant à une liste.
@@ -312,18 +292,15 @@ définition ou une description pour chacun.
 \begin{lstlisting}
 \begin{description}
 \item[rouge] première couleur
-  primaire
-\item[vert] seconde couleur
-  primaire
+\item[vert] deuxième couleur
 \item[bleu] troisième couleur
-  primaire
 \end{description}
 \end{lstlisting}
     \producing
 \begin{description}
-\item[rouge] première couleur primaire
-\item[vert] seconde couleur primaire
-\item[bleu] troisième couleur primaire
+\item[rouge] première couleur
+\item[vert] deuxième couleur
+\item[bleu] troisième couleur
 \end{description}
   \end{texample}
 \end{demo}
@@ -351,10 +328,10 @@ principalement pour centrer un bloc de texte.
 \end{center}
   \end{eqxample}
 \end{demo}
-On remarquera que le texte centré n'est pas placé en retrait des
+Remarquez comment le texte centré n'est pas placé en retrait des
 marges gauche et droite (illustrées par les lignes verticales
-ci-dessus). Lorsque le texte fait plus d'une ligne, on pourra
-souhaiter forcer des retours à la ligne avec la commande {\bs\bs}.
+ci-dessus). Lorsque le texte fait plus d'une ligne, vous pouvez forcer
+des retours à la ligne avec la commande «\pixbsbs».
 \begin{demo}
   \begin{eqxample}
 \begin{lstlisting}
@@ -373,19 +350,19 @@ souhaiter forcer des retours à la ligne avec la commande {\bs\bs}.
   \end{eqxample}
 \end{demo}
 
-La commande \cmd{\centering} s'applique à tout le texte qui suit. Elle
-s'avère surtout utile à l'intérieur d'environnements comme \Pe{table}
-ou \Pe{figure} pour centrer un tableau ou une figure sur la page. On
-trouvera plusieurs exemples de son utilisation
-au \autoref{chap:tableaux}.
+La commande \cmd{\centering}, quant à elle, centre tout le texte qui
+la suit. Elle s'avère surtout utile à l'intérieur d'environnements
+comme \Pe{table} ou \Pe{figure} pour centrer un tableau ou une figure
+sur la page. Vous la rencontrerez dans plusieurs des exemples du
+\autoref{chap:tableaux}.
 
 
 \section{Citations}
 \label{sec:apparence:citations}
 
 Une citation est une reproduction d'un propos ou d'un écrit antérieur
-d'un auteur qui est habituellement mentionné. Il existe deux
-environnements dans {\LaTeX} pour composer les citations.
+d'un auteur. Il existe deux environnements dans {\LaTeX} pour composer
+les citations.
 
 \begin{quote}
   L'environnement \Ie{quote} est utilisé pour les citations courtes.
@@ -394,15 +371,15 @@ environnements dans {\LaTeX} pour composer les citations.
 \end{quote}
 
 \begin{quotation}
-  L'environnement \Ie{quotation}, lui, sert pour les citations plus
-  longues se comptant en paragraphes.
+  Ce paragraphe et les deux suivants sont plutôt composés dans
+  un environnement \Ie{quotation}.
+
+  Cet environnement sert pour les citations plus longues se comptant
+  en paragraphes.
 
   La principale différence par rapport à l'environnement \Pe{quote},
   c'est que \Pe{quotation} prend aussi en charge les marques de
   paragraphes.
-
-  Ce paragraphe et les deux précédents sont composés dans
-  un environnement \Pe{quotation}.
 \end{quotation}
 
 
@@ -430,18 +407,18 @@ disposition des notes.
 Pour éviter que l'appel de note ne soit séparé du texte à expliquer,
 la commande \cmd{\footnote} doit immédiatement suivre celui-ci. La
 gestion des espaces peut alors devenir délicate, surtout si l'appel de
-note se trouve en fin de phrase. Nous recommandons de faire bon usage
-du symbole \% pour délimiter le contenu de \cmdprint{\footnote} du
+note se trouve en fin de phrase. Je recommande de faire bon usage
+du symbole «\%» pour délimiter le contenu de \cmdprint{\footnote} du
 texte courant.
 \begin{lstlisting}[emph=footnote]
 %% note en fin de phrase
-Nous remercions Pierre Lasou\footnote{%
+Je remercie Pierre Lasou\footnote{%
   Spécialiste en ressources documentaires.}. %
 Il fut d'une grande aide dans la préparation de ...
 \end{lstlisting}
 \begin{lstlisting}[emph=footnote]
 %% note au fil de la phrase
-Nous soulignons que Pierre Lasou\footnote{%
+Je souligne que Pierre Lasou\footnote{%
   Spécialiste en ressources documentaires.} %
 fut d'une grande aide dans la préparation de ...
 \end{lstlisting}
@@ -451,11 +428,10 @@ varient beaucoup d'une discipline à l'autre: numérotation consécutive
 pour tout le document, notes dans la marge plutôt qu'au bas de la
 page, notes rassemblées à la fin de chaque chapitre ou à la toute fin
 du document, etc. Différents paquetages permettent de réaliser ce type
-de disposition, notamment \pkg{footmisc} \citep{footmisc}. Les
-utilisateurs de la classe \class{ulthese} pourront également tirer
-profit des nombreuses fonctionnalités de la classe \class{memoir} pour
-la gestion des notes; consulter le chapitre~12 de la %
-\doc{memoir}{http://texdoc.net/pkg/memoir} de \class{memoir}.
+de disposition, notamment \pkg{footmisc} \citep{footmisc}. La classe
+\class{memoir} compte également de nombreuses fonctionnalités pour la
+gestion des notes; consultez le chapitre~12 de la %
+\doc{memoir}{https://texdoc.net/pkg/memoir}.
 
 
 \section{Texte brut et code source}
@@ -463,8 +439,8 @@ la gestion des notes; consulter le chapitre~12 de la %
 
 Il est parfois utile d'afficher du texte exactement comme il a été
 saisi dans un fichier, sans que {\LaTeX} n'interprète les commandes
-qui s'y trouvent ou n'en modifie la disposition. C'est ainsi que nous
-avons composé les nombreux extraits de code du présent document.
+qui s'y trouvent ou n'en modifie la disposition. C'est ainsi que j'ai
+composé les nombreux extraits de code du présent document.
 
 L'environnement \Ie{verbatim} permet de présenter du texte tel qu'il
 est entré dans le code source du document.
@@ -531,7 +507,7 @@ mots ne compte pas dans
 \end{demo}
 
 Pour tout document comportant une grande quantité de texte brut ou de
-code source, nous recommandons d'avoir le paquetage \pkg{listings}
+code source, je recommande d'employer le paquetage \pkg{listings}
 \citep{listings}. La \autoref{sec:trucs:listings} approfondit le
 sujet.
 
@@ -553,7 +529,7 @@ sujet.
 
 \begin{exercice}[nosol]
   \begin{enumerate}
-  \item Ouvrir le fichier \fichier{exercice\_complet.tex} et en
+  \item Ouvrir le fichier \fichier{exercice-complet.tex} et en
     étudier le code source, puis le compiler.
   \item Supprimer l'option \code{article} au chargement de la classe
     et compiler de nouveau le document. Observer l'effet de cette

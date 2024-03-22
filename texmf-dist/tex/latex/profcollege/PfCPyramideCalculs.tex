@@ -1,0 +1,281 @@
+%%%
+% Pyramide de calculs
+%%%
+\newcommand\DessinePyramideNombreMul[1]{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    pair A[],B[],O;
+    cote:=\useKV[ClesPyramide]{Cote};
+    boolean Aide,Produit,Solution,Vide;
+    Aide:=\useKV[ClesPyramide]{Aide};
+    Vide:=\useKV[ClesPyramide]{Vide};
+    Produit:=\useKV[ClesPyramide]{Produit};
+    Solution:=\useKV[ClesPyramide]{Solution};
+    A1=u*(1,1);
+    A2-A1=cote*(1,0);
+    A3=rotation(A2,A1,60);
+    A4=A1;
+    B1=iso(A1,A2);
+    B2=iso(A2,A3);
+    B3=iso(A3,A1);
+    O=iso(A1,A2,A3);
+    path BoiteRec;
+    BoiteRec=((-0.4,-0.5)--(0.4,-0.5){dir0}..{dir90}(0.5,-0.4)--(0.5,0.4){dir90}..{dir180}(0.4,0.5)--(-0.4,0.5){dir180}..{dir-90}(-0.5,0.4)--(-0.5,-0.4){dir-90}..cycle) scaled 1u;
+    % On trace et on affiche...éventuellement :)
+    trace polygone(A1,A2,A3);
+    for k=1 upto 3:
+    trace segment(O,B[k]) dashed withdots scaled 0.25;
+    draw BoiteRec shifted (1.75[O,B[k]]-center BoiteRec) dashed evenly scaled 0.5;
+    endfor;
+    if Vide:
+    else:
+    % On récupère les valeurs pour déterminer les produits
+    k=0;
+    for p_=#1:
+    k:=k+1;
+    Facteur[k]=p_;
+    endfor;
+    Produit[1]=Facteur[1] * Facteur[2];
+    Produit[2]=Facteur[2] * Facteur[3];
+    Produit[3]=Facteur[3] * Facteur[1];
+    for k=1 upto 3:
+    if Produit or Solution:
+    label(TEX("\num{"&decimal(Produit[k])&"}"),(1.75[O,B[k]]-center BoiteRec));
+    fi;
+    if Produit:
+    else:
+    label(TEX("\num{"&decimal(Facteur[k])&"}"),(0.5[O,A[k]]-center BoiteRec));
+    fi;
+    endfor;
+    fi;
+    if Aide:
+    for k=1 upto 3:
+    drawarrow (0.5[O,A[k]]--1.75[O,B[k]]) cutbefore segment(A[k],A[k+1]) cutafter BoiteRec shifted (1.75[O,B[k]]-center BoiteRec) dashed evenly scaled 0.5;
+    drawarrow (0.5[O,A[k+1]]--1.75[O,B[k]]) cutbefore segment(A[k],A[k+1]) cutafter BoiteRec shifted (1.75[O,B[k]]-center BoiteRec) dashed evenly scaled 0.5;
+    endfor;
+    fi;
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={cote:=\useKV[ClesPyramide]{Cote};
+      boolean Aide,Produit,Solution,Vide;
+      Aide:=\useKV[ClesPyramide]{Aide};
+      Vide:=\useKV[ClesPyramide]{Vide};
+      Produit:=\useKV[ClesPyramide]{Produit};
+      Solution:=\useKV[ClesPyramide]{Solution};}]
+    pair A[],B[],O;
+    A1=u*(1,1);
+    A2-A1=cote*(1,0);
+    A3=rotation(A2,A1,60);
+    A4=A1;
+    B1=iso(A1,A2);
+    B2=iso(A2,A3);
+    B3=iso(A3,A1);
+    O=iso(A1,A2,A3);
+    path BoiteRec;
+    BoiteRec=((-0.4,-0.5)--(0.4,-0.5){dir0}..{dir90}(0.5,-0.4)--(0.5,0.4){dir90}..{dir180}(0.4,0.5)--(-0.4,0.5){dir180}..{dir-90}(-0.5,0.4)--(-0.5,-0.4){dir-90}..cycle) scaled 1u;
+    % On trace et on affiche...éventuellement :)
+    trace polygone(A1,A2,A3);
+    for k=1 upto 3:
+    trace segment(O,B[k]) dashed withdots scaled 0.25;
+    draw BoiteRec shifted (1.75[O,B[k]]-center BoiteRec) dashed evenly scaled 0.5;
+    endfor;
+    if Vide:
+    else:
+    % On récupère les valeurs pour déterminer les produits
+    k=0;
+    for p_=#1:
+    k:=k+1;
+    Facteur[k]=p_;
+    endfor;
+    Produit[1]=Facteur[1] * Facteur[2];
+    Produit[2]=Facteur[2] * Facteur[3];
+    Produit[3]=Facteur[3] * Facteur[1];
+    for k=1 upto 3:
+    if Produit or Solution:
+    label(LATEX("\num{"&decimal(Produit[k])&"}"),(1.75[O,B[k]]-center BoiteRec));
+    fi;
+    if Produit:
+    else:
+    label(LATEX("\num{"&decimal(Facteur[k])&"}"),(0.5[O,A[k]]-center BoiteRec));
+    fi;
+    endfor;
+    fi;
+    if Aide:
+    for k=1 upto 3:
+    drawarrow (0.5[O,A[k]]--1.75[O,B[k]]) cutbefore segment(A[k],A[k+1]) cutafter BoiteRec shifted (1.75[O,B[k]]-center BoiteRec) dashed evenly scaled 0.5;
+    drawarrow (0.5[O,A[k+1]]--1.75[O,B[k]]) cutbefore segment(A[k],A[k+1]) cutafter BoiteRec shifted (1.75[O,B[k]]-center BoiteRec) dashed evenly scaled 0.5;
+    endfor;
+    fi;
+  \end{mpost}
+  \fi
+}
+
+\newcommand\DessinePyramideNombre[1]{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    pair A[][],B[];
+    path Case[];
+    color CaseCouleur;
+    nbetages:=\useKV[ClesPyramide]{Etages};
+    largeur:=\useKV[ClesPyramide]{Largeur};
+    hauteur:=\useKV[ClesPyramide]{Hauteur};
+    CaseCouleur:=\useKV[ClesPyramide]{Couleur};
+    boolean Double;
+    Double=\useKV[ClesPyramide]{Double};
+    Nbeb:=0;%Pour associer les textes avec les points. Plus facile :)
+    if Double:
+    for k=nbetages downto 1:
+    for l=0 upto (k-1):
+    Nbeb:=Nbeb+1;
+    A[k][l]=(0,0)+(nbetages-k)*(largeur/2,0)+(l*largeur,(nbetages-k)*hauteur);
+    B[Nbeb]=A[k][l];
+    Case[Nbeb]=((unitsquare xscaled largeur) yscaled hauteur) shifted (A[k][l]-0.5*(largeur,hauteur));
+    trace Case[Nbeb];
+    endfor;
+    endfor;
+    for k=nbetages-1 downto 1:
+    for l=0 upto (k-1):
+    Nbeb:=Nbeb+1;
+    A[-k][l]=(0,0)+(nbetages-k)*(largeur/2,0)+(l*largeur,-(nbetages-k)*hauteur);
+    B[Nbeb]=A[-k][l];
+    Case[Nbeb]=((unitsquare xscaled largeur) yscaled hauteur) shifted (A[-k][l]-0.5*(largeur,hauteur));
+    trace Case[Nbeb];
+    endfor;
+    endfor;
+    else:
+    if \useKV[ClesPyramide]{Inverse}:
+    change:=-1;
+    else:
+    change=1;
+    fi;
+    for k=nbetages downto 1:
+    for l=0 upto (k-1):
+    Nbeb:=Nbeb+1;
+    A[k][l]=(0,0)+(nbetages-k)*(largeur/2,0)+(l*largeur,change*(nbetages-k)*hauteur);
+    B[Nbeb]=A[k][l];
+    Case[Nbeb]=((unitsquare xscaled largeur) yscaled hauteur) shifted (A[k][l]-0.5*(largeur,hauteur));
+    trace Case[Nbeb];
+    endfor;
+    endfor;
+    fi;
+    if \useKV[ClesPyramide]{Vide}:
+    else:
+    Nbeb:=0;
+    for p_=#1:
+    Nbeb:=Nbeb+1;
+    if (substring(0,1) of p_)="*":
+    fill Case[Nbeb] withcolor CaseCouleur;
+    trace Case[Nbeb];
+    label(TEX(substring(1,length p_) of p_),B[Nbeb]);
+    elseif (substring(0,1) of p_)="!":
+    drawoptions(withcolor \useKV[ClesPyramide]{CouleurNombre});
+    label(TEX(substring(1,length p_) of p_),B[Nbeb]);
+    drawoptions();
+    else:
+    label(TEX(p_),B[Nbeb]);
+    fi;
+    endfor;
+    fi;
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={nbetages:=\useKV[ClesPyramide]{Etages};largeur:=\useKV[ClesPyramide]{Largeur};hauteur:=\useKV[ClesPyramide]{Hauteur};boolean Vide,Inverse,Double;Vide=\useKV[ClesPyramide]{Vide};Inverse=\useKV[ClesPyramide]{Inverse};Double=\useKV[ClesPyramide]{Double};color CaseCouleur;CouleurNombre; CaseCouleur:=\useKV[ClesPyramide]{Couleur};CouleurNombre=\useKV[ClesPyramide]{CouleurNombre};}]
+    pair A[][],B[];
+    path Case[];
+    Nbeb:=0;
+    if Double:
+    for k=nbetages downto 1:
+    for l=0 upto (k-1):
+    Nbeb:=Nbeb+1;
+    A[k][l]=(0,0)+(nbetages-k)*(largeur/2,0)+(l*largeur,(nbetages-k)*hauteur);
+    B[Nbeb]=A[k][l];
+    Case[Nbeb]=((unitsquare xscaled largeur) yscaled hauteur) shifted (A[k][l]-0.5*(largeur,hauteur));
+    trace Case[Nbeb];
+    endfor;
+    endfor;
+    for k=nbetages-1 downto 1:
+    for l=0 upto (k-1):
+    Nbeb:=Nbeb+1;
+    A[-k][l]=(0,0)+(nbetages-k)*(largeur/2,0)+(l*largeur,-(nbetages-k)*hauteur);
+    B[Nbeb]=A[-k][l];
+    Case[Nbeb]=((unitsquare xscaled largeur) yscaled hauteur) shifted (A[-k][l]-0.5*(largeur,hauteur));
+    trace Case[Nbeb];
+    endfor;
+    endfor;
+    else:
+    if Inverse:
+    change:=-1;
+    else:
+    change=1;
+    fi;
+    for k=nbetages downto 1:
+    for l=0 upto (k-1):
+    Nbeb:=Nbeb+1;
+    A[k][l]=(0,0)+(nbetages-k)*(largeur/2,0)+(l*largeur,change*(nbetages-k)*hauteur);
+    B[Nbeb]=A[k][l];
+    Case[Nbeb]=((unitsquare xscaled largeur) yscaled hauteur) shifted (A[k][l]-0.5*(largeur,hauteur));
+    trace Case[Nbeb];
+    endfor;
+    endfor;
+    fi;
+    if Vide:
+    else:
+    Nbeb:=0;
+    for p_=#1:
+    Nbeb:=Nbeb+1;
+    if (substring(0,1) of p_)="*":
+    fill Case[Nbeb] withcolor CaseCouleur;
+    trace Case[Nbeb];
+    label(LATEX(substring(1,length p_) of p_),B[Nbeb]);
+    elseif (substring(0,1) of p_)="!":
+    drawoptions(withcolor CouleurNombre);
+    label(LATEX(substring(1,length p_) of p_),B[Nbeb]);
+    drawoptions();
+    else:
+    label(LATEX(p_),B[Nbeb]);
+    fi;
+    endfor;
+    fi;
+  \end{mpost}
+  \fi
+}%
+
+\setKVdefault[ClesPyramide]{Etages=5,Largeur=2cm,Hauteur=1cm,Vide=false,Inverse=false,Double=false,Couleur=Crimson,Multiplication=false,CouleurNombre=blue,Produit=false,Solution=false,Aide=false,Cote=4cm}%
+
+\newtoks\toklistecaseP%
+\def\UpdatetoksPyramide#1\nil{\addtotok\toklistecaseP{"#1",}}%
+\def\UpdatetoksPyramideMul#1\nil{\addtotok\toklistecaseP{#1,}}%
+
+\NewDocumentCommand\PyramideNombre{o m}{%
+  \useKVdefault[ClesPyramide]%
+  \setKV[ClesPyramide]{#1}%
+  \ifboolKV[ClesPyramide]{Multiplication}{%
+    \ifx\bla#2\bla%
+    \setKV[ClesPyramide]{Vide=true}%
+    \DessinePyramideNombreMul{\the\toklistecaseP}%
+    \else
+    \setsepchar{,}%
+    \readlist*\ListePyramide{#2}%
+    \DessinePyramideNombreMul{\ListePyramide[1],\ListePyramide[2],\ListePyramide[3]}%
+    \fi
+  }{%
+    \ifx\bla#2\bla%
+    \setKV[ClesPyramide]{Vide=true}%
+    \DessinePyramideNombre{\the\toklistecaseP}%
+    \else%
+    \setsepchar{,}%
+    \readlist*\ListePyramide{#2}%
+    \ifboolKV[ClesPyramide]{Double}{%
+      \def\CalculNombreComposants{\fpeval{\useKV[ClesPyramide]{Etages}*\useKV[ClesPyramide]{Etages}}}%
+    }{%
+      \def\CalculNombreComposants{\fpeval{\useKV[ClesPyramide]{Etages}*(\useKV[ClesPyramide]{Etages}+1)/2}}%
+    }%
+    \xintifboolexpr{\ListePyramidelen==\CalculNombreComposants}{%
+      \toklistecaseP{}%
+      \foreachitem\compteur\in\ListePyramide{\expandafter\UpdatetoksPyramide\compteur\nil}%
+      \DessinePyramideNombre{\the\toklistecaseP}%
+    }{Le nombre d'éléments dans la liste des propositions n'est pas compatible avec le nombre d'étages choisi.}%
+    \fi%
+  }%
+}%

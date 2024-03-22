@@ -1,6 +1,6 @@
 %% xob-font.sty
 %%
-%% Copyright (c) 2014-2022 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2014-2023 Kangsoo Kim <karnes at ktug org>
 %% Copyright (c) 2017-2020 Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the
@@ -15,7 +15,7 @@
 %%  oblivoir hangul/hanja font setting.
 %%  part of oblivoir
 %%
-\ProvidesPackage{xob-font}[2022/04/11 v0.9.6 select hangul/hanja fonts for oblivoir]
+\ProvidesPackage{xob-font}[2023/02/19 v0.9.7 select hangul/hanja fonts for oblivoir]
 
 %%% obsolete options: retain \if@.. conditions for backward compatibility
 \newif\if@nowin\@nowinfalse
@@ -704,6 +704,15 @@
 }
 %\setkomainfont(UnBatang.ttf)(UnBatangBold.ttf)(UnGraphic.ttf)
 %\fi\fi
+
+%%% compresspunctuations
+\NewDocumentCommand \compressbnms { }
+{
+	\@ifpackageloaded{luatexko}
+	{
+		\AtBeginDocument{\addhangulfontfeature{CompressPunctuations}}
+	}{}
+}
 
 \ExplSyntaxOff
 

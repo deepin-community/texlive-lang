@@ -32,7 +32,7 @@ BEGIN {
   unshift (@INC, "$texdir/tlpkg");
 }
 
-use TeXLive::TLUtils qw(win32 mkdirhier conv_to_w32_path
+use TeXLive::TLUtils qw(wndws mkdirhier conv_to_w32_path
                         debug ddebug log info tlwarn);
 
 
@@ -159,7 +159,7 @@ my %original = (
 );
 
 $::lang = "C";
-if (TeXLive::TLUtils::win32()) {
+if (TeXLive::TLUtils::wndws()) {
   require TeXLive::TLWinGoo;
 }
 require("TeXLive/trans.pl");
@@ -231,7 +231,7 @@ sub do_install {
   my $toolsdir;
   my $tugdir;
   my $inifile;
-  if (win32()) {
+  if (wndws()) {
     # we assume TeXworks from TL, thus IniFormat
     chomp( my $twini = `kpsewhich -var-value=TW_INIPATH` ) ;
     $toolsdir = "$twini/configuration";
@@ -316,7 +316,7 @@ sub do_install {
     for my $t (sort keys %original) {
       my $id = sprintf("%03d", ++$highest_entry);
       $entries{$id} = $original{$t};
-      if (win32()) {
+      if (wndws()) {
         $entries{$id}{'program'} .= ".exe";
       }
     }
@@ -326,7 +326,7 @@ sub do_install {
     for my $t (sort keys %ptex2pdf) {
       my $id = sprintf("%03d", ++$highest_entry);
       $entries{$id} = $ptex2pdf{$t};
-      if (win32()) {
+      if (wndws()) {
         $entries{$id}{'program'} .= ".exe";
       }
     }

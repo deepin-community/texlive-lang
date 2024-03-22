@@ -4,7 +4,7 @@
 \input docstrip.tex
 \keepsilent
 \preamble
-Copyright 2001--2022 Claudio Beccari All rights reserved.
+Copyright 2001--2023 Claudio Beccari All rights reserved.
 
  This system is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,7 +43,7 @@ See the end of the file.
 %<package>\ProvidesPackage{teubner}[%
 %<tbtx>\ProvidesPackage{teubnertx}[%
 %<*driver,package,tbtx>
-2022/10/03 v.5.7.3 
+2023/08/25 v.5.8.3
 %<package>Extensions for Greek philology]
 %<tbtx>Access to the LGR encoded Greek fonts that match the TX fonts]
 %</driver,package,tbtx>
@@ -84,7 +84,7 @@ See the end of the file.
 %</driver>
 % \fi
 %
-% \CheckSum{4206}
+% \CheckSum{4190}
 % \begin{multicols}{2}\tableofcontents\end{multicols}
 %
 %
@@ -646,7 +646,7 @@ Type X <return> to exit.}%
 % distinguishes the variant or the main language whose attribute
 % gets set and, evidently, becomes effective when the main language
 % |greek| is in force. Notice that if the |greek.ldf| has a date previous
-% to 2014/09/18, the attribute |ancient| may not be defined; in this case
+% to 2014-09-18, the attribute |ancient| may not be defined; in this case
 % the |polutoniko| attribute is set, else the |ancient| attribute is
 % selected. The difference is that the attribute |polutoniko| selects
 % the polytonic spelling and the modern Greek hyphenation, while
@@ -656,25 +656,36 @@ Type X <return> to exit.}%
 % Nevertheless, if some work on modern polytonic Greek philological
 % document is being typeset, the |ancient| attribute may work
 % satisfactorily, but with some possible “ancient” line breaks. 
+%
+% In this new version 5.81 of this package I redefined the test to check 
+%if the \texttt{greek.ldf} is sufficiently recent in order to correctly 
+% use the ancient Greek version. The 2023 dev release of the \LaTeX format
+% already contains a new control sequence named \cs{IfFileLaterThanTF}
+% LaTeX3 function that allows to test the date of any file the full name
+% of which is passed as the first argument to the function; the syntax is
+% as such
+%
+% \cs{IfFileLaterThanTF}\marg{full file name}\marg{ISO date}\marg{true}\marg{false}
+%
+%\noindent where the \meta{full file name} means with its extension;
+% \meta{ISO date} means any form among yyyy/mm/dd or yyyy-mm-dd.
+% If the LaTeX kernel already contains this LaTeX3 definition the teubner
+% definition is skipped.
 %    \begin{macrocode}
+\unless\ifcsname IfFileLaterThanTF\endcsname
+  \def\IfFileLaterThanTF#1{\expandafter\@ifl@t@r\csname ver@#1\endcsname}%
+\fi
+
+\def\GreekName{greek}
 \ifx\languageattribute\undefined
- \def\GreekName{polutonikogreek}%
+  \def\GreekName{polutonikogreek}%
 \else
- \def\GreekName{greek}
- \def\strip@slash#1/#2/#3!{\edef\@tempA{#1#2#3}}
- \def\getgreekdate#1 #2 #3 #4!{\def\@tempA{#1}\expandafter\strip@slash\@tempA!}
- \expandafter\expandafter\expandafter\getgreekdate\csname ver@greek.ldf\endcsname !
- \ifnum\@tempA<20140918
-   \languageattribute{greek}{polutoniko}%
- \else
-   \languageattribute{greek}{ancient}%
- \fi
- \let\strip@slash\@undefined
- \let\getgreekdate\@undefined
+\IfFileLaterThanTF{greek.ldf}{2014-09-18}%
+  {\languageattribute{greek}{ancient}}%
+  {\languageattribute{greek}{polutoniko}}%
 \fi
 %    \end{macrocode}
 %\end{macro}
-
 %
 % \subsection{Compatibility with Latin fonts}\label{ssec:LatinFontComp}
 %
@@ -3563,8 +3574,10 @@ $\displaystyle\left.%
 \providecommand\grtoday{}
 \RenewDocumentCommand\grtoday{ s }%
 {\bgroup\IfBooleanTF{#1}%
-{\greeknumeral*{\the\day}\space\gr@c@month\space\greeknumeral*{\the\year}}%
-{\greeknumeral{\the\day}\space\gr@c@month\space\greeknumeral{\the\year}}%
+{\greeknumeral*{\the\day}\space \gr@polutoniko@month\space 
+  \greeknumeral*{\the\year}}%
+{\greeknumeral{\the\day}\space \gr@polutoniko@month\space 
+  \greeknumeral{\the\year}}%
 \egroup}
 
 %    \end{macrocode}

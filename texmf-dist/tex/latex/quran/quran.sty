@@ -1,6 +1,6 @@
 %% This is file `quran.sty',
 %%
-%% Copyright © 2015-2021
+%% Copyright © 2015-2023
 %% Seiied-Mohammad-Javad Razavian <javadr@gmail.com>
 %%
 %% This work may be distributed and/or modified under the
@@ -20,8 +20,8 @@
 %% to one who has devoted his life to Quran
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\qurandate{2021/02/02}
-\def\quranversion{1.81}
+\def\qurandate{2023/08/01}
+\def\quranversion{2.2}
 \ProvidesPackage{quran}[\qurandate\space v\quranversion^^JAn easy way to typeset the whole or any parts of the holy Quran]
 \RequirePackage{ifxetex}
 \RequirePackage{biditools}
@@ -54,6 +54,7 @@
 \newcommand*\qt@debug[1]{\typeout{debuging ==::>>> #1 <<<::==}}%
 \def\qt@showitems#1{\footnote{#1}}%
 \def\qt@no#1{ #1}%
+\def\qt@ob@begin{\relax}\def\qt@ob@end{\relax}%
 %
 \DeclareOptionX{nopar}{\let\qt@par\relax}
 \DeclareOptionX{nonumber}{\def\qt@no##1{\relax}}
@@ -72,6 +73,8 @@
     \IfSubStr{#1}{fr}{\qt@transfrtrue}{}%
 }%
 \DeclareOptionX{wordwise}{\qt@wordwisetrue}
+\newcommand*\SetOrnamentalBraces[2]{\def\qt@ob@begin{#1}\def\qt@ob@end{#2}}%
+\DeclareOptionX{ornbraces}{\SetOrnamentalBraces{﴿}{﴾}}%
 \DeclareOptionX*{\PackageWarning{quran}{Unknown option ‘\CurrentOption’}}
 \ProcessOptionsX\relax
 %\ProcessOptions\relax
@@ -82,17 +85,25 @@
     \let\qt@newcmd\bidi@newrobustcmd%
 \fi
 \bidi@newrobustcmd\surahname{%
-  \@ifstar\@@surahname\@surahname
+    \@ifstar\@@surahname\@surahname
 }%
-%
+% surah name taken from http://tanzil.net/res/text/metadata/quran-data.xml
 \def\@@surahname[#1]{%
 \ifcase#1 {}\or الفاتحة\or البقرة\or آل عمران\or النساء\or المائدة\or الأنعام\or الأعراف\or الأنفال\or التوبة\or يونس\or هود\or يوسف\or الرعد\or إبراهيم\or الحجر\or النحل\or الإسراء\or الكهف\or مريم\or طه\or الأنبياء\or الحج\or المؤمنون\or النور\or الفرقان\or الشعراء\or النمل\or القصص\or العنكبوت\or الروم\or لقمان\or السجدة\or الأحزاب\or سبأ\or فاطر\or يس\or الصافات\or ص\or الزمر\or غافر\or فصلت\or الشورى\or الزخرف\or الدخان\or الجاثية\or الأحقاف\or محمد\or الفتح\or الحجرات\or ق\or الذاريات\or الطور\or النجم\or القمر\or الرحمن\or الواقعة\or الحديد\or المجادلة\or الحشر\or الممتحنة\or الصف\or الجمعة\or المنافقون\or التغابن\or الطلاق\or التحريم\or الملك\or القلم\or الحاقة\or المعارج\or نوح\or الجن\or المزمل\or المدثر\or القيامة\or الإنسان\or المرسلات\or النبأ\or النازعات\or عبس\or التكوير\or الإنفطار\or المطففين\or الانشقاق\or البروج\or الطارق\or الأعلى\or الغاشية\or الفجر\or البلد\or الشمس\or الليل\or الضحى\or الشرح\or التين\or العلق\or القدر\or البينة\or الزلزلة\or العاديات\or القارعة\or التكاثر\or العصر\or الهمزة\or الفيل\or قريش\or الماعون\or الكوثر\or الكافرون\or النصر\or المسد\or الإخلاص\or الفلق\or الناس\else\relax\fi}
 \def\@surahname[#1]{%
-\ifcase#1\or Al-Fatiha\or Al-Baqara\or Aal-e-Imran\or An-Nisa\or Al-Maeda\or Al-Anaam\or Al-Araf\or Al-Anfal\or At-Taubah\or Yunus\or Hud\or Yusuf\or Ar-Rad\or Ibrahim\or Al-Hijr\or An-Nahl\or Al-Isra\or Al-Kahf\or Maryam\or Taha\or Al-Anbiya\or Al-Hajj\or Al-Mumenoon\or An-Noor\or Al-Furqan\or Ash-Shuara\or An-Naml\or Al-Qasas\or Al-Ankaboot\or Ar-Room\or Luqman\or As-Sajda\or Al-Ahzab\or Saba\or Fatir\or Ya-Seen\or As-Saaffat\or Sad\or Az-Zumar\or Ghafir\or Fussilat\or Ash-Shura\or Az-Zukhruf\or Ad-Dukhan\or Al-Jathiya\or Al-Ahqaf\or Muhammad\or Al-Fath\or Al-Hujraat\or Qaf\or Adh-Dhariyat\or At-tur\or An-Najm\or Al-Qamar\or Al-Rahman\or Al-Waqia\or Al-Hadid\or Al-Mujadila\or Al-Hashr\or Al-Mumtahina\or As-Saff\or Al-Jumua\or Al-Munafiqoon\or At-Taghabun\or At-Talaq\or At-Tahrim\or Al-Mulk\or Al-Qalam\or Al-Haaqqa\or Al-Maarij\or Nooh\or Al-Jinn\or Al-Muzzammil\or Al-Muddathir\or Al-Qiyama\or Al-Insan\or Al-Mursalat\or An-Naba\or An-Naziat\or Abasa\or At-Takwir\or AL-Infitar\or Al-Mutaffifin\or Al-Inshiqaq\or Al-Burooj\or At-Tariq\or Al-Ala\or Al-Ghashiya\or Al-Fajr\or Al-Balad\or Ash-Shams\or Al-Lail\or Ad-Dhuha\or Al-Inshirah\or At-Tin\or Al-Alaq\or Al-Qadr\or Al-Bayyina\or Al-Zalzala\or Al-Adiyat\or Al-Qaria\or At-Takathur\or Al-Asr\or Al-Humaza\or Al-Fil\or Quraish\or Al-Maun\or Al-Kauther\or Al-Kafiroon\or An-Nasr\or Al-Masadd\or Al-Ikhlas\or Al-Falaq\or An-Nas\else\relax\fi}%
+\ifcase#1\or Al-Faatiha\or Al-Baqara\or Aal-i-Imraan\or An-Nisaa\or Al-Maaida\or Al-An'aam\or Al-A'raaf\or Al-Anfaal\or At-Tawba\or Yunus\or Hud\or Yusuf\or Ar-Ra'd\or Ibraahim\or Al-Hijr\or An-Nahl\or Al-Israa\or Al-Kahf\or Maryam\or Taa-Haa\or Al-Anbiyaa\or Al-Hajj\or Al-Muminoon\or An-Noor\or Al-Furqaan\or Ash-Shu'araa\or An-Naml\or Al-Qasas\or Al-Ankaboot\or Ar-Room\or Luqman\or As-Sajda\or Al-Ahzaab\or Saba\or Faatir\or Yaseen\or As-Saaffaat\or Saad\or Az-Zumar\or Ghaafir\or Fussilat\or Ash-Shura\or Az-Zukhruf\or Ad-Dukhaan\or Al-Jaathiya\or Al-Ahqaaf\or Muhammad\or Al-Fath\or Al-Hujuraat\or Qaaf\or Adh-Dhaariyat\or At-Tur\or An-Najm\or Al-Qamar\or Ar-Rahmaan\or Al-Waaqia\or Al-Hadid\or Al-Mujaadila\or Al-Hashr\or Al-Mumtahana\or As-Saff\or Al-Jumu'a\or Al-Munaafiqoon\or At-Taghaabun\or At-Talaaq\or At-Tahrim\or Al-Mulk\or Al-Qalam\or Al-Haaqqa\or Al-Ma'aarij\or Nooh\or Al-Jinn\or Al-Muzzammil\or Al-Muddaththir\or Al-Qiyaama\or Al-Insaan\or Al-Mursalaat\or An-Naba\or An-Naazi'aat\or Abasa\or At-Takwir\or Al-Infitaar\or Al-Mutaffifin\or Al-Inshiqaaq\or Al-Burooj\or At-Taariq\or Al-A'laa\or Al-Ghaashiya\or Al-Fajr\or Al-Balad\or Ash-Shams\or Al-Lail\or Ad-Dhuhaa\or Ash-Sharh\or At-Tin\or Al-Alaq\or Al-Qadr\or Al-Bayyina\or Az-Zalzala\or Al-Aadiyaat\or Al-Qaari'a\or At-Takaathur\or Al-Asr\or Al-Humaza\or Al-Fil\or Quraish\or Al-Maa'un\or Al-Kawthar\or Al-Kaafiroon\or An-Nasr\or Al-Masad\or Al-Ikhlaas\or Al-Falaq\or An-Naas\else\relax\fi}%
+\def\@surahname@old[#1]{%
+\ifcase#1\or Al-Fatiha\or Al-Baqara\or Aal-e-Imran\or An-Nisa\or Al-Maeda\or Al-Anaam\or Al-Araf\or Al-Anfal\or At-Taubah\or Yunus\or Hud\or Yusuf\or Ar-Rad\or Ibrahim\or Al-Hijr\or An-Nahl\or Al-Isra\or Al-Kahf\or Maryam\or Taha\or Al-Anbiya\or Al-Hajj\or Al-Mumenoon\or An-Noor\or Al-Furqan\or Ash-Shuara\or An-Naml\or Al-Qasas\or Al-Ankaboot\or Ar-Room\or Luqman\or As-Sajda\or Al-Ahzab\or Saba\or Fatir\or Ya-Seen\or As-Saaffat\or Sad\or Az-Zumar\or Ghafir\or Fussilat\or Ash-Shura\or Az-Zukhruf\or Ad-Dukhan\or Al-Jathiya\or Al-Ahqaf\or Muhammad\or Al-Fath\or Al-Hujraat\or Qaf\or Adh-Dhariyat\or At-tur\or An-Najm\or Al-Qamar\or Al-Rahman\or Al-Waqia\or Al-Hadid\or Al-Mujadila\or Al-Hashr\or Al-Mumtahina\or As-Saff\or Al-Jumua\or Al-Munafiqoon\or At-Taghabun\or At-Talaq\or At-Tahrim\or Al-Mulk\or Al-Qalam\or Al-Haaqqa\or Al-Maarij\or Nooh\or Al-Jinn\or Al-Muzzammil\or Al-Muddathir\or Al-Qiyama\or Al-Insan\or Al-Mursalat\or An-Naba\or An-Naziat\or Abasa\or At-Takwir\or AL-Infitar\or Al-Mutaffifin\or Al-Inshiqaq\or Al-Burooj\or At-Tariq\or Al-Ala\or Al-Ghashiya\or Al-Fajr\or Al-Balad\or Ash-Shams\or Al-Lail\or Ad-Dhuha\or Al-Inshirah\or At-Tin\or Al-Alaq\or Al-Qadr\or Al-Bayyina\or Al-Zalzala\or Al-Adiyat\or Al-Qaria\or At-Takathur\or Al-Asr\or Al-Humaza\or Al-Fil\or Quraish\or Al-Maun\or Al-Kauther\or Al-Kafiroon\or An-Nasr\or Al-Masadd\or Al-Ikhlas\or Al-Falaq\or An-Nas\else\relax\fi%
+}
 %
 %% makes some macros for surah name to convert them to their original number in surah list.
     \newcount\qt@tempcount \qt@tempcount=1%
     \loop%
+        % support for Anglicized name pior to ver 2.1
+        \edef\qt@tmp@old{\lowercase{\edef\noexpand\qt@surah@name@old{\@surahname@old[\qt@tempcount]}}}%
+        \qt@tmp@old%
+        \expandafter\xdef\csname qt@surah@\qt@surah@name@old\endcsname{\the\qt@tempcount}%
+        % new Anglicized name of Quran surahs
         \edef\qt@tmp{\lowercase{\edef\noexpand\qt@surah@name{\@surahname[\qt@tempcount]}}}%
         \qt@tmp%
         \expandafter\xdef\csname qt@surah@\qt@surah@name\endcsname{\the\qt@tempcount}%
@@ -133,42 +144,43 @@
     \hskip0.25em\relax%
 }%
 %
-\DeclareDocumentCommand{\qt@doqt}{ o o }{%
+\DeclareDocumentCommand{\qt@doqt}{ o o }{\qt@ob@begin%
     \addtocounter{qt@count}{1}%
     \def\@qtexp{}%
     \loop%
-        \global\xdef\@qtexp{\@qtexp\csname qurantext@\roman{qt@count}\endcsname\ifnum\value{qt@count}=\qt@max\else\space\fi\qt@par}%
+        \global\xdef\@qtexp{\@qtexp\csname qurantext@\roman{qt@count}\endcsname\ifnum\value{qt@count}=\qt@max\else\space\fi%
+        \ifnum\value{qt@count}<\qt@max\relax\qt@par\fi}%
         \ifnum\value{qt@count}<\qt@max\relax%
         \addtocounter{qt@count}{1}%
     \repeat%
     \IfNoValueTF{#1}%
-    {\@qtexp}%true
+    {\@qtexp\qt@ob@end\qt@par}%true
     {\qt@WordCount=0\relax\c@qt@start=\numexpr#1-1\relax%
     \readlist*\qt@words{\@qtexp}%
         \IfNoValueTF{#2}%
         {\c@qt@end=\numexpr\qt@wordslen+1\relax}{\c@qt@end=\numexpr#2+1\relax}%
         \foreachitem\qt@word\in\qt@words{%
-            \ifnum\qt@wordcnt>\c@qt@start\ifnum\qt@wordcnt<\c@qt@end\qt@word\ifnum\qt@wordcnt=\numexpr\c@qt@end-1\relax\else\xspace\fi\fi\fi%
+            \ifnum\qt@wordcnt>\c@qt@start\ifnum\qt@wordcnt<\c@qt@end\qt@word\ifnum\qt@wordcnt=\numexpr\c@qt@end-1\qt@ob@end\relax\else\xspace\fi\fi\fi%
         }%
         \global\edef\qt@currentfont{\the\font}%
         \qt@showitems{\qt@currentfont\showitems\qt@words}%
-    }%false
+    \qt@par}%false
 }%
 %
 \bidi@newrobustcmd\ChangeQtPar{%
-  \ifx\qt@par\relax%
-    \def\qt@par{\par}%
-  \else%
-    \let\qt@par\relax%
-  \fi%
+    \ifx\qt@par\relax%
+        \def\qt@par{\par}%
+    \else%
+        \let\qt@par\relax%
+    \fi%
 }%
 %
 \bidi@newrobustcmd\ToggleAyahNumber{%
-  \expandafter\ifx\qt@no{0}\relax%
-    \def\qt@no##1{ ##1}%
-  \else%
-    \def\qt@no##1{\relax}%
-  \fi%
+    \expandafter\ifx\qt@no{0}\relax%
+        \def\qt@no##1{ ##1}%
+    \else%
+        \def\qt@no##1{\relax}%
+    \fi%
 }%
 \DeclareDocumentCommand{\qurantext}{ s O{\qt@default} o t{+} }{%
     \IfBooleanTF{#4}{\def\qt@showitems##1{\footnote{##1}}}{\def\qt@showitems##1{\relax}}%
@@ -183,25 +195,25 @@
 }%
 %
 \def\@qurantext[#1][#2]{%
-  \expandafter\qt@minmax\expandafter{#1}%
-  \setcounter{qt@count}{\qt@min}%
-  \addtocounter{qt@count}{-1}%
-  \IfNoValueTF{#2}{\qt@doqt}{%
-      \IfSubStr{#2}{-}{\StrCut{#2}{-}\qt@@start\qt@@end\relax%
-      \qt@doqt[\qt@@start][\qt@@end]%
-      }%
-      {\qt@doqt[#2]}%
+    \expandafter\qt@minmax\expandafter{#1}%
+    \setcounter{qt@count}{\qt@min}%
+    \addtocounter{qt@count}{-1}%
+    \IfNoValueTF{#2}{\qt@doqt}{%
+        \IfSubStr{#2}{-}{\StrCut{#2}{-}\qt@@start\qt@@end\relax%
+        \qt@doqt[\qt@@start][\qt@@end]%
+        }%
+        {\qt@doqt[#2]}%
     }%
 }%
 %
 \def\qt@get#1-#2;{\edef\qt@min{#1}\edef\qt@max{#2}}%
 \def\qt@stripmax#1-{\edef\qt@max{#1}}%
 \def\qt@minmax#1{%
-  \qt@get#1-\relax;%
-  \edef\qt@tmpa{\qt@max}%
-  \edef\qt@relax{\relax}%
-  \ifx\qt@tmpa\qt@relax\edef\qt@max{\qt@min}%
-  \else\expandafter\qt@stripmax\qt@max\fi%
+    \qt@get#1-\relax;%
+    \edef\qt@tmpa{\qt@max}%
+    \edef\qt@relax{\relax}%
+    \ifx\qt@tmpa\qt@relax\edef\qt@max{\qt@min}%
+    \else\expandafter\qt@stripmax\qt@max\fi%
 }%
 %
 \def\qt@getrange#1--#2;{\def\qt@min{#1}\def\qt@max{#2}}%
@@ -210,7 +222,7 @@
 \newcounter{qt@start}%
 \newcounter{qt@end}%
 %
-\bidi@newrobustcmd\qt@surah@default{112}% Surah Al-Ikhlas
+\bidi@newrobustcmd\qt@surah@default{112}% Surah Al-Ikhlaas
 \bidi@newrobustcmd\setsurahdefault[1]{%
 \bidi@renewrobustcmd{\qt@surah@default}{#1}}%
 %
@@ -523,16 +535,16 @@
 }%
 %
 \bidi@newrobustcmd\ToggleBasmalah{%
-  \ifqt@basmalah\qt@basmalahfalse\else\qt@basmalahtrue\fi
-  \ifx\basmalah\relax%
-    \def\basmalah{بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ\qt@par\space}%
-  \else%
-    \let\basmalah\relax%
-  \fi%
-  \ifqt@translt\ToggleBasmalahlt\fi%
-  \ifqt@transen\ToggleBasmalahen\fi%
-  \ifqt@transde\ToggleBasmalahde\fi%
-  \ifqt@transfa\ToggleBasmalahfa\fi%
+    \ifqt@basmalah\qt@basmalahfalse\else\qt@basmalahtrue\fi
+    \ifx\basmalah\relax%
+        \def\basmalah{بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ\qt@par\space}%
+    \else%
+        \let\basmalah\relax%
+    \fi%
+    \ifqt@translt\ToggleBasmalahlt\fi%
+    \ifqt@transen\ToggleBasmalahen\fi%
+    \ifqt@transde\ToggleBasmalahde\fi%
+    \ifqt@transfa\ToggleBasmalahfa\fi%
 }%
 \ifqt@uthmani%
     \input{qurantext-uthmani.def}%

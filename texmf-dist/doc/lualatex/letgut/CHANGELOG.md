@@ -7,6 +7,14 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.9.7] - 2023-05-21
+
+### Changed
+Announcement's title and toc entry possibly different (backward compatibility broken!)
+
+### Fixed
+`tabularray`'s needed library added.
+
 ## [0.9.6] - 2023-01-14
 
 ### Fixed

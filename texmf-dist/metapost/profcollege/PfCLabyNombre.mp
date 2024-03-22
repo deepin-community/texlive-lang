@@ -193,7 +193,47 @@ vardef TraceLabyrinthe=
     fi;
     );
   $
-enddef;    
+enddef;
+
+vardef InitialisationLabyrintheMul(expr long,larg)=
+  LargeurLaby:=larg;
+  LongueurLaby:=long;
+  uh=2u;
+  uv=2u;
+  pair M[][],N[][];%centre de la case, coinbg de la case
+  boolean CaseExploree[][];%Case Exploree ou pas
+  %on initialise les cases comme non explorées pour celles qui sont à l'intérieur du labyrinthe
+  for k=-1 upto larg:
+    for l=-1 upto long:
+      M[k][l]:=(5mm,-uv+5mm)+(l*uh,-k*uv);
+      N[k][l]:=(l*uh,(-k-1)*uv);
+      if (k=-1) or (k=larg) or (l=-1) or (l=long):
+	CaseExploree[k][l]:=true;
+      else:
+	CaseExploree[k][l]:=false;
+      fi;
+    endfor;
+  endfor;
+enddef;
+
+vardef TraceLabyrintheMul=
+  save $;
+  picture $;
+  $=image(
+      n:=0;
+      for k=0 upto LargeurLaby-1:
+	for l=0 upto LongueurLaby-1:
+	  n:=n+1;
+	if (n mod 2)=1:
+	  draw (Fullcircle scaled 10mm) shifted N[k][l];
+	else:
+	  draw (unitsquare scaled 10mm) shifted N[k][l];
+	fi;
+      endfor;
+    endfor;
+    );
+  $
+enddef;
 
 vardef murgauche=
   save $;

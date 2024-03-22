@@ -1,0 +1,564 @@
+%%%
+% Fractions
+%%%
+\setKVdefault[ClesFraction]{Rayon=2cm,Disque,Regulier=false,Segment=false,Rectangle=false,Longueur=5cm,Largeur=2cm,Cotes=5,Triangle=false,Parts=3,Eprouvette=false,Couleur=green,Reponse=false,Multiple=1,Hachures=false,Epaisseur=1}
+
+\def\MPFractionEprouvetteCode{%
+  Hauteur=\useKV[ClesFraction]{Longueur};
+  color ColEprou;
+  ColEprou=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  vardef eprouvette(expr deno,nume)=
+  picture PfCEprou,PfCEprouGrad;
+  path Cc;
+  Cc=cercles((0,0),1u) yscaled 0.2;
+  PfCEprouGrad=image(
+  trace Cc shifted((0,Hauteur));
+  trace subpath(0,length Cc/2) of Cc dashed evenly;
+  trace subpath(length Cc/2,length Cc) of Cc;
+  trace segment(point(0) of Cc,point(0) of Cc shifted((0,Hauteur)));
+  trace segment(point(length Cc/2) of Cc,point(length Cc/2) of (Cc shifted((0,Hauteur))));
+  for k=1 upto (deno-1):
+  trace (subpath(length Cc/2,length Cc*0.7) of Cc) shifted ((k/deno)*(0,Hauteur));
+  endfor;
+  );
+  m=nume div deno;
+  if (nume mod deno)=0:m:=m-1; fi;
+  PfCEprou=image(%
+  path Volume,VolumeComplet;
+  Volume=(point(0) of Cc)--(subpath(0,length Cc/2) of Cc shifted(((nume mod deno)/deno)*(0,Hauteur)))--(point(length Cc/2) of Cc shifted(((nume mod deno)/deno)*(0,Hauteur)))--(subpath(length Cc/2,length Cc) of Cc)--cycle;
+  VolumeComplet=(point(0) of Cc)--(subpath(0,length Cc/2) of Cc shifted((0,Hauteur)))--(point(length Cc/2) of Cc)--(subpath(length Cc/2,length Cc) of Cc)--cycle;
+  if m>0:
+  for l=0 upto (m-1):
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(VolumeComplet shifted(l*(3u,0)),60,0.2,0) withcolor ColEprou;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis (VolumeComplet shifted(l*(3u,0))) withcolor ColEprou;
+  fi;
+  fi;
+  endfor;
+  fi;
+  if (nume mod deno)<>0:
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(Volume shifted(m*(3u,0)),60,0.2,0) withcolor ColEprou;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis (Volume shifted(m*(3u,0))) withcolor ColEprou;
+  fi;
+  trace (Cc shifted(((nume mod deno)/deno)*(0,Hauteur))) shifted(m*(3u,0));
+  fi;
+  else:
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(VolumeComplet shifted(m*(3u,0)),60,0.2,0) withcolor ColEprou;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis (VolumeComplet shifted(m*(3u,0))) withcolor ColEprou;
+  fi;
+  fi;
+  fi;
+  for k=0 upto m:
+  trace PfCEprouGrad shifted((3u*k,0));
+  endfor;
+  );
+  PfCEprou
+  enddef;
+}
+  
+\def\MPFractionEprouvette#1#2{%
+  % #1 num
+  % #2 d\'eno
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPFractionEprouvetteCode
+    trace eprouvette(#2,#1);
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPFractionEprouvetteCode}]
+    trace eprouvette(#2,#1);
+  \end{mpost}
+  \fi
+}
+
+\def\MPFractionRegulierCode{%
+  Rayon=\useKV[ClesFraction]{Rayon};
+  Cotes=\useKV[ClesFraction]{Cotes};
+  color ColPolyReg;
+  ColPolyReg=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  pair O,A[],B[];
+  O=u*(0,0);
+  path cc,cd;
+  cc=cercles(O,Rayon);
+  for k=0 upto Cotes:
+  A[k]=pointarc(cc,k*(360/Cotes));
+  endfor;
+  cd=polygone(A0 for k=1 upto Cotes-1:,A[k] endfor);
+  vardef FractionPolyReg(expr nume,deno)=
+  for k=0 upto deno-1:
+  B[k]=point(k*(Cotes/deno)) of cd;
+  endfor;
+  picture fondcolore,FractionPoly;
+  fondcolore=image(
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(O--arccercle(B[0],B[nume mod deno],O)--cycle,1.5*360/Cotes,0.25,0) withcolor ColPolyReg;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis O--arccercle(B[0],B[nume mod deno],O)--cycle withcolor ColPolyReg;
+  fi;
+  clip currentpicture to cd;
+  for k=0 upto deno-1:
+  draw segment(O,B[k]) cutafter cd;
+  endfor;
+  trace cd;
+  );
+  currentpicture:=nullpicture;
+  m=nume div deno;
+  if (nume mod deno)=0:m:=m-1; fi;
+  FractionPoly=image(
+  if m>0:
+  for l=0 upto (m-1):
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(cd shifted(l*(Rayon*2+0.5cm,0)),1.5*360/Cotes,0.25,0) withcolor ColPolyReg;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  fill cd shifted(l*(Rayon*2+0.5cm,0)) withcolor ColPolyReg;
+  fi;
+  fi;
+  trace cd shifted(l*(Rayon*2+0.5cm,0));
+  if deno>1:
+  for k=0 upto deno-1:
+  draw (segment(O,B[k]) cutafter cd) shifted(l*(Rayon*2+0.5cm,0));
+  endfor;
+  fi;
+  endfor;
+  fi;
+  if Reponse:
+  draw fondcolore shifted(m*(Rayon*2+0.5cm,0));
+  fi;
+  draw cd shifted(m*(Rayon*2+0.5cm,0));
+  if deno>1:
+  for k=0 upto deno-1:
+  draw (segment(O,B[k]) cutafter cd) shifted(m*(Rayon*2+0.5cm,0));
+  endfor;
+  fi;
+  );
+  FractionPoly
+  enddef;
+}%
+
+\def\MPFractionRegulier#1#2{%
+  % #1 num, #2 deno
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPFractionRegulierCode
+    trace FractionPolyReg(#1,#2);
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPFractionRegulierCode}]
+    trace FractionPolyReg(#1,#2);
+  \end{mpost}
+  \fi
+}%
+
+\def\MPFractionTriangleCode{%
+  Longueur:=\useKV[ClesFraction]{Longueur};
+  nbparts:=\useKV[ClesFraction]{Parts};
+  color ColTriangle;
+  ColTriangle=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  nbtriangle=0;
+  %
+  vardef Ligne(expr longueur)=
+  for k=0 upto 2*(longueur-1):
+  nbtriangle:=nbtriangle+1;
+  if (k mod 2)=0:
+  M[nbtriangle]=(Tria shifted(0.5*k*(1/nbparts)*(B-A))) shifted((nbparts-longueur)*(1/nbparts)*(C-A));
+  else:
+  M[nbtriangle]=(Trir shifted(0.5*(k-1)*(1/nbparts)*(B-A))) shifted((nbparts-longueur)*(1/nbparts)*(C-A));
+  fi;
+  endfor;
+  enddef;
+  %
+  pair A,B,C;
+  A=u*(0.5,0.5);
+  B-A=(Longueur,0);
+  C=rotation(B,A,60);
+  %
+  path Tria,Trir,M[];
+  Tria=polygone(A,(1/nbparts)[A,B],(1/nbparts)[A,C]);
+  Trir=symetrie(Tria,(1/nbparts)[A,B],(1/nbparts)[A,C]);
+  %
+  for k=nbparts downto 1:
+  Ligne(k);
+  endfor;
+  %
+  vardef FractionTriangle(expr nume,deno)=
+  m:=nume div deno;
+  picture RetourFraction;
+  RetourFraction=image(
+  for l=1 upto (nume mod deno):
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(M[l] shifted(m*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  fill (M[l] shifted(m*(Longueur+1cm,0))) withcolor ColTriangle;
+  fi;
+  fi;
+  for k=1 upto nbparts:
+  trace segment((k/nbparts)[A,B],(k/nbparts)[A,C]) shifted(m*(Longueur+1cm,0));
+  trace segment((k/nbparts)[B,A],(k/nbparts)[B,C]) shifted(m*(Longueur+1cm,0));
+  trace segment((k/nbparts)[C,A],(k/nbparts)[C,B]) shifted(m*(Longueur+1cm,0));
+  endfor;
+  endfor;
+  % 
+  for l=0 upto (m-1):
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(polygone(A,B,C) shifted(l*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis polygone(A,B,C) withcolor ColRectangle;
+  fi;
+  fi;
+  for k=1 upto nbparts:
+  trace segment((k/nbparts)[A,B],(k/nbparts)[A,C]) shifted(l*(Longueur+1cm,0));
+  trace segment((k/nbparts)[B,A],(k/nbparts)[B,C]) shifted(l*(Longueur+1cm,0));
+  trace segment((k/nbparts)[C,A],(k/nbparts)[C,B]) shifted(l*(Longueur+1cm,0));
+  endfor;
+  endfor;
+  );
+  RetourFraction
+  enddef;
+}%
+
+\def\MPFractionTriangle#1#2{%
+  % #1 num #2 d\'eno (attention : = partage^2)
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPFractionTriangleCode
+    draw FractionTriangle(#1,#2);
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPFractionTriangleCode}]
+    draw FractionTriangle(#1,#2);
+  \end{mpost}
+  \fi
+}%
+
+\def\MPFractionRectangleCode{%
+  Longueur=\useKV[ClesFraction]{Longueur};
+  Largeur=\useKV[ClesFraction]{Largeur};
+  color ColRectangle;
+  ColRectangle=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  Multiple=\useKV[ClesFraction]{Multiple};
+  %
+  pair A,B,C,D,M[],N[],R[],S[];
+  A=(1,1);
+  B-A=(Longueur,0);
+  C-B=(0,Largeur);
+  D-C=A-B;
+  vardef FractionRectangle(expr nume,deno)=
+  m=nume div deno;
+  if (nume mod deno)=0:m:=m-1; fi;
+  numeric parts;
+  parts=(deno div Multiple);
+  for k=0 upto parts:
+  M[k]=(k/parts)[A,B];
+  N[k]=(k/parts)[D,C];
+  endfor;
+  if Multiple>1:
+  for k=0 upto Multiple:
+  R[k]=(k/Multiple)[A,D];
+  S[k]=(k/Multiple)[B,C];
+  endfor;
+  fi;
+  picture FondRectangle;
+  FondRectangle=image(%
+  draw polygone(A,B,C,D);
+  for k=1 upto (parts-1):
+  draw segment(M[k],N[k]);
+  endfor;
+  if Multiple>1:
+  for k=1 upto (Multiple-1):
+  draw segment(R[k],S[k]);
+  endfor;
+  fi;
+  );
+  picture FondRectangleColorie;
+  FondRectangleColorie=image(%
+  if Multiple=1:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(polygone(A,M[nume mod deno],N[nume mod deno],D),45,0.25,0) withcolor ColRectangle;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis polygone(A,M[nume mod deno],N[nume mod deno],D) withcolor ColRectangle;
+  fi;
+  else:
+  DDiv=(nume mod deno) div parts;
+  MMod=(nume mod deno) mod parts;
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(polygone(A,B,S[DDiv],R[DDiv]),45,0.25,0) withcolor ColRectangle;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(polygone(R[DDiv],(xpart(M[MMod]),ypart(R[DDiv])),(xpart(M[MMod]),ypart(R[DDiv+1])),R[DDiv+1]),45,0.25,0) withcolor ColRectangle;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis polygone(A,B,S[DDiv],R[DDiv]) withcolor ColRectangle;
+  remplis polygone(R[DDiv],(xpart(M[MMod]),ypart(R[DDiv])),(xpart(M[MMod]),ypart(R[DDiv+1])),R[DDiv+1]) withcolor ColRectangle;
+  fi;
+  fi;
+  );
+  picture RetourRectangle;
+  RetourRectangle=image(
+  if m>0:
+  for l=0 upto m-1:
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  trace hachurage(polygone(A,B,C,D) shifted(l*(Longueur+1cm,0)),45,0.25,0) withcolor ColRectangle;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  else:
+  remplis (polygone(A,B,C,D) shifted(l*(Longueur+1cm,0))) withcolor ColRectangle;
+  fi;
+  fi;
+  trace FondRectangle shifted(l*(Longueur+1cm,0));
+  endfor;
+  fi;
+  if (nume mod deno)<>0:
+  if Reponse:
+  trace FondRectangleColorie shifted(m*(Longueur+1cm,0));
+  fi;
+  else:
+  if Reponse:
+  if Hachures:
+  trace hachurage(polygone(A,B,C,D) shifted(m*(Longueur+1cm,0)),45,0.25,0) withcolor ColRectangle;
+  else:
+  remplis (polygone(A,B,C,D) shifted(m*(Longueur+1cm,0))) withcolor ColRectangle;
+  fi;
+  fi;
+  fi;
+  trace FondRectangle shifted(m*(Longueur+1cm,0));
+  );
+  RetourRectangle
+  enddef;
+}%
+
+\def\MPFractionRectangle#1#2{%
+  % #1 num, #2 deno
+  \ifluatex%
+  \mplibforcehmode%
+  \begin{mplibcode}
+    \MPFractionRectangleCode
+    trace FractionRectangle(#1,#2);
+  \end{mplibcode}
+  \else%
+  \begin{mpost}[mpsettings={\MPFractionRectangleCode;color ColRectangle;ColRectangle=\useKV[ClesFraction]{Couleur};}]
+    trace FractionRectangle(#1,#2);
+  \end{mpost}
+  \fi%
+}%
+
+\def\MPFractionDisqueCode{%
+  Rayon=\useKV[ClesFraction]{Rayon};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  color ColDisque;
+  ColDisque=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Reponse:=\useKV[ClesFraction]{Reponse};
+  %
+  pair A,B[];
+  A=(0,0);
+  path cc;
+  cc=cercles(A,Rayon);
+  vardef FractionDisque(expr nume,deno)=
+  for k=0 upto deno:
+  B[k]=pointarc(cc,(360/deno)*k);
+  endfor;
+  m=(nume div deno);
+  if (nume mod deno)=0:m:=m-1; fi;
+  picture RetourFraction;
+  RetourFraction=image(%
+  if Reponse:
+  if m>0:
+  for l=0 upto (m-1):
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  draw hachurage(cc shifted(l*(2*Rayon+1cm,0)),1.5*360/deno,0.25,0) withcolor ColDisque;
+  else:
+  fill cc shifted(l*(2*Rayon+1cm,0)) withcolor ColDisque;
+  fi;
+  endfor;
+  fi;
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  draw hachurage((A--B0--arccercle(B[0],B[nume mod deno],A)--cycle) shifted(m*(2*Rayon+1cm,0)),1.5*360/deno,0.25,0) withcolor ColDisque;
+  else:
+  fill ((A--B0--arccercle(B[0],B[nume mod deno],A)--cycle) shifted (m*(2*Rayon+1cm,0))) withcolor ColDisque;
+  fi;
+  fi;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  for l=0 upto m:
+  draw cc shifted(l*(2*Rayon+1cm,0));
+  for k=0 upto (deno-1):
+  draw segment(A,B[k]) shifted(l*(2*Rayon+1cm,0));
+  endfor;
+  endfor;
+  drawoptions();
+  );
+  RetourFraction
+  enddef;
+}%
+
+\NewDocumentCommand\MPFractionDisque{mm}{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPFractionDisqueCode
+    trace FractionDisque(#1,#2);
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPFractionDisqueCode}]
+    trace FractionDisque(#1,#2);
+  \end{mpost}
+  \fi
+}
+
+\def\MPFractionSegmentCode{%
+  Longueur=\useKV[ClesFraction]{Longueur};
+  color ColSegment;
+  ColSegment=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  %
+  pair A,C,B[];
+  A=(0,0);
+  C-A=(Longueur,0);
+  %
+  vardef FractionSegment(expr nume,deno)=
+  for k=0 upto deno:
+  B[k]=(k/deno)[A,C];
+  endfor;
+  m=nume div deno;
+  picture RetourFraction;
+  RetourFraction=image(
+  if m>0:
+  for l=0 upto (m-1):
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  draw hachurage(polygone(B[0]+u*(0,-0.15),B[deno]+u*(0,-0.15),B[deno]+u*(0,0.15),B[0]+u*(0,0.15)) shifted(l*(Longueur+1cm,0)),120,0.2,0) withcolor ColSegment;
+  drawoptions();
+  else:
+  draw (segment(B[0],B[deno]) shifted(l*(Longueur+1cm,0))) withpen pencircle scaled 2 withcolor ColSegment;
+  fi;
+  fi;
+  draw (segment(B[0],B[deno]) shifted(l*(Longueur+1cm,0)));
+  endfor;
+  fi;
+  if (nume mod deno)<>0:
+  if Reponse:
+  if Hachures:
+  drawoptions(withpen pencircle scaled Epaisseur);
+  draw hachurage(polygone(B[0]+u*(0,-0.15),B[nume mod deno]+u*(0,-0.15),B[nume mod deno]+u*(0,0.15),B[0]+u*(0,0.15)) shifted(m*(Longueur+1cm,0)),120,0.2,0) withcolor ColSegment;
+  drawoptions();
+  else:
+  draw (segment(B[0],B[nume mod deno]) shifted(m*(Longueur+1cm,0))) withpen pencircle scaled 2 withcolor ColSegment;
+  draw segment(A,C) shifted(m*(Longueur+1cm,0));
+  fi;
+  fi;
+  if Hachures:drawoptions(withpen pencircle scaled Epaisseur);fi;
+  draw (segment(B[0],B[nume mod deno]) shifted(m*(Longueur+1cm,0)));
+  draw segment(A,C) shifted(m*(Longueur+1cm,0));
+  %drawoptions();
+  fi;
+  if Hachures:drawoptions(withpen pencircle scaled Epaisseur);fi;
+  marque_p:="tiretv";
+  for l=0 upto m-1:
+  for k=0 upto deno:
+  pointe(B[k] shifted(l*(Longueur+1cm,0)));
+  endfor;
+  endfor;
+  if (nume mod deno)<>0:
+  for k=0 upto deno:
+  pointe(B[k] shifted(m*(Longueur+1cm,0)));
+  endfor;
+  fi;
+  );
+  RetourFraction
+  enddef;
+}
+
+\NewDocumentCommand\MPFractionSegment{mm}{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPFractionSegmentCode
+    trace FractionSegment(#1,#2);
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPFractionSegmentCode}]
+    trace FractionSegment(#1,#2);
+  \end{mpost}
+  \fi
+}
+
+\NewDocumentCommand\Fraction{o m}{%
+  \useKVdefault[ClesFraction]%
+  \setKV[ClesFraction]{#1}%
+  \setsepchar[*]{/}%
+  \readlist*\ListeFraction{#2}%
+  \ifboolKV[ClesFraction]{Eprouvette}{%
+    \MPFractionEprouvette{\ListeFraction[1]}{\ListeFraction[2]}%
+  }{%
+    \ifboolKV[ClesFraction]{Triangle}{%
+      \MPFractionTriangle{\ListeFraction[1]}{\ListeFraction[2]}%
+    }{%
+      \ifboolKV[ClesFraction]{Regulier}{%
+        \MPFractionRegulier{\ListeFraction[1]}{\ListeFraction[2]}%
+      }{%
+        \ifboolKV[ClesFraction]{Segment}{%
+          \MPFractionSegment{\ListeFraction[1]}{\ListeFraction[2]}%
+        }{%
+          \ifboolKV[ClesFraction]{Rectangle}{%
+            \MPFractionRectangle{\ListeFraction[1]}{\ListeFraction[2]}%
+          }{%
+            \MPFractionDisque{\ListeFraction[1]}{\ListeFraction[2]}%
+          }%
+        }%
+      }%
+    }%
+  }%
+}%

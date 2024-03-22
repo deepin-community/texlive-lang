@@ -21,8 +21,18 @@
 %% same distribution. (The sources need not necessarily be
 %% in the same archive or directory.)
 \ProvidesFile{bxjsja-minimal.def}
-  [2022/04/10 v2.7a BXJS document classes]
+  [2024/01/22 v2.9b BXJS document classes]
 %% このファイルは日本語文字を含みます
+\let\bxjs@tmpa\relax
+\ifx J\jsEngine \def\bxjs@tmpa{NTT-jTeX}\fi
+\ifx O\jsEngine \def\bxjs@tmpa{Omega}\fi
+\ifx\bxjs@tmpa\relax \expandafter\@gobble
+\else
+  \ClassError\bxjs@clsname
+   {The engine in use (\bxjs@tmpa) is not supported}
+   {It's a fatal error. I'll quit right now.}
+  \expandafter\@firstofone
+\fi{\endinput\@@end}
 \def\DeclareJaTextFontCommand#1#2{%
   \DeclareRobustCommand#1[1]{%
     \relax
@@ -389,21 +399,6 @@
 \g@addto@macro\bxjs@begin@document@hook{%
   \bxjs@pagestyle@hook
   \global\let\bxjs@pagestyle@hook\relax}
-\fi
-\ifbxjs@jaspace@cmd
-  \def\jaenspace{\hskip.5\jsZw\relax}
-  \def\jathinspace{\hskip\z@skip}
-  \def\　{\zwspace}
-  \DeclareRobustCommand*{\jaspace}[1]{%
-    \expandafter\ifx\csname bxjs@jaspace@@#1\endcsname\relax
-      \ClassError\bxjs@clsname
-       {Unknown jaspace: #1}{\@eha}%
-    \else
-      \csname bxjs@jaspace@@#1\endcsname
-    \fi}
-  \def\bxjs@jaspace@@zenkaku{\hskip 1\jsZw\relax}
-  \def\bxjs@jaspace@@nibu{\hskip .5\jsZw\relax}
-  \def\bxjs@jaspace@@shibu{\hskip .25\jsZw\relax}
 \fi
 \endinput
 %%

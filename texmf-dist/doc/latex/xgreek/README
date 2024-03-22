@@ -1,3 +1,16 @@
+Version 3.4.0
+Apparently, some \DeclareUppercaseMapping pairs where missing in the previous
+version. Thanks to Giannis Papadongonas for letting me know about it.
+
+Version 3.3.0
+The new implementation of the \MakeUppercase command ingores \uccode and
+\lccode commands and so the output of \MakeUppercase is wrong when Greek text is the
+argument of the command. In this version, I replaced all the \uccode
+and the corresponding \lccode command with the required new \DeclareUppercaseMapping 
+and \DeclareLowercaseMapping commands. Now \MakeUppercase works as expected.
+In addition, I have added a detailed explanation of the grammatical rule
+that dictates this change.
+
 Version 3.2.0
 
 The previous version did not work properly when the user did not
@@ -9,7 +22,7 @@ Introduces the option "listings" that loads the listings package,
 adjusts the catcodes of the Greek letters and allows one to properly
 use Greek letters in code listings (remember: all modern programming
 languages are UTF-8 aware!). It should be obvious, but here is how
-one can load the package with this oprion enabled:
+one can load the package with this option enabled:
 
 \usepackage[listings]{xgreek}
 
@@ -41,7 +54,7 @@ Claudio Beccari and Günter Milde for finding this bug.
 Version 2.6
 
 In this version the definition of \anwtonos and \katwtonos have been
-changed and now the commands expand to the correspong symbol and not
+changed and now the commands expand to the corresponding symbol and not
 to some \char"03XX\relax sequence. It seems the previous definitions
 did not work with some packages.
 
@@ -54,7 +67,7 @@ users wanted to be able to disable this "feature". Now, users can
 specify the noindentfirst option to achieve this. Also, some users wanted
 to be able to have the Greek numerals that appear in enumerations and
 chapter headers to get printed without the NUMERAL SIGN. This feature
-can be turned on with the new option nonumeralsign. Fianlly, command
+can be turned on with the new option nonumeralsign. Finally, command
 \anoteleia can be used to get an ANO TELEIA character. 
 
 Version 2.4
@@ -86,7 +99,7 @@ Greek language documents using XeLaTeX. And it is released in
 the hope that people will use it and spot errors, bugs, features
 so to improve it. Practically, it provides all the capabilities 
 of the greek option of the babel package. The package can be 
-invoced with any of the following options: monogreek (for 
+invoked with any of the following options: monogreek (for 
 typesetting modern monotonic Greek), polygreek (for typesetting 
 modern polytonic Greek), and ancientgreek (for typesetting 
 ancient texts). The default option is monogreek. The command
@@ -103,4 +116,4 @@ greek           loadhyph-el-polyton.tex
 
 Apostolos Syropoulos
 Xanthi, Greece
-2022/08/28
+2024/01/01

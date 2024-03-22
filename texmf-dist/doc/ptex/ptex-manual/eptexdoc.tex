@@ -300,9 +300,10 @@ tracing機能や条件判断文の強化などあるが，そこら辺はパッ�
   上記で「和文文字コードとして有効かどうか」は，関数|is_char_kanji|を参照．
   この関数は内部コードによって異なるため，マクロで実装するのは面倒であるが，
   \epTeX~190709以降では\.{iffontchar}で容易に実現できる．
-  なお，\upTeX では任意の非負の値が和文文字コードとして有効なため，
+  なお，内部Unicodeの\upTeX では任意の非負の値が和文文字コードとして有効なため，
   |is_char_kanji|は非負かどうかの判定になっている．
 \end{dangerous}
+
 
 \section{\OMEGA 由来の機能（旧名称：\texttt{FAM256}パッチ）}
 \epTeX には，掲示板\TeX\ Q\ \&\ Aの山本氏の書き込み
@@ -314,11 +315,11 @@ W32\TeX, \TeX~Liveのバイナリでは標準で有効になっていただけ�
 それでは利用者が混乱するので
 \emph{「\texttt{FAM256}パッチは\epTeX~160201以降からは切り離さない」}
 とここで宣言する．
-本ドキュメントの最後のページ\footnote{ただし，ソースファイルで言えば{\tt
-fam256d.tex}（本文）と\texttt{fam256p.tex}（preamble部）に対応する．}にちょっ
-としたサンプルを載せてある．
+本ドキュメントの最後のページ\footnote{ただし，ソースファイルで言えば
+\texttt{fam256d.tex}（本文）と\texttt{fam256p.tex}（preamble部）に対応する．}に
+ちょっとしたサンプルを載せてある．
 
-本節で述べる追加機能は extendend modeでなくても有効になっている．
+本節で述べる追加機能はextended modeでなくても有効になっている．
 ただし，後に説明する「レジスタが各種類65536個まで」は，
 extended modeの時に限り有効になる．
 
@@ -633,8 +634,6 @@ delimiter codeについても同様である．
   \LaTeX~2019-10-01で行われる変更(\cite{latex95,tjb83})で必要になったために
   \epTeX~190709で導入された．
 
-%%%
-\ifnum\epTeXversion>210629
  \csitem[\.{vadjust} \texttt{pre} <vertical mode material>]
   \.{vadjust}自体は\TeX82に存在し，それが現れた行の
   \emph{直後}に<vertical mode material>を配置するものである．
@@ -645,8 +644,6 @@ delimiter codeについても同様である．
 
   発端は，2021年2月にPandocで「ハイパーリンクのターゲットを行の下端ではなく
   上端にする」という目的で|\vadjust pre|が使われたことである\cite{tjb115}．
-\fi
-%%%
 \end{cslist}
 
 
@@ -692,7 +689,7 @@ p\number\ptexversion.\number\ptexminorversion\ptexrevision-%
   例えば\texttt{W\.{relax}\ oWo}からはW\relax oWoという出力になり，
   Wとoの間のカーニングが\.{relax}によって挿入されなくなったことがわかる．
 }による．
-min10フォントメトリックで「ちょっと」を組むと「ょっ」の間が詰まるという不具合は有名であるが，
+min10フォントメトリックで「|ちょっと|」を組むと「ょっ」の間が詰まるという不具合は有名であるが，
 「|ちょ{}っと|」と空グループを挟むことで回避されるのも，同じ理由である．
 
 \medskip
@@ -777,8 +774,6 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
 と「，」の内部コードが取得される．
 
 
-%%%
-\ifnum\epTeXversion>220213
 \subsection{\.{lastnodefont}プリミティブ}
 \.{lastnodechar}を補完するものとして，\epTeX~220214 (\TeX~Live 2022)で実装された．
 \begin{cslist}
@@ -801,8 +796,6 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
 組み合わせれば，「最後のノード」が和文文字かどうかを判別できる
 \footnote{\epTeX では「\.{lastnodechar}が256以上かどうか」でも判別できるが，
 \eupTeX では文字コード0--255の和文文字ノードも存在しうることに注意．}．
-\fi
-%%%
 
 
 \subsection{\.{lastnodesubtype}プリミティブ}
@@ -826,12 +819,8 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
   \begin{itemize}
     \item 最後のノードが文字ノードのときは0が返る．
     \item 現在構築中のリストが空のときは$-1$が返る．
-%%%
-\ifnum\epTeXversion>210629
     \item \epTeX~210701以降では，数式内のノードについてはsubtype値
       そのままではほとんど意味がないので，次ページの表の値を返す．
-\fi
-%%%
   \end{itemize}
 \end{cslist}
 
@@ -912,8 +901,6 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
 \end{verbatim}
 として定義している．
 
-%%%
-\ifnum\epTeXversion>210629
 \paragraph{\epTeX~210701以降の注意}
 上でも述べたように，数式内のノードについてはsubtype値はほとんど意味を持たないので，
 これらに対する\.{lastnodesubtype}ではsubtype値でなく以下の値を返すようにした：
@@ -947,8 +934,6 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
   \.{right}に「対応する」\.{lastnodesubtype}の値は取得できない．
   \.{over}プリミティブなどによる分数についても類似の事情がある．
 \end{description}
-\fi
-%%%
 
 
 \subsection{\.{epTeXinputencoding}プリミティブ}
@@ -1140,8 +1125,6 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
 \end{dangerous}
 
 
-%%%
-\ifdefined\suppresslongerror %% e-pTeX 211207
 \subsection{エラー抑制(\.{suppress...error})}
 \hologo{LuaTeX}に実装されているエラー発生を抑止するプリミティブたちのうち
 いくつかを，\epTeX~211207で追加した．
@@ -1155,8 +1138,6 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
  \csitem[\.{suppressmathparerror} (integer)]
   この内部整数が非ゼロのとき，数式モード中の\.{par}に由来するエラーを抑止する．
 \end{cslist}
-\fi
-%%%
 
 
 \section{\TeX~Liveによる拡張}
@@ -1202,8 +1183,7 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
   \TeX~Live 2021で追加された．
 \end{cslist}
 
-%%%
-\ifdefined\partokenname %% 2021-07-25
+
 \subsection{parトークンの制御}
 \TeX82では\.{par}という名称の制御綴は特別な役割を持っている．
 \begin{itemize}
@@ -1274,11 +1254,8 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
 値を1にすれば，「\.{vbox}の中身が水平モードで終わった場合」にも
 「暗黙のpar」ではなく「\.{par}という名称の制御綴」が挿入されるので，
 \.{par}の再定義が効く．
-\fi
-%%%
 
-%%%
-\ifdefined\showstream %% 2021-11-07
+
 \subsection{\.{show}系コマンドの出力制御}
 \begin{cslist}
  \csitem[\.{showstream} (integer)]
@@ -1293,8 +1270,20 @@ abcfi\the\lastnodechar, abc\char"1C \the\lastnodechar
   既定値は$-1$であり，これはファイルと一致しないため\TeX82と同じ動作となる．
   2021-11-07のコミットr60992（\TeX~Liveでは2022年以降）で追加された．
 \end{cslist}
-\fi
-%%%
+
+
+\subsection{展開遅延\.{special}}
+\begin{cslist}
+ \csitem[\.{special} \texttt{shipout} <general text>]
+  \TeX82の\.{special}プリミティブは，\.{immediate}\.{write}と同様に
+  引数のトークン列を「即座に」完全展開する．
+  \epTeX~230214（\TeX~Live 2023以降：2023-02-13のコミットr65815を参照）
+  では，新たにキーワード|shipout|を付けるとトークンの展開を
+  「ページをDVIファイルに出力する時点」まで遅らせる
+  （非\.{immediate}な\.{write}と同様）ことができる．同様の機能が
+  \hologo{pdfTeX}, \hologo{XeTeX}, \hologo{LuaTeX}, Alephで
+  一斉に実装されている．
+\end{cslist}
 
 
 \begin{comment}
@@ -1365,28 +1354,29 @@ $3$\,sp）だが，どこか気になるところである．
   本pdfと同じディレクトリにある\texttt{eptex\_resume.pdf}がそれにあたる．
  \bibitem{yamamoto} 山本 和義，「数式famの制限とluatex」，
   掲示板「\TeX\ Q\ \&\ A」，2009/02/12．\\
-  \url{http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52744.html}
+  \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52744.html}
  \bibitem{yamamoto2} 山本 和義，「Re: 数式famの制限とluatex」，
   掲示板「\TeX\ Q\ \&\ A」，2009/02/16．
-  \url{http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52767.html}
+  \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52767.html}
  \bibitem{yamamoto3} 山本 和義，「数式fam拡張マクロ for e-pTeX等」，
   掲示板「\TeX\ Q\ \&\ A」，2009/02/21．
-  \url{http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52799.html}
+  \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52799.html}
  \bibitem{expl31} 河原，「パッケージとディストリビューションについて」，
   掲示板「\TeX\ Q\ \&\ A」，2010/12/16．
-  \url{http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/55464.html}
+  \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/55464.html}
  \bibitem{expl32} 角藤 亮，「Re: パッケージとディストリビューションについて」，
   掲示板「\TeX\ Q\ \&\ A」，2010/12/19．
-  \url{http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/55478.html}
+  \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/55478.html}
  \bibitem{expl33} zrbabbler，「LaTeX3 と expl3 パッケージ」，
   ブログ「マクロツイーター」内，2010/12/22．
-  \url{http://d.hatena.ne.jp/zrbabbler/20101222/1293050561}
+  \url{https://zrbabbler.hatenablog.com/entry/20101222/1293050561}
+  % 旧 http://d.hatena.ne.jp/zrbabbler/20101222/1293050561
  \bibitem{strcmp} 角藤 亮，「Re: e-pTeX 101231」，
   掲示板「\TeX\ Q\ \&\ A」，2011/01/01．\\
-  \url{http://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/55528.html}
+  \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/55528.html}
  \bibitem{pdfse} Dora TeX，「Re: |\pdfshellescape|,
   |\lastnodechar| の実装」，\TeX~Forum，2014/11/19．
-  \url{http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=1435#p8053}
+  \url{https://okumuralab.org/tex/mod/forum/discuss.php?d=1435#p8053}
  \bibitem{lnc} 北川 弘典，「|\lastnodechar| プリミティブについて」，2014/12/15．\\
   \url{https://ja.osdn.net/projects/eptex/wiki/lastnodechar}
  \bibitem{xe5} Joseph Wright, ``[XeTeX] |\(pdf)mdfivesum|'',
@@ -1395,7 +1385,7 @@ $3$\,sp）だが，どこか気になるところである．
  \bibitem{15715} tat tsan，
   「[expl3 / e(u)ptex] 2015/07/15 版 expl3 パッケージが、(u)platex で通らない」，
   \TeX~Forum，2015/07/26．\\
-  \url{http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=1632}
+  \url{https://okumuralab.org/tex/mod/forum/discuss.php?d=1632}
  \bibitem{random} Joseph Wright, ``[tex-live] Random number primitives'',
   2016/11/12,\\
   \url{http://tug.org/pipermail/tex-live/2016-November/039436.html}

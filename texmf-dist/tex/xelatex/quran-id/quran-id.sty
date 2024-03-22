@@ -1,0 +1,250 @@
+%% This is file `quran-id.sty', and it's completely relies on the quran package.
+%%
+%% Copyright © 2023 by Seiied-Mohammad-Javad Razavian
+%% <javadr@gmail.com>
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% This work is “author-maintained” (as per LPPL maintenance status)
+%% by Seiied-Mohammad-Javad Razavian..
+%% The Current Maintainer of this work is Seiied-Mohammad-Javad Razavian.
+%%
+%% This work consists of the files quran-id.sty, qurantext-idi.translation.def, qurantext-idii.translation.def,
+%% qurantext-idiii.translation.def, quran-id-doc.tex, quran-id-doc.pdf, and quran.png.
+%%
+%% To one having devoted his life to the Holy Quran
+%%
+\NeedsTeXFormat{LaTeX2e}
+\def\quraniddate{2023/11/01}
+\def\quranidversion{0.1}
+\ProvidesPackage{quran-id}[%
+\quraniddate\space v\quranidversion\space^^J
+Indonesian translation extension to the quran package.%
+]
+\RequirePackage{xstring}
+\RequirePackage{xkeyval}
+\define@boolkeys{quran-id.sty}[id@]{bahasa,jalalayn,all}[true]
+\DeclareOptionX*{\PassOptionsToPackage{\CurrentOption}{quran}}
+\DeclareOption*{\PackageWarning{quran-id}{Unknown option ‘\CurrentOption’}}
+\ProcessOptionsX\relax
+\ifid@all
+    \ExecuteOptionsX{bahasa,jalalayn}
+\else
+    \ExecuteOptionsX{bahasa}
+\fi
+\RequirePackage{quran}
+\ifqt@wordwise%
+    \let\qt@newcmd\newcommand
+\else%
+    \let\qt@newcmd\bidi@newrobustcmd
+\fi%
+\input{qurantext-idi.translation.def}%
+%
+\ifid@bahasa%
+    \PackageInfo{quran-id}{Bahasa Indonesia's translation is chosen.}%
+\fi%
+\ifid@jalalayn%
+    \PackageInfo{quran-id}{Tafsir Jalalayn's translation is chosen.}%
+\fi%
+\newcount\trans@id%
+\trans@id=\z@%
+\define@choicekey*+{quran-id}{trans}[\val\nr]{bahasa,jalalayn}{%
+    \ifcase\nr\relax
+        \global\trans@id=\z@\relax%
+    \or
+        \global\trans@id=\@ne\relax%
+ \fi}{%
+    \PackageWarning{quran-id}{\string \idSetTrans' paramenter should be one of  `bahasa', or `jalalayn'. The package sets to `bahasa' by default.}{}%
+    \global\trans@id=\z@\relax%
+}%
+\newcommand*{\idGetTrans}{%
+    \ifcase\trans@id
+        bahasa%
+    \or
+        jalalayn%
+    \fi%
+}
+%
+\newcommand{\idSetTrans}[1]{%
+\IfInteger{#1}%
+{%Yes
+\count255=#1%
+\advance\count255 by -1\relax%
+\trans@id=\count255%
+}{%NO
+\setkeys{quran-id}{trans=#1}%
+}%
+%
+%\let\bidi@newrobustcmd\bidi@renewrobustcmd
+\ifqt@wordwise%
+    \makeatother\let\qt@newcmd\renewcommand\makeatletter%
+\else%
+    \makeatother\let\qt@newcmd\bidi@renewrobustcmd\makeatletter%
+\fi%
+\ifcase\trans@id%
+    \ifid@bahasa%
+        \ifx\basmalahid\relax\else%
+            \def\basmalahid{Dengan menyebut nama Allah Yang Maha Pemurah lagi Maha Penyayang. \qt@par}%
+        \fi%
+        \bidi@renewrobustcmd\ToggleBasmalahid{%
+            \ifx\basmalahid\relax%
+                \def\basmalahid{Dengan menyebut nama Allah Yang Maha Pemurah lagi Maha Penyayang. \qt@par}%
+            \else%
+                \let\basmalahid\relax%
+            \fi%
+        }%
+        \input{qurantext-idi.translation.def}%
+    \else%
+        \PackageError{quran-id}{Bahasa's translation has not been loaded}{}%
+    \fi%
+\or%
+    \ifid@jalalayn
+        \ifx\basmalahid\relax\else%
+            \def\basmalahid{Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang. \qt@par}%
+        \fi
+        \bidi@renewrobustcmd\ToggleBasmalahid{%
+            \ifx\basmalahid\relax%
+                \def\basmalahid{Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang. \qt@par}%
+            \else%
+                \let\basmalahid\relax%
+            \fi%
+        }%
+        \input{qurantext-idii.translation.def}%
+    \else%
+        \PackageError{quran-id}{Jalalayn's translation has not been loaded}{}%
+    \fi
+\else%
+    \PackageError{quran-id}{\string \idSetTrans{} paramenter should be between 1 to 3 }{}%
+\fi
+}%
+\bidi@newrobustcmd\ToggleBasmalahid{%
+    \ifx\basmalahid\relax%
+        \ifcase\trans@id% bahasa,,
+            \def\basmalahid{Dengan menyebut nama Allah Yang Maha Pemurah lagi Maha Penyayang. \qt@par}%
+        \or% jalalayn
+            \def\basmalahid{Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang \qt@par}%
+        \fi%
+    \else%
+        \let\basmalahid\relax%
+    \fi%
+}%
+\let\qt@doqt@orig\qt@doqt
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bidi@apptocmd{\ToggleBasmalah}{\ToggleBasmalahid}{}{}
+\let\ToggleBasmalah@orig\ToggleBasmalah
+\def\basmalahid{Dengan menyebut nama Allah Yang Maha Pemurah lagi Maha Penyayang. \qt@par}%
+\def\Basmalahid{%
+        \begingroup%
+        \let\par\relax%
+        \def\qt@no##1{\relax}%
+        \quranayahid[1][1][1]%
+        \endgroup%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand\qt@doid{ o o }{%
+    \addtocounter{qt@count}{1}%
+    \def\@qtexp{}%
+    \loop%
+        \global\xdef\@qtexp{\@qtexp\csname qurantrans@id@\roman{qt@count}\endcsname\ifnum\value{qt@count}=\qt@max\else\space\fi
+        \ifnum\value{qt@count}<\qt@max\relax\qt@par\fi}%
+        \ifnum\value{qt@count}<\qt@max\relax%
+        \addtocounter{qt@count}{1}%
+    \repeat%
+    \IfNoValueTF{#1}%
+    {\@qtexp\qt@par}%true
+    {\qt@WordCount=0\relax\c@qt@start=\numexpr#1-1\relax%
+    \readlist*\qt@words{\@qtexp}%
+        \IfNoValueTF{#2}%
+        {\c@qt@end=\numexpr\qt@wordslen+1\relax}{\c@qt@end=\numexpr#2+1\relax}%
+        \foreachitem\qt@word\in\qt@words{%
+            \ifnum\qt@wordcnt>\c@qt@start\ifnum\qt@wordcnt<\c@qt@end\qt@word\ifnum\qt@wordcnt=\numexpr\c@qt@end-1\relax\else\xspace\fi\fi\fi%
+        }%
+        \global\edef\qt@currentfont{\the\font}%
+        \qt@showitems{\qt@currentfont\showitems\qt@words}%
+    \qt@par}%false
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\qurantextid}{ s O{\qt@default} o t{+} }{%
+    \IfBooleanTF{#4}{\def\qt@showitems##1{\footnote{##1}}}{\def\qt@showitems##1{\relax}}%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\IfBooleanTF{#4}{\qurantext*[#2][#3]+}{\qurantext*[#2][#3]}}%
+    {\IfBooleanTF{#4}{\qurantext[#2][#3]+}{\qurantext[#2][#3]}}%
+    \let\qt@doqt\qt@doqt@orig%
+    \def\qt@showitems##1{\relax}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand\quransurahid{ s O{\qt@surah@default} }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quransurah*[#2]}%
+    {\quransurah[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranayahid}{ s o o o t{+} }{%
+    \let\qt@doqt\qt@doid%
+    \let\ToggleBasmalah\ToggleBasmalahid%
+    \IfBooleanTF{#1}%
+    {\IfBooleanTF{#5}{\quranayah*[#2][#3][#4]+}{\quranayah*[#2][#3][#4]}}%
+    {\IfBooleanTF{#5}{\quranayah[#2][#3][#4]+}{\quranayah[#2][#3][#4]}}%
+    \let\qt@doqt\qt@doqt@orig%
+    \let\ToggleBasmalah\ToggleBasmalah@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranjuzid}{ s o }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quranjuz*[#2]}%
+    {\quranjuz[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranpageid}{ s o }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quranpage*[#2]}%
+    {\quranpage[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranquarterid}{ s o }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quranquarter*[#2]}%
+    {\quranquarter[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranrukuid}{ s o }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quranruku*[#2]}%
+    {\quranruku[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranhizbid}{ s o }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quranhizb*[#2]}%
+    {\quranhizb[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareDocumentCommand{\quranmanzilid}{ s o }{%
+    \let\qt@doqt\qt@doid%
+    \IfBooleanTF{#1}%
+    {\quranmanzil*[#2]}%
+    {\quranmanzil[#2]}%
+    \let\qt@doqt\qt@doqt@orig%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of file `quran-id.sty'.

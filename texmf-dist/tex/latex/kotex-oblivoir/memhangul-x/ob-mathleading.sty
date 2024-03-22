@@ -12,12 +12,13 @@
 %% v. 0.0.1-pr2 : 2018/12/24
 %% v. 0.0.1     : 2018/12/25
 %% v. 0.1		: 2022/04/01	: <split> fixed.
+%% v. 0.2	: 2023/02/26, maintenance
 %%
 \RequirePackage{expl3}
 \ProvidesExplPackage
 	{ob-mathleading}
-	{2022/04/01}
-	{v0.1}
+	{2023/02/26}
+	{v0.2}
 	{adjust math leadings for oblivoir}
 
 \@ifpackageloaded{amsmath}{}{\RequirePackage{amsmath}}
@@ -30,7 +31,8 @@
 	default			.bool_set:N	= \l_defaultopt_bool,
 	mathleading		.fp_set:N 	= \l_opt_mathleading_fp,
 	exception		.clist_set:N = \g_opt_mlexception_clist,
-	noallowdisplaybreaks	.bool_set:N = \g_noallowdispbreak_bool
+	noallowdisplaybreaks	.bool_set:N = \g_noallowdispbreak_bool,
+	badm		.bool_set:N = \opt_badm_bool
 }
 
 \keys_set:nn { obmathleading }
@@ -38,7 +40,8 @@
 	default 	= true,
 	mathleading	= 1.0,
 	exception	= {},
-	noallowdisplaybreaks = false
+	noallowdisplaybreaks = false,
+	badm = false
 }
 
 \ProcessKeysOptions { obmathleading }
@@ -142,5 +145,31 @@
 {
 	\AtBeginDocument { \allowdisplaybreaks }
 }
+
+%%% badm
+\dim_new:N \l_beforedm_dim
+\dim_new:N \l_afterdm_dim
+\dim_new:N \l_defaultonebasedistance_dim
+
+%%% for compatibility
+%\cs_if_exist:NF \onelineskip { \let\onelineskip\baselineskip }
+%\dim_set:Nn \l_defaultonebasedistance_dim { \baselineskip - \onelineskip }
+%
+%\NewDocumentCommand \setmlbeforeafterdm { mm }
+%{
+%	\dim_set:Nn \l_beforedm_dim { #1 }
+%	\dim_set:Nn \l_afterdm_dim { #2 }
+%}
+%
+%\bool_if:NT \opt_badm_bool
+%{
+%	\clist_set:Nn \l_tmpa_clist { align, equation, gather, multline, align*, equation*, gather*, alignat, alignat*, multline* }
+%	\clist_map_inline:Nn \l_tmpa_clist 
+%	{
+%		\AddToHook { env/##1/before } { \vspace { \dimexpr-\l_defaultonebasedistance_dim - \l_beforedm_dim \relax } }
+%		\AddToHook { env/##1/after } { \vspace { \dimexpr-\l_defaultonebasedistance_dim - \l_afterdm_dim \relax } }
+%	}
+%}
+
 
 %% end of file

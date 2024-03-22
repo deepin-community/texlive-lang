@@ -48,8 +48,8 @@
 }
 \ExplSyntaxOff
 \ProvidesExplClass{letgut}
-{2023-01-14}
-{0.9.6}
+{2023-05-21}
+{0.9.7}
 {
   Class for the newsletter “The GUTenberg Letter”
 }
@@ -255,6 +255,7 @@
 }
 \tl_const:Nn \c__letgut_acronyms_file_tl { letgut-acronyms }
 \tl_const:Nn \c__letgut_local_config_file_tl { localconf }
+\tl_const:Nn \c__letgut_pre_documentclass_file_tl { pre-documentclass }
 \tl_const:Nn \c__letgut_lstlanguage_file_tl { letgut-lstlang.sty }
 \tl_const:Nn \c__letgut_contents_name_tl { Sommaire }
 \tl_const:Nn \c__letgut_draftwatermark_text_tl {
@@ -307,6 +308,8 @@
 \tl_new:N \l__letgut_title_addon_tl
 \tl_new:N \l__letgut_reference_text_tl
 \tl_new:N \g__letgut_effective_acronyms_file_tl
+\tl_new:N \l__letgut_toc_title_announce_tl
+\tl_new:N \l__letgut_toc_color_announce_tl
 \clist_new:N \g__letgut_pagecolor_clist
 \clist_const:Nn \c__letgut_default_pagecolor_screen_clist
 {1.0, 0.98, 0.94}
@@ -485,6 +488,7 @@
 }
 \floatsetup[table]{capposition=top}
 \renewcommand*\frenchtablename{Tableau}
+\UseTblrLibrary{booktabs}
 \NewCommandCopy{\__letgut_old_printbibliography}{
   \printbibliography
 }
@@ -623,8 +627,9 @@
   , editorial .initial:n = { true }
   , informations .bool_gset:N = \g__letgut_informations_bool
   , informations .initial:n = { true }
-  , detailedtoc .bool_gset:N = \g__letgut_detailedtoc_bool
-  , detailedtoc .initial:n = { false }
+  , detailedtoc .str_gset:N = \g__letgut_detailedtoc_level_str
+  , detailedtoc .default:n = 5
+  , detailedtoc .initial:n = 0
   , reverse-files-attachement .code:n = {
     \AddToHook{begindocument/before}{
       \bool_lazy_and:nnTF {\g__letgut_for_readers_bool} {!\g__letgut_paper_bool}
@@ -724,34 +729,48 @@
   \end{tblr}
   \skip_vertical:N \c_zero_dim
 }
-\DeclareTColorBox{announcement}{ O{black} m }
+\tcbset{
+  announce~ style/.style={
+    enhanced,
+    sharp~ corners,
+    boxrule=0mm,
+    leftrule=1cm,
+    bottomrule=1cm,
+    toptitle=20pt,
+    bottomtitle=20pt,
+    center~ title,
+    before~ title=\hypersetup{hidelinks},
+    fonttitle=\scshape\bfseries\huge,
+    fontupper=\Large,
+    fontlower=\Large,
+    skin=empty,
+    segmentation~ style=solid,
+    halign=center,
+    toc~ title/.store~ in=\l__letgut_toc_title_announce_tl,
+    color/.store~ in=\l__letgut_toc_color_announce_tl,
+  }
+}
+\cs_new_protected:Npn \__letgut_toc_title_announce:nn #1 #2
 {
-  colframe=#1,
-  coltitle=#1,
-  borderline~ west={1cm}{0pt}{#1},
-  IfBlankF={#2}{
-    title=\hypersetup{hidelinks}#2,
-    phantom={\phantomsection\addcontentsline{toc}{title}{#2}},
-  },
-  enhanced,
-  sharp~ corners,
-  boxrule=0mm,
-  leftrule=1cm,
-  bottomrule=1cm,
-  toptitle=20pt,
-  bottomtitle=20pt,
-  center~ title,
-  fonttitle=\scshape\bfseries\huge,
-  fontupper=\Large,
-  fontlower=\Large,
-  skin=empty,
-  segmentation~ style=solid,
-  halign=center,
+  \tl_if_empty:NTF {#1}{
+    \phantomsection\addcontentsline{toc}{title}{#2}
+  }{
+    \phantomsection\addcontentsline{toc}{title}{#1}
+  }
+}
+\NewTColorBox{announcement}{ O{} m }
+{
+  announce~ style,
+  title=#2,
+  borderline~ west={1cm}{0pt}{\l__letgut_toc_color_announce_tl},
+  phantom={\__letgut_toc_title_announce:nn {\l__letgut_toc_title_announce_tl}{#2}},
   overlay~ unbroken~ and~ first ={
-    \node[color=#1]~ at~ ([yshift=8pt]title.south)
+    \node[color=\l__letgut_toc_color_announce_tl]~ at~ ([yshift=8pt]title.south)
     {\pgfornament[width=0.4\linewidth]{88}};
     \node[color=white,anchor=north~ west]~ at~ (frame.north~ west) {\huge\bfseries\aldineright{}};
   },
+  #1,
+  coltitle=\l__letgut_toc_color_announce_tl,
 }
 \NewDocumentCommand{\solution}{}{\tcblower}
 \NewDocumentCommand{\displaysolutions}{}{%
@@ -966,11 +985,7 @@
 \vskip 1.5em
 }
 \thispagestyle{empty}
-\bool_if:NTF \g__letgut_detailedtoc_bool {
-  \etocsetnexttocdepth{5}
-}{
-  \etocsetnexttocdepth{0}
-}
+\etocsetnexttocdepth{\g__letgut_detailedtoc_level_str}
 \pdfbookmark[1]{
   \c__letgut_contents_name_tl
 }{
@@ -1084,10 +1099,15 @@
     \leavevmode\leftskip 2cm\relax
   }
   {
-    \bool_if:NTF \g__letgut_detailedtoc_bool {
-      \bfseries
+    \bool_lazy_or:nnTF {
+      \str_if_eq_p:Vn \g__letgut_detailedtoc_level_str { 0 }
     }{
+      \str_if_eq_p:Vn \g__letgut_detailedtoc_level_str { title }
+    }
+    {
       \mdseries
+    }{
+      \bfseries
     }
     \normalsize
     \etocname
@@ -1904,6 +1924,19 @@ title .value_required:n = true,
     \__letgut_meta:nn {#1}{#2}
   }
 }
+\cs_new_protected:Npn \__letgut_attach_non_empty_existing_file:n #1 {
+  \file_get_size:nN {./#1} \tmpa_tl
+  \quark_if_no_value:NF \tmpa_tl {
+    \tl_if_eq:NnF \tmpa_tl {0} {
+      \seq_gput_left:Nn \g__letgut_included_files_seq {
+        \attachfile[
+        description={Source~ nécessaire~ (fichier~ `#1.tex`)},
+        mimetype=application/x-tex]
+        {#1.tex}
+      }
+    }
+  }
+}
 \cs_new_protected:Npn \__letgut_input_article:nn #1 #2
 {
   \lstset{ style=__letgut_reset_listings_styles }
@@ -1911,11 +1944,17 @@ title .value_required:n = true,
   \input{#2}%
   \bool_if:NT \g__letgut_included_files_attached_bool {
     \IfBooleanF {#1}{
+      \__letgut_attach_non_empty_existing_file:n {
+        \c__letgut_local_config_file_tl
+      }
+      \__letgut_attach_non_empty_existing_file:n {
+        \c__letgut_pre_documentclass_file_tl
+      }
       \seq_gput_left:Nn \g__letgut_included_files_seq {
         \attachfile[
         description={Source~ du~ présent~ article~ (fichier~ `#2.tex`)},
-        mimetype=application/x-tex]%
-        {#2.tex}%
+        mimetype=application/x-tex]
+        {#2.tex}
       }
       \bool_if:NT \g__letgut_acronyms_file_attached_bool {
         \seq_gput_right:No \g__letgut_included_files_seq {
@@ -2557,6 +2596,7 @@ overlay={
   ^^^^201c^^^^201d% for “ and ”
   ^^^^215b% for ⅛
   ^^^^2122% for ™
+  ^^^^2019% for ’
   ^^00%
 }
 \lst@RestoreCatcodes

@@ -11,6 +11,7 @@ In exam-zh, you can
 - design the sealline easily;
 - use it in Windows, macOS and Linux;
 - ... (for more that you can do with it, please read the manual（in Chinese）: `exam-zh-doc.pdf`
+- QQ group: 652500180
 
 
 Repository: https://gitee.com/xkwxdyy/exam-zh
@@ -24,6 +25,7 @@ Issues and pull requests are welcome: [issues]( https://gitee.com/xkwxdyy/exam-z
 - 作者：Zeping Lee
 - 维护者：Kangwei Xia, Lijun Guo
 - 授权：[LaTeX Project Public License 1.3c](https://www.latex-project.org/lppl.txt)
+- QQ 用户交流群：652500180
 
 
 本项目提供了一个中国高考试卷样式的 LaTeX 模板，旨在帮助中小学教师更方便地使用 LaTeX。模板具有以下特性：

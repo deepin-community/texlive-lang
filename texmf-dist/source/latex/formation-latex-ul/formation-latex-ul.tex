@@ -1,4 +1,4 @@
-%%% Copyright (C) 2020 Vincent Goulet
+%%% Copyright (C) 2015-2023 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -10,7 +10,7 @@
 %%% https://creativecommons.org/licenses/by-sa/4.0/
 
 \documentclass[letterpaper,11pt,x11names,english,french]{memoir}
-  \usepackage{natbib,url,bibentry}
+  \usepackage{natbib}
   \usepackage{babel}
   \usepackage[autolanguage]{numprint}
   \usepackage{amsmath,amsthm}
@@ -36,10 +36,10 @@
   %%% =============================
   \title{Rédaction avec \LaTeX}
   \author{Vincent Goulet}
-  \renewcommand{\year}{2020}
-  \renewcommand{\month}{10}
-  \newcommand{\ctanurl}{https://ctan.org/pkg/formation-latex-ul/}
-  \newcommand{\reposurl}{https://gitlab.com/vigou3/formation-latex-ul/}
+  \renewcommand{\year}{2023}
+  \renewcommand{\month}{11}
+  \newcommand{\ctanurl}{https://ctan.org/pkg/formation-latex-ul}
+  \newcommand{\reposurl}{https://gitlab.com/vigou3/formation-latex-ul}
 
   %%% ===================
   %%%  Style du document
@@ -236,6 +236,28 @@
       \item}
     {\end{list}}
 
+  %% Corriger un bogue dans answers apparu dans TeX Live 2020.
+  %% https://tex.stackexchange.com/a/537873
+  \makeatletter
+  \renewcommand{\Writetofile}[2]{%
+    \@bsphack
+    \Iffileundefined{#1}{}{%
+      \Ifopen{#1}{%
+        {%
+          \begingroup
+          % \let\protect\string %%% <----- removed
+          \Ifanswerfiles{%
+            \protected@iwrite{\@nameuse{#1@file}}{\afterassignment\let@protect@string}{#2}%
+          }{}%
+          \endgroup
+        }%
+      }{}%
+    }%
+    \@esphack
+  }
+  \def\let@protect@string{\let\protect\string}
+  \makeatother
+
   %% Démo de code LaTeX. Le code de 'texample' et 'eqxample' est
   %% repris de amsldoc.tex avec des petits ajustements.
   \newenvironment{demo}{%
@@ -381,6 +403,12 @@
   %% Suppression de l'hyperlien
   \newcommand{\nolink}[1]{\begin{NoHyper}#1\end{NoHyper}}
 
+  %% Identification de la licence CC BY-SA.
+  \newcommand{\ccbysa}{\mbox{%
+    \faCreativeCommons\kern0.1em%
+    \faCreativeCommonsBy\kern0.1em%
+    \faCreativeCommonsSa}~\faCopyright[regular]\relax}
+
   %% Lien vers Gitlab dans la page de notices
   \newcommand{\viewsource}[1]{%
     \href{#1}{\faGitlab\ Voir sur Gitlab}}
@@ -394,21 +422,62 @@
   %% Logo BIBTeX; tiré de https://bit.ly/1RQqUnG
   \newcommand{\BibTeX}{\rmfamily B\kern-.05em{\scshape i\kern-.025em b}\kern-.08em \TeX}
 
-  %% Chapitre sur les bibliographies: des références bibliographiques
-  %% sont insérées dans le texte avec \bibentry. Certaines commandes
-  %% de francaisbst.tex sont alors utilisées, mais non encore
-  %% définies. Répétées ici. De plus, il faut définir ici la commande
-  %% \enquote plutôt que dans francais.bst. C'est pourquoi il y a une
-  %% version modifiée de ce fichier dans ces sources.
-  %% Voir https://bit.ly/1MORZmp
-  \global\def\bbland{et}
-  \global\def\bbledn{\'ed.}
-  \global\def\bblfourtho{4{\ieme}}
-  \global\def\bblth{{\ieme}}
-  \global\def\bblvol{vol.}
-  \def\bblno{\no{}}
-  \def\bblpp{p.}
-  \newcommand{\enquote}[1]{\guillemotleft#1\guillemotright}
+  %%% ====================================================
+  %%%  Affichage d'entrées de bibliographie dans le texte
+  %%% ====================================================
+
+  %% Le chapitre sur les bibliographies contient des références
+  %% bibliographiques dans le texte. C'est le paquetage bibentry,
+  %% livré avec natbib, qui permet d'afficher de telles références
+  %% avec \bibentry. Cependant, le paquetage définit les commandes
+  %% \urlprefix et \doi qui entrent en conflit avec celles du style
+  %% bibliographique francais.bst utilisé par le document. J'insère
+  %% donc ici une version légèrement modifiée du code paquetage qui ne
+  %% définit pas les commandes mentionnées précédemment.
+  \makeatletter
+  \newif\ifBR@star
+  \newcommand\nobibliography{\@ifstar{\BR@nobib{}}{\BR@nobib}}
+  \newcommand\BR@nobib[1]{%
+    \ifx\relax#1\relax\global\BR@startrue\else\global\BR@starfalse\fi
+    \begingroup
+    \ifBR@star\@fileswfalse\fi
+    \renewenvironment{thebibliography}[1]{%
+      \usecounter{enumiv}%
+      \renewcommand\item[1][]{%
+            \ifx\relax####1\relax\stepcounter\@listctr\fi}%
+      \ifBR@star \newcommand\BR@bibitem[2][]{}\else
+      \let\BR@bibitem=\bibitem\fi
+      \let\bibitem=\BR@b@bibitem}{}%
+      \let\@biblabel\@gobble
+    \bibliography{#1}\endgroup
+    \ifx\relax#1\relax\global\BR@startrue\else\global\BR@starfalse\fi}
+  \newcommand\BR@b@bibitem[2][]{\ifx\relax#1\relax\BR@bibitem{#2}%
+     \else \BR@bibitem[#1]{#2}\fi \BR@c@bibitem{#2}}
+  \def\BR@c@bibitem#1 #2 \par{{\let\protect\@unexpandable@protect
+        \expandafter \gdef\csname BR@r@#1\@extra@b@citeb\endcsname
+        {\BR@nodot#2\relax.\relax\relax}}}
+  \def\BR@nodot#1.\relax#2\relax{#1}
+  \newcommand\bibentry[1]{\nocite{#1}{\frenchspacing
+       \hyper@natanchorstart{#1\@extra@b@citeb}%
+       \@nameuse{BR@r@#1\@extra@b@citeb}\hyper@natanchorend}}
+  \providecommand\@extra@b@citeb{}
+  \providecommand\hyper@natanchorstart[1]{}
+  \providecommand\hyper@natanchorend{}
+  \AtBeginDocument{\let\BR@bib\bibliography
+    \def\bibliography{\global\BR@starfalse\BR@bib}}
+  \AtBeginDocument{%
+    \providecommand*{\urlprefix}{}
+  }
+  \makeatother
+
+  %% Lors de l'affichage des références, certaines commandes de
+  %% francaisbst.tex sont requises. Le fichier est donc chargé dès
+  %% maintenant.
+  \input{francaisbst.tex}
+
+  %% Enfin, il faut définir dès maintenant la commande \enquote qui
+  %% est autrement insérée dans le fichier .bbl par francais.bst.
+  \let\enquote\frquote
 
   %%% =======
   %%%  Varia

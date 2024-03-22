@@ -1,0 +1,246 @@
+\setKVdefault[ClesPatron]{Cube,Arete=1cm,ListeCouleurs={white},Pave=false,Largeur=2cm,Hauteur=1.5cm,Profondeur=1cm,Codes=false}%
+\defKV[ClesPatron]{Traces=\setKV[ClesPatron]{Codes}}%
+
+\newtoks\toklistepatron%
+\def\UpdatetoksPatron#1\nil{\addtotok\toklistepatron{"#1",}}%
+
+\NewDocumentCommand\Patron{om}{%
+  \useKVdefault[ClesPatron]%
+  \setKV[ClesPatron]{#1}%
+  \newtoks\toklistecouleur%
+  \xdef\ListeAvantCouleurs{\useKV[ClesPatron]{ListeCouleurs}}%
+  \readlist*\ListeCouleur{\ListeAvantCouleurs}%
+  \foreachitem\couleur\in\ListeCouleur{\expandafter\UpdateCoul\couleur\nil}%
+  \ifboolKV[ClesPatron]{Pave}{%
+    \toklistepatron{}%
+    \readlist*\PfCListePatron{#2}%
+    \foreachitem\compteur\in\PfCListePatron{\expandafter\UpdatetoksPatron\compteur\nil}%
+    \MPPatronPave{\the\toklistepatron}{\the\toklistecouleur}%
+  }{%
+    \ifboolKV[ClesPatron]{Cube}{%
+      \toklistepatron{}%
+      \readlist*\PfCListePatron{#2}%
+      \foreachitem\compteur\in\PfCListePatron{\expandafter\UpdatetoksPatron\compteur\nil}%
+      \MPPatronCube{\the\toklistepatron}{\the\toklistecouleur}%
+    }{%
+    }%
+  }%
+}%
+
+\def\MPPatronCubeCode{%
+  Arete=\useKV[ClesPatron]{Arete};
+  %
+  pair C[],M[],N[],O[],P[];
+  %
+  color Col[],CoulDefaut;
+  CoulDefaut=white;
+  %
+  boolean Codes;
+  Codes=\useKV[ClesPatron]{Codes};
+  vardef Patron(text t)=
+  nblignes:=-1;
+  nbcol:=0;
+  nbfaces:=0;
+  for p_=t:
+  Long:=length p_;
+  nblignes:=nblignes+1;
+  nbcolonnes:=0;
+  for k=0 upto Long-1:
+  nbcolonnes:=nbcolonnes+1;
+  if substring(k,k+1) of p_="x":
+  nbfaces:=nbfaces+1;
+  nbcol:=nbcol+1;
+  if (unknown Col[nbcol]):
+  else:
+  if Col[nbcol]=white:
+  else:
+  fill ((unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes))) withcolor Col[nbcol];
+  fi;
+  fi;
+  trace (unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes));
+  C[nbfaces]=(center unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes));
+  M[nbfaces]=point(0) of ((unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes)));
+  N[nbfaces]=point(1) of ((unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes)));
+  O[nbfaces]=point(2) of ((unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes)));
+  P[nbfaces]=point(3) of ((unitsquare scaled Arete) shifted (Arete*(nbcolonnes,-nblignes)));
+  fi;
+  endfor;
+  endfor;
+  enddef;
+  % 
+  vardef EffectuerTraces=
+  if Codes:
+  \useKV[ClesPatron]{Traces};
+  fi;
+  enddef;
+}%
+
+\def\MPPatronCube#1#2{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPPatronCubeCode
+    %
+    n:=0;
+    for p_=#2:
+    n:=n+1;
+    if color p_:
+    Col[n]=p_;
+    else:
+    Col[n]=CoulDefaut;
+    fi;
+    endfor;
+    %    
+    Patron(#1);
+    EffectuerTraces;
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPPatronCubeCode;}]
+    %
+    n:=0;
+    for p_=#2:
+    n:=n+1;
+    if color p_:
+    Col[n]=p_;
+    else:
+    Col[n]=CoulDefaut;
+    fi;
+    endfor;
+    %    
+    Patron(#1);
+    EffectuerTraces;
+  \end{mpost}
+  \fi
+}
+
+\def\MPPatronPaveCode{%
+  Largeur=\useKV[ClesPatron]{Largeur};
+  Hauteur=\useKV[ClesPatron]{Hauteur};
+  Profondeur=\useKV[ClesPatron]{Profondeur};
+  % 
+  pair C[],M[],N[],O[],P[];
+  % 
+  color Col[],CoulDefaut;
+  CoulDefaut=white;
+  %
+  boolean Codes;
+  Codes=\useKV[ClesPatron]{Codes};
+  numeric DecalCol[];
+  vardef LectureLargeur(text t)=
+  for p_=t:
+  Long:=length p_;
+  endfor;
+  for k=1 upto Long-1:
+  for p_=t:
+  if substring(k,k+1) of p_="l":
+  DecalCol[k]:=Largeur;
+  elseif substring(k,k+1) of p_="h":
+  DecalCol[k]:=Hauteur;
+  elseif substring(k,k+1) of p_="p":
+  DecalCol[k]:=Profondeur;
+  fi;
+  endfor;
+  endfor;
+  enddef;
+  vardef Patron(text t)=
+  path PathPave;
+  nblignes:=-1;
+  nbcol:=0;
+  nbfaces:=0;
+  for p_=t:
+  Long:=length p_;
+  nbcolonnes:=0;
+  if substring(0,1) of p_="h":
+  YEchelle:=Hauteur;
+  elseif substring(0,1) of p_="l":
+  YEchelle:=Largeur;
+  elseif substring(0,1) of p_="p":
+  YEchelle:=Profondeur;
+  fi;
+  nblignes:=nblignes-YEchelle;
+  for k=1 upto Long-1:
+  if substring(k,k+1) of p_="l":
+  nbcol:=nbcol+1;
+  PathPave:=(unitsquare xscaled Largeur yscaled YEchelle) shifted ((nbcolonnes,nblignes));
+  nbfaces:=nbfaces+1;
+  C[nbfaces]=center PathPave;
+  M[nbfaces]=point(0) of PathPave;
+  N[nbfaces]=point(1) of PathPave;
+  O[nbfaces]=point(2) of PathPave;
+  P[nbfaces]=point(3) of PathPave;
+  elseif substring(k,k+1) of p_="h":
+  nbcol:=nbcol+1;
+  PathPave:=(unitsquare xscaled Hauteur yscaled YEchelle) shifted ((nbcolonnes,nblignes));
+  nbfaces:=nbfaces+1;
+  C[nbfaces]=center PathPave;
+  M[nbfaces]=point(0) of PathPave;
+  N[nbfaces]=point(1) of PathPave;
+  O[nbfaces]=point(2) of PathPave;
+  P[nbfaces]=point(3) of PathPave;
+  elseif substring(k,k+1) of p_="p":
+  nbcol:=nbcol+1;
+  PathPave:=(unitsquare xscaled Profondeur yscaled YEchelle) shifted ((nbcolonnes,nblignes));
+  nbfaces:=nbfaces+1;
+  C[nbfaces]=center PathPave;
+  M[nbfaces]=point(0) of PathPave;
+  N[nbfaces]=point(1) of PathPave;
+  O[nbfaces]=point(2) of PathPave;
+  P[nbfaces]=point(3) of PathPave;
+  fi;
+  if (unknown Col[nbcol]):
+  else:
+  if Col[nbcol]=white:
+  else:
+  fill PathPave withcolor Col[nbcol];
+  fi;
+  fi;
+  trace PathPave;
+  nbcolonnes:=nbcolonnes+DecalCol[k];
+  endfor;
+  endfor;
+  enddef;
+  % 
+  vardef EffectuerTraces=
+  if Codes:
+  \useKV[ClesPatron]{Traces};
+  fi;
+  enddef;
+}%
+
+\def\MPPatronPave#1#2{%
+  \ifluatex
+  \mplibforcehmode
+  \begin{mplibcode}
+    \MPPatronPaveCode    
+    n:=0;
+    for p_=#2:
+    n:=n+1;
+    if color p_:
+    Col[n]=p_;
+    else:
+    Col[n]=CoulDefaut;
+    fi;
+    endfor;
+    %
+    LectureLargeur(#1);
+    Patron(#1);
+    EffectuerTraces;
+  \end{mplibcode}
+  \else
+  \begin{mpost}[mpsettings={\MPPatronPaveCode;}]
+    n:=0;
+    for p_=#2:
+    n:=n+1;
+    if color p_:
+    Col[n]=p_;
+    else:
+    Col[n]=CoulDefaut;
+    fi;
+    endfor;
+    % 
+    LectureLargeur(#1);
+    Patron(#1);
+    EffectuerTraces;
+  \end{mpost}
+  \fi
+}%

@@ -10,8 +10,8 @@ sources and their changes in parallel.  Also included is the collection of
 Although not all the texts here are written or maintained by Donald Knuth, it
 is more convenient for everything to be collected in one place for reading and
 searching.  They all stem from the system that Knuth created.  The central
-entry point is the ‘index’ file, with links to the individual documents, either
-in HTML or in PDF format.
+entry point is the ‘index’ file, with links to the individual HINT documents,
+either in HTML or in PDF format.
 
 If you believe to have found anything that remains technically, historically,
 typographically, or politically incorrect in any of these files, please feel
@@ -21,4 +21,4 @@ The “License” of the `knuth-hint` package is “Public Domain” and it cove
 the contents of this package, _not_ the various (and varying) “free software”
 licenses of the presented software codes.
 
-This is version “1.0” of the `knuth-hint` package — 2022-04-06, Andreas Scherer.
+This is version “2.1” of the `knuth-hint` package — 2023-06-15, Andreas Scherer.

@@ -275,7 +275,7 @@ muokata sivun ylä- tai alatunnistetta eli verrattain pysyviä
 tunnistetietoja, jotka toistuvat joka sivulla ylä- tai alareunassa.
 Niiden muokkaamiseen käytetään \paketti{fancyhdr}\-/ pakettia, jonka
 ohjeita on luvussa \ref{luku/ylä-ala-tunnisteet}. Sivun taustavärin
-asettamista käsitellään luvussa \ref{luku/korostus-värit}.
+asettamista käsitellään luvussa \ref{luku/sivun-väri}.
 
 \subsection{Sivun koko ja marginaalit}
 \label{luku/sivun-mitat}
@@ -294,13 +294,11 @@ oikean marginaalin pituus (\koodi{left}, \koodi{right}).
 \end{koodilohkosis}
 
 \noindent
-Vaihtoehtoisesti asetukset voi ilmaista erikseen \komento{geometry}\-/
-komennon avulla seuraavalla tavalla:
+Vaihtoehtoisesti asetukset voi ilmaista paketin lataamisen jälkeen
+\komento{geometry}\-/ komennon avulla:
 
-\komentoi{usepackage}
 \komentoi{geometry}
 \begin{koodilohkosis}
-\usepackage{geometry}
 \geometry{a4paper, top=20mm, bottom=30mm, left=20mm, right=20mm}
 \end{koodilohkosis}
 
@@ -888,6 +886,26 @@ toteutukseen.
   \label{esim/fancyhdr-koko}
 \end{esimerkki*}
 
+\subsection{Taustaväri}
+\label{luku/sivun-väri}
+
+Dokumentin sivun värin valitsemiseen sopii \pakettictan{xcolor}\-/
+paketti, jonka peruskäyttöön kannattaa tutustua luvussa
+\ref{luku/värit}. Sivulle voi asettaa taustavärin komennolla
+\komento{pagecolor}, joka vaihtaa värin nykyiselle ja seuraaville
+sivuille, kunnes väri vaihdetaan toiseksi tai poistetaan. Komennolle
+annetaan samanlaiset argumentit kuin muillekin värikomennoille (luku
+\ref{luku/värit}). Komento \komento{nopagecolor} poistaa taustavärin
+kokonaan eli palauttaa taustan oletustilaan.
+
+\komentoi{pagecolor}
+\komentoi{nopagecolor}
+\begin{koodilohkosis}
+\pagecolor{nimi} % sivun taustaväriksi ennalta määritelty ”nimi”
+\pagecolor[värimalli]{parametrit}
+\nopagecolor
+\end{koodilohkosis}
+
 \section{Pdf-tiedosto}
 \label{luku/pdf-asetukset}
 
@@ -1062,8 +1080,9 @@ asetusten näkökulmasta.
   \hfill
   {\ttfamily\addfontfeatures{FakeStretch=1, Scale=4.5}Amf}
 }{
-  \caption{Vasemmalla pääteviivallinen (antiikva), keskellä
-    pääteviivaton (groteski) ja oikealla tasalevyinen kirjainperhe}
+  \caption{Vasemmalla pääteviivallinen \englanti{Libertinus Serif}
+    (antiikva), keskellä pääteviivaton \englanti{Libertinus Sans}
+    (groteski) ja oikealla tasalevyinen \englanti{Libertinus Mono}}
   \label{kuva/kirjainperhetyypit}
 }
 
@@ -1091,9 +1110,9 @@ Libertinus\-/ kirjainperheet saa käyttöön lataamalla paketin
 Valmiita paketteja on kuitenkin vain harvoille fonteille, ja käytännössä
 lähes aina \englanti{True Type}- ja \englanti{Open Type} \=/muodossa
 olevat fontit otetaan käyttöön \pakettictan{fontspec}\-/ paketin
-komennoilla\footnote{Vaihtoehtoisesti fonttien asettamiseen voi käyttää
-  \paketti{babel}\-/ paketin komentoja (luku \ref{luku/babel}).}
-seuraavan esimerkin mukaisesti:
+komennoilla\footnote{Vaihtoehtoisesti fontit voi asettaa
+  \paketti{babel}\-/ paketin \komento{babelfont}\-/ komennolla (luku
+  \ref{luku/babel}).} seuraavan esimerkin mukaisesti:
 
 \komentoi{setmainfont}
 \komentoi{setsansfont}
@@ -1112,7 +1131,7 @@ seuraavan esimerkin mukaisesti:
     Garamond Libre & antiikva, renessanssi, ranskalainen \\
     TeX Gyre Pagella & antiikva, renessanssi, ranskalainen \\
     TeX Gyre Termes & antiikva, renessanssi, alankomainen \\
-    Libertinus Serif & antiikva, barokki, siirtymäkausi \\
+    Libertinus Serif & antiikva, renessanssi, alankomainen \\
     Latin Modern Roman & antiikva, uusantiikva \\
     TeX Gyre Schola & antiikva, vahvapäätteinen \\
     TeX Gyre Bonum & antiikva, vahvapäätteinen \\
@@ -1120,6 +1139,7 @@ seuraavan esimerkin mukaisesti:
     TeX Gyre Chorus & kalligrafinen \\
     \midrule
     Libertinus Sans & groteski, humanistinen, kaksivahvuinen \\
+    Latin Modern Sans & groteski \\
     TeX Gyre Heros & groteski, uusgroteski \\
     DejaVu Sans & groteski, uusgroteski \\
     TeX Gyre Adventor & groteski, geometrinen \\
@@ -1127,6 +1147,7 @@ seuraavan esimerkin mukaisesti:
     Libertinus Mono & tasalevyinen \\
     TeX Gyre Cursor & tasalevyinen \\
     DejaVu Sans Mono & tasalevyinen \\
+    Latin Modern Mono & tasalevyinen \\
     \bottomrule
   \end{tabular}
 }{
@@ -1161,8 +1182,8 @@ vielä \koodi{Scale\-Again}\-/ valitsimella seuraavalla tavalla:
 
 \komentoi{setmonofont}
 \begin{koodilohkosis}
-\setmonofont{TeX Gyre Cursor}
-[Scale=MatchLowercase, ScaleAgain=.97]
+\setmonofont{TeX Gyre Cursor}[
+  Scale=MatchLowercase, ScaleAgain=.97]
 \end{koodilohkosis}
 
 \noindent
@@ -1179,11 +1200,13 @@ perusvahvuudeksi ja mikä lihavaksi.
 Esimerkki \ref{esim/fontit-leik-omin} selventää, kuinka kirjainperheen
 eri leikkausten nimet tai fonttitiedostot määritellään. Kullekin
 leikkaukselle voi määrittää myös omat asetuksensa \koodi{Fea\-tures}\-/
-sanaan päättyvällä valitsimella. Samaa asiaa havainnollistetaan myös
-konkreettisemmin esimerkissä \ref{esim/fontit-leik-omin-käyt}.
+sanaan päättyvällä valitsimella. Samaa asiaa havainnollistetaan
+konkreettisemmin esimerkissä \ref{esim/fontit-leik-libertinus}.
 Leikkauksen nimessä voi käyttää tähteä (\koodi{*}), joka korvautuu
-kirjainperheen nimellä (\englanti{Macklin Text}). Fonttien nimeämisestä
-on lisätietoa luvussa \ref{luku/luatex-xetex-fonttitekn}.
+kirjainperheen nimellä (esim. \englanti{Libertinus Serif}). Fonttien
+nimeämisestä on lisätietoa luvussa \ref{luku/luatex-xetex-fonttitekn},
+ja fonttien asetuksia käsitellään tämän luvun \ref{luku/kirjaintyypit}
+loppupuolella.
 
 \begin{esimerkki*}
   \komentoi{setmainfont}
@@ -1206,17 +1229,35 @@ on lisätietoa luvussa \ref{luku/luatex-xetex-fonttitekn}.
 
 \begin{esimerkki*}
   \komentoi{setmainfont}
+  \komentoi{setsansfont}
+  \komentoi{setmonofont}
 \begin{koodilohko}
-\setmainfont{Macklin Text}[
-  UprightFont    = {* Light},
-  ItalicFont     = {* Light Italic},
-  BoldFont       = {* Medium},
-  BoldItalicFont = {* Medium Italic}]
+\setmainfont{Libertinus Serif}[
+  Numbers=Lowercase,
+  BoldFont        = {* Semibold},
+  BoldItalicFont  = {* Semibold Italic},
+  SlantedFont     = {* Regular},  SlantedFeatures={FakeSlant=0.2},
+  BoldSlantedFont = {* Semibold}, BoldSlantedFeatures={FakeSlant=0.2},
+  SmallCapsFont   = {* Regular},  SmallCapsFeatures={Language=Default,
+                                                     Letters=SmallCaps}]
+
+\setsansfont{Libertinus Sans}[
+  Scale=MatchLowercase, Numbers=Lowercase,
+  SlantedFont     = {* Regular}, SlantedFeatures={FakeSlant=0.2},
+  BoldSlantedFont = {* Bold},    BoldSlantedFeatures={FakeSlant=0.2},
+  SmallCapsFont   = {* Regular}, SmallCapsFeatures={Language=Default,
+                                                    Letters=SmallCaps}]
+
+\setmonofont{Libertinus Mono}[
+  Scale=MatchLowercase, FakeStretch=0.8, Ligatures=CommonOff]
 \end{koodilohko}
-  \caption{Eri leikkausten nimien määrittely \englanti{Macklin Text}
-    \=/kirjainperheelle. Leikkauksen nimessä tähti (\koodi{*}) korvautuu
-    automaattisesti koko perheen nimellä}
-  \label{esim/fontit-leik-omin-käyt}
+  \caption{Libertinus\-/ kirjainperheiden asettaminen. Tässä
+    \englanti{Libertinus Serif} \=/perheen lihavoinniksi on valittu
+    \englanti{Semibold}, mutta myös vahvempi \englanti{Bold}\-/ leikkaus
+    on saatavilla. Pienversaali saattaa näissä perheissä vaatia
+    erityiset asetukset \koodi{Small\-Caps\-Font} ja
+    \koodi{Small\-Caps\-Features}}
+  \label{esim/fontit-leik-libertinus}
 \end{esimerkki*}
 
 Jos edellä kuvatut kolme kirjainperhettä (\komento{setmainfont},
@@ -1279,12 +1320,12 @@ Latexin normaaleissa dokumenttiluokissa vain kolme: \koodi{10pt}
 (oletus), \koodi{11pt} ja \koodi{12pt}. Dokumenttiluokan kokoasetus
 vaikuttaa myös sivun marginaaleihin, koska Latex pyrkii pitämään rivin
 merkkimäärän lukijalle sopivana: yhdelle riville ei kannata latoa ihan
-mahdottomasti merkkejä, koska kovin pitkän rivin seuraaminen rasittaa
-lukijaa ja vaatii enemmän keskittymistä.
+mahdottomasti merkkejä, koska kovin pitkän rivin seuraaminen vaatii
+enemmän keskittymistä ja rasittaa lukijaa.
 
 Fontin koon määrittäminen dokumenttiluokan valitsimella ehkä kuuluu jo
-vähän menneisyyteen, mutta voi sitä edelleen käyttää, jos se riittää ja
-sillä saa halutun lopputuloksen. Yleensä lienee järkevää jättää
+menneisyyteen, mutta voi sitä edelleen käyttää, jos se riittää ja sillä
+saa halutun lopputuloksen. Yleensä lienee järkevää jättää
 dokumenttiluokan fonttiasetus oletukseksi (\koodi{10pt}) ja käyttää koon
 asettamiseen luvuissa \ref{luku/fontti-suhteellinen} ja
 \ref{luku/fontti-absoluuttinen} kerrottuja tapoja. Sivun marginaalien ja
@@ -1388,7 +1429,7 @@ olevaa tekstiä.
     \komento{#1} & \komento{#2}\komentoarg{\dots} & #3 \\}
   \begin{tabular}{lll}
     \toprule
-    \multicolumn{2}{l}{\ots{Komento}} & \ots{Merkitys} \\
+    \multicolumn{2}{l}{\ots{Komennot}} & \ots{Kirjainperhe} \\
 
     \midrule
     \rivi {rmfamily} {textrm}
@@ -1410,9 +1451,9 @@ olevaa tekstiä.
   \providecommand{\rivi}{}
   \renewcommand{\rivi}[3]{%
     \komento{#1} & \komento{#2}\komentoarg{\dots} & #3 \\}
-  \begin{tabular}{llll}
+  \begin{tabular}{lll}
     \toprule
-    \multicolumn{2}{l}{\ots{Komento}} & \ots{Merkitys} \\
+    \multicolumn{2}{l}{\ots{Komennot}} & \ots{Kirjainleikkaus} \\
 
     \midrule
     \rivi {mdseries} {textmd}
@@ -1427,10 +1468,10 @@ olevaa tekstiä.
     {\textit{kursiivi, italic}}
     \rivi {slshape} {textsl}
     {\textsl{kalteva, slanted, oblique}}
-    \rivi {swshape} {textsw}
-    {{\swashfontti Koristeellinen, swash}}
     \rivi {scshape} {textsc}
     {\textsc{pienversaali, kapiteeli, small caps}}
+    \rivi {swshape} {textsw}
+    {\textsw{Koristeellinen, swash}}
 
     \bottomrule
   \end{tabular}
@@ -1466,16 +1507,16 @@ tehdä myös keinotekoisesti Latexissa. Katso lisätietoa luvusta
 
 Jotkut \englanti{Open Type} \=/fontit sisältävät erillisen
 koristeellisen tyylin (\komento{swshape}), joka voi sisältyä esimerkiksi
-kursiivileikkaukseen mutta joka täytyy silti kytkeä erikseen päälle.
-Sellaisen saa määritettyä osaksi kirjainperhettä käyttämällä valitsimia
-\koodi{Swash\-Font} ja \koodi{Swash\-Fea\-tures} (esimerkki
-\ref{esim/fontit-leik-omin}) seuraavalla tavalla:
+kursiivileikkaukseen ja erityisesti versaalikirjaimiin mutta joka täytyy
+kytkeä erikseen päälle. Sellaisen saa määritettyä osaksi kirjainperhettä
+käyttämällä valitsimia \koodi{Swash\-Font} ja \koodi{Swash\-Fea\-tures}
+(esimerkki \ref{esim/fontit-leik-omin}) seuraavalla tavalla:
 
 \komentoi{setmainfont}
 \begin{koodilohkosis}
-\setmainfont{Garamond Premier Pro}[
-  SwashFont={GaramondPremrPro-It},   % kursiivileikkaus
-  SwashFeatures={Style=Swash}]       % koristeellinen swash-tyyli
+\setmainfont{Garamond Libre}[
+  SwashFont={* Italic},         % kursiivileikkaus
+  SwashFeatures={Style=Swash}]  % koristeellinen swash-tyyli
 \end{koodilohkosis}
 
 \noindent
@@ -1564,13 +1605,13 @@ suhteessa siihen. Esimerkki \ref{esim/fontti-suhteellinen} selventää,
 kuinka se tapahtuu. Alussa otetaan käyttöön dokumenttiluokka
 \luokka{article} ja annetaan sille valitsin \koodi{10pt}, joka määrittää
 fonttikooksi 10 pistettä. Se on dokumenttiluokan oletusasetus, jota ei
-tarvitsisi edes kirjoittaa näkyviin. Esimerkin toisella rivillä otetaan
-\paketti{fontspec}\-/paketti käyttöön.
+tarvitsisi edes kirjoittaa näkyviin. Esimerkin toisella rivillä ladataan
+\paketti{fontspec}\-/ paketti.
 
 Peruskirjainperheen (rivi~4) koko skaalataan 1,4\-/kertaiseksi, eli
 pistekooksi tulee 1,4 kertaa 10 pistettä eli 14 pistettä (pt).
 Normaalikokoinen peruskirjainperhe on ainoa, jonka pistekoko tiedetään.
-Kaikkien muiden koot täytyisi selvittää laskemalla.
+Kaikkien muiden koot määräytyvät suhteessa tähän.
 
 Groteski eli pääteviivaton kirjainperhe (rivi~5) ja tasalevyinen perhe
 (rivi~6) skaalataan samankorkuiseksi kuin perusperhe. Vertailukohtana
@@ -1739,7 +1780,7 @@ olevien asetusten pohjalta antaa otsikon ulkoasun (luku
 
 \noindent
 Esimerkin \ref{esim/fontti-absoluuttinen} riveillä 16--20 määritellään
-uudelleen Latexin korkean tason komennot, joilla fonttikoot asetetaan.
+uudelleen Latexin korkean tason komentoja, joilla fonttikoot asetetaan.
 Oletusarvot tulevat dokumenttiluokasta (luku
 \ref{luku/dokumenttiluokat}), mutta jos ne eivät ole sopivia, täytyy
 vähintäänkin määritellä komento \komento{normalsize} mutta sen lisäksi
@@ -1780,7 +1821,7 @@ kirjainperhettä tai yksittäistä leikkausta enää löydykään.
 
 Ongelma korjaantuu nimeämällä kirjainperheen tai \=/leikkauksen eri
 tavalla. Yleispätevää ohjetta nimeämiseen on vaikeaa antaa, mutta jos
-tulee ongelmia, kannatta fonttitiedostoista tutkia kirjainperheelle tai
+tulee ongelmia, kannattaa fonttitiedostoista tutkia kirjainperheelle tai
 \=/leikkaukselle annettuja nimiä. Se onnistuu käyttöjärjestelmän
 komentotulkissa \koodi{otfinfo}\-/ komennolla, joka tulostaa jotakin
 esimerkin \ref{esim/otfinfo-fonttinimiä} kaltaista. Kokeilemalla
@@ -1788,12 +1829,12 @@ tulosteessa olevia nimiä saa kyllä fontit toimimaan.
 
 \begin{esimerkki*}
 \begin{koodilohko}
-Family:              Garamond Premr Pro
+Family:              TeX Gyre Pagella
 Subfamily:           Regular
-Full name:           GaramondPremrPro
-PostScript name:     GaramondPremrPro
-Preferred family:    Garamond Premier Pro
-Mac font menu name:  Garamond Premr Pro
+Full name:           TeXGyrePagella-Regular
+PostScript name:     TeXGyrePagella-Regular
+Preferred family:    TeX Gyre Pagella
+Preferred subfamily: Regular
 \end{koodilohko}
   \caption{\koodi{otfinfo}\-/ komennon tuloste kertoo fontista muun
     muassa kirjainperheen ja \=/leikkauksen nimiä}
@@ -1801,7 +1842,7 @@ Mac font menu name:  Garamond Premr Pro
 \end{esimerkki*}
 
 \begin{koodilohkosis}
-otfinfo -i GaramondPremrPro.otf
+otfinfo -i texgyrepagella-regular.otf
 \end{koodilohkosis}
 
 \noindent
@@ -1818,7 +1859,10 @@ käyttämällä valitsinta \koodi{Renderer} seuraavan esimerkin tavoin:
 
 \noindent
 Tavallisimpia \koodi{Renderer}\-/ valitsimen arvoja ovat
-\koodi{\mbox{Node}}, \koodi{Harf\-Buzz} ja \koodi{Open\-Type}.
+\koodi{\mbox{Node}}, \koodi{Harf\-Buzz} ja \koodi{Open\-Type}. Toisinaan
+\koodi{\mbox{Node}} on tuottanut paremman tuloksen kuin muut
+vaihtoehdot.
+
 Lisätietoa voi lukea \paketti{fontspec}\-/ paketin ohjekirjan luvusta,
 joka käsittelee Luatexin erityispiirteitä. Myös Xelatexissa (Xetex) on
 fontteihin liittyviä ominaisuuksia, joita ei muissa kääntäjissä ole.
@@ -1848,7 +1892,7 @@ käsitellään tarkemmin luvussa \ref{luku/typo-liga}. Molemmat edellä
 mainitut ligatuurityypit saa pois päältä seuraavalla asetuksella:
 
 \begin{koodilohkosis}
-Ligatures={TeXReset, NoCommon}
+Ligatures={TeXOff, CommonOff}
 \end{koodilohkosis}
 
 \noindent
@@ -1871,13 +1915,13 @@ HyphenChar=None
 
 \noindent
 Yleensä tasalevyisestä kirjainperheestä kannattaa kytkeä typografiset
-ligatuurit pois päältä asetuksella \koodi{Liga\-tures=\katk No\-Common}.
-Tasalevyisen fontin ajatukseen nimenomaan kuuluu, että merkit ovat
-samanlevyisiä eikä yhden merkin tilaan sovi sulloa useampaa kirjainta.
-Kaikki tasalevyiset kirjainperheet eivät edes sisällä ligatuurimerkkejä,
-joten ominaisuus näyttää olevan automaattisesti pois päältä. Varmuuden
-vuoksi on kuitenkin hyvä lisätä asetus \koodi{Liga\-tures=\katk
-  No\-Common} tasalevyiselle perheelle.
+ligatuurit pois päältä asetuksella \koodi{Liga\-tures=\katk
+  Common\-Off}. Tasalevyisen fontin ajatukseen nimenomaan kuuluu, että
+merkit ovat samanlevyisiä eikä yhden merkin tilaan sovi sulloa useampaa
+kirjainta. Kaikki tasalevyiset kirjainperheet eivät edes sisällä
+ligatuurimerkkejä, joten ominaisuus näyttää olevan automaattisesti pois
+päältä. Varmuuden vuoksi on kuitenkin hyvä lisätä asetus
+\koodi{Liga\-tures=\katk Common\-Off} tasalevyiselle perheelle.
 
 Oletuksena tavutus on kytketty pois päältä tasalevyiseltä
 kirjainperheeltä, koska sitä käytetään tavallisesti tietokoneisiin
@@ -1979,13 +2023,13 @@ fi f\textcompwordmark i
 \noindent
 Mikäli tavallisia ligatuureja ei halua käyttöön lainkaan, on parasta
 valita jo kirjainperheen tai \=/leikkauksen käyttöönotossa asetus
-\koodi{Liga\-tures=\katk No\-Com\-mon}. Väliaikaisesti fontin asetuksiin
+\koodi{Liga\-tures=\katk Common\-Off}. Väliaikaisesti fontin asetuksiin
 voi vaikuttaa komennolla \komento{addfontfeatures}, joka sekin on
 \paketti{fontspec}\-/pakettiin sisältyvä komento.
 
 \komentoi{addfontfeatures}
 \begin{koodilohkosis}
-{\addfontfeatures{Ligatures=NoCommon} fi fl}
+{\addfontfeatures{Ligatures=CommonOff} fi fl}
 \end{koodilohkosis}
 
 \noindent
@@ -1994,8 +2038,8 @@ sisältää myös harvinaisempia ligatuureja, jotka täytyy erikseen kytkeä
 päälle. Niiden tarkoituksena on esimerkiksi erityinen koristeellisuus
 tai historiallisen kirjainleikkauksen jäljittely. Harvinaisia
 ligatuureja ei ole tarkoitus käyttää joka tilanteessa vaan ainoastaan
-erityisestä syystä. Kuvassa \ref{kuva/ligatuurit} ja tässäkin
-tekstikappaleessa olevat {%
+erityisestä syystä. Kuvassa \ref{kuva/ligatuurit} ja tässäkin virkkeessä
+olevat {%
   \newcommand{\hlig}[1]{{\addfontfeatures{Ligatures=Historic}#1}}%
   \hlig{st}- ja \hlig{ct}\-/ligatuurit%
 } on saatu fontin asetuksella \koodi{Liga\-tures=\katk His\-toric}.
@@ -2018,6 +2062,13 @@ tarkoituskaan. Jotkin ligatuurit kuuluvat vain tiettyyn typografian
 aikakauteen tai kirjaintyyliin. Open Type \=/fontin ominaisuuksia voi
 selvittää käyttöjärjestelmän komentotulkissa komennolla \koodi{otfinfo}.
 Komennon argumentiksi annetaan muun muassa fonttitiedoston nimi.
+
+\begin{koodilohkosis}
+$ otfinfo -f LibertinusSerif-Regular.otf | grep Ligatures
+dlig    Discretionary Ligatures
+hlig    Historical Ligatures
+liga    Standard Ligatures
+\end{koodilohkosis}
 
 \subsection{Numeroiden muoto}
 \label{luku/fontit-numerot}
@@ -2143,9 +2194,10 @@ viivakontrasti muuttuu. Kirjainleikkauksen kutistaminen vaikuttaa
 lihavuuteen päinvastaisesti. Tällainen keinotekoinen fontin
 korjaileminen ei välttämättä tuota typografisesti kovin hyvää jälkeä
 mutta voi sopia lievästi käytettynä esimerkiksi otsikoihin. Tämän oppaan
-tasalevyistä kirjainperhettä on hieman kutistettu, koska alkuperäinen on
-kohtuuttoman leveä ({\ttfamily\addfontfeatures{FakeStretch=1}
-  esimerkki}) verrattuna muiden kirjainperheiden leveyteen.
+tasalevyistä kirjainperhettä (\englanti{Libertinus Mono}) on hieman
+kutistettu, koska alkuperäinen on kohtuuttoman leveä
+({\ttfamily\addfontfeatures{FakeStretch=1} esimerkki}) verrattuna muiden
+kirjainperheiden leveyteen.
 
 Jos kirjainperheeseen ei sisälly sopivaa lihavoitua tai kaltevaa
 leikkausta, voi sellaiset koettaa tehdä myös keinotekoisesti
@@ -2274,7 +2326,8 @@ voi tutkia esimerkiksi käyttöjärjestelmän komentotulkissa
 \koodi{otfinfo}\-/ komennolla:
 
 \begin{koodilohkosis}
-otfinfo -s texgyrepagella-math.otf
+$ otfinfo -s texgyrepagella-math.otf | grep math
+math            Mathematical Alphanumeric Symbols
 \end{koodilohkosis}
 
 \leijutlk{
@@ -2291,6 +2344,7 @@ otfinfo -s texgyrepagella-math.otf
     \rivi{TeX Gyre Schola}{TeX Gyre Schola Math}
     \rivi{TeX Gyre Termes}{TeX Gyre Termes Math}
     \rivi{DejaVu Serif}{TeX Gyre Dejavu Math}
+    \rivi{DejaVu Serif}{DejaVu Serif}
     \rivi{Garamond Libre}{Garamond Math}
     \rivi{Latin Modern Roman}{Latin Modern Math}
     \bottomrule
@@ -2306,8 +2360,8 @@ Taulukkoon \ref{tlk/matematiikka-fontteja} on koottu \englanti{Open
   Type} \=/fontteja, joissa on yhteensopiva leipätekstin ja
 matematiikkatilan kirjainperhe. Teknisesti kaikkia voi käyttää kaikkien
 kanssa, mutta on tietenkin toivottavaa, että kirjainleikkaukset sopivat
-ulkoasultaan yhteen. Kaikki fontit ovat vapaita ja toimitetaan Tex Live
-\=/jakelun tai käyttöjärjestelmän mukana.
+ulkoasultaan yhteen. Kaikki taulukon fontit ovat vapaita ja toimitetaan
+Tex Live \=/jakelun tai käyttöjärjestelmän mukana.
 
 \section{Kieli}
 \label{luku/kieliasetukset}
@@ -2527,9 +2581,8 @@ peruskirjainperhe ja pääteviivaton perhe.
 \babelfont[greek]{rm}[Scale=MatchLowercase]{GFS Artemisia}
 \babelfont[greek]{sf}[Scale=MatchLowercase]{GFS Neohellenic}
 \end{koodilohko}
-  \caption{\komento{babelfont}\-/komennon käyttö dokumentin
-    kirjainperheiden valintaan ja kielikohtaisten kirjainperheiden
-    valintaan}
+  \caption{\komento{babelfont}\-/ komennon käyttö yleisten
+    kirjainperheiden sekä kielikohtaisten kirjainperheiden asettamiseen}
   \label{esim/babelfont}
 \end{esimerkki*}
 
@@ -3243,8 +3296,8 @@ merkityksellisten osien rajakohdasta. Tavurajakin voi sattua samaan
 paikkaan, mutta tavutettaessa heittomerkki säilyy: \emph{show'-hun}.%
 \footnote{Asiaa ei yleensä mainita kielenhuolto\-/oppaissa. Tieto
   perustuu Kielikello\-/lehden 2/2006 artikkeliin:
-  \kulmaurl{https://www.kielikello.fi/-/lainausmerkit-}. Viittauspäivä
-  6.7.2020.} Mikäli tällainen tavutuskohta halutaan mukaan, käytetään
+  \kulmaurl{https://kielikello.fi/lainausmerkit/}. Viittauspäivä
+  5.5.2024.} Mikäli tällainen tavutuskohta halutaan mukaan, käytetään
 sanassa tavallista tavutusvihjettä: \koodi{show'}\komento{-}\koodi{hun}.
 Mieluummin ei kuitenkaan katkaista sanoja heittomerkin kohdalta.
 

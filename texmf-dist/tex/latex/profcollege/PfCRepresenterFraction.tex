@@ -1,7 +1,11 @@
 %%%
 % Fractions
 %%%
-\setKVdefault[ClesFraction]{Rayon=2cm,Disque,Regulier=false,Segment=false,Rectangle=false,Longueur=5cm,Largeur=2cm,Cotes=5,Triangle=false,Parts=3,Eprouvette=false,Couleur=green,Reponse=false,Multiple=1,Hachures=false,Epaisseur=1}
+\def\filedateRepFrac{2024/08/30}%
+\def\fileversionRepFrac{0.1a}%
+\message{-- \filedateRepFrac\space v\fileversionRepFrac}%
+%
+\setKVdefault[ClesFraction]{Rayon=2cm,Disque,Regulier=false,Segment=false,Rectangle=false,Longueur=5cm,Largeur=2cm,Cotes=5,Triangle=false,Parts=3,Eprouvette=false,Couleur=green,Reponse=false,Multiple=1,Hachures=false,Epaisseur=1,Aleatoire=false}
 
 \def\MPFractionEprouvetteCode{%
   Hauteur=\useKV[ClesFraction]{Longueur};
@@ -80,6 +84,7 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
+    % Pas d'aléa ici : l'eau ne peut pas être en lévitation :)
     \MPFractionEprouvetteCode
     trace eprouvette(#2,#1);
   \end{mplibcode}
@@ -89,6 +94,107 @@
   \end{mpost}
   \fi
 }
+
+\def\MPFractionRegulierCodeAlea{%
+  Rayon=\useKV[ClesFraction]{Rayon};
+  Cotes=\useKV[ClesFraction]{Cotes};
+  color ColPolyReg;
+  ColPolyReg=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  pair O,A[],B[];
+  O=u*(0,0);
+  path cc,cd;
+  cc=cercles(O,Rayon);
+  for k=0 upto Cotes:
+  A[k]=pointarc(cc,k*(360/Cotes));
+  endfor;
+  cd=polygone(A0 for k=1 upto Cotes-1:,A[k] endfor);
+  path part[];
+  vardef FractionPolyReg(expr nume,deno)=
+  for k=0 upto deno:
+    B[k]=point(k*(Cotes/deno)) of cd;
+    dotlabel("",B[k]);
+  endfor;
+  for k=0 upto deno-1:
+  part[k]=O--B[k] for l=1 upto Cotes-1:if (B[k]--B[k+1]) intersectiontimes (O--A[l])<>(-1,-1):--A[l] fi endfor  --B[k+1]--cycle;%O--arccercle(B[k],B[k+1],O)--cycle;
+  endfor;
+  m=(nume div deno);
+  if (nume mod deno)=0:m:=m-1; fi;
+  picture RetourFraction;
+  RetourFraction=image(%
+  Reste=((nume div deno)+1)*deno;
+  RetiensPart=0;
+  if Reponse:
+    if m>0:
+      for l=0 upto (m-1):
+        for k=0 upto deno-1:
+          if RetiensPart<nume:
+            if Reste>(nume-RetiensPart):
+              test:=uniformdeviate(1);
+              if test>0.5:
+                RetiensPart:=RetiensPart+1;
+                if Hachures:
+                  drawoptions(withpen pencircle scaled Epaisseur);
+                  draw hachurage(part[k] shifted(l*(2*Rayon+0.5cm,0)),1.5*360/deno,0.25,0) withcolor ColPolyReg;
+                else:
+                  fill part[k] shifted(l*(2*Rayon+0.5cm,0)) withcolor ColPolyReg;
+                fi;
+              fi;
+            else:
+              RetiensPart:=RetiensPart+1;
+              if Hachures:
+                drawoptions(withpen pencircle scaled Epaisseur);
+                draw hachurage(part[k] shifted(l*(2*Rayon+0.5cm,0)),1.5*360/deno,0.25,0) withcolor ColPolyReg;
+              else:
+                fill part[k] shifted(l*(2*Rayon+0.5cm,0)) withcolor ColPolyReg;
+              fi;
+            fi;
+          fi;
+        Reste:=Reste-1;
+        endfor;
+      endfor;  
+    fi;
+    for k=0 upto deno-1:
+      if RetiensPart<nume:
+        if Reste>(nume-RetiensPart):
+          test:=uniformdeviate(1);
+          if test>0.5:
+            RetiensPart:=RetiensPart+1;
+            if Hachures:
+              drawoptions(withpen pencircle scaled Epaisseur);
+              draw hachurage(part[k] shifted(m*(2*Rayon+0.5cm,0)),1.5*360/deno,0.25,0) withcolor ColPolyReg;
+            else:
+              fill part[k] shifted(m*(2*Rayon+0.5cm,0)) withcolor ColPolyReg;
+            fi;
+          fi;
+        else:
+          RetiensPart:=RetiensPart+1;
+          if Hachures:
+            drawoptions(withpen pencircle scaled Epaisseur);
+            draw hachurage(part[k] shifted(m*(2*Rayon+0.5cm,0)),1.5*360/deno,0.25,0) withcolor ColPolyReg;
+          else:
+            fill part[k] shifted(m*(2*Rayon+0.5cm,0)) withcolor ColPolyReg;
+          fi;
+        fi;
+      fi;
+      Reste:=Reste-1;  
+    endfor;
+  fi;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  for l=0 upto m:
+    draw cd shifted(l*(2*Rayon+0.5cm,0));
+    for k=0 upto (deno-1):
+      draw segment(O,B[k]) shifted(l*(2*Rayon+0.5cm,0));
+    endfor;
+  endfor;
+  drawoptions();
+  );
+  RetourFraction
+  enddef;
+}%
 
 \def\MPFractionRegulierCode{%
   Rayon=\useKV[ClesFraction]{Rayon};
@@ -168,7 +274,13 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
+    boolean Alea;
+    Alea=\useKV[ClesFraction]{Aleatoire};
+    if Alea:
+    \MPFractionRegulierCodeAlea;
+    else:
     \MPFractionRegulierCode
+    fi;
     trace FractionPolyReg(#1,#2);
   \end{mplibcode}
   \else
@@ -176,6 +288,122 @@
     trace FractionPolyReg(#1,#2);
   \end{mpost}
   \fi
+}%
+
+\def\MPFractionTriangleCodeAlea{%
+  Longueur:=\useKV[ClesFraction]{Longueur};
+  nbparts:=\useKV[ClesFraction]{Parts};
+  color ColTriangle;
+  ColTriangle=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  nbtriangle=0;
+  %
+  vardef Ligne(expr longueur)=
+    for k=0 upto 2*(longueur-1):
+      nbtriangle:=nbtriangle+1;
+      if (k mod 2)=0:
+        M[nbtriangle]=(Tria shifted(0.5*k*(1/nbparts)*(B-A))) shifted((nbparts-longueur)*(1/nbparts)*(C-A));
+      else:
+        M[nbtriangle]=(Trir shifted(0.5*(k-1)*(1/nbparts)*(B-A))) shifted((nbparts-longueur)*(1/nbparts)*(C-A));
+      fi;
+    endfor;
+  enddef;
+  %
+  pair A,B,C;
+  A=u*(0.5,0.5);
+  B-A=(Longueur,0);
+  C=rotation(B,A,60);
+  %
+  path Tria,Trir,M[];
+  Tria=polygone(A,(1/nbparts)[A,B],(1/nbparts)[A,C]);
+  Trir=symetrie(Tria,(1/nbparts)[A,B],(1/nbparts)[A,C]);
+  %
+  for k=nbparts downto 1:
+    Ligne(k);
+  endfor;
+  %
+  picture FondTriangle;
+  FondTriangle=image(
+    for k=1 upto nbtriangle:
+      trace M[k];
+    endfor;
+  );
+  %
+  vardef FractionTriangle(expr nume,deno)=
+  m:=nume div deno;
+  if (nume mod deno)=0:
+    m:=m-1;
+  fi;
+  picture RetourFraction;
+  RetourFraction=image(
+    Reste=((nume div deno)+1)*deno;
+    RetiensPart=0;
+    if Reponse:
+      if m>0:
+        for l=0 upto (m-1):
+          for k=1 upto nbtriangle:
+            if RetiensPart<nume:
+              if Reste>(nume-RetiensPart):
+                test:=uniformdeviate(1);
+                if test>0.5:
+                  RetiensPart:=RetiensPart+1;
+                  if Hachures:
+                    drawoptions(withpen pencircle scaled Epaisseur);
+                    draw hachurage(M[k] shifted(l*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
+                  else:
+                    fill M[k] shifted(l*(Longueur+1cm,0)) withcolor ColTriangle;
+                  fi;
+                fi;
+              else:
+                RetiensPart:=RetiensPart+1;
+                if Hachures:
+                  drawoptions(withpen pencircle scaled Epaisseur);
+                  draw hachurage(M[k] shifted(l*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
+                else:
+                  fill M[k] shifted(l*(Longueur+1cm,0)) withcolor ColTriangle;
+                fi;
+              fi;
+            fi;
+            Reste:=Reste-1;
+          endfor;
+        endfor;  
+      fi;
+      for k=1 upto nbtriangle:
+        if RetiensPart<nume:
+          if Reste>(nume-RetiensPart):
+            test:=uniformdeviate(1);
+            if test>0.5:
+              RetiensPart:=RetiensPart+1;
+              if Hachures:
+                drawoptions(withpen pencircle scaled Epaisseur);
+                draw hachurage(M[k] shifted(m*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
+              else:
+                fill M[k] shifted(m*(Longueur+1cm,0)) withcolor ColTriangle;
+              fi;
+            fi;
+          else:
+            RetiensPart:=RetiensPart+1;
+            if Hachures:
+              drawoptions(withpen pencircle scaled Epaisseur);
+              draw hachurage(M[k] shifted(m*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
+            else:
+              fill M[k] shifted(m*(Longueur+1cm,0)) withcolor ColTriangle;
+            fi;
+          fi;
+        fi;
+        Reste:=Reste-1;  
+      endfor;
+    fi;
+    drawoptions(withpen pencircle scaled Epaisseur);
+    for l=0 upto m:
+      trace FondTriangle shifted(l*(Longueur+1cm,0));
+    endfor;
+  );
+  RetourFraction
+enddef;
 }%
 
 \def\MPFractionTriangleCode{%
@@ -241,7 +469,7 @@
   trace hachurage(polygone(A,B,C) shifted(l*(Longueur+1cm,0)),90,0.2,0) withcolor ColTriangle;
   drawoptions(withpen pencircle scaled Epaisseur);
   else:
-  remplis polygone(A,B,C) withcolor ColRectangle;
+  remplis polygone(A,B,C) withcolor ColTriangle;
   fi;
   fi;
   for k=1 upto nbparts:
@@ -260,7 +488,13 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
-    \MPFractionTriangleCode
+    boolean Alea;
+    Alea=\useKV[ClesFraction]{Aleatoire};
+    if Alea:
+    \MPFractionTriangleCodeAlea;
+    else:
+    \MPFractionTriangleCode;
+    fi;
     draw FractionTriangle(#1,#2);
   \end{mplibcode}
   \else
@@ -268,6 +502,117 @@
     draw FractionTriangle(#1,#2);
   \end{mpost}
   \fi
+}%
+
+\def\MPFractionRectangleCodeAlea{%
+  Longueur=\useKV[ClesFraction]{Longueur};
+  Largeur=\useKV[ClesFraction]{Largeur};
+  color ColRectangle;
+  ColRectangle=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  Multiple=\useKV[ClesFraction]{Multiple};
+  %
+  pair A,B,C,D,M[],N[],R[],S[];
+  A=(0,0);
+  B-A=(Longueur,0);
+  C-B=(0,Largeur);
+  D-C=A-B;
+  vardef FractionRectangle(expr nume,deno)=
+    m=nume div deno;
+    if (nume mod deno)=0:
+      m:=m-1;
+    fi;
+    numeric parts;
+    parts=(deno div Multiple);
+    for k=0 upto parts:
+      M[k]=(k/parts)[A,B];
+      N[k]=(k/parts)[D,C];
+    endfor;
+    if Multiple>1:
+      for k=0 upto Multiple:
+        R[k]=(k/Multiple)[A,D];
+        S[k]=(k/Multiple)[B,C];
+      endfor;
+    fi;
+    picture FondRectangle;
+    FondRectangle=image(%
+      path case[];
+      for k=0 upto Multiple-1:
+        for l=0 step Multiple until (deno-1):
+          case[k*(deno div Multiple)+(l div Multiple)]=(unitsquare xscaled (Multiple*abs(A-B)/deno) yscaled (abs(D-A)/Multiple)) shifted (((l/deno)[A,B]-A)+((k/Multiple)[A,D]-A));
+          trace case[k*(deno div Multiple)+(l div Multiple)];
+        endfor;
+      endfor;
+    );
+    picture RetourRectangle;
+    RetourRectangle=image(
+      Reste=((nume div deno)+1)*deno;
+      RetiensPart=0;
+      if Reponse:
+        if m>0:
+          for l=0 upto (m-1):
+            for k=0 upto deno-1:
+              if RetiensPart<nume:
+                if Reste>(nume-RetiensPart):
+                  test:=uniformdeviate(1);
+                  if test>0.5:
+                    RetiensPart:=RetiensPart+1;
+                    if Hachures:
+                      drawoptions(withpen pencircle scaled Epaisseur);
+                      draw hachurage(case[k] shifted(l*(Longueur+1cm,0)),45,0.25,0) withcolor ColRectangle;
+                    else:
+                      fill case[k] shifted(l*(Longueur+1cm,0)) withcolor ColRectangle;
+                    fi;
+                  fi;
+                else:
+                  RetiensPart:=RetiensPart+1;
+                  if Hachures:
+                    drawoptions(withpen pencircle scaled Epaisseur);
+                    draw hachurage(case[k] shifted(l*(Longueur+1cm,0)),45,0.25,0) withcolor ColRectangle;
+                  else:
+                    fill case[k] shifted(l*(Longueur+1cm,0)) withcolor ColRectangle;
+                  fi;
+                fi;
+              fi;
+              Reste:=Reste-1;
+            endfor;
+          endfor;  
+        fi;
+        for k=0 upto deno-1:
+          if RetiensPart<nume:
+            if Reste>(nume-RetiensPart):
+              test:=uniformdeviate(1);
+              if test>0.5:
+                RetiensPart:=RetiensPart+1;
+                if Hachures:
+                  drawoptions(withpen pencircle scaled Epaisseur);
+                  draw hachurage(case[k] shifted(m*(Longueur+1cm,0)),45,0.25,0) withcolor ColRectangle;
+                else:
+                  fill case[k] shifted(m*(Longueur+1cm,0)) withcolor ColRectangle;
+                fi;
+              fi;
+            else:
+              RetiensPart:=RetiensPart+1;
+              if Hachures:
+                drawoptions(withpen pencircle scaled Epaisseur);
+                draw hachurage(case[k] shifted(m*(Longueur+1cm,0)),45,0.25,0) withcolor ColRectangle;
+              else:
+                fill case[k] shifted(m*(Longueur+1cm,0)) withcolor ColRectangle;
+              fi;
+            fi;
+          fi;
+          Reste:=Reste-1;  
+        endfor;
+      fi;
+      for l=0 upto m:
+        trace FondRectangle shifted(l*(Longueur+1cm,0));
+      endfor;
+    );
+    RetourRectangle
+  enddef;
 }%
 
 \def\MPFractionRectangleCode{%
@@ -378,7 +723,13 @@
   \ifluatex%
   \mplibforcehmode%
   \begin{mplibcode}
-    \MPFractionRectangleCode
+    boolean Alea;
+    Alea=\useKV[ClesFraction]{Aleatoire};
+    if Alea:
+    \MPFractionRectangleCodeAlea;
+    else:
+    \MPFractionRectangleCode;
+    fi;
     trace FractionRectangle(#1,#2);
   \end{mplibcode}
   \else%
@@ -386,6 +737,101 @@
     trace FractionRectangle(#1,#2);
   \end{mpost}
   \fi%
+}%
+
+\def\MPFractionDisqueCodeAlea{%
+  Rayon=\useKV[ClesFraction]{Rayon};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  color ColDisque;
+  ColDisque=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Reponse:=\useKV[ClesFraction]{Reponse};
+  %
+  pair A,B[];
+  A=(0,0);
+  path cc,part[];
+  cc=cercles(A,Rayon);
+  vardef FractionDisque(expr nume,deno)=
+  for k=0 upto deno+1:
+  B[k]=pointarc(cc,(360/deno)*k);
+  endfor;
+  for k=0 upto deno-1:
+  part[k]=A--arccercle(B[k],B[k+1],A)--cycle;
+  endfor;
+  m=(nume div deno);
+  if (nume mod deno)=0:m:=m-1; fi;
+  picture RetourFraction;
+  RetourFraction=image(%
+  Reste=((nume div deno)+1)*deno;
+  RetiensPart=0;
+  if Reponse:
+    if m>0:
+      for l=0 upto (m-1):
+        for k=0 upto deno-1:
+          if RetiensPart<nume:
+            if Reste>(nume-RetiensPart):
+              test:=uniformdeviate(1);
+              if test>0.5:
+                RetiensPart:=RetiensPart+1;
+                if Hachures:
+                  drawoptions(withpen pencircle scaled Epaisseur);
+                  draw hachurage(part[k] shifted(l*(2*Rayon+1cm,0)),1.5*360/deno,0.25,0) withcolor ColDisque;
+                else:
+                  fill part[k] shifted(l*(2*Rayon+1cm,0)) withcolor ColDisque;
+                fi;
+              fi;
+            else:
+              RetiensPart:=RetiensPart+1;
+              if Hachures:
+                drawoptions(withpen pencircle scaled Epaisseur);
+                draw hachurage(part[k] shifted(l*(2*Rayon+1cm,0)),1.5*360/deno,0.25,0) withcolor ColDisque;
+              else:
+                fill part[k] shifted(l*(2*Rayon+1cm,0)) withcolor ColDisque;
+              fi;
+            fi;
+          fi;
+        Reste:=Reste-1;
+        endfor;
+      endfor;  
+    fi;
+    for k=0 upto deno-1:
+      if RetiensPart<nume:
+        if Reste>(nume-RetiensPart):
+          test:=uniformdeviate(1);
+          if test>0.5:
+            RetiensPart:=RetiensPart+1;
+            if Hachures:
+              drawoptions(withpen pencircle scaled Epaisseur);
+              draw hachurage(part[k] shifted(m*(2*Rayon+1cm,0)),1.5*360/deno,0.25,0) withcolor ColDisque;
+            else:
+              fill part[k] shifted(m*(2*Rayon+1cm,0)) withcolor ColDisque;
+            fi;
+          fi;
+        else:
+          RetiensPart:=RetiensPart+1;
+          if Hachures:
+            drawoptions(withpen pencircle scaled Epaisseur);
+            draw hachurage(part[k] shifted(m*(2*Rayon+1cm,0)),1.5*360/deno,0.25,0) withcolor ColDisque;
+          else:
+            fill part[k] shifted(m*(2*Rayon+1cm,0)) withcolor ColDisque;
+          fi;
+        fi;
+      fi;
+      Reste:=Reste-1;  
+    endfor;
+  fi;
+  drawoptions(withpen pencircle scaled Epaisseur);
+  for l=0 upto m:
+    draw cc shifted(l*(2*Rayon+1cm,0));
+    for k=0 upto (deno-1):
+      draw segment(A,B[k]) shifted(l*(2*Rayon+1cm,0));
+    endfor;
+  endfor;
+  drawoptions();
+  );
+  RetourFraction
+  enddef;
 }%
 
 \def\MPFractionDisqueCode{%
@@ -444,7 +890,13 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
+    boolean Alea;
+    Alea=\useKV[ClesFraction]{Aleatoire};
+    if Alea:
+    \MPFractionDisqueCodeAlea;
+    else:
     \MPFractionDisqueCode
+    fi;
     trace FractionDisque(#1,#2);
   \end{mplibcode}
   \else
@@ -452,6 +904,115 @@
     trace FractionDisque(#1,#2);
   \end{mpost}
   \fi
+}
+
+\def\MPFractionSegmentCodeAlea{%
+  Longueur=\useKV[ClesFraction]{Longueur};
+  color ColSegment;
+  ColSegment=\useKV[ClesFraction]{Couleur};
+  boolean Hachures,Reponse;
+  Reponse=\useKV[ClesFraction]{Reponse};
+  Hachures=\useKV[ClesFraction]{Hachures};
+  Epaisseur=\useKV[ClesFraction]{Epaisseur};
+  %
+  pair A,C,B[];
+  A=(0,0);
+  C-A=(Longueur,0);
+  %
+  path part[];
+  %
+  vardef FractionSegment(expr nume,deno)=
+  for k=0 upto deno:
+  B[k]=(k/deno)[A,C];
+  endfor;
+  for k=0 upto deno-1:
+  part[k]=polygone(B[k]+u*(0,-0.15),B[k+1]+u*(0,-0.15),B[k+1]+u*(0,0.15),B[k]+u*(0,0.15));
+  endfor;
+  m=nume div deno;
+  picture RetourFraction;
+  RetourFraction=image(
+  Reste=((nume div deno)+1)*deno;
+  RetiensPart=0;
+  % Reponse
+  if Reponse:
+    if m>0:
+      for l=0 upto (m-1):
+        for k=0 upto deno-1:
+          if RetiensPart<nume:
+            if Reste>(nume-RetiensPart):
+              test:=uniformdeviate(1);
+              if test>0.5:
+                RetiensPart:=RetiensPart+1;
+                if Hachures:
+                  drawoptions(withpen pencircle scaled Epaisseur);
+                  draw hachurage(part[k] shifted(l*(Longueur+1cm,0)),120,0.2,0) withcolor ColSegment;
+                  drawoptions();
+                else:
+                  draw (segment(B[k],B[k+1]) shifted(l*(Longueur+1cm,0))) withpen pencircle scaled 2 withcolor ColSegment;
+                fi;
+              fi;
+            else:
+              RetiensPart:=RetiensPart+1;
+              if Hachures:
+                drawoptions(withpen pencircle scaled Epaisseur);
+                draw hachurage(part[k] shifted(l*(Longueur+1cm,0)),120,0.2,0) withcolor ColSegment;
+                drawoptions();
+              else:
+                draw (segment(B[k],B[k+1]) shifted(l*(Longueur+1cm,0))) withpen pencircle scaled 2 withcolor ColSegment;
+              fi;
+            fi;
+          fi;
+        Reste:=Reste-1;
+        endfor;
+      endfor;  
+    fi;
+    for k=0 upto deno-1:
+      if RetiensPart<nume:
+        if Reste>(nume-RetiensPart):
+          test:=uniformdeviate(1);
+          if test>0.5:
+            RetiensPart:=RetiensPart+1;
+            if Hachures:
+              drawoptions(withpen pencircle scaled Epaisseur);
+              draw hachurage(part[k] shifted(m*(Longueur+1cm,0)),120,0.2,0) withcolor ColSegment;
+              drawoptions();
+            else:
+              draw (segment(B[k],B[k+1]) shifted(m*(Longueur+1cm,0))) withpen pencircle scaled 2 withcolor ColSegment;
+            fi;
+          fi;
+        else:
+          RetiensPart:=RetiensPart+1;
+          if Hachures:
+            drawoptions(withpen pencircle scaled Epaisseur);
+            draw hachurage(part[k] shifted(m*(Longueur+1cm,0)),120,0.2,0) withcolor ColSegment;
+          else:
+            draw (segment(B[k],B[k+1]) shifted(m*(Longueur+1cm,0))) withpen pencircle scaled 2 withcolor ColSegment;
+          fi;
+        fi;
+      fi;
+      Reste:=Reste-1;  
+    endfor;
+  fi;
+  %fin Reponse
+  if Hachures:drawoptions(withpen pencircle scaled Epaisseur);fi;
+  % draw (segment(B[0],B[nume mod deno]) shifted(m*(Longueur+1cm,0)));
+  for l=0 upto m:
+  draw segment(A,C) shifted(l*(Longueur+1cm,0));
+  endfor;
+  marque_p:="tiretv";
+  for l=0 upto m-1:
+  for k=0 upto deno:
+  pointe(B[k] shifted(l*(Longueur+1cm,0)));
+  endfor;
+  endfor;
+  if (nume mod deno)<>0:
+  for k=0 upto deno:
+  pointe(B[k] shifted(m*(Longueur+1cm,0)));
+  endfor;
+  fi;
+  );
+  RetourFraction
+  enddef;
 }
 
 \def\MPFractionSegmentCode{%
@@ -525,7 +1086,13 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
+    boolean Alea;
+    Alea=\useKV[ClesFraction]{Aleatoire};
+    if Alea:
+    \MPFractionSegmentCodeAlea;
+    else:
     \MPFractionSegmentCode
+    fi;
     trace FractionSegment(#1,#2);
   \end{mplibcode}
   \else

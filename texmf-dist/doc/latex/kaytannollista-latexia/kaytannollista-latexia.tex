@@ -31,7 +31,7 @@
 datezeros=false]{biblatex}
 \usepackage{tikz}
 \usepackage{totcount}
-\usepackage{nowidow} \setnowidow \setnoclub
+\usepackage[all]{nowidow}
 \usepackage{hanging}
 \usepackage{lettrine}
 \usepackage{multicol}
@@ -74,11 +74,30 @@ datezeros=false]{biblatex}
 \newcommand{\englanti}[1]{\textenglish{#1}}
 \newcommand{\englantik}[1]{\textenglish{\emph{#1}}}
 
-\defaultfontfeatures[\ttfamily]{Ligatures={TeXReset, NoCommon}}
-\usepackage[oldstyle,semibold,ScaleSF=MatchLowercase,StretchTT=.8]
-{libertinus-otf}
+\defaultfontfeatures[\ttfamily]{} % Nollataan oletukset: tavutus päälle
 
-\newfontface{\swashfontti}{TeX Gyre Chorus}[Scale=MatchLowercase]
+\setmainfont{Libertinus Serif}[
+Numbers=Lowercase,
+BoldFont={* Semibold},
+BoldItalicFont={* Semibold Italic},
+SlantedFont={* Regular}, SlantedFeatures={FakeSlant=0.2},
+BoldSlantedFont={* Semibold}, BoldSlantedFeatures={FakeSlant=0.2},
+SmallCapsFont={* Regular}, SmallCapsFeatures={Language=Default,
+  Letters=SmallCaps},
+SwashFont={TeX Gyre Chorus}]
+
+\setsansfont{Libertinus Sans}[
+Scale=MatchLowercase, Numbers=Lowercase,
+SlantedFont={* Regular}, SlantedFeatures={FakeSlant=0.2},
+BoldSlantedFont={* Bold}, BoldSlantedFeatures={FakeSlant=0.2},
+SmallCapsFont={* Regular}, SmallCapsFeatures={Language=Default,
+  Letters=SmallCaps}]
+
+\setmonofont{Libertinus Mono}[
+Scale=MatchLowercase, Ligatures={TeXOff, CommonOff},
+FakeStretch=0.8, Numbers=SlashedZero]
+
+\setmathfont{Libertinus Math}[Scale=MatchLowercase]
 
 \renewcommand{\scriptsize}{\fontsize{7bp}{7bp}\selectfont}
 \renewcommand{\footnotesize}{\fontsize{8bp}{9bp}\selectfont}
@@ -95,7 +114,7 @@ datezeros=false]{biblatex}
 \newcommand{\versaalinum}{\addfontfeatures{Numbers=Uppercase}}
 \newcommand{\murtoluku}[2]{{\addfontfeatures{Fractions=On}#1/#2}}
 
-\setlength{\emergencystretch}{1em}
+\setlength{\emergencystretch}{1.3em}
 
 \setlength{\parindent}{1em}
 \setlength{\bibhang}{\parindent}
@@ -154,7 +173,7 @@ columnsep=1em]
   \begin{textblock*}{1cm}(-2em,3bp)
     \small\seurausnuoli
   \end{textblock*}
-  \begin{minipage}{\linewidth}
+  \begin{minipage}{\textwidth}
     \linespread{1}\small
   }{%
   \end{minipage}
@@ -169,18 +188,18 @@ columnsep=1em]
   \end{list}}
 
 \floatsetup{ style=plain, font={small}, justification=raggedright,
-  margins=raggedright, captionskip=0ex, capposition=bottom }
+  margins=centering, captionskip=0ex, capposition=bottom }
 
 \floatsetup[table]{ style=plain, captionskip=2ex }
 \floatsetup[figure]{ style=plain, captionskip=2ex }
 
 \captionsetup{ font={small, sf}, labelfont={bf}, textfont={},
-  textformat=period, margin=.5em, justification=RaggedRight,
-  singlelinecheck=off }
+  textformat=period, margin={.1em, 1.1em}, oneside,
+  justification=RaggedRight, singlelinecheck=off }
 
 \newcommand{\leijutlk}[2]{%
   \begin{table*}
-    \floatbox{table}{\versaalinum #1}{#2}
+    \floatbox{table}[\FBwidth]{\versaalinum #1}{#2}
   \end{table*}}
 
 \newcommand{\leijukuva}[2]{%
@@ -196,7 +215,6 @@ columnsep=1em]
       \setlength{\itemsep}{.2ex plus .2ex}
       \setlength{\parsep}{0em}
       \setlength{\topsep}{.2ex plus .2ex}
-      \RaggedRight
     }}{\end{list}}
 
 \newenvironment{maaritelma}[1]{%
@@ -352,7 +370,6 @@ columnsep=1em]
 \regtotcounter{chapter}
 
 \begin{document}
-\rmfamily % Pienversaali ei toimi leipätekstissä ilman tätä.
 
 \input{tavutusvihjeet}
 
@@ -424,6 +441,7 @@ columnsep=1em]
 
   \begin{list}{\textbullet}{
       \setlength{\leftmargin}{1em}
+      \setlength{\labelsep}{.35em}
       \setlength{\topsep}{0ex}
       \setlength{\partopsep}{0ex}
       \setlength{\itemsep}{0ex}
@@ -474,7 +492,6 @@ columnsep=1em]
   ladottu eri väreillä: \komentox{teksti} ja \mkomentox{matematiikka}.}
 \printindex[komennot]
 \printindex[laskurit]
-\clearpage
 \printindex[mitat]
 \printindex[paketit]
 \indexprologue{\noindent Tekstitilan ja matematiikkatilan ympäristöt on

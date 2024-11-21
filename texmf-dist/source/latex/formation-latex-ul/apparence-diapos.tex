@@ -1,4 +1,4 @@
-%%% Copyright (C) 2015-2023 Vincent Goulet
+%%% Copyright (C) 2015-2024 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -18,13 +18,47 @@
   {\CM Computer Modern}.
 
   \begin{itemize}
-  \item Aujourd'hui plus facile d'utiliser d'autres polices, surtout
-    avec {\XeLaTeX}
-  \item \alert{Attention}: peu de polices adaptées pour les
-    mathématiques
+  \item Dans un premier temps, n'essayez pas de changer la police de
+    caractère du document
   \item Commandes pour modifier les \alert{attributs} de la police
     (famille, forme, graisse)
+    \medskip
+
+    par ex.:
+    {
+      \small
+      \begin{tabular}[t]{l}
+        \cs{rmfamily} \\ \CM romain
+      \end{tabular} \quad
+      \begin{tabular}[t]{l}
+        \cs{ttfamily} \\ \CMtt largeur fixe
+      \end{tabular} \quad
+      \begin{tabular}[t]{l}
+        \cs{itshape} \\ \CM\itshape italique
+      \end{tabular} \quad
+      \begin{tabular}[t]{l}
+        \cs{bfseries} \\ \CM\bfseries gras
+      \end{tabular}
+    }
   \item Commandes pour modifier la \alert{taille} du texte
+    \medskip
+
+    par ex.:
+    {
+      \small
+      \begin{tabular}[t]{l}
+        \cs{footnotesize} \\ \CM\footnotesize très petit
+      \end{tabular} \quad
+      \begin{tabular}[t]{l}
+        \cs{small} \\ \CM\small petit
+      \end{tabular} \quad
+      \begin{tabular}[t]{l}
+        \cs{large} \\ \CM\large grand
+      \end{tabular} \quad
+      \begin{tabular}[t]{l}
+        \cs{Large} \\ \CM\Large très grand
+      \end{tabular}
+    }
   \end{itemize}
 \end{frame}
 
@@ -51,7 +85,6 @@
     \end{enumerate}
   \item Possible de les imbriquer les unes dans les autres
   \item Marqueurs adaptés automatiquement jusqu'à 4 niveaux
-  \end{itemize}
   \pause
 
 \begin{lstlisting}
@@ -65,6 +98,7 @@
 \item Marqueurs adaptés automatiquement jusqu'à 4 niveaux
 \end{itemize}
 \end{lstlisting}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -85,12 +119,26 @@
   \item Environnement \code{verbatim}
 \begin{lstlisting}
 \begin{verbatim}
-Texte disposé exactement tel qu'il est tapé
+Texte disposé exactement tel qu'il est saisi
 dans une police à largeur fixe
 \end{verbatim}
 \end{lstlisting}
-  \item Pour usage plus intensif, utiliser le paquetage \pkg{listings}
+  \item Pour usage plus intensif, utiliser les paquetages
+    \pkg{fancyvrb} ou \pkg{listings}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \tipbox{Il est aujourd'hui beaucoup plus facile d'utiliser d'autres
+    polices de caractères pour vos documents, surtout avec {\XeLaTeX}.
+
+
+    Attention, toutefois: peu de polices sont adaptées pour les
+    mathématiques.
+
+    Excellents choix modernes: %
+    \link{https://ctan.org/pkg/stix2-otf/}{\stixtwo STIX~Two}, %
+    \link{https://ctan.org/pkg/fira}{Fira Sans}.}
 \end{frame}
 
 \begin{exercice}

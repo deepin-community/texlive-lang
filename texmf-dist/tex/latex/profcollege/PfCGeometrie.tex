@@ -1,6 +1,10 @@
 %%%
 % Geometrie
 %%%
+\def\filedateGeometrie{2024/08/04}%
+\def\fileversionGeometrie{0.1}%
+\message{-- \filedateGeometrie\space v\fileversionGeometrie}%
+%
 \setKVdefault[Geometrie]{CoinBG={(0,0)},CoinHD={(10u,10u)},TypeTrace="Instruments",Clip,Cadres=false,Epaisseur=1,Pointilles=false,Ombre=false,Couleur=black,Ecart=2,ModeleCouleur=5}%
 \defKV[Geometrie]{Cadre=\setKV[Geometrie]{Cadres}\setKV[Geometrie]{Clip=false}}%
 
@@ -42,6 +46,9 @@
     elseif \useKV[Geometrie]{TypeTrace}="Espace":
     typetrace:="3D";
     typerepre:="persp";
+    elseif \useKV[Geometrie]{TypeTrace}="Schema":
+    input PfCSketch;
+    sketchypaths;
     fi;
     xa:=xpart(Coinbg);
     xb:=xpart(Coinhd);
@@ -120,6 +127,9 @@
       elseif \useKV[Geometrie]{TypeTrace}="Espace":
       typetrace:="3D";
       typerepre:="persp";
+      elseif \useKV[Geometrie]{TypeTrace}="Schema":
+      input PfCSketch;
+      sketchypaths;
       fi;}
     ]%
     xa:=xpart(Coinbg);

@@ -3,7 +3,7 @@
 --
 luatexbase.provides_module({
   name = 'luatexja.jfmglue',
-  date = '2022-08-29',
+  date = '2024-10-12',
   description = 'Insertion process of JFM glues, [x]kanjiskip and others',
 })
 luatexja.jfmglue = luatexja.jfmglue or {}
@@ -587,7 +587,7 @@ function calc_np(last, lp)
          if k then return lp end
       end
    end
-   Np=nil
+   Np = nil
 end
 end -- 001 -----------------------------------------------
 
@@ -693,6 +693,7 @@ end
 -------------------- 最下層の処理
 
 luatexbase.create_callback('luatexja.adjust_jfmglue', 'simple', function(n) return n end)
+luatexbase.create_callback('luatexja.adjust_jfmglue_tail', 'simple', function(n) return n end)
 
 -- change penalties (or create a new penalty, if needed)
 local function handle_penalty_normal(post, pre, g)
@@ -741,7 +742,7 @@ local function handle_penalty_jwp()
    local a = table_current_stack[luatexja.stack_table_index.JWP]
    if #widow_Bp == 0 then
       if a~=0 then
-         local p = node_new(id_penalty, widow_Np.nuc)
+         local p = node_new(id_penalty, nil, widow_Np.nuc)
          if a<-10000 then a = -10000 elseif a>10000 then a = 10000 end
          setpenalty(p, a); head = insert_before(head, widow_Np.first, p)
          widow_Bp[1]=p; set_attr(p, attr_icflag, KINSOKU)
@@ -1059,7 +1060,7 @@ local function handle_np_jachar(mode)
       real_insert(g)
    end
    if mode and Np.kcat%2~=1 then
-      widow_Np.first, widow_Bp, Bp = Np.first, Bp, widow_Bp
+      widow_Np.nuc, widow_Np.first, widow_Bp, Bp = Np.nuc, Np.first, Bp, widow_Bp
    end
 end
 
@@ -1138,6 +1139,7 @@ local function handle_list_tail(mode, last)
    adjust_nq()
    if mode then
       -- the current list is to be line-breaked.
+      call_callback('luatexja.adjust_jfmglue_tail', head, Nq, last)
       -- Insert \jcharwidowpenalty
       if widow_Np.first then handle_penalty_jwp() end
    else

@@ -1,10 +1,166 @@
+2024-05-12  Karl Berry  <karl@freefriends.org>
+
+	* May 2024 release to CTAN.
+
+	* latex2e.texi (fontenc package): tweak encoding text.
+	* ANNOUNCE.tmpl: tweak this too.
+
+2024-05-09  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (\protect): update for current LaTeX; most commands
+	have been robust since October 2019. Mention the cprotect package.
+
+2024-05-06  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Input encodings): brief introduction to character
+	encodings.
+	(inputenc package): update handling of non-UTF-8 in LuaTeX and XeTeX.
+
+2024-05-06  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Over- or under math): mention \overrightarrow
+	and \overleftarrow. Also rename section, since these commands only
+	work with math. Report from Randolf Scholz, 5 Apr 2024 16:07:25.
+	* NEWS: mention this.
+
+	* common.texi (@mbox): make synonym for @hbox for use in @math
+	(aka @tex) examples.
+
+	* Makefile (t2html_menu): can be empty again as of makeinfo 7.1.
+	For 7.0, needed -c CHECK_NORMAL_MENU_STRUCTURE=1.
+
+2023-11-12  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (\footnotemark): wording.
+	(Footnotes in section headings): missing period.
+
+2023-11-11  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Class and package commands): add @menu.
+	(\footnote) <\footnoterule): avoid overfull lines.
+
+2023-11-11  Vincent Bela\"iche  <vincentb1@users.sourceforge.net>
+
+	* latex2e.texi (\footnote): Add ``@c xx'' comment suggesting
+	propagating improvement from the French version.
+	Grammar fix ``is'' -> ``are''.
+	Insert explanatory LaTeX comments to the \footnoterule
+	\renewcommand example, and star the \renewcommand.
+	(\footnotemark): Typo ``by-hand giving'' -> ``by hand-giving''.
+	Move the ``footnoteValueSaver'' counter example after the next
+	example in order not to interleave it in between two related examples.
+	(Footnotes in section headings): Add ``@c xx'' comment indicating
+	need for handling the \listoftable/\listoffigures case.
+
+2023-10-19  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (itemize): remove extra } in itemize* example.
+	Report from Stefan Pofahl, 18 Oct 2023 23:48:38.
+
+	* latex2e.texi: fix most menus per texinfo 7.1 warnings.
+
+2023-10-11  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Ligatures): new node.
+
+2023-10-04  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Special characters): new node.
+	(Reserved characters): rename to `Printing special characters'.
+
+2023-10-02  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (@TeX{} engines): add hilatex.
+	
+	* Makefile (disttree): new variable for brevity; use it.
+	(postwebclean): new target to automate cleanup after a web update.
+	(commitready): depend on easyurls so that this is the only target
+	that need be run for a web update.
+	Add @echo commands to help trace what's happening.
+	Remove trailing whitespace.
+
+2023-09-30  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Overview): give mailing list url.
+	(Environment): rename to Environment syntax.
+	(\DocumentMetadata): new node.
+	(Class and package structure): use ctan.org/pkg/clsguide.
+	(Class and package commands): move to Definitions chapter;
+	rewrite as separate sections.
+	(Graphics): move chapter to before Color.
+	Throughout: avoid xxx as example string, since we use xx
+	as the todo marker.
+
+2023-08-27  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (\thepage): simplify, as it turns out that
+	TUGboat's attempted complicated redefinition does not work well.
+	
+	* Makefile (htmlopts): add -c CHECK_NORMAL_MENU_STRUCTURE=1
+	for makeinfo 7.0.3 to emit warnings about menu problems.
+	Should be re-enabled by default in the next release.
+
+2023-07-19  Karl Berry  <karl@freefriends.org>
+
+	* Makefile (svri): rename svrsplit; mention for post-web cleanup.
+
+2023-07-19  Jim Hefferon  <jhefferon@smcvt.edu>
+
+	* src/easyurls.py: skip _005cslash.html since it conflicts.
+	Add lower_case_flag.
+	* src/easyurls_test.py: update.
+
+2023-07-19  Karl Berry  <karl@freefriends.org>
+
+	* Makefile (check-dw): also ignore @c lines.
+
+	* latex2e.texi (~): also mention \nobreakspace and U+00A0 synonyms.
+	(They aren't, quite, ~ has a pair of empty braces after, but this
+	does not seem worth mentioning.)
+
+2023-07-16  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (Document class options): recommend the geometry
+	package, and note that \pdfpagewidth/height is engine-dependent.
+	Report from Seymour J Metz, 14 Jul 2023 17:38:07.
+	
+	* latex2e.texi (\thepage): new section, based on information
+	from Ulrike Fischer, https://tex.stackexchange.com/questions/687258.
+	* NEWS: mention this.
+
+2023-06-23  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (\DeclareTextSymbol, Text symbols): guillemet not
+	guillemot.
+	
+	(\spacefactor, \@@, \frenchspacing & \nonfrenchspacing, \(SPACE)):
+	try to clarify that many punctuation characters are involved.
+
+2023-05-28  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (\slash): new node for this simple command.
+	(\pagebreak & \nopagebreak) <\samepage>: not obsolete.
+	(\pagenumbering): rearrange.
+
+2023-03-22  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (list): \setlength{\itemsep} was missing the \.
+	Report from Markus Kurtz, 22 Mar 2023 14:10:21.
+
+	* latex2e.texi (math): punctuation tweaks.
+
+2023-01-18  Karl Berry  <karl@freefriends.org>
+
+	* latex2e.texi (equation): second \begin should be \end.
+	Report from yukif@mac.com, 18 Jan 2023 16:04:02.
+
 2022-01-26  Karl Berry  <karl@freefriends.org>
 
 	January 2023 release to CTAN.
 	* NEWS: update.
 
-	* mirroring.html,
-	* writing.html: use https, $Date.
+	* Makefile (%.html): depend on latex2e.css, not %.css,
+	since there is no latex2e-es.css (and doesn't need to be).
 
 2023-01-14  Karl Berry  <karl@freefriends.org>
 

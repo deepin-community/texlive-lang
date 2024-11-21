@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tlmgr.pl 69653 2024-01-31 21:52:46Z karl $
+# $Id: tlmgr.pl 71331 2024-05-24 07:30:36Z preining $
 # Copyright 2008-2024 Norbert Preining
 # This file is licensed under the GNU General Public License version 2
 # or any later version.
@@ -8,8 +8,8 @@
 
 use strict; use warnings;
 
-my $svnrev = '$Revision: 69653 $';
-my $datrev = '$Date: 2024-01-31 22:52:46 +0100 (Wed, 31 Jan 2024) $';
+my $svnrev = '$Revision: 71331 $';
+my $datrev = '$Date: 2024-05-24 09:30:36 +0200 (Fri, 24 May 2024) $';
 my $tlmgrrevision;
 my $tlmgrversion;
 my $prg;
@@ -147,6 +147,9 @@ my %action_specification = (
     "run-post" => 1,
     "function" => \&action_backup
   },
+  "bug" => {
+    "function" => \&action_bug
+  },
   "candidates" => {
     "run-post" => 0,
     "function" => \&action_candidates
@@ -165,7 +168,7 @@ my %action_specification = (
     "function" => \&action_conf
   },
   "dump-tlpdb" => { 
-    "options"  => { local => 1, remote => 1 },
+    "options"  => { local => 1, remote => 1, json => 1 },
     "run-post" => 0,
     "function" => \&action_dumptlpdb
   },
@@ -209,7 +212,8 @@ my %action_specification = (
       "all" => 1,
       "list" => 1, 
       "only-installed" => 1,
-      "only-remote" => 1
+      "only-remote" => 1,
+      "json" => 1
     },
     "run-post" => 0,
     "function" => \&action_info
@@ -237,11 +241,12 @@ my %action_specification = (
     "function" => \&action_key
   },
   "option" => { 
+    "options"  => { "json" => 1 },
     "run-post" => 1,
     "function" => \&action_option
   },
   "paper" => { 
-    "options"  => { "list" => 1 },
+    "options"  => { "list" => 1, "json" => 1 },
     "run-post" => 1,
     "function" => \&action_paper
   },
@@ -297,7 +302,8 @@ my %action_specification = (
       "all" => 1,
       "backupdir" => "=s",
       "dry-run|n" => 1,
-      "force" => 1
+      "force" => 1,
+      "json" => 1,
     },
     "run-post" => 1,
     "function" => \&action_restore
@@ -308,6 +314,7 @@ my %action_specification = (
       "file" => 1,
       "global" => 1,
       "word" => 1,
+      "json" => 1,
     },
     "run-post" => 1,
     "function" => \&action_search
@@ -345,7 +352,6 @@ my %globaloptions = (
   "debug-translation" => 1,
   "h|?" => 1,
   "help" => 1,
-  "json" => 1,
   "location|repository|repo" => "=s",
   "machine-readable" => 1,
   "no-execute-actions" => 1,
@@ -1707,7 +1713,7 @@ sub action_info {
   my @datafields;
   my $fmt = "list";
   if ($opts{'data'} && $opts{'json'}) {
-    tlwarn("Preferring json output over data output!\n");
+    tlwarn("Preferring JSON output over data output!\n");
     delete($opts{'data'});
   }
   if ($opts{'json'}) {
@@ -1815,6 +1821,22 @@ sub action_info {
 
 #  SEARCH
 #
+sub format_search_tlpdb_result {
+  my $ret = shift;
+  my $retfile = '';
+  my $retdesc = '';
+  for my $pkg (sort keys %{$ret->{"packages"}}) {
+    $retdesc .= "$pkg - " . $ret->{"packages"}{$pkg} . "\n";
+  }
+  for my $pkg (sort keys %{$ret->{"files"}}) {
+    $retfile .= "$pkg:\n";
+    for my $f (@{$ret->{"files"}{$pkg}}) {
+      $retfile .= "\t$f\n";
+    }
+  }
+  return ($retfile, $retdesc);
+}
+
 sub action_search {
   my ($r) = @ARGV;
   my $tlpdb;
@@ -1840,21 +1862,26 @@ sub action_search {
     $tlpdb = $localtlpdb;
   }
 
-  my ($foundfile, $founddesc) = search_tlpdb($tlpdb, $r, 
+  my $ret = search_tlpdb($tlpdb, $r, 
     $opts{'file'} || $opts{'all'}, 
     (!$opts{'file'} || $opts{'all'}), 
     $opts{'word'});
- 
-  print $founddesc;
-  print $foundfile;
+
+  if ($opts{'json'}) {
+    my $json = TeXLive::TLUtils::encode_json($ret);
+    print($json);
+  } else {
+    my ($retfile, $retdesc) = format_search_tlpdb_result($ret);
+    print ($retdesc);
+    print ($retfile);
+  }
 
   return ($F_OK | $F_NOPOSTACTION);
 }
 
-sub search_tlpdb {
+sub _search_tlpdb {
   my ($tlpdb, $what, $dofile, $dodesc, $inword) = @_;
-  my $retfile = '';
-  my $retdesc = '';
+  my %pkgs;
   foreach my $pkg ($tlpdb->list_packages) {
     my $tlp = $tlpdb->get_package($pkg);
     
@@ -1862,9 +1889,8 @@ sub search_tlpdb {
     if ($dofile) {
       my @ret = search_pkg_files($tlp, $what);
       if (@ret) {
-        $retfile .= "$pkg:\n";
         foreach (@ret) {
-          $retfile .= "\t$_\n";
+          $pkgs{$pkg}{'files'}{$_} = 1;
         }
       }
     }
@@ -1872,28 +1898,47 @@ sub search_tlpdb {
     # no options or --all -> search package names/descriptions
     if ($dodesc) {
       next if ($pkg =~ m/\./);
-      my $matched = search_pkg_desc($tlp, $what, $inword);
-      $retdesc .= "$matched\n" if ($matched);
+      my $t = "$pkg\n";
+      $t = $t . $tlp->shortdesc . "\n" if (defined($tlp->shortdesc));
+      $t = $t . $tlp->longdesc . "\n" if (defined($tlp->longdesc));
+      $t = $t . $tlp->cataloguedata->{'topics'} . "\n" if (defined($tlp->cataloguedata->{'topics'}));
+      my $pat = $what;
+      $pat = '\W' . $what . '\W' if ($inword);
+      my $matched = "";
+      if ($t =~ m/$pat/i) {
+        my $shortdesc = $tlp->shortdesc || "";
+        $pkgs{$pkg}{'desc'} = $shortdesc;
+      }
     }
   }
-  return($retfile, $retdesc);
+  return \%pkgs;
 }
 
-sub search_pkg_desc {
-  my ($tlp, $what, $inword) = @_;
-  my $pkg = $tlp->name;
-  my $t = "$pkg\n";
-  $t = $t . $tlp->shortdesc . "\n" if (defined($tlp->shortdesc));
-  $t = $t . $tlp->longdesc . "\n" if (defined($tlp->longdesc));
-  $t = $t . $tlp->cataloguedata->{'topics'} . "\n" if (defined($tlp->cataloguedata->{'topics'}));
-  my $pat = $what;
-  $pat = '\W' . $what . '\W' if ($inword);
-  my $matched = "";
-  if ($t =~ m/$pat/i) {
-    my $shortdesc = $tlp->shortdesc || "";
-    $matched .= "$pkg - $shortdesc";
+
+sub search_tlpdb {
+  my ($tlpdb, $what, $dofile, $dodesc, $inword) = @_;
+  my $fndptr = _search_tlpdb($tlpdb, $what, $dofile, $dodesc, $inword);
+  # first report on $pkg - $shortdesc found
+  my $retfile = '';
+  my $retdesc = '';
+  my %ret = ( "packages" => {}, "files" => {} );
+  for my $pkg (sort keys %$fndptr) {
+    if ($fndptr->{$pkg}{'desc'}) {
+      $ret{"packages"}{$pkg} = $fndptr->{$pkg}{'desc'};
+    }
   }
-  return $matched;
+  for my $pkg (sort keys %$fndptr) {
+    if ($fndptr->{$pkg}{'files'}) {
+      $ret{"files"}{$pkg} = [ keys %{$fndptr->{$pkg}{'files'}} ];
+    }
+  }
+  # {
+  #   require Data::Dumper;
+  #   print Data::Dumper->Dump([\%retjson], [qw(retjson)]);
+  #   my $json = TeXLive::TLUtils::encode_json(\%retjson);
+  #   print($json);
+  # }
+  return (\%ret);
 }
 
 sub search_pkg_files {
@@ -4289,7 +4334,8 @@ sub show_one_package_detail {
       }
       # we didn't find a package like this, so use search
       info("$prg: cannot find package $pkg, searching for other matches:\n");
-      my ($foundfile, $founddesc) = search_tlpdb($remotetlpdb,$pkg,1,1,0);
+      my $ret = search_tlpdb($remotetlpdb,$pkg,1,1,0);
+      my ($foundfile, $founddesc) = format_search_tlpdb_result($ret);
       print "\nPackages containing \`$pkg\' in their title/description:\n";
       print $founddesc;
       print "\nPackages containing files matching \`$pkg\':\n";
@@ -5028,10 +5074,10 @@ sub action_platform {
         print "    $a\n";
       }
     }
-    print "Already installed platforms are marked with (i)\n";
-    print "You can add new platforms with: tlmgr platform add PLAT1 PLAT2...\n";
-    print "You can remove platforms with: tlmgr platform remove PLAT1 PLAT2...\n";
-    print "You can set the active platform with: tlmgr platform set PLAT\n";
+    print "Already installed platforms are marked with (i).\n";
+    print "Add new platforms with: tlmgr platform add PLAT1 PLAT2...\n";
+    print "Remove platforms with:  tlmgr platform remove PLAT1 PLAT2...\n";
+    print "Set the active platform with: tlmgr platform set PLAT\n";
     return ($F_OK | $F_NOPOSTACTION);
 
   } elsif ($what =~ m/^add$/i) {
@@ -5066,7 +5112,8 @@ sub action_platform {
                 }
               }
             } else {
-              tlwarn("$prg: action platform add, cannot find package $pkg.$a\n");
+              tlwarn("$prg: action platform add: package $pkg does not exist",
+                     " for platform: $a\n");
               $ret |= $F_WARNING;
             }
           }
@@ -5721,6 +5768,7 @@ sub check_runfiles {
   $omit_pkgs .= '^0+texlive|^bin-|^collection-|^scheme-|^texlive-|^texworks';
   $omit_pkgs .= '|^pgf$';           # intentionally duplicated .lua
   $omit_pkgs .= '|^latex-.*-dev$';  # intentionally duplicated base latex
+  $omit_pkgs .= '|^l3(kernel|backend)-dev$';  # more base latex
   my @runtime_files = ();
   #
   foreach my $tlpn ($localtlpdb->list_packages) {
@@ -6677,7 +6725,7 @@ sub action_shell {
   # keys which can be set/get and are also settable via global cmdline opts
   my @valid_bool_keys
     = qw/debug-translation machine-readable no-execute-actions
-         verify-repo json/;  
+         verify-repo/;  
   my @valid_string_keys = qw/repository prompt/;
   my @valid_keys = (@valid_bool_keys, @valid_string_keys);
   # set auto flush unconditionally in action shell
@@ -6927,6 +6975,151 @@ sub action_shell {
       print "ERROR unknown command $cmd\n";
     }
   }
+}
+
+
+#  BUG
+# bug-reporting info, possibly interactive
+# 
+sub action_bug {
+  sub prompt_it {
+    my ($q, $required, $default) = @_;
+    print "$q ";
+    my $ans = <STDIN>;
+    if (!defined($ans)) {
+      if ($required) {
+        return $F_ERROR, "";
+      } else {
+        return $F_OK, $default;
+      }
+    }
+    chomp($ans);
+    return $F_OK, $ans;
+  }
+  my ($ans) = @ARGV;
+  init_local_db();
+  if (!$ans) {
+    my $ok;
+    ($ok, $ans) = prompt_it("Package or file to report a bug against:", 1);
+    if ($ok == $F_ERROR) {
+      print "Bailing out!\n";
+      return $F_ERROR;
+    }
+  }
+  # first search for packages that match $ans, and if not search for files
+  my $tlp = $localtlpdb->get_package($ans);
+  if ($tlp) {
+    return issue_bug_info_for_package($tlp);
+  }
+  # we are still here, so search for a file that matches
+  my $fndptr = _search_tlpdb($localtlpdb, $ans,
+    1, # search files,
+    1, # search descriptions
+    1  # don't search within words
+  );
+  my @deschit;
+  for my $pkg (sort keys %$fndptr) {
+    if ($fndptr->{$pkg}{'desc'}) {
+      push @deschit, [$pkg, "$pkg (" . $fndptr->{$pkg}{'desc'} . ")\n"] ;
+      # delete files if we found it already via description (which
+      # includes package name) since we don't want to show the same
+      # package twice times, and the files hit will be mostly based on the
+      # directory name.
+      delete $fndptr->{$pkg}{'files'};
+    } elsif ($pkg eq "00texlive.image") { # never a good match
+        delete $fndptr->{$pkg}{'files'};
+    }
+  }
+  my @filehit;
+  for my $pkg (sort keys %$fndptr) {
+    if ($fndptr->{$pkg}{'files'}) {
+      push @filehit, [$pkg, "$pkg\n\t"
+                      . join("\n\t", sort keys %{$fndptr->{$pkg}{'files'}})
+                      . "\n"];
+    }
+  }
+  my $nr_total_hit = $#deschit + 1 + $#filehit + 1;
+  my $pkg;
+  if ($nr_total_hit > 1) {
+    my $n = 1;
+    my $ndigits = $#deschit < 10 ? "1" : "2";
+    if ($#deschit >= 0) {
+      print "\nPackage matches (alphabetical):\n";
+      for my $i (0..$#deschit) {
+        printf "%" . $ndigits . "d %s", $n, $deschit[$i][1];
+        $n++;
+      }
+    }
+    if ($#filehit >= 0) {
+      print "\nFile matches (alphabetical by package):\n";
+      $ndigits = $n + $#filehit < 10 ? "1" : "2";
+      for my $i (0..$#filehit) {
+        printf "%" . $ndigits . "d %s", $n, $filehit[$i][1];
+        $n++;
+      }
+    }
+    print "\nSelect a package: ";
+    my $pkgidx = <STDIN>;
+    $pkgidx = "" if ! defined ($pkgidx); # if they hit eof
+    chomp($pkgidx);
+    if ($pkgidx !~ /^\d+$/) {
+      print "$prg: Not a positive integer, exiting: $pkgidx\n";
+      return $F_ERROR;
+    }
+    $pkgidx = int($pkgidx);
+    if (!defined($pkgidx) or $pkgidx < 1 or $pkgidx > $nr_total_hit) {
+      print "$prg: number out of range, exiting: $pkgidx\n";
+      return $F_ERROR;
+    }
+    # print "#deschit = $#deschit, #filehit = $#filehit, pkgidx = $pkgidx\n";
+    if ($pkgidx <= $#deschit + 1) {
+      $pkg = $deschit[$pkgidx - 1][0];
+    } else {
+      $pkg = $filehit[$pkgidx - 1 - $#deschit - 1][0];
+    }
+  } elsif ($nr_total_hit == 1) {
+    if ($#deschit == 0) {
+      $pkg = $deschit[0][0];
+    } else {
+      $pkg = $filehit[0][0];
+    }
+  } else {
+    print "$prg: Nothing found for: $ans\n";
+    return $F_OK;
+  }
+  $tlp = $localtlpdb->get_package($pkg);
+  return issue_bug_info_for_package($tlp);
+}
+
+sub issue_bug_info_for_package {
+  my $tlp = shift;
+  print "Package:        ", $tlp->name, "\n";
+  if (defined($tlp->cataloguedata->{'ctan'})) {
+    print "CTAN page:      https://ctan.org/pkg/" . $tlp->name . "\n";
+    print "CTAN directory: https://mirror.ctan.org"
+          . $tlp->cataloguedata->{'ctan'} . "\n";
+  }
+  my $output = '';
+  if (defined($tlp->cataloguedata->{'contact-bugs'})) {
+    $output .= "Bug contact:    " . $tlp->cataloguedata->{'contact-bugs'}
+               . "\n";
+  }
+  my $other_output = '';
+  for my $k (keys %{$tlp->cataloguedata}) {
+    if ($k =~ m/^contact-/) {
+      next if ($k eq 'contact-bugs');
+      $other_output .= "$k: " . $tlp->cataloguedata->{$k} . "\n";
+    }
+  }
+  if ($other_output) {
+    $output .= "\nOther contact points:\n$other_output\n";
+  }
+  if ($output) {
+    print $output;
+  } else {
+    print "No other information was found.\n";
+  }
+  return $F_OK;
 }
 
 
@@ -7469,12 +7662,17 @@ FROZEN_MSG
   # save remote database if it is a net location
   # make sure that the writeout of the tlpdb is done in UNIX mode
   # since otherwise the checksum will change.
+  # For the main tlnet and tlcontrib, both of which are distributed
+  # via mirror.ctan, we make sure that we have only one hashed version
+  # of the tlpdb saved locally.
   if (!$local_copy_tlpdb_used && $location =~ m;^(https?|ftp)://;) {
     my $loc_digest = TeXLive::TLCrypto::tl_short_digest($location);
     my $loc_copy_of_remote_tlpdb =
       ($is_main ? 
         "$Master/$InfraLocation/texlive.tlpdb.main.$loc_digest" :
-        "$Master/$InfraLocation/texlive.tlpdb.$loc_digest");
+        ($location =~ m;texlive/tlcontrib/?$; ?
+          "$Master/$InfraLocation/texlive.tlpdb.tlcontrib.$loc_digest" :
+          "$Master/$InfraLocation/texlive.tlpdb.$loc_digest"));
     my $tlfh;
     if (!open($tlfh, ">:unix", $loc_copy_of_remote_tlpdb)) {
       # that should be only a debug statement, since a user without
@@ -7489,6 +7687,13 @@ FROZEN_MSG
       # are used $Master/$InfraLocation/texlive.tlpdb.main.$loc_digest
       if ($is_main) {
         for my $fn (<"$Master/$InfraLocation/texlive.tlpdb.main.*">) {
+          next if ($fn eq $loc_copy_of_remote_tlpdb);
+          unlink($fn);
+        }
+      }
+      # Do the same for tlcontrib, which is also distributed via mirror.
+      if ($location =~ m;texlive/tlcontrib/?$;) {
+        for my $fn (<"$Master/$InfraLocation/texlive.tlpdb.tlcontrib.*">) {
           next if ($fn eq $loc_copy_of_remote_tlpdb);
           unlink($fn);
         }
@@ -7971,6 +8176,11 @@ repository (typically useful when updating from CTAN).
 Display detailed information about a package I<what>, such as the installation
 status and description, of searches for I<what> in all packages.
 
+=item C<tlmgr bug> I<what>
+
+Display available bug-reporting information for I<what>, a package or
+file name.
+
 =back
 
 For all the capabilities and details of C<tlmgr>, please read the
@@ -8266,6 +8476,16 @@ performed are written to the terminal.
 
 =back
 
+=head2 bug [I<search-string>]
+
+Searches for I<search-string> (prompted for, if not given) as a package
+name and in package descriptions, as complete words, and in filenames,
+as any substring, and outputs bug-reporting and other information for
+the package selected from the results.
+
+The search is equivalent to C<tlmgr search --word --file> I<search-string>.
+Thus, I<search-string> is interpreted as a (Perl) regular expression.
+
 =head2 candidates I<pkg>
 
 Shows the available candidate repositories for package I<pkg>.
@@ -8413,7 +8633,7 @@ Dump the remote TLPDB.
 =item B<--json>
 
 Instead of dumping the actual content, the database is dumped as
-JSON. For the format of JSON output see C<tlpkg/doc/JSON-formats.txt>,
+JSON. For the format of JSON output see C<tlpkg/doc/json-formats.txt>,
 format definition C<TLPDB>.
 
 =back
@@ -8637,11 +8857,11 @@ page for new packages: L<https://ctan.org/upload>.
 
 =item B<--json>
 
-In case C<--json> is specified, the output is a JSON encoded array where
-each array element is the JSON representation of a single C<TLPOBJ> but
-with additional information. For details see
-C<tlpkg/doc/JSON-formats.txt>, format definition: C<TLPOBJINFO>. If both
-C<--json> and C<--data> are given, C<--json> takes precedence.
+If C<--json> is specified, the output is a JSON encoded array where each
+array element is the JSON representation of a single C<TLPOBJ> but with
+additional information. For details see C<tlpkg/doc/json-formats.txt>,
+format definition: C<TLPOBJINFO>. If both C<--json> and C<--data> are
+given, C<--json> takes precedence.
 
 =back
 
@@ -8776,7 +8996,7 @@ synonym).
 Both C<show...> forms take an option C<--json>, which dumps the option
 information in JSON format.  In this case, both forms dump the same
 data. For the format of the JSON output see
-C<tlpkg/doc/JSON-formats.txt>, format definition C<TLOPTION>.
+C<tlpkg/doc/json-formats.txt>, format definition C<TLOPTION>.
 
 In the third form, with I<key>, if I<value> is not given, the setting
 for I<key> is displayed.  If I<value> is present, I<key> is set to
@@ -8892,7 +9112,7 @@ sizes for that program.  The first size shown is the default.
 
 If C<--json> is specified without other options, the paper setup is
 dumped in JSON format. For the format of JSON output see
-C<tlpkg/doc/JSON-formats.txt>, format definition C<TLPAPER>.
+C<tlpkg/doc/json-formats.txt>, format definition C<TLPAPER>.
 
 Incidentally, this syntax of having a specific program name before the
 C<paper> keyword is unusual.  It is inherited from the longstanding
@@ -9230,10 +9450,11 @@ Don't ask questions.
 
 =item B<--json>
 
-When listing backups, the option C<--json> turn on JSON output.
-The format is an array of JSON objects (C<name>, C<rev>, C<date>).
-For details see C<tlpkg/doc/JSON-formats.txt>, format definition: C<TLBACKUPS>.
-If both C<--json> and C<--data> are given, C<--json> takes precedence.
+When listing backups, the option C<--json> writes JSON output. The
+format is an array of JSON objects (C<name>, C<rev>, C<date>). For
+details see C<tlpkg/doc/json-formats.txt>, format definition:
+C<TLBACKUPS>. If both C<--json> and C<--data> are given, C<--json> takes
+precedence.
 
 =back
 
@@ -9276,6 +9497,12 @@ Restrict the search of package names and descriptions (but not
 filenames) to match only full words.  For example, searching for
 C<table> with this option will not output packages containing the word
 C<tables> (unless they also contain the word C<table> on its own).
+
+=item B<--json>
+
+Output search results as a JSON hash with two keys: B<files> and
+B<packages>. For the format of the JSON output see
+C<tlpkg/doc/json-formats.txt>, format definition C<TLSEARCH>.
 
 =back
 
@@ -10364,7 +10591,7 @@ This script and its documentation were written for the TeX Live
 distribution (L<https://tug.org/texlive>) and both are licensed under the
 GNU General Public License Version 2 or later.
 
-$Id: tlmgr.pl 69653 2024-01-31 21:52:46Z karl $
+$Id: tlmgr.pl 71331 2024-05-24 07:30:36Z preining $
 =cut
 
 # test HTML version: pod2html --cachedir=/tmp tlmgr.pl >/tmp/tlmgr.html

@@ -1,6 +1,16 @@
-\setKVdefault[ClesConversion]{Longueur,Aire=false,Vol=false,Masses=false,Capas=false,Sans=false,Complete=40pt}%
+%%%
+% Conversion
+%%%
+\def\filedateConversion{2024/08/04}%
+\def\fileversionConversion{0.1}%
+\message{-- \filedateConversion\space v\fileversionConversion}%
+
+\setKVdefault[ClesConversion]{Longueur,Aire=false,Vol=false,Masses=false,Capas=false,Sans=false,Completes=false}%
+\defKV[ClesConversion]{Complete=\setKV[ClesConversion]{Completes}}%
 \defKV[ClesConversion]{Masse=\setKV[ClesConversion]{Longueur=false}\setKV[ClesConversion]{Masses}}%
 \defKV[ClesConversion]{Capa=\setKV[ClesConversion]{Longueur=false}\setKV[ClesConversion]{Capas}}%
+
+\newlength{\PfCConversionLongueur}%
 
 \NewDocumentCommand\ChoixUniteD{m}{%
   \IfStrEqCase{#1}{%
@@ -41,21 +51,21 @@
 \NewDocumentCommand\Convertir{somm}{%
   \useKVdefault[ClesConversion]%
   \setKV[ClesConversion]{#2}%
-  \StrBefore{#3}{>}[\PrefixeDepart]
-  \StrBehind{#3}{>}[\PrefixeArrivee]
+  \StrBefore{#3}{>}[\PrefixeDepart]%
+  \StrBehind{#3}{>}[\PrefixeArrivee]%
   \ChoixUniteD{\PrefixeDepart}%
   \ChoixUniteA{\PrefixeArrivee}%
   \ifboolKV[ClesConversion]{Aire}{%
     \DeclareSIUnit{\TempoAvant}{\square}%
     \DeclareSIUnit{\TempoBase}{\meter}
-    \xdef\PfCConvExposant{2}
+    \xdef\PfCConvExposant{2}%
   }{\ifboolKV[ClesConversion]{Vol}{%
       \DeclareSIUnit{\TempoAvant}{\cubic}%
       \DeclareSIUnit{\TempoBase}{\meter}
-      \xdef\PfCConvExposant{3}
+      \xdef\PfCConvExposant{3}%
     }{%
       \DeclareSIUnit{\TempoAvant}{}%
-      \xdef\PfCConvExposant{1}
+      \xdef\PfCConvExposant{1}%
     }%
   }%
   \ifboolKV[ClesConversion]{Masses}{%
@@ -67,14 +77,14 @@
   \ifboolKV[ClesConversion]{Capas}{%
     \DeclareSIUnit{\TempoBase}{\liter}%
   }{}%
-  \ensuremath{
+  \ensuremath{%
     \IfBooleanTF{#1}{%
       \IfStrEq{\PrefixeDepart}{t}{\DeclareSIUnit{\TempoBase}{\relax}}{}\IfStrEq{\PrefixeDepart}{q}{\DeclareSIUnit{\TempoBase}{\relax}}{}
       \SI{#4}{\TempoAvant\TempoPrefixeD\TempoBase}
       \IfStrEq{\PrefixeDepart}{t}{\DeclareSIUnit{\TempoBase}{\gram}}{}\IfStrEq{\PrefixeDepart}{q}{\DeclareSIUnit{\TempoBase}{\gram}}{}
       =
       \IfStrEq{\PrefixeArrivee}{t}{\DeclareSIUnit{\TempoBase}{\relax}}{}\IfStrEq{\PrefixeArrivee}{q}{\DeclareSIUnit{\TempoBase}{\relax}}{}
-      \PointsSuspension{\fpeval{#4*(10**((\ExposantD-(\ExposantA))*\PfCConvExposant))}\fpeval{#4*(10**((\ExposantD-(\ExposantA))*\PfCConvExposant))}}~\si{\TempoAvant\TempoPrefixeA\TempoBase}
+      \ifboolKV[ClesConversion]{Completes}{\setlength{\PfCConversionLongueur}{\useKV[ClesConversion]{Complete}}\pointilles[\PfCConversionLongueur]}{\PointsSuspension{\fpeval{#4*(10**((\ExposantD-(\ExposantA))*\PfCConvExposant))}\fpeval{#4*(10**((\ExposantD-(\ExposantA))*\PfCConvExposant))}}}~\si{\TempoAvant\TempoPrefixeA\TempoBase}
       \IfStrEq{\PrefixeArrivee}{t}{\DeclareSIUnit{\TempoBase}{\gram}}{}\IfStrEq{\PrefixeArrivee}{q}{\DeclareSIUnit{\TempoBase}{\gram}}{}
     }{%
       \ifboolKV[ClesConversion]{Sans}{%

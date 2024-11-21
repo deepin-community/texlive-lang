@@ -1,4 +1,11 @@
-\setKVdefault[CalculsFractions]{Couleurs=false,Negatif=false}%
+%%%
+% Calculs fractions
+%
+\def\filedateCalculsFractions{2024/08/04}%
+\def\fileversionCalculsFractions{0.1}%
+\message{-- \filedateCalculsFractions\space v\fileversionCalculsFractions}%
+%
+\setKVdefault[CalculsFractions]{Couleurs=false,Negatif=false,Seul=false}%
 \defKV[CalculsFractions]{Couleur=\setKV[CalculsFractions]{Couleurs}\setKV[ClesSimplification]{Couleur=#1}}%
 
 \NewDocumentCommand\tofrac{m}{%
@@ -50,7 +57,7 @@
     \xdef\PfCNumD{1}%
   }{%
     \StrCut{#5}{/}\PfCNumC\PfCNumD%
-  }
+  }%
   \xdef\PfCAddFoo{\PfCNumA/\PfCNumB,\PfCNumC/\PfCNumD}%
   \setsepchar[*]{,*/}\ignoreemptyitems%
   \readlist*\ListeFractions{\PfCAddFoo}%
@@ -69,6 +76,7 @@
   \xdef\PfCAddDenoSimp{\fpeval{\PfCAddDenoFin/\PfCAddPgcd}}%
   \xdef\PfCAddSumSimp{\PfCAddNumSimp/\PfCAddDenoSimp}%
   \IfValueT{#6}{\xdef#6{\PfCAddSumSimp}}%
+  \ifboolKV[CalculsFractions]{Seul}{}{%
   % Partie affichage
   \ensuremath{%
     \IfValueTF{#3}{%
@@ -103,6 +111,7 @@
     }{\tofrac{#4}\PfCFractionOp\tofrac{#5}
     }%
   }%
+  }%
 }%
 
 \NewDocumentCommand\SousFraction{oommo}{%
@@ -127,17 +136,18 @@
   \xdef\PfCMulFoo{\PfCNumA/\PfCNumB,\PfCNumC/\PfCNumD}%
   \setsepchar[*]{,*/}\ignoreemptyitems%
   \readlist*\ListeFractions{\PfCMulFoo}%
-  \reademptyitems
+  \reademptyitems%
   \setsepchar{,}%
   % Calculs
-  \xdef\PfCMulNumFin{\fpeval{(\ListeFractions[1,1])*(\ListeFractions[2,1])}}
-  \xdef\PfCMulDenoFin{\fpeval{\ListeFractions[1,2]*\ListeFractions[2,2]}}
+  \xdef\PfCMulNumFin{\fpeval{(\ListeFractions[1,1])*(\ListeFractions[2,1])}}%
+  \xdef\PfCMulDenoFin{\fpeval{\ListeFractions[1,2]*\ListeFractions[2,2]}}%
   \PGCD{\fpeval{abs(\PfCMulNumFin)}}{\fpeval{abs(\PfCMulDenoFin)}}\xdef\PfCMulPgcd{\pgcd}%
   \xdef\PfCMulNumSimp{\fpeval{\PfCMulNumFin/\PfCMulPgcd}}%
   \xdef\PfCMulDenoSimp{\fpeval{\PfCMulDenoFin/\PfCMulPgcd}}%
   \xdef\PfCMulPdtSimp{\PfCMulNumSimp/\PfCMulDenoSimp}%
   \IfValueT{#5}{\xdef#5{\PfCMulPdtSimp}}%
-  \ensuremath{%
+  \ifboolKV[CalculsFractions]{Seul}{}{%
+    \ensuremath{%
     \IfValueTF{#2}{%
       \ifnum#2=3\relax
         \ifboolKV[CalculsFractions]{Negatif}{%
@@ -154,7 +164,8 @@
       \fi
       \fi
     }{\tofrac{#3}\times\tofrac{#4}
-    }
+    }%
+  }%
   }%
 }%
 
@@ -186,6 +197,7 @@
   \xdef\PfCDivDenoSimp{\fpeval{\PfCDivDenoFin/\PfCDivPgcd}}%
   \xdef\PfCDivPdtSimp{\PfCDivNumSimp/\PfCDivDenoSimp}%
   \IfValueT{#5}{\xdef#5{\PfCDivPdtSimp}}%
+  \ifboolKV[CalculsFractions]{Seul}{}{%
   \ensuremath{%
     \IfValueTF{#2}{%
       \ifnum#2=4\relax
@@ -206,5 +218,6 @@
       \fi
     }{\tofrac{#3}\div\tofrac{#4}
     }
+  }%
   }%
 }%

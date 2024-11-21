@@ -1,0 +1,153 @@
+% Chapter 4 from Asymptote tutorial Jim Hefferon
+\def\asydir{chapter4/asy}
+\chapter{3D}
+
+A strength of \Asy{} is its ability in three dimensions.
+It can easily draw what you want to draw.
+That includes 
+% that it extends  to three dimensions constructs for good-looking paths
+% that come from two-dimensional \MF{} and \MP.
+doing projections, which can be tricky to get right by eye.
+
+In addition, you can choose to make these graphics manipulable, so that you can 
+use your mouse to turn them around or peek under them, and in 
+general have an explore.
+This is great for a Calculus lecture so it is what I'm showing here.
+(Note that only some PDF viewers let you manipulate.
+For instance, Adobe's Reader works but the ones embedded in web
+browsers do not.
+To test your reader just click on the graphic below.
+You may be asked to let the reader 
+run the code that does the manipulation.)
+
+We start with a picture showing the displacement vector $(2,1,1)$ at a 
+number of initial points.
+% \begin{center}
+%   \asyinclude{chapter4/asy/vectors}
+% \end{center}
+\begin{center}
+  \input chapter4/asy/vectors.tex
+\end{center}  
+
+The input code shows two new things.
+First, to scatter the vectors about,
+in lines 34--36 they get a randomly-chosen initial point.
+The randomization uses the seed from line~24.
+To find that number I uncommented lines 21--23 and commented out line~24,
+compiled the \path{.asy} file a couple of times 
+until I got a scatter that I liked, and then I froze the seed.
+With that, the loop in
+lines~33--44 creates a randomly placed vector and
+draws it if the entire vector will show, 
+until there are such eight vectors. 
+\begin{center}
+  \inputminted{Asymptote}{chapter4/asy/vectors.asy}
+\end{center}
+However, the really new stuff is the 3D stuff.
+It is surprisingly like the 2D constructs that we have seen.
+Line~10's 
+\mintinline{Asymptote}{import graph3} gives access to 
+\Asy's 3D routines, and extends them to axes and graph plotting.
+Some things are new, such as that instead of 
+\mintinline{Asymptote}{pair}'s
+you want
+\mintinline{Asymptote}{triple}'s, 
+and instead of 
+\mintinline{Asymptote}{xaxis(..)}
+you say 
+\mintinline{Asymptote}{xaxis3(..)}.
+But much of it is at least similar.
+(Lines~11 and~12 give the projection,
+essentially setting the location of the camera
+that is taking this picture.
+Even if we use a reader that allows us to manipulate the image,
+we still need a starting view.)
+
+We next see something 
+genuinely different from a 2D context, surfaces.
+This graphic illustrates that the angle between two 
+intersecting planes is the same as the angle between their normal
+vectors. 
+% \begin{center}
+%   \asyinclude{chapter4/asy/planes.asy}
+% \end{center}
+\begin{center}
+  \vcenteredhbox{\input chapter4/asy/planes.tex }%
+\end{center}  
+\begin{center}
+  \inputminted{Asymptote}{chapter4/asy/planes.asy}
+\end{center}
+
+This code 
+spotlights the power of transforms.
+We don't have to give the equations of the planes or specify their normals.
+Instead, in line~17 we define the edge of 
+the horizontal plane region and then in line~18 we create that
+as a surface. 
+To get the other plane, the one at an angle, 
+we make a transform \mintinline{Asymptote}{p_t} in line~19 
+that basically rotates by \mintinline{Asymptote}{rotation_degs}
+about the $x$~axis.
+The new plane with its edge and its normal vector 
+then comes from applying that transform
+to the horizontal plane, its edge, and its normal.
+
+In lines~24 and~26 we use 
+\mintinline{Asymptote}{figure_material} to give the surfaces color.
+We will reuse this later so the definition is in \path{jh.sty};
+see lines~26--32 in the Appendix.
+This involves \mintinline{Asymptote}{opacity(..)} and 
+note that you can indeed see through the planes. 
+
+Finally, in lines~40--46 we take advantage of one of \Asy's many helper functions
+to find and draw the arc of the angle between the planes and the normals.
+ 
+Our last graphic is from the Calculus~I lecture on the volume of
+a surface of revolution, specifically using slices that are
+washers.
+We start with the $xy$~plane area between $y=x^2$ and $y=x$,
+here defined as line~33's \mintinline{Asymptote}{pth}.
+\begin{center}
+  \inputminted{Asymptote}{chapter4/asy/washer.asy}
+\end{center}
+In line~39 \Asy{} rotates that area about the $y$~axis, giving the 3D figure.
+% \begin{center}
+%   \asyinclude{chapter4/asy/washer.asy}
+% \end{center}
+\begin{center}
+  \vcenteredhbox{\input chapter4/asy/washer.tex }%
+\end{center}  
+
+
+
+
+
+\section{Include the graphic in a \LaTeX{} file}
+To illustrate including 3D output in your document we use
+\path{asy/vectors.asy}.
+Create the \LaTeX{} file \path{main_3d.tex}. 
+\begin{center}
+  \inputminted{TeX}{chapter4/main_3d.tex}
+\end{center} 
+Run \LaTeX{}. 
+\begin{minted}{Bash}
+jim@millstone:~/Documents/asy_tut/src/chapter4$ pdflatex main_3d
+\end{minted}
+(As outlined in the document,
+another option that many people prefer
+is to instead use \mintinline{TeX}{\asyinclude{..}}.
+For that you first run \LaTeX{}, then go to the \path{asy/} subdirectory and
+run \mintinline{Bash}{asy -inlineimage main_3d-1} and then return
+to the starting to directory to run \LaTeX{} on the above document a
+second time.)
+Here is a shot of the output.
+\begin{center}
+  \framebox{\includegraphics[page=1,scale=0.325,trim=0.25in 5in 0.25in 0.25in]{chapter4/main_3d.pdf}}
+\end{center}
+In that output PDF, 
+you should be able to click on the poster graphic to bring up
+the manipulable graphic,
+if your reader supports that. 
+
+
+

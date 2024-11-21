@@ -1,6 +1,10 @@
 %%%
 % Statistiques
 %%%
+\def\filedateStat{2024/08/04}%
+\def\fileversionStat{0.1}%
+\message{-- \filedateStat\space v\fileversionStat}%
+%
 \newcommand\NbDonnees{}%
 \newcommand\SommeDonnees{}%
 \newcommand\EffectifTotal{}%
@@ -18,9 +22,9 @@ Tableau=false,Stretch=1,Frequence=false,EffectifTotal=false,%
 Etendue=false,Moyenne=false,SET=false,ValeurExacte=false,MoyenneA,Somme,Mediane=false,DetailsMediane=false,UneMediane=false,QuartileUn=false,QuartileTrois=false,Total=false,Concret=false,%
 Largeur=1cm,Precision=2,PrecisionF=0,Donnee=Valeurs,Effectif=Effectif,Grille=false,Origine=0,Angle=false,SemiAngle=false,Qualitatif=false,Classes=false,TableauVide=false,ECC=false,Coupure=10,CouleurTab=gray!15,Graphique=false,Batons=true,Centre=false,CentreVide=false,Crochets=false,%
 % Pour les diags batons
-EpaisseurBatons=1,ListeCouleursB={a},Lecture=false,LectureFine=false,AideLecture=false,Reponses=false,DonneesSup=false,AbscisseRotation=false,Tiret=false,AngleRotationAbscisse=0,Pasx=1,Pasy=1,Unitex=0.5,Unitey=0.5,Depart=0,CouleurDefaut=black,Date=false,GrandNombrey=false,GrandNombrex=false,PasGrillex=1,PasGrilley=1,%
+EpaisseurBatons=1,ListeCouleursB={a},Lecture=false,LectureFine=false,AideLecture=false,Reponses=false,DonneesSup=false,AbscisseRotation=false,Tiret=false,Pasx=1,Pasy=1,Unitex=0.5,Unitey=0.5,Depart=0,CouleurDefaut=black,Date=false,GrandNombrey=false,GrandNombrex=false,PasGrillex=1,PasGrilley=1,%
 % Pour les diags circulaires
-Rayon=3cm,AffichageAngle=false,AffichageDonnee=false,ListeCouleurs={white},Hachures=false,ListeHachures={60},LectureInverse=false,EcartHachures=0.25,EpaisseurHachures=1,Legende,LegendeVide=false,ACompleter=false,DebutAngle=0,%
+Rayon=3cm,AffichageAngle=false,AffichageDonnee=false,ListeCouleurs={white},Hachures=false,ListeHachures={60},LectureInverse=false,EcartHachures=0.25,EpaisseurHachures=1,Legende,LegendeVide=false,ACompleter=false,DebutAngle=0,%on utilisera également la clé CouleurDefaut
 %Pour les représentations
 Representation=false,%
 %Pour les barres horizontales
@@ -466,7 +470,6 @@ ModeleCouleur=5%
   unitex:=\useKV[ClesStat]{Unitex}*cm;
   unitey:=\useKV[ClesStat]{Unitey}*cm;
   xpartorigine:=\useKV[ClesStat]{Origine};
-  AngleRotation=\useKV[ClesStat]{AngleRotationAbscisse};
   boolean Rotation,Lecture,LectureFine,AideLecture,DonneesSup,Reponses,Qualitatif,Tiret,LegendeVide,Retour,GrandNombrex,GrandNombrey,Date,Grille;
   GrandNombrex=\useKV[ClesStat]{GrandNombrex};
   GrandNombrey=\useKV[ClesStat]{GrandNombrey};
@@ -478,6 +481,11 @@ ModeleCouleur=5%
   fi;
   Date:=\useKV[ClesStat]{Date};
   Rotation=\useKV[ClesStat]{AbscisseRotation};
+  if Rotation:
+  AngleRotation=\useKV[ClesStat]{AngleRotationAbscisse};
+  else:
+  AngleRotation=0;
+  fi;
   Lecture:=\useKV[ClesStat]{Lecture};
   LectureFine:=\useKV[ClesStat]{LectureFine};
   AideLecture:=\useKV[ClesStat]{AideLecture};
@@ -515,7 +523,7 @@ ModeleCouleur=5%
   fi;
   endfor;
   if DonneesSup:
-  maxAxey:=floor(maxy/10)*10+4*PasGrilley;
+  maxAxey:=maxy;%floor(maxy/10)*10+4*PasGrilley;
   else:
   maxAxey:=maxy;
   fi;
@@ -586,13 +594,21 @@ ModeleCouleur=5%
     if Date:
     label.bot(TEX(decimal(xpart(p_))) rotated AngleRotation,A[l]);
     else:
+    if GrandNombrex:
+    label.bot(TEX("\num{\fpeval{\useKV[ClesStat]{GrandNombreA}*"&decimal(xpart(p_))&"}}") rotated AngleRotation,A[l]);
+    else:
     label.bot(TEX("\num{"&decimal(xpart(p_))&"}") rotated AngleRotation,A[l]);
+    fi;
     fi;
     else :
     if Date:
     label.bot(TEX(decimal(xpart(p_))),A[l]);
     else:
+    if GrandNombrex:
+
+    else:
     label.bot(TEX("\num{"&decimal(xpart(p_))&"}"),A[l]);
+    fi;
     fi;
     fi;
     if Reponses:
@@ -657,11 +673,12 @@ ModeleCouleur=5%
     if Qualitatif: tutu(#1); else: toto(#1); fi;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if Grille:
+    %%%%%%%%%%%%%%%% -< Ici
     drawoptions(withcolor 0.75white);
     for k=0 step PasGrillex until ((maxx+1)):
-    trace (k*unitex,0)--(k*unitex,unitey*((floor(maxAxey/Pasy)+1)*Pasy));
+    trace (k*unitex,0)--(k*unitex,unitey*((ceiling(maxAxey/Pasy)+1)*Pasy));
     endfor;
-    for k=0 step PasGrilley until (floor(maxAxey/Pasy)+1)*Pasy:%((maxy+2*Pasy)):
+    for k=0 step PasGrilley until (ceiling(maxAxey/Pasy)+1)*Pasy:%((maxy+2*Pasy)):
     trace (0,k*unitey)--(unitex*(maxx+1),k*unitey);
     endfor;
     drawoptions();
@@ -711,9 +728,9 @@ ModeleCouleur=5%
     endfor;
     fi;
     drawarrow (0,0)--unitex*(maxx+1,0);
-    drawarrow (0,0)--unitey*(0,(floor(maxAxey/Pasy)+1)*Pasy);
+    drawarrow (0,0)--unitey*(0,(ceiling(maxAxey/Pasy)+1)*Pasy);
     label.lrt(TEX("\useKV[ClesStat]{Donnee}"),unitex*(maxx+1,0));
-    label.urt(TEX("\useKV[ClesStat]{Effectif}"),unitey*(0,(floor(maxAxey/Pasy)+1)*Pasy));
+    label.urt(TEX("\useKV[ClesStat]{Effectif}"),unitey*(0,(ceiling(maxAxey/Pasy)+1)*Pasy));
     if Qualitatif: titi(#1); else:tata(#1); fi;
   \end{mplibcode}
   \else
@@ -855,6 +872,8 @@ ModeleCouleur=5%
   Retour=false;
   ACompleter=\useKV[ClesStat]{ACompleter};
   DebutAngle=\useKV[ClesStat]{DebutAngle};
+  color CoulDefaut;
+  CoulDefaut=\useKV[ClesStat]{CouleurDefaut};
   % 
   pair A[],O,B[],C[],D[];
   O=(0,0);
@@ -964,7 +983,12 @@ ModeleCouleur=5%
     n:=0;
     for p_=#3:
     n:=n+1;
+    % Col[n]=p_;
+    if color p_:
     Col[n]=p_;
+    else:
+    Col[n]=CoulDefaut;
+    fi;
     endfor;
     % on r\'ecup\`ere les angles d'hachures
     numeric anglehach[];

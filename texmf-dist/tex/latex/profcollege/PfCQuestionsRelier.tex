@@ -1,8 +1,15 @@
 %%%
 % R\'eponses \`a relier
 %%%
+\def\filedateQRelier{2024/08/04}%
+\def\fileversionQRelier{0.1}%
+\message{-- \filedateQRelier\space v\fileversionQRelier}%
+%
 \setKVdefault[ClesRelie]{Solution=false,LargeurG=5cm,LargeurD=2cm,Stretch=1.5,Ecart=2cm,Couleur=black}%
 \defKV[ClesRelie]{Graine=\PfCGraineAlea{#1}}%
+
+\newcounter{NbRelie}%
+\newcounter{NbRelieD}
 
 \NewDocumentCommand\Relie{som}{%
   \useKVdefault[ClesRelie]%
@@ -33,7 +40,13 @@
         \itemtomacro\ListeRelie[##1,1]\untest%
         \ifx\bla\untest\bla%
         \else%
-          \tikz[remember picture,overlay]{\draw[PfCRelieCouleurTrace] (RelieG-##1) -- (RelieD-\ListeRelie[##1,3]);}%
+          \itemtomacro\ListeRelie[##1,3]\Foo
+          \setsepchar{-}\ignoreemptyitems%
+          \readlist*\ListeRelieReponses{\Foo}%
+          \reademptyitems
+          \foreachitem\compteur\in\ListeRelieReponses{%
+            \tikz[remember picture,overlay]{\draw[PfCRelieCouleurTrace] (RelieG-##1) -- (RelieD-\ListeRelieReponses[\compteurcnt]);}%
+            }
         \fi
       }%
     }{%
@@ -41,49 +54,39 @@
   }%
 }%
 
-\newcommand\Relieold[2][]{%
-  \useKVdefault[ClesRelie]%
-  \setKV[ClesRelie]{#1}%
-  \setsepchar[*]{,*/}\reademptyitems%
-  \readlist*\ListeRelie{#2}%
-  \ignoreemptyitems
-  \buildtabrelie%
-  \ifboolKV[ClesRelie]{Solution}{%
-    \colorlet{PfCRelieCouleurTrace}{\useKV[ClesRelie]{Couleur}}%
-    \xintFor* ##1 in {\xintSeq {1}{\ListeRelielen}}\do{%
-      \itemtomacro\ListeRelie[##1,1]\untest
-      \ifx\bla\untest\bla%
-      \else
-        \tikz[remember picture,overlay]{\draw[PfCRelieCouleurTrace] (RelieG-##1) -- (RelieD-\ListeRelie[##1,3]);}%
-      \fi
-    }%
-  }{%
-  }%
-}%
-
-\newcounter{NbRelie}%
-
 \def\buildtabrelie{%
   \setcounter{NbRelie}{0}%
+  \setcounter{NbRelieD}{0}%
   \renewcommand{\arraystretch}{\useKV[ClesRelie]{Stretch}}%
-  \begin{tabular}{p{\useKV[ClesRelie]{LargeurG}}cp{\useKV[ClesRelie]{Ecart}}>{\tikz[remember
-    picture]{\node[name=RelieD-\theNbRelie,inner
-    sep=0pt]{};\fill[] (RelieD-\theNbRelie) circle[radius=1.5pt]}}cp{\useKV[ClesRelie]{LargeurD}}}%
-    \xintFor* ##1 in {\xintSeq {1}{\ListeRelielen}}\do{\ListeRelie[##1,1]\itemtomacro\ListeRelie[##1,1]\untest%
-\ifx\bla\untest\bla%                                     
+  \begin{tabular}{p{\useKV[ClesRelie]{LargeurG}}cp{\useKV[ClesRelie]{Ecart}}cp{\useKV[ClesRelie]{LargeurD}}}%
+    \xintFor* ##1 in {\xintSeq {1}{\ListeRelielen}}\do{%
+    \ListeRelie[##1,1]\itemtomacro\ListeRelie[##1,1]\untest%
+    \ifx\bla\untest\bla%                                     
     \uppercase{&}\stepcounter{NbRelie}%
       \else
       \uppercase{&}\stepcounter{NbRelie}\tikz[remember
                    picture,overlay]{\node[name=RelieG-\theNbRelie,inner
                    sep=0pt]{};\fill[]
                    (RelieG-\theNbRelie) circle[radius=1.5pt];}
-\fi&&&\ListeRelie[##1,2]\\}%
+                   \fi&&
+                         \itemtomacro\ListeRelie[##1,2]\untest
+                         \ifx\bla\untest\bla\else\stepcounter{NbRelieD}\tikz[remember
+                         picture]{\node[name=RelieD-\theNbRelieD,inner
+                         sep=0pt]{};\fill[] (RelieD-\theNbRelieD) circle[radius=1.5pt]}
+                         \fi
+    &\itemtomacro\ListeRelie[##1,2]\untest%
+                          \ifx\bla\untest\bla
+                          \else
+                          \ListeRelie[##1,2]
+                          \fi\\}%
   \end{tabular}%
-  \setcounter{NbRelie}{0}%
+  %\setcounter{NbRelie}{0}%
+  %\setcounter{NbRelieD}{0}%
 }%
 
 \def\buildtabrelieauto{%
   \setcounter{NbRelie}{0}%
+  \setcounter{NbRelieD}{0}%
   \xdef\PfCFooListeNbQ{1}%
   \xintFor* ##1 in{\xintSeq{2}{\ListeRelielen}}\do{%
     \xdef\PfCFooListeNbQ{\PfCFooListeNbQ,##1}%
@@ -111,3 +114,4 @@
   \end{tabular}%
   \setcounter{NbRelie}{0}%
 }%
+

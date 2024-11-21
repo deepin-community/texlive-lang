@@ -1,25 +1,32 @@
-\setKVdefault[ClesEra]{Premier=false,Nombre=1,CouleurP=Cornsilk!50,CouleurNP=Crimson!15,Colonnes=10,Lignes=10,Hauteur=24pt}
+%%%
+% Crible Eratostene
+%%%
+\def\filedateEratos{2024/08/04}%
+\def\fileversionEratos{0.1}%
+\message{-- \filedateEratos\space v\fileversionEratos}%
+%
+\setKVdefault[ClesEra]{Premier=false,Nombre=1,CouleurP=Cornsilk!50,CouleurNP=Crimson!15,Colonnes=10,Lignes=10,Hauteur=24pt}%
 
 \NewDocumentCommand\TestPremier{m}{%
   % #1 le nombre premier \`a tester
   \newcount\anp\newcount\bnp\newcount\cnp%
-  \anp=#1\relax
-  \bnp=2\relax
-  \premier=-1\relax
+  \anp=#1\relax%
+  \bnp=2\relax%
+  \premier=-1\relax%
   % Pour d\'eterminer le nombre d'\'etapes
   \whiledo{\anp > 1}{%
-    \modulo{\the\anp}{\the\bnp}
-    \ifnum\remainder=0\relax
-      \global\premier=\numexpr\premier+1\relax
-      \cnp=\numexpr\anp/\bnp\relax
-      \anp=\cnp\relax
+    \modulo{\the\anp}{\the\bnp}%
+    \ifnum\remainder=0\relax%
+      \global\premier=\numexpr\premier+1\relax%
+      \cnp=\numexpr\anp/\bnp\relax%
+      \anp=\cnp\relax%
     \else%
       \bnp=\numexpr\bnp+1\relax%
     \fi%
   }%
   \ifnum\premier=0%
   \setKV[ClesEra]{Premier=true}%
-  \else
+  \else%
   \setKV[ClesEra]{Premier=false}%
   \fi%
 }%

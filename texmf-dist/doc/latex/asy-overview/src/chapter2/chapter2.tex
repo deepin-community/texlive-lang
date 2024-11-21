@@ -1,0 +1,174 @@
+% Chapter 2 from Asymptote tutorial Jim Hefferon
+\chapter{Plots}
+We will draw this function.
+\begin{equation*}
+  f(x)=x+\frac{1}{x-1}
+\end{equation*}
+It goes infinite at $x=1$ so
+we can't ask \Asy{} to plot all $x$'s. 
+We will instead plot the $x$'s where the associated $y$'s 
+are between $-5$ and~$5$. 
+To find these
+we can use a computer algebra system such as \textit{Sage} to solve
+$5=x+1/(x-1)$ and $-5=x+1/(x-1)$.
+\begin{minted}{Python}
+sage: x = var('x')
+sage: solve( [5==x+(1/(x-1))], x )
+[x == -sqrt(3) + 3, x == sqrt(3) + 3]
+sage: solve( [-5==x+(1/(x-1))], x )
+[x == -2*sqrt(2) - 2, x == 2*sqrt(2) - 2]
+sage: round(-sqrt(3) + 3, ndigits=3)
+1.268
+sage: round(2*sqrt(2) - 2, ndigits=3)
+0.828
+\end{minted}
+That leads to this source file \path{asy/plot.asy}.
+\begin{center}
+  \inputminted{Asymptote}{chapter2/asy/plot.asy}
+\end{center}
+Here is the resulting plot.
+\begin{center}
+  \includegraphics{chapter2/asy/plot.pdf}
+\end{center}
+
+
+
+\section{Adjustments}
+As earlier, on seeing the draft graphic we make some tweaks, 
+which helps give a sense of some available options,
+leading to the 
+source \path{asy/plot_after.asy} below.
+
+The axes go through the two $0$'s
+and the vertical asymptote passes through the~$1$.
+We can change the \mintinline{Asymptote}{xaxis(..)}
+command to say \mintinline{Asymptote}{RightTicks(Step=1, OmitTick(0,1))},
+and similarly change \mintinline{Asymptote}{yaxis(..)}.
+
+Although we limited the output range to between $y=-5$ and~$5$, 
+the plot is still so tall that it is hard to fit on a page or slide.
+We make the $y$~unit height be half of the $x$ unit width by adding this command
+\begin{minted}{Asymptote}
+scale(Linear, Linear(0.5))
+\end{minted}
+(\mintinline{Asymptote}{Linear} is in contrast with a 
+\mintinline{Asymptote}{Logarithmic} scale).
+The axes and graph now come out rescaled but
+we must also adjust the location
+of points, the ones defining the vertical asymptote line, using for example 
+line~26's \mintinline{Asymptote}{Scale((1,ymin))}.
+
+That tweak of the $y$~axis causes its tick labels to be scrunched together,
+so we arrange that \Asy{} labels only every fifth tick
+(the labeled ones are called major ticks and the others are minor ticks). 
+\begin{minted}{Asymptote}
+  yaxis(ymin=ymin-0.4, ymax=ymax+0.4,
+      LeftTicks(Step=5, step=1, OmitTick(0), Size=3pt, size=2pt),
+      Arrows(TeXHead));
+\end{minted}
+That command also sets the length of these major and minor ticks.
+
+Here is \path{asy/plot_after.asy}. 
+An explanation of line~3 is in the next section.
+\begin{center}
+  \inputminted{Asymptote}{chapter2/asy/plot_after.asy}
+\end{center}
+Here is the output.
+\begin{center}
+  \includegraphics{chapter2/asy/plot_after.pdf}
+\end{center}
+
+
+
+\section{Defaults}
+Rather than copy and paste elements common across graphics 
+such as the font commands or colors,
+we can put them in a separate file and import them,
+as in the prior source's line~3.
+The source of that file, \path{jh.asy}, is in the Appendix.
+(About the
+\mintinline{Asymptote}{"../../../asy/"} 
+directory stuff:~usually we set up \Asy{} with a directory for common files
+and then just say \mintinline{Asymptote}{import jh}.
+But for this document we want that a user can compile without setup
+so the relative path is in the source.)
+
+
+
+\section{Ticks}
+With plot ticks you often want something other
+than the default.
+We won't cover all of the options but there are a couple of things we have
+not yet seen that are especially useful.
+
+On a trigonometric graph
+\begin{center}
+  \includegraphics{chapter2/asy/cos.pdf}
+\end{center}
+you don't want the $x$~axis to say $1$, $2$, etc.,
+you want $\pi/2$, $\pi$, etc.
+You also don't want ``$3.14$,'' you want ``$\pi$.''
+This illustrates explicit ticks, on lines 19 and~21.
+\begin{center}
+  \inputminted{Asymptote}{chapter2/asy/cos.asy}
+\end{center}
+Note line~25's \mintinline{Asymptote}{NW}, which prints
+the $3\pi/2$ northwest of its tick. 
+
+Our other tick example has a graph paper effect, 
+with lines  in a light color extending across the graph.
+(I sometimes use this for lectures; here, 
+to estimate by eye that at $y=2$ the slope of the tangent line 
+is~$2$.)
+\begin{center}
+  \includegraphics{chapter2/asy/exponential.pdf}
+\end{center}
+
+The source has a number of interesting features.
+\begin{center}
+  \inputminted{Asymptote}{chapter2/asy/exponential.asy}
+\end{center}
+The graph paper effect is due to the input in lines 26 through~46.
+The horizontal lines are a little clearer so we will cover them.
+They are created by the \mintinline{Asymptote}{yaxis(..)} commands
+in lines 39--46.
+These two vertical axes, one on the left and one on the right, 
+are drawn with a \mintinline{Asymptote}{nullpen} so we don't see 
+vertical black lines at \mintinline{Asymptote}{xmin-0.2}
+and \mintinline{Asymptote}{xmax+0.2}.
+What we do see are
+the ticks for those axes,
+extending back and forth between them in the color given by 
+\mintinline{Asymptote}{GRAPHPAPERPEN}, because of 
+the \mintinline{Asymptote}{extend=true}.
+These ticks have a null label because of the 
+\LaTeX{} comment character~\mintinline{Asymptote}{"%"}.
+The $y$~axis on the left produces the horizontal 
+graph paper marks between
+$x=\text{\mintinline{Asymptote}{xmin-0.2}}$ and
+$x=0$, while the one on the right generates the marks 
+from $x=0$ to $x=\text{\mintinline{Asymptote}{xmax+0.2}}$.
+(The $x=0$ comes from the $y$~axis in lines 52--54.)
+
+The commands from line~49 to the end produce the axes shown in black.
+% Note that \mintinline{Asymptote}{yaxis(..)} produces only one arrow.
+
+This is a long file but we will discuss a few fine points.
+One is that the $(\ln(2),2)$ label has a white background
+obscuring some of the graph paper lines, from the
+\mintinline{Asymptote}{Label("$(\ln(2),2)$",filltype=Fill(white))}
+command.
+Another is that the 300 in line~19's
+\mintinline{Asymptote}{f = graph(fcn, xmin, xmax, n=300)}
+is there because \Asy{} draws the graph by connecting dots that
+evaluate 
+\mintinline{Asymptote}{fcn}
+at a finite number of points, and the default was too small so that
+the graphic had visible jaggies.
+
+Finally, lines 18 and~19 as well as lines 27 and~28 make clear that
+essential to understanding \Asy{} is understanding the ideas of  
+\mintinline{Asymptote}{path}
+and
+\mintinline{Asymptote}{pen}.
+That's the next chapter.

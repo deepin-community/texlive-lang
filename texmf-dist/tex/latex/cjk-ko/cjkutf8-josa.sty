@@ -1,6 +1,6 @@
 % cjkutf8-josa.sty
 %
-% Copyright (c) 2016-2023 Dohyun Kim <nomos at ktug org>
+% Copyright (c) 2016-2024 Dohyun Kim <nomos at ktug org>
 %
 % This program is free software; you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -17,17 +17,16 @@
 % Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 % MA 02110-1301 USA
 
-\ProvidesPackage{cjkutf8-josa}[2023/05/31 v2.4 Automatic Josa selection for cjk-ko]
+\ProvidesPackage{cjkutf8-josa}[2024/03/01 v2.5 Automatic Josa selection for cjk-ko]
 
-\AtBeginDocument{
-  \ifx\use@josa\undefined\else
-    % redefine \@setref
-    \let\CJKKO@orig@setref\@setref
-    \def\@setref#1#2#3{\CJKKO@orig@setref{#1}{#2}{#3}%
-      \ifx#1\relax\else
-        \cjkko@prepare@josa@str{\expandafter#2#1}%
-      \fi }
-    % redefine \@cite@ofmt
+\ifx\use@josa\undefined\else
+  % redefine \@setref
+  \AddToHookWithArguments{cmd/@setref/after}{%
+    \ifx#1\relax\else
+      \cjkko@prepare@josa@str{\expandafter#2#1}%
+    \fi }
+  % redefine \@cite@ofmt
+  \AtBeginDocument{
     \let\CJKKO@orig@cite@ofmt\@cite@ofmt
     \def\@cite@ofmt#1{\CJKKO@orig@cite@ofmt{#1}%
       \bgroup
@@ -36,10 +35,10 @@
       \def\beamer@sort##1##2{}%
       \def\hyperlink##1##2{##2}% for beamer: not from kotexutf
       \cjkko@prepare@josa@str{#1}%
-      \egroup}
-    % partially support biblatex's \cite
-    \@ifpackageloaded{biblatex}{%
-      \renewrobustcmd*{\blx@imc@printfield}[2][]{%
+      \egroup}}
+  % partially support biblatex's \cite
+  \AddToHook{package/biblatex/after}{%
+    \renewrobustcmd*{\blx@imc@printfield}[2][]{%
       \blx@imc@iffieldundef{#2}
         {\blx@nounit}
         {\blx@getformat\blx@theformat{ffd}{#1}{#2}%
@@ -52,17 +51,17 @@
             \expandafter\expandafter
             \expandafter{\csname abx@field@#2\endcsname}%
                     \cjkko@prepare@josa@str{\csname abx@field@#2\endcsname}%
-            \blx@endunit}}}}{}
-  \fi
-  \@ifpackageloaded{hyperref}{\g@addto@macro\pdfstringdefPreHook{%
-      \let\jong\relax
-      \let\rieul\relax
-      \let\jung\relax
-      \def\^^ea{^^ea}%
-      \def\^^eb{^^eb}%
-      \def\^^ec{^^ec}%
-  }}{}
-}
+            \blx@endunit}}}}
+\fi
+
+\AddToHook{package/hyperref/after}{\g@addto@macro\pdfstringdefPreHook{%
+  \let\jong\relax
+  \let\rieul\relax
+  \let\jung\relax
+  \def\^^ea{^^ea}%
+  \def\^^eb{^^eb}%
+  \def\^^ec{^^ec}%
+}}
 
 % support hangul syllables (0xAC00..0xD7A3)
 \def\cjkko@josa@ea{\cjkko@josa@hangul@syllableS{"EA}}
@@ -99,9 +98,9 @@
 }
 
 %%% user commands: \jong \jung \rieul
-\protected\def\jong {\let\josa@str\empty\chardef\@josa\z@ }
-\protected\def\rieul{\let\josa@str\empty\chardef\@josa\@ne}
-\protected\def\jung {\let\josa@str\empty\chardef\@josa\tw@}
+\protected\def\jong {\global\let\josa@str\empty\global\chardef\@josa\z@ }
+\protected\def\rieul{\global\let\josa@str\empty\global\chardef\@josa\@ne}
+\protected\def\jung {\global\let\josa@str\empty\global\chardef\@josa\tw@}
 \jung
 
 \def\cjkko@josa@str@end{cjkko@josa@str@end}

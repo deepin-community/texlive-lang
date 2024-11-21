@@ -1,6 +1,6 @@
 %% File `oblivoir-xl.cls`
 %%
-%% (C) Copyright 2006-2023 Kangsoo Kim <modviv2k15 at gmail dot com>
+%% (C) Copyright 2006-2024 Kangsoo Kim <modviv2k15 at gmail dot com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xl}
-  [2023/03/08 v3.2.1 memoir-based class to typeset Korean]
+  [2024/03/06 v3.3 memoir-based class to typeset Korean]
 
 \providecommand\@DisabledOption[1]{%
   \typeout{[#1] option is deprecated}}

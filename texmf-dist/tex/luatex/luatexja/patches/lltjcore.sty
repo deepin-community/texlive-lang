@@ -176,6 +176,7 @@
   \ifnum\ltjgetparameter{direction}=4\else
     \dimen\z@\textwidth \textwidth\textheight \textheight\dimen\z@
   \fi
+  \directlua{luatexja.lineskip.setting_backup()}
   \let \protect \noexpand
 }{}{}
 \patchcmd\@outputpage{% supply \yoko
@@ -200,6 +201,8 @@
 \patchcmd\@outputpage{\vskip\topmargin}{\vskip\topmargin\iftombow\vskip1in\fi}{}{}
 \patchcmd\@outputpage{\reset@font}{\@tombowreset@@paper\reset@font}{}{}
 \patchcmd\@outputpage{\@begindvi}{\@begindvi\@outputtombow}{}{}
+\patchcmd\@outputpage{\stepcounter{page}}%
+  {\stepcounter{page}\directlua{luatexja.lineskip.setting_restore()}}{}{}
 
 %
 \pretocmd\@floatboxreset{\pltx@save@float@dir}{}{}
@@ -216,10 +219,6 @@
   \@latex@error{Direction change inside float!?\MessageBreak
     Use \noexpand\layoutcaption provided in \string\usepackage{lltjext}}\@ehc}
 %%% Remove extra xkanjiskip
-\renewcommand\@makefnmark{%
-  \unless\ifnum\ltjgetparameter{direction}=3
-    \hbox{}\hbox{\@textsuperscript{\normalfont\@thefnmark}}\hbox{}%
-  \else\hbox{\yoko \@textsuperscript{\normalfont\@thefnmark}}\fi}
 \begingroup
 \@ifpackageloaded{hyperref}
   {\ifdefined\real@setref\def\ltj@setrefprefix{real}\else\def\ltj@setrefprefix{}\fi}
@@ -247,6 +246,11 @@
 \gdef\@stopfield{%
   \inhibitglue\@tempskipa\lastskip\unskip
   \hskip\@tempskipa\color@endgroup\egroup}
+%%%%%% footnote
+\renewcommand\@makefnmark{%
+  \unless\ifnum\ltjgetparameter{direction}=3
+    \hbox{}\hbox{\@textsuperscript{\normalfont\@thefnmark}}\hbox{}%
+  \else\hbox{\yoko \@textsuperscript{\normalfont\@thefnmark}}\fi}
 \pretocmd{\footnote}{\inhibitglue}{}{}
 \pretocmd{\footnotemark}{\inhibitglue}{}{}
 \def\@ltj@process@makefnmark#1{%

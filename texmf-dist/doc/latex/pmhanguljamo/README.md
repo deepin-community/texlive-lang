@@ -12,7 +12,7 @@ In version 0.3, it provides two kinds of transliteration rules. And in version 0
 
 In version 1.0, we introduced a new rule, so-called _frkim_. Now it has three alternative ways of Hangul input methods.
 
-The current version is 1.0.2
+The current version is 1.1.
 
 
 ## Copyright and License

@@ -1,6 +1,6 @@
 %% File `oblivoir-utf.cls`
 %%
-%% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2024 Kangsoo Kim <modviv2k15 at gmail dot com>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -11,7 +11,7 @@
 %% version 2006/05/20 or later.
 %%
 \ProvidesClass{oblivoir-utf}
-  [2020/02/10 v0.8.2 article-like class to typeset UTF-8 korean using memoir.]
+  [2024/03/06 v0.9 article-like class to typeset UTF-8 korean using memoir.]
 %\typeout{oblivoir requires memoir, dhucs, and memhangul. 2008/10/23.}
 
 %%% Acknowledgements:

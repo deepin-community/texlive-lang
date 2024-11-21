@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright 1999 - 2000 Andris Lasis, 2014-2018 Javier Bezos and any
+% Copyright 1999 - 2000 Andris Lasis, 2014-2024 Javier Bezos and any
 % individual authors listed elsewhere in this file.  All rights
 % reserved.
 % 
@@ -37,8 +37,8 @@
 %</dtx>
 %<code>\ProvidesLanguage{latvian}
 % \fi
-% \ProvidesLanguage{latvian}
-        [2018/02/19 v2.0b Latvian support from the babel system]
+% \ProvidesFile{latvian}
+        [2024/04/27 v2.0c Latvian support from the babel system]
 % \iffalse
 %<*filedriver>
 \documentclass{ltxdoc}
@@ -58,7 +58,7 @@
 % \section{The Latvian Language}
 %
 % The file \textsf{latvian.ldf}\footnote{The file described in this
-% section has version number 2.0a and was last revised on 2018/02/19.}
+% section has version number 2.0c and was last revised on 2024/04/27.}
 % defines the language definition macros for the Latvian language. It
 % is heavily based on the work by Andris Lasis, and this file just
 % cleans the code up and adapts it to babel 3.9.
@@ -192,11 +192,13 @@
 %
 %    \begin{macrocode}
 \gdef\the@chapter{%
-  \ifx\chapter\undefined\relax\else
-  \ifnum\c@chapter>\z@\thechapter\fi\fi}
+  \ifx\c@chapter\@undefined\else
+    \ifnum\c@chapter>\z@\thechapter\fi
+  \fi}
 \def\thechapter{%
-  \ifx\chapter\undefined\relax\else
-  \arabic{chapter}.\fi}
+  \ifx\c@chapter\@undefined\else
+    \arabic{chapter}.%
+  \fi}
 \def\thesection{\the@chapter\arabic{section}.}
 \def\thesubsection{\thesection\arabic{subsection}.}
 \def\thesubsubsection{\thesubsection\arabic{subsubsection}.}

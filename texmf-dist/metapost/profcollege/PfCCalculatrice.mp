@@ -145,10 +145,10 @@ vardef Test(expr cptk)(text cptnt)=
     elseif substring(cptk,cptk+1) of cptnt=")":draw Affichage("01000001000001000010000100010001000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="*":draw Affichage("00000001001010101110101010010000000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="+":draw Affichage("00000001000010011111001000010000000") shifted(Decalage);
-    elseif substring(cptk,cptk+1) of cptnt=",":draw Affichage("00000000000000000000011000010001000") shifted(Decalage);
+%    elseif substring(cptk,cptk+1) of cptnt=",":draw Affichage("00000000000000000000011000010001000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="-":draw Affichage("00000000000000011111000000000000000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt=".":draw Affichage("00000000000000000000000000110001100") shifted(Decalage);
-    elseif substring(cptk,cptk+1) of cptnt="/":draw Affichage("00000000010001000100010001000000000") shifted(Decalage);
+%    elseif substring(cptk,cptk+1) of cptnt="/":draw Affichage("00000000010001000100010001000000000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt=":":if Math=true:
 	draw Affichage("00000000000000000000000000000000000") shifted(Decalage);
       else:
@@ -172,6 +172,7 @@ vardef Test(expr cptk)(text cptnt)=
     elseif substring(cptk,cptk+1) of cptnt="$":draw Affichage("00000000000000100001000010000111111") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="^":draw Affichage("00100010101000100000000000000000000") shifted(Decalage);
     elseif substring(cptk,cptk+1) of cptnt="_":draw Affichage("11111111111111111111111111111111111") shifted(Decalage);
+    elseif substring(cptk,cptk+1) of cptnt="~":draw Affichage("01000010000111001000010000100001000") shifted(Decalage);
     fi;
 enddef;
 

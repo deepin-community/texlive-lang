@@ -7,6 +7,48 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.9.12] - 2024-10-30
+
+### Fixed
+Fatal error in case of to be attached files not found
+
+### Added
+License in the README file
+
+## [0.9.11] - 2024-10-23
+
+### Fixed
+- Bibliographic files not attached to the PDF
+
+## [0.9.10] - 2024-10-07
+
+### Changed
+- Multiple rebuses handled
+- Paper clips (links to source files of the articles) not in the magin anymore and separated by spaces
+- Watermark letter and scale can now be specified
+
+### Fixed
+- Wrong output with \terminal
+- Title of publication in small capitals
+- Options of `letgut-banner` never taken in account
+- Not all included graphics attached to the PDF
+- Variables wrongly local or not reset
+- `\citeauthor` displayed family name in small caps
+
+## [0.9.9] - 2024-03-07
+
+### Fixed
+Private scratch variables not declared.
+
+## [0.9.8] - 2024-02-29
+
+### Changed
+- Drop use of l3keys2e, as advised.
+- Announcements possibly neither in the ToC nor in the bookmarks.
+
+### Fixed
+Floats not outside the article they belong to.
+
 ## [0.9.7] - 2023-05-21
 
 ### Changed

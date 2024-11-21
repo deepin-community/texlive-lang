@@ -1,7 +1,5 @@
 % \iffalse meta-comment
 %
-% Copyright © 1996-2023 Daniel Flipo.
-%
 % This program can be distributed and/or modified under the terms
 % of the LaTeX Project Public License either version 1.3c of this
 % license or (at your option) any later version.
@@ -29,11 +27,11 @@ to be used with the Babel system.
 -------------------------------------------------------------
 
 It may be distributed and/or modified under the
-conditions of the LaTeX Project Public License, either version 1.3
+conditions of the LaTeX Project Public License, either version 1.3c
 of this license or (at your option) any later version.
 The latest version of this license is in
   http://www.latex-project.org/lppl.txt
-and version 1.3 or later is part of all distributions of LaTeX
+and version 1.3c or later is part of all distributions of LaTeX
 version 2003/12/01 or later.
 
 This work has the LPPL maintenance status "maintained".
@@ -77,8 +75,8 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %<frenchb>\ProvidesLanguage{frenchb}
 %<lua>--[[
 %<lua>   File `frenchb.lua’ generated from frenchb.dtx
-         [2023-12-19 v3.5r French support from the babel system]
-%<lua>   Copyright © 2014-2023 Daniel Flipo
+         [2024-07-25 v3.6c French support from the babel system]
+%<lua>   Copyright © 2014-2024 Daniel Flipo
 %<lua>   <daniel (dot) flipo (at) free (dot) fr>
 %<lua>   License LPPL: see french.ldf.
 %<lua>--]]
@@ -86,7 +84,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %<*dtx|french>
 %%
 %%  Babel package for LaTeX version 2e
-%%  Copyright © 1996-2023
+%%  Copyright © 1996-2024
 %%            by Daniel Flipo <daniel (dot) flipo (at) free (dot) fr>
 %%
 %</dtx|french>
@@ -103,17 +101,24 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 \usepackage[dvipsnames]{xcolor}
 \usepackage[no-math]{fontspec}
 \usepackage{realscripts}
-\setmainfont{Vera.ttf}[
-  ItalicFont        = VeraIt.ttf,
-  BoldFont          = VeraBd.ttf,
-  BoldItalicFont    = VeraBI.ttf,
-  Scale = 0.92
-  ]
-\setmonofont{VeraMono.ttf}[
-  ItalicFont        = VeraMoIt.ttf,
-  BoldFont          = VeraMoBd.ttf,
-  BoldItalicFont    = VeraMoBI.ttf,
-  Scale = MatchLowercase,
+\usepackage{setspace}
+\setstretch{1.15}
+\setmainfont{SourceSansPro}[
+    Scale          = 1.13 ,
+    Extension      = .otf ,
+    UprightFont    = *-Regular ,
+    ItalicFont     = *-RegularIt ,
+    BoldFont       = *-Bold ,
+    BoldItalicFont = *-BoldIt ]
+\setmonofont{iosevka}[%
+    Scale          = MatchLowercase ,
+    FakeStretch    = 1.05 ,
+    Extension      = .ttf,
+    UprightFont    = *-medium,
+    BoldFont       = *-bold,
+    ItalicFont     = *-italic,
+    BoldItalicFont = *-bolditalic,
+%   RawFeatures    = -dlig;-clig        % ligature >= (l.1314)
   ]
 %
 \def\PrintMacroName#1{%
@@ -151,8 +156,8 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
    \clearpage
    \section{Change History}%
    \GlossaryPrologue{}%
-   Changes are listed in reverse order (latest first) and limited to
-   \frenchb{}~v3.
+   Changes listed in reverse order (latest first) and not older
+    than~v3.3 (2018).
    \PrintChanges
 }
 \begin{document}
@@ -300,8 +305,8 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      the quotation either an opening French guillemet («), or
 %      a closing one (») or nothing depending on option
 %      \fbo{EveryParGuill=open} or \fbo{=close} or \fbo{=none},
-%      see p.~\pageref{everyparguill}.
-%      Command |\NoEveryParQuote| is provided to locally suppress
+%      see p.~\pageref{everyparguill}.\\
+%      The command |\NoEveryParQuote| is provided to locally suppress
 %      unwanted guillemets (typically when lists are embedded in
 %      |\frquote{}|), it is meant to be used inside an environment
 %      or a group.
@@ -357,7 +362,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %          Usage: |Albert~\bsc{Camus}|.
 %
 %    \item Commands |\primo|, |\secundo|, |\tertio| and |\quarto|
-%          print 1\up{o}, 2\up{o}, 3\up{o}, 4\up{o}.
+%          print 1\up{o}, 2\up{o}, 3\up{o}, 4\up{o}.\linebreak
 %          |\FrenchEnumerate{6}| prints 6\up{o}.
 %    \item Abbreviations for ``Numéro(s)’’ and ``numéro(s)’’
 %          (N\up{o} N\up{os} n\up{o} and n\up{os}~) are obtained
@@ -405,7 +410,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %    Customisation of \frenchb{} relies on command \fbsetup{}
 %    (formerly called |\frenchbsetup{}|, the latter name will be kept
 %    for ever to ensure backwards compatibility), options are entered
-%    using the \file{keyval} syntax.
+%    using the \file{l3keys} syntax.
 %    The command \fbsetup{} is to appear in the preamble only
 %    (after loading \babel).
 %
@@ -420,7 +425,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %
 %    \fbsetup{ShowOptions} prints all available options to
 %    the \file{.log} file, it is just meant as a remainder of the
-%    list of offered options.  As usual with \file{keyval} syntax,
+%    list of offered options.  As usual with \file{l3keys} syntax,
 %    boolean options (as \fbo{ShowOptions}) can be entered as
 %    \fbo{ShowOptions=true} or just \fbo{ShowOptions}, the
 %    \fbo{=true} part can be omitted.
@@ -455,9 +460,10 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      first paragraph of sections.  When French is the main language,
 %      this option applies to all languages.
 %
-%    \item [PartNameFull=false (true)]; when true, \frenchb{} numbers
-%      the title of |\part{}| commands as ``Première partie’’,
-%      ``Deuxième partie’’ and so on.  With some classes which
+%    \item [PartNameFull=false (true)]; when true (the default),
+%      \frenchb{} numbers the title of |\part{}| commands as
+%      ``Première partie’’, ``Deuxième partie’’ and so on.
+%      With some classes which
 %      change the |\part{}| command (AMS classes do so), you could
 %      get ``Première partie~1’’, ``Deuxième partie~2’’ in the toc;
 %      when this occurs, this option should be set to
@@ -508,9 +514,9 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      you had to set \fbo{ReduceListSpacing=false} to revert to the
 %      class settings which actually reduce list’s spacings even more
 %      than \frenchb! \fbo{StandardListSpacing=true} replaces
-%      \fbo{ReduceListSpacing=false}.}; \frenchb{} customises
+%      \fbo{ReduceListSpacing=false}.}; \frenchb{} usually customises
 %      the vertical spaces in the \env{list} environment, this affects
-%      all lists, including \env{itemize} \env{enumerate},
+%      all lists, including \env{itemize}, \env{enumerate},
 %      \env{description}, but also \env{abstract}, \env{quote},
 %      \env{quotation}, \env{verse}, etc. which are based on \env{list}.
 %      Setting this option to \fbo{true} reverts to the standard
@@ -554,12 +560,14 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %           \cs{ding\{43\}} (\cs{textemdash}*)]\hfill
 %
 %    \item [StandardLists=true (false*)] forbids \frenchb{} to
-%      customise any kind of list.  Try the option \fbo{StandardLists}
-%      in case of conflicts with classes or packages that customise
+%      customise any kind of list.  The option \fbo{StandardLists=true}
+%      should be used in case of conflicts with classes or packages that
+%      customise
 %      lists too.  This option is just a shorthand setting all four
 %      options \fbo{StandardListSpacing=true},
-%      \fbo{StandardItemizeEnv=true}, \fbo{StandardEnumerateEnv=true}
-%      and \fbo{StandardItemLabels=true}.
+%      \fbo{StandardItemizeEnv=true},\linebreak
+%      \fbo{StandardEnumerateEnv=true} and
+%      \fbo{StandardItemLabels=true}.
 %
 %    \item [ListOldLayout=true (false)]; starting with version~2.6a,
 %      the layout of lists has changed regarding leftmargins’ sizes
@@ -578,9 +586,11 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      instance).
 %
 %    \item [AutoSpaceFootnotes=false (true*)]; by default \frenchb{}
-%      adds a thin space in the running text before the number or
-%      symbol calling the footnote.  Making this option \fbo{false}
-%      reverts to the standard setting (no space added).
+%      adds a (customisable) thin space in the running text before the
+%      number or symbol calling the footnote.  Making this option
+%      \fbo{false} reverts to the standard setting (no space added).
+%      The default definition of this thin space is:\\
+%      |\newcommand*{\FBfnmarkspace}{\kern .5\fontdimen2\font}|
 %
 %    \item [AutoSpacePunctuation=false (true)]; in French, the user
 %      \hlabel{autospacepunctuation}
@@ -679,7 +689,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      always surrounded by « and », the next option is ineffective.
 %
 %    \item [InnerGuillSingle=true (false)];
-%      if \fbo{InnerGuillSingle=false} (default), inner quotations
+%      if \fbo{InnerGuillSingle=false} (the default), inner quotations
 %      entered with |\frquote{}| start with~\texttt{``} and end
 %      with~\texttt{’’}.
 %      If \fbo{InnerGuillSingle=true}, \texttt{\guilsinglleft} and
@@ -695,7 +705,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      |\npthousandsep| is defined as a non-breaking space (|~|)%
 %      \footnote{Actually without stretch nor shrink.} in French;
 %      when set to true, this option redefines |\npthousandsep|
-%      as a thin space (|\,|).
+%      as a thin space (|\FBthinspace|).
 %
 %    \item [SmallCapsFigTabCaptions=false (true*)]; when set to
 %      \fbo{false}, |\figurename| and |\tablename| will be printed in
@@ -704,8 +714,8 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %      achieved by defining |\FBfigtabshape| as |\relax| before
 %      loading \frenchb{} (in a document class f.i.).
 %
-%    \item [CustomiseFigTabCaptions=false (true*)]; when \fbo{false}
-%      the default separator (colon) is used instead of
+%    \item [CustomiseFigTabCaptions=false (true*)]; when set to
+%     \fbo{false} the default separator (colon) is used instead of
 %      |\CaptionSeparator|.  Anyway, \frenchb{} tries hard to insert
 %      a proper space before it in French and warns if it fails to do
 %      so.
@@ -737,23 +747,23 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %    in the order they appear in the \fbsetup{} command.
 %    Someone wishing that \frenchb{} leaves the layout of lists
 %    and footnotes untouched but caring for indentation of first
-%    paragraph of sections should choose\\
-%    \fbsetup{StandardLayout,IndentFirst} to get the expected
-%    layout.  The reverse order
-%    \fbsetup{IndentFirst,StandardLayout} would lead to option
-%    \fbo{IndentFirst} being overwritten by \fbo{StandardLayout}.
+%    paragraph of sections should choose
+%    \fbsetup{StandardLayout,IndentFirst}\par
+%    The reverse order \fbsetup{IndentFirst,StandardLayout}
+%    would lead to option \fbo{IndentFirst} being overwritten by
+%    \fbo{StandardLayout}.
 %
 %  \subsubsection{Caption names}
 %  \label{sssec-captions-name}
 %
-%    All caption names can easily be customised in French using the
-%    simplified syntax introduced by \babel~3.9, for instance
-%    |\def\frenchproofname{Preuve}| or
+%    {\sloppy All caption names can easily be customised in French
+%    using the simplified syntax introduced by \babel~3.9,
+%    for instance |\def\frenchproofname{Preuve}| or
 %    |\def\acadianproofname{Preuve}| for the \opt{acadian} dialect.
 %    The older syntax |\addto\captionsfrench{\def\proofname{Preuve}}|
 %    still works. Keep in mind that \emph{only} |french| can be used
 %    to redefine captions, even if \babel{}’s option was entered as
-%    |frenchb| or |francais|.
+%    |frenchb| or |francais|.\par}
 %
 %  \subsubsection{Figure and table captions}
 %  \label{sssec-captions-fig}
@@ -841,6 +851,13 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %  \subsection{Changes}
 %  \label{ssec-changes}
 %
+%  \subsubsection*{What’s new in version 3.6?}
+%
+%    Version 3.6a no longer loads the \pkg{keyval} package, replaced by
+%    core LaTeX commands (\pkg{l3keys}). The thin space added before
+%    footnote’s calls is now customisable (suggested by Thomas Savary),
+%    the command’s name is |\FBfnmarkspace|.
+%
 %  \subsubsection*{What’s new in version 3.5?}
 %
 %    Version 3.5a offers a new option \fbo{ListItemsAsPar}.  The default
@@ -866,7 +883,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %    kerning was disabled for Type1 fonts since v3.1g (2015).
 %
 %    Version 3.5j also fixes a long standing bug affecting koma-script,
-%    \cls{memoir} et \cls{beamer} classes: redefintions of the caption
+%    \cls{memoir} and \cls{beamer} classes: redefintions of the caption
 %    separator (commands |\captionformat|, |\captiondelim|, etc.) are
 %    now taken into account properly.
 %
@@ -959,92 +976,6 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %    Further customisation of the |\part{}| command is provided via
 %    three new commands |\frenchpartfirst|, |\frenchpartsecond| and
 %    |\frenchpartnameord|.
-%
-%  \subsubsection*{What’s new in version 3.2?}
-%
-%    Version 3.2g changes the default behaviour of |\frquote{}|
-%    with LuaTeX based engines, the output is now the same with
-%    all engines; to recover the former behaviour, add option
-%    \fbo{EveryLineGuill=open}.
-%
-%    The handling of footnotes has been redesigned for the
-%    \cls{beamer}, \cls{memoir} and koma-script classes.
-%    The layout of footnotes ``à la française’’ should be unchanged
-%    but footnotes’ customisations offered by these classes
-%    (i.e.\ font or color changes) are now available even when option
-%    \fbo{FrenchFootnotes} is \fbo{true}.
-%
-%    A long standing bug regarding the \pkg{xspace} package has been
-%    fixed: |\xspace| has been moved up from the internal command
-%    |\FB@fg| to |\fg|; |\frquote{}| now works properly when the
-%      \pkg{xspace} package is loaded.
-%
-%    Version 3.2b is the first one designed to work with LuaTeX
-%    v.~0.95 as included in TeXLive 2016 (LuaTeX’s new glue node
-%    structure is not compatible with previous versions).
-%
-%    \textbf{Warning to Lua(La)TeX users:} starting with version~3.2b
-%    the lua code included in \file{frenchb.lua} will \emph{not work}
-%    on older installations (TL2015 f.i.), so \frenchb{} reverts to
-%    active characters while handling high punctuation with LuaTeX
-%    engines older than 0.95!
-%    The best way to go is to upgrade to TL2016 or equivalent asap.
-%    Xe(La)TeX and pdf(La)TeX users can safely use \frenchb{} v.~3.2b
-%    and later on older installations too.
-%
-%    The internals of commands |\NoAutoSpacing|, |\ttfamilyFB|,
-%    |\rmfamilyFB| and |\sffamilyFB| have been completely redesigned
-%    in version~3.2c, they behave now consistently with all engines.
-%
-%  \subsubsection*{What’s new in version 3.1?}
-%
-%    New command |\frquote{}| meant to enter French quotations,
-%    especially long ones (spreading over several paragraphs) and/or
-%    embedded ones. see p.~\pageref{frquote} for details.
-%
-%  \subsubsection*{What’s new in version 3.0?}
-%
-%    Many deep changes lead me to step \frenchb’s version number
-%    to~3.0a:
-%    \begin{itemize}
-%    \item \babel{}~3.9 is required now to process
-%      \file{frenchb.ldf}, this change allows for cleaner definitions
-%      of dates and captions for the Unicode engines LuaTeX and
-%      XeTeX and also provides a simpler syntax for end-users, see
-%      section~\ref{sssec-captions-name}
-%      p.\pageref{sssec-captions-name}.
-%    \item \fbsetup{} options management has been completely
-%      reworked; two new options added.
-%    \item Canadian French didn’t work as a normal \babel’s dialect,
-%      it should now; btw. the French language should now be loaded
-%      as \opt{french}, \emph{not as} \opt{frenchb} or
-%      \opt{francais} and preferably as a \emph{global} option of
-%      |\documentclass|. Some tolerance still exists in v3.0, but
-%      do not rely on it.
-%    \item \frenchb{} no longer loads \file{frenchb.cfg}:
-%      customisation should definitely be done using \fbsetup{}
-%      options.
-%    \item Description lists labels are now indented; try setting
-%      |\descindentFB=0pt| (or |\listindentFB=0pt| for all lists)
-%      in the preamble if you don’t like it.
-%    \item The last but not least change affects the (recent)
-%      LuaTeX-based engines, (this means version 0.76 as included in
-%      TL2013 and up): active characters are no longer used in French
-%      for `high punctuation’%
-%      \footnote{The current \frenchb{} version requires LuaTeX
-%      v.~1.0.4 as included in TL2017, see above.}.
-%      Functionalities and user interface are unchanged.
-%
-%      Many thanks to Paul Isambert who provided the basis for the
-%      lua code (see his presentation at GUT’2010) and kindly
-%      reviewed my first drafts suggesting significant improvements.
-%
-%    \end{itemize}
-%
-%    Starting with version~3.0c, \frenchb{} no longer customises
-%    lists with the \cls{beamer} class and offers a new option
-%    (\fbo{INGuillSpace}) to follow French `Imprimerie Nationale’
-%    recommendations regarding quotes’ spacing.
 %
 % \StopEventually{}
 %
@@ -1219,7 +1150,7 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\ifFBunicode}
+%\begin{macro}{\ifFBunicode}
 % \begin{macro}{\ifFBLuaTeX}
 % \begin{macro}{\ifFBXeTeX}
 %    French hyphenation patterns are now coded in Unicode, see file
@@ -1462,8 +1393,8 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %
 % \begin{macro}{\FBsetspaces}
 %    This command makes it easy to fine tune |\FBguillspace|,
-%    |\FBcolonspace| and |\FBthinspace| in French (defaut) or
-%    independently in a French dialect using the optional argument.
+%    |\FBcolonspace| and\linebreak |\FBthinspace| in French (defaut)
+%    or independently in a French dialect using the optional argument.
 %    They are meant for LaTeX2e \emph{only} and can only be used
 %    in the preamble.
 %    Four mandatory arguments are expected besides the optional one:
@@ -1471,8 +1402,8 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %    "thin", the last four are decimal numbers specifying
 %    \textit{width}, \textit{stretch} and \textit{shrink} relative to
 %    \textit{fontdimens}.\hlabel{FBsetspaces}
-%    For instance |\FBsetspaces[acadian]{colon}{0.5}{0}{0}| defines
-%    |\acadianFBcolonspace| as a thinspace which will be used for
+%    For \kern0pt instance |\FBsetspaces[acadian]{colon}{0.5}{0}{0}|
+%    defines |\acadianFBcolonspace| as a thinspace which will be used for
 %    the Acadian dialect only.  When used without optional argument or
 %    with argument `french’, the same command would tune the basic
 %    |\FBcolonspace| command.
@@ -1689,13 +1620,16 @@ Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
              with this version of LuaTeX!}
   \fi
 %    \end{macrocode}
-%    The next command will be used in the first call of |\extrasfrench|
-%    to convert |\FBcolonspace|, |\FBthinspace| and |\FBguillspace|
-%    into a table usable by LuaTeX.  This way, any customisation done
-%    in the preamble (by \fbsetup{}, redefinitions or |\FBsetspaces|
-%    commands) are taken into account.  Values not explicitly set for
-%    Acadian by |\FBsetspaces[|\textit{acadian}|]| commands are copied
-%    from the French ones.
+%
+%    {\sloppy The next command will be used in the first call of
+%    |\extrasfrench| to convert |\FBcolonspace|, |\FBthinspace| and
+%    |\FBguillspace| into a table usable by LuaTeX.
+%    This way, any customisation done in the preamble (by \fbsetup{},
+%    redefinitions or |\FBsetspaces| commands) are taken into account.
+%    Values not explicitly set for Acadian by
+%    |\FBsetspaces[|\textit{acadian}|]| commands are copied from the
+%    French ones.\par}
+
 %    In case parsing by the Lua function |FBget_glue| (defined in file
 %    \file{frenchb.lua}) fails due to unexpected syntax in |\FB...space|
 %    the table remains unchanged and a warning is issued.
@@ -1815,6 +1749,7 @@ local copy_node    = node.copy
 local node_id      = node.id
 local HLIST        = node_id("hlist")
 local TEMP         = node_id("temp")
+local DISC         = node_id("disc")
 local KERN         = node_id("kern")
 local GLUE         = node_id("glue")
 local GLYPH        = node_id("glyph")
@@ -2025,6 +1960,9 @@ local function french_punctuation (head)
 %    if next node is a glyph or not.  If it is, turn the `auto’ flag
 %    to false (avoids spurious spaces in URLs, MSDOS paths or 10:35).}
 %
+% \changes{v3.5s}{2024/02/28}{A `:’ followed by `-’ or a ligature
+%    should not trigger spacing.}
+%
 %    For characters for which |FB_punct_thin| or |FB_punct_thick| is
 %    \emph{true}, the amount of spacing to be typeset before them
 %    is controlled by commands |\FBthinspace| and |\FBcolonspace|
@@ -2056,7 +1994,8 @@ local function french_punctuation (head)
                    if next then
                       next_id = next.id
                    end
-                   if next_id and next_id == GLYPH then
+                   if next_id and
+                      (next_id == GLYPH or next_id == DISC) then
                       auto = false
                    end
                 end
@@ -2741,13 +2680,13 @@ return french_punctuation
 %    tex4ht, pointed out by MPG.}
 %
 %    {\sloppypar |\autospace@beforeFDP| and |\noautospace@beforeFDP| are
-%    internal commands.  |\autospace@beforeFDP| defines |\FDP@thinspace|
-%    and |\FDP@colonspace| as non-breaking spaces and sets LuaTeX
-%    attribute |\FB@addDPspace| to 1 (true), while
-%    |\noautospace@beforeFDP| lets these spaces empty and sets flag
+%    internal commands.  |\autospace@beforeFDP| defines commands
+%    |\FDP@thinspace| and |\FDP@colonspace| as non-breaking spaces and
+%    sets LuaTeX attribute |\FB@addDPspace| to 1 (true), while
+%    |\noautospace@beforeFDP| makes them no-op and sets flag
 %    |\FB@addDPspace| to 0 (false).  User commands |\AutoSpaceBeforeFDP|
 %    and |\NoAutoSpaceBeforeFDP| do the same and take care of the flag
-%    |\ifFBAutoSpacePunctuation| in \LaTeX{}.\par}
+%    |\ifFBAutoSpacePunctuation| in LaTeX{}.\par}
 %
 %    Set the default now for Plain (done later for LaTeX).
 %    \begin{macrocode}
@@ -2835,16 +2774,22 @@ return french_punctuation
 %    active punctuation characters (if any).
 %    It is engine independent (works for TeX, LuaTeX and
 %    XeTeX based engines) and is meant to be used inside a group.
+%    The faked definition of |\texorpdfstring| will be overwritten
+%    by \file{hyperref.sty}.
 %
 % \changes{v3.2b}{2016/04/18}{\cs{NoAutoSpacing} made robust.}
 %
 % \changes{v3.2c}{2016/05/14}{New definition based on
 %    \cs{FB@spacing@off} common to all engines.}
 %
+% \changes{v3.6b}{2024/06/26}{\cs{NoAutoSpacing} must be inhibited
+%    in bookmarks.}
+%
 %    \begin{macrocode}
+\providecommand\texorpdfstring[2]{#1}
 \DeclareRobustCommand*{\NoAutoSpacing}{%
-  \FB@spacing@off
-  \ifFB@active@punct\shorthandoff{;:!?}\fi
+  \texorpdfstring{\FB@spacing@off
+                  \ifFB@active@punct\shorthandoff{;:!?}\fi}{}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -2916,7 +2861,6 @@ return french_punctuation
 %
 %    |\FB@og| and |\FB@fg| are now designed to work in bookmarks.
 %    \begin{macrocode}
-\providecommand\texorpdfstring[2]{#1}
 \newcommand*{\FB@og}{\texorpdfstring{\@FB@og}{\guillemotleft\space}}
 \newcommand*{\FB@fg}{\texorpdfstring{\@FB@fg}{\space\guillemotright}}
 %    \end{macrocode}
@@ -3597,64 +3541,41 @@ return french_punctuation
   \providecommand*{\textbackslash}{{\char"005C}}
   \providecommand*{\textasciicircum}{{\char"005E}}
   \providecommand*{\textasciitilde}{{\char"007E}}
-  \newcommand*{\FB@degre}{°}
+  \DeclareRobustCommand*{\degre}{°}
 \else
-  \ifLaTeXe
-    \newcommand*{\FB@degre}{\r{}}
-  \fi
+  \DeclareRobustCommand*{\degre}{\textdegree}
 \fi
 \DeclareRobustCommand*{\boi}{\textbackslash}
 \DeclareRobustCommand*{\circonflexe}{\textasciicircum}
 \DeclareRobustCommand*{\tild}{\textasciitilde}
-\DeclareRobustCommand*{\degre}{%
-  \texorpdfstring{\FB@degre}{\textdegree}}
 \newcommand*{\at}{@}
 %    \end{macrocode}
 %
 % \begin{macro}{\degres}
 %    We now define a macro |\degres| for typesetting the abbreviation
-%    for `degrees’ (as in `degrees Celsius’).  As the bounding box of
-%    the character `degree’ has \emph{very} different widths in CM/EC
-%    and PostScript fonts, we fix the width of the bounding box of
-%    |\degres| to 0.3\,em, this lets the symbol `degree’ stick to the
-%    preceding (e.g., |45\degres|) or following character
-%    (e.g., |20~\degres C|). |\degres| works in math-mode (angles).
+%    for `degrees’ (as in `°C’ or `°K’) in text fonts which also works
+%    in math mode for angles.
 %
 % \changes{v2.6e}{2013/07/06}{Refrain from redefining \cs{textdegree}
 %    from latin1.def, applemac.def, etc. as \cs{degres} because it
 %    loops in hyperref’s bookmarks.  Pointed out by Eddy Flas on fctt.}
 %
-%    If \TeX{} Companion fonts are available (\file{textcomp.sty}),
-%    we pick up |\textdegree| from them instead of emulating `degrees’
-%    from the |\r{}| accent.  Otherwise we advise the user (once only)
-%    to use TS1-encoding.
-%
 % \changes{v2.1c}{2008/04/29}{Provide a temporary definition (hyperref
 %    safe) of \cs{degres} in case it has to be expanded in the preamble
 %    (by beamer’s \cs{title} command for instance).}
+%
+% \changes{v3.6a}{2024/05/20}{Simplify \cs{degres} definition for text
+%    and math mode: \cs{textdegree} always defined (TS1) since 2019.}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*{\degres}{\degre}
 \ifLaTeXe
   \AtBeginDocument{%
-    \@ifpackageloaded{fontspec}{}{%
-      \ifdefined\DeclareEncodingSubset
-        \DeclareRobustCommand*{\degres}{%
+    \@ifpackageloaded{fontspec}{}%
+        {\DeclareRobustCommand*{\degres}{%
           \texorpdfstring{\hbox{\UseTextSymbol{TS1}{\textdegree}}}%
                          {\textdegree}}%
-      \else
-        \def\Warning@degree@TSone{\FBWarning
-             {Degrees would look better in TS1-encoding:%
-              \MessageBreak add \protect
-              \usepackage{textcomp} to the preamble.%
-              \MessageBreak Degrees used}}
-        \DeclareRobustCommand*{\degres}{%
-          \texorpdfstring{\hbox to 0.3em{\hss\degre\hss}%
-                          \Warning@degree@TSone
-                          \global\let\Warning@degree@TSone\relax}%
-                          {\textdegree}}%
-      \fi
-    }%
+        }%
   }
 \fi
 %    \end{macrocode}
@@ -4053,9 +3974,10 @@ return french_punctuation
 %    ua-thesis.cls… change it).
 %    If they are identical, \frenchb{} just adds a hook called
 %    |\FBCaption@Separator| to |\@makecaption|; |\FBCaption@Separator|
-%    defaults to `:~’ as in the standard |\@makecaption| and will be
-%    changed to `~:~’ in French `AtBeginDocument’; it can be also set to
-%    |\CaptionSeparator| (` -- ’) using \fbo{CustomiseFigTabCaptions}.
+%    defaults to `:~’ as in the standard definition of |\@makecaption|
+%    and will be changed to `~:~’ in French `AtBeginDocument’;
+%    it can be also set to |\CaptionSeparator| (` -- ’) using
+%    \fbo{CustomiseFigTabCaptions}.
 %
 % \changes{v2.6c}{2013/05/18}{Former \cs{CaptionSeparator}
 %    has been renamed as \cs{FBCaption@Separator};
@@ -4073,7 +3995,7 @@ return french_punctuation
 %    active).
 %    \begin{macrocode}
 \bgroup
-  \catcode`:=12 \catcode`>=12 \relax
+  \catcode`: =12 \catcode`> =12 \relax
   \long\gdef\STD@makecaption#1#2{%
     \vskip\abovecaptionskip
     \sbox\@tempboxa{#1: #2}%
@@ -4253,7 +4175,7 @@ return french_punctuation
 %    with XeTeX and LuaTeX.
 %
 % \changes{v2.0}{2006/11/06}{Added special case for LY1 encoding,
-%    see  bug report from Bruno Voisin (2004/05/18).}
+%    see bug report from Bruno Voisin (2004/05/18).}
 %
 % \changes{v2.5f}{2011/06/18}{Unicode fonts also provide a ready made
 %    character for \cs{textellipsis}, let’s just use it!
@@ -4342,7 +4264,7 @@ return french_punctuation
 }
 %    \end{macrocode}
 %
-%  \subsection{Setup options: keyval stuff}
+%  \subsection{Setup options: key/value stuff (l3keys)}
 %  \label{ssec-keyval}
 %
 % \changes{v2.0}{2006/11/06}{New command \cs{frenchbsetup} added
@@ -4352,25 +4274,222 @@ return french_punctuation
 %    reorganised, now \cs{babel@save} and\cs{babel@savevariable} are
 %    usable for French.}
 %
-%    All setup options are handled by command \fbsetup{} using the
-%    keyval syntax.  A list of flags is defined and set to a default
-%    value which will possibly be changed `AtEndOfPackage’ if French is
-%    the main language.  After this, \fbsetup{} eventually modifies the
-%    preset values of these flags.
+% \changes{v3.6a}{2024/05/16}{Internal `l3keys’ replaces package
+%    `keyval’ for options’ management.}
 %
-%    {\sloppypar Option processing can occur either in \fbsetup{}, but
-%    \emph{only for options explicitly set} by \fbsetup{}, or
+%    Check LaTeX2e version (support for \pkg{l3keys} required).
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[2022-06-01]
+%    \end{macrocode}
+%    All setup options are handled by command \fbsetup{} based on
+%    the \file{l3keys}’ |\SetKeys{}| command.  A list of flags is
+%    defined beforehand and set to default values which will possibly
+%    be changed `AtEndOfPackage’ in case French is the main language.
+%    After this, \fbsetup{} eventually modifies the preset values of
+%    these flags.
+%
+%    {\sloppypar Some options processing occurs in \fbsetup{},
+%    \emph{only for options explicitly set} by \fbsetup{}, the rest
 %    `AtBeginDocument’; any option affecting |\extrasfrench{}|
-%    \emph{must} be processed by \fbsetup{}: when French is the main
-%    language, |\extrasfrench{}| is executed by \babel{} when it
-%    switches the main language and this occurs \emph{before} reading
+%    \emph{must} be immediatelt processed by \fbsetup{}: when French is
+%    the main language, |\extrasfrench{}| is executed by \babel{} when
+%    it switches the main language and this occurs \emph{before} reading
 %    the stuff postponed by \frenchb{} `AtBeginDocument’.  Reexecuting
-%    |\extrasfrench{}| is an option which was used up to v2.6h, it has
-%    been dropped in v3.0a because of its side-effects (f.i.\
-%    |\babel@save| and |\babel@savevariable| did not work for
+%    |\extrasfrench{}| is not an option because of its side-effects
+%    (f.i.\ |\babel@save| and |\babel@savevariable| did not work for
 %    French).\par}
 %
+%    We first define a collection of conditionals and set  their
+%    defaults (true or false).
+%
+%    \begin{macrocode}
+\newif\ifFBShowOptions
+\newif\ifFBStandardLayout           \FBStandardLayouttrue
+\newif\ifFBGlobalLayoutFrench       \FBGlobalLayoutFrenchtrue
+\newif\ifFBStandardListSpacing      \FBStandardListSpacingtrue
+\newif\ifFBListOldLayout
+\newif\ifFBListItemsAsPar
+\newif\ifFBCompactItemize
+\newif\ifFBStandardItemizeEnv       \FBStandardItemizeEnvtrue
+\newif\ifFBStandardEnumerateEnv     \FBStandardEnumerateEnvtrue
+\newif\ifFBStandardItemLabels       \FBStandardItemLabelstrue
+\newif\ifFBStandardLists            \FBStandardListstrue
+\newif\ifFBIndentFirst
+\newif\ifFBFrenchFootnotes
+\newif\ifFBAutoSpaceFootnotes
+\newif\ifFBOriginalTypewriter
+\newif\ifFBThinColonSpace
+\newif\ifFBThinSpaceInFrenchNumbers
+\newif\ifFBFrenchSuperscripts       \FBFrenchSuperscriptstrue
+\newif\ifFBLowercaseSuperscripts    \FBLowercaseSuperscriptstrue
+\newif\ifFBPartNameFull             \FBPartNameFulltrue
+\newif\ifFBCustomiseFigTabCaptions
+\newif\ifFBOldFigTabCaptions
+\newif\ifFBSmallCapsFigTabCaptions  \FBSmallCapsFigTabCaptionstrue
+\newif\ifFBSuppressWarning
+\newif\ifFBINGuillSpace
+%    \end{macrocode}
+%
+% \changes{v3.1g}{2015/05/10}{Bug fix for koma-scripts classes:
+%    a spurious dot was added by the \cs{partformat} command.}
+%
+% \changes{v3.4a}{2018/01/07}{Patch for koma-script classes moved here,
+%    after \cs{ifFBPartNameFull} is defined, so that it applies to
+%    \cs{extrasacadian} too: \cs{AtEndOfPackage} is too late.}
+%
+%    The following patch is for koma-script classes: the |\partformat|
+%    command, defined as |\partname~\thepart\autodot|, is incompatible
+%    with our redefinition of |\partname|.
+%    \begin{macrocode}
+\ifFB@koma
+  \ifdefined\partformat
+    \def\FB@partformat@fix{%
+           \ifFBPartNameFull
+             \babel@save\partformat
+             \renewcommand*{\partformat}{\partname}%
+           \fi}
+    \addto\extrasfrench{\FB@partformat@fix}%
+  \fi
+\fi
+%    \end{macrocode}
+%
+% \changes{v2.5b}{2010/10/30}{Do not use the
+%    test \cs{iflanguage}\{french\} to check whether French is the
+%    main language or not, as it might be be erroneously positive
+%    when English is the main language and no hyphenation patterns
+%    are available for French.
+%    In this case \cs{l@french} and \cs{l@english} are 0.
+%    Pointed out by Günter Milde.}
+%
+% \changes{v3.0c}{2014/03/30}{No list customisation when beamer
+%    class is loaded.}
+%
+% \changes{v3.2g}{2017/01/30}{Minimal list customisation when
+%    beamerarticle.sty is loaded.}
+%
+% \changes{v3.2h}{2017/04/11}{Option GlobalLayoutFrench skipped
+%    when French is not the main language.}
+%
+% \changes{v3.5e}{2019/03/14}{StandardLayout and GlobalLayoutFrench
+%    options can no longer be toggled when French is not the main
+%    language.}
+%
+%    The defaults values of these flags are choosen so that
+%    \frenchb{} does not change anything regarding the global layout.
+%    Some of them must be toogled when French (or a French dialect) is
+%    the main language. The latter (last option of \babel, stored in
+%    |\bbl@main@language|) will be known `AtEndOfPackage’.
+%    So we postpone the |\bbl@main@language| checking until then.
+%
+%    Our list customisation conflicts with the \cls{beamer} class and
+%    with the \pkg{beamerarticle} package.  The patch provided in
+%    \pkg{beamerbasecompatibility} solves the conflict except in case
+%    of language changes, so we provide our own patch.
+%    When the \cls{beamer} is loaded, lists are not customised at all
+%    to ensure compatibility.\hlabel{beamerarticle}
+%    The \pkg{beamerarticle} package needs to be loaded \emph{before}
+%    \babel, a warning is issued otherwise, see
+%    section~\ref{ssec-loading-order}; a light customisation is
+%    compatible with the \pkg{beamerarticle} package.
+%
+% \changes{v3.5n}{2022/04/18}{\cs{FBGlobalLayoutFrench} no longer set to
+%    false when French is not the main language.}
+%
+%    \begin{macrocode}
+\def\FB@french{french}
+\def\FB@acadian{acadian}
+\newif\ifFB@mainlanguage@FR
+\AtEndOfPackage{%
+  \ifx\bbl@main@language\FB@french \FB@mainlanguage@FRtrue
+  \else \ifx\bbl@main@language\FB@acadian \FB@mainlanguage@FRtrue \fi
+  \fi
+  \ifFB@mainlanguage@FR
+    \FBGlobalLayoutFrenchtrue
+    \@ifclassloaded{beamer}%
+      {\PackageInfo{french.ldf}{%
+          No list customisation for the beamer class,%
+          \MessageBreak reported}}%
+      {\@ifpackageloaded{beamerarticle}%
+         {\FBStandardItemLabelsfalse
+          \FBStandardListSpacingfalse
+          \PackageInfo{french.ldf}{%
+             Minimal list customisation for the beamerarticle%
+             \MessageBreak package; reported}}%
+%    \end{macrocode}
+%    Otherwise customise lists ``à la française’’:
+%    \begin{macrocode}
+         {\FBStandardListSpacingfalse
+          \FBStandardItemizeEnvfalse
+          \FBStandardEnumerateEnvfalse
+          \FBStandardItemLabelsfalse}%
+      }
+    \FBIndentFirsttrue
+    \FBFrenchFootnotestrue
+    \FBAutoSpaceFootnotestrue
+    \FBCustomiseFigTabCaptionstrue
+  \fi
+}
+%    \end{macrocode}
+%
 % \begin{macro}{\frenchsetup}
+%    Let’s define the keys to be used in \fbsetup{}.
+%    \begin{macrocode}
+\DeclareKeys[FBsetup]
+  {
+    ShowOptions.if               = FBShowOptions                        ,
+    StandardLayout.default:n     = {true}                               ,
+    StandardLayout.code          = \FBStandardLayout@setup{#1}          ,
+    GlobalLayoutFrench.default:n = {true}                               ,
+    GlobalLayoutFrench.code      = \FBGlobalLayout@setup{#1}            ,
+    StandardListSpacing.if       = FBStandardListSpacing                ,
+    ReduceListSpacing.ifnot      = FBStandardListSpacing                ,
+    ListOldLayout.default:n      = {true}                               ,
+    ListOldLayout.code           = \FBListOldLayout@setup{#1}           ,
+    CompactItemize.default:n     = {true}                               ,
+    CompactItemize.code          = \FBCompactItemize@setup{#1}          ,
+    StandardItemizeEnv.if        = FBStandardItemizeEnv                 ,
+    StandardEnumerateEnv.if      = FBStandardEnumerateEnv               ,
+    StandardItemLabels.if        = FBStandardItemLabels                 ,
+    ItemLabels.store             = \FrenchLabelItem                     ,
+    ItemLabeli.store             = \Frlabelitemi                        ,
+    ItemLabelii.store            = \Frlabelitemii                       ,
+    ItemLabeliii.store           = \Frlabelitemiii                      ,
+    ItemLabeliv.store            = \Frlabelitemiv                       ,
+    StandardLists.default:n      = {true}                               ,
+    StandardLists.code           = \FBStandardLists@setup{#1}           ,
+    ListItemsAsPar.if            = FBListItemsAsPar                     ,
+    IndentFirst.if               = FBIndentFirst                        ,
+    FrenchFootnotes.if           = FBFrenchFootnotes                    ,
+    AutoSpaceFootnotes.if        = FBAutoSpaceFootnotes                 ,
+    AutoSpacePunctuation.if      = FBAutoSpacePunctuation               ,
+    OriginalTypewriter.if        = FBOriginalTypewriter                 ,
+    ThinColonSpace.default:n     = {true}                               ,
+    ThinColonSpace.code          = \FBThinColonSpace@setup{#1}          ,
+    ThinSpaceInFrenchNumbers.if  = FBThinSpaceInFrenchNumbers           ,
+    FrenchSuperscripts.if        = FBFrenchSuperscripts                 ,
+    LowercaseSuperscripts.if     = FBLowercaseSuperscripts              ,
+    PartNameFull.if              = FBPartNameFull                       ,
+    CustomiseFigTabCaptions.if   = FBCustomiseFigTabCaptions            ,
+    OldFigTabCaptions.default:n  = {true}                               ,
+    OldFigTabCaptions.code       = \FBOldFigTabCaptions@setup{#1}       ,
+    SmallCapsFigTabCaptions.default:n = {true}                          ,
+    SmallCapsFigTabCaptions.code = \FBSmallCapsFigTabCaptions@setup{#1} ,
+    SuppressWarning.default:n    = {true}                               ,
+    SuppressWarning.code         = \FBSuppressWarning@setup{#1}         ,
+    INGuillSpace.default:n       = {true}                               ,
+    INGuillSpace.code            = \FBINGuillSpace@setup{#1}            ,
+    InnerGuillSingle.if          = FBInnerGuillSingle                   ,
+    EveryParGuill.default:n      = {open}                               ,
+    EveryParGuill.code           = \FBEveryParGuill@setup{#1}           ,
+    EveryLineGuill.default:n     = {open}                               ,
+    EveryLineGuill.code          = \FBEveryLineGuill@setup{#1}          ,
+    UnicodeNoBreakSpaces.default:n = {true}                             ,
+    UnicodeNoBreakSpaces.code    = \FBUnicodeNoBreakSpaces@setup{#1}    ,
+    og.code                      = \FBog@setup{#1}                      ,
+    fg.code                      = \FBfg@setup{#1}                      ,
+}
+%    \end{macrocode}
+%
 %    Let’s now define this command which reads and sets the options
 %    to be processed either immediately (i.e.\ just after setting the
 %    key) or later (at |\begin{document}|) by |\FBprocess@options|.
@@ -4453,7 +4572,7 @@ return french_punctuation
 %
 %    \begin{macrocode}
 \newcommand*{\frenchsetup}[1]{%
-  \setkeys{FB}{#1}%
+  \SetKeys[FBsetup]{#1}%
 }%
 \@onlypreamble\frenchsetup
 %    \end{macrocode}
@@ -4463,340 +4582,154 @@ return french_punctuation
 \@onlypreamble\frenchbsetup
 %    \end{macrocode}
 %
-%    We define a collection of conditionals with their defaults
-%    (true or false).
+% \changes{v3.6c}{2024/07/25}{Removed spurious @ in
+%   \cs{FBCompactItemize@setup} and \cs{FBListOldLayout@setup}
+%   commands’ names.}
 %
+%    The following commands, defined with property |.code| in
+%    |DeclareKeys{}|, execute some post-treatment required to
+%    immediately take the flags value into account.
 %    \begin{macrocode}
-\newif\ifFBShowOptions
-\newif\ifFBStandardLayout           \FBStandardLayouttrue
-\newif\ifFBGlobalLayoutFrench       \FBGlobalLayoutFrenchtrue
-\newif\ifFBReduceListSpacing
-\newif\ifFBStandardListSpacing      \FBStandardListSpacingtrue
-\newif\ifFBListOldLayout
-\newif\ifFBListItemsAsPar
-\newif\ifFBCompactItemize
-\newif\ifFBStandardItemizeEnv       \FBStandardItemizeEnvtrue
-\newif\ifFBStandardEnumerateEnv     \FBStandardEnumerateEnvtrue
-\newif\ifFBStandardItemLabels       \FBStandardItemLabelstrue
-\newif\ifFBStandardLists            \FBStandardListstrue
-\newif\ifFBIndentFirst
-\newif\ifFBFrenchFootnotes
-\newif\ifFBAutoSpaceFootnotes
-\newif\ifFBOriginalTypewriter
-\newif\ifFBThinColonSpace
-\newif\ifFBThinSpaceInFrenchNumbers
-\newif\ifFBFrenchSuperscripts       \FBFrenchSuperscriptstrue
-\newif\ifFBLowercaseSuperscripts    \FBLowercaseSuperscriptstrue
-\newif\ifFBPartNameFull             \FBPartNameFulltrue
-\newif\ifFBCustomiseFigTabCaptions
-\newif\ifFBOldFigTabCaptions
-\newif\ifFBSmallCapsFigTabCaptions  \FBSmallCapsFigTabCaptionstrue
-\newif\ifFBSuppressWarning
-\newif\ifFBINGuillSpace
-%    \end{macrocode}
-%
-%    The defaults values of these flags have been choosen so that
-%    \frenchb{} does not change anything regarding the global layout.
-%    |\bbl@main@language|, set by the last option of \babel, controls
-%    the global layout of the document.  `AtEndOfPackage’ we check the
-%    main language in |\bbl@main@language|; if it is French (or a
-%    French dialect) the values of some flags have to be changed to
-%    ensure a French looking layout for the whole document (even in
-%    parts written in languages other than French); the end-user will
-%    then be able to customise the values of all these flags with
-%    \fbsetup{}.
-%
-% \changes{v2.5b}{2010/10/30}{Do not use the
-%    test \cs{iflanguage}\{french\} to check whether French is the
-%    main language or not, as it might be be erroneously positive
-%    when English is the main language and no hyphenation patterns
-%    are available for French.
-%    In this case \cs{l@french} and \cs{l@english} are 0.
-%    Pointed out by Günter Milde.}
-%
-% \changes{v3.1g}{2015/05/10}{Bug fix for koma-scripts classes:
-%    a spurious dot was added by the \cs{partformat} command.}
-%
-% \changes{v3.4a}{2018/01/07}{Patch for koma-script classes moved here,
-%    after \cs{ifFBPartNameFull} is defined, so that it applies to
-%    \cs{extrasacadian} too: \cs{AtEndOfPackage} is too late.}
-%
-%    The following patch is for koma-script classes: the |\partformat|
-%    command, defined as |\partname~\thepart\autodot|, is incompatible
-%    with our redefinition of |\partname|.
-%    \begin{macrocode}
-\ifFB@koma
-  \ifdefined\partformat
-    \def\FB@partformat@fix{%
-           \ifFBPartNameFull
-             \babel@save\partformat
-             \renewcommand*{\partformat}{\partname}%
-           \fi}
-    \addto\extrasfrench{\FB@partformat@fix}%
-  \fi
-\fi
-%    \end{macrocode}
-%
-% \changes{v3.0c}{2014/03/30}{No list customisation when beamer
-%    class is loaded.}
-%
-% \changes{v3.2g}{2017/01/30}{Minimal list customisation when
-%    beamerarticle.sty is loaded.}
-%
-% \changes{v3.2h}{2017/04/11}{Option GlobalLayoutFrench skipped
-%    when French is not the main language.}
-%
-% \changes{v3.5e}{2019/03/14}{StandardLayout and GlobalLayoutFrench
-%    options can no longer be toggled when French is not the main
-%    language.}
-%
-%    Our list customisation conflicts with the \cls{beamer} class and
-%    with the \pkg{beamerarticle} package.  The patch provided in
-%    \pkg{beamerbasecompatibility} solves the conflict except in case
-%    of language changes, so we provide our own patch.
-%    When the \cls{beamer} is loaded, lists are not customised at all
-%    to ensure compatibility.\hlabel{beamerarticle}
-%    The \pkg{beamerarticle} package needs to be loaded \emph{before}
-%    \babel, a warning is issued otherwise, see
-%    section~\ref{ssec-loading-order}; a light customisation is
-%    compatible with the \pkg{beamerarticle} package.
-%
-% \changes{v3.5n}{2022/04/18}{\cs{FBGlobalLayoutFrench} no longer set to
-%    false when French is not the main language.}
-%
-%    \begin{macrocode}
-\def\FB@french{french}
-\def\FB@acadian{acadian}
-\newif\ifFB@mainlanguage@FR
-\AtEndOfPackage{%
-  \ifx\bbl@main@language\FB@french \FB@mainlanguage@FRtrue
-  \else \ifx\bbl@main@language\FB@acadian \FB@mainlanguage@FRtrue \fi
-  \fi
-  \ifFB@mainlanguage@FR
-    \FBGlobalLayoutFrenchtrue
-    \@ifclassloaded{beamer}%
-      {\PackageInfo{french.ldf}{%
-          No list customisation for the beamer class,%
-          \MessageBreak reported}}%
-      {\@ifpackageloaded{beamerarticle}%
-         {\FBStandardItemLabelsfalse
-          \FBStandardListSpacingfalse
-          \PackageInfo{french.ldf}{%
-             Minimal list customisation for the beamerarticle%
-             \MessageBreak package; reported}}%
-%    \end{macrocode}
-%    Otherwise customise lists ``à la française’’:
-%    \begin{macrocode}
-         {\FBStandardListSpacingfalse
-          \FBStandardItemizeEnvfalse
-          \FBStandardEnumerateEnvfalse
-          \FBStandardItemLabelsfalse}%
-      }
-    \FBIndentFirsttrue
-    \FBFrenchFootnotestrue
-    \FBAutoSpaceFootnotestrue
-    \FBCustomiseFigTabCaptionstrue
-  \fi
-%    \end{macrocode}
-%    \frenchb{} being an option of \babel, it cannot load a package
-%    (\pkg{keyval}) while \file{french.ldf} is read, so we defer the
-%    loading of \file{keyval} and the options setup at the end of
-%    \babel’s loading.
-%    \begin{macrocode}
-  \RequirePackage{keyval}%
-  \define@key{FB}{ShowOptions}[true]%
-          {\csname FBShowOptions#1\endcsname}%
-%    \end{macrocode}
-%    The next two keys can only be toggled when French is the main
-%    language.
-%    \begin{macrocode}
-  \define@key{FB}{StandardLayout}[true]%
-          {\ifFB@mainlanguage@FR
-             \csname FBStandardLayout#1\endcsname
-           \else
-             \PackageWarning{french.ldf}%
-               {Option `StandardLayout' skipped:\MessageBreak
-                French is *not* babel's last option.\MessageBreak
-                Reported}%
-           \fi
-           \ifFBStandardLayout
-             \FBStandardListSpacingtrue
-             \FBStandardItemizeEnvtrue
-             \FBStandardItemLabelstrue
-             \FBStandardEnumerateEnvtrue
-             \FBIndentFirstfalse
-             \FBFrenchFootnotesfalse
-             \FBAutoSpaceFootnotesfalse
-           \else
-             \FBStandardListSpacingfalse
-             \FBStandardItemizeEnvfalse
-             \FBStandardItemLabelsfalse
-             \FBStandardEnumerateEnvfalse
-             \FBIndentFirsttrue
-             \FBFrenchFootnotestrue
-             \FBAutoSpaceFootnotestrue
-           \fi}%
-  \define@key{FB}{GlobalLayoutFrench}[true]%
-          {\ifFB@mainlanguage@FR
-            \csname FBGlobalLayoutFrench#1\endcsname
-           \else
-             \PackageWarning{french.ldf}%
-               {Option `GlobalLayoutFrench' skipped:\MessageBreak
-                French is *not* babel's last option.\MessageBreak
-                Reported}%
-           \fi}%
-%    \end{macrocode}
-%    If this key is set to \fbo{true} when French is the main language,
-%    nothing to do: all flags keep their default value.
-%    If this key is set to \fbo{false}, nothing to do either:
-%    |\babel@save| will do the job at every language’s switch.
-%    \begin{macrocode}
-  \define@key{FB}{ReduceListSpacing}[true]%
-          {\csname FBReduceListSpacing#1\endcsname
-           \ifFBReduceListSpacing \FBStandardListSpacingfalse
-           \else \FBStandardListSpacingtrue\fi
-           }%
-  \define@key{FB}{StandardListSpacing}[true]%
-          {\csname FBStandardListSpacing#1\endcsname}%
-  \define@key{FB}{ListOldLayout}[true]%
-          {\csname FBListOldLayout#1\endcsname
-           \ifFBListOldLayout
-             \FBStandardEnumerateEnvtrue
-             \renewcommand*{\FrenchLabelItem}{\textendash}%
-           \fi}%
-  \define@key{FB}{CompactItemize}[true]%
-          {\csname FBCompactItemize#1\endcsname
-           \ifFBCompactItemize
-             \FBStandardItemizeEnvfalse
-             \FBStandardEnumerateEnvfalse
-           \else
-             \FBStandardItemizeEnvtrue
-             \FBStandardEnumerateEnvtrue
-           \fi}%
-  \define@key{FB}{StandardItemizeEnv}[true]%
-          {\csname FBStandardItemizeEnv#1\endcsname}%
-  \define@key{FB}{StandardEnumerateEnv}[true]%
-          {\csname FBStandardEnumerateEnv#1\endcsname}%
-  \define@key{FB}{StandardItemLabels}[true]%
-          {\csname FBStandardItemLabels#1\endcsname}%
-  \define@key{FB}{ItemLabels}%
-          {\renewcommand*{\FrenchLabelItem}{#1}}%
-  \define@key{FB}{ItemLabeli}%
-          {\renewcommand*{\Frlabelitemi}{#1}}%
-  \define@key{FB}{ItemLabelii}%
-          {\renewcommand*{\Frlabelitemii}{#1}}%
-  \define@key{FB}{ItemLabeliii}%
-          {\renewcommand*{\Frlabelitemiii}{#1}}%
-  \define@key{FB}{ItemLabeliv}%
-          {\renewcommand*{\Frlabelitemiv}{#1}}%
-  \define@key{FB}{StandardLists}[true]%
-          {\csname FBStandardLists#1\endcsname
-           \ifFBStandardLists
-             \FBStandardListSpacingtrue
-             \FBStandardItemizeEnvtrue
-             \FBStandardEnumerateEnvtrue
-             \FBStandardItemLabelstrue
-           \else
-             \FBStandardListSpacingfalse
-             \FBStandardItemizeEnvfalse
-             \FBStandardEnumerateEnvfalse
-             \FBStandardItemLabelsfalse
-           \fi}%
-  \define@key{FB}{ListItemsAsPar}[true]%
-          {\csname FBListItemsAsPar#1\endcsname}
-  \define@key{FB}{IndentFirst}[true]%
-          {\csname FBIndentFirst#1\endcsname}%
-  \define@key{FB}{FrenchFootnotes}[true]%
-          {\csname FBFrenchFootnotes#1\endcsname}%
-  \define@key{FB}{AutoSpaceFootnotes}[true]%
-          {\csname FBAutoSpaceFootnotes#1\endcsname}%
-  \define@key{FB}{AutoSpacePunctuation}[true]%
-          {\csname FBAutoSpacePunctuation#1\endcsname}%
-  \define@key{FB}{OriginalTypewriter}[true]%
-          {\csname FBOriginalTypewriter#1\endcsname}%
-  \define@key{FB}{ThinColonSpace}[true]%
-          {\csname FBThinColonSpace#1\endcsname
-           \ifFBThinColonSpace
-             \renewcommand*{\FBcolonspace}{\FBthinspace}%
-           \fi}%
-  \define@key{FB}{ThinSpaceInFrenchNumbers}[true]%
-          {\csname FBThinSpaceInFrenchNumbers#1\endcsname}%
-  \define@key{FB}{FrenchSuperscripts}[true]%
-          {\csname FBFrenchSuperscripts#1\endcsname}
-  \define@key{FB}{LowercaseSuperscripts}[true]%
-          {\csname FBLowercaseSuperscripts#1\endcsname}
-  \define@key{FB}{PartNameFull}[true]%
-          {\csname FBPartNameFull#1\endcsname}%
-  \define@key{FB}{CustomiseFigTabCaptions}[true]%
-          {\csname FBCustomiseFigTabCaptions#1\endcsname}%
-  \define@key{FB}{OldFigTabCaptions}[true]%
-          {\csname FBOldFigTabCaptions#1\endcsname
-           \ifFBOldFigTabCaptions
-             \def\FB@capsep@fix{\babel@save\FBCaption@Separator
-                    \def\FBCaption@Separator{\CaptionSeparator}}%
+\newcommand*{\FBStandardLayout@setup}[1]%
+  {\ifFB@mainlanguage@FR
+     \csname FBStandardLayout#1\endcsname
+   \else
+     \PackageWarning{french.ldf}%
+         {Option `StandardLayout' skipped:\MessageBreak
+          French is *not* babel's last option.\MessageBreak
+          Reported}%
+   \fi
+   \ifFBStandardLayout
+     \FBStandardListSpacingtrue
+     \FBStandardItemizeEnvtrue
+     \FBStandardItemLabelstrue
+     \FBStandardEnumerateEnvtrue
+     \FBIndentFirstfalse
+     \FBFrenchFootnotesfalse
+     \FBAutoSpaceFootnotesfalse
+   \else
+     \FBStandardListSpacingfalse
+     \FBStandardItemizeEnvfalse
+     \FBStandardItemLabelsfalse
+     \FBStandardEnumerateEnvfalse
+     \FBIndentFirsttrue
+     \FBFrenchFootnotestrue
+     \FBAutoSpaceFootnotestrue
+   \fi
+  }
+\newcommand*{\FBGlobalLayout@setup}[1]%
+  {\ifFB@mainlanguage@FR
+     \csname FBGlobalLayoutFrench#1\endcsname
+   \else
+     \PackageWarning{french.ldf}%
+       {Option `GlobalLayoutFrench' skipped:\MessageBreak
+        French is *not* babel's last option.\MessageBreak
+        Reported}%
+   \fi
+  }
+\newcommand*{\FBListOldLayout@setup}[1]%
+  {\csname FBListOldLayout#1\endcsname
+   \ifFBListOldLayout
+     \FBStandardEnumerateEnvtrue
+     \renewcommand*{\FrenchLabelItem}{\textendash}%
+   \fi
+  }
+\newcommand*{\FBCompactItemize@setup}[1]%
+  {\csname FBCompactItemize#1\endcsname
+   \ifFBCompactItemize
+     \FBStandardItemizeEnvfalse
+     \FBStandardEnumerateEnvfalse
+   \else
+     \FBStandardItemizeEnvtrue
+     \FBStandardEnumerateEnvtrue
+   \fi
+  }
+\newcommand*{\FBStandardLists@setup}[1]%
+  {\csname FBStandardLists#1\endcsname
+   \ifFBStandardLists
+     \FBStandardListSpacingtrue
+     \FBStandardItemizeEnvtrue
+     \FBStandardEnumerateEnvtrue
+     \FBStandardItemLabelstrue
+   \else
+     \FBStandardListSpacingfalse
+     \FBStandardItemizeEnvfalse
+     \FBStandardEnumerateEnvfalse
+     \FBStandardItemLabelsfalse
+   \fi
+  }
+\newcommand*{\FBThinColonSpace@setup}[1]%
+  {\csname FBThinColonSpace#1\endcsname
+   \ifFBThinColonSpace
+     \renewcommand*{\FBcolonspace}{\FBthinspace}%
+   \fi
+  }
+\newcommand*{\FBOldFigTabCaptions@setup}[1]%
+  {\csname FBOldFigTabCaptions#1\endcsname
+   \ifFBOldFigTabCaptions
+     \def\FB@capsep@fix{\babel@save\FBCaption@Separator
+             \def\FBCaption@Separator{\CaptionSeparator}}%
              \addto\extrasfrench{\FB@capsep@fix}%
              \ifdefined\extrasacadian
                \addto\extrasacadian{\FB@capsep@fix}%
              \fi
-           \fi}%
-  \define@key{FB}{SmallCapsFigTabCaptions}[true]%
-          {\csname FBSmallCapsFigTabCaptions#1\endcsname
-           \ifFBSmallCapsFigTabCaptions
-           \else \let\FBfigtabshape\relax \fi}%
-  \define@key{FB}{SuppressWarning}[true]%
-          {\csname FBSuppressWarning#1\endcsname
-           \ifFBSuppressWarning
-             \renewcommand{\FBWarning}[1]{}%
-           \fi}%
-%    \end{macrocode}
-%    Here are the options controlling French guillemets spacing
-%    and the output of |\frquote{}|.
-%
-% \changes{v3.2g}{2017/01/30}{Warn when wrong values are provided to
-%    options EveryParGuill or EveryLineGuill.}
-%
-%    \begin{macrocode}
-  \define@key{FB}{INGuillSpace}[true]%
-          {\csname FBINGuillSpace#1\endcsname
-           \ifFBINGuillSpace
-             \renewcommand*{\FBguillspace}{\space}%
-           \fi}%
-  \define@key{FB}{InnerGuillSingle}[true]%
-          {\csname FBInnerGuillSingle#1\endcsname}%
-  \define@key{FB}{EveryParGuill}[open]%
-          {\expandafter\let\expandafter
-             \FBeveryparguill\csname FBguill#1\endcsname
-           \ifx\FBeveryparguill\FBguillopen
-           \else\ifx\FBeveryparguill\FBguillclose
-                \else\ifx\FBeveryparguill\FBguillnone
-                     \else
-                       \let\FBeveryparguill\FBguillopen
-                       \FBWarning{Wrong value for `EveryParGuill':
-                                  try `open',\MessageBreak
-                                  `close' or `none'. Reported}%
-                     \fi
-                \fi
-           \fi}%
-  \define@key{FB}{EveryLineGuill}[open]%
-          {\ifFB@luatex@punct
-             \expandafter\let\expandafter
-               \FBeverylineguill\csname FBguill#1\endcsname
-             \ifx\FBeverylineguill\FBguillopen
-             \else\ifx\FBeverylineguill\FBguillclose
-                  \else\ifx\FBeverylineguill\FBguillnone
-                       \else
-                         \let\FBeverylineguill\FBguillnone
-                         \FBWarning{Wrong value for `EveryLineGuill':
-                                    try `open',\MessageBreak
-                                    `close' or `none'. Reported}%
-                       \fi
-                  \fi
-             \fi
-           \else
-             \FBWarning{Option `EveryLineGuill' skipped:%
-                        \MessageBreak this option is for
-                        LuaTeX *only*.\MessageBreak Reported}%
-           \fi}%
+   \fi
+  }
+\newcommand*{\FBSmallCapsFigTabCaptions@setup}[1]%
+  {\csname FBSmallCapsFigTabCaptions#1\endcsname
+   \ifFBSmallCapsFigTabCaptions
+   \else
+     \let\FBfigtabshape\relax
+   \fi
+  }
+\newcommand*{\FBSuppressWarning@setup}[1]%
+  {\csname FBSuppressWarning#1\endcsname
+   \ifFBSuppressWarning
+     \renewcommand{\FBWarning}[1]{}%
+   \fi
+  }
+\newcommand*{\FBINGuillSpace@setup}[1]%
+  {\csname FBINGuillSpace#1\endcsname
+   \ifFBINGuillSpace
+     \renewcommand*{\FBguillspace}{\space}%
+   \fi
+  }
+\newcommand*{\FBEveryParGuill@setup}[1]%
+  {\expandafter\let\expandafter
+      \FBeveryparguill\csname FBguill#1\endcsname
+   \ifx\FBeveryparguill\FBguillopen
+   \else\ifx\FBeveryparguill\FBguillclose
+        \else\ifx\FBeveryparguill\FBguillnone
+             \else
+               \let\FBeveryparguill\FBguillopen
+               \FBWarning{Wrong value for `EveryParGuill':
+                          try `open',\MessageBreak
+                          `close' or `none'. Reported}%
+              \fi
+        \fi
+   \fi
+  }
+\newcommand*{\FBEveryLineGuill@setup}[1]%
+  {\ifFB@luatex@punct
+     \expandafter\let\expandafter
+        \FBeverylineguill\csname FBguill#1\endcsname
+     \ifx\FBeverylineguill\FBguillopen
+     \else\ifx\FBeverylineguill\FBguillclose
+          \else\ifx\FBeverylineguill\FBguillnone
+               \else
+                 \let\FBeverylineguill\FBguillnone
+                 \FBWarning{Wrong value for `EveryLineGuill':
+                            try `open',\MessageBreak
+                            `close' or `none'. Reported}%
+               \fi
+          \fi
+     \fi
+   \else
+     \FBWarning{Option `EveryLineGuill' skipped:%
+                \MessageBreak this option is for
+                LuaTeX *only*.\MessageBreak Reported}%
+   \fi
+  }
 %    \end{macrocode}
 %
 % \changes{v3.3c}{2017/07/23}{New option `UnicodeNoBreakSpaces’ for
@@ -4804,20 +4737,21 @@ return french_punctuation
 %
 %    Option \fbo{UnicodeNoBreakSpaces} (LuaLaTeX  only) is meant for
 %    HTML translators: when true, all non-breaking spaces added by
-%    \frenchb{} are coded in the PDF file as Unicode characters, namely
-%    U+A0 or U+202F, instead of penalties and glues.
+%    \frenchb{} are coded in the PDF file as Unicode characters,
+%    namely U+A0 or U+202F, instead of penalties and glues.
 %    \begin{macrocode}
-  \define@key{FB}{UnicodeNoBreakSpaces}[true]%
-          {\ifFB@luatex@punct
-             \csname FBucsNBSP#1\endcsname
-             \ifFBucsNBSP \FB@ucsNBSP=\@ne \fi
-           \else
-             \FBWarning{Option `UnicodeNoBreakSpaces' skipped:%
-                        \MessageBreak this option is for
-                        LuaTeX *only*.\MessageBreak Reported}%
-           \fi
-          }%
+\newcommand*{\FBUnicodeNoBreakSpaces@setup}[1]%
+  {\ifFB@luatex@punct
+     \csname FBucsNBSP#1\endcsname
+     \ifFBucsNBSP \FB@ucsNBSP=\@ne \fi
+   \else
+     \FBWarning{Option `UnicodeNoBreakSpaces' skipped:%
+                \MessageBreak this option is for
+                LuaTeX *only*.\MessageBreak Reported}%
+   \fi
+  }%
 %    \end{macrocode}
+%
 %    Inputing French quotes as \emph{single characters} when they are
 %    available on the keyboard (through a compose key for instance)
 %    is more comfortable than typing |\og| and |\fg|.
@@ -4858,145 +4792,145 @@ return french_punctuation
 %    it can be single-byte (latin1, latin9, applemac,…) or
 %    multi-bytes (utf-8, utf8x); the next command is meant for checking
 %    whether a character is single-byte (|\FB@second| is empty) or not.
-%    \begin{macrocode}
-  \def\FB@parse#1#2\endparse{\def\FB@second{#2}}%
-%    \end{macrocode}
 %
 %    \begin{macrocode}
-  \define@key{FB}{og}%
-          {\ifFBunicode
+\def\FB@parse#1#2\endparse{\def\FB@second{#2}}%
+\newcommand*{\FB@@og}%
+  {\ifFBfrench
+     \ifFB@spacing \FB@og\ignorespaces
+     \else \guillemotleft
+     \fi
+   \else \guillemotleft
+   \fi
+  }
+\newcommand*{\FB@@fg}%
+  {\ifFBfrench
+     \ifFB@spacing \FB@fg
+     \else \guillemotright
+     \fi
+   \else \guillemotright
+   \fi
+  }
+\newcommand*{\FBog@setup}[1]%
+  {\ifFBunicode
 %    \end{macrocode}
 %    LuaTeX or XeTeX in use, first try modern LuaTeX: we just need
 %    to set LuaTeX’s attribute |\FB@addGUILspace| to 1,
 %    \begin{macrocode}
-             \ifFB@luatex@punct
-               \FB@addGUILspace=1 \relax
-             \fi
+     \ifFB@luatex@punct
+       \FB@addGUILspace=1 \relax
+     \fi
 %    \end{macrocode}
 %    then with XeTeX it is a bit more tricky:
 %    \begin{macrocode}
-             \ifFB@xetex@punct
+     \ifFB@xetex@punct
 %    \end{macrocode}
 %    |\XeTeXinterchartokenstate| is defined, we just need to set
 %    |\XeTeXcharclass| to |\FB@guilo| for the French opening quote
 %    in T1 and Unicode encoding (see subsection~\ref{ssec-punct}).
 %    \begin{macrocode}
-               \XeTeXcharclass"13   = \FB@guilo
-               \XeTeXcharclass"AB   = \FB@guilo
-               \XeTeXcharclass"A0   = \FB@guilnul
-               \XeTeXcharclass"202F = \FB@guilnul
-             \fi
+       \XeTeXcharclass"13   = \FB@guilo
+       \XeTeXcharclass"AB   = \FB@guilo
+       \XeTeXcharclass"A0   = \FB@guilnul
+       \XeTeXcharclass"202F = \FB@guilnul
+     \fi
 %    \end{macrocode}
 %    Issue a warning with older Unicode engines requiring active
 %    characters.
 %    \begin{macrocode}
-             \ifFB@active@punct
-               \FBWarning{Option og=« not supported with this version
-                          of\MessageBreak LuaTeX/XeTeX; reported}%
-             \fi
-           \else
+     \ifFB@active@punct
+       \FBWarning{Option og=« not supported with this version of
+                  \MessageBreak LuaTeX/XeTeX; reported}% »
+     \fi
+   \else
 %    \end{macrocode}
 %    This is for conventional TeX engines:
 %    \begin{macrocode}
-             \newcommand*{\FB@@og}{%
-                \ifFBfrench
-                  \ifFB@spacing\FB@og\ignorespaces
-                  \else\guillemotleft
-                  \fi
-                \else\guillemotleft\fi}%
-             \AtBeginDocument{%
-                \ifdefined\uc@dclc
+     \AtBeginDocument{%
+        \ifdefined\uc@dclc
 %    \end{macrocode}
 %    Package \pkg{inputenc} with utf8x (ucs) encoding loaded,
 %    use |\uc@dclc|:
 %    \begin{macrocode}
-                  \uc@dclc{171}{default}{\FB@@og}%
-                \else
+          \uc@dclc{171}{default}{\FB@@og}%
+        \else
 %    \end{macrocode}
 %    if encoding is not utf8x, check if the argument of |og|
 %    is a single-byte character:
 %    \begin{macrocode}
-                  \FB@parse#1\endparse
-                  \ifx\FB@second\@empty
+          \FB@parse#1\endparse
+          \ifx\FB@second\@empty
 %    \end{macrocode}
 %    This means 8-bit character encoding.
 %    Package \pkg{MULEenc} (from CJK) defines |\mule@def|
 %    to map characters to control sequences.
 %    \begin{macrocode}
-                    \ifdefined\mule@def
-                      \mule@def{11}{\FB@@og}%
-                    \else
-                      \ifdefined\DeclareInputText
-                        \@tempcnta`#1\relax
-                        \DeclareInputText{\the\@tempcnta}{\FB@@og}%
-                      \else
+            \ifdefined\mule@def
+              \mule@def{11}{\FB@@og}%
+            \else
+              \ifdefined\DeclareInputText
+                \@tempcnta`#1\relax
+                \DeclareInputText{\the\@tempcnta}{\FB@@og}%
+              \else
 %    \end{macrocode}
 %    Package \pkg{inputenc} not loaded, no way…
 %    \begin{macrocode}
-                        \FBWarning{Option `og' requires package
-                                   inputenc;\MessageBreak reported}%
-                      \fi
-                    \fi
-                  \else
+                \FBWarning{Option `og' requires package
+                           inputenc;\MessageBreak reported}%
+              \fi
+            \fi
+          \else
 %    \end{macrocode}
 %    This means multi-byte character encoding, we assume UTF-8
 %    \begin{macrocode}
-                    \DeclareUnicodeCharacter{00AB}{\FB@@og}%
-                  \fi
-                \fi}%
-           \fi
-          }%
+            \DeclareUnicodeCharacter{00AB}{\FB@@og}%
+          \fi
+        \fi}%
+   \fi
+  }
 %    \end{macrocode}
 %
 %    Same code for the closing quote.
 %    \begin{macrocode}
-  \define@key{FB}{fg}%
-          {\ifFBunicode
-             \ifFB@luatex@punct
-               \FB@addGUILspace=1 \relax
-             \fi
-             \ifFB@xetex@punct
-               \XeTeXcharclass"14   = \FB@guilf
-               \XeTeXcharclass"BB   = \FB@guilf
-               \XeTeXcharclass"A0   = \FB@guilnul
-               \XeTeXcharclass"202F = \FB@guilnul
-             \fi
-             \ifFB@active@punct
-               \FBWarning{Option fg=» not supported with this version
-                          of\MessageBreak LuaTeX/XeTeX; reported}%
-             \fi
-           \else
-             \newcommand*{\FB@@fg}{%
-                \ifFBfrench
-                  \ifFB@spacing\FB@fg
-                  \else\guillemotright
-                  \fi
-                \else\guillemotright\fi}%
-             \AtBeginDocument{%
-                \ifdefined\uc@dclc
-                  \uc@dclc{187}{default}{\FB@@fg}%
-                \else
-                  \FB@parse#1\endparse
-                  \ifx\FB@second\@empty
-                    \ifdefined\mule@def
-                      \mule@def{27}{{\FB@@fg}}%
-                    \else
-                      \ifdefined\DeclareInputText
-                        \@tempcnta`#1\relax
-                        \DeclareInputText{\the\@tempcnta}{\FB@@fg}%
-                      \else
-                        \FBWarning{Option `fg' requires package
-                                   inputenc;\MessageBreak reported}%
-                      \fi
-                    \fi
-                  \else
-                    \DeclareUnicodeCharacter{00BB}{\FB@@fg}%
-                  \fi
-                \fi}%
-           \fi
-          }%
-}
-%    \end{macrocode}
+\newcommand*{\FBfg@setup}[1]%
+  {\ifFBunicode
+     \ifFB@luatex@punct
+       \FB@addGUILspace=1 \relax
+     \fi
+     \ifFB@xetex@punct
+       \XeTeXcharclass"14   = \FB@guilf
+       \XeTeXcharclass"BB   = \FB@guilf
+       \XeTeXcharclass"A0   = \FB@guilnul
+       \XeTeXcharclass"202F = \FB@guilnul
+     \fi
+     \ifFB@active@punct
+       \FBWarning{Option fg=» not supported with this version of
+                  \MessageBreak LuaTeX/XeTeX; reported}%
+     \fi
+   \else
+     \AtBeginDocument{%
+        \ifdefined\uc@dclc
+          \uc@dclc{187}{default}{\FB@@fg}%
+        \else
+          \FB@parse#1\endparse
+          \ifx\FB@second\@empty
+             \ifdefined\mule@def
+               \mule@def{27}{{\FB@@fg}}%
+             \else
+               \ifdefined\DeclareInputText
+                 \@tempcnta`#1\relax
+                 \DeclareInputText{\the\@tempcnta}{\FB@@fg}%
+               \else
+                 \FBWarning{Option `fg' requires package
+                            inputenc;\MessageBreak reported}%
+                 \fi
+               \fi
+          \else
+            \DeclareUnicodeCharacter{00BB}{\FB@@fg}%
+          \fi
+        \fi}%
+   \fi
+  }
 % \end{macro}
 %
 % \begin{macro}{\FBprocess@options}
@@ -5070,7 +5004,7 @@ return french_punctuation
     \ifFBStandardItemizeEnv
     \else
       \PackageWarning{french.ldf}%
-        {babel-french will not customize lists' layout\MessageBreak
+        {babel-french will not customise lists' layout\MessageBreak
          when French is not the main language,\MessageBreak
          reported}%
     \fi
@@ -5110,8 +5044,8 @@ return french_punctuation
 %
 %    When package \pkg{numprint} is loaded with option
 %    \opt{autolanguage}, \pkg{numprint}’s command |\npstylefrench| has
-%    to be redefined differently according to the value of flag
-%    \fbo{ThinSpaceInFrenchNumbers}.
+%    to be redefined differently according to the value of
+%    flag\linebreak \fbo{ThinSpaceInFrenchNumbers}.
 %    As |\npstylefrench| was undefined in old versions of
 %    \pkg{numprint}, we provide this command.
 %    \begin{macrocode}
@@ -5119,17 +5053,16 @@ return french_punctuation
     {\ifnprt@autolanguage
        \providecommand*{\npstylefrench}{}%
        \ifFBThinSpaceInFrenchNumbers
-         \renewcommand*{\FBthousandsep}{\,}%
+         \renewcommand*{\FBthousandsep}{\FBthinspace}%
        \fi
        \g@addto@macro\npstylefrench{\npthousandsep{\FBthousandsep}}%
      \fi
     }{}%
 %    \end{macrocode}
 %    \fbo{FrenchSuperscripts}: if \fbo{true} |\up=\fup|, else
-%    |\up=\textsuperscript|.  Anyway |\up*=\FB@up@fake|.  The star-form
-%    |\up*{}| is provided for fonts that lack some superior letters:
-%    Adobe Jenson Pro and Utopia Expert have no ``g superior’’ for
-%    instance.
+%    |\up=\textsuperscript|.  The star-form |\up*=\FB@up@fake| is
+%    provided for fonts that lack some superior letters: Adobe Jenson
+%    Pro and Utopia Expert have no ``g superior’’ for instance.
 %    \begin{macrocode}
   \ifFBFrenchSuperscripts
     \DeclareRobustCommand*{\up}{%
@@ -5272,9 +5205,8 @@ return french_punctuation
 %    Reported by Sébastien Gouezel.}
 %
 %    At |\begin{document}|, we have to provide an |\xspace| command
-%    in case the \pkg{xspace} package is not loaded, do some setup for
-%    \file{hyperref}’s bookmarks, execute |\FBprocess@options|, switch
-%    LuaTeX punctuation on and issue some warnings if necessary.
+%    in case the \pkg{xspace} package is not loaded and execute
+%    |\FBprocess@options|.
 %    \begin{macrocode}
 \AtBeginDocument{%
    \providecommand*{\xspace}{\relax}%
@@ -5423,13 +5355,14 @@ return french_punctuation
 % \begin{macro}{\Frlabelitemii}
 % \begin{macro}{\Frlabelitemiii}
 % \begin{macro}{\Frlabelitemiv}
-%    Default labels for French itemize-lists (same label for all levels):
+%    Default labels for French itemize-lists ---same label for all
+%    levels---, (already defined as empty by |\DeclareKey{}|):
 %    \begin{macrocode}
-\newcommand*{\FrenchLabelItem}{\textemdash}
-\newcommand*{\Frlabelitemi}{\FrenchLabelItem}
-\newcommand*{\Frlabelitemii}{\FrenchLabelItem}
-\newcommand*{\Frlabelitemiii}{\FrenchLabelItem}
-\newcommand*{\Frlabelitemiv}{\FrenchLabelItem}
+\renewcommand*{\FrenchLabelItem}{\textemdash}
+\renewcommand*{\Frlabelitemi}{\FrenchLabelItem}
+\renewcommand*{\Frlabelitemii}{\FrenchLabelItem}
+\renewcommand*{\Frlabelitemiii}{\FrenchLabelItem}
+\renewcommand*{\Frlabelitemiv}{\FrenchLabelItem}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -5441,14 +5374,14 @@ return french_punctuation
 % \begin{macro}{\descindentFB}
 % \begin{macro}{\labelindentFB}
 % \begin{macro}{\labelwidthFB}
-%    Let’s define four dimens |\listindentFB|, |\descindentFB|,
+%    {\sloppy Let’s define four dimens |\listindentFB|, |\descindentFB|,
 %    |\labelindentFB| and |\labelwidthFB| to customise lists’ horizontal
 %    indentations.
 %    They are given silly negative values here in order to eventually
 %    enable their customisation in the preamble.  They will get
 %    reasonnable defaults later when entering French (see
 %    |\setlabelitemsFB| and |\setlistindentFB|) unless they have been
-%    customised.
+%    customised.\par}
 %    \begin{macrocode}
 \newdimen\listindentFB
 \setlength{\listindentFB}{-1pt}
@@ -5781,13 +5714,6 @@ return french_punctuation
 % \changes{v2.0}{2006/11/06}{Footnotes are now printed
 %     by default `à la française’ for the whole document.}
 %
-% \changes{v2.0b}{2007/04/18}{Footnotes: Just do nothing
-%    (except warning) when the bigfoot package is loaded.}
-%
-%    The \pkg{bigfoot} package deeply changes the way footnotes are
-%    handled.  When \file{bigfoot} is loaded, we just warn the user
-%    that \frenchb{} will drop the customisation of footnotes.
-%
 %    The layout of footnotes is controlled by two flags
 %    |\ifFBAutoSpaceFootnotes| and |\ifFBFrenchFootnotes| which are
 %    set by options of \fbsetup{} (see section~\ref{ssec-keyval}).
@@ -5796,31 +5722,8 @@ return french_punctuation
 %    different because one was called in a French part, the other one
 %    in English!).
 %
-%    We save the original definition of |\@footnotemark| at the
-%    |\begin{document}| in order to include any customisation that
-%    packages might have done; we define a variant |\@footnotemarkFB|
-%    which just adds a thin space before the number or symbol calling
-%    a footnote (any space typed in is removed first). The choice
-%    between the two definitions (valid for the whole document) is
-%    controlled by flag |\ifFBAutoSpaceFootnotes|.
-%
 % \changes{v2.4a}{2009/11/23}{\cs{PackageWarning} changed to
 %    \cs{PackageInfo} (when bigfoot package in use).}
-%
-%    \begin{macrocode}
-\AtBeginDocument{\@ifpackageloaded{bigfoot}%
-                   {\PackageInfo{french.ldf}%
-                     {bigfoot package in use.\MessageBreak
-                      babel-french will NOT customise footnotes;%
-                      \MessageBreak reported}}%
-                   {\let\@footnotemarkORI\@footnotemark
-                    \def\@footnotemarkFB{\leavevmode\unskip\unkern
-                                         \,\@footnotemarkORI}%
-                    \ifFBAutoSpaceFootnotes
-                      \let\@footnotemark\@footnotemarkFB
-                    \fi}%
-                }
-%    \end{macrocode}
 %
 % \begin{macro}{\@makefntextFB}
 %    We then define |\@makefntextFB|, a variant of |\@makefntext|
@@ -5862,10 +5765,9 @@ return french_punctuation
 \newcommand*{\kernFFN}{\kern .5em}
 \newdimen\FBfnindent
 %    \end{macrocode}
-%    |\@makefntextFB|’s definition is now tuned according to the
-%    document’s class for better compatibility.
+%    |\@makefntextFB|’s definition depends on the document’s class.
 %
-%    Koma-script classes provide |\deffootnote|, a handy command
+%    Koma-script classes: they provide |\deffootnote|, a handy command
 %    to customise the footnotes’ layout (see English manual
 %    \file{scrguien.pdf}); it redefines |\@makefntext| and
 %    |\@@makefnmark|.  First, save the original definitions.
@@ -5911,19 +5813,17 @@ return french_punctuation
       \makefootmark #1}%
    }{}
 %    \end{macrocode}
-%    Definitions for the \cls{beamer} class:
-%    \begin{macrocode}
-\@ifclassloaded{beamer}
-%    \end{macrocode}
-%    (see original definition in \file{beamerbaseframecomponents.sty}),
-%    note that for the \cls{beamer} class footnotes are LR-boxes, not
-%    paragraphs, so |\parindentFFN| is irrelevant.
-%    class.
+%    Definitions for the \cls{beamer} class:\par
+%    the original definition is in
+%    \file{beamerbaseframecomponents.sty}, note that for the
+%    \cls{beamer} class footnotes are LR-boxes, not paragraphs,
+%    so |\parindentFFN| is irrelevant.
 %
 % \changes{v3.2h}{2016/04/09}{With beamer.cls, add \cs{llap} to
 %    \cs{@thefnmark} for notes numbered over 99.}
 %
 %    \begin{macrocode}
+\@ifclassloaded{beamer}
    {\def\@makefntextFB#1{%
       \def\insertfootnotetext{#1}%
       \def\insertfootnotemark{\insertfootnotemarkFB}%
@@ -5934,9 +5834,9 @@ return french_punctuation
       \llap{\@thefnmark}\dotFFN\kernFFN}%
    }{}
 %    \end{macrocode}
+%
 %    Now the default definition of |\@makefntextFB| for standard LaTeX
 %    and AMS classes.
-%
 %    The next command prints the footnote mark according to the
 %    specifications of the French `Imprimerie Nationale’.
 %    Keep in mind that |\@thefnmark| might be empty (i.e.\ in
@@ -5953,11 +5853,36 @@ return french_punctuation
 %    \end{macrocode}
 % \end{macro}
 %
-%    The rest of |\@makefntext|’s customisation is done at the
-%    |\begin{document}|.  We save the original definition of
-%    |\@makefntext|, and then redefine |\@makefntext| according
+%    The rest of |\@makefntext|’s customisation will be done at
+%    the |\begin{document}|: saving the original definition of
+%    |\@makefntext|, then redefining |\@makefntext| according
 %    to the value of flag |\ifFBFrenchFootnotes| (true or false).
-%    Koma-script classes require a special treatment.
+%
+% \begin{macro}{\@footnotemark}
+%
+% \changes{v3.6a}{2024/05/13}{Allow customisation of the space added
+%    in \cs{\@footnotemarkFB}.}
+%
+%    We will save the original definition of |\@footnotemark| at the
+%    |\begin{document}| in order to include any customisation that
+%    packages might have done; we define a variant |\@footnotemarkFB|
+%    which just adds a (customisable) thin space before the number or
+%    symbol calling a footnote (any space typed in is removed first).
+%    The choice between the two definitions (valid for the whole
+%    document) is controlled by flag |\ifFBAutoSpaceFootnotes|.
+%
+%    |\@footnotemark|’s customisation: let’s define a customisable
+%    thin space which will be added before footnote’s call by
+%    |\@footnotemarkFB|.
+%    \begin{macrocode}
+\newcommand*{\FBfnmarkspace}{\kern .5\fontdimen2\font}
+\def\@footnotemarkFB{\leavevmode\unskip\unkern
+                     \protect\FBfnmarkspace\@footnotemarkORI}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \changes{v2.0b}{2007/04/18}{Footnotes: Just do nothing
+%    (except warning) when the bigfoot package is loaded.}
 %
 % \changes{v3.3c}{2017/07/28}{Reset \cs{localleftbox} locally
 %    inside \cs{@makefntext}.  Needed by \cs{frquote} with LuaTeX.}
@@ -5969,14 +5894,49 @@ return french_punctuation
 %    \cs{localleftbox} and \cs{FBeverypar@quote} saved and restored
 %    instead.}
 %
+% \changes{v3.5s}{2024/01/05}{Footnotes: no customising of
+%    \cs{@footnotetext} when the footnotebackref package is loaded.
+%    Just warn the user.}
+%
+%    Switching between French or Standard layout for footnotes is done
+%    `AtBeginDocument’.
 %    The LuaTeX command |\localleftbox| and |\FBeverypar@quote| used
 %    by |\frquote{}| have to be reset inside footnotes; done for LaTeX
 %    based formats only.
 %    \begin{macrocode}
 \providecommand\localleftbox[1]{}
 \AtBeginDocument{%
-   \@ifpackageloaded{bigfoot}{}%
-      {\ifdim\parindentFFN<10in
+%    \end{macrocode}
+%    When the \pkg{footnotebackref} package is loaded, \frenchb{}
+%    will not customise |\@footnotetext| in order to keep back
+%    referencing working.
+%    \begin{macrocode}
+  \@ifpackageloaded{footnotebackref}%
+      {\FBFrenchFootnotesfalse
+       \PackageWarning{french.ldf}%
+          {footnotebackref package loaded.\MessageBreak
+           babel-french will NOT customise footnotes;%
+           \MessageBreak reported}}%
+      {}%
+%    \end{macrocode}
+%    The \pkg{bigfoot} package deeply changes the way footnotes are
+%    handled.  When \file{bigfoot} is loaded, we just warn the user
+%    that \frenchb{} will not customise footnotes at all.
+%    \begin{macrocode}
+   \@ifpackageloaded{bigfoot}%
+      {\PackageWarning{french.ldf}%
+          {bigfoot package in use.\MessageBreak
+           babel-french will NOT customise footnotes;%
+           \MessageBreak reported}}%
+%    \end{macrocode}
+%    Otherwise, footnotes may be customised according to the
+%    \fbsetup{} options.
+%    \begin{macrocode}
+      {\let\@footnotemarkORI\@footnotemark
+       \ifFBAutoSpaceFootnotes
+         \let\@footnotemark\@footnotemarkFB
+       \fi
+       \ifdim\parindentFFN<10in
        \else
          \parindentFFN=\parindent
          \ifdim\parindentFFN<1.5em \parindentFFN=1.5em \fi
@@ -5984,14 +5944,15 @@ return french_punctuation
        \settowidth{\FBfnindent}{\dotFFN\kernFFN}%
        \addtolength{\FBfnindent}{\parindentFFN}%
        \let\@makefntextORI\@makefntext
-       \ifFB@koma
 %    \end{macrocode}
+%    Koma-script classes require a special treatment.\par
 %    Definition of |\@makefntext| for koma-script classes: running
 %    \@makefntextORI inside a group to reset |\localleftbox{}| and
 %    |\FBeverypar@quote| would mess up the layout of footnotes whenever
 %    the first manadatory argument of |\deffootnote{}| (used as
 %    |\leftskip|) is non-nil (default is 1em, 0pt in French).
 %    \begin{macrocode}
+       \ifFB@koma
          \let\@@makefnmarkORI\@@makefnmark
          \long\def\@makefntext#1{%
            \localleftbox{}%
@@ -6053,7 +6014,7 @@ return french_punctuation
            \localleftbox{\FBeveryline@quote}}%
        \fi
     }%
-}
+  }
 %    \end{macrocode}
 %
 %    For compatibility reasons, we provide definitions for the commands

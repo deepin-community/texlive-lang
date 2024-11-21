@@ -1,0 +1,191 @@
+\documentclass[a4paper]{ltxdoc}
+
+\usepackage{holtxdoc}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{tikz}
+\hypersetup{%
+  plainpages=false,%
+  bookmarksnumbered,%
+  pdftitle={The quran-es Package},%
+  pdfkeywords={quran-es, surah, ayah, juz, hizb, ruku, manzil},%
+  pdfauthor={Seiied-Mohammad-Javad Razavian},%
+  baseurl={http://mirrors.ctan.org/macros/xetex/latex/quran-es/doc/quran-es-doc.pdf},%
+}
+\usepackage[all]{quran-es}
+% because of definition of \XeTeX and \XeLaTeX symbols in bidi,
+% I should undef these macro that are also defined in holtxdoc package.
+\makeatletter
+\bidi@undef\XeTeX
+\bidi@undef\XeLaTeX
+\makeatother
+\usepackage{arabxetex}
+
+\makeatletter
+\bidi@BeforeBeginEnvironment{declcs}{\vspace*{-4mm}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\boxcs#1{\leftline{\fbox{\mcs{#1}}}}
+\def\mcs#1{\lr{\texttt{\textbackslash{}#1}}}
+\def\tt#1{\lr{\texttt{#1}}}
+\lstdefinestyle{BashInputStyle}{
+  language=bash,
+  basicstyle=\footnotesize\sffamily,
+  frame=tb,
+  columns=fullflexible,
+  backgroundcolor=\color{gray!10},
+}
+
+% Define box and box title style
+\tikzstyle{mybox} = [draw=black, fill=gray!20, very thick,
+    rectangle, rounded corners, inner sep=10pt, inner ysep=20pt]
+\tikzstyle{fancytitle} =[fill=gray, text=white]
+
+\def\mx#1#2{\mybox{#1}{#2}{.45\textwidth}}
+\def\mxf#1#2{\mybox{#1}{#2}{\textwidth}}
+
+\def\mybox#1#2#3{
+\begin{tikzpicture}
+\node [mybox] (box){%
+    \begin{minipage}[t]{#3}
+        #2
+    \end{minipage}
+};
+\node[fancytitle, anchor=west, right=10pt] at (box.north west) {\small \cs{#1}};
+\node (hole) [anchor=north east, left=5pt ] at (box.north east) { \tikz\fill[very thick,white] (0,0) circle (12pt); };
+\node[ ] at (hole.center) {\includegraphics[width=.05\textwidth]{quran.png}};
+\end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\includegraphics[scale=.3]{quran.png}\\
+The \xpackage{quran-es} Package\footnote{To one who has devoted his life to the Holy Quran}\\
+}
+\author{Seiied-Mohammad-Javad Razavian\\\xemail{javadr@gmail.com}}
+
+\date{\quranesdate,  Version \quranesversion\footnote{Initial release: September 5, 2024}}
+
+\parindent=0pt
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+%\newpage
+
+\section{Introduction}
+
+The \xpackage{quran} package offers various macros for typesetting the entire Holy Quran or specific sections, 
+based on its commonly used divisions. Additionally, it provides commands for several translations 
+of the Holy Quran, including German, English, French, and Persian. 
+Requests for additional translations prompted the creation of separate packages due to technical constraints. 
+One such package is \xpackage{quran-es}, which includes all Spanish translations of the Holy Quran provided by 
+\href{https://tanzil.net}{tanzil.net}, 
+namely those by \emph{``Raúl González Bórnez''}, \emph{``Julio Cortes''}, and \emph{``Muhammad Isa García''}.
+
+
+\section{Loading The Package}
+
+The package can be loaded in the usual manner with the command:\\
+\cs{usepackage[option]\{quran-es\}}. 
+
+Upon loading, the package outputs some information to both the terminal and the log file. 
+This information typically includes:
+
+
+\begin{quote}
+\begin{lstlisting}[style=BashInputStyle, language=tex, escapechar={|}]
+Package: quran-es |\quranesdate| v|\quranesversion|
+Spanish translations extension to the quran package.
+\end{lstlisting}
+\end{quote}
+
+
+\section{Options of The Package}\label{sec:qurantypesetting}
+
+\marginpar{\xoption{bornez}\smallskip}\marginpar{\xoption{cortes}\smallskip}%
+\marginpar{\xoption{garcia}\smallskip}\marginpar{\xoption{all}\smallskip}%
+The package offers three options: \xoption{bornez}, \xoption{cortes}, and \xoption{garcia}.
+By specifying any combination of these options, you can typeset the corresponding translations 
+in the same manner as the \xpackage{quran} package. Additionally, the \xoption{all} option loads all 
+Spanish translations provided by the \xpackage{quran-es} package. 
+By default, the package loads the \xoption{garcia} option.
+
+This package is built on top of the \xpackage{quran} package, 
+so you can also pass any options defined in the \xpackage{quran} package to \xpackage{quran-es}.
+
+
+\section{Differences Between \xpackage{quran} and \xpackage{quran-es}}
+
+At first glance, \xpackage{quran-es} provides all the functionalities of \xpackage{quran}. 
+The primary distinction is that \xpackage{quran-es} extends \xpackage{quran} by including three additional Spanish translations: 
+`bornez`, `cortes`, and `garcia`. All Spanish translations offered by the package are listed in Table~\ref{tab:estrans}.
+
+
+
+
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{|c|l|c|}
+    \toprule
+    Order & \multicolumn{1}{c|}{Translator} & Option's name \\\midrule
+    1 & Raúl González Bórnez & bornez \\
+    2 & 	Julio Cortes & cortes \\
+    3 & 	Muhammad Isa García & garcia \\
+    \bottomrule
+\end{tabular}
+    \caption{Spanish translations included in the package}
+    \label{tab:estrans}
+\end{table}
+
+\subsection{How to Change the Current Spanish Translation}
+    The \xpackage{quran-es} package uses Muhammad Isa García's translation by default.
+    To change the default Spanish translation, you can use the following macro:
+    \begin{declcs}{esSetTrans}\marg{index}
+    \end{declcs}
+    The \meta{index} can be either an integer or a name. Both ``order'' and ``option’s name'' 
+    as shown in Table~\ref{tab:estrans} are valid. 
+    For example, both \cs{esSetTrans\{2\}} and \cs{esSetTrans\{cortes\}} will produce the same effect.
+
+
+\subsection{How to Retrieve the Name of the Current Spanish Translation}
+    \begin{declcs}{esGetTrans}
+    \end{declcs}
+    The macro above returns the name of the current Spanish translation, which will be one of ``bornez'', ``cortes'', or ``garcia''.
+
+
+\subsection{How to Typeset the Spanish Translation}
+
+    The process is identical to that of the \xpackage{quran} package. 
+    All of the following macros are available for use.
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item \cs{quransurahes}
+        \item \cs{quranayahes}
+        \item \cs{quranpagees}
+        \item \cs{quranjuzes}
+        \item \cs{quranhizbes}
+        \item \cs{quranquarteres}
+        \item \cs{quranrukues}
+        \item \cs{quranmanziles}
+        \item \cs{qurantextes}
+    \end{itemize}
+\end{multicols}
+
+    \centerline{\mxf{quransurah*}
+    {\begin{arab}\small\quransurah*\end{arab}}}
+
+    \centerline{\mxf{esSetTrans\{bornez\}\textbackslash{}quransurahes*}
+    {\esSetTrans{bornez}\quransurahes*}}
+
+    \centerline{\mxf{esSetTrans\{cortes\}\textbackslash{}quransurahes*}
+    {\esSetTrans{cortes}\quransurahes*}}
+
+    \centerline{\mxf{esSetTrans\{garcia\}\textbackslash{}quransurahes*}
+    {\esSetTrans{garcia}\quransurahes*}}
+
+\end{document}
+

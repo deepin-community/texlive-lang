@@ -1,4 +1,4 @@
-# $Id: TLUtils.pm 69653 2024-01-31 21:52:46Z karl $
+# $Id: TLUtils.pm 71593 2024-06-22 21:04:17Z karl $
 # TeXLive::TLUtils.pm - the inevitable utilities for TeX Live.
 # Copyright 2007-2024 Norbert Preining, Reinhard Kotucha
 # This file is licensed under the GNU General Public License version 2
@@ -8,7 +8,7 @@ use strict; use warnings;
 
 package TeXLive::TLUtils;
 
-my $svnrev = '$Revision: 69653 $';
+my $svnrev = '$Revision: 71593 $';
 my $_modulerevision = ($svnrev =~ m/: ([0-9]+) /) ? $1 : "unknown";
 sub module_revision { return $_modulerevision; }
 
@@ -2268,7 +2268,7 @@ Run the ConTeXt cache generation commands, using C<$bindir> and
 C<$progext> to check if commands can be run. Use the function reference
 C<$run_postinst_cmd> to actually run the commands. The return status is
 zero if all succeeded, nonzero otherwise. If the main ConTeXt program
-(C<luametatex>) cannot be run at all, the return status is status.
+(C<luametatex>) cannot be run at all, the return status is zero.
 
 Functions C<info> and C<debug> are called with status reports.
 
@@ -2290,16 +2290,24 @@ sub update_context_cache {
   # can be done about it.
   my $lmtx = "$bindir/luametatex$progext";
   if (TeXLive::TLUtils::system_ok("$lmtx --version")) {
-    info("setting up ConTeXt cache: ");
+    info("setting up ConTeXt caches: ");
     $errcount += &$run_postinst_cmd("mtxrun --generate");
     #
     # If mtxrun failed, don't bother trying more.
     if ($errcount == 0) {
       $errcount += &$run_postinst_cmd("context --luatex --generate");
       #
+      # This is for finding fonts by font name (the --generate suffices
+      # for file name). Although ConTeXt does some automatic cache
+      # regeneration, Hans advises that this manual reload can help, and
+      # should be no harm.
+      # https://wiki.contextgarden.net/Use_the_fonts_you_want
+      # https://wiki.contextgarden.net/Mtxrun#base and #fonts
+      $errcount += &$run_postinst_cmd("mtxrun --script fonts --reload");
+      #
       # If context succeeded too, try luajittex. Missing on some platforms.
       # Although we build luajittex normally, instead of importing the
-      # binary, testing for file existence should suffice, we may as
+      # binary, so testing for file existence should suffice, we may as
       # well test execution since it's just as easy.
       # 
       if ($errcount == 0) {
@@ -2636,7 +2644,7 @@ sub check_file_and_remove {
 
   if (!$checksum && !$checksize) {
     tlwarn("$fn_name: neither checksum nor checksize " .
-           "available for $xzfile, cannot check integrity"); 
+           "available for $xzfile, cannot check integrity\n"); 
     return;
   }
   
@@ -4858,36 +4866,54 @@ sub tlnet_disabled_packages {
   return @ret;
 }
 
+=item C<< report_tlpdb_differences($rret) >>
+
+Report, using info function, as given in hash reference argument RET,
+with keys removed_packages, added_packages, different_packages.
+
+=cut
+
 sub report_tlpdb_differences {
   my $rret = shift;
   my %ret = %$rret;
 
   if (defined($ret{'removed_packages'})) {
     info ("removed packages from A to B:\n");
-    for my $f (@{$ret{'removed_packages'}}) {
+    for my $f (sort @{$ret{'removed_packages'}}) {
       info ("  $f\n");
     }
   }
   if (defined($ret{'added_packages'})) {
     info ("added packages from A to B:\n");
-    for my $f (@{$ret{'added_packages'}}) {
+    for my $f (sort @{$ret{'added_packages'}}) {
       info ("  $f\n");
     }
   }
   if (defined($ret{'different_packages'})) {
     info ("different packages from A to B:\n");
-    for my $p (keys %{$ret{'different_packages'}}) {
-      info ("  $p\n");
-      for my $k (keys %{$ret{'different_packages'}->{$p}}) {
+    my $printed_fmttriggers_msg = 0;
+    for my $p (sort keys %{$ret{'different_packages'}}) {
+      info ("  $p:\n");
+      for my $k (sort keys %{$ret{'different_packages'}->{$p}}) {
         if ($k eq "revision") {
-          info("    revision differ: $ret{'different_packages'}->{$p}->{$k}\n");
+         info("    revision differ: $ret{'different_packages'}->{$p}->{$k}\n");
         } elsif ($k eq "removed" || $k eq "added") {
-          info("    $k files:\n");
-          for my $f (@{$ret{'different_packages'}->{$p}->{$k}}) {
-            info("      $f\n");
+          info ("    $k files:\n");
+          for my $f (sort @{$ret{'different_packages'}->{$p}->{$k}}) {
+            info ("      $f\n");
           }
+        } elsif ($k eq "fmttriggers") {
+          # fmttriggers; don't bother making a complete report.
+          # The fmttriggers will differ when the global variables in
+          # 00texlive.autopatterns.tlpsrc change but we forgot to
+          # tlforceincr all the packages that depend on the variables.
+          # Which happens depressingly often.
+          info("    $k differ)\n");
+          info("(if 00texlive.autopatterns change, tlforceincr dependents.)\n")
+            if ! $printed_fmttriggers_msg; # just show once
+          $printed_fmttriggers_msg = 1;
         } else {
-          info("  unknown differ $k\n");
+          info("    $k differ\n");
         }
       }
     }

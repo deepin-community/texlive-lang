@@ -68,7 +68,7 @@
 }
 \author{Association GUTenberg}
 \date{%
-  Version 0.9.7 en date du \today%
+  Version 0.9.12 en date du \today%
   \texorpdfstring{%
     \\
     \url{https://framagit.org/gutenberg/letgut}%
@@ -338,30 +338,31 @@ Les options de la \letgutcls{} peuvent être spécifiées de deux façons :
   page.
 \end{docKey}
 
-\tcbset{before lower=\vspace*{.5\baselineskip}\par}
-%
-\begin{docKey}[][doc updated={2023-01-19}]{detailedtoc}{=\docValue{section}\textbar\docValue{subsection}\textbar\docValue{subsubsection}\textbar\docValue{paragraph}\textbar\docValue{subparagraph}}{\valinitdef[\docValue*{title}][\docValue*{all}]}
-  Par défaut, une table des matières est automatiquement insérée en début de
-  document, avec comme niveau de profondeur celui des titres des articles
-  (saisis via la \refCom{title}), et seulement eux.  La clé \refKey{detailedtoc}
-  permet de modifier le \enquote{niveau de profondeur} de cette table des
-  matières, respectivement jusqu'aux sections, sous-sections,
-  sous-sous-sections, paragraphes, sous-paragraphes. Sont également acceptées
-  les valeurs spéciales :
-  \begin{itemize}
-  \item \docValue{all} (alias de \docValue{subparagraph}) ;
-  \item \docValue{none} qui inhibe l'affichage de la table des matières.
-  \end{itemize}
+{\tcbset{before lower=\vspace*{\baselineskip}\par}
+  %
+  \begin{docKey}[][doc updated={2023-01-19}]{detailedtoc}{=\docValue{section}\textbar\docValue{subsection}\textbar\docValue{subsubsection}\textbar\docValue{paragraph}\textbar\docValue{subparagraph}}{\valinitdef[\docValue*{title}][\docValue*{all}]}
+    Par défaut, une table des matières est automatiquement insérée en début de
+    document, avec comme niveau de profondeur celui des titres des articles
+    (saisis via la \refCom{title}), et seulement eux.  La clé \refKey{detailedtoc}
+    permet de modifier le \enquote{niveau de profondeur} de cette table des
+    matières, respectivement jusqu'aux sections, sous-sections,
+    sous-sous-sections, paragraphes, sous-paragraphes. Sont également acceptées
+    les valeurs spéciales :
+    \begin{itemize}
+    \item \docValue{all} (alias de \docValue{subparagraph}) ;
+    \item \docValue{none} qui inhibe l'affichage de la table des matières.
+    \end{itemize}
 
-  \begin{dbremark}{Tables des matières locales}{}
-    Chaque article peut contenir une table des matières locale, affichée au
-    moyen de la commande \docAuxCommand{localtableofcontents} (fournie par le
-    \package*{etoc} chargé en sous-main par la \letgutcls{}). Le niveau de
-    profondeur est par défaut celui des sections mais cela peut être modifié en
-    la faisant précéder de la commande \docAuxCommand{etocsetnexttocdepth} (dont
-    l'argument est l'une des valeurs possibles de la clé \refKey{detailedtoc}).
-  \end{dbremark}
-\end{docKey}
+    \begin{dbremark}{Tables des matières locales}{}
+      Chaque article peut contenir une table des matières locale, affichée au
+      moyen de la commande \docAuxCommand{localtableofcontents} (fournie par le
+      \package*{etoc} chargé en sous-main par la \letgutcls{}). Le niveau de
+      profondeur est par défaut celui des sections mais cela peut être modifié en
+      la faisant précéder de la commande \docAuxCommand{etocsetnexttocdepth} (dont
+      l'argument est l'une des valeurs possibles de la clé \refKey{detailedtoc}).
+    \end{dbremark}
+  \end{docKey}
+}
 
 \begin{docKey}[][doc new={2023-01-14}]{reverse-files-attachement}{}{\valinitdef[pas de valeur]}
   Si, et seulement si, la \lettre{} est à la fois en version pour les lecteurs
@@ -376,6 +377,28 @@ Les options de la \letgutcls{} peuvent être spécifiées de deux façons :
   L'option \refKey{reverse-files-attachement} inverse ce comportement par
   défaut.
 \end{docKey}
+
+\begin{docKeys}[doc new={2024-10-07}]
+  {
+    {
+      doc name = watermark letter,
+      doc description = {\valinitdef[g]},
+    },
+    {
+      doc name = watermark scale,
+      doc description = {\valinitdef[1]},
+    },
+  }%
+  La première page de la \lettre{} comporte, en filigrane et en gris clair,
+  (entre autre) un (très grand) \enquote{g}, composé avec la fonte
+  \enquote{normale}.
+  \begin{itemize}
+  \item La clé \refKey{watermark letter} permet de spécifier une lettre autre
+    qu'un \enquote{g} et/ou composé avec une fonte autre que \enquote{normale}.
+  \item La clé \refKey{watermark scale} permet de spécifier échelle autre que~1
+    pour cette lettre (par exemple si celle-ci s'avère par défaut trop grande).
+  \end{itemize}
+\end{docKeys}
 
 \subsection{Options autres}
 \label{sec:options-autres}
@@ -449,9 +472,6 @@ Si la commande \docAuxCommand{title}\marg{titre} est
   En plus de l'importation proprement dite, cette commande procède à un certain
   nombre de réinitialisations.
 \end{docCommands}
-
-\begin{docCommand}{inputarticle}{\marg{fichier enfant}}
-\end{docCommand}
 
 \section{Structuration}
 \label{sec:structuration}
@@ -719,7 +739,7 @@ Unicode a prévu le caractère \Ucode[symbole numéro]{2116}.
     { doc name = gut },
     { doc name = assogut, doc new={2023-01-14} },
     { doc name = Assogut, doc new={2023-01-14} },
-    { doc name = lettresn doc new={2023-01-14} },
+    { doc name = lettres, doc new={2023-01-14} },
     { doc name = lettresgut, doc new={2023-01-14} },
     { doc name = cahier },
     { doc name = cahiers },
@@ -952,7 +972,7 @@ environnements \enquote{verbatim} suivants.
     automatiquement coupés en frontière de page.
   \item Les exemples de codes avec résultats (environnements
     \refEnv{ltx-code-result} et \refEnv{ltx-code-external-result}), présentent
-    ces codes et résulats :
+    ces codes et résultats :
     \begin{itemize}
     \item l'un sous l'autre par défaut ;
     \item l'un à gauche de l'autre si l'option ™sidebyside™ est
@@ -1112,54 +1132,21 @@ fournit la commande à arguments \enquote{verbatim} suivante.
 
 Ainsi le code suivant :
 \begingroup
-\lstset{basicstyle=\ttfamily\scriptsize}
-\begin{ltx-code}[listing options app={%
-  deletekeywords={[3]{latex,width,height,string,label,by,example,system,tex}},%
-  deletetexcs={edef,rlap,smash,expandafter,string}%
-}]
-\terminal{time rg foobar -g "*.sty" "/home/bitouze/texlive/2022"}{
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/skeyval/skeyval.sty
-445:%       \usepackage[option1,option2]{foobar}
-447:%       \expandafter\show\csname foobar.sty.poxkeys\endcsname
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/thmtools/thm-restate.sty
-197:%%% support for keyval-style: restate=foobar
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/pinlabel/pinlabel.sty
-284:\edef\foobar{[width=\@p@swidth sp,height=\@p@sheight sp]{\@p@dffile}}%
-286:\@message{\string\@includegraphics@\foobar}%
-287:\rlap{\smash{\expandafter\@includegraphics@\foobar}}%
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/theoremref/theoremref.sty
-129:    its label by ``\thlabel{foobar}''. For example,
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/qrbill/qrbill.sty
-12:%%   Marei Peischl (peiTeX) and Alex Antener (foobar LLC).
-rg     -g  0,25s user 0,23s system 320% cpu 0,150 total
+% \lstset{basicstyle=\ttfamily\scriptsize}
+\begin{ltx-code}
+\terminal{lualatex}{
+This is LuaHBTeX, Version 1.18.0 (TeX Live 2024)
+ restricted system commands enabled.
+**
 }
 \end{ltx-code}
 
 donne-t-il :
 
-\terminal{time rg foobar -g "*.sty" "/home/bitouze/texlive/2022"}{
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/skeyval/skeyval.sty
-445:%       \usepackage[option1,option2]{foobar}
-447:%       \expandafter\show\csname foobar.sty.poxkeys\endcsname
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/thmtools/thm-restate.sty
-197:%%% support for keyval-style: restate=foobar
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/pinlabel/pinlabel.sty
-284:\edef\foobar{[width=\@p@swidth sp,height=\@p@sheight sp]{\@p@dffile}}%
-286:\@message{\string\@includegraphics@\foobar}%
-287:\rlap{\smash{\expandafter\@includegraphics@\foobar}}%
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/theoremref/theoremref.sty
-129:    its label by ``\thlabel{foobar}''. For example,
-
-/home/bitouze/texlive/2022/texmf-dist/tex/latex/qrbill/qrbill.sty
-12:%%   Marei Peischl (peiTeX) and Alex Antener (foobar LLC).
-rg     -g  0,25s user 0,23s system 320% cpu 0,150 total
+\terminal{lualatex}{
+This is LuaHBTeX, Version 1.18.0 (TeX Live 2024)
+ restricted system commands enabled.
+**
 }
 \endgroup
 
@@ -1209,8 +1196,7 @@ s'obtient :
 \begin{itemize}
 \item sous \linux{} : \LKeyShiftAltGrX{8}\footnote{Touche \LKey{8} du clavier
     principal.} ;
-\item sous \macos{} : à l'aide du visualiseur de caractères\footnote{Et
-    possiblement de raccourcis claviers personnels.} ;
+\item sous \macos{} : \LKeyShift+\LKeyOptionKey+\LKey{T} ;
 \item sous \windows{} : \LKeyAltX{0}+\LKey{1}+\LKey{5}+\LKey{3}.
 \end{itemize}
 \end{dbremark}
@@ -1293,7 +1279,7 @@ Les fiches de lecture d'un livre sont créées au moyen de l'environnement
         fichier local de configuration, cf. \vpageref{sec:fichier-local-de}) au
         moyen de la commande :
 \begin{ltx-code}
-\addbibressource{£\meta{bibliographie}£.bib}
+\addbibresource{£\meta{bibliographie}£.bib}
 \end{ltx-code}
       \end{dbwarning}
     \end{docKey}
@@ -1499,9 +1485,11 @@ Afin de présenter aisément et de façon homogène les annonces à paraître da
     assimilés du \package*{tcolorbox}, destinées à, le cas échéant, modifier la
     mise en forme par défaut de l'annonce ;
   \item deux qui lui sont propres :
-    \begin{docKey}[][doc new={2023-05-21}]{toc title}{=\meta{titre alternatif}}{\valinitdef}
+    \begin{docKey}[][doc new and updated={2023-05-21}{2023-11-08}]{toc title}{=\meta{titre alternatif}}{\valinitdef}
       Cette clé permet de remplacer dans la table des matières et dans les
-      signets le \meta{titre} par un \meta{titre alternatif}.
+      signets le \meta{titre} par un \meta{titre alternatif}. Si cette option
+      est utilisée avec un \meta{titre alternatif} vide, l'annonce ne figure ni
+      dans la table des matières, ni dans les signets.
     \end{docKey}
     \begin{docKey}[][doc new={2023-05-21}]{color}{=\meta{couleur}}{\valinitdef[\docValue*{black}]}
       Cette clé permet une \meta{couleur} d'ornement et de titre autre que celle

@@ -1,7 +1,7 @@
 %%
 %% This is file 'pxchfon.sty'.
 %%
-%% Copyright (c) 2009-2023 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2009-2024 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{pxchfon}[2023/08/28 v2.0]
+\ProvidesPackage{pxchfon}[2024/08/22 v2.2]
 \def\pxcz@pkgname{pxchfon}
 
 %--------------------------------------- general
@@ -28,7 +28,11 @@
 %% unique tokens
 \def\pxcz@end{\pxcz@end@}
 \def\pxcz@mt{\pxcz@mt@}
+\toksdef\pxcz@mk=9 % unexpandable
 
+%% \pxcz@letcs\CSa{<cs2>}
+\def\pxcz@letcs#1#2{%
+  \expandafter\let\expandafter#1\csname#2\endcsname}
 %% \pxcz@csletcs{<cs1>}{<cs2>}
 \def\pxcz@csletcs#1#2{%
   \expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname}
@@ -47,6 +51,19 @@
 \def\pxcz@onlypreamble@let#1{%
   \@onlypreamble#1\let#1}
 
+%% \pxcz@first@doc@hook
+% Invoked earlier than \pxcz@doc@hook.
+\pxcz@onlypreamble@let\pxcz@first@doc@hook\@empty
+\AtBeginDocument{\pxcz@first@doc@hook}
+
+%% \pxcz@new@gbool{<name>}
+\pxcz@onlypreamble@def\pxcz@new@gbool#1{%
+  \expandafter\pxcz@new@gbool@a\csname if#1\endcsname{#1}}
+\pxcz@onlypreamble@def\pxcz@new@gbool@a#1#2{%
+  \@namedef{#2true}{\global\let#1\iftrue}%
+  \@namedef{#2false}{\global\let#1\iffalse}%
+  \@nameuse{#2false}}\@gobbletwo\fi\fi
+
 %% \pxcz@csuse@or{<csname>}{<default>}
 \def\pxcz@csuse@or#1#2{%
   \expandafter\ifx\csname#1\endcsname\relax \expandafter\@firstoftwo
@@ -59,12 +76,21 @@
 \def\pxcz@lower@a#1\pxcz@end#2{%
   \lowercase{\def#2{#1}}}
 
-%% \pxcz@setkeys{<text>}{<error>}
-\pxcz@onlypreamble@def\pxcz@setkeys#1#2{%
-  \def\KV@errx##1{#2}%
-  \edef\pxcz@do{\noexpand\setkeys{pxchfon}{#1}}\pxcz@do
+%% \pxcz@setkeys{<kv-family>}{<text>}{<error>}
+\pxcz@onlypreamble@def\pxcz@setkeys#1#2#3{%
+  \let\KV@errx#3%
+  \edef\pxcz@do{\noexpand\setkeys{#1}{#2}}\pxcz@do
   \let\KV@errx\pxcz@org@KV@errx}
 \let\pxcz@org@KV@errx\KV@errx
+
+%% \pxcz@handle@mt@kvopt{<key>}{<value>}{<code>}
+\pxcz@onlypreamble@def\pxcz@handle@mt@kvopt#1#2#3{%
+  \ifx\pxcz@mt#2\pxcz@mt #3%
+  \else
+    \PackageError\pxcz@pkgname
+     {No value allowed for key '#1'}%
+     {\@ehc}%
+  \fi}
 
 %% \pxcz@handle@kvopt{<key>}{<cs-key>}{<value>}{<code>}
 %% \pxcz@handle@bool@kvopt{<key>}{<cs-key>}{<value>}
@@ -74,10 +100,11 @@
   \pxcz@handle@kvopt@a{}{#1}{#2}{#3}{\pxcz@value}}
 \pxcz@onlypreamble@def\pxcz@handle@kvopt@a#1#2#3#4{%
   \@nameuse{pxcz@#3@giventrue}%
-  \pxcz@csletcs{pxcz@value}{pxcz@#3#1#4}%
+  \pxcz@letcs\pxcz@value{pxcz@#3#1#4}%
   \ifx\pxcz@value\relax
     \PackageError\pxcz@pkgname
-     {Invalid value for option key '#2'\MessageBreak (#4)}%
+     {Invalid value for key '#2'\MessageBreak (#4)}%
+     {\@ehc}%
     \expandafter\@gobble
   \else \expandafter\@firstofone
   \fi}
@@ -97,7 +124,45 @@
 \def\pxcz@split@c#1\pxcz@mt#2\pxcz@end#3{%
   \def\pxcz@pre{#3}\def\pxcz@post{#1}}
 
+%% \pxcz@let@jchar@token\CS{<code>}
+\pxcz@onlypreamble@def\pxcz@let@jchar@token#1#2{%
+  \begingroup
+    \kansujichar1=#2\relax \kcatcode#2=18\relax
+    \xdef\pxcz@g@tmpa{\kansuji1}%
+  \endgroup
+  \let#1=\pxcz@g@tmpa}
+
+%% \pxcz@geta
+\pxcz@let@jchar@token\pxcz@geta{\jis"222E}
+
+%% \pxcz@Z\newrobustcmd*\CS...
+% On e-TeX engines, it simply does \newrobustcmd*;
+% otherwise it does \DeclareRobustCommand* with 'new' check.
+\pxcz@onlypreamble@def\pxcz@Z\newrobustcmd*#1{%
+  \pxcz@okfalse
+  \@ifdefinable{#1}{\pxcz@oktrue}%
+  \pxcz@cond\ifpxcz@ok\fi
+    {\DeclareRobustCommand*#1}{\providecommand*\pxcz@mt}%
+}
+
+%% \pxcz@PackageNoteNoLine
+\ifx\PackageNoteNoLine\@undefined
+  \let\pxcz@PackageNoteNoLine\PackageWarningNoLine
+\else
+  \let\pxcz@PackageNoteNoLine\PackageNoteNoLine
+\fi
+
 %--------------------------------------- environment check
+
+%%<+> \pxchfonNoCheckMultiweight
+% If defined, skips the check for using multi-weight settings
+% without loading japanese-otf package with 'deluxe'.
+%(keep unchanged)
+
+%%<+> \pxchfonNoCheckExpert
+% If defined, skips the check for using expert settings without
+% substituting all weights.
+%(keep unchanged)
 
 %% check for 'pxjafont' package
 \@ifpackageloaded{pxjafont}{%
@@ -115,6 +180,18 @@
   \pxcz@do\kchardef{\pxcz@uptextrue}
   % only upTeX in Unicode is seen as upTeX
   \ifnum\ucs"3000="3000 \else \pxcz@uptexfalse \fi}
+%% \ifpxcz@etex
+\newif\ifpxcz@etex \pxcz@etexfalse
+\pxcz@do\eTeXversion{\pxcz@etextrue}
+%% \ifpxcz@etoolbox
+\newif\ifpxcz@etoolbox
+\ifpxcz@etex
+  \IfFileExists{etoolbox.sty}{%
+    \RequirePackage{etoolbox}[2011/01/03]% v2.1
+    \pxcz@etoolboxtrue
+    \let\pxcz@Z\@empty
+  }{}
+\fi
 
 %% \pxcz@JYn
 \edef\pxcz@JYn{%
@@ -128,13 +205,11 @@
   \pxcz@lite@modetrue}
 
 %% \ifpxcz@otf@loaded
-%% \ifpxcz@otf@deluxe
 %% \pxcz@otf@weight: otf weight mode
 \newif\ifpxcz@otf@loaded \pxcz@otf@loadedtrue
-\newif\ifpxcz@otf@deluxe \pxcz@otf@deluxefalse
 % watch out for priority...
 \@ifpackagewith{otf}{deluxe}{%
-  \pxcz@otf@deluxetrue \let\pxcz@otf@weight=d
+  \let\pxcz@otf@weight=d
 }{\@ifpackagewith{otf}{bold}{%
   \let\pxcz@otf@weight=b
 }{\@ifpackagewith{otf}{expert}{%
@@ -253,7 +328,7 @@
 \let\pxcz@alphabet\relax
 \newif\ifpxcz@otf \pxcz@otftrue
 \newif\ifpxcz@cmap@alpha
-\newif\ifpxcz@mmivjis
+\pxcz@new@gbool{pxcz@mmivjis}
 \newif\ifpxcz@everypage
 \newif\ifpxcz@oneweight
 \newif\ifpxcz@fullwidth
@@ -274,9 +349,14 @@
 \chardef\pxcz@glyphid\z@
 \newif\ifpxcz@autojfmsync
 
+%% \pxcz@invalid@opt{<key>}
+\pxcz@onlypreamble@def\pxcz@invalid@opt#1{%
+  \@unknownoptionerror}
+
 %% process options
 % drivers
 \DeclareOption{nodvidriver}{\pxcz@enabledfalse}
+\DeclareOption{resetdvidriver}{\pxcz@enabledtrue}
 \DeclareOption{dvips}{\pxcz@enabledfalse}
 \DeclareOption{dviout}{\pxcz@enabledfalse}
 \DeclareOption{xdvi}{\pxcz@enabledfalse}
@@ -353,7 +433,9 @@
 \DeclareOption{autojfmsync}{\pxcz@autojfmsynctrue}
 \DeclareOption{noautojfmsync}{\pxcz@autojfmsyncfalse}
 % maybe-multiweight
-\DeclareOption{maybe-multiweight}{\let\pxchfonMaybeMultiweight=t}
+\DeclareOption{maybe-multiweight}{\let\pxchfonNoCheckMultiweight=t}
+% nocheck-expert
+\DeclareOption{nocheck-expert}{\let\pxchfonNoCheckExpert=t}
 % use=<spec>
 \define@key{pxchfon}{use}{%
   \pxcz@okfalse
@@ -427,7 +509,7 @@
 \DeclareOption*{%
   \pxcz@parse@opt\CurrentOption
   \ifpxcz@ok\else
-    \pxcz@setkeys{\CurrentOption}{\@unknownoptionerror}%
+    \pxcz@setkeys{pxchfon}{\CurrentOption}\pxcz@invalid@opt
   \fi}
 
 %% \pxcz@use@list
@@ -475,7 +557,7 @@
 \ifpxcz@unicode@given\else
   \let\pxcz@unicode\pxcz@unicode@@false
   \ifnum\pxcz@pxufont@loaded>0
-    \PackageWarningNoLine\pxcz@pkgname
+    \pxcz@PackageNoteNoLine\pxcz@pkgname
      {Option 'unicode' is enabled, since the package\MessageBreak
       'pxufont' is already loaded}
     \let\pxcz@unicode\pxcz@unicode@@full
@@ -486,7 +568,13 @@
 %% apply default value for \pxcz@alphabet
 \if\pxcz@alphabet\relax
   \ifx\pxcz@main@preset\relax \ifx\pxcz@file@preset\relax
-    % TODO: warn
+    \PackageWarningNoLine\pxcz@pkgname
+     {No preset is given and options for alphabetic\MessageBreak
+      fonts ('alphabet'/'noalphabet'/'relfont') are\MessageBreak
+      omitted. Here 'alphabet' will be assumed, but\MessageBreak
+      such omission is now DEPRECATED and the behavior\MessageBreak
+      might be changed in future!!\MessageBreak
+      You must write the option 'alphabet' explicitly}
     \let\pxcz@alphabet=t
   \fi\fi
   \if\pxcz@alphabet\relax
@@ -530,32 +618,14 @@
   \let\pxcz@switch@font@xjistrue\pxcz@switch@font@xjisfalse
 \fi
 
-\begingroup \lccode`\@=`\_ \lowercase{%
-  \xdef\pxcz@get@dvipdfmx@version{%
-    \let\noexpand\pxcz@dvipdfmx@version\expandafter\noexpand
-    \csname c@@Kernel@sys@dvipdfmx@version@int\endcsname}}
-\endgroup
-\AtBeginDocument{%
-  \@tempswatrue
-  \ifnum\pxcz@unicode<\pxcz@unicode@@full\else
-    \pxcz@get@dvipdfmx@version
-    \ifx\pxcz@dvipdfmx@version\@undefined\else
-      \ifnum\pxcz@dvipdfmx@version<20170918
-        \@tempswafalse \fi\fi
-  \fi
-  \if@tempswa\else
-    \PackageError\pxcz@pkgname
-     {Option 'unicode' is not available, since\MessageBreak
-      your dvipdfmx is too old (v.\number\pxcz@dvipdfmx@version)}
-     {The option requires dvipdfmx version 20170918 or later.%
-      \MessageBreak\@ehc}
-  \fi}
-
 %--------------------------------------- preset-dependent setup
 
-%% variables
-\newif\ifpxcz@warn@unless@all@defined
-\newif\ifpxcz@warn@unless@all@embedded
+%% \pxcz@warn@unless@all@defined@for
+% The \do-list of names of problematic features.
+\pxcz@onlypreamble@let\pxcz@warn@unless@all@defined@for\@empty
+%% \pxcz@warn@unless@all@embedded@for
+% The \do-list of names of problematic features.
+\pxcz@onlypreamble@let\pxcz@warn@unless@all@embedded@for\@empty
 
 %% \pxcz@apply@opt@unicode
 % Forces the 'unicode' setup (unless a directunicode option was given).
@@ -566,7 +636,7 @@
   \fi}
 %% \pxcz@warn@unicode
 \pxcz@onlypreamble@def\pxcz@warn@unicode{%
-  \PackageWarningNoLine\pxcz@pkgname
+  \pxcz@PackageNoteNoLine\pxcz@pkgname
    {The option 'unicode' is enforced, because the\MessageBreak
     preset '\pxcz@main@preset' is selected.}}
 
@@ -586,7 +656,8 @@
 \pxcz@custom@apply@opt@unicode
 % No-embed is not supported under the 'unicode' setup
 \ifnum\pxcz@unicode=\pxcz@unicode@@full
-  \pxcz@warn@unless@all@embeddedtrue
+  \g@addto@macro\pxcz@warn@unless@all@embedded@for{%
+    \do{Direct Unicode spec ('unicode')}}
 \fi
 
 %% apply default for pxcz@legacycode@replace
@@ -661,9 +732,36 @@
   \fi
   \let\pxcz@expert=f
 \fi
-\if t\pxcz@expert
-  \pxcz@warn@unless@all@definedtrue
-\fi
+\g@addto@macro\pxcz@first@doc@hook{%
+  \if t\pxcz@expert \ifx\pxchfonNoCheckExpert\@undefined
+    \g@addto@macro\pxcz@warn@unless@all@defined@for{%
+      \do{Expert glyph shapes ('expert')}}%
+  \fi\fi}
+
+%--------------------------------------- '\pxchfonsetup'
+
+%% errors
+\pxcz@onlypreamble@def\pxcz@err@ivsky#1{%
+  \PackageError\pxcz@pkgname
+   {Unknown key: #1}%
+   {\@ehc}}
+
+%% 'jis2004=<bool>'
+\define@key{pxchfonS}{jis2004}[true]{%
+  \pxcz@handle@bool@kvopt{jis2004}{mmivjis}{#1}}
+%% 'maybe-multiweight'
+\define@key{pxchfonS}{maybe-multiweight}[]{%
+  \pxcz@handle@mt@kvopt{maybe-multiweight}{#1}{%
+    \global\let\pxchfonNoCheckMultiweight=t}}
+%% 'nocheck-expert'
+\define@key{pxchfonS}{nocheck-expert}[]{%
+  \pxcz@handle@mt@kvopt{nocheck-expert}{#1}{%
+    \global\let\pxchfonNoCheckExpert=t}}
+
+%%<*> \pxchfonsetup{<text>}
+\@onlypreamble\pxchfonsetup
+\pxcz@Z\newrobustcmd*\pxchfonsetup[1]{%
+  \pxcz@setkeys{pxchfonS}{#1}\pxcz@err@ivsky}
 
 %--------------------------------------- user interface
 
@@ -678,53 +776,60 @@
   tcml,tcmr,tcmb,tcgr,tcgb,tcgx,tcgu,tcmgr}
 
 %%<*> \setminchofont/\setgothicfont/etc.
-\newcommand*\setminchofont{\pxcz@setfont{mnl,mnr,mnb}}
-\newcommand*\setgothicfont{\pxcz@setfont{gtr,gtb,gtx,gtu}}
-\newcommand*\setlightminchofont{\pxcz@setfont@dx{mnl}}
-\newcommand*\setmediumminchofont{\pxcz@setfont@dx{mnr}}
-\newcommand*\setboldminchofont{\pxcz@setfont@dx{mnb}}
-\newcommand*\setmediumgothicfont{\pxcz@setfont@dx{gtr}}
-\newcommand*\setboldgothicfont{\pxcz@setfont@dx{gtb}}
-\newcommand*\setxboldgothicfont{\pxcz@setfont@dx{gtx}}
-\newcommand*\setoneweightgothicfont{\pxcz@setfont@dx{gtu}}
-\newcommand*\setmarugothicfont{\pxcz@setfont@dx{mgr}}
-
-\newcommand*\setkoreanminchofont{\pxcz@setfont{koml,komr,komb}}
-\newcommand*\setkoreangothicfont{\pxcz@setfont{kogr,kogb,kogx,kogu,komgr}}
-\newcommand*\setkoreanlightminchofont{\pxcz@setfont@dx{koml}}
-\newcommand*\setkoreanmediumminchofont{\pxcz@setfont@dx{komr}}
-\newcommand*\setkoreanboldminchofont{\pxcz@setfont@dx{komb}}
-\newcommand*\setkoreanmediumgothicfont{\pxcz@setfont@dx{kogr}}
-\newcommand*\setkoreanboldgothicfont{\pxcz@setfont@dx{kogb}}
-\newcommand*\setkoreanxboldgothicfont{\pxcz@setfont@dx{kogx}}
-\newcommand*\setkoreanoneweightgothicfont{\pxcz@setfont@dx{kogu}}
-\newcommand*\setkoreanmarugothicfont{\pxcz@setfont@dx{komgr}}
-
-\newcommand*\setschineseminchofont{\pxcz@setfont{scml,scmr,scmb}}
-\newcommand*\setschinesegothicfont{\pxcz@setfont{scgr,scgb,scgx,scgu,scmgr}}
-\newcommand*\setschineselightminchofont{\pxcz@setfont@dx{scml}}
-\newcommand*\setschinesemediumminchofont{\pxcz@setfont@dx{scmr}}
-\newcommand*\setschineseboldminchofont{\pxcz@setfont@dx{scmb}}
-\newcommand*\setschinesemediumgothicfont{\pxcz@setfont@dx{scgr}}
-\newcommand*\setschineseboldgothicfont{\pxcz@setfont@dx{scgb}}
-\newcommand*\setschinesexboldgothicfont{\pxcz@setfont@dx{scgx}}
-\newcommand*\setschineseoneweightgothicfont{\pxcz@setfont@dx{scgu}}
-\newcommand*\setschinesemarugothicfont{\pxcz@setfont@dx{scmgr}}
-
-\newcommand*\settchineseminchofont{\pxcz@setfont{tcml,tcmr,tcmb}}
-\newcommand*\settchinesegothicfont{\pxcz@setfont{tcgr,tcgb,tcgx,tcgu,tcmgr}}
-\newcommand*\settchineselightminchofont{\pxcz@setfont@dx{tcml}}
-\newcommand*\settchinesemediumminchofont{\pxcz@setfont@dx{tcmr}}
-\newcommand*\settchineseboldminchofont{\pxcz@setfont@dx{tcmb}}
-\newcommand*\settchinesemediumgothicfont{\pxcz@setfont@dx{tcgr}}
-\newcommand*\settchineseboldgothicfont{\pxcz@setfont@dx{tcgb}}
-\newcommand*\settchinesexboldgothicfont{\pxcz@setfont@dx{tcgx}}
-\newcommand*\settchineseoneweightgothicfont{\pxcz@setfont@dx{tcgu}}
-\newcommand*\settchinesemarugothicfont{\pxcz@setfont@dx{tcmgr}}
+% japanese
+\pxcz@Z\newrobustcmd*\setminchofont{\pxcz@setfont{mnl,mnr,mnb}}
+\pxcz@Z\newrobustcmd*\setgothicfont{\pxcz@setfont{gtr,gtb,gtx,gtu}}
+\pxcz@Z\newrobustcmd*\setlightminchofont{\pxcz@setdf{mnl}}
+\pxcz@Z\newrobustcmd*\setmediumminchofont{\pxcz@setdf{mnr}}
+\pxcz@Z\newrobustcmd*\setboldminchofont{\pxcz@setdf{mnb}}
+\pxcz@Z\newrobustcmd*\setmediumgothicfont{\pxcz@setdf{gtr}}
+\pxcz@Z\newrobustcmd*\setboldgothicfont{\pxcz@setdf{gtb}}
+\pxcz@Z\newrobustcmd*\setxboldgothicfont{\pxcz@setdf{gtx}}
+\pxcz@Z\newrobustcmd*\setoneweightgothicfont{\pxcz@setdf{gtu}}
+\pxcz@Z\newrobustcmd*\setmarugothicfont{\pxcz@setdf{mgr}}
+% korean
+\pxcz@Z\newrobustcmd*\setkoreanminchofont{%
+  \pxcz@setfont{koml,komr,komb}}
+\pxcz@Z\newrobustcmd*\setkoreangothicfont{%
+  \pxcz@setfont{kogr,kogb,kogx,kogu,komgr}}
+\pxcz@Z\newrobustcmd*\setkoreanlightminchofont{\pxcz@setdf{koml}}
+\pxcz@Z\newrobustcmd*\setkoreanmediumminchofont{\pxcz@setdf{komr}}
+\pxcz@Z\newrobustcmd*\setkoreanboldminchofont{\pxcz@setdf{komb}}
+\pxcz@Z\newrobustcmd*\setkoreanmediumgothicfont{\pxcz@setdf{kogr}}
+\pxcz@Z\newrobustcmd*\setkoreanboldgothicfont{\pxcz@setdf{kogb}}
+\pxcz@Z\newrobustcmd*\setkoreanxboldgothicfont{\pxcz@setdf{kogx}}
+\pxcz@Z\newrobustcmd*\setkoreanoneweightgothicfont{\pxcz@setdf{kogu}}
+\pxcz@Z\newrobustcmd*\setkoreanmarugothicfont{\pxcz@setdf{komgr}}
+% schinese
+\pxcz@Z\newrobustcmd*\setschineseminchofont{%
+  \pxcz@setfont{scml,scmr,scmb}}
+\pxcz@Z\newrobustcmd*\setschinesegothicfont{%
+  \pxcz@setfont{scgr,scgb,scgx,scgu,scmgr}}
+\pxcz@Z\newrobustcmd*\setschineselightminchofont{\pxcz@setdf{scml}}
+\pxcz@Z\newrobustcmd*\setschinesemediumminchofont{\pxcz@setdf{scmr}}
+\pxcz@Z\newrobustcmd*\setschineseboldminchofont{\pxcz@setdf{scmb}}
+\pxcz@Z\newrobustcmd*\setschinesemediumgothicfont{\pxcz@setdf{scgr}}
+\pxcz@Z\newrobustcmd*\setschineseboldgothicfont{\pxcz@setdf{scgb}}
+\pxcz@Z\newrobustcmd*\setschinesexboldgothicfont{\pxcz@setdf{scgx}}
+\pxcz@Z\newrobustcmd*\setschineseoneweightgothicfont{\pxcz@setdf{scgu}}
+\pxcz@Z\newrobustcmd*\setschinesemarugothicfont{\pxcz@setdf{scmgr}}
+% tchinese
+\pxcz@Z\newrobustcmd*\settchineseminchofont{%
+  \pxcz@setfont{tcml,tcmr,tcmb}}
+\pxcz@Z\newrobustcmd*\settchinesegothicfont{%
+  \pxcz@setfont{tcgr,tcgb,tcgx,tcgu,tcmgr}}
+\pxcz@Z\newrobustcmd*\settchineselightminchofont{\pxcz@setdf{tcml}}
+\pxcz@Z\newrobustcmd*\settchinesemediumminchofont{\pxcz@setdf{tcmr}}
+\pxcz@Z\newrobustcmd*\settchineseboldminchofont{\pxcz@setdf{tcmb}}
+\pxcz@Z\newrobustcmd*\settchinesemediumgothicfont{\pxcz@setdf{tcgr}}
+\pxcz@Z\newrobustcmd*\settchineseboldgothicfont{\pxcz@setdf{tcgb}}
+\pxcz@Z\newrobustcmd*\settchinesexboldgothicfont{\pxcz@setdf{tcgx}}
+\pxcz@Z\newrobustcmd*\settchineseoneweightgothicfont{\pxcz@setdf{tcgu}}
+\pxcz@Z\newrobustcmd*\settchinesemarugothicfont{\pxcz@setdf{tcmgr}}
 
 \pxcz@onlypreamble@def\pxcz@setfont#1{\@ifnextchar[%]
   {\pxcz@setfont@a{#1}}{\pxcz@setfont@a{#1}[0]}}
-\pxcz@onlypreamble@def\pxcz@setfont@dx{%
+\pxcz@onlypreamble@def\pxcz@setdf{%
   \pxcz@deluxe@usedtrue\pxcz@setfont}
 \pxcz@onlypreamble@def\pxcz@setfont@a#1[#2]#3{%
   \edef\pxcz@tmpa{#3}\pxcz@lower\pxcz@tmpa
@@ -742,22 +847,21 @@
 \@for\pxcz@x:=\pxcz@sym@list\do{%
   \@namedef{pxcz@FS/\pxcz@x}{}}
 
-%%<*> \maybemultiweight
-\newcommand*\maybemultiweight{%
-  \let\pxchfonMaybeMultiweight=t}
-
 % check for usage of multi-weight commands
-\ifx t\pxchfonMaybeMultiweight\else
-  \AtBeginDocument{%
-    \ifpxcz@deluxe@used\ifpxcz@otf@deluxe\else
+\g@addto@macro\pxcz@first@doc@hook{%
+  \ifx t\pxchfonMaybeMultiweight % for compatibility
+    \let\pxchfonNoCheckMultiweight=t%
+  \fi
+  \ifx\pxchfonNoCheckMultiweight\@undefined
+    \ifpxcz@deluxe@used\if d\pxcz@otf@weight\else
       \PackageWarningNoLine\pxcz@pkgname
        {Setting for multi-weight usage of japanese-otf\MessageBreak
         font set is employed, but 'deluxe' option\MessageBreak
         of japanese-otf is not enabled!\MessageBreak
         You should specify 'maybe-multiweight' option\MessageBreak
         if you really intend the present setting}
-    \fi\fi}
-\fi
+    \fi\fi
+  \fi}
 
 %--------------------------------------- fontmap internals
 
@@ -777,9 +881,9 @@
 \def\pxcz@cmap@hwuni{UniJIS-UCS2-HW-H}
 
 %%<*> \usecmapforalphabet/\nousecmapforalphabet
-\newcommand*\usecmapforalphabet{%
+\pxcz@Z\newrobustcmd*\usecmapforalphabet{%
   \global\pxcz@cmap@alphatrue}
-\newcommand*\nousecmapforalphabet{%
+\pxcz@Z\newrobustcmd*\nousecmapforalphabet{%
   \global\pxcz@cmap@alphafalse}
 
 %% \pxcz@NEF/<sym>
@@ -800,34 +904,48 @@
 %%<+> \JaFontReplacementFor{<sym>}
 \newcommand*\JaFontReplacementFor[1]{%
   \csname pxcz@FS/#1\endcsname}
+\@namedef{pxcz@FS/*}{\pxcz@empty}
 
 %%<+> \JaFontReplacementHook{<code>}
 \@onlypreamble\JaFontReplacementHook
-\newcommand*\JaFontReplacementHook{%
+\pxcz@Z\newrobustcmd*\JaFontReplacementHook{%
   \g@addto@macro\pxcz@user@hook}
 \let\pxcz@user@hook\@empty
 
 %%<+> \JaFontUserDefinedMap
 \@onlypreamble\JaFontUserDefinedMap
-\newcommand*\JaFontUserDefinedMap{%
+\pxcz@Z\newrobustcmd*\JaFontUserDefinedMap{%
   \g@addto@macro\pxcz@user@map}
-\let\pxcz@user@map\@empty
-\@namedef{pxcz@FS/*}{\pxcz@empty}
-
-%%<+> \usefontmapline{<map-line>}
-\@onlypreamble\usefontmapline
-\newcommand*\usefontmapline[1]{%
-  \JaFontUserDefinedMap{\pxcz@addtospec@alt\pxcz@mapline{#1}}}
-
-%%<+> \usefontmapfile{<map-file>}
-\@onlypreamble\usefontmapfile
-\newcommand*\usefontmapfile[1]{%
-  \JaFontUserDefinedMap{\pxcz@addtospec@alt\pxcz@mapfile{#1}}}
+\pxcz@onlypreamble@let\pxcz@user@map\@empty
 
 %% \pxcz@check@extra
 % Executed at the begin-document hook.
 \@onlypreamble\pxcz@check@extra
 \let\pxcz@check@extra\@empty
+
+%% \pxcz@addtospec@aux{<name>}{<text>}
+\pxcz@onlypreamble@def\pxcz@addtospec@aux#1#2{%
+  \xdef\pxcz@spec{\pxcz@spec\noexpand\special{pdf:#1 #2}}%
+}
+
+%%<*> \usefontmapline{<map-line>}
+\@onlypreamble\usefontmapline
+\pxcz@Z\newrobustcmd*\usefontmapline[1]{%
+  \JaFontUserDefinedMap{\pxcz@add@mapline{#1}}%
+}
+%%<*> \usefontmapfile{<map-file>}
+\@onlypreamble\usefontmapfile
+\pxcz@Z\newrobustcmd*\usefontmapfile[1]{%
+  \JaFontUserDefinedMap{\pxcz@add@mapfile{#1}}%
+}
+%% \pxcz@add@mapfile{<map-file>}
+\pxcz@onlypreamble@def\pxcz@add@mapfile{%
+  \pxcz@addtospec@aux{mapfile}%
+}
+%% \pxcz@add@mapline{<map-line>}
+\pxcz@onlypreamble@def\pxcz@add@mapline{%
+  \pxcz@addtospec@aux{mapline}%
+}
 
 %--------------------------------------- map entry handling
 
@@ -835,7 +953,7 @@
 \def\pxcz@pfx@jis@dflt{2004-}
 \def\pxcz@pfx@jis@star{JISX0213-2004-}
 \@onlypreamble\setnewglyphcmapprefix
-\newcommand*\setnewglyphcmapprefix{%
+\pxcz@Z\newrobustcmd*\setnewglyphcmapprefix{%
   \@ifstar{\pxcz@set@pfx@jis\pxcz@pfx@jis@star}%
    {\pxcz@set@pfx@jis}}
 \def\pxcz@set@pfx@jis#1{%
@@ -887,18 +1005,6 @@
   \ifx\pxcz@font\@empty
   \else\ifx\pxcz@font\pxcz@noembed
   \else
-    \pxcz@inspect@font@tribe@a{?SourceHanSerif-}{.otf?}{sourcehan}%
-    \pxcz@inspect@font@tribe@a{?SourceHanSans-}{.otf?}{sourcehan}%
-    \pxcz@inspect@font@tribe@a{?:0:SourceHanSerif-}{.ttc?}{sourcehanC}%
-    \pxcz@inspect@font@tribe@a{?:0:SourceHanSans-}{.ttc?}{sourcehanC}%
-    \pxcz@inspect@font@tribe@a{?NotoSerifCJKjp-}{.otf?}{noto}%
-    \pxcz@inspect@font@tribe@a{?NotoSansCJKjp-}{.otf?}{noto}%
-    \pxcz@inspect@font@tribe@a{?:0:NotoSerifCJK-}{.ttc?}{notoC}%
-    \pxcz@inspect@font@tribe@a{?:0:NotoSansCJK-}{.ttc?}{notoC}%
-    \pxcz@inspect@font@tribe@a{?yumin}{.ttf?}{yumin}%
-    \pxcz@inspect@font@tribe@a{?YUMIN}{.TTF?}{yuminU}%
-    \pxcz@inspect@font@tribe@a{:YuGoth}{.ttc?}{yugoth}%
-    \pxcz@inspect@font@tribe@a{:YUGOTH}{.TTC?}{yugoth}%
     \pxcz@inspect@font@tribe@a{:moga}{.ttc?}{mogamobo}%
     \pxcz@inspect@font@tribe@a{:mobo}{.ttc?}{mogamobo}%
   \fi\fi
@@ -919,7 +1025,7 @@
 %% \pxcz@switch@font@for{<feature>}
 % Modifies \pxcz@font, assuming \pxcz@font@tribe is properly set.
 \pxcz@onlypreamble@def\pxcz@switch@font@for#1{%
-  \pxcz@csletcs{pxcz@tmpb}{pxcz@switch@font@@\pxcz@font@tribe @#1}%
+  \pxcz@letcs\pxcz@tmpb{pxcz@switch@font@@\pxcz@font@tribe @#1}%
   \ifx\pxcz@tmpb\relax\else
 %\typeout{#1:\pxcz@font-->\expandafter\pxcz@tmpb\pxcz@font}%
     \edef\pxcz@font{\expandafter\pxcz@tmpb\pxcz@font}%
@@ -1085,11 +1191,9 @@
   \fi\fi
   % output it
   \ifx\pxcz@font\pxcz@kill@mapping
-    \xdef\pxcz@spec{\pxcz@spec\noexpand\special{%
-      \pxcz@mapline{-#2}}}%
+    \pxcz@add@mapline{-#2}%
   \else\ifx\pxcz@font\@empty\else
-    \xdef\pxcz@spec{\pxcz@spec\noexpand\special{%
-      \pxcz@mapline{#2 \pxcz@cmap\space\pxcz@font\pxcz@mopts}}}%
+    \pxcz@add@mapline{#2 \pxcz@cmap\space\pxcz@font\pxcz@mopts}%
   \fi\fi}
 
 %% \pxcz@do@file@preset
@@ -1116,13 +1220,7 @@
   \ifpxcz@uptex \pxcz@use@mapfile@b{uptex-#1-#2}\fi
   \ifpxcz@otf \pxcz@use@mapfile@b{otf-#1-#2}\fi}
 \pxcz@onlypreamble@def\pxcz@use@mapfile@b#1{%
-  \pxcz@addtospec@alt\pxcz@mapfile{#1.map}}
-
-%% \pxcz@addtospec@alt
-\def\pxcz@addtospec@alt#1#2{%
-  \xdef\pxcz@spec{\pxcz@spec\noexpand\special{#1{#2}}}}
-\def\pxcz@mapfile#1{pdf:mapfile #1}
-\def\pxcz@mapline#1{pdf:mapline #1}
+  \pxcz@add@mapfile{#1.map}}
 
 %--------------------------------------- map entry definitions
 
@@ -1435,15 +1533,15 @@
   \else
     \ifnum\pxcz@unicode<\pxcz@unicode@@simple\else
       \pxcz@diruni@oktrue % 'unicode=UTF' does not need otf
-      \AtBeginDocument{% loading otf later causes inconsistency
+      \g@addto@macro\pxcz@first@doc@hook{%
+        % loading otf later causes inconsistency
         \@ifpackageloaded{otf}{\pxcz@diruni@okfalse}{}}%
     \fi
   \fi
 \fi
 
 %%<*> \diruni
-\newcommand*{\diruni}{\pxcz@diruni}
-\DeclareRobustCommand*{\pxcz@diruni}{%
+\pxcz@Z\newrobustcmd*\diruni{%
     \not@math@alphabet\diruni\relax
     \ifx\cy@encoding\pxcz@JYn % if in standard Japanese encoding
       \expandafter\let\csname UTF \endcsname\pxcz@du@UTF
@@ -1452,10 +1550,9 @@
 }
 
 %%<*> \textdiruni{<text>}
-\@ifdefinable{\textdiruni}{%
-  \DeclareRobustCommand*{\textdiruni}[1]{%
-    \relax\ifmmode\hbox\fi{\pxcz@diruni#1}%
-  }}
+\pxcz@Z\newrobustcmd*\textdiruni[1]{%
+  \relax\ifmmode\hbox\fi{\diruni#1}%
+}
 
 %% \pxcz@du@UTF
 \def\pxcz@du@UTF#1{%
@@ -1476,7 +1573,7 @@
     \ifcase\pxcz@unicode with 'unicode' option%
     \else pxchfon after 'otf' package%
     \fi .\MessageBreak\@ehc}}
-\AtBeginDocument{%
+\g@addto@macro\pxcz@first@doc@hook{%
   \ifpxcz@diruni@ok \let\pxcz@err@diruni\relax
   \else \let\pxcz@diruni\pxcz@err@diruni
   \fi}
@@ -1526,7 +1623,7 @@
 \fi
 \fi\fi\fi
 
-\AtBeginDocument{%
+\g@addto@macro\pxcz@first@doc@hook{%
   \def\pxcz@do#1#2#3{%
     \DeclareFontShape{#1}{#2}{#3}{diruni}{<->ssub*#2/#3/n}{}}%
   \@for\pxcz@tmpa:={\rmdefault,\sfdefault,\ttdefault}\do{%
@@ -1547,25 +1644,25 @@
 \fi                 %---- </diruni-ok>
 
 %--------------------------------------- 'glyphid'
+\ifnum\pxcz@glyphid>0 %---- <*glyphid>
 
-%% \pxcz@geta
-\chardef\pxcz@geta=\jis"222E\relax
-
-\ifnum\pxcz@glyphid=2 %---- <*glyphid>
+\ifnum\pxcz@glyphid=2 %---- <*glyphid-ok>
 
 %% check integrity
 \ifpxcz@otf@loaded\else
-  \AtBeginDocument{% loading otf later causes inconsistency
+  \g@addto@macro\pxcz@first@doc@hook{%
+    % loading otf later causes inconsistency
     \@ifpackageloaded{otf}{%
       \PackageWarningNoLine\pxcz@pkgname
        {The option 'glyphid' will not work. You must\MessageBreak
         load pxchfon after 'otf' package}%
-    \def\gid{\pxcz@gid@fb}}{}}
+      \def\pxcz@gid{\pxcz@gid@fb}%
+      \chardef\pxcz@glyphid=1
+    }{}}
 \fi
 
-%%<*> \gid{<number>}
-\newcommand*{\gid}{\pxcz@gid}
-\DeclareRobustCommand*{\pxcz@gid}[1]{%
+%% \pxcz@gid{<number>}
+\def\pxcz@gid#1{%
   \begingroup
     \kanjishape{dirgid}\selectfont
     \kchar#1\pxcz@gid@jfm@sync
@@ -1608,108 +1705,38 @@
 \pxcz@dg@decl@shape{gt}{bx}f{ssub*gt/m/dirgid}{}%
 \fi\fi\fi
 
-\fi                 %---- </glyphid>
+\fi                   %---- </glyphid-ok>
 
-\ifnum\pxcz@glyphid>0
-  %% \pxcz@gid@fb
-  \providecommand*{\gid}{\pxcz@gid@fb}
-  \DeclareRobustCommand*{\pxcz@gid@fb}[1]{%
-    \begingroup \kchar\pxcz@geta \endgroup}
+%%<*> \gid{<number>}
+\pxcz@Z\newrobustcmd*\gid{\pxcz@gid}
 
-  % redefinition in PDF-strings
-  \begingroup \kansujichar1=\pxcz@geta \kcatcode\pxcz@geta=18
-    \xdef\pxcz@hy@gid#1{\kansuji1}
-  \endgroup
+%% \pxcz@gid@fb
+\def\pxcz@gid@fb#1{%
+    \begingroup
+      \pxcz@geta
+    \endgroup}
+\providecommand*\pxcz@gid{\pxcz@gid@fb}
+
+% redefinition in PDF-strings
+\def\pxcz@hy@gid#1{%
+  \ifx\pxjahyperBadCharacter\@undefined
+    \pxcz@geta
+  \else
+    \pxjahyperBadCharacter{GID+#1}%
+  \fi
+}
   \pxcz@hy@disable@commands{%
     \let\gid\pxcz@hy@gid}
+
+\fi                   %---- </glyphid>
+%--------------------------------------- 'pxchfon0' submodule
+\ifpxcz@lite@mode\else
+
+%% load the submodule
+\input{pxchfon0.def}
+
 \fi
-
-%--------------------------------------- 'alphabet' option
-
-%% check for textcomp
-\newif\ifpxcz@textcomp
-\ifx\DeclareEncodingSubset\@undefined\else
-  \expandafter\ifx\csname T@TS1\endcsname\relax\else
-    \pxcz@textcomptrue
-\fi\fi
-
-%% \pxcz@afont@enc@list
-\def\pxcz@afont@enc@list{OT1,T1}
-\ifpxcz@textcomp \g@addto@macro\pxcz@afont@enc@list{,TS1}\fi
-%% \pxcz@decl@family{<fam>}
-\pxcz@onlypreamble@def\pxcz@decl@family#1{%
-  \ifpxcz@textcomp \DeclareEncodingSubset{TS1}{#1}{3}\fi
-  \@for\pxcz@x:=\pxcz@afont@enc@list\do{%
-    \DeclareFontFamily{\pxcz@x}{#1}{}}}
-%% \pxcz@decl@shape{<fam>}{<ser>}<sw>{<font>}
-\pxcz@onlypreamble@def\pxcz@decl@shape#1#2#3#4{%
-  \if s#3%
-    \@for\pxcz@x:=\pxcz@afont@enc@list\do{%
-      \DeclareFontShape{\pxcz@x}{#1}{#2}{n}{<->ssub*#4}{}}%
-  \else
-    \DeclareFontShape{OT1}{#1}{#2}{n}{<->#4-l5j}{}%
-    \DeclareFontShape {T1}{#1}{#2}{n}{<->#4-t1}{}%
-    \ifpxcz@textcomp
-      \DeclareFontShape{TS1}{#1}{#2}{n}{<->#4-ts1}{}%
-    \fi
-  \fi
-  \@for\pxcz@x:=\pxcz@afont@enc@list\do{%
-    \DeclareFontShape{\pxcz@x}{#1}{#2}{it}{<->ssub*#1/#2/n}{}%
-    \DeclareFontShape{\pxcz@x}{#1}{#2}{sl}{<->ssub*#1/#2/n}{}}}
-
-\ifpxcz@alphafont   %---- <*alphabet>
-\ifpxcz@otf@deluxe  %---- <*otfdx> : otf with deluxe option
-  % define families cfjar & cfjas
-\pxcz@decl@family{cfjar}%
-\pxcz@decl@shape{cfjar}{l}n{cfjar-l}%
-\pxcz@decl@shape{cfjar}{m}n{cfjar-r}%
-\pxcz@decl@shape{cfjar}{bx}n{cfjar-b}%
-\pxcz@decl@family{cfjas}%
-\pxcz@decl@shape{cfjas}{m}n{cfjas-r}%
-\pxcz@decl@shape{cfjas}{bx}n{cfjas-b}%
-\pxcz@decl@shape{cfjas}{eb}n{cfjas-x}%
-\pxcz@decl@family{cfjam}%
-\pxcz@decl@shape{cfjam}{m}n{cfjam-r}%
-  % redefine \ltseries & \ebseries so they affect roman font
-\let\ltseries\relax \let\ebseries\relax
-\DeclareRobustCommand\ltseries{%
-  \not@math@alphabet\ltseries\relax
-  \fontseries\ltdefault\selectfont}%
-\DeclareRobustCommand\ebseries{%
-  \not@math@alphabet\ebseries\relax
-  \fontseries\ebdefault\selectfont}%
-\else               %---- <*!otfdx>
-\pxcz@decl@family{cfjar}%
-\pxcz@decl@shape{cfjar}{m}n{cfjar-r}%
-\pxcz@decl@shape{cfjar}{bx}s{cfjas/m/n}%
-\pxcz@decl@family{cfjas}%
-\pxcz@decl@shape{cfjas}{m}n{cfjas-r}%
-\pxcz@decl@shape{cfjas}{bx}s{cfjas/m/n}%
-\pxcz@onlypreamble@def\pxcz@err@dxotf#1{%
-  \PackageError\pxcz@pkgname
-   {Loaded before '#1' with 'deluxe'}%
-   {This package must be loaded after '#1' with 'deluxe' option
-    when using both.}}
-\g@addto@macro\pxcz@check@extra{%
-  \expandafter\let\expandafter\pxcz@x\csname pxcz@FS/mnr\endcsname
-  \ifx\pxcz@x\@empty\else
-    % if mnr is replaced but gtr is not then ...
-    \expandafter\ifx\csname pxcz@FS/gtr\endcsname\@empty
-      {\expandafter\let\csname pxcz@FS/gtr\endcsname\pxcz@x
-        \pxcz@Entry{gtr}{r-cfjas-r-@PXcjk0@}{unicode}{HWid}}%
-  \fi\fi
-  \@ifpackagewith{otf}{deluxe}{\pxcz@err@dxotf{otf}}{}%
-}
-\fi                 %---- </otfdx>
-\fi                 %---- </alphabet>
-
 %--------------------------------------- begin-document hook
-
-%% variables
-\let\pxcz@afont@enc\relax
-
-%% \pxcz@mgfamily@hook
-\def\pxcz@mgfamily@hook{\romanfamily{cfjam}}
 
 %% \pxcz@set@page@hook{<text>}
 \ifpxcz@old@hook@system %----
@@ -1740,37 +1767,14 @@
     \expandafter\ifx\csname pxcz@FS/\pxcz@x\endcsname\@empty
       \pxcz@okfalse \fi}}
 
-%% \pxcz@decl@relfont{<fam>}{<afam>}{<ser>,...}
-\pxcz@onlypreamble@def\pxcz@decl@relfont#1#2#3{%
-  \@for\pxcz@x:={#3}\do{%
-    \expandafter\ifx\csname\k@encoding/#1/\pxcz@x/n\endcsname\relax\else
-      \edef\pxcz@tmpa{\noexpand\DeclareRelationFont
-        {\k@encoding}{#1}{\pxcz@x}{}{\pxcz@afont@enc}{#2}{\pxcz@x}{}%
-      }\pxcz@tmpa
-    \fi}%
-  \PackageInfo\pxcz@pkgname
-   {Relation font set for \k@encoding/#1}}
-
-%% \pxcz@check@afont@enc
-\pxcz@onlypreamble@def\pxcz@check@afont@enc{%
-  \pxcz@oktrue % OT1 is always okay
-  \expandafter\ifx\csname\pxcz@afont@enc+cfjar\endcsname\relax
-    \pxcz@okfalse \fi
-  % if not okay, use OT1 instead
-  \ifpxcz@ok\else \def\pxcz@afont@enc{OT1}\fi}
-
-%% \pxcz@set@bfdefault@to@bx{<doc-ser>}
-\pxcz@onlypreamble@let\pxcz@set@bfdefault@to@bx\@gobble
-\ifx\DeclareFontSeriesDefault\@undefined\else
-  \def\pxcz@set@bfdefault@to@bx#1{%
-    \DeclareFontSeriesDefault[#1]{bf}{bx}}
-\fi
-
 %% the begin-document hook
 \pxcz@onlypreamble@def\pxcz@doc@hook{%
   \ifpxcz@otf
     \@ifpackageloaded{otf}{\pxcz@otftrue}{\pxcz@otffalse}%
     \@ifpackageloaded{utf}{\pxcz@utftrue}{\pxcz@utffalse}%
+    \ifx\pxchfonNoCheckMultiweight\@undefined\else
+      \pxcz@otftrue
+    \fi
   \fi
   \pxcz@user@hook
   \let\pxcz@use@do\pxcz@use@mapfile
@@ -1782,44 +1786,11 @@
     \pxcz@inspect@flavor@all
   \fi
   \if t\pxcz@alphabet % 'alphabet'
-    \pxcz@check@alldefined{mnl,mnr,mnb}\ifpxcz@ok
-      \renewcommand\rmdefault{cfjar}%
-      \pxcz@set@bfdefault@to@bx{rm}%
-    \fi
-    \pxcz@check@alldefined{gtr,gtb,gtx}\ifpxcz@ok
-      \renewcommand\sfdefault{cfjas}%
-      \pxcz@set@bfdefault@to@bx{sf}%
-    \fi
-    % attach hook to \mgfamily if mgr font is defined
-    \pxcz@check@alldefined{mgr}\ifpxcz@ok\ifpxcz@otf@deluxe
-      \begingroup
-        \def\pxcz@x##1{\toks@\expandafter{##1}%
-          \xdef##1{\noexpand\pxcz@mgfamily@hook\the\toks@}%
-        }\expandafter\pxcz@x\csname mgfamily \endcsname
-      \endgroup
-    \fi\fi
-    % decide alphabet font encoding
-    \edef\pxcz@afont@enc{\encodingdefault}%
-    \pxcz@check@afont@enc\ifpxcz@ok\else
-      \PackageWarningNoLine\pxcz@pkgname
-       {Default encoding is changed to 'OT1' because%
-        \MessageBreak'alphabet' option is in effect}%
-      \renewcommand\encodingdefault{OT1}%
-    \fi
-    \normalfont
+    \pxcz@setup@alphabet
     \pxcz@addtospec{ALPHA}%
   \fi
   \if r\pxcz@alphabet % 'relfont'
-    \edef\pxcz@afont@enc{\encodingdefault}%
-    \pxcz@check@afont@enc
-    \pxcz@check@alldefined{mnl,mnr,mnb}%
-    \ifpxcz@ok \pxcz@decl@relfont\mcdefault{cfjar}{m,bx,l}\fi
-    \pxcz@check@alldefined{gtr,gtb,gtx}%
-    \ifpxcz@ok \pxcz@decl@relfont\gtdefault{cfjas}{m,bx,eb}\fi
-    \pxcz@check@alldefined{mgr}%
-    \ifpxcz@ok\ifpxcz@otf@deluxe
-      \pxcz@decl@relfont\mgdefault{cfjam}{m}%
-    \fi\fi
+    \pxcz@setup@relfont
     \pxcz@addtospec{ALPHA}%
   \fi
   \ifpxcz@uptex\else
@@ -1843,24 +1814,34 @@
   \ifpxcz@utf \pxcz@addtospec{UTF}%
   \fi
   % warn if some weights are not substituted, and if necessaty
-  \ifpxcz@warn@unless@all@defined
-    \ifpxcz@otf@deluxe
+  \ifx\pxcz@warn@unless@all@defined@for\@empty\else
+    \if d\pxcz@otf@weight
       \pxcz@check@alldefined{mnl,mnr,mnb,gtr,gtb,gtx,mgr}%
     \else \pxcz@check@alldefined{mnr,mnb,gtr,gtb}%
     \fi
     \ifpxcz@ok\else
+      \def\do##1{\MessageBreak - ##1}%
       \PackageWarningNoLine\pxcz@pkgname
-       {Some font weights are not substituted.\MessageBreak
-        So some features of pxchfon might not work\MessageBreak
-        properly when applied to such weights}%
+       {There are some weights that font files are\MessageBreak
+        not specified for. It is possibly okay,\MessageBreak
+        but some features of pxchfon (listed below)\MessageBreak
+        might not work properly when applied to\MessageBreak
+        such weights.%
+        \pxcz@warn@unless@all@defined@for
+        \expandafter\@gobble}% gobble the period
     \fi
   \fi
   % warn if some weights are not embedded, and if necessaty
-  \ifpxcz@warn@unless@all@embedded \ifpxcz@noembed@used
+  \ifx\pxcz@warn@unless@all@embedded@for\@empty\else
+      \ifpxcz@noembed@used
+    \def\do##1{\MessageBreak - ##1}%
     \PackageWarningNoLine\pxcz@pkgname
      {Some font weights have no-embed setting.\MessageBreak
-      So some features of pxchfon might not work\MessageBreak
-      properly when applied to such weights}%
+      So some features of pxchfon (listed below)\MessageBreak
+      might not work properly when applied to\MessageBreak
+      such weights.%
+      \pxcz@warn@unless@all@embedded@for
+      \expandafter\@gobble}% gobble the period
   \fi\fi
   %
   \pxcz@check@extra
@@ -1868,7 +1849,7 @@
   \ifpxcz@enabled
     \pxcz@set@page@hook{\pxcz@spec}%
   \else\ifx\pxcz@spec\@empty\else
-    \PackageWarningNoLine\pxcz@pkgname
+    \pxcz@PackageNoteNoLine\pxcz@pkgname
      {Font mapping is disabled, since the driver in use\MessageBreak
       is not dvipdfmx}%
   \fi\fi
@@ -2090,7 +2071,7 @@
 \ifpxcz@autojfmsync %---- <*autojfmsync>
 % Makes \git/\CID/\UTF do automatically jfmsync
 \let\pxcz@gid@jfm@sync\pxcz@jfm@sync
-\AtBeginDocument{%
+\g@addto@macro\pxcz@first@doc@hook{%
   \ifx\put@character\@undefined\else
     \g@addto@macro\put@character{\pxcz@jfm@sync}%
   \fi

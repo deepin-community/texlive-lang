@@ -1,17 +1,21 @@
 %%%
 % Garam
 %%%
-\setKVdefault[Garam]{Taille=7,Largeur=15pt,Solution=false,CouleurSolution=Black}
+\def\filedateGaram{2024/08/04}%
+\def\fileversionGaram{0.1}%
+\message{-- \filedateGaram\space v\fileversionGaram}%
+%
+\setKVdefault[Garam]{Taille=7,Largeur=15pt,Solution=false}%
+\defKV[Garam]{CouleurSolution=\setKV[Garam]{Solution}\colorlet{PfCGaramCoulSol}{#1}}%
 \newlength\PfCGaramHeight
 
 \NewDocumentCommand\Garam{o m}{%
-  \useKVdefault[Garam]
+  \useKVdefault[Garam]%
   \setKV[Garam]{#1}%
   \setlength{\PfCGaramHeight}{\useKV[Garam]{Largeur}+\tabcolsep}%
   \reademptyitems%
   \setsepchar[*]{§*,*/}%
   \readlist*\PfCListeGaram{#2}%
-  \colorlet{PfCGaramCoulSol}{\useKV[Garam]{CouleurSolution}}%
   \begin{NiceTabular}{*{\useKV[Garam]{Taille}}{m{\useKV[Garam]{Largeur}}}}
     \CodeBefore
     \xintFor* ##1 in{\xintSeq{2}{\fpeval{\useKV[Garam]{Taille}}}}\do{%
@@ -26,7 +30,7 @@
       \rule{0pt}{\PfCGaramHeight}\xintFor* ##2 in {\xintSeq{1}{\useKV[Garam]{Taille}}}\do{%
         \xintifForFirst{}{&}\StrChar{\PfCListeGaram[##1,##2,1]}{1}[\PfCCaracGaram]%
         \IfStrEq{\PfCCaracGaram}{*}{\Block[draw,fill=black]{1-1}{}}{%
-          \IfStrEq{\PfCCaracGaram}{!}{\Block{}{\ifboolKV[Garam]{Solution}{\StrGobbleLeft{\PfCListeGaram[##1,##2,1]}{1}}{}}}{\Block{}{\color{PfCGaramCoulSol}\PfCListeGaram[##1,##2,1]}}%
+          \IfStrEq{\PfCCaracGaram}{!}{\Block{}{\ifboolKV[Garam]{Solution}{\color{PfCGaramCoulSol}\StrGobbleLeft{\PfCListeGaram[##1,##2,1]}{1}}{}}}{\Block{}{\PfCListeGaram[##1,##2,1]}}%
         }%
       }\\
     }%

@@ -7,7 +7,7 @@
 %% ./hulipsum.dtx  (with options: `package')
 %% This is a generated file.
 %% 
-%% Copyright 2018-2020 by Tibor Tomacs
+%% Copyright 2018-2024 by Tibor Tomacs
 %% 
 %% Hungarian dummy text (Lorum ipse) for demonstrating the textual elements of a document template
 %% All paragraphs are taken with permission from http://www.lorumipse.hu/.
@@ -25,8 +25,8 @@
 %% 
 %% The Current Maintainer of this work is Tibor Tomacs.
 %% 
-\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-\ProvidesPackage{hulipsum}[2020/11/03 v1.1 Hungarian dummy text (Lorum ipse)]
+\NeedsTeXFormat{LaTeX2e}[2022/06/20]
+\ProvidesPackage{hulipsum}[2024/04/12 v1.3 Hungarian dummy text (Lorum ipse)]
 %%
 \newif\if@hulipsum@num@
 \newif\if@hulipsum@minnum@
@@ -123,19 +123,29 @@
 \newif\if@hulipsum@firstexpand@
 \@hulipsum@firstexpand@true
 
-\newcommand{\hulipsumdocument}[1][]{%
+\newcommand{\hulipsumdocument}[1][]{
 \if@hulipsum@firstexpand@
-\global\@hulipsum@firstexpand@false%
-\def\hulipsum@part{#1}%
-\def\hulipsum@partcheck{part}%
+\global\@hulipsum@firstexpand@false
+\begingroup
+\DeclareKeys{
+  maketitle.if=@hulipsum@maketitle,
+  tableofcontents.if=@hulipsum@tableofcontents,
+  part.if=@hulipsum@part,
+  abstract.if=@hulipsum@abstract,
+  math.if=@hulipsum@math,
+  bibliography.if=@hulipsum@bibliography}
+\SetKeys{maketitle,part=false,abstract,tableofcontents,math,bibliography,#1}
+\if@hulipsum@maketitle
 \@ifundefined{title}{}{\title{L\'{o}rum ipse}}
 \@ifundefined{author}{}{\author{Nyomasek Bob\'{o}}}
+\@ifundefined{supervisor}{}{\supervisor{Dr. Szel\'{e}s Gerg\H{o}\\ egyetemi docens}\author{Nyomasek Bob\'{o}\\ matematika szak}}
+\@ifundefined{institute}{}{\institute{Matematikai és Informatikai Intézet}}
+\@ifundefined{city}{}{\city{Eger}}
 \@ifundefined{maketitle}{}{\maketitle}
-\@ifundefined{tableofcontents}{}{\tableofcontents}
-\@ifundefined{abstract}{}{\begin{abstract}\hulipsum[1]\end{abstract}}
-\ifx\hulipsum@part\hulipsum@partcheck%
-\@ifundefined{part}{}{\part{Borzaszt\'{o}an cog\'{a}lis pat\'{a}s}}
 \fi
+\if@hulipsum@tableofcontents\@ifundefined{tableofcontents}{}{\tableofcontents}\fi
+\if@hulipsum@abstract\@ifundefined{abstract}{}{\begin{abstract}\hulipsum[1]\end{abstract}}\fi
+\if@hulipsum@part\@ifundefined{part}{}{\part{Borzaszt\'{o}an cog\'{a}lis pat\'{a}s}}\fi
 \@ifundefined{chapter}{}{\chapter{Fog\'{a}s n\'{e}lk\"{u}l nem vark\'{a}l}}
 \@ifundefined{section}{}{\section{A vandoba h\'{e}t matlan}}
 \hulipsum[1-2]
@@ -187,11 +197,18 @@
 \end{description}
 \end{description}
 \end{description}}
+\if@hulipsum@math
+$\mathrm{e}^x=\sum_{n=0}^\infty\frac{x^n}{n!}$ minden val\'{o}s $x$ eset\'{e}n.
+\[\mathrm{e}^x=\sum_{n=0}^\infty\frac{x^n}{n!}\quad\forall x\in\mathbf{R}.\]
+\fi
+\if@hulipsum@bibliography
 \@ifundefined{thebibliography}{}{%
 \begin{thebibliography}{1}
 \bibitem{a} \textsc{Nyomasek Bob\'{o}}, \emph{L\'{o}rum ipse}, Handana Kiad\'{o}, 1980.
 \bibitem{b} \textsc{Szel\'{e}s Gerg\H{o}}, \emph{A griszt\'{a}s talt\'{a}s kirg\'{e}szei}, \"{U}d\"{o}sv\'{e}ny Kiad\'{o}, 2010.
 \end{thebibliography}}
+\fi
+\endgroup
 \fi
 }
 

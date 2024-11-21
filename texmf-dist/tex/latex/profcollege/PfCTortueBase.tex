@@ -1,6 +1,10 @@
 %%%
 % Tortue
 %%%
+\def\filedateTortue{2024/08/04}%
+\def\fileversionTortue{0.1}%
+\message{-- \filedateTortue\space v\fileversionTortue}%
+%
 \setKVdefault[Tortue]{%
   Pas=0.2mm,%Déplacement,
   Etapes=false,%Pour arrêter la construction à une étape particulière
@@ -18,9 +22,10 @@
   Axes=false,%Affichage des axes ou pas
   Origine={(0,0)},%Origine des axes
   Cases=false,%Se déplace-t-on sur des cases ?
+  Trace=false%
 }
 \defKV[Tortue]{Etape=\setKV[Tortue]{Etapes}}%choix de l'étape d'arrêt
-
+\defKV[Tortue]{Traces=\setKV[Tortue]{Trace}}%
 \newcounter{PfCTortue}
 \setcounter{PfCTortue}{0}
 
@@ -178,6 +183,9 @@
   \ifboolKV[Tortue]{Etapes}{%
     \immediate\write\turtle@out{drawoptions(withcolor DarkGreen);label(btex \noexpand\Large\noexpand\ding{40} etex rotated RetiensAngle[Total] scaled 1.5,A[Total]);}%
   }{\ifboolKV[Tortue]{TortueF}{\immediate\write\turtle@out{drawoptions(withcolor DarkGreen);label(btex \noexpand\Large\noexpand\ding{40} etex rotated RetiensAngle[k] scaled 1.5,A[k]);}}{}}%
+  \ifboolKV[Tortue]{Trace}{%
+    \immediate\write\turtle@out{\useKV[Tortue]{Traces}}%
+  }{}%
   \immediate\closeout\turtle@out%
   \restorecomparemode%
 }%

@@ -1,7 +1,11 @@
 %%%
 % Ecritures d'unit\'es
 %%%
-\setKVdefault[Unites]{m=false,km=false,hm=false,ha=false,dam=false,a=false,dm=false,cm=true,mm=false,um=false,nm=false,g=true,t=false,q=false,kg=false,hg=false,dag=false,dg=false,cg=false,mg=false,ug=false,ng=false,mmin=false,kmh=true,kms=false,ms=false,mh=false,kgm=false,gcm=true,L=true,kL=false,hL=false,daL=false,dL=false,cL=false,mL=false,l=true,kl=false,hl=false,dal=false,dl=false,cl=false,ml=false,Go=true,Mo=false,ko=false,To=false,o=false,kWh=true,C=true,K=false,F=false,Nombre,US=false,UK=false,Precision=2}%
+\def\filedateEcrireUnites{2024/08/04}%
+\def\fileversionEcrireUnites{0.1}%
+\message{-- \filedateEcrireUnites\space v\fileversionEcrireUnites}%
+%
+\setKVdefault[Unites]{m=false,km=false,hm=false,ha=false,dam=false,a=false,dm=false,cm=true,mm=false,um=false,nm=false,g=true,t=false,q=false,kg=false,hg=false,dag=false,dg=false,cg=false,mg=false,ug=false,ng=false,mmin=false,kmh=true,kms=false,ms=false,mh=false,kgm=false,gcm=true,L=true,kL=false,hL=false,daL=false,dL=false,cL=false,mL=false,l=true,kl=false,hl=false,dal=false,dl=false,cl=false,ml=false,Go=true,Mo=false,ko=false,To=false,o=false,kWh=true,C=true,K=false,F=false,Nombre,US=false,UK=false,CFA=false,CFP=false,CHF=false,Euro=false,Precision=2}%
 \defKV[Unites]{Dots=\setKV[Unites]{Nombre=false}}%
 
 \newlength{\PfCLgUnites}
@@ -170,37 +174,45 @@
   }%
 }%
 
-%Pour mémoire au cas où...
-%\newcommand\Prixo[2][2]{%
-%  \SI[round-mode=places,round-precision=#1]{#2}{\EuRo}%
-%}
-
-%\NewDocumentCommand\Prix{o O{2} m}{%
-%  \useKVdefault[Unites]%
-%  \setKV[Unites]{#1}%
-%  \ifboolKV[Unites]{Nombre}{%
-%    \SI[round-mode=places,round-precision=#2]{#3}{\EuRo}%
-%  }{%
-%    \setlength{\PfCLgUnites}{\useKV[Unites]{Dots}}
-%    \pointilles[\PfCLgUnites]~\si{\EuRo}%
-%  }%
-%}%
-
+\makeatletter
 \NewDocumentCommand\Prix{o m}{%
   \useKVdefault[Unites]%
   \setKV[Unites]{#1}%
-  \ifboolKV[Unites]{US}{%
-    \DeclareSIUnit{\Tempo}{\Dollar}%
+  \ifboolKV[Unites]{CHF}{%
+    \DeclareSIUnit{\Tempo}{\PfCCHF}%
   }{%
-    \ifboolKV[Unites]{UK}{%
-      \DeclareSIUnit{\Tempo}{\LivreSterling}%
+    \ifboolKV[Unites]{CFA}{%
+      \DeclareSIUnit{\Tempo}{\PfCCFA}%
     }{%
-      \DeclareSIUnit{\Tempo}{\EuRo}%
+      \ifboolKV[Unites]{CFP}{%
+        \DeclareSIUnit{\Tempo}{\PfCCFP}%
+      }{%
+        \ifboolKV[Unites]{US}{%
+          \DeclareSIUnit{\Tempo}{\Dollar}%
+        }{%
+          \ifboolKV[Unites]{UK}{%
+            \DeclareSIUnit{\Tempo}{\LivreSterling}%
+          }{%
+            \ifboolKV[Unites]{Euro}{%
+              \DeclareSIUnit{\Tempo}{\EuRo}%
+            }{%
+              \if@CHF%
+                \setKV[Unites]{CHF}%
+              \fi%
+              \DeclareSIUnit{\Tempo}{\DeviseDefaut}%
+            }%
+          }%
+        }%
+      }%
     }%
   }%
   \ifboolKV[Unites]{Nombre}{%
     \IfInteger{#2}{%
-      \SI{#2}{\Tempo}%
+      \ifboolKV[Unites]{CHF}{%
+        \si{\PfCCHF}~\num{#2}.-%
+      }{%
+        \SI{#2}{\Tempo}%
+      }%
     }{%
       \SI[round-mode=places,round-precision=\useKV[Unites]{Precision}]{#2}{\Tempo}%
     }%
@@ -209,6 +221,31 @@
     \pointilles[\PfCLgUnites]~\si{\Tempo}%
   }%
 }%
+\makeatother
+
+%\NewDocumentCommand\Prixold{o m}{%
+%  \useKVdefault[Unites]%
+%  \setKV[Unites]{#1}%
+%  \ifboolKV[Unites]{US}{%
+%    \DeclareSIUnit{\Tempo}{\Dollar}%
+%  }{%
+%    \ifboolKV[Unites]{UK}{%
+%      \DeclareSIUnit{\Tempo}{\LivreSterling}%
+%    }{%
+%      \DeclareSIUnit{\Tempo}{\EuRo}%
+%    }%
+%  }%
+%  \ifboolKV[Unites]{Nombre}{%
+%    \IfInteger{#2}{%
+%      \SI{#2}{\Tempo}%
+%    }{%
+%      \SI[round-mode=places,round-precision=\useKV[Unites]{Precision}]{#2}{\Tempo}%
+%    }%
+%  }{%
+%    \setlength{\PfCLgUnites}{\useKV[Unites]{Dots}}%
+%    \pointilles[\PfCLgUnites]~\si{\Tempo}%
+%  }%
+%}%
 
 \NewDocumentCommand\Octet{o m}{%
   \useKVdefault[Unites]%

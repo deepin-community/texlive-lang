@@ -125,7 +125,8 @@ vardef Projette(expr M)=
 %    (Ypart(M)+0.5*cosd(30)*Xpart(M),Zpart(M)+0.5*sind(30)*Xpart(M))*20%Good avec Theta=-20/Phi=-10
     %(Ypart(GCoord(M))+0.5*cosd(-30)*Xpart(GCoord(M)),Zpart(GCoord(M))+0.5*sind(-30)*Xpart(GCoord(M)))*20%Good avec Theta=-20/Phi=-10
 %    (Xpart(GCoord(M))*cosd(90-30),Ypart(GCoord(M))*sind(90-30)*0.5)*DE%à garder peut-être ?
-    (Xpart(GCoordcabinet(M)),Ypart(GCoordcabinet(M)))*DE%
+%    (Xpart(GCoordcabinet(M)),Ypart(GCoordcabinet(M)))*DE%<-last good :)
+    ((Xpart(GCoordcabinet(M)),Ypart(GCoordcabinet(M)))/Zpart(GCoordcabinet(M)))*DE
     %(Zpart(GCoord(M))+0.5*cosd(-30)*Ypart(GCoord(M)),Xpart(GCoord(M))+0.5*sind(-30)*Ypart(GCoord(M)))*20
 %    (0.5*cosd(45)*Xpart(GCoord(M)),0.5*sind(45)*Ypart(GCoord(M)))*unit*DE
 %    (Xpart(GCoord(M)),Ypart(GCoord(M)))*unit*DE

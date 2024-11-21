@@ -1,11 +1,11 @@
 %%%
 % Op\'erations pos\'es à trou
 %%%
-%% D'après https://tex.stackexchange.com/questions/277246/drawing-a-circle-around-the-numbers-in-xlop-package
-
-%\begin{document}%
+\def\filedateOpTrou{2024/08/04}%
+\def\fileversionOpTrou{0.1}%
+\message{-- \filedateOpTrou\space v\fileversionOpTrou}%
 %
-%\end{document}
+%% D'après https://tex.stackexchange.com/questions/277246/drawing-a-circle-around-the-numbers-in-xlop-package
 
 \newcommand\PfCchiffre[2]{\tikz[remember picture] \node[inner sep=0pt](#1){#2};}
 
@@ -105,7 +105,7 @@ transform canvas={xshift=0em,yshift=0em}},rectangle,fill=PfCSolOp,rounded corner
   \fi
   \opmul[decimalsepsymbol={,},lineheight=2em,columnwidth=1.5em,voperator=bottom,intermediarystyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]{#2}{#3}%
   \foreach \i in {1,...,\thedivxlop}{%
-    \PfCentoure{A\i}{A\i}%
+     \PfCentoure{A\i}{A\i}%
   }%
   \endgroup
   }
@@ -167,5 +167,229 @@ transform canvas={xshift=0em,yshift=0em}},rectangle,fill=PfCSolOp,rounded corner
   \opmanyadd[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,vmanyoperator=bottom,resultstyle=\stepcounter{divxlop}\color{PfCSolOp}\PfCchiffre{A\thedivxlop},resultstyle.d=\color{PfCCouleurVirgule}]#2
   \foreach \i in {1,...,\thedivxlop}{%
     \PfCentoure{A\i}{A\i}%
+  }%
+}%
+
+%%%%%%%%%%%%%%%%%%%%% Colorees %%%%%%%%%%%%%%%%%%%
+% Merci JCC
+%%% Seule ligne à modifier selon la convenance %%%
+\newcommand\couleurs{blue,red,green,blue,red,green,blue,red,green,blue,red,green}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcount\numint%
+\newcount\indint%
+\newcount\ind%
+\def\nnil{\nil}%
+\def\ExtraitCouleurs{%
+   \ind=0%
+   \expandafter\ExtraitCouleursAux\couleurs,\nil,%
+}%
+\def\ExtraitCouleursAux#1,{%
+  \def\arg{#1}%
+  \ifx\arg\nnil%
+     \edef\cmax{\the\ind}%
+   \else%
+     \def\couleur{#1}%
+     \stepcounter{coulxlop}%
+     \stepcounter{coulxlopa}%
+     \stepcounter{coulxlopd}%
+     \expandafter\edef\csname PfCOpCouleurs\Roman{coulxlop}\endcsname{\couleur}%
+     \expandafter\edef
+     \csname op@operandstyle.1.\the\numexpr\ind+1\endcsname{%
+       \noexpand\PfCchiffre{CA\thecoulxlop}%
+     }%
+     \expandafter\edef
+     \csname op@operandstyle.2.\the\numexpr\ind+1\endcsname{%
+       \noexpand\PfCchiffre{CB\thecoulxlopa}%
+     }%
+     \expandafter\edef
+     \csname op@resultstyle.\the\numexpr\ind+1\endcsname{%
+       \noexpand\PfCchiffre{CC\thecoulxlopd}%
+     }%
+     \numint = \numexpr\ind+1
+     \indint = 1
+     \ConstruitIntermediaire
+     \advance\ind by 1
+     \expandafter\ExtraitCouleursAux
+   \fi
+}
+\def\ConstruitIntermediaire{%
+  \ifnum\numint>0
+    \stepcounter{coulxlopi}%
+    \expandafter\edef\csname PfCOpCouleursi\Roman{coulxlopi}\endcsname{\couleur}%
+     \expandafter\edef
+     \csname op@intermediarystyle.\the\numint.\the\indint\endcsname{%
+       \noexpand\PfCchiffre{CD\thecoulxlopi}%
+     }%
+     \advance\indint by 1
+     \advance\numint by -1
+     \expandafter\ConstruitIntermediaire
+   \fi
+ }
+ \def\ConstruitRemainder{%
+  \ifnum\numint>0
+    \stepcounter{coulxlopidiv}%
+    \expandafter\edef\csname PfCOpCouleursid\Roman{coulxlopidiv}\endcsname{\couleur}%
+     \expandafter\edef
+     \csname op@remainderystyle.\the\numint.\the\indint\endcsname{%
+       \noexpand\PfCchiffre{CE\thecoulxlopidiv}%
+     }%
+     \advance\indint by 1
+     \advance\numint by -1
+     \expandafter\ConstruitRemainder
+   \fi
+ }
+
+\newcounter{coulxlop}%
+\newcounter{coulxlopi}%
+\newcounter{coulxlopa}%
+\newcounter{coulxlopd}%
+\newcounter{coulxlopidiv}%
+\newcounter{coulxlopcoul}%
+
+\newcommand\PfCentoureColor[2]{%
+  \expandafter\edef\csname RetiensCouleur\endcsname{\csname PfCOpCouleurs\Roman{coulxlopcoul}\endcsname}\colorlet{CouleurCadre}{\RetiensCouleur}%
+  \tikz[remember picture,overlay] \node[preaction={draw={CouleurCadre},ultra thick,opacity=1,
+    transform canvas={xshift=0em,yshift=0em}},rectangle,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\newcommand\PfCentoureColorR[3]{%
+  \expandafter\edef\csname RetiensCouleur\endcsname{\csname PfCOpCouleurs\Roman{coulxlopcoul}\endcsname}\colorlet{CouleurCadre}{\RetiensCouleur}%
+  \tikz[remember picture,overlay] \node[preaction={draw={CouleurCadre},ultra thick,opacity=1,
+    transform canvas={xshift=0em,yshift=0em}},rectangle,fill=PfCSolOp,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\newcommand\PfCentoureColorI[2]{%
+  \expandafter\edef\csname RetiensCouleur\endcsname{\csname PfCOpCouleursi\Roman{coulxlopcoul}\endcsname}\colorlet{CouleurCadre}{\RetiensCouleur}%
+  \tikz[remember picture,overlay] \node[preaction={draw={CouleurCadre},ultra thick,opacity=1,
+    transform canvas={xshift=0em,yshift=0em}},rectangle,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\newcommand\PfCentoureColorIR[2]{%
+  \expandafter\edef\csname RetiensCouleur\endcsname{\csname PfCOpCouleursi\Roman{coulxlopcoul}\endcsname}\colorlet{CouleurCadre}{\RetiensCouleur}%
+  \tikz[remember picture,overlay] \node[preaction={draw={CouleurCadre},ultra thick,opacity=1,
+    transform canvas={xshift=0em,yshift=0em}},rectangle,fill=PfCSolOp,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\newcommand\PfCentoureColorIdiv[2]{%
+  \expandafter\edef\csname RetiensCouleur\endcsname{\csname PfCOpCouleursid\Roman{coulxlopcoul}\endcsname}\colorlet{CouleurCadre}{\RetiensCouleur}%
+  \tikz[remember picture,overlay] \node[preaction={draw={CouleurCadre},ultra thick,opacity=1,
+transform canvas={xshift=0em,yshift=0em}},rectangle,rounded corners,ultra thick,inner sep=.55em,fit=(#1.center)(#2.center)]{};}
+
+\makeatletter
+\long\def\ifnodedefined#1#2#3{%
+    \@ifundefined{pgf@sh@ns@#1}{#3}{#2}%
+}
+\makeatother
+
+\NewDocumentCommand\MultiplicationColore{omm}{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+  \setcounter{coulxlop}{0}%
+  \setcounter{coulxlopa}{0}%
+  \setcounter{coulxlopd}{0}%
+  \setcounter{coulxlopi}{0}%
+  \setcounter{coulxlopcoul}{0}%
+  \ifboolKV[ClesOperations]{Solution}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}}%
+  \ExtraitCouleurs%
+  \begingroup%
+  \setlength{\baselineskip}{1.75em}%
+  \StrLen{#3}[\PfCLongueurFacteurDeux]%
+  \ifnum\PfCLongueurFacteurDeux=1\relax%
+  \opset{lineheight=\baselineskip} % nécessaire
+  \else%
+    \opset{lineheight=\baselineskip,displayintermediary=all,displayshiftintermediary=all} % nécessaire
+  \fi%
+  \opmul[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom]{#2}{#3}%
+  \endgroup%
+  \foreach \i in {1,...,\thecoulxlop}{%
+    \stepcounter{coulxlopcoul}%
+        \ifnodedefined{CA\i}{%
+            \PfCentoureColor{CA\i}{CA\i}%
+            }{}
+  }%
+  \setcounter{coulxlopcoul}{0}%
+    \foreach \i in {1,...,\thecoulxlopa}{%
+    \stepcounter{coulxlopcoul}%
+        \ifnodedefined{CB\i}{%
+            \PfCentoureColor{CB\i}{CB\i}%
+            }{}
+          }%
+          \setcounter{coulxlopcoul}{0}%
+    \foreach \i in {1,...,\thecoulxlopd}{%
+    \stepcounter{coulxlopcoul}%
+        \ifnodedefined{CC\i}{%
+      \ifboolKV[ClesOperations]{Solution}{\PfCentoureColor{CC\i}{CC\i}}{\PfCentoureColorR{CC\i}{CC\i}}%
+            }{}
+  }%
+  \setcounter{coulxlopcoul}{0}%
+  \foreach \i in {1,...,\thecoulxlopi}{%
+    \stepcounter{coulxlopcoul}%
+%    La couleur est 
+    \ifnodedefined{CD\i}{%
+        \ifboolKV[ClesOperations]{Solution}{\PfCentoureColorI{CD\i}{CD\i}}{\PfCentoureColorIR{CD\i}{CD\i}}%
+    }{}%
+  }%
+}%
+
+\newcommand\AdditionColore[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+    \ifboolKV[ClesOperations]{Solution}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}}%
+    \setcounter{coulxlop}{0}%
+  \setcounter{coulxlopa}{0}%
+  \setcounter{coulxlopd}{0}%
+  \setcounter{coulxlopi}{0}%
+  \setcounter{coulxlopcoul}{0}%
+  \ExtraitCouleurs%
+  \opadd[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom]{#2}{#3}%
+  \foreach \i in {1,...,\thecoulxlop}{%
+    \stepcounter{coulxlopcoul}%
+    \ifnodedefined{CA\i}{%
+      \PfCentoureColor{CA\i}{CA\i}%
+    }{}%
+  }%
+  \setcounter{coulxlopcoul}{0}%
+  \foreach \i in {1,...,\thecoulxlopa}{%
+    \stepcounter{coulxlopcoul}%
+    \ifnodedefined{CB\i}{%
+      \PfCentoureColor{CB\i}{CB\i}%
+    }{}%
+  }%
+  \setcounter{coulxlopcoul}{0}%
+  \foreach \i in {1,...,\thecoulxlopd}{%
+    \stepcounter{coulxlopcoul}%
+    \ifnodedefined{CC\i}{%
+      \ifboolKV[ClesOperations]{Solution}{\PfCentoureColor{CC\i}{CC\i}}{\PfCentoureColorR{CC\i}{CC\i}}%
+    }{}%
+  }%
+}%
+
+\newcommand\SoustractionColore[3][]{%
+  \useKVdefault[ClesOperations]%
+  \setKV[ClesOperations]{#1}%
+    \ifboolKV[ClesOperations]{Solution}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurSolution}}}{\colorlet{PfCSolOp}{\useKV[ClesOperations]{CouleurFond}}}%
+    \setcounter{coulxlop}{0}%
+  \setcounter{coulxlopa}{0}%
+  \setcounter{coulxlopd}{0}%
+  \setcounter{coulxlopi}{0}%
+  \setcounter{coulxlopcoul}{0}%
+  \ExtraitCouleurs%
+  \opsub[decimalsepsymbol={,},lineheight=1.75em,columnwidth=1.5em,voperator=bottom]{#2}{#3}%
+\foreach \i in {1,...,\thecoulxlop}{%
+    \stepcounter{coulxlopcoul}%
+        \ifnodedefined{CA\i}{%
+            \PfCentoureColor{CA\i}{CA\i}%
+            }{}
+  }%
+  \setcounter{coulxlopcoul}{0}%
+    \foreach \i in {1,...,\thecoulxlopa}{%
+    \stepcounter{coulxlopcoul}%
+        \ifnodedefined{CB\i}{%
+            \PfCentoureColor{CB\i}{CB\i}%
+            }{}
+          }%
+          \setcounter{coulxlopcoul}{0}%
+    \foreach \i in {1,...,\thecoulxlopd}{%
+    \stepcounter{coulxlopcoul}%
+        \ifnodedefined{CC\i}{%
+      \ifboolKV[ClesOperations]{Solution}{\PfCentoureColor{CC\i}{CC\i}}{\PfCentoureColorR{CC\i}{CC\i}}%
+      }{}
   }%
 }%

@@ -1,6 +1,10 @@
 %%%
 % Cards
 %%%
+\def\filedateCartesJeux{2024/08/04}%
+\def\fileversionCartesJeux{0.1}%
+\message{-- \filedateCartesJeux\space v\fileversionCartesJeux}%
+%
 \setKVdefault[Cards]{Formats=false,Largeur=165,Hauteur=250,HauteurTheme=40,Marge=12,Landscape=false,Couleur=Cornsilk,CouleurAr=Cornsilk,Theme=Th\'eor\`eme\\de
   Pythagore,ThemeSol=Solution,AfficheTheme=false,Trame=false,Jointes=false,TrameVisible=false,RayonArc=5pt,Titre=false,NomTitre=Jeu 1,Loop,JaiQuia=false,Eleve=false,BackgroundAv=false,BackgroundAr=false,%ImageAv=4813762.jpg,ImageAr=4813762.jpg,
   AffichageSolution=true,SolutionSeule=false,%
@@ -336,6 +340,10 @@
   \end{tikzpicture}%
 }{}%
 
+% Pour construire la liste des cartes lors d'un ajout automatiques
+\newtoks\TokListeAjout{}
+\def\UpdatetoksCartes#1/#2\nil{\addtotok\TokListeAjout{§#1/#2}}%
+
 \NewDocumentCommand\CartesPerso{o +m}{%
 %  0/ La largeur est \useKV[Cards]{Largeur} - La hauteur est \useKV[Cards]{Hauteur}.\par
   \useKVdefault[Cards]%
@@ -383,19 +391,46 @@
   % Dimensions intérieures des cartes
   \setlength{\hauteurcarte}{\fpeval{\hauteurcards-\margecards}pt}%
   \setlength{\largeurcarte}{\fpeval{\largeurcards-\margecards}pt}%
-  % nombre de cartes sur la largeur
+  % nombre de cartes sur la largeur et sur la hauteur
   \xdef\PfCNbCartesLarg{\fpeval{floor(\paperwidth/\largeurcards)}}%
   \xdef\PfCNbCartesHaut{\fpeval{floor(\paperheight/\hauteurcards)}}%
   \xdef\PfCNbCartesPerso{\fpeval{\PfCNbCartesLarg*\PfCNbCartesHaut}}%
-  % Jointes
+  % On vérifie si le nombres de déclarations de cartes est compatible avec le nombre total de cartes calculé automatiquement. Mais pas dans le mode Trivial et surtout pas dans le cas où la trame n'est pas utilisée !
+  \ifboolKV[Cards]{Trame}{%
+  \ifboolKV[Cards]{Trivial}{}{%
+      \xintifboolexpr{\PfCNbCartesPerso==\ListeCardslen}{%
+        % Je ne dois pas ajouter de cartes
+      }{%
+        % Je passe ici et j'ajoute des cartes\\
+        % Je dois en ajouter \fpeval{\PfCNbCartesPerso-\ListeCardslen}%
+        \ifnum\fpeval{\PfCNbCartesPerso-\ListeCardslen}>0
+        \foreachitem\compteur\in\ListeCards{\expandafter\UpdatetoksCartes\compteur\nil}%
+        \def\PfCFooAjout{Non connue/Non connue}
+        \xintFor* ##1 in {\xintSeq{1}{\fpeval{\PfCNbCartesPerso-\ListeCardslen}}}\do{%
+          \expandafter\UpdatetoksCartes\PfCFooAjout\nil
+        }%
+        \xdef\PfCFooAjoutBis{\the\TokListeAjout}%
+        \setsepchar[*]{§*/}%
+        \readlist*\ListeCards{\PfCFooAjoutBis}%
+        \setsepchar{,}%
+        \fi
+      }%
+  }}{}%
+  % fin Ajout automatique
+    % Jointes
   \ifboolKV[Cards]{Jointes}{\setlength{\largeurcards}{\largeurcarte}}{}%
   \ifboolKV[Cards]{Jointes}{\setlength{\hauteurcards}{\hauteurcarte}}{}%
   % décalage entre les cartes ou pas
-  \ifnum\PfCNbCartesLarg>1\relax
-    \setlength{\margeh}{\fpeval{(\paperwidth-\PfCNbCartesLarg*\largeurcards)/(\PfCNbCartesLarg-1)}pt}%
+  \ifnum\PfCNbCartesLarg>2\relax
+     \setlength{\margeh}{\fpeval{(\paperwidth-\PfCNbCartesLarg*\largeurcards)/(\PfCNbCartesLarg-1)}pt}%
+     % \setlength{\margeh}{0pt}
+   \else
+     \setlength{\margeh}{\fpeval{(\paperwidth-\PfCNbCartesLarg*\largeurcards)/(\PfCNbCartesLarg+1)}pt}%
   \fi
-  \ifnum\PfCNbCartesHaut>1\relax
+  \ifnum\PfCNbCartesHaut>2\relax
     \setlength{\margev}{\fpeval{(\paperheight-\PfCNbCartesHaut*\hauteurcards)/(\PfCNbCartesHaut-1)}pt}%
+  \else
+    \setlength{\margev}{\fpeval{(\paperheight-\PfCNbCartesHaut*\hauteurcards)/(\PfCNbCartesHaut+1)}pt}%
   \fi
   % 
   \setlength{\hauteurtitre}{\fpeval{\useKV[Cards]{HauteurTheme}}pt}%
@@ -424,10 +459,11 @@
     \clearpage%
     \thispagestyle{empty}%
     \begin{Trame}
-      \multido{\i=1+1}{\PfCNbCartesPerso}{%
-        \node[] at (Carte\i) {%
+      %\multido{\i=1+1}{\PfCNbCartesPerso}{%
+\xintFor* ##1 in{\xintSeq{1}{\PfCNbCartesPerso}}\do{
+        \node[] at (Carte##1) {%
           \begin{MyboxSimpleAv}{\useKV[Cards]{Theme}}%
-            \ListeCards[\i,1]%
+            \ListeCards[##1,1]%
           \end{MyboxSimpleAv}%
         };%
       }%
@@ -469,10 +505,11 @@
     \clearpage%
     \thispagestyle{empty}%
     \begin{Trame}
-      \multido{\i=1+1}{\PfCNbCartesPerso}{%
-        \node[] at (Carte\i) {%
-          \begin{Mybox}{\ListeCards[\i,1]}{\useKV[Cards]{Theme}}{\ListeCards[\i,2]}%
-            \ListeCards[\i,3]%
+%      \multido{\i=1+1}{\PfCNbCartesPerso}{%
+\xintFor* ##1 in{\xintSeq{1}{\PfCNbCartesPerso}}\do{
+        \node[] at (Carte##1) {%
+          \begin{Mybox}{\ListeCards[##1,1]}{\useKV[Cards]{Theme}}{\ListeCards[##1,2]}%
+            \ListeCards[##1,3]%
           \end{Mybox}%
         };%
       }%
@@ -513,9 +550,10 @@
     \clearpage%
     \thispagestyle{empty}%
     \begin{Trame}
-      \multido{\i=1+1}{\PfCNbCartesPerso}{%
-        \node[] at (Carte\i) {%
-          \begin{MyboxJQ}{\ListeCards[\i,1]}{\ListeCards[\i,2]}%
+%      \multido{\i=1+1}{\PfCNbCartesPerso}{%
+\xintFor* ##1 in{\xintSeq{1}{\PfCNbCartesPerso}}\do{
+        \node[] at (Carte##1) {%
+          \begin{MyboxJQ}{\ListeCards[##1,1]}{\ListeCards[##1,2]}%
             %% 
           \end{MyboxJQ}%
         };%
@@ -562,13 +600,14 @@
     \clearpage%
     \thispagestyle{empty}%
     \begin{Trame}
-      \multido{\i=1+1}{\PfCNbCartesPerso}{%
-        \node[] at (Carte\i) {%
+%      \multido{\i=1+1}{\PfCNbCartesPerso}{%
+\xintFor* ##2 in{\xintSeq{1}{\PfCNbCartesPerso}}\do{
+        \node[] at (Carte##2) {%
           \begin{MyboxTrivial}%
             \begin{center}
               \begin{NiceTabular}[width=0.9\largeurcarte]{X[1,m]X[9,m]}[hvlines]%
                 \xintFor* ##1 in{\xintSeq{1}{6}}\do{%
-                  \rule{0pt}{0.12\hauteurcards}\Block{1-1}{\ListeSymbolesTrivial[##1]}&\ListeCards[\i,\fpeval{1+2*(##1-1)}]\\
+                  \rule{0pt}{0.12\hauteurcards}\Block{1-1}{\ListeSymbolesTrivial[##1]}&\ListeCards[##2,\fpeval{1+2*(##1-1)}]\\
                 }%
               \end{NiceTabular}%
             \end{center}%
@@ -634,13 +673,14 @@
     \clearpage%
     \thispagestyle{empty}%
     \begin{Trame}
-      \multido{\i=1+1}{\PfCNbCartesPerso}{%
-        \node[] at (Carte\i) {%
+%      \multido{\i=1+1}{\PfCNbCartesPerso}{%
+\xintFor* ##2 in{\xintSeq{1}{\PfCNbCartesPerso}}\do{
+        \node[] at (Carte##2) {%
           \begin{MyboxTrivial}%
             \begin{center}
               \begin{NiceTabular}[width=0.9\largeurcarte]{X[1,m]X[9,m]}[hvlines]%
                 \xintFor* ##1 in{\xintSeq{1}{6}}\do{%
-                  \rule{0pt}{0.12\hauteurcards}\Block{1-1}{\ListeSymbolesTrivial[##1]}&\ListeCards[\i,\fpeval{1+2*(##1-1)}]\\
+                  \rule{0pt}{0.12\hauteurcards}\Block{1-1}{\ListeSymbolesTrivial[##1]}&\ListeCards[##2,\fpeval{1+2*(##1-1)}]\\
                 }%
               \end{NiceTabular}%
             \end{center}%

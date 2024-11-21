@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{arabxetex} % for typesetting Arabic text in Rigth−To−Left direction
+\usepackage[bornez, cortes, garcia, trans={en,lt}]{quran-es}
+
+\def\setTr#1{\par\esSetTrans{#1}\fbox{\ttfamily  Translation by \esGetTrans:}\par\smallskip}
+\newcommand{\compare}[1]{%
+    \noindent\smallskip\par
+    \hrulefill{\string #1}\hrulefill
+    \par\smallskip
+    \begin{minipage}[t]{.31\textwidth}
+    \setTr{bornez} {#1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{.31\textwidth}
+    \setTr{cortes} {#1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{.31\textwidth}
+    \setTr{garcia} {#1}
+    \end{minipage}
+    \bigskip
+}
+
+\begin{document}
+
+\begin{arab}[utf]
+\quransurah*[1]
+\end{arab}
+\quransurahes*[1]
+
+\begin{minipage}{.4\textwidth}
+\begin{arab}[utf]
+\quranayah[Al-Ikhlas][1-4]
+\end{arab}
+\end{minipage}
+\hfill
+\begin{minipage}{.4\textwidth}
+\quranayahlt[Al-Ikhlas][1-4]
+\end{minipage}
+
+\begin{minipage}{.4\textwidth}
+\quranayahes[Al-Ikhlas][1-4]
+\end{minipage}
+\hfill
+\begin{minipage}{.4\textwidth}
+\quranayahen[Al-Ikhlas][1-4]
+\end{minipage}
+
+\ToggleBasmalah
+\compare{\quransurahes}
+% \compare{\quranayahes[1][1]}
+\ToggleBasmalah
+\compare{\quranpagees*[2]}
+
+\end{document}

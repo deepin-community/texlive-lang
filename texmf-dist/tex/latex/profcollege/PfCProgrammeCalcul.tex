@@ -1,6 +1,10 @@
 %%%%
 % Prog de calculs "simples"
 %%%%
+\def\filedateProgCalcul{2024/08/04}%
+\def\fileversionProgCalcul{0.1}%
+\message{-- \filedateProgCalcul\space v\fileversionProgCalcul}%
+%
 \setKVdefault[ClesProg]{%
   Ecart=2em,%
   Direct,%
@@ -28,30 +32,80 @@
 
 \newlength{\PointillesClesProg}%
 
-\newcommand\ProgCalcul[2][]{%
-  % #1 : cl\'es
-  % #2 : \'etapes
+\NewDocumentCommand\ProgCalcul{som}{%
+  % #1 : pour l'écriture rapide, linéaire du programme de calcul
+  % #2 : cl\'es
+  % #3 : \'etapes
   \useKVdefault[ClesProg]%
-  \setKV[ClesProg]{#1}%
-  \ifboolKV[ClesProg]{ThemePerso}{}{%
-    \tcbset{ProgCalcul/.style={%
-        boxsep=1mm,
-        bottom=.75mm,
-        middle=2mm,
-        boxrule={\useKV[ClesProg]{Epaisseur}},
-        text width={\useKV[ClesProg]{Largeur}},
-        colframe={\useKV[ClesProg]{CouleurCadre}},
-        colback={\useKV[ClesProg]{CouleurFond}},
-        halign upper=center
+  \setKV[ClesProg]{#2}%
+  \IfBooleanTF{#1}{%
+    \setsepchar[*]{,* }\ignoreemptyitems%
+    \readlist*\ListeProg{#3}%
+    \ensuremath{%
+      \xdef\NbDepart{\ListeProg[1]}%
+      \ifboolKV[ClesProg]{SansCalcul}{%
+          \NbDepart\foreachitem\compteur\in\ListeProg[2]{%
+            \edef\Test{\ListeProg[2,\compteurcnt]}%
+            \expandarg%
+            \StrSubstitute{\Test}{^}{\empty\dots{}^}[\tempa]%
+            \StrSubstitute{\tempa}{**}{^}[\tempab]%
+            \StrSubstitute{\tempab}{*}{\times}[\tempac]%
+            \StrSubstitute{\tempac}{/}{\div}[\tempad]%
+            % \hspace{0.2em}
+            \xrightarrow{\tempad}
+            % \hspace{0.2em}
+            \ListeProg[3,\compteurcnt]%
+          }%
+        }{%
+          \num{\NbDepart}~\foreachitem\compteur\in\ListeProg[2]{%
+            \ifboolKV[ClesProg]{Direct}{%
+                \edef\Test{\ListeProg[2,\compteurcnt]}%
+                \expandarg%
+                \StrSubstitute{\Test}{^}{\empty\dots{}^}[\tempa]%
+                \StrSubstitute{\tempa}{**}{^}[\tempab]%
+                \StrSubstitute{\tempab}{*}{\times}[\tempac]%
+                \StrSubstitute{\tempac}{/}{\div}[\tempad]%
+                % \hspace{0.2em}
+                \xdef\NbDepart{\fpeval{(\NbDepart)\ListeProg[2,\compteurcnt]}}
+                % \hspace{0.2em}
+                \xrightarrow{\tempad}~\num{\NbDepart}%
+              }{%
+                \edef\Test{\ListeProg[2,\compteurcnt]}
+                \expandarg%
+                \StrSubstitute{\Test}{^2}{\empty\sqrt{\dots{}}}[\tempa]%
+                \StrSubstitute{\tempa}{**}{^}[\tempab]%
+                \StrSubstitute{\tempab}{*}{\div}[\tempac]%
+                \StrSubstitute{\tempac}{/}{\times}[\tempad]%
+                \StrSubstitute{\tempad}{-}{+}[\tempae]%
+                \StrSubstitute{\tempae}{++}{-}[\tempaf]%
+                %\hspace{0.2em}
+                \xdef\NbDepart{\fpeval{(\NbDepart)\ListeProg[2,\compteurcnt]}}
+                % \hspace{0.2em}
+                \xleftarrow{\tempaf}~\num{\NbDepart}%
+              }%
+            }%
+          }
+        }
+      }{%
+        \ifboolKV[ClesProg]{ThemePerso}{}{%
+      \tcbset{ProgCalcul/.style={%
+          boxsep=1mm,
+          bottom=.75mm,
+          middle=2mm,
+          boxrule={\useKV[ClesProg]{Epaisseur}},
+          text width={\useKV[ClesProg]{Largeur}},
+          colframe={\useKV[ClesProg]{CouleurCadre}},
+          colback={\useKV[ClesProg]{CouleurFond}},
+          halign upper=center
+        }%
       }%
     }%
-  }%
   \ifboolKV[ClesProg]{Application}{%
-    %    % by Thomas Dehon and cp
-    \setsepchar[*]{§*,}
+      %    % by Thomas Dehon and cp
+    \setsepchar[*]{§*,}%
     % \setsepchar[*]{,* }%
     \ignoreemptyitems%
-    \readlist*\ListeTotale{#2}%
+    \readlist*\ListeTotale{#3}%
     \xdef\PfCPCfoo{\ListeTotale[1]}%
     \xdef\PfCPCfaa{\ListeTotale[2]}%
     %% 
@@ -94,7 +148,7 @@
       % by Thomas Dehon
       \setsepchar[*]{,* }%
       \ignoreemptyitems%
-      \readlist*\ListeEtapes{#2}% 
+      \readlist*\ListeEtapes{#3}% 
       \begin{tcolorbox}[%
         ProgCalcul,%
         ]
@@ -118,7 +172,7 @@
       \end{tcolorbox}
     }{%
       \setsepchar[*]{,* }\ignoreemptyitems%
-      \readlist*\ListeProg{#2}%
+      \readlist*\ListeProg{#3}%
       \stepcounter{NBprog}%
       \ifboolKV[ClesProg]{Vide}{%
         \xdef\PfCNbDepart{\ListeProg[1]}%
@@ -162,7 +216,7 @@
                \StrSubstitute{\tempab}{*}{\div}[\tempac]%
                \StrSubstitute{\tempac}{/}{\times}[\tempad]%
                \StrSubstitute{\tempad}{-}{+}[\tempae]%
-               \StrSubstitute{\tempae}{+}{-}[\tempaf]%
+               \StrSubstitute{\tempae}{++}{-}[\tempaf]%
                \ifnum\fpeval{\useKV[ClesProg]{Reponses}}>0\relax%
                  \ifnum\fpeval{\listlen\ListeProg[2]-\compteurcnt}<\fpeval{\useKV[ClesProg]{Reponses}}\relax%
                    \ifboolKV[ClesProg]{OpReciproques}{%
@@ -181,8 +235,8 @@
                }%
            \end{tikzpicture}%
          }{}%
-      }{%
-        \xdef\NbDepart{\ListeProg[1]}%
+       }{%
+         \xdef\NbDepart{\ListeProg[1]}%
         \ifboolKV[ClesProg]{SansCalcul}{%
           $\NbDepart$\foreachitem\compteur\in\ListeProg[2]{%
             \hspace{0.2em}\tikzmark{A-\theNBprog-\compteurcnt}\hspace{\useKV[ClesProg]{Ecart}}\tikzmark{B-\theNBprog-\compteurcnt}\hspace{0.2em}$\ListeProg[3,\compteurcnt]$%
@@ -236,4 +290,5 @@
       }%
     }%
   }%
+  }
 }%

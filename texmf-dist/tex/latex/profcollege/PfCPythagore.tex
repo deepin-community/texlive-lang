@@ -1,6 +1,10 @@
 %%%
 % Le th\'eor\`eme de Pythagore
 %%%
+\def\filedatePythagore{2024/08/04}%
+\def\fileversionPythagore{0.1}%
+\message{-- \filedatePythagore\space v\fileversionPythagore}%
+%
 \setKVdefault[ClesPythagore]{Exact=false,AvantRacine=false,Racine=false,Entier=false,Egalite=false,Precision=2,Soustraction=false,Figure=false,FigureSeule=false,Angle=0,Echelle=1cm,Reciproque=false,ReciColonnes=false,Faible=false,Unite=cm,EnchaineA=false,EnchaineB=false,EnchaineC=false,Perso=false,AllPerso=false,SansMots=false,Decalage=5mm,ModeleCouleur=5}%
 \defKV[ClesPythagore]{ValeurA=\setKV[ClesPythagore]{EnchaineA}}%
 \defKV[ClesPythagore]{ValeurB=\setKV[ClesPythagore]{EnchaineB}}%
@@ -284,7 +288,7 @@
       \NomA\NomC^2&=\ifboolKV[ClesPythagore]{EnchaineA}{\opexport{a1}{\Aun}\num{\Aun}}{\opmul*{A1}{A1}{a1}\opexport{a1}{\Aun}\num{\Aun}}+\ifboolKV[ClesPythagore]{EnchaineB}{\opexport{a2}{\Adeux}\num{\Adeux}}{\opmul*{A2}{A2}{a2}\opexport{a2}{\Adeux}\num{\Adeux}}\\
       \NomA\NomC^2&=\opadd*{a1}{a2}{a3}\opexport{a3}{\Atrois}\num{\Atrois}%\\
       \ifboolKV[ClesPythagore]{AvantRacine}{}{%
-         \ifboolKV[ClesPythagore]{Entier}{}{\\\NomA\NomC&=\sqrt{\opexport{a3}{\Atrois}\num{\Atrois}}}
+         \ifboolKV[ClesPythagore]{Entier}{}{\\\NomA\NomC&=\sqrt{\opexport{a3}{\Atrois}\num{\Atrois}}\ifboolKV[ClesPythagore]{Racine}{~\si{\PfCPythaUnit}}{}}
          \ifboolKV[ClesPythagore]{Racine}{}{\\\NomA\NomC&\IfStrEq{\ResultatApproche}{\ResultatAttendu}{=}{\approx}\opsqrt[maxdivstep=5]{a3}{a4}\opround{a4}{pres}{a4}\opunzero{a4}\opexport{a4}{\Aquatre}\SI{\Aquatre}{\PfCPythaUnit}}%\\
       }
     \end{align*}

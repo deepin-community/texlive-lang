@@ -1,7 +1,12 @@
 %%%
 % D\'ecomposition de fractions d\'ecimales
 %%%
-\setKVdefault[ClesFracDeci]{Complete=false,SansZero=false,Remediation=false,Longueur=1cm}
+\def\filedateDecompFracDeci{2024/08/13}%
+\def\fileversionDecompFracDeci{0.1a}%
+\message{-- \filedateDecompFracDeci\space v\fileversionDecompFracDeci}%
+%
+\setKVdefault[ClesFracDeci]{Complete=false,SansZero=false,Remediation=false,Longueur=1cm,Vides=false}%
+\defKV[ClesFracDeci]{Vide=\setKV[ClesFracDeci]{Remediation}\setKV[ClesFracDeci]{Vides}}%
 \newlength{\PfCLongueurP}%
 
 \newcommand\FractionDecimale[2][]{%
@@ -26,7 +31,7 @@
         \xintifboolexpr{\PartieEntiereFractionDeci == 0}{}{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\PartieEntiereFractionDeci}}+}%
         \xintFor* ##1 in {\xintSeq{1}{\LongueurPartieDecimale}}\do{%
           \StrMid{\PartieDecimaleFractionDeci}{##1}{##1}[\ChiffrePartieDecimale]%
-          \xintifForFirst{}{\xintifboolexpr{\ChiffrePartieDecimale == 0}{}{+}}\xintifboolexpr{\ChiffrePartieDecimale == 0}{}{\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\ChiffrePartieDecimale}}}{\num{\fpeval{10**(\LongueurFracDeciDeno-1-\LongueurPartieDecimale+##1)}}}}%
+          \xintifForFirst{}{\xintifboolexpr{\ChiffrePartieDecimale == 0}{}{+}}\xintifboolexpr{\ChiffrePartieDecimale == 0}{}{\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\ChiffrePartieDecimale}}}{\ifboolKV[ClesFracDeci]{Vides}{\pointilles[\PfCLongueurP]}{\num{\fpeval{10**(\LongueurFracDeciDeno-1-\LongueurPartieDecimale+##1)}}}}}%
         }%
       }%
     }{%
@@ -38,20 +43,20 @@
             \StrGobbleLeft{\FractionDeciNum}{\fpeval{\LongueurPartieEntiere}}[\DecompositionFracDeciComplete]%
             % on affiche la partie décimale.
             \xintFor* ##1 in {\xintSeq{1}{\fpeval{\LongueurFracDeciNum-\LongueurPartieEntiere}}}\do{%
-              \xintifForFirst{}{+}\StrMid{\DecompositionFracDeciComplete}{##1}{##1}[\ChiffrePartieDecimale]\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\ChiffrePartieDecimale}}}{\num{\fpeval{10**##1}}}%
+              \xintifForFirst{}{+}\StrMid{\DecompositionFracDeciComplete}{##1}{##1}[\ChiffrePartieDecimale]\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\ChiffrePartieDecimale}}}{\ifboolKV[ClesFracDeci]{Vides}{\pointilles[\PfCLongueurP]}{\num{\fpeval{10**##1}}}}%
             }%
           }%
         }{%
           \ensuremath{%
             \xintFor* ##1 in {\xintSeq{1}{\LongueurPartieDecimale}}\do{%
               \StrMid{\PartieDecimaleFractionDeci}{##1}{##1}[\ChiffrePartieDecimale]%
-              \xintifForFirst{}{+}\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\ChiffrePartieDecimale}}}{\num{\fpeval{10**(\LongueurFracDeciDeno-1-\LongueurPartieDecimale+##1)}}}%
+              \xintifForFirst{}{+}\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\ChiffrePartieDecimale}}}{\ifboolKV[ClesFracDeci]{Vides}{\pointilles[\PfCLongueurP]}{\num{\fpeval{10**(\LongueurFracDeciDeno-1-\LongueurPartieDecimale+##1)}}}}%
             }%
           }%
         }%
       }{%
         \ensuremath{%
-          \xintifboolexpr{\PartieEntiereFractionDeci == 0}{}{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\PartieEntiereFractionDeci}}+}\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\PartieDecimaleFractionDeci}}}{\num{\FractionDeciDeno}}%
+          \xintifboolexpr{\PartieEntiereFractionDeci == 0}{}{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\PartieEntiereFractionDeci}}+}\frac{\ifboolKV[ClesFracDeci]{Remediation}{\pointilles[\PfCLongueurP]}{\num{\PartieDecimaleFractionDeci}}}{\ifboolKV[ClesFracDeci]{Vides}{\pointilles[\PfCLongueurP]}{\num{\FractionDeciDeno}}}%
         }%
       }%
     }%

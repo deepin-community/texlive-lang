@@ -1,4 +1,4 @@
-% Created 2023-05-21 dim. 17:49
+% Created 2024-10-30 Wed 17:28
 % Intended LaTeX compiler: lualatex
 \documentclass{letgut}
                                 \setmainfont{KpRoman}
@@ -13,20 +13,19 @@
 
 
 \section{Readme file}
-\label{sec:org4c9ba67}
-
-\begin{verbatim}
+\label{Readmefile-dlkgxqt0fck0}
+\begin{lstlisting}
 -------:| ---------------------------------------------------
  letgut:| Package for the banner of the newsletter
-	| "La Lettre de GUTenberg"
+        | "La Lettre de GUTenberg"
  Author:| Association GUTenberg
- E-mail:| secretariat@gutenberg.eu.org
+ E-mail:| secretariat@gutenberg-asso.fr
 License:| Released under the LaTeX Project Public License
-	|  v1.3c or later
+        |  v1.3c or later
     See:| http://www.latex-project.org/lppl.txt
 
-Copyright (C) 1994-2022 by Association GUTenberg
-		  <secretariat@gutenberg.eu.org>
+Copyright (C) 1994-2024 by Association GUTenberg
+                  <secretariat@gutenberg-asso.fr>
 
 This work may be distributed and/or modified under the
 conditions of the LaTeX Project Public License (LPPL), either
@@ -37,21 +36,19 @@ http://www.latex-project.org/lppl.txt
 
 This work is "maintained" (as per LPPL maintenance status)
 by Association GUTenberg.
-\end{verbatim}
+\end{lstlisting}
 
 \section{Implementation}
-\label{sec:org4c5e60d}
-
+\label{Implementation-ckogxqt0fck0}
 \subsection{Identification}
-\label{sec:org09b0cd2}
-
-\begin{verbatim}
+\label{ImplementationIdentification-gwqgxqt0fck0}
+\begin{lstlisting}
 This is file `letgut-banner.sty,
 generated with the Emacs Org-babel utility.
 
 The original source file is letgut-banner.org
 %% 
-\end{verbatim}
+\end{lstlisting}
 
 These document classes can only be used with \LaTeXe, so we make
 sure that an appropriate message is displayed when another \TeX{}
@@ -65,23 +62,15 @@ Now, we can announce the package name and its version:
 
 \begin{lstlisting}
 \ProvidesExplPackage{letgut-banner}
-{2022-03-17}
-{0.9}
+{2024-10-07}
+{0.10}
 {
   Package for the banner of the newsletter "La Lettre de GUTenberg"
 }
 \end{lstlisting}
 
 \subsection{Packages loaded}
-\label{sec:org447090b}
-
-In order to provide class options, we load the \package{l3keys2e} which provides
-\LaTeXe{} option processing using \LaTeX3 keys:
-
-\begin{lstlisting}
-\RequirePackage{l3keys2e}
-\end{lstlisting}
-
+\label{ImplementationPackagesloaded-etvgxqt0fck0}
 Till the Lua-based color will be  added to the core \package{l3color} approach,
 we have to rely on \package{xcolor}
 
@@ -96,35 +85,14 @@ reader who wants to copy the interesting text be able to select it (see below).
 \RequirePackage{accsupp}
 \end{lstlisting}
 
-What follows has to be done at this end of the preamble, otherwise the font set
-with \lstinline+\setmainfont+ in the preamble isn't taken in account in the banner.
-
-We define an option for the color of the text in the "L" (that has to be the
-same as the page color of the document).
-
-\begin{lstlisting}
-\keys_define:nn { letgut-banner }
-{
-  , pagecolor .clist_gset:N = \g__letgutbanner_pagecolor_clist
-  , pagecolor .initial:n = { 1,1,1 }
-}
-\ProcessKeysOptions { letgut-banner }
-\end{lstlisting}
-
-\begin{lstlisting}
-\AddToHook{begindocument}{
-\end{lstlisting}
-
 \begin{lstlisting}
 \cs_generate_variant:Nn \color_fill:nn { nV }
 \end{lstlisting}
 
 \subsection{Declarations}
-\label{sec:orgbda0ae2}
-
+\label{ImplementationDeclarations-u0ygxqt0fck0}
 \subsubsection{Dimensions}
-\label{sec:org5711d86}
-
+\label{ImplementationDeclarationsDimensions-9t0hxqt0fck0}
 \begin{lstlisting}
 \dim_new:N \g__letgutbanner_area_height_dim
 \dim_new:N \g__letgutbanner_La_height_dim
@@ -138,6 +106,7 @@ same as the page color of the document).
 \dim_if_exist:NF \g__letgutbanner_first_page_shrink_dim {
   \dim_new:N \g__letgutbanner_first_page_shrink_dim
 }
+\dim_new:N \g__letgutbanner_textwidth_dim
 \end{lstlisting}
 
 \begin{itemize}
@@ -155,11 +124,9 @@ values. For this, we first generate a variant of \lstinline+\dim_const:Nn+ (see
   { 25cm }
 }
 \dim_if_exist:NTF \c__letgut_textwidth_dim {
-  \dim_const:NV \c__letgutbanner_textwidth_dim
-  \c__letgut_textwidth_dim
+  \dim_gset_eq:NN \g__letgutbanner_textwidth_dim \c__letgut_textwidth_dim
 }{
-  \dim_const:Nn \c__letgutbanner_textwidth_dim
-  { 14cm }
+  \dim_gset:Nn \g__letgutbanner_textwidth_dim { 14cm }
 }
 \dim_if_exist:NTF \c__letgut_lmargin_dim {
   \dim_const:NV \c__letgutbanner_lmargin_dim
@@ -237,7 +204,7 @@ the left margin minus half the difference between the width of the left
 margin and the width (\(d\)) of the "L": \(=w+l-(l-d)/2=w+(l+d)/2\)).
 \begin{lstlisting}
 \dim_const:Nn \c__letgutbanner_banner_width_dim  {
-  \c__letgutbanner_textwidth_dim
+  \g__letgutbanner_textwidth_dim
   +
   (
   \c__letgutbanner_banner_thickness_dim
@@ -262,7 +229,7 @@ padding because this text will be stuck to its left "margin").
 \begin{lstlisting}
 \dim_const:Nn
 \c__letgutbanner_banner_horizontal_contents_width_dim {
-  \c__letgutbanner_textwidth_dim
+  \g__letgutbanner_textwidth_dim
   - (
   \c__letgutbanner_banner_thickness_dim
   -
@@ -276,8 +243,7 @@ padding because this text will be stuck to its left "margin").
 \end{itemize}
 
 \subsubsection{Boxes}
-\label{sec:orge5b5c6b}
-
+\label{ImplementationDeclarationsBoxes-s83hxqt0fck0}
 New boxes, for each of the letters in the word "LETTRE" (!), and then for the
 rest of the content listed in the banner.
 \begin{lstlisting}
@@ -292,8 +258,7 @@ rest of the content listed in the banner.
 \end{lstlisting}
 
 \subsubsection{Floating point numbers}
-\label{sec:org61842b5}
-
+\label{ImplementationDeclarationsFloatingpointnumbers-e75hxqt0fck0}
 \begin{itemize}
 \item Minimum percentage of the common height of the letters of the word "LETTRE"
 that their line spacing must represent.
@@ -309,14 +274,13 @@ that their line spacing must represent.
 \fp_const:Nn \c__letgutbanner_leading_La_factor_fp { 1.5 }
 \end{lstlisting}
 
-\subsection{Application des dimensions de la page}
-\label{sec:orgb3e9382}
-
+\subsection{Applying the page dimensions}
+\label{ImplementationApplyingthepagedimensions-187hxqt0fck0}
 \begin{lstlisting}
 \geometry{
   asymmetric,
   textheight    = \c__letgutbanner_textheight_dim,
-  textwidth     = \c__letgutbanner_textwidth_dim,
+  textwidth     = \g__letgutbanner_textwidth_dim,
   lmargin       = \c__letgutbanner_lmargin_dim,
   tmargin       = \c__letgutbanner_tmargin_dim,
   head          = \c__letgutbanner_head_dim,
@@ -328,7 +292,7 @@ that their line spacing must represent.
 \end{lstlisting}
 
 \subsection{Filling of the boxes}
-\label{sec:orgdd18dd8}
+\label{ImplementationFillingoftheboxes-q49hxqt0fck0}
 \begin{lstlisting}
 \hbox_gset:Nn \g__letgutbanner_L_box { \textbf{L} }
 \hbox_gset:Nn \g__letgutbanner_E_box { \textbf{E} }
@@ -341,9 +305,40 @@ that their line spacing must represent.
 \hbox_gset:Nn \g__letgutbanner_g_box { \textbf{g} }
 \end{lstlisting}
 
-\subsection{Computations}
-\label{sec:orgb1ea800}
+\subsection{Options of the package}
+\label{ImplementationOptionsofthepackage-21ri36v0fck0}
+We define:
 
+\begin{itemize}
+\item an option for the color of the text in the "L" (that has to be the same as the
+page color of the document),
+\item an option that let us choose another letter than “g” as the watermark letter.
+\end{itemize}
+
+\begin{lstlisting}
+\keys_define:nn { letgut-banner }
+{
+  , pagecolor .clist_gset:N = \g__letgutbanner_pagecolor_clist
+  , pagecolor .initial:n = { 1,1,1 }
+  , watermark~ letter .code:n = {
+    \hbox_gset:Nn \g__letgutbanner_g_box { \textbf{#1} }
+  }
+  , watermark~ scale .tl_gset:N = \g__letgutbanner_watermark_scale_tl
+  , watermark~ scale .initial:n = 1
+}
+\ProcessKeyOptions [ letgut-banner ]
+\end{lstlisting}
+
+What follows has to be done at this end of the preamble, otherwise the font set
+with \lstinline+\setmainfont+ in the preamble isn't taken in account in the banner.
+
+\begin{lstlisting}
+\AddToHook{begindocument}{
+\end{lstlisting}
+
+
+\subsection{Computations}
+\label{ImplementationComputations-r7bhxqt0fck0}
 Determination of the widths of each of the letter boxes of the word "LETTRE".
 \begin{lstlisting}
 \dim_const:Nn \c__letgutbanner_L_width_dim {
@@ -621,7 +616,11 @@ as well.
 Resize the box containing "g" to the width of the text.
 \begin{lstlisting}
 \box_gresize_to_wd:Nn \g__letgutbanner_g_box {
-  \c__letgutbanner_textwidth_dim
+  \fp_to_dim:n {
+    \g__letgutbanner_watermark_scale_tl
+    *
+    \g__letgutbanner_textwidth_dim
+  }
 }
 \end{lstlisting}
 Calculates the size by which the height of the text box on the 1st page must be
@@ -649,6 +648,7 @@ the page:
   .5\baselineskip
 }
 \end{lstlisting}
+
 Automatic addition on the 1st page (only) of the banner.
 \begin{lstlisting}
 \AddToHookNext{shipout/background}{
@@ -750,7 +750,13 @@ chosen for the page background.
   % \color_fill:n {black!10}
   \color{ black!10 }
   \put(
-  .5\c__letgutbanner_lmargin_dim+.5\c__letgutbanner_banner_thickness_dim
+  .5\c__letgutbanner_lmargin_dim
+  +
+  .5\c__letgutbanner_banner_thickness_dim
+  +
+  \fp_to_dim:n {
+    (1-\g__letgutbanner_watermark_scale_tl)/2*\g__letgutbanner_textwidth_dim
+  }
   ,
   .5\paperheight
   +
@@ -791,5 +797,5 @@ textheight of the first page of the height of the horizontal bar of the "L".
 \end{lstlisting}
 
 \section{Example file (\texttt{letgut-banner-example.tex})}
-\label{sec:orgaf6d8ec}
+\label{Examplefileletgutbannerexampletex-heehxqt0fck0}
 \end{document}

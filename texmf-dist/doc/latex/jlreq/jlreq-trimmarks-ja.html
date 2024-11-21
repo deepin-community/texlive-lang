@@ -88,18 +88,13 @@
 <article class="markdown-body">
 <h1 id="jlreq-trimmarks">jlreq-trimmarks</h1>
 <h2 id="これは何">これは何？</h2>
-<p>トンボ（トリムマーク）を出力するためのパッケージです．<a
-href="https://osdn.jp/projects/luatex-ja/wiki/FrontPage">LuaTeX-ja</a> /
-pLaTeX / upLaTeX / dvipdfmx / Dvips /
-dviout上で動きます．jlreqクラスファイルのみでなく，汎用的に動くように設計されています．以下の機能を提供します．</p>
+<p>トンボ（トリムマーク）を出力するためのパッケージです．<a href="https://osdn.jp/projects/luatex-ja/wiki/FrontPage">LuaTeX-ja</a> / pLaTeX / upLaTeX / dvipdfmx / Dvips / dviout上で動きます．jlreqクラスファイルのみでなく，汎用的に動くように設計されています．以下の機能を提供します．</p>
 <ul>
 <li>トンボの出力</li>
 <li>可能な場合には，TrimBox / BleedBoxを設定</li>
 <li>紙サイズの設定</li>
 </ul>
-<p>なお，本パッケージは<a
-href="https://www.w3.org/TR/jlreq/ja/">日本語組版処理の要件</a>
-(JLReq)とは無縁です．JLReqにはトンボに関する記述はありません．</p>
+<p>なお，本パッケージは<a href="https://www.w3.org/TR/jlreq/ja/">日本語組版処理の要件</a> (JLReq)とは無縁です．JLReqにはトンボに関する記述はありません．</p>
 <h2 id="インストール">インストール</h2>
 <p>$TEXMF/tex/latex/jlreq内にjlreq-trimmarks.styとjlreq-helpers.styを配置してください．</p>
 <h2 id="使い方">使い方</h2>
@@ -107,27 +102,22 @@ href="https://www.w3.org/TR/jlreq/ja/">日本語組版処理の要件</a>
 <pre><code>\usepackage[dvipdfmx,platex]{jlreq-trimmarks}</code></pre>
 <p>なお，クラスファイルの<code>tombow</code>オプションは使わないでください．</p>
 <h2 id="ノート">ノート</h2>
-<p>jlreq-trimmarksは紙サイズを設定しますが，その他のパッケージとの兼ね合いで正しく機能しないことがあります．その際は<a
-href="https://github.com/zr-tex8r/BXpapersize">bxpapersize</a>のようなより強力なパッケージを試してみてください．</p>
+<p>jlreq-trimmarksは紙サイズを設定しますが，その他のパッケージとの兼ね合いで正しく機能しないことがあります．その際は<a href="https://github.com/zr-tex8r/BXpapersize">bxpapersize</a>のようなより強力なパッケージを試してみてください．</p>
 <h2 id="オプション">オプション</h2>
 <p>以下のパッケージオプションを受け付けます．keyval形式です．</p>
-<h3 id="platex-uplatex-lulatex"><code>platex</code>,
-<code>uplatex</code>, <code>lulatex</code></h3>
+<h3 id="platex-uplatex-lulatex"><code>platex</code>, <code>uplatex</code>, <code>lulatex</code></h3>
 <p>エンジンの指定です．省略時は，</p>
 <ul>
 <li><code>jlreq</code>クラスファイルを読み込んでいる場合はそれと連動する</li>
 <li>そうでなければ自動推定</li>
 </ul>
 <p>です．</p>
-<h3
-id="dvipdfmxdvipsdviout"><code>dvipdfmx</code>，<code>dvips</code>，<code>dviout</code></h3>
+<h3 id="dvipdfmxdvipsdviout"><code>dvipdfmx</code>，<code>dvips</code>，<code>dviout</code></h3>
 <p>dviドライバの指定です．エンジンに<code>lualatex</code>を利用する場合は指定する必要はありません．省略時は<code>dvipdfmx</code>が使われます．</p>
 <h3 id="trimmarks_paper"><code>trimmarks_paper</code></h3>
 <p>トンボ付きの紙サイズを指定します．</p>
 <ul>
-<li><code>trimmarks_paper=a4</code>のように，<code>a0--a10</code>,
-<code>b0--b10</code>, <code>c2--c8</code>（BはJIS
-B列）を指定できる他，<code>trimmarks_paper={&lt;width&gt;,&lt;height&gt;}</code>と直接寸法を指定することができます．</li>
+<li><code>trimmarks_paper=a4paper</code>のように，<code>a0paper--a10paper</code>, <code>b0paper--b10paper</code>, <code>c2paper--c8paper</code>を指定できる他，<code>trimmarks_paper={&lt;width&gt;,&lt;height&gt;}</code>と直接寸法を指定することができます．B列はISO B列です．JIS B列を指定する場合は<code>b0j--b10j</code>を指定してください．</li>
 <li><code>a4+{1cm,2cm}</code>や<code>{10cm,20cm}+{1cm,2cm}</code>のように<code>&lt;紙サイズ&gt;+{&lt;寸法横&gt;,&lt;寸法縦&gt;}</code>とした場合は，指定された紙サイズから指定された寸法だけ増やした紙サイズを設定します．</li>
 <li><code>a4+2cm</code>は<code>a4+{2cm,2cm}</code>と等価です．</li>
 <li><code>+2cm</code>と紙サイズの部分を省略すると，現在の紙サイズを利用します．</li>
@@ -145,14 +135,12 @@ B列）を指定できる他，<code>trimmarks_paper={&lt;width&gt;,&lt;height&g
 </ul>
 <h3 id="bleed_margin"><code>bleed_margin</code></h3>
 <p>仕上がりと裁ち落としの間（ドブ）の長さを指定します．次のようにすると，上下左右を独立に変更できます．</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode latex"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>[bleed_margin={top=3mm,bottom=5mm,gutter=0mm,fore-edge=2mm}]{<span class="ex">jlreq-trimmarks</span>}</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>[bleed_margin={top=3mm,bottom=5mm,gutter=0mm,fore-edge=2mm}]{<span class="ex">jlreq-trimmarks</span>}</span></code></pre></div>
 <h2 id="jlreqtrimmarkssetup"><code>\jlreqtrimmarkssetup</code></h2>
 <p>パッケージオプションで指定できない設定を行えます．keyval形式です．</p>
 <h3 id="banner"><code>banner</code></h3>
 <p><code>show=banner</code>時に出力される文字列．通常は左上に出力されますが，四つ角および上下左右の中心に出力することもできます．指定は</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode latex"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  banner={</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    &lt;場所（上下，左右中央）&gt;={</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      &lt;細かな位置&gt;={</span>
@@ -164,8 +152,7 @@ class="sourceCode latex"><code class="sourceCode latex"><span id="cb3-1"><a href
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>のようになります．キー名は省略することもできます．例えば次のように指定します．</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode latex"><code class="sourceCode latex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  banner={</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    top-right={</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      tate={</span>
@@ -190,8 +177,7 @@ class="sourceCode latex"><code class="sourceCode latex"><span id="cb4-1"><a href
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>場所は<code>top/bottom/center</code>と<code>left/right/center/gutter/fore-edge</code>の可能な組み合わせが指定可能です．各項目に<code>\thepage</code>を指定するとページ数を出力できます．</p>
 <p>次のような指定も可能です．</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode latex"><code class="sourceCode latex"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  banner={</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    tate={左上に縦書き}, <span class="co">% 場所が省略されるとtop-leftと見なされる．</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    odd={左上奇数ページ}, <span class="co">% 省略されたのでyokoと見なされる．</span></span>
@@ -209,14 +195,12 @@ class="sourceCode latex"><code class="sourceCode latex"><span id="cb5-1"><a href
 <li><p>そうでない場合は<code>\color</code>の引数に回されます．<code>[***]</code>という形が先行する場合は，<code>\color</code>のオプションとして扱われます．例えば以下のようになります．</p>
 <ul>
 <li><code>black</code> -&gt; <code>\color{black}</code></li>
-<li><code>[cmyk]0.5,0.5,0.5,0</code> -&gt;
-<code>\color[cmyk]{0.5,0.5,0.5,0}</code></li>
+<li><code>[cmyk]0.5,0.5,0.5,0</code> -&gt; <code>\color[cmyk]{0.5,0.5,0.5,0}</code></li>
 </ul></li>
 </ul>
 <h3 id="trimmarks_pattern"><code>trimmarks_pattern</code></h3>
 <p>トンボの形．直接の描画コードを指定します．次のように<code>centers</code>に指定すると，上下左右の真ん中のトンボの形が変わります．指定するのは上の真ん中のトンボの描画コードであり，そのほかの場所にはそれを回転したものが描画されます．なお，指定前に<code>graphicx</code>パッケージを読み込んでおく必要があります．また<code>\jlreqtrimmarkswidth</code>には</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode latex"><code class="sourceCode latex"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\jlreqtrimmarkssetup</span>{</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  trimmarks_pattern = {</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    centers = {</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">\raisebox</span>{3mm}{</span>
@@ -229,8 +213,7 @@ class="sourceCode latex"><code class="sourceCode latex"><span id="cb6-1"><a href
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>上下左右の形を個別に指定することもできます．例えば上の真ん中のみ変更するには<code>top-center=&lt;描画コード&gt;</code>を指定します．同様に<code>bottom-center</code>，<code>left-center</code>，<code>right-center</code>が指定できます．個別指定には<code>graphicx</code>パッケージは不要です．</p>
 <h2 id="ライセンス">ライセンス</h2>
-<p>このパッケージは二条項BSDライセンスの元で配布されています．詳しくは<a
-href="LICENSE">LICENSE</a>をご覧ください．</p>
+<p>このパッケージは二条項BSDライセンスの元で配布されています．詳しくは<a href="LICENSE">LICENSE</a>をご覧ください．</p>
 <h2 id="履歴">履歴</h2>
 <ul>
 <li>2018-05-19
@@ -287,10 +270,17 @@ href="LICENSE">LICENSE</a>をご覧ください．</p>
 <ul>
 <li>縦書きで読み込み時にエラーが出るバグ修正．</li>
 </ul></li>
+<li>2024-02-13
+<ul>
+<li>ドキュメントの間違いを修正．</li>
+</ul></li>
+<li>2024-08-23
+<ul>
+<li><code>\DeclareKeys</code>などを使うようにした．</li>
+</ul></li>
 </ul>
 <hr />
-<p>Noriyuki Abe <a
-href="https://github.com/abenori/jlreq">https://github.com/abenori/jlreq</a></p>
+<p>Noriyuki Abe <a href="https://github.com/abenori/jlreq">https://github.com/abenori/jlreq</a></p>
 </article>
 </body>
 </html>

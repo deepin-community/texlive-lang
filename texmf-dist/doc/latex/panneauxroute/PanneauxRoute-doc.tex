@@ -36,8 +36,8 @@
 \usepackage[margin=1.5cm]{geometry}
 \setlength{\parindent}{0pt}
 
-\def\TPversion{0.1.0}
-\def\TPdate{14 août 2023}
+\def\TPversion{0.1.2}
+\def\TPdate{14 septembre 2024}
 \usepackage{tcolorbox}
 
 
@@ -135,6 +135,10 @@ Les panneaux sont au format \MontreCode{pdf}, obtenu à l'aide de fichiers \Mont
 
 \subsection{Historique}
 
+\verb|v0.1.2|~:~~~~Nouveaux panneaux
+
+\verb|v0.1.1|~:~~~~Ajout du panneau B14 (80) pour la limitation de vitesse 80
+
 \verb|v0.1.0|~:~~~~Version initiale
 
 \subsection{Chargement}
@@ -178,12 +182,12 @@ Par défaut (dû à \MontreCode{\textbackslash includegraphics}) les \textit{ima
 Pour les panneaux de (début/fin de) limitation de vitesse, la commande associée nécessite un argument obligatoire, et entre \MontreCode{\{...\}}, avec comme possibilités \MontreCode{15/30/50/70/90/110/130} :
 
 \begin{demohigh}[language=latex/latex3,style/main=cyan!5,style/code=cyan!5,style/demo=cyan!5]
-\prLimVites{15}\prLimVites{30}\prLimVites{50}\prLimVites{70}
-\prLimVites{90}\prLimVites{110}\prLimVites{130}
+\prLimVites{15}\prLimVites{30}\prLimVites{50}\prLimVites{70}%
+\prLimVites{80}\prLimVites{90}\prLimVites{110}\prLimVites{130}
 \end{demohigh}
 
 \begin{demohigh}[language=latex/latex3,style/main=cyan!5,style/code=cyan!5,style/demo=cyan!5]
-\prFinLimVit{15}\prFinLimVit{30}\prFinLimVit{50}\prFinLimVit{70}
+\prFinLimVit{15}\prFinLimVit{30}\prFinLimVit{50}\prFinLimVit{70}%
 \prFinLimVit{90}\prFinLimVit{110}\prFinLimVit{130}
 \end{demohigh}
 
@@ -228,6 +232,24 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 
 \pagebreak
 
+\subsection{Panneaux de Danger temporaires}
+
+\begin{longtblr}[label=none,entry=none]{width=0.95\linewidth,hlines,vlines,colspec={Q[12.5mm,m,c]Q[m,c]X[l,m]Q[m,c,35mm]},row{1}={cyan!5,font=\Large\sffamily},row{2-Z}={font=\sffamily},cell{2-Z}{Z}={font=\footnotesize}}
+	Type & Panneau & Signification & Alias \\
+	AK2 & \PanneauTableau{AK2} & Dos d'âne ou cassis & \fakeverb{\prDosAneTemp} \\
+	AK3 & \PanneauTableau{AK3} & Rétrécissement de chaussée & \fakeverb{\prChausRetTemp}\\
+	AK4 & \PanneauTableau{AK4} & Chaussée glissante & \fakeverb{\prChaussGlissTemp} \\
+	AK5 & \PanneauTableau{AK5} & Travaux & \fakeverb{\prTravauxTemp} \\
+	AK14 & \PanneauTableau{AK14} & Danger & \fakeverb{\prDangerTemp} \\
+	AK17 & \PanneauTableau{AK17} & Feux temporaires & \fakeverb{\prFeuxTemp} \\
+	AK22 & \PanneauTableau{AK22} & Projection de gravillons & \fakeverb{\prGraviersTemp} \\
+	AK30 & \PanneauTableau{AK30} & Embouteillage & \fakeverb{\prBouchonTemp} \\
+	AK31 & \PanneauTableau{AK31} & Accident & \fakeverb{\prAccidentTemp} \\
+	AK32 & \PanneauTableau{AK32} & Brouillard ou fumées épaisses & \fakeverb{\prBrouillardTemp} \\
+\end{longtblr}
+
+\pagebreak
+
 \subsection{Panneaux d'Interdiction et de Priorité}
 
 \begin{longtblr}[label=none,entry=none]{width=0.95\linewidth,hlines,vlines,colspec={Q[12.5mm,m,c]Q[m,c]X[l,m]Q[m,c,35mm]},row{1}={cyan!5,font=\Large\sffamily},row{2-Z}={font=\sffamily},cell{2-Z}{Z}={font=\footnotesize}}
@@ -251,11 +273,11 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 	Type & Panneau & Signification & Alias \\
 	B0 & \PanneauTableau{B0} & Circulation interdite à tout véhicule dans les deux sens & \fakeverb{\prCircInterd} \\
 	B1 & \PanneauTableau{B1} & Sens interdit à tout véhicule & \fakeverb{\prSensInterdit} \\
-	%B1j & \PanneauTableau{B1j} & Répétition d'interdiction d'accès à contresens de bretelles [\ldots] \\
+	B1j & \PanneauTableau{B1j} & Répétition d'interdiction d'accès à contresens de bretelles [\ldots] & \fakeverb{\prSensInterditJ} \\
 	B2a & \PanneauTableau{B2a} & Interdiction de tourner à gauche à la prochaine intersection & \fakeverb{\prInterdTournG} \\
 	B2b & \PanneauTableau{B2b} & Interdiction de tourner à droite à la prochaine intersection & \fakeverb{\prInterdTournD} \\
 	B2c & \PanneauTableau{B2c} & Interdiction de faire demi-tour sur la route suivie jusqu'à la prochaine intersection & \fakeverb{\prInterdDemiTour} \\
-	B3 & \PanneauTableau{B31} & Interdiction de dépasser tous les véhicules à moteur autres que ceux à deux roues sans side-car & \fakeverb{\prInterdDepass} \\
+	B3 & \PanneauTableau{B3} & Interdiction de dépasser tous les véhicules à moteur autres que ceux à deux roues sans side-car & \fakeverb{\prInterdDepass} \\
 	B3a & \PanneauTableau{B3a} & Interdiction aux véhicules automobiles, véhicules articulés, trains doubles ou [\ldots] & \fakeverb{\prInterdVehic} \\
 	B4 & \PanneauTableau{B4} & Arrêt au poste de douane & \fakeverb{\prHalteDouane} \\
 	B5a & \PanneauTableau{B5a} & Arrêt au poste de gendarmerie & \fakeverb{\prHalteGendarm} \\
@@ -282,7 +304,7 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 	B12 & \PanneauTableau{B12} & Accès interdit aux véhicules dont la hauteur, chargement compris, est supérieure [\ldots] & \fakeverb{\prInterdHaut} \\
 	B13 & \PanneauTableau{B13} & Accès interdit aux véhicules, véhicules articulés, trains doubles ou ensemble de véhicules [\ldots] & \fakeverb{\prInterdPoids} \\
 	B13a & \PanneauTableau{B13a} & Accès interdit aux véhicules pesant sur un essieu plus que le nombre indiqué & \fakeverb{\prInterdPoidsEssieu} \\
-	B14\_x & Limite de vitesse &  \PanneauTableau{B14_15}\PanneauTableau{B14_30}\PanneauTableau{B14_50}\PanneauTableau{B14_70}\PanneauTableau{B14_90}\PanneauTableau{B14_110}\PanneauTableau{B14_130} & \fakeverb{\prLimVites{x}}\\
+	B14\_x & Limite de vitesse &  \PanneauTableau{B14_15}\PanneauTableau{B14_30}\PanneauTableau{B14_50}\PanneauTableau{B14_70}\PanneauTableau{B14_80}\PanneauTableau{B14_90}\PanneauTableau{B14_110}\PanneauTableau{B14_130} & \fakeverb{\prLimVites{x}}\\
 	B15 & \PanneauTableau{B15} & Cédez le passage à la circulation venant en sens inverse & \fakeverb{\prCedezInv} \\
 	B16 & \PanneauTableau{B16} & Signaux sonores interdits & \fakeverb{\prInterdSons}  \\
 	B17 & \PanneauTableau{B17} & Interdiction aux véhicules de circuler sans maintenir entre eux un intervalle [\ldots] & \fakeverb{\prDistance} \\
@@ -461,6 +483,28 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 	%CE100 & \PanneauTableau{CE100} & Indication de l’enseigne de la ou des sociétés commerciales offrant un [\ldots] \\
 \end{longtblr}
 
+\subsection{Panneaux divers}
+
+\NewDocumentCommand\AffPanneauGenerique{ m }{%
+	\raisebox{-0.2\height}{\AffPanneau[height=1.5cm]{#1}} : \texttt{#1}
+}
+\begin{multicols}{3}
+	\AffPanneauGenerique{B50a} \\
+	\AffPanneauGenerique{B50b} \\
+	\AffPanneauGenerique{B50c} \\
+	\AffPanneauGenerique{B50d} \\
+	\AffPanneauGenerique{B50e} \\
+	\raisebox{-0.2\height}{\AffPanneau[height=1.5cm]{B51_30}} : \texttt{B51\_30} \\
+	\AffPanneauGenerique{B53} \\
+	\AffPanneauGenerique{B55} \\
+	\AffPanneauGenerique{B57} \\
+	\AffPanneauGenerique{B59} \\
+	\AffPanneauGenerique{B49VL} \\
+	\AffPanneauGenerique{C24a}
+\end{multicols}
+
+\pagebreak
+
 \section{Aliases, de hauteur 2.5ex}
 
 \begin{multicols}{3}
@@ -494,6 +538,19 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 	\raisebox{-0.2\height}{\prVent[height=2.5ex]} : \verb+\prVent+
 \end{multicols}
 
+\begin{multicols}{3}%temporaire
+	\raisebox{-0.2\height}{\prDosAneTemp[height=2.5ex]} : \verb+\prDosAneTemp+ \\
+	\raisebox{-0.2\height}{\prChausRetTemp[height=2.5ex]} : \verb+\prIntersectPrio+ \\
+	\raisebox{-0.2\height}{\prChaussGlissTemp[height=2.5ex]} : \verb+\prChaussGlissTemp+ \\
+	\raisebox{-0.2\height}{\prTravauxTemp[height=2.5ex]} : \verb+\prTravauxTemp+ \\
+	\raisebox{-0.2\height}{\prDangerTemp[height=2.5ex]} : \verb+\prDangerTemp+ \\
+	\raisebox{-0.2\height}{\prFeuxTemp[height=2.5ex]} : \verb+\prFeuxTemp+ \\
+	\raisebox{-0.2\height}{\prGraviersTemp[height=2.5ex]} : \verb+\prGraviersTemp+ \\
+	\raisebox{-0.2\height}{\prBouchonTemp[height=2.5ex]} : \verb+\prBouchonTemp+ \\
+	\raisebox{-0.2\height}{\prAccidentTemp[height=2.5ex]} : \verb+\prAccidentTemp+ \\
+	\raisebox{-0.2\height}{\prBrouillardTemp[height=2.5ex]} : \verb+\prBrouillardTemp+
+\end{multicols}
+
 \begin{multicols}{3}
 	\raisebox{-0.2\height}{\prIntersect[height=2.5ex]} : \verb+\prIntersect+ \\
 	\raisebox{-0.2\height}{\prIntersectPrio[height=2.5ex]} : \verb+\prIntersectPrio+ \\
@@ -509,6 +566,7 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 \begin{multicols}{3}
 	\raisebox{-0.2\height}{\prCircInterd[height=2.5ex]} : \verb+\prCircInterd+ \\
 	\raisebox{-0.2\height}{\prSensInterdit[height=2.5ex]} : \verb+\prSensInterdit+ \\
+	\raisebox{-0.2\height}{\prSensInterditJ[height=2.5ex]} : \verb+\prSensInterditJ+ \\
 	\raisebox{-0.2\height}{\prInterdTournG[height=2.5ex]} : \verb+\prInterdTournG+ \\
 	\raisebox{-0.2\height}{\prInterdTournD[height=2.5ex]} : \verb+\prInterdTournD+ \\
 	\raisebox{-0.2\height}{\prInterdDemiTour[height=2.5ex]} : \verb+\prInterdDemiTour+ \\
@@ -543,6 +601,7 @@ Pour les panneaux de (début/fin de) limitation de vitesse, la commande associé
 	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{30}} : \verb+\prLimVites{30}+ \\
 	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{50}} : \verb+\prLimVites{50}+ \\
 	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{70}} : \verb+\prLimVites{70}+ \\
+	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{80}} : \verb+\prLimVites{80}+ \\
 	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{90}} : \verb+\prLimVites{90}+ \\
 	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{110}} : \verb+\prLimVites{110}+ \\
 	\raisebox{-0.2\height}{\prLimVites[height=2.5ex]{130}} : \verb+\prLimVites{130}+ \\

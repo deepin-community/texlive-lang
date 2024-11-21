@@ -1,7 +1,7 @@
 %%
 %% `huaz.tex' documentation of the huaz package
 %%
-%% Copyright 2022 by Tibor Tomacs
+%% Copyright 2022-2024 by Tibor Tómács
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -13,44 +13,61 @@
 %%
 %% This work has the LPPL maintenance status `maintained'.
 %%
-%% The Current Maintainer of this work is Tibor Tomacs.
+%% The Current Maintainer of this work is Tibor Tómács.
 %%
 \documentclass[12pt]{article}
-\usepackage{listings,xcolor,lmodern,xurl}
-\usepackage[pdfstartview=FitH,colorlinks,allcolors=teal,bookmarksnumbered]{hyperref}
-\usepackage[a4paper,top=1in,bottom=1.2in]{geometry}
+\usepackage[a4paper,top=1in,bottom=1in]{geometry}
+\usepackage{listings,xcolor,lmodern,xurl,multicol}
 \usepackage[T1]{fontenc}
-\PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
+\PassOptionsToPackage{
+  defaults=hu-min,
+  labelitems=unchanged,
+  }{magyar.ldf}
 \usepackage[english,magyar]{babel}
+\usepackage[
+  pdfstartview=FitH,
+  colorlinks,
+  allcolors=purple,
+  bookmarksnumbered,
+  bookmarksopen,
+  ]{hyperref}
+\usepackage{upquote}
+
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
 
+\def\codefont{\usefont{T1}{pcrs}{m}{n}}
+
 \lstset{literate={<}{{$\langle$}}1{>}{{$\rangle$}}1
-  {ö}{{\"o}}1{ü}{{\"u}}1{ó}{{\'o}}1{é}{{\'e}}1{á}{{\'a}}1{í}{{\'i}}1}
+  {ű}{{\H u}}1{ö}{{\"o}}1{ő}{{\H o}}1{ü}{{\"u}}1
+  {ó}{{\'o}}1{é}{{\'e}}1{á}{{\'a}}1{í}{{\'i}}1}
 
-\lstnewenvironment{examplelst}{\lstset{
-aboveskip=\bigskipamount,
-basicstyle=\footnotesize\color{blue!70!black}\ttfamily,
-backgroundcolor=\color{black!3},
-rulecolor=\color{black!15},
-frame=trbl,
-framesep=5pt,
-columns=fullflexible,
-xleftmargin=5.4pt,
-xrightmargin=5.4pt, 
-keepspaces}}{}
+\lstnewenvironment{examplelst}{%
+  \lstset{
+    aboveskip=\bigskipamount,
+    basicstyle=\color{blue!70!black}\small\codefont,
+    backgroundcolor=\color{black!3},
+    rulecolor=\color{black!15},
+    frame=trbl,
+    framesep=5pt,
+    columns=fullflexible,
+    xleftmargin=5.4pt,
+    xrightmargin=5.4pt, 
+    keepspaces}}{}
 
-\newcommand{\commandinline}{\hspace*{-15mm}\lstinline[
-delim={[is][\color{green!50!black}\normalfont\small\sffamily]{!}{!}},
-basicstyle=\color{red!70!black}\normalfont\ttfamily,
-columns=fullflexible,
-keepspaces]}
+\newcommand{\huazcmd}{\hspace*{-15mm}%
+  \lstinline[
+    delim={[is][\color{teal}\normalfont\small\sffamily]{!}{!}},
+    basicstyle=\color{magenta}\normalfont\small\codefont,
+    columns=fullflexible,
+    keepspaces]}
 
-\newcommand{\verbinline}{\lstinline[
-delim={[is][\color{green!50!black}\normalfont\small\sffamily]{!}{!}},
-basicstyle=\normalfont\ttfamily,
-columns=fullflexible,
-keepspaces]}
+\newcommand{\code}{%
+  \lstinline[
+    delim={[is][\color{teal}\normalfont\small\sffamily]{!}{!}},
+    basicstyle=\normalfont\small\codefont,
+    columns=fullflexible,
+    keepspaces]}
 
 \makeatletter
 \def\@oddfoot{\hfill\textsf{\color{gray}\thepage}\hfill}
@@ -58,274 +75,476 @@ keepspaces]}
 \def\ps@plain{\def\@oddfoot{\hfill\textsf{\color{gray}\thepage}\hfill}}
 \makeatother
 
-\def\huaz{\textbf{\sffamily hu\color{gray}az}}
+\definecolor{hured}{RGB}{207,36,54}
+\definecolor{hugreen}{RGB}{69,113,79}
+\usepackage{contour}
+\def\huazlogo{%
+  {\contourlength{.8pt}\Huge
+  \sbox0{\contour{black!30}{\Huge\bfseries\sffamily\color{white}HUAZ}}%
+  \mbox{}%
+  \lower-\dimeval{2\ht0/3}%
+  \rlap{{\color{hured}\rule{\wd0}{\dimeval{\ht0/3}}}}%
+  {\color{hugreen}\rule{\wd0}{\dimeval{\ht0/3}}}%
+  \llap{\usebox0}}}
+
+\def\huaz{\textbf{\sffamily hu\itshape\color{gray}az}}
+
+\def\labelenumi{\textbf{\theenumi.}}
+
+\def\huqq#1{,,{\color{gray}#1}''}
+
+\def\paragraph#1{\par\bigskip\textbf{#1.}}
 
 \begin{document}
 
-\title{The \huaz\ package\\
-       {\large v1.0 (2022/10/16)}}
+\title{\huazlogo\\ The \huaz\ package\\{\large v2.1 (2024/05/05)}}
 \author{Tibor Tómács\\
-        {\normalsize\href{email:tomacs.tibor@uni-eszterhazy.hu}{\nolinkurl{tomacs.tibor@uni-eszterhazy.hu}}}}
+  {\normalsize\href{email:tomacs.tibor@gmail.com}{\nolinkurl{tomacs.tibor@gmail.com}}}}
 \date{}
 \maketitle
 
 \begin{otherlanguage}{english}
 \begin{abstract}
-In Hungarian there are two definite articles, \emph{``a''} and \emph{``az''}, which are determined by the pronunciation of the subsequent word. The definite article is \emph{``az''}, if the first phoneme of the pronounced word is a vowel, otherwise it is \emph{``a''}.
-The \huaz\ package helps the user to insert automatically the correct definite article for cross-references and other commands containing text. Thus, if these change, the definite articles will also change accordingly.
+There are two definite articles in Hungarian, ``a'' and ``az'', depending on the first sound of the word that follows. If the word begins with a vowel sound, the definite article is ``az'', otherwise it is ``a''.
 
-\medskip
-\emph{Sorry, the documentation is in Hungarian, because only users of the Hungarian language are interested.}
+The \huaz\ package helps the user to automatically insert the correct definite article for cross-references and other commands containing text.
+This way, if the number or text changes, the definite articles will change accordingly.
+
+The documentation of the \huaz\ package is in Hungarian, as it is assumed that only Hungarian-speaking users are interested.
 \end{abstract}
 \end{otherlanguage}
 
 \section{Bevezetés}
 
-A magyar nyelvben a határozott névelő egy szó előtt aszerint \emph{,,a''} vagy \emph{,,az''}, hogy a szó kiejtve mássalhangzóval vagy magánhangzóval kezdődik. Például \emph{,,a szék''} vagy \emph{,,az asztal''}. Ez egyszerűnek tűnik, de gondoljon a következő esetekre:
+A magyar nyelvben a határozott névelő egy szó előtt aszerint \huqq{a} vagy \huqq{az}, hogy a szó kiejtve mássalhangzóval vagy magánhangzóval kezdődik.
+Például \huqq{a szék} vagy \huqq{az asztal}.
+Ez egyszerű szabály, de írásban összetett vizsgálatot igényel.
+Itt felsorolunk néhány nehézséget:
 
 \begin{itemize}
-\item Például ha oldalszámra akar hivatkozni, akkor a \verb|\pageref| parancsot szoktuk használni. Ha ez elé akar határozott névelőt rakni, akkor nem mindegy, hogy mi az oldalszám. Például \emph{,,az~1.~oldal''}, \emph{,,a~2.~oldal''}, \emph{,,az~5.~oldal''}, \emph{,,a~10.~oldal''}. Így egyáltalán nem biztos, hogy az ,,\verbinline|a \pageref{!<kulcs>!}|'' kód megfelelő eredményt ad. Hasonló a probléma minden kereszthivatkozás esetén (\verb|\ref|, \verb|\pageref|, \verb|\eqref|, \verb|\cite|).
+\item
+Ha oldalszámra akarunk hivatkozni, akkor a \code|\pageref| parancsot szoktuk használni.
+Ha ez elé kell határozott névelőt rakni, akkor nem mindegy, hogy mi az oldalszám.
+Például \huqq{az~1.~oldal}, \huqq{a~2.~oldal}, \huqq{az~5.~oldal}, \huqq{a~10.~oldal}.
+Így egyáltalán nem biztos, hogy az ,,\code|a \pageref{!<kulcs>!}|'' kód megfelelő eredményt ad.
+Hasonló a probléma minden kereszthivatkozás esetén (\code|\ref|, \code|\pageref|, \code|\eqref|, \code|\cite|).
 
-\item Az is fontos, hogy egy kifejezés római szám vagy sem. Például \emph{,,az~V.~fejezet''}, ha \emph{V} római szám, azaz 5 a jelentése. Ugyanakkor \emph{,,a~V.~fejezet''}, ha \emph{V} betűt jelöl vagy alfanumerikus szám esetén a 22 értéket (\emph{V} az angol ábécében a 22.~betű).
+\item
+Az is fontos, hogy egy kifejezés római szám vagy sem.
+Például \huqq{az~V.~fejezet}, ha V római szám, azaz 5 a jelentése.
+Ugyanakkor \huqq{a~V.~fejezet}, ha V betűt jelöl vagy alfanumerikus szám esetén a 22 értéket (V az angol ábécében a 22.~betű).
 
-\item Néhány mássalhangzó speciális tulajdonságú. Például \emph{,,az M betű''}, de \emph{,,a Magyar Közlöny''}; \emph{,,az Ny betű''}, de \emph{,,a Nyugdíjfolyósító Igazgatóság''}; stb.
+\item
+Néhány mássalhangzó speciális tulajdonságú.
+Például \huqq{a Magyar Közlöny} de \huqq{az M betű}; \huqq{a Nyugdíjfolyósító Igazgatóság} de \huqq{az Ny betű}; stb.
 \end{itemize}
 
 Először megemlítünk két eddigi megoldást a határozott névelők automatikus kezelésére, kiemelve azok hibáit és hiányosságait.
 
-\subsection{A magyar.ldf}
+\subsection{A \texttt{magyar.ldf}}
 
-Egyik lehetőség a \texttt{babel} csomag \texttt{magyar} opcióját beállító \texttt{magyar.ldf} fájl használata. Ennek teljes dokumentációja elérhető innen: \url{https://math.bme.hu/latex/magyarldf-doc.pdf}. 
+Egyik lehetőség a \code{babel} csomag \code{magyar} opcióját beállító \code{magyar.ldf} fájl használata.
+Ennek teljes dokumentációja elérhető innen: \url{https://math.bme.hu/latex/magyarldf-doc.pdf}. 
 
-Az ebben definiált \verb|\az|, \verb|\aref|, \verb|\apageref|, \verb|\acite|, stb. parancsok alapvetően jól használhatóak, de van néhány fontos hiba, melyek a \huaz\ csomag megírását motiválták:
+Az ebben definiált \code|\az|, \code|\aref|, \code|\apageref|, \code|\acite|, stb.~parancsok alapvetően jól használhatóak, de van néhány fontos hiba, melyek a \huaz\ csomag megírását motiválták:
 
 \begin{itemize}
-\item Az \verb|\eqref| parancsnak nincs névelős verziója. Helyette az \verbinline|\aref({!<kulcs>!})| használható, de ez dőlt betűs környezetben nem álló betűs eredményt ad, mint az \verb|\eqref| esetében. Másik lehetőség, ami ezt a problémát megoldja, az \verbinline|\az{\eqref{!<kulcs>!}}| parancs. Ugyanakkor egyik megoldás sem kezeli a római számozású vagy a \verb|\tag| paranccsal címkézett egyenleteket.
+\item
+Az \code|\eqref| parancsnak nincs névelős verziója.
+Helyette az \code|\aref({!<kulcs>!})| használható, de ez dőlt betűs környezetben nem álló betűs eredményt ad, mint az \code|\eqref| esetében.
+Másik lehetőség, ami ezt a problémát megoldja, az \code|\az{\eqref{!<kulcs>!}}| parancs.
+Ugyanakkor egyik megoldás sem kezeli a római számozású vagy a \code|\tag| paranccsal címkézett egyenleteket.
 
-\item Az \verbinline|\az{\ref{!<kulcs>!}}| és \verbinline|\az{\pageref{!<kulcs>!}}| nem kezeli a római számozású hivatkozásokat. 
+\item
+Az \code|\az{\ref{!<kulcs>!}}| és \code|\az{\pageref{!<kulcs>!}}| nem kezeli a római számozású hivatkozásokat. 
 
-\item  Az előző hiba akkor is fennáll, amikor az \verb|\az| parancsban egy római számmal kezdődő szöveg van. Például \verb|\az{V.~osztály}| eredménye \emph{,,a V.~osztály''}.
+\item 
+Az előző hiba akkor is fennáll, amikor az \code|\az| parancsban egy római számmal kezdődő szöveg van.
+Például \code|\az{V.~osztály}| eredménye \huqq{a V.~osztály}.
 
-\item Amennyiben nem kereszthivatkozáshoz, hanem egy szöveghez, vagy valamilyen szöveget tároló parancshoz kell automatikus névelő, akkor az ékezetes betűket UTF-8 kódolás esetén rosszul detektálja. A hiba alapvető oka, hogy az UTF-8 kódolású karakterek nem egy, hanem több bájton vannak kódolva, amit a \texttt{magyar.ldf} nem vesz figyelembe. Ezért például \verb|\az{ágy}| eredménye \emph{,,a ágy''}, mert nem betűként érzékeli az \emph{,,á''} betűt, így azt sem tudja, hogy ez magánhangzó. Meglepő módon \verb|\az{száz}| eredménye \emph{,,az száz''} is rossz. Ennek az az oka, hogy mivel számára az \emph{,,á''} nem betű, ezért az \emph{,,sz''} betűt különállónak tekinti, ami elé valóban \emph{,,az''} kell.
+\item
+Amennyiben nem kereszthivatkozáshoz, hanem egy szöveghez, vagy valamilyen szöveget tároló parancshoz kell automatikus névelő, akkor az ékezetes betűket \texttt{UTF-8} kódolás esetén rosszul detektálja, mivel azok nem egy, hanem több bájton vannak kódolva, amit a \code{magyar.ldf} nem vesz figyelembe.
+Ezért például \code|\az{ágy}| eredménye \huqq{a ágy}, mert nem betűként érzékeli az \huqq{á} betűt, így azt sem tudja, hogy ez magánhangzó.
+Meglepő módon \code|\az{száz}| eredménye \huqq{az száz} is rossz.
+Ennek oka, hogy számára az \huqq{á} nem betű, ezért az \huqq{sz} betűt különállónak tekinti, ami elé valóban \huqq{az} kell.
 
-\item Hibának ugyan nem tekinthető, de mindenesetre kényelmetlen, hogy például \verb|\az{\textbf{N betű}}| esetén a \verb|\textbf| parancs megzavarja a szó betűinek detektálását, így a névelő helytelenül \emph{,,a''} lesz.
+\item
+Például \code|\az{\textbf{N betű}}| esetén a \code|\textbf| parancs megzavarja a szó betűinek detektálását, így a névelő helytelenül \huqq{a} lesz.
 \end{itemize}
 
-\subsection{A nevelok csomag}
+\subsection{A \texttt{nevelok} csomag}
 
-2015-ben készült a \texttt{nevelok} csomag, ami szintén az automatikus határozott névelők kezelésére készült. A szerzője valószínűleg nem ismerte a \texttt{magyar.ldf} már akkor létező lehetőségeit, ezért készíthette ezt a jóval kevesebbet tudó csomagot. 
-
-2022-ben telepített \TeX-rendszeren tesztelve azt tapasztaltam, hogy nem kezeli az ékezetes betűk semmilyen formáját és sok esetben ad kereszthivatkozásoknál is rossz névelőt. Az utóbbinak az az oka, hogy közvetlenül a \verb|\ref| parancsot vizsgálja, ami nem kifejthető parancs. 
-
-Ezen dokumentáció elkészültéig semmilyen fejlesztése nem történt. Jelen állapotában nem javasolt ennek a csomagnak a használata.
+A \code{nevelok} csomag szintén a határozott névelők automatikus beillesztéséhez készült.
+Nem kezeli az ékezetes betűk semmilyen formáját és sok esetben ad kereszthivatkozásoknál rossz névelőt, ugyanis közvetlenül a \code|\ref| és \code|\pageref| parancsokat vizsgálja, amelyek nem kifejthetőek. 
+Ezért ennek a csomagnak a jelenlegi verzióját nem szabad használni!
 
 \subsection{A \texorpdfstring{\huaz}{huaz} csomag célja és működése}
 
-A \huaz\ csomag célja segíteni a felhasználót abban, hogy a kereszthivatkozásokhoz és szöveget tartalmazó parancsokhoz automatikusan beszúrja a megfelelő határozott névelőt. Így ha ezek változnak, akkor a határozott névelők is megfelelően változnak. 
+A \huaz\ csomag segíti a felhasználót abban, hogy a kereszthivatkozásokhoz és szöveget tartalmazó parancsokhoz automatikusan beszúrja a megfelelő határozott névelőt.
+Így ha ezek változnak, akkor a határozott névelők is megfelelően változnak. 
 
-A másik cél ezt úgy megtenni, hogy a \texttt{magyar.ldf} és a \texttt{nevelok.sty} hibáit és hiányosságait korrigálja illetve pótolja.
+Fontos cél volt ezt úgy megtenni, hogy a \code{magyar.ldf} és a \code{nevelok.sty} hibáit és hiányosságait korrigálja illetve pótolja.
 
-A \huaz\ csomag a következő esetekben illeszt az adott szöveg elé ,,az'' névelőt:
+A \huaz\ csomag a következő esetekben illeszt az adott szöveg elé \huqq{az} névelőt:
 
 \begin{enumerate}
-\item Az első betű magánhangzó (legyen az kis- vagy nagybetű, ékezetes vagy sem, magyar vagy sem, UTF-8, ISO-8859-2 karakterrel vagy repülő ékezettel megadva).
+\item
+Az első betű magánhangzó (legyen az kis- vagy nagybetű, ékezetes vagy sem, magyar vagy sem, \texttt{UTF-8}, \texttt{ISO-8859-2} karakterrel vagy ékezet paranccsal megadva).
 
-\item Az első betű olyan kis vagy nagy mássalhangzó, amit önmagában kiejtve magánhangzóval kezdünk (például F, L, M, stb.) míg a második karakter (ha van) nem betű, hanem szám, írásjel vagy szóköz. Például ,,M-10''. Ide soroltunk néhány nem magyar ékezetes mássalhangzót is. Például ,,Ň.1''.
+\item
+Az első betű olyan kis vagy nagy mássalhangzó, amit önmagában kiejtve magánhangzóval kezdünk (például F, L, M, stb.) míg a második karakter (ha van) nem betű, hanem szám, írásjel vagy szóköz.
+Például \huqq{M-10}.
+Ide soroltunk néhány nem magyar ékezetes mássalhangzót is.
+Például \huqq{Ň.1}.
 
-\item Az első két karakter egy olyan kis vagy nagy kétjegyű mássalhangzó, amit önmagában kiejtve magánhangzóval kezdünk (például Ny, Ly, Sz, stb.) míg a harmadik karakter (ha van) nem betű, hanem szám, írásjel vagy szóköz. Például ,,NY betű''.
+\item
+Az első két karakter egy olyan kis vagy nagy kétjegyű mássalhangzó, amit önmagában kiejtve magánhangzóval kezdünk (például NY, LY, SZ, stb.) míg a harmadik karakter (ha van) nem betű, hanem szám, írásjel vagy szóköz.
+Például \huqq{SZ betű}.
 
-\item Az első karakter 5.
+\item
+Az első karakter 5.
 
-\item 1, 4, 7 vagy 10 jegyű számmal kezdődik és az első számjegy 1 (egy, ezer, egymillió, egymilliárd).
+\item
+1, 4, 7 vagy 10 jegyű számmal kezdődik és az első számjegy 1 (egy, ezer, egymillió, egymilliárd).
 \end{enumerate}
 
-Ha a szó elején található karakterek római számként is értelmezhetőek, akkor megválasztható, hogy azt konvertálja arab számra és a névelőt ahhoz határozza meg vagy sem. Például ,,XII/A'' esetén.
+Ha a szó elején található karakterek római számként is értelmezhetőek, akkor megválasztható, hogy azt konvertálja arab számra és a névelőt ahhoz határozza meg vagy sem. Például \huqq{V. emelet} esetén.
 
 \section{A \texorpdfstring{\huaz}{huaz} csomag használata}
 
 A \huaz\ csomagot a szokott módon kell betölteni:
 
-\commandinline|\usepackage{huaz}|
+\huazcmd|\usepackage{huaz}|
 
-Csomagopciók nincsenek. UTF-8 (\texttt{utf8}) és ISO-8859-2 (\texttt{latin2}) kódolású forrásfájl esetén működik, de a repülő ékezeteket is jól kezeli. Kompatibilis a \texttt{pdflatex}, \texttt{xelatex} és \texttt{lualatex} fordítókkal is. Például \texttt{pdflatex} fordítóval a következő betöltés megfelelő:
+Kompatibilis a \code{latex}, \code{pdflatex}, \code{xelatex} és \code{lualatex} fordítókkal is.
+A \code{latex} és \code{pdflatex} fordítóval a következő betöltés megfelelő:
 
 \begin{examplelst}
 \documentclass{article}
 \usepackage[T1]{fontenc}
-\usepackage{huaz}
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
 \usepackage[magyar]{babel}
+\usepackage{huaz}
 \begin{document}
  ...
 \end{document}
 \end{examplelst}
-A \texttt{hyperref} csomaggal is kompatibilis, így az is betölthető a \huaz\ mellé.
 
-A \texttt{magyar.ldf} \texttt{defaults=hu-min} opciója bekapcsol néhány olyan opciót is, amely elérhetővé teszi a saját automatikus névelőparancsait. Ezt ugyan nem kötelező, de hasznos a \huaz\ csomag használata esetén kikapcsolni. Ehhez a
+Az ékezetes betűket \texttt{UTF-8} (\code{utf8}) és \texttt{ISO-8859-2} (\code{latin2}) kódolású forrásfájl esetén, illetve ékezet parancsokkal (\code|\'|, \code|\"|, \code|\H|, stb.) is jól kezeli.
+
+A \code{hyperref} csomaggal is kompatibilis, így az is betölthető a \huaz\ mellé.
+
+A \code{magyar.ldf} \code{defaults=hu-min} opciója bekapcsol néhány olyan opciót is, amely elérhetővé teszi a saját automatikus névelőparancsait.
+Ha ezeket a \huaz\ csomag használata esetén ki akarja kapcsolni, akkor a
 \begin{examplelst}
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
 \end{examplelst}
 sor helyett használja a következőt:
 \begin{examplelst}
-\PassOptionsToPackage{defaults=hu-min,az=no,
-                      shortrefcmds=no,hunnewlabel=no}{magyar.ldf}
+\PassOptionsToPackage{
+  defaults=hu-min,
+  az=no,
+  shortrefcmds=no,
+  hunnewlabel=no
+  }{magyar.ldf}
 \end{examplelst}
+Ezt nem kell feltétlenül megtenni, mert a \huaz\ csomag átdefiniálja a \code{magyar.ldf} névelőparancsait függetlenül attól, hogy a \code{babel} előtt vagy után töltötte be.
 
-A \texttt{xelatex} és \texttt{lualatex} fordítók esetén \texttt{babel} helyett a 
+A \code{xelatex} és \code{lualatex} fordítók esetén \code{babel} helyett a
 \begin{examplelst}
 \usepackage{polyglossia}
 \setdefaultlanguage{hungarian}
 \end{examplelst}
 is használható.
 
-A \huaz\ csomag felhasználja az \texttt{xstring}, \texttt{refcount} és \texttt{iftex} csomagok szolgáltatásait, így ezek is betöltődnek. Másrészt felhasználásra kerül néhány 2021. október 10-én bevezetett változás a \LaTeX\ kerneljében, így csak az ezután telepített rendszereken működik megfelelően a csomag.
+A \huaz\ csomag felhasználja az \code{xstring}, \code{refcount} és \code{iftex} csomagok szolgáltatásait, így ezek is betöltődnek.
+Felhasználásra kerül néhány 2021. október 10-én bevezetett változás a \LaTeX\ kerneljében, így csak az ezután telepített rendszereken működik megfelelően a csomag.
 
 \subsection{Parancsok}
 
-\commandinline|\az{!<szöveg>!}|
+\huazcmd|\az{!<szöveg>!}|
 
-A \verbinline|!<szöveg>!| elé a megfelelő határozott névelő kerül kisbetűs alakban. Ha a \verbinline|!<szöveg>!| elején római számként értelmezhető karakterek vannak, akkor a névelő az arab megfelelőjéhez igazodik. Például
+A \code|!<szöveg>!| elé a megfelelő határozott névelő kerül kisbetűs alakban.
+Ha a \code|!<szöveg>!| római számként is értelmezhető (pl.~\huqq{XII}), esetleg azt írásjel vagy szóköz követi (pl.~\huqq{XII.A}), akkor a névelő az arab megfelelőjéhez igazodik.
+Például
 \begin{examplelst}
 Idén \az{V.B}~osztály rendezi a farsangot.
 \end{examplelst}
-eredménye ,,Idén az V.B~osztály rendezi a farsangot.''.
+eredménye \huqq{Idén az~V.B~osztály rendezi a farsangot.}.
+De
+\begin{examplelst}
+\az{VB}, \az{V4}
+\end{examplelst}
+eredménye \huqq{a~VB, a~V4} lesz, mert V után betű illetve szám következik, ezért nem 5-nek, hanem V betűnek értelmezi mindkét esetben.
 
-A \verbinline|!<szöveg>!| lehet szöveget tároló parancs is. Például
+A \code|!<szöveg>!| lehet szöveget tároló parancs is.
+Például
 \begin{examplelst}
 \newcommand{\osztaly}{V.B}
 Idén \az{\osztaly}~osztály rendezi a farsangot.
 \end{examplelst}
-eredménye ,,Idén az V.B~osztály rendezi a farsangot.''.
+eredménye \huqq{Idén az~V.B~osztály rendezi a farsangot.}.
 
-A \verbinline|!<szöveg>!| tartalmazhat szövegformázó parancsokat is (bővebben lásd \az{\ref{subsec-kapocs}}.~alszakaszban). Például
+A \code|!<szöveg>!| tartalmazhat szövegformázó parancsokat is (bővebben lásd \az{\ref{subsec-ignoralt-parancsok}}.~alszakaszban).
+Például
 \begin{examplelst}
 \newcommand{\osztaly}{V.B}
 Idén \az{\textbf{\osztaly}}~osztály rendezi a farsangot.
 \end{examplelst}
-eredménye ,,Idén az \textbf{V.B}~osztály rendezi a farsangot.''.
+eredménye \huqq{Idén az~\textbf{V.B}~osztály rendezi a farsangot.}.
 
-A \verbinline|!<szöveg>!| lehet standard kereszthivatkozás is (\verb|\ref|, \verb|\pageref|, \verb|\eqref|, \verb|\cite|). Például
+A \code|!<szöveg>!| lehet kereszthivatkozás is.
+Például
 \begin{examplelst}
 \section{Cím}\label{seca}
 \section{Cím}\label{secb}
-\az{\ref{seca}}.~szakaszban, \az{\textbf{\ref{secb}}}.~szakaszban
+\az{\ref{seca}}.~szakaszban,
+\az{\textbf{\ref{secb}}}.~szakaszban
 \end{examplelst}
-eredménye ,,az 1. szakaszban, a \textbf{2}. szakaszban''. Ha a \texttt{section} számláló kiírása római számozásra van állítva a \verb|\renewcommand{\thesection}{\Roman{section}}| paranccsal, akkor az előző kód eredménye ,,az I. szakaszban, a \textbf{II}. szakaszban''.
+eredménye \huqq{az~1.~szakaszban, a~\textbf{2}.~szakaszban}.
+
+Ha a \code{section} számláló kiírása római számozásra van állítva a
+\begin{examplelst}
+\renewcommand{\thesection}{\Roman{section}} 
+\end{examplelst}
+paranccsal, akkor az előző kód eredménye \huqq{az I. szakaszban, a \textbf{II}. szakaszban}.
 
 \subsubsection*{Korlátozások}
+
 \begin{enumerate}
-\item A \verbinline|!<szöveg>!| elején csak a \verb|\ref|, \verb|\pageref|, \verb|\eqref|, \verb|\cite| kereszthivatkozásokkal működik helyesen. Például a \texttt{hyperref} csomag \verb|\ref*| és \verb|\pageref*| parancsai nem működnek közvetlenül \verbinline|!<szöveg>!|-ként, de ez megoldható a később ismertetett \verb|\az*| paranccsal.
+\item
+A \code|!<szöveg>!| elején a \code|\ref|, \code|\ref*|, \code|\pageref|, \code|\pageref*|, \code|\eqref|, \code|\refeq| kereszthivatkozásokkal működik helyesen.
+Az \code|\eqref| az \code{amsmath}, a \code|\refeq| pedig a \code{mathtools} csomaggal van definiálva.
 
-\item A \verbinline|!<szöveg>!| elején a \verb|\cite| parancs jól működik a  \texttt{natbib} csomaggal és \texttt{bibtex} esetében is. A \texttt{biblatex} csomag használata esetén akkor működik jól, ha a \texttt{style} vagy \texttt{citestyle} opciók értéke \texttt{numeric}, \texttt{numeric-verb}, \texttt{alphabetic}, \texttt{alphabetic-verb} vagy \texttt{authoryear}. Akkor is jól működik, ha nem adjuk meg a \texttt{style} illetve \texttt{citestyle} opciók egyikét sem.
+\item
+A \code|!<szöveg>!| elején a \code|\cite| jól működik a  \code{natbib} csomaggal és \code{bibtex} esetében is.
 
-\item A pdf vázlatfájába nem lehet \verb|\az| paranccsal szöveget beilleszteni. Tehát például a következő kód nem ad helyes vázlatfát, ha \texttt{hyperref} vagy \texttt{bookmark} csomagot használ:
+A \code{biblatex} csomaggal a \code|\cite|, \code|\citeauthor|, \code|\textcite|, \code|\citeyear| akkor működik jól, ha a \code{style} vagy \code{citestyle} opciók értéke:
+
+\code{numeric}\\
+\code{numeric-verb}\\
+\code{alphabetic}\\
+\code{alphabetic-verb}\\
+\code{authoryear}
+
+Akkor is jól működik, ha nem adjuk meg a \code{style} illetve \code{citestyle} opciók egyikét sem.
+
+\item
+A pdf vázlatfájába nem lehet \code|\az| paranccsal szöveget beilleszteni.
+Tehát például a következő kód nem ad helyes vázlatfát, ha \code{hyperref} vagy \code{bookmark} csomagot használ (bár a cím a szövegben, fejlécben és a tartalomjegyzékben jól fog megjelenni).
 \begin{examplelst}
 \section{...\az{\ref{sec}}...}
 \end{examplelst}
-Viszont a cím a szövegben, fejlécben és a tartalomjegyzékben jól fog megjelenni. A problémát a később ismertetett \verb|\azsaved| paranccsal lehet megoldani.
+A problémát a később ismertetett \code|\azsaved| illetve \code|\aznotshow| parancsokkal lehet megoldani.
 \end{enumerate}
 
-\commandinline|\az*{!<szöveg>!}|
+\huazcmd|\az*{!<szöveg>!}|
 
-Ugyanaz mint a \texttt{*} nélküli esetben, de ekkor csak a névelő kerül kiírásra. Például \texttt{hyperref} csomag használatával:
+Ugyanaz mint a \code|*| nélküli esetben, de ekkor csak a névelő kerül kiírásra.
+Például, ha az \code{amsmath} és \code{hyperref} csomagok használata mellett szeretnénk egy link nélküli egyenlethivatkozást, akkor ezt (mivel nincs \code|\eqref*| definiálva) például így tehetjük meg:
 \begin{examplelst}
-\section{Cím}\label{sec}
-\az*{\ref{sec}}~\ref*{sec}.~szakaszban
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \textup{(\ref*{eq})} egyenletet!}
+\end{examplelst}
+Szebb lenne a mondat határozott névelővel a képlet száma előtt, de most nem ad feltétlenül helyes eredményt az
+\begin{examplelst}
+\az{\textup{(\ref*{eq})}}
+\end{examplelst}
+kód, mert az első karakter a \code{(} jel lesz, és nem a képlet száma.
+Így minden esetben \huqq{a} lesz a névelő.
+Ezt a következő módon javíthatjuk:
+\begin{examplelst}
+\az*{\ref{eq}} \textup{(\ref*{eq})}
 \end{examplelst}
 
-\commandinline|\azv{!<szöveg>!}|
+\huazcmd|\azv{!<szöveg>!}|
 
-Ugyanaz mint \verbinline|\az{!<szöveg>!}|, de ha a \verbinline|!<szöveg>!| elején római számként értelmezhető karakterek vannak, akkor a névelő nem az arab megfelelőjéhez igazodik, hanem mint egyszerű karakterekhez. Például
+Ugyanaz mint az \code|\az{!<szöveg>!}|, de ha a \code|!<szöveg>!| elején római számként értelmezhető karakterek vannak, akkor a névelő nem az arab megfelelőjéhez igazodik, hanem mint egyszerű karakterekhez.
+Például
 \begin{examplelst}
 \renewcommand{\thesection}{\Alph{section}}
 \setcounter{section}{21}
 \section{Cím}\label{sec}
 \az{\ref{sec}}.~szakaszban, \azv{\ref{sec}}.~szakaszban
 \end{examplelst}
-eredménye ,,az V.~szakaszban, a V.~szakaszban'', mert az első esetben a V betűt római számként értelmezte, a második esetben pedig nem. Mivel most alfanumerikus számra van beállítva a \texttt{section} számláló, ezért a második eset a jó.
+eredménye \huqq{az V.~szakaszban, a V.~szakaszban}, mert az első esetben a V betűt római számként értelmezte, a második esetben pedig nem.
+Mivel most alfanumerikus számra van beállítva a \code{section} számláló, ezért a második eset a jó.
 
-\commandinline|\azv*{!<szöveg>!}|
+\huazcmd|\azv*{!<szöveg>!}|
 
-Ugyanaz mint a \texttt{*} nélküli esetben, de ekkor csak a névelő kerül kiírásra.
+Ugyanaz mint a \code|*| nélküli esetben, de ekkor csak a névelő kerül kiírásra.
 
-A parancsok nevében az ,,a'' betű kicserélhető ,,A'' betűre. Ekkor a határozott névelő nagybetűvel fog kezdődni, ami mondatok elején szükséges.
+\huazcmd|\Az{!<szöveg>!}|\\
+\huazcmd|\Az*{!<szöveg>!}|\\
+\huazcmd|\Azv{!<szöveg>!}|\\
+\huazcmd|\Azv*{!<szöveg>!}|
 
-\commandinline|\Az{!<szöveg>!}|\\
-\commandinline|\Az*{!<szöveg>!}|\\
-\commandinline|\Azv{!<szöveg>!}|\\
-\commandinline|\Azv*{!<szöveg>!}|
-
+Ugyanaz, mint a kis \code{a} betűvel kezdődő parancsok, de ekkor a határozott névelő nagybetűvel kezdődik, ami mondatok elején szükséges.
 Például
 \begin{examplelst}
 \section{Cím}\label{sec}
-\Az{\ref{sec}}.~szakaszban áttekintjük a téma rövid történetét.
+\Az{\ref{sec}}.~szakaszban \dots
 \end{examplelst}
-eredménye {,,Az 1.~szakaszban áttekintjük a téma rövid történetét.''}.
+eredménye \huqq{Az 1.~szakaszban \dots}.
 
-\commandinline|\azsaved|
+\huazcmd|\azsaved|
 
-Amikor kiadja az előző parancsok bármelyikét, akkor generálódik egy kifejthető \verb|\azsaved| parancs is. Ennek eredménye az a határozott névelő amelyik a szó elé kell. 
+Az előző parancsok bármelyikét használva, generálódik egy kifejthető \code|\azsaved| parancs.
+Ennek eredménye az a határozott névelő amelyik a szó elé kell.
 
-Amikor \texttt{hyperref} vagy \texttt{bookmark} csomagot használ, akkor ahogyan azt korábban említettük, a következő kód esetén a cím, fejléc, tartalomjegyzék rendben lesz, de a pdf vázlatfája nem:
+Amikor \code{hyperref} vagy \code{bookmark} csomagot használ, akkor (ahogyan azt korábban említettük) a következő kód esetén a cím, fejléc, tartalomjegyzék rendben lesz, de a pdf vázlatfája nem:
 \begin{examplelst}
 \section{\Az{\ref{sec}}...}
 \end{examplelst}
-Ez az \verb|\azsaved| paranccsal a következő módon oldható meg:
+Ez az \code|\azsaved| paranccsal a következő módon oldható meg:
 \begin{examplelst}
-\section{\texorpdfstring{\Az{\ref{sec}}...}{\azsaved~\ref{sec}...}}
+\section{\texorpdfstring {\Az*{\ref{sec}}} {\azsaved}
+         \ref{sec}...}
 \end{examplelst}
 Ekkor a vázlatfába az
 \begin{examplelst}
-\azsaved~\ref{sec}...
+\azsaved \ref{sec}...
 \end{examplelst}
-kód kerül, ami már helyes eredményt ad. Ez a probléma a \verb|\texorpdfstring| helyett az
+kód kerül, ami már helyes eredményt ad.
 
-\commandinline|\aznotshow|
+\huazcmd|\aznotshow|
 
-paranccsal egyszerűbben is megoldható. Ugyanis ezt helyezve az \verb|\az| (vagy bármelyik verziója) elé, az eredmény nem jelenik meg, csak az \verb|\azsaved| generálódik le a megfelelő határozott névelővel. Így
+Az előző probléma a \code|\texorpdfstring| helyett ezzel a paranccsal egyszerűbben is megoldható.
+Ugyanis ezt helyezve az \code|\az| (vagy bármelyik verziója) elé, az eredmény nem jelenik meg, csak az \code|\azsaved| generálódik le a megfelelő határozott névelővel.
+Így
 \begin{examplelst}
 \aznotshow\Az{\ref{sec}}
-\section{\azsaved~\ref{sec}...}
+\section{\azsaved \ref{sec}...}
 \end{examplelst}
 szintén helyes eredményt ad a vázlatfában is.
 
+\huazcmd|\azseparator{!<kód>!}|
+
+Ezzel lehet megadni, hogy a határozott névelő és a \code|!<szöveg>!| mivel legyen elválasztva.
+Alapértelmezetten ez a törhetetlen normál méretű szóköz, ami 
+\begin{examplelst}
+\azseparator{~}
+\end{examplelst}
+módon lett beállítva.
+Ha át akarjuk állítani például törhető szóközre akkor ez 
+\begin{examplelst}
+\azseparator{ }
+\end{examplelst}
+módon tehető meg.
+
 \subsection{Rövidítések}
 
-\commandinline|\aref{!<kulcs>!}  | $\equiv$ \verbinline|\az{\ref{!<kulcs>!}}|\\
-\commandinline|\aref*{!<kulcs>!} | $\equiv$ \verbinline|\az*{\ref{!<kulcs>!}}|\\
-\commandinline|\avref{!<kulcs>!} | $\equiv$ \verbinline|\azv{\ref{!<kulcs>!}}|\\
-\commandinline|\avref*{!<kulcs>!}| $\equiv$ \verbinline|\azv*{\ref{!<kulcs>!}}|
+A \code|\ref|, \code|\ref*|, \code|\eqref|, \code|\refeq|, \code|\pageref|, \code|\pageref*|, \code|\cite| kereszthivatkozások elé nem csak az előbbi parancsokkal tehetünk határozott névelőt, ugyanis mindegyiknek van egy rövidített egyparancsos verziója is:
 
-\commandinline|\aeqref{!<kulcs>!}  | $\equiv$ \verbinline|\az{\eqref{!<kulcs>!}}|\\
-\commandinline|\aeqref*{!<kulcs>!} | $\equiv$ \verbinline|\az*{\eqref{!<kulcs>!}}|\\
-\commandinline|\aveqref{!<kulcs>!} | $\equiv$ \verbinline|\azv{\eqref{!<kulcs>!}}|\\
-\commandinline|\aveqref*{!<kulcs>!}| $\equiv$ \verbinline|\azv*{\eqref{!<kulcs>!}}|
+\huazcmd|\aref{!<kulcs>!}  | $\equiv$ \code|\az{\ref{!<kulcs>!}}|\\
+\huazcmd|\aref*{!<kulcs>!} | $\equiv$ \code|\az{\ref*{!<kulcs>!}}|\\
+\huazcmd|\avref{!<kulcs>!} | $\equiv$ \code|\azv{\ref{!<kulcs>!}}|\\
+\huazcmd|\avref*{!<kulcs>!}| $\equiv$ \code|\azv{\ref*{!<kulcs>!}}|
 
-\commandinline|\apageref{!<kulcs>!}  | $\equiv$ \verbinline|\az{\pageref{!<kulcs>!}}|\\
-\commandinline|\apageref*{!<kulcs>!} | $\equiv$ \verbinline|\az*{\pageref{!<kulcs>!}}|\\
-\commandinline|\avpageref{!<kulcs>!} | $\equiv$ \verbinline|\azv{\pageref{!<kulcs>!}}|\\
-\commandinline|\avpageref*{!<kulcs>!}| $\equiv$ \verbinline|\azv*{\pageref{!<kulcs>!}}|
+\huazcmd|\aeqref{!<kulcs>!}  | $\equiv$ \code|\az{\eqref{!<kulcs>!}}|\\
+\huazcmd|\aveqref{!<kulcs>!} | $\equiv$ \code|\azv{\eqref{!<kulcs>!}}|
 
-\commandinline|\acite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}  | $\equiv$ \verbinline|\az{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
-\commandinline|\acite*[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!} | $\equiv$ \verbinline|\az*{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
-\commandinline|\avcite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!} | $\equiv$ \verbinline|\azv{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
-\commandinline|\avcite*[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}| $\equiv$ \verbinline|\azv*{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|
+\huazcmd|\arefeq{!<kulcs>!}  | $\equiv$ \code|\az{\refeq{!<kulcs>!}}|\\
+\huazcmd|\avrefeq{!<kulcs>!} | $\equiv$ \code|\azv{\refeq{!<kulcs>!}}|
 
-A parancsok nevében az első ,,a'' betű kicserélhető ,,A'' betűre. Ekkor a határozott névelő nagybetűvel fog kezdődni, ami mondatok elején szükséges:
+\huazcmd|\apageref{!<kulcs>!}  | $\equiv$ \code|\az{\pageref{!<kulcs>!}}|\\
+\huazcmd|\apageref*{!<kulcs>!} | $\equiv$ \code|\az{\pageref*{!<kulcs>!}}|\\
+\huazcmd|\avpageref{!<kulcs>!} | $\equiv$ \code|\azv{\pageref{!<kulcs>!}}|\\
+\huazcmd|\avpageref*{!<kulcs>!}| $\equiv$ \code|\azv{\pageref*{!<kulcs>!}}|
 
-\commandinline|\Aref \Avref \Aeqref \Aveqref \Apageref \Avpageref \Acite \Avcite|
+\huazcmd|\acite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}  | $\equiv$ \code|\az{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|\\
+\huazcmd|\avcite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!} | $\equiv$ \code|\azv{\cite[!<szöveg>!]{!<kulcs1>!,!<kulcs2>!,!...!}}|
+
+A parancsok nevében az első \code{a} betű kicserélhető \code{A} betűre.
+Ekkor a határozott névelő nagybetűvel kezdődik, ami mondatok elején szükséges:
+
+\huazcmd|\Aref \Aref* \Avref \Avref*|\\
+\huazcmd|\Aeqref \Aveqref|\\
+\huazcmd|\Arefeq \Avrefeq|\\
+\huazcmd|\Apageref \Apageref* \Avpageref \Avpageref*|\\
+\huazcmd|\Acite \Avcite|
 
 Például
 \begin{examplelst}
 \section{Cím}\label{seca}
 \section{Cím}\label{secb}
-\Aref{seca}.~és \aref{secb}.~szakaszban
+\Aref{seca}.~és \aref{secb}.~szakaszokban
 \end{examplelst}
-eredménye ,,Az 1. és a 2. szakaszban''.
+eredménye \huqq{Az 1. és a 2. szakaszokban}.
 
-\subsection{A huaz kapocs}\label{subsec-kapocs}
+\subsection{Ignorált parancsok}\label{subsec-ignoralt-parancsok}
 
-Amikor a \huaz\ csomag megkeresi a megfelelő határozott névelőt, akkor a szövegben található kereszthivatkozásokat lecseréli a kifejthető verziójukra, továbbá a kifejtés során a formázó parancsokat (\verb|\emph|, \verb|\textbf|, \verb|\small|, stb.) figyelmen kívül hagyja. Emiatt lehetséges, hogy például a következő kódok működnek:
+Amikor a \huaz\ csomag megkeresi a megfelelő határozott névelőt, akkor a szövegben a következő parancsokat a nem szöveget tároló argumentumaikkal együtt (ha van) figyelmen kívül hagyja:
+
+\begin{multicols}{4}
+\code|\bfseries|\\
+\code|\color|\\
+\code|\emph|\\
+\code|\em|\\
+\code|\enquote|\\
+\code|\fbox|\\
+\code|\fontencoding|\\
+\code|\fontfamily|\\
+\code|\fontseries|\\
+\code|\fontshape|\\
+\code|\fontsize|\\
+\code|\footnotesize|\\
+\code|\framebox|\\
+\code|\hbox|\\
+\code|\href|\\
+\code|\huge|\\
+\code|\Huge|\\
+\code|\itshape|\\
+\code|\large|\\
+\code|\Large|\\
+\code|\LARGE|\\
+\code|\lowercase|\\
+\code|\makebox|\\
+\code|\MakeLowercase|\\
+\code|\MakeUppercase|\\
+\code|\mbox|\\
+\code|\mdseries|\\
+\code|\negthinspace|\\
+\code|\normalfont|\\
+\code|\normalsize|\\
+\code|\num|\\
+\code|\rmfamily|\\
+\code|\scriptsize|\\
+\code|\scshape|\\
+\code|\selectfont|\\
+\code|\sffamily|\\
+\code|\slshape|\\
+\code|\small|\\
+\code|\sscshape|\\
+\code|\swshape|\\
+\code|\textbf|\\
+\code|\textcolor|\\
+\code|\textit|\\
+\code|\textmd|\\
+\code|\textnormal|\\
+\code|\textqq|\\
+\code|\textrm|\\
+\code|\textsc|\\
+\code|\textsf|\\
+\code|\textsl|\\
+\code|\textssc|\\
+\code|\textsw|\\
+\code|\texttt|\\
+\code|\textulc|\\
+\code|\textup|\\
+\code|\tiny|\\
+\code|\told|\\
+\code|\ttfamily|\\
+\code|\ulcshape|\\
+\code|\underline|\\
+\code|\uppercase|\\
+\code|\upshape|\\
+\code|\usefont|
+\end{multicols}
+
+Emiatt lehetséges, hogy a következő kódok jól működnek:
 \begin{examplelst}
 \newcommand{\osztaly}{V.B}
 Idén \az{\textbf{\osztaly}}~osztály rendezi a farsangot.
@@ -333,49 +552,376 @@ Idén \az{\textbf{\osztaly}}~osztály rendezi a farsangot.
 
 \begin{examplelst}
 \section{Cím}\label{sec}
-\az{\textbf{\ref{sec}}}
+\az{\footnotesize\ref{sec}}
 \end{examplelst}
 
-\commandinline|\AddToHook{huaz}{!<kód>!}|
+De ez is helyes eredményt ad:
+\begin{examplelst}
+\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
+\newcommand{\osztaly}{V.A~osztály}
+\az{\myfont{\osztaly}}
+\end{examplelst}
+Azért kapunk helyes eredményt, mert a \code|\myfont| kifejtésében található \code|\usefont| szerepel az előző listában. Ha a \code|\myfont| erős parancsként lett volna definiálva, akkor már nem működne megfelelően az előző kód (lásd később). Ebben az esetben a \code|\myfont| parancsot is fel kell venni a listára.
 
-A \huaz\ csomag azon szövegformázó parancsokat hagyja figyelmen kívül, melyek egy előre definiált listában szerepelnek. Amennyiben olyan formázó parancsot használ, ami még ezen a listán nem található, akkor az a felhasználó által is bővíthető. Például
+\huazcmd|\huazignorecmd[!<opció>!]{!<parancs>!}|
+
+Az ignoráló listát ezzel lehet bővíteni.
+A \code|!<parancs>!| helyére az ignorálandó parancsot kell írni az argumentumai és \code{*} nélkül.
+Az \code|!<opció>!| \code{0} és \code{9} közötti egész szám lehet.
+Amennyiben ezektől eltérő a beírt \code|!<opció>!|, akkor erre figyelmeztet a fordító.
+A használata három esetre bontható.
+
+\paragraph{1. eset}
+%
+Opció nélkül használva, a \code|!<parancs>!| a névelő megállapításakor törlődik, de az utána írt \code{*}, opció vagy argumentum nem.
+Deklarációs parancsok esetén jól használható.
+Például a \code|\tiny| parancs így lett besorolva a listába:
 \begin{examplelst}
-\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
-\newcommand{\mytext}{X.A~osztály}
-\az{\myfont{\mytext}}
+\huazignorecmd{\tiny}
 \end{examplelst}
-esetén a \verb|\myfont| nincs ezen a listán, ezért ez a kód hibával fordul. A listára az
+Ugyanez alkalmazható abban az esetben is, ha a \code|!<parancs>!|-nak nincs csillagos verziója sem opciója, továbbá az első \code|{ }| jelek közé írt argumentuma a figyelembe vett szöveg. Például a \code|\textrm| ilyen, ezért így lett besorolva:
 \begin{examplelst}
-\AddToHook{huaz}{\def\myfont{}}
+\huazignorecmd{\textrm}
 \end{examplelst}
-módon vehető fel. Ezzel azt érjük el, hogy a névelő megállapítása során a \verb|\myfont| parancs ne jelentsen semmit. Tehát a következő kód már megfelelően működik:
+
+A \code{shadowtext} csomag \code|\shadowtext| parancsa nincs a listában, ezért a következő kód eredménye hibás lesz:
 \begin{examplelst}
-\AddToHook{huaz}{\def\myfont{}}
-\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
-\newcommand{\mytext}{X.A~osztály}
-\az{\myfont{\mytext}}
+\newcommand{\osztaly}{X.A~osztály}
+\az{\shadowtext{\osztaly}}
 \end{examplelst}
-Az előző eset a \texttt{huaz} kapocs nélkül így is megoldható:
+A listára
 \begin{examplelst}
-\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
-\newcommand{\mytext}{X.A~osztály}
-\az*{\mytext}~\myfont{\mytext}
+\huazignorecmd{\shadowtext}
 \end{examplelst}
-Ha a \verb|\myfont| a \verb|\mytext| definíciójában szerepel, akkor a \texttt{huaz} kapocs használata nem kerülhető meg:
+módon vehető fel, mert a \code|\shadowtext| parancsnak sem opciója sem csillagos verziója nincs, továbbá egyetlen argumentuma a szöveg.
+Tehát a következő kód már megfelelően működik:
 \begin{examplelst}
-\AddToHook{huaz}{\def\myfont{}}
-\newcommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
-\newcommand{\mytext}{\myfont{X.A~osztály}}
-\az{\mytext}
+\huazignorecmd{\shadowtext}
+\newcommand{\osztaly}{X.A~osztály}
+\az{\shadowtext{\osztaly}}
 \end{examplelst}
-Kereszthivatkozásnál, ha maga a számozás van standardtól különböző paranccsal formázva, akkor a \texttt{huaz} kapocs használata szintén nem kerülhető meg. Például
+Megjegyezzük, hogy az előző eset így is megoldható:
 \begin{examplelst}
-\AddToHook{huaz}{\def\myfont{}}
-\DeclareRobustCommand{\myfont}[1]{{\usefont{T1}{yv1d}{m}{n}#1}}
-\renewcommand{\thesection}{\myfont{\arabic{section}}}
+\newcommand{\osztaly}{X.A~osztály}
+\az*{\osztaly}~\shadowtext{\osztaly}
+\end{examplelst}
+Ha a \code|\shadowtext| az \code|\osztaly| definíciójában szerepel, akkor nem tudjuk megkerülni a \code|\huazignorecmd| használatát az előző módon:
+\begin{examplelst}
+\huazignorecmd{\shadowtext}
+\newcommand{\osztaly}{\shadowtext{X.A~osztály}}
+\az{\osztaly}
+\end{examplelst}
+
+\paragraph{2. eset}
+%
+Ha az \code|!<opció>!| \code{0}, akkor a \code|!<parancs>!| és az utána található első \code|{| jelig található kódok mindegyike ignorálódik a névelő megállapításakor.
+Tehát például
+\begin{examplelst}
+\huazignorecmd[0]{\foo}
+\end{examplelst}
+esetén a
+\begin{examplelst}
+\foo{...} \foo*{...} \foo[...]{...} \foo*[...]{...}
+\end{examplelst}
+kódokban a 
+\begin{examplelst}
+\foo \foo* \foo[...] \foo*[...]
+\end{examplelst}
+mindegyike figyelmen kívül lesz hagyva a névelő megállapításakor.
+A \code|\makebox| például
+\begin{examplelst}
+\huazignorecmd[0]{\makebox}
+\end{examplelst}
+módon lett besorolva, ezért például
+\begin{examplelst}
+\makebox[2cm][s]{szöveg}
+\end{examplelst}
+esetén a \code|\makebox[2cm][s]| rész törlődik és csak a \huqq{szöveg} lesz figyelembe véve.
+
+
+Ha a formázó parancs erős, akkor a \code|\huazignorecmd| használata nem kerülhető meg még akkor sem, ha a listán szereplő parancsokkal épül fel.
+Például
+\begin{examplelst}
+\huazignorecmd[0]{\myfont}
+\DeclareRobustCommand{\myfont}[2][cmr]
+  {{\usefont{T1}{#1}{m}{n}#2}}
+\renewcommand{\thesection}{\myfont[yv1d]{\arabic{section}}}
 \section{Cím}\label{sec}
 \aref{sec}
 \end{examplelst}
-Itt a \verb|\myfont| azért lett erős parancsként definiálva, mert mozgó argumentumba kerül. Az előző példa esete ritkán fordul elő, mert a számláló típusának megadásánál (arab, római, stb.) nem szokás szövegformázó parancsot is alkalmazni.
+Ebben a példában nem hagyható el a \code{[0]}, mert a \code|\myfont|-nak van opciója.
 
+\paragraph{3. eset}
+%
+Ha az \code|!<opció>!| \code{1} és \code{9} közötti egész szám, akkor a \code|\huazignorecmd| parancs a névelő megállapítása során  a \code|!<parancs>!|-ot és az utána következő első \code|{| jelig tartó kódokat ignorálja, továbbá ezután az első \code|!<opció>!| darab \code|{ }| jelek közé írt részeket szintén figyelmen kívül hagyja.
+Tehát például
+\begin{examplelst}
+\huazignorecmd[1]{\foo}
+\end{examplelst}
+esetén a
+\begin{examplelst}
+\foo{...} \foo*{...} \foo[...]{...} \foo*[...]{...}
+\end{examplelst}
+kódok mindegyike figyelmen kívül lesz hagyva a névelő megállapításakor.
+Például a \code|\textcolor| parancs
+\begin{examplelst}
+\huazignorecmd[1]{\textcolor}
+\end{examplelst}
+módon lett a listába sorolva, így a
+\begin{examplelst}
+\textcolor[RGB]{20,30,40}{szöveg}
+\end{examplelst}
+parancsban a 
+\begin{examplelst}
+\textcolor[RGB]{20,30,40}
+\end{examplelst}
+kódrész ignorálva lesz, és csak a ,,\code{szöveg}'' kerül vizsgálatra a névelő megállapításakor.
+Ha a
+\begin{examplelst}
+\huazignorecmd[2]{\foo}
+\end{examplelst}
+parancsot használjuk, akkor a
+\begin{examplelst}
+\foo{...}{...}      \foo*{...}{...} 
+\foo[...]{...}{...} \foo*[...]{...}{...}
+\end{examplelst}
+kódok mindegyike figyelmen kívül lesz hagyva a névelő megállapításakor.
+Például a \code|\fontsize| parancs
+\begin{examplelst}
+\huazignorecmd[2]{\fontsize}
+\end{examplelst}
+módon lett a listába sorolva, így a
+\begin{examplelst}
+\fontsize{14pt}{14pt} 
+\end{examplelst}
+parancs figyelmen kívül lesz hagyva a névelő megállapításakor.
+
+\subsection{A kereszthivatkozások kifejthető verziói}
+
+Ha a szöveg elején kereszthivatkozás van, akkor a határozott névelő megállapítása előtt a kereszthivatkozás parancsát le kell cserélni annak kifejthető verziójára.
+A \code{refcount} csomag két ilyen parancsot definiál:
+A \code|\getrefnumber| a \code|\ref|, \code|\ref*|, \code|\eqref|, \code|\refeq| esetén
+használható, a \code|\getpagerefnumber| pedig a \code|\pageref| és \code|\pageref*| esetén.
+
+\huazcmd|\huazrefcmd{!<parancs>!}|
+
+Ezzel a paranccsal elérhető, hogy a \code|!<parancs>!| helyére beírt parancsot és annak csillagos verzióját a határozott névelő megállapítása során a \code|\getrefnumber| paranccsal helyettesítse.
+
+A \code|\ref|, \code|\ref*|, \code|\eqref|, \code|\refeq| parancsok így lettek besorolva a \huaz\ csomagban:
+\begin{examplelst}
+\huazrefcmd{\ref}
+\huazrefcmd{\eqref}
+\huazrefcmd{\refeq}
+\end{examplelst}
+Ezzel már az \code|\eqref*| és \code|\refeq*| is működne, de ezek a csillagos verziók nincsenek definiálva a csillag nélküli verziókat definiáló \code{amsmath} illetve \code{mathtools} csomagokban. Ezt mi is pótolhatjuk, amire \aref{subsec-eqref}.~alszakaszban láthatunk megoldást.
+
+\huazcmd|\huazpagerefcmd{!<parancs>!}|
+
+Ezzel a paranccsal elérhető, hogy a \code|!<parancs>!| helyére beírt parancsot és annak csillagos verzióját a határozott névelő megállapítása során a \code|\getpagerefnumber| paranccsal helyettesítse.
+
+A \code|\pageref| és \code|\pageref*| parancsok így lettek besorolva a \huaz\ csomagban:
+\begin{examplelst}
+\huazrefcmd{\pageref}
+\end{examplelst}
+
+Ezekre láthatunk egy alkalmazást \aref{subsec-autoref}.~alszakaszban.
+
+\subsection{Az \texttt{\textbackslash autoref} és \texttt{\textbackslash autopageref} parancsok}\label{subsec-autoref}
+
+Ezeket a parancsokat a \code{hyperref} csomag definiálja.
+Ezekkel hivatkozva egy címkére, nem csak a sorszám, hanem a sorszámozott egység neve (szakasz, alszakasz, oldal, stb.) is megjelenik link formájában.
+Ezeknek léteznek csillagos verzióik is, melyeknek ugyanaz a hatásuk, de nem generálnak linket.
+
+Magyar nyelvű dokumentumokban nem lehet közvetlenül alkalmazni, mert az angol szabály szerint \huqq{1.~szakasz} helyett \huqq{szakasz~1} lesz az eredménye a következőnek:
+\begin{examplelst}
+\section{Cím}\label{sec}
+\autoref*{sec}
+\end{examplelst}
+A használatához először magyarosítani kell a következő kóddal a \code{hyperref} betöltése után a preambulumban:
+\begin{examplelst}
+\usepackage{regexpatch}
+\makeatletter
+\xpatchcmd{\HyRef@autosetref}{\HyRef@currentHtag}{}{}{}
+\xpatchcmd{\HyRef@autosetref}{\null}
+          {\null.~\HyRef@currentHtag}{}{}
+\xpatchcmd*{\HyRef@testreftype}{~}{}{}{}
+\makeatother
+\RenewDocumentCommand{\autopageref}{sm}{%
+  \IfBooleanTF{#1}
+    {\pageref*{#2}.~oldal}
+    {\hyperref[{#2}]{\pageref*{#2}.~oldal}}}
+\end{examplelst}
+Ezután már \huqq{1.~szakasz} lesz az eredmény.
+
+Ha az így módosított \code|\autoref|, \code|\autoref*|, \code|\autopageref|, \code|\autopageref*| parancsokhoz automatikus határozott névelőt szeretnénk, akkor írjuk be a következőket a \huaz\ betöltése után:
+\begin{examplelst}
+\huazrefcmd{\autoref}
+\huazpagerefcmd{\autopageref}
+\end{examplelst}
+Ezután a következő kód eredménye \huqq{Az 1. szakasz az 1. oldalon kezdődik.} lesz:
+\begin{examplelst}
+\section{Cím}\label{sec}
+\Az{\autoref*{sec}} \az{\autopageref*{sec}on} kezdődik.
+\end{examplelst}
+
+\subsection{Az \texttt{\textbackslash eqref*} és \texttt{\textbackslash refeq*} parancsok}\label{subsec-eqref}
+
+A \code|\ref| és \code|\pageref| parancsoknak definiált a csillagos verziójuk is, amely alapesetben nem különbözik a normál verziótól, de a \code{hyperref} csomaggal használva a csillag nélküli verzió linket generál, míg a csillagos nem.
+
+Az \code{amsmath} csomag által definiált \code|\eqref| a \code{hyperref} csomaggal együtt használva szintén generál linket, de ennek nincs definiálva csillagos verziója, így ekkor a link nélküli verzió nem érhető el közvetlenül.
+További gond az ilyen link nélküli egyenlethivatkozás előtti automatikus névelő megadása.
+
+Négy lehetséges megoldást mutatunk.
+
+\begin{enumerate}
+\item
+A \code{NoHyper} környezet használatával:
+\begin{examplelst}
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \begin{NoHyper}\aeqref{eq}\end{NoHyper}
+      egyenletet!}
+\end{examplelst}
+
+\item
+Az \code|\az*| parancs használatával:
+\begin{examplelst}
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \az*{\ref{eq}} \textup{(\ref*{eq})}
+      egyenletet!}
+\end{examplelst}
+
+\item
+Az \code|\eqrefstyle| parancs definiálásával és a \code|\huazignorecmd| paranccsal, amely az előzőnek egy kényelmesebben használható verziója:
+\begin{examplelst}
+\makeatletter
+\newcommand{\eqrefstyle}[1]{\textup{\tagform@{#1}}}
+\makeatother
+\huazignorecmd{\eqrefstyle}
+
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \az{\eqrefstyle{\ref*{eq}}} egyenletet!}
+\end{examplelst}
+
+\item
+Ebben az esetben definiáljuk az \code|\eqref| csillagos verzióját (az \code{amsmath} betöltése után), amely nem generál linket a \code{hyperref} csomaggal együtt használva:
+\begin{examplelst}
+\makeatletter
+\DeclareDocumentCommand{\eqref}{ s m }{%
+  \textup{\tagform@{%
+    \IfBooleanTF{#1}{\ref*{#2}}{\ref{#2}}%
+  }}%
+}
+\makeatother
+\end{examplelst}
+Ezután a
+\begin{examplelst}
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \az{\eqref*{eq}} egyenletet!}
+\end{examplelst}
+kód helyes eredményt ad, mert a \huaz\ csomagban nem csak az \code|\eqref|, hanem az \code|\eqref*| is a kifejthető \code|\getrefnumber| parancsra lesz kicserélve a határozott névelő meghatározásánál.
+\end{enumerate}
+
+Ugyanez a probléma a \code{mathtools} csomag által definiált \code|\refeq| és a \code{hyperref} csomag együttes használata esetében.
+
+Az előző négy megoldás mindegyikét lehet alkalmazni megfelelő módosításokkal:
+\begin{enumerate}
+\item
+A \code{NoHyper} környezet használatával:
+\begin{examplelst}
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \begin{NoHyper}\arefeq{eq}\end{NoHyper}
+      egyenletet!}
+\end{examplelst}
+
+\item
+Az \code|\az*| parancs használatával:
+\begin{examplelst}
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \az*{\ref{eq}} \textup{\ref*{eq}} egyenletet!}
+\end{examplelst}
+
+\item
+A \code|\refeqstyle| parancs definiálásával:
+\begin{examplelst}
+\newcommand{\refeqstyle}[1]{\textup{#1}}
+
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \az{\refeqstyle{\ref*{eq}}} egyenletet!}
+\end{examplelst}
+Itt nincs szükség a \code|\huazignorecmd{\refeqstyle}| használatára.
+
+\item
+A \code|\refeq*| parancs definiálásával:
+\begin{examplelst}
+\DeclareDocumentCommand{\refeq}{ s m }{%
+  \textup{%
+    \IfBooleanTF{#1}{\ref*{#2}}{\ref{#2}}%
+  }%
+}
+\end{examplelst}
+Ezután a
+\begin{examplelst}
+\begin{equation}\label{eq}
+a=b
+\end{equation}
+\emph{Lásd \az{\refeq*{eq}} egyenletet!}
+\end{examplelst}
+kód helyes eredményt ad, mert a \huaz\ csomagban nem csak a \code|\refeq|, hanem a \code|\refeq*| is a kifejthető \code|\getrefnumber| parancsra lesz kicserélve a határozott névelő meghatározásánál.
+\end{enumerate}
+
+\subsection{Parancsok átdefiniálása a határozott névelő megállapításakor}
+
+A \code|\huazignorecmd|, \code|\huazrefcmd| és \code|\huazpagerefcmd| parancsok is a címben szereplő funkciót látják el, de speciális esetekben.
+Ezek általánosított verziója a következő parancs:
+
+\huazcmd|\huazdefcmd{!<átdefiniáló kód>!}|
+
+Az \code|!<átdefiniáló kód>!| helyére egy parancsnak azt a definícióját kell írni, amelynek a határozott névelő megállapítása során kell érvényesülnie.
+Felsorolunk néhány kódpárt, melyek ekvivalensek egymással:
+\begin{examplelst}
+\huazignorecmd{\tiny}
+\huazdefcmd{\def\tiny{}}
+\end{examplelst}
+
+\begin{examplelst}
+\huazignorecmd[0]{\makebox}
+\huazdefcmd{\def\makebox#1#{}}
+\end{examplelst}
+
+\begin{examplelst}
+\huazignorecmd[1]{\textcolor}
+\huazdefcmd{\def\textcolor#1#{\@gobble}}
+\end{examplelst}
+
+\begin{examplelst}
+\huazrefcmd{\ref}
+\huazdefcmd{\def\ref#1#{\getrefnumber}}
+\end{examplelst}
+
+Alkalmazásként tekintsük a következő kódot, amely hibával fog fordulni:
+\begin{examplelst}
+\newcommand{\tananyag}{\LaTeX\ alapjai}
+A mai óra anyaga \az{\tananyag}.
+\end{examplelst}
+A megfelelő eredményhez a \code|\LaTeX| parancsot át kell definiálni a névelő megállapításakor:
+\begin{examplelst}
+\huazdefcmd{\def\LaTeX{latex}}
+\newcommand{\tananyag}{\LaTeX\ alapjai}
+A mai óra anyaga \az{\tananyag}.
+\end{examplelst}
+Az eredmény \huqq{A mai óra anyaga a \LaTeX.} lesz.
 \end{document}

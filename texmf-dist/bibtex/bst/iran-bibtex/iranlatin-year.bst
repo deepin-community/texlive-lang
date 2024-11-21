@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
-%% This file is “iranlatin-year.bst”, v0.1.0 (2024/01/8)
+%% This file is “iranlatin-year.bst”, v0.1.2 (2024/08/2)
 %% created by modifying “iranlatin.bst” file in accordance with the
 %% “Iran Manual of Style Citation Guide” (1st edn., 2016) to support
 %% English/Latin only.
@@ -1108,12 +1108,7 @@ FUNCTION {format.full.label.names}
                 " " * bbl.etal *
               }
               {
-                numnames #2 >
-                  { bbl.comma * }
-                  'skip$
-                if$
-                bbl.and
-                separate.by.space * t *
+                bbl.comma * bbl.and separate.by.space * t *
               }
             if$
           }
@@ -1574,7 +1569,7 @@ FUNCTION {field.doi}
   doi empty$
     { "" }
     {
-      bbl.doi "u" change.case$ ":\doi{" * doi * "}" *
+      bbl.doi "u" change.case$ ":~\doi{" * doi * "}" *
     }
   if$
 }
@@ -1898,7 +1893,7 @@ FUNCTION {field.url}
   url duplicate$ empty$
     { pop$ "" }
     {
-      bbl.url "u" change.case$ ": \url{" * swap$ * "}" *
+      bbl.url "u" change.case$ ":~\url{" * swap$ * "}" *
     }
   if$
 }

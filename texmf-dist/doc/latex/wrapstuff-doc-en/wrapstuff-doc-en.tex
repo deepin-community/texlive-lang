@@ -1,0 +1,264 @@
+\documentclass{l3doc}
+\usepackage{wrapstuff}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\title{The \textsf{wrapstuff} package\thanks{Corresponding to version v0.3*
+  of the Chinese documentation.}}
+\author{Author: Qing Lee \\ Translator: Siyu Wu}
+\date{\today}
+\newcommand{\opt}[1]{\texttt{#1}}
+\ExplSyntaxOn
+\makeatletter
+\DeclareDocumentCommand \ADDSPECEIALKEY { m }
+  {
+    \cs_gset_eq:NN \@@_codedoc_names_typeset_save:
+                   \__codedoc_names_typeset:
+    \cs_gset_protected:Npn \__codedoc_names_typeset:
+      {
+        \cs_gset_eq:NN \__codedoc_names_typeset:
+                       \@@_codedoc_names_typeset_save:
+        \__codedoc_names_typeset:
+        #1 \\
+      }
+  }
+\makeatother
+\ExplSyntaxOff
+\begin{document}
+
+\maketitle
+
+\section{Basic Usage}
+
+The \pkg{wrapstuff} package provides another implementation
+of wrapping text around a figure.
+\pkg{wrapstuff} tries to integrate and extend the function
+of some similar packages such as \pkg{picinpar}, \pkg{floatflt},
+\pkg{wrapfig}, \pkg{cutwin} and \pkg{wrapfig2}.
+This package is compatible with \pkg{caption}, \pkg{float}
+and \pkg{floatrow}. And it tries to be compatible with display
+math and various kinds of \LaTeX{} list environments so that
+they can wrap figures and tables correctly.
+
+The implementation of \pkg{wrapstuff} depends on the paragraph
+hooks provided by \LaTeX{} 2021-06-01, and also depends on
+\LaTeX3 2022-04-10 or later version.
+
+\begin{function}{wrapstuff}
+  \begin{syntax}
+    \cs{begin}\{wrapstuff\}\oarg{options}
+      \meta{wrapped contents}
+    \cs{end}\{wrapstuff\}
+    \meta{main text}
+  \end{syntax}
+\end{function}
+
+\pkg{wrapstuff} only provides one environment called \env{wrapstuff},
+which will wrap text from the paragraph after this environment on.
+For example,
+
+\begin{verbatim}
+  \begin{wrapstuff}[c,top=1]
+    \includegraphics[width=\dimeval{\linewidth/3}]{example-image.pdf}
+  \end{wrapstuff}
+  \lipsum[1-2]
+\end{verbatim}
+
+\begin{wrapstuff}[c,top=1]
+  \includegraphics[width=\dimeval{\linewidth/3}]{example-image.pdf}
+\end{wrapstuff}
+\lipsum[1]
+
+\begin{function}{\wrapstuffset}
+  \begin{syntax}
+    \cs{wrapstuff}\marg{option list}
+  \end{syntax}
+  The options of \pkg{wrapstuff} can be set when invoking the package,
+  but they can also be set using \cs{wrapstuffset}.
+\end{function}
+
+\ADDSPECEIALKEY{\textrm{\meta{n}}}
+\begin{function}{top}
+  \begin{syntax}
+    top = \meta{non-negative integer}
+  \end{syntax}
+  sets the number of the line after which \pkg{wrapstuff} begins to wrap text.
+  \meta{n} is the abbreviation of setting \texttt{top} to \meta{n}.
+  The initial value is 0. 
+\end{function}
+
+\begin{function}{width}
+  \begin{syntax}
+    width = \meta{width}
+  \end{syntax}
+  sets the width of wrapped contents. The initial value is 0pt,
+  which represents for the natural width.
+  At this time, the contents in the \env{wrapstuff} environment
+  can only have one line and users are not permitted to use
+  \cmd\\ to break line or \cs{par} to start new paragraph.
+  If one needs to break line or start a new paragraph in the environment,
+  he has to set proper value for \texttt{width}.
+\end{function}
+
+\begin{function}{height}
+  \begin{syntax}
+    height = \meta{height}
+  \end{syntax}
+  sets the height of the wrapped contents. The initial value is 0pt,
+  which represents for the natural height.
+\end{function}
+
+\begin{function}{lines}
+  \begin{syntax}
+    lines = \meta{positive integer}
+  \end{syntax}
+  sets the number of lines occupied by the wrapped contents.
+  The initial value is empty, which means that the number will
+  be calculated automatically.
+\end{function}
+
+\begin{function}{linewidth}
+  \begin{syntax}
+    linewidth = \meta{width}
+  \end{syntax}
+  sets the line width of the main text.
+  The initial value is \cs{linewidth} and typically it is unnecessary
+  to adjust it.
+\end{function}
+
+\begin{function}{l,r,c,i,o,ratio}
+  \begin{syntax}
+    l/r/c/i/o
+    ratio = \meta{real number}
+  \end{syntax}
+  These options set the position of the wrapped contents relative to
+  the main text. Options \opt{l/r/c/i/o} means left, right, center,
+  inner and outer respectively. The option \opt{ratio} sets the
+  ratio of the line width occupied by the main text on the left side
+  of the wrapped contents. One can set \opt{ratio} to any proper real number
+  between the interval $[0,1]$.
+  Options \opt{i/o} can be used together with \opt{ratio}.
+  The initial value is \opt{r}.
+\end{function}
+
+\begin{function}{column}
+  \begin{syntax}
+    column = \meta{true|false|par}
+  \end{syntax}
+  controls whether to display the main text around the wrapped contents
+  as two columns or not. Only when setting the option \opt{c}
+  or setting \opt{ratio} in $(0,1)$ this option has its effect.
+  \opt{false} means not displaying the main text in two columns
+  and \opt{par} means displaying the main text as two columns
+  but with per paragraph as a separate unit.
+\end{function}
+
+\begin{verbatim}
+  \def\lorem{%
+    Just then her head struck against the roof of the hall:
+    in fact she was now more than nine feet high, and she
+    at once took up the little golden key and hurried off
+    to the garden door.\par
+    Poor Alice! It was as much as she could do, lying down
+    on one side, to look through into the garden with one eye;
+    but to get through was more hopeless than ever: 
+    she sat down and began to cry again.}
+  
+  \begin{wrapstuff}[c,column=par]
+    \includegraphics[width=3cm]{example-image.pdf}
+  \end{wrapstuff}
+  \lorem
+  
+  \begin{wrapstuff}[c]
+    \includegraphics[width=3cm]{example-image.pdf}
+  \end{wrapstuff}
+  \lorem
+  
+  \begin{wrapstuff}[c,column=false]
+    \includegraphics[width=3cm]{example-image.pdf}
+  \end{wrapstuff}
+  \lorem
+\end{verbatim}
+
+\def\lorem{%
+Just then her head struck against the roof of the hall: in fact she was now more than nine feet high, and she at once took up the little golden key and hurried off to the garden door.\par
+Poor Alice! It was as much as she could do, lying down on one side, to look through into the garden with one eye; but to get through was more hopeless than ever: she sat down and began to cry again.}
+\begin{wrapstuff}[c,column=par]
+  \includegraphics[width=3cm]{example-image.pdf}
+\end{wrapstuff}
+\lorem
+
+\begin{wrapstuff}[c]
+  \includegraphics[width=3cm]{example-image.pdf}
+\end{wrapstuff}
+\lorem
+
+\begin{wrapstuff}[c,column=false]
+  \includegraphics[width=3cm]{example-image.pdf}
+\end{wrapstuff}
+\lorem
+
+\begin{function}{leftsep,rightsep,hsep}
+  \begin{syntax}
+    leftsep = \meta{length}
+    rightsep = \meta{length}
+    hsep = \meta{length}
+  \end{syntax}
+  set the left/right space between wrapped contents and main text.
+  The option \texttt{hsep} sets \texttt{leftsep} and \texttt{rightsep}
+  simultaneously. The initial value is 1em.
+\end{function}
+
+\begin{function}{abovesep,belowsep,vsep}
+  \begin{syntax}
+    abovesep = \meta{length}
+    belowsep = \meta{length}
+    vsep = \meta{length}
+  \end{syntax}
+  set the upper/lower space between wrapped contents and main text.
+  The option \texttt{vsep} sets \texttt{abovesep} and \texttt{belowsep}
+  simultaneously. The initial value is 0pt.
+\end{function}
+
+\begin{function}{hoffset}
+  \begin{syntax}
+    hoffset = \meta{length}
+  \end{syntax}
+  sets the length of the wrapped contents that extend beyond
+  the main text area. When \texttt{c} is used or \texttt{ratio}
+  is set between $(0,1)$, this option loses effect.
+  One special value \cs{width} is used to represent the total width
+  of wrapped contents and the corresponding spacing.
+  If setting \opt{hoffset} equals to \cs{width}, then
+  the wrapped contents are totally placed outside of the main text area.
+  The initial value is 0pt.
+\end{function}
+
+\begin{function}{voffset}
+  \begin{syntax}
+    voffset = \meta{length}
+  \end{syntax}
+  is used to adjust the vertical position of the wrapped contents.
+  The initial value is 0pt.
+\end{function}
+
+\begin{function}{type}
+  \begin{syntax}
+    type = \meta{float type}
+  \end{syntax}
+  sets the type of float of the wrapped contents.
+  The initial value is empty.
+  If one needs to use \cs{caption} in \env{wrapstuff},
+  then he has to set \opt{type} to \opt{figure} or \opt{table}
+  and set the value for \opt{width}.
+\end{function}
+
+\begin{function}{\wrapstuffclear}
+  If the number of lines in the current paragraph is not enough,
+  the effect of \pkg{wrapstuff} will continue to the next paragraph.
+  Sometimes it may cause some undesirable results,
+  in which case one could issue \cs{wrapstuffclear} to eliminate
+  the effect.
+\end{function}
+
+\PrintIndex
+\end{document}

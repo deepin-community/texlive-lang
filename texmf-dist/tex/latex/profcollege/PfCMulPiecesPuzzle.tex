@@ -1,12 +1,16 @@
 %%%
 % Pièces de puzzle pour multiplication
 %%%
+\def\filedateMulPiecesPuzzle{2024/08/04}%
+\def\fileversionMulPiecesPuzzle{0.1}%
+\message{-- \filedateMulPiecesPuzzle\space v\fileversionMulPiecesPuzzle}%
+%
 %https://mirror.gutenberg-asso.fr/tex.loria.fr/prod-graph/metafun.pdf
 \newtoks\toklistepuzzlea%
 
 \def\UpdatetoksPuzzleA#1\nil{\addtotok\toklistepuzzlea{"#1",}}%
 
-\setKVdefault[ClesPuzzleMul]{Solution=false,Unite=1cm,Couleur=LightSteelBlue}
+\setKVdefault[ClesPuzzleMul]{Solution=false,Unite=1cm,Couleur=LightSteelBlue,Cube=false}
 
 \NewDocumentCommand\PuzzleMul{om}{%
   \useKVdefault[ClesPuzzleMul]%
@@ -17,8 +21,12 @@
   \xdef\HauteurPuzzle{\PfCListePuzzlelen}%
   \toklistepuzzlea{}%
   \foreachitem\compteur\in\PfCListePuzzle{\expandafter\UpdatetoksPuzzleA\compteur\nil}%
-  \BuildPuzzle{\the\toklistepuzzlea}%
-}
+  \ifboolKV[ClesPuzzleMul]{Cube}{%
+    \BuildPuzzleEspace{\the\toklistepuzzlea}%
+  }{%
+    \BuildPuzzle{\the\toklistepuzzlea}%
+  }%
+}%
 
 \def\BuildPuzzleCode{%
   def PreDrawPuzzle ( expr ww, hh, uu ) =

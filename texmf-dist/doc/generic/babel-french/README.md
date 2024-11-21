@@ -23,7 +23,7 @@ The bundle consists of the following files:
 License
 -------
 
-Released under the LaTeX Project Public License v1.3 or later
+Released under the LaTeX Project Public License v1.3c or later
 See http://www.latex-project.org/lppl.txt
 
 ## Installation
@@ -31,7 +31,8 @@ See http://www.latex-project.org/lppl.txt
 If the latest version of this package is not included in your LaTeX
 distribution, do the following:
 
-* issue "luatex frenchb.dtx" to unpack the language definition files;
+* execute the command "luatex frenchb.dtx" in a terminal to unpack
+  the language definition files;
 * copy the files frenchb.lua, french.ldf, frenchb.ldf, francais.ldf,
   acadian.ldf and canadien.ldf to a location where TeX can find them
   (default location: $TEXMF/tex/generic/babel-french/);
@@ -49,5 +50,5 @@ Changes
 See the included manual frenchb.pdf, section "Change History".
 
 ---
-Copyright 1996--2023 Daniel Flipo
+Copyright 1996--2024 Daniel Flipo
 E-mail: daniel (dot) flipo (at) free (dot) fr

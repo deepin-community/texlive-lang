@@ -1,6 +1,10 @@
 %%%
 % Lego
 %%%
+\def\filedateLego{2024/09/01}%
+\def\fileversionLego{0.1a}%
+\message{-- \filedateLego\space v\fileversionLego}%
+%
 \setKVdefault[Lego]{Echelle=1,Couleur=LightSteelBlue,Unite=8,Diviseur=2,Perso=false,Plaque=false,Largeura=2,Largeurb=2,Unique=false}%
 \defKV[Lego]{ListePerso=\setKV[Lego]{Perso}\xdef\PfCFooLegoListePerso{#1}}%
 
@@ -22,15 +26,19 @@
 \NewDocumentCommand\Lego{o}{%
   \useKVdefault[Lego]%
   \setKV[Lego]{#1}%
-  \xintifboolexpr{\useKV[Lego]{Unite}==1}{%
+  \xintifboolexpr{\useKV[Lego]{Unite}==1 || \useKV[Lego]{Unique}}{%
     \xdef\PfCNbCouleurs{1}%
   }{%
     \xdef\PfCNbCouleurs{\fpeval{floor(\useKV[Lego]{Unite}/\useKV[Lego]{Diviseur})}}%
   }%
-  \ChoixCouleur{\PfCNbCouleurs}%
   \ifboolKV[Lego]{Perso}{%
+    \setsepchar{,}\ignoreemptyitems%
+    \readlist*\ListeAvantChoixCouleurs{\PfCFooLegoListePerso}%
+    \ChoixCouleur{\ListeAvantChoixCouleurslen}%
+    \reademptyitems%
     \BuildBarreLego{\FooCouleur}{\PfCFooLegoListePerso}%
   }{%
+    \ChoixCouleur{\PfCNbCouleurs}%
     \BuildBarreLego{\FooCouleur}{}%
   }%
 }%
@@ -38,7 +46,7 @@
 \NewDocumentCommand\BuildBarreLego{mm}{%
   \ifluatex%
     \mplibforcehmode%
-    \begin{mplibcode}
+    \begin{mplibcode}%
       boolean Plaque,Unique;
       Plaque=\useKV[Lego]{Plaque};
       Unique=\useKV[Lego]{Unique};
@@ -105,9 +113,9 @@
       RetiensLego=currentpicture;
       currentpicture:=nullpicture;
       draw RetiensLego scaled Echelle;
-    \end{mplibcode}
-  \else
-    \begin{mpost}
+    \end{mplibcode}%
+  \else%
+    \begin{mpost}%
       input PfCLego;
       %
       vardef ChoixCouleur(text t)=
@@ -153,6 +161,6 @@
       Lego_box(Diviseur,2,Brique[k]);
       endfor;
       fi;
-    \end{mpost}
+    \end{mpost}%
   \fi%
 }%

@@ -1,6 +1,10 @@
 %%%
 % Proportionnalit\'e
 %%%
+\def\filedatePropor{2024/09/04}%
+\def\fileversionPropor{0.1a}%
+\message{-- \filedatePropor\space v\fileversionPropor}%
+%
 \setKVdefault[ClesPropor]{GrandeurA=Grandeur A,GrandeurB=Grandeur B,Largeur=1cm,Math=false,Stretch=1,ColorFill=white,CouleurTab=gray!15,Vertical=false,Simple=false,Condense=false}%
 
 \tikzstyle{FlechePropor}=[-stealth]
@@ -201,49 +205,51 @@
 
 \NewDocumentCommand\FlechePCG{mm}{%
   \begin{tikzpicture}[remember picture,overlay,node distance=\getstrut\ht]%
-    \node[inner sep=0pt] (MilieuH-#1) at ($(ProporG-#1)!0.25!(ProporD-#1)$) {};%
-    \node[inner sep=0pt] (MilieuH-#2) at ($(ProporG-#2)!0.25!(ProporD-#2)$) {};%
-    \node[inner sep=0pt] (MilieuB-#1) at ($(ProporG-#1)!0.75!(ProporD-#1)$) {};%
-    \node[inner sep=0pt] (MilieuB-#2) at ($(ProporG-#2)!0.75!(ProporD-#2)$) {};%
+    \node[inner sep=0pt] (MilieuH-#1) at ($(ProporH-#1)!\PfCCoeffH!(ProporB-#1)$) {};%
+    \node[inner sep=0pt] (MilieuH-#2) at ($(ProporH-#2)!\PfCCoeffH!(ProporB-#2)$) {};%
+    \node[inner sep=0pt] (MilieuB-#1) at ($(ProporH-#1)!\PfCCoeffB!(ProporB-#1)$) {};%
+    \node[inner sep=0pt] (MilieuB-#2) at ($(ProporH-#2)!\PfCCoeffB!(ProporB-#2)$) {};%
     \xintifboolexpr{#1<#2}{%
       \coordinate[right of=MilieuH-#1] (aux1);%
-      \coordinate[right of=MilieuH-#2] (aux2);%
-      \coordinate[left of=MilieuB-#1] (aux3);%
+      \coordinate[left of=MilieuH-#2] (aux2);%
+      \coordinate[right of=MilieuB-#1] (aux3);%
       \coordinate[left of=MilieuB-#2] (aux4);%
-      \draw[out=30,in=-30,gray] (aux3) to (aux4);
+      \draw[FlechePropor,gray] (aux4) -- (aux1);
+      \draw[out=-30,in=30,gray] (aux2) to (aux4);
     }{%
-      \coordinate[right of=MilieuH-#1] (aux1);%
+      \coordinate[left of=MilieuH-#1] (aux1);%
       \coordinate[right of=MilieuH-#2] (aux2);%
       \coordinate[left of=MilieuB-#1] (aux3);%
-      \coordinate[left of=MilieuB-#2] (aux4);%
-      \draw[out=-30,in=30,gray] (aux3) to (aux4);
+      \coordinate[right of=MilieuB-#2] (aux4);%
+      \draw[FlechePropor,gray] (aux1) -- (aux4);
+      \draw[out=30,in=-30,gray] (aux3) to (aux1);
     }%
     \draw[gray] (aux2) -- (aux3);
-    \draw[FlechePropor,gray] (aux4) -- (aux1);
   \end{tikzpicture}%
 }%
 
 \NewDocumentCommand\FlechePCD{mm}{%
   \begin{tikzpicture}[remember picture,overlay,node distance=\getstrut\ht]%
-    \node[inner sep=0pt] (MilieuH-#1) at ($(ProporG-#1)!0.25!(ProporD-#1)$) {};%
-    \node[inner sep=0pt] (MilieuH-#2) at ($(ProporG-#2)!0.25!(ProporD-#2)$) {};%
-    \node[inner sep=0pt] (MilieuB-#1) at ($(ProporG-#1)!0.75!(ProporD-#1)$) {};%
-    \node[inner sep=0pt] (MilieuB-#2) at ($(ProporG-#2)!0.75!(ProporD-#2)$) {};%
+    \node[inner sep=0pt] (MilieuH-#1) at ($(ProporH-#1)!\PfCCoeffH!(ProporB-#1)$) {};%
+    \node[inner sep=0pt] (MilieuH-#2) at ($(ProporH-#2)!\PfCCoeffH!(ProporB-#2)$) {};%
+    \node[inner sep=0pt] (MilieuB-#1) at ($(ProporH-#1)!\PfCCoeffB!(ProporB-#1)$) {};%
+    \node[inner sep=0pt] (MilieuB-#2) at ($(ProporH-#2)!\PfCCoeffB!(ProporB-#2)$) {};%
     \xintifboolexpr{#1<#2}{%
       \coordinate[right of=MilieuH-#1] (aux1);%
-      \coordinate[right of=MilieuH-#2] (aux2);%
-      \coordinate[left of=MilieuB-#1] (aux3);%
+      \coordinate[left of=MilieuH-#2] (aux2);%
+      \coordinate[right of=MilieuB-#1] (aux3);%
       \coordinate[left of=MilieuB-#2] (aux4);%
-      \draw[out=150,in=-150,gray] (aux1) to (aux2);
+      \draw[FlechePropor,gray] (aux3) -- (aux2);
+      \draw[out=-150,in=150,gray] (aux1) to (aux3);
     }{%
-      \coordinate[right of=MilieuH-#1] (aux1);%
+      \coordinate[left of=MilieuH-#1] (aux1);%
       \coordinate[right of=MilieuH-#2] (aux2);%
       \coordinate[left of=MilieuB-#1] (aux3);%
-      \coordinate[left of=MilieuB-#2] (aux4);%
-      \draw[out=-150,in=150,gray] (aux1) to (aux2);
+      \coordinate[right of=MilieuB-#2] (aux4);%
+      \draw[FlechePropor,gray] (aux2) -- (aux3);
+      \draw[out=-150,in=150,gray] (aux2) to (aux4);
     }%
     \draw[gray] (aux4) -- (aux1);
-    \draw[FlechePropor,gray] (aux2) -- (aux3);
   \end{tikzpicture}%
 }%
 

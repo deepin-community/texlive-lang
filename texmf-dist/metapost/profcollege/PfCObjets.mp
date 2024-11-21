@@ -42,6 +42,263 @@ Transparence:=false;
 boolean couleurz;%pour gérer l'affichage "des lignes" de niveaux
 couleurz:=false;
 
+      vardef AffichageObjetCylindre[]=
+      save _affi;
+  picture _affi;
+  color Fc[][];color cou[];
+  tapj:=0;
+  for k=0 upto apj.@:
+    cpt[tapj]:=tapj;
+    Fc[tapj].nb:=OTFc.@[k].nb;
+    for l=1 upto Fc[tapj].nb:
+      Fc[tapj][l]:=OTFc.@[k][l];
+    endfor;
+    Fc[tapj].iso:=OTFc.@[k].iso;
+    cou[tapj]:=if perso.@:scantokens(couleurperso) else: coul.@[k] fi;
+    ALT[tapj]:=ALT.@[k];
+    Vue[tapj]:=Vue.@[k];
+    tapj:=tapj+1;
+  endfor;
+  tapj:=tapj-1;
+  QS(0,tapj);
+    for k=0 step 1 until tapj:
+    if Vue[cpt[k]]=false:
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2]) dashed dashpattern(on0.5 off2) withpen pencircle scaled0.25;
+      draw Projette(Fc[cpt[k]][3])--Projette(Fc[cpt[k]][4]) dashed dashpattern(on0.5 off2) withpen pencircle scaled0.25;
+    fi;
+    endfor;
+    n:=0;
+    for k=0 step 1 until tapj:
+    if Vue[cpt[k]]:
+%    label(""&decimal(cpt[k])&"",Projette(Fc[cpt[k]].iso));
+      n:=n+1;
+      if n<3:
+      if cpt[k]>1:
+      vala[n]=cpt[k];
+%      label.top(decimal(n)&"--"&decimal(vala[n]),n*u*(1,0));
+      else:
+      n:=n-1;
+      fi;
+      fi;
+      if cpt[k]<1:
+      draw for l=1 upto Fc[cpt[k]].nb:
+        Projette(Fc[cpt[k]][l])--
+        endfor
+        cycle;% withpen pencircle scaled0.25;
+        fi;
+        if cpt[k]>1:  
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[cpt[k]][3])--Projette(Fc[cpt[k]][4]);% withpen pencircle scaled0.25;
+        fi;
+      fi;
+      endfor;
+      if vala[1]<vala[2]:
+      draw Projette(Fc[vala[1]][2])--Projette(Fc[vala[1]][3]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][1])--Projette(Fc[vala[2]][4]);% withpen pencircle scaled0.25;
+      else:
+      draw Projette(Fc[vala[1]][1])--Projette(Fc[vala[1]][4]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][2])--Projette(Fc[vala[2]][3]);% withpen pencircle scaled0.25;
+      fi;
+enddef;
+
+      vardef AffichageObjetCylindreSansBase[]=
+      save _affi;
+  picture _affi;
+  color Fc[][];color cou[];
+  tapj:=0;
+  for k=0 upto apj.@:
+    cpt[tapj]:=tapj;
+    Fc[tapj].nb:=OTFc.@[k].nb;
+    for l=1 upto Fc[tapj].nb:
+      Fc[tapj][l]:=OTFc.@[k][l];
+    endfor;
+    Fc[tapj].iso:=OTFc.@[k].iso;
+    cou[tapj]:=if perso.@:scantokens(couleurperso) else: coul.@[k] fi;
+    ALT[tapj]:=ALT.@[k];
+    Vue[tapj]:=Vue.@[k];
+    tapj:=tapj+1;
+  endfor;
+  tapj:=tapj-1;
+  QS(0,tapj);
+    for k=0 step 1 until tapj:
+    if Vue[cpt[k]]=false:
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2]) dashed dashpattern(on0.5 off2) withpen pencircle scaled0.25;
+      draw Projette(Fc[cpt[k]][3])--Projette(Fc[cpt[k]][4]) dashed dashpattern(on0.5 off2) withpen pencircle scaled0.25;
+    fi;
+    endfor;
+    n:=0;
+    for k=0 step 1 until tapj:
+    if Vue[cpt[k]]:
+%    label(""&decimal(cpt[k])&"",Projette(Fc[cpt[k]].iso));
+      n:=n+1;
+      if n<3:
+      if cpt[k]>1:
+      vala[n]=cpt[k];
+%      label.top(decimal(n)&"--"&decimal(vala[n]),n*u*(1,0));
+      else:
+      n:=n-1;
+      fi;
+      fi;
+      %if cpt[k]<1:
+      %draw for l=1 upto Fc[cpt[k]].nb:
+      %  Projette(Fc[cpt[k]][l])--
+      %  endfor
+      %  cycle withpen pencircle scaled0.25;
+      %  fi;
+        if cpt[k]>1:  
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[cpt[k]][3])--Projette(Fc[cpt[k]][4]);% withpen pencircle scaled0.25;
+        fi;
+      fi;
+      endfor;
+      if vala[1]<vala[2]:
+      draw Projette(Fc[vala[1]][2])--Projette(Fc[vala[1]][3]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][1])--Projette(Fc[vala[2]][4]);% withpen pencircle scaled0.25;
+      else:
+      draw Projette(Fc[vala[1]][1])--Projette(Fc[vala[1]][4]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][2])--Projette(Fc[vala[2]][3]);% withpen pencircle scaled0.25;
+      fi;
+enddef;
+
+vardef AffichageObjetCone[]=
+  save _affi;
+  picture _affi;
+  color Fc[][];color cou[];
+  tapj:=0;
+  for k=0 upto apj.@:
+    cpt[tapj]:=tapj;
+    Fc[tapj].nb:=OTFc.@[k].nb;
+    for l=1 upto Fc[tapj].nb:
+      Fc[tapj][l]:=OTFc.@[k][l];
+    endfor;
+    Fc[tapj].iso:=OTFc.@[k].iso;
+    cou[tapj]:=if perso.@:scantokens(couleurperso) else: coul.@[k] fi;
+    ALT[tapj]:=ALT.@[k];
+    Vue[tapj]:=Vue.@[k];
+    tapj:=tapj+1;
+  endfor;
+  tapj:=tapj-1;
+  QS(0,tapj);
+  n:=0;
+    for k=0 upto tapj:
+    if Vue[cpt[k]]:
+    %label(""&decimal(cpt[k])&"",Projette(Fc[cpt[k]].iso));
+    if cpt[k]>0:
+    n:=n+1;
+    if n<3:
+      if cpt[k]>1:
+      vala[n]:=cpt[k];
+%      label.top(decimal(n)&"--"&decimal(vala[n]),n*u*(1,0));
+      else:
+      n:=n-1;
+      fi;
+      fi;
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2]);%withpen pencircle scaled0.25bp;
+          fi;
+      fi;
+      endfor;
+      if vala[1]<vala[2]:
+      draw Projette(Fc[vala[1]][2])--Projette(Fc[vala[1]][3]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][1])--Projette(Fc[vala[2]][4]);% withpen pencircle scaled0.25;
+      else:
+      draw Projette(Fc[vala[1]][1])--Projette(Fc[vala[1]][4]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][2])--Projette(Fc[vala[2]][3]);% withpen pencircle scaled0.25;
+      fi;
+    enddef;
+
+    vardef AffichageObjetConeAvecBase[]=
+  save _affi;
+  picture _affi;
+  color Fc[][];color cou[];
+  tapj:=0;
+  for k=0 upto apj.@:
+    cpt[tapj]:=tapj;
+    Fc[tapj].nb:=OTFc.@[k].nb;
+    for l=1 upto Fc[tapj].nb:
+      Fc[tapj][l]:=OTFc.@[k][l];
+    endfor;
+    Fc[tapj].iso:=OTFc.@[k].iso;
+    cou[tapj]:=if perso.@:scantokens(couleurperso) else: coul.@[k] fi;
+    ALT[tapj]:=ALT.@[k];
+    Vue[tapj]:=Vue.@[k];
+    tapj:=tapj+1;
+  endfor;
+  tapj:=tapj-1;
+  QS(0,tapj);
+  for k=0 upto tapj:
+    if Vue[cpt[k]]=false:
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2])
+	dashed dashpattern(on0.5 off2) withpen pencircle scaled0.25bp;
+    fi;
+  endfor;
+  n:=0;
+    for k=0 upto tapj:
+    if Vue[cpt[k]]:
+    %label(""&decimal(cpt[k])&"",Projette(Fc[cpt[k]].iso));
+    if cpt[k]>0:
+    n:=n+1;
+    if n<3:
+      if cpt[k]>1:
+      vala[n]:=cpt[k];
+%      label.top(decimal(n)&"--"&decimal(vala[n]),n*u*(1,0));
+      else:
+      n:=n-1;
+      fi;
+      fi;
+      draw Projette(Fc[cpt[k]][1])--Projette(Fc[cpt[k]][2]);%withpen pencircle scaled0.25bp;
+          fi;
+      fi;
+      endfor;
+      if vala[1]<vala[2]:
+      draw Projette(Fc[vala[1]][2])--Projette(Fc[vala[1]][3]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][1])--Projette(Fc[vala[2]][4]);% withpen pencircle scaled0.25;
+      else:
+      draw Projette(Fc[vala[1]][1])--Projette(Fc[vala[1]][4]);% withpen pencircle scaled0.25;
+      draw Projette(Fc[vala[2]][2])--Projette(Fc[vala[2]][3]);% withpen pencircle scaled0.25;
+      fi;
+enddef;
+
+            vardef AffichageObjetCalotte[]=
+      save _affi;
+  picture _affi;
+  color Fc[][];color cou[];
+  tapj:=0;
+  for k=0 upto apj.@:
+    cpt[tapj]:=tapj;
+    Fc[tapj].nb:=OTFc.@[k].nb;
+    for l=1 upto Fc[tapj].nb:
+      Fc[tapj][l]:=OTFc.@[k][l];
+    endfor;
+    Fc[tapj].iso:=OTFc.@[k].iso;
+    cou[tapj]:=if perso.@:scantokens(couleurperso) else: coul.@[k] fi;
+    ALT[tapj]:=ALT.@[k];
+    Vue[tapj]:=Vue.@[k];
+    tapj:=tapj+1;
+  endfor;
+  tapj:=tapj-1;
+  QS(0,tapj);
+  minvue:=4000;
+    for k=1 step 1 until tapj:
+    if cpt[k]>1:
+    if Vue[cpt[k]]:
+    if cpt[k]<minvue:
+    minvue:=cpt[k];
+    fi;
+          fi;
+          fi;
+          endfor;
+          for k=0 upto 11:
+          draw for l=1 upto 2:%Fc[minvue+k*72].nb:
+	    Projette(Fc[minvue+k*72][l])--
+	  endfor
+	  cycle;% withpen pencircle scaled0.25bp;
+          draw for l=3 upto 4:%Fc[minvue+k*72].nb:
+	    Projette(Fc[minvue+35+k*72][l])--
+	  endfor
+	  cycle;% withpen pencircle scaled0.25bp;
+          endfor;
+enddef;
+
 vardef AffichagePfC[]=
   save _affi;
   picture _affi;
@@ -404,6 +661,55 @@ vardef DessineFusion=
   endfor;
 enddef;
 
+vardef DessineFusionCoul=
+  save _fusion;
+  picture _fusion;
+  tapj:=0;
+  color Fc[][];color cou[];
+  for l=1 upto nbobj:
+    for k=0 upto apj[l]:
+      cpt[tapj]:=tapj;
+      cou[tapj]:=Outcolor[l];
+      Fc[tapj].nb:=OTFc[l][k].nb;
+      for p=1 upto Fc[tapj].nb:
+	Fc[tapj][p]:=OTFc[l][k][p];
+      endfor;
+      Fc[tapj].iso:=OTFc[l][k].iso;
+      ALT[tapj]:=ALT[l][k];
+      Vue[tapj]:=Vue[l][k];
+      if Ferme[l]:
+	if Vue[tapj]=false:
+	  tapj:=tapj-1;
+	fi;
+      fi;
+      tapj:=tapj+1;
+    endfor;
+  endfor;
+  tapj:=tapj-1;
+  QS(0,tapj);
+  for k=0 upto tapj:
+    fill for l=1 upto Fc[cpt[k]].nb:
+      Projette(Fc[cpt[k]][l])--
+    endfor
+    cycle withcolor if Vue[cpt[k]]:
+      abs(lumin(cpt[k]))*cou[cpt[k]] fi;
+    if traits:
+      draw for l=1 upto Fc[cpt[k]].nb:
+	Projette(Fc[cpt[k]][l])--
+      endfor
+      cycle withpen pencircle scaled0.25bp;
+      %add by cp 22/08/2011
+	else:
+	  draw for l=1 upto Fc[cpt[k]].nb:
+	      Projette(Fc[cpt[k]][l])--
+	  endfor
+	  cycle withcolor if Vue[cpt[k]]:
+	       abs(lumin(cpt[k]))*cou[cpt[k]] fi;
+	  %fin add
+    fi;
+  endfor;
+enddef;
+
 vardef Objettore[](expr Rn,rn)=
   Outcolor.@:=outcolor;
   Incolor.@:=incolor;
@@ -728,6 +1034,37 @@ vardef Objetsphere[](expr Rn)=
   vardef Famille(expr u,v)=(R*(cos(u)*cos(v),cos(u)*sin(v),sin(u))) enddef;
   umin:=-pi/2; umax:=pi/2; upas:=pi/nb;
   vmin:=-pi; vpas:=2*pi/subh; vmax:=pi;
+  apj:=0;
+  %On crée les facettes et on calcule la profondeur en Z.
+  for k=0 upto (nb-1):
+    for l=0 upto (subh-1):
+      tcpt.@[apj]:=apj;
+      OTFc.@[apj].nb:=4;
+      OTFc.@[apj][1]:=Image(Famille(umin+(k+1)*upas,vmin+l*vpas));
+      OTFc.@[apj][2]:=Image(Famille(umin+k*upas,vmin+l*vpas));
+      OTFc.@[apj][3]:=Image(Famille(umin+k*upas,vmin+(l+1)*vpas));
+      OTFc.@[apj][4]:=Image(Famille(umin+(k+1)*upas,vmin+(l+1)*vpas));
+      OTFc.@[apj].iso:=(OTFc.@[apj][1]+OTFc.@[apj][2]+OTFc.@[apj][3]+OTFc.@[apj][4])/4;
+      ALT.@[apj]:=-Zpart(GCoord(OTFc.@[apj].iso));
+      if ProduitScalaire(Oeil-OTFc.@[apj].iso,Normal(OTFc.@[apj].iso,OTFc.@[apj][1],OTFc.@[apj][2]))>=0:
+	Vue.@[apj]:=true;coul.@[apj]:=outcolor;
+      else:
+	Vue.@[apj]:=false;coul.@[apj]:=incolor;
+      fi;
+      apj:=apj+1;
+    endfor;
+  endfor;
+  apj.@:=apj-1;
+enddef;
+
+vardef Objetdemispherebasse[](expr Rn)=
+  Outcolor.@:=outcolor;
+  Incolor.@:=incolor;
+  if creux:Ferme.@:=false else: Ferme.@:=true fi;
+  scantokens("numeric "&substring(0,1) of Rn&"; "&Rn&";");
+  vardef Famille(expr u,v)=(R*(cos(u)*cos(v),cos(u)*sin(v),sin(u))) enddef;
+  umin:=-pi/2; umax:=0; upas:=0.5*pi/nb;
+  vmin:=-pi; vpas:=2*pi/subh; vmax:=0;
   apj:=0;
   %On crée les facettes et on calcule la profondeur en Z.
   for k=0 upto (nb-1):
@@ -1439,8 +1776,8 @@ vardef Objettetraedre[](expr ar)=
   tcpt.@[0]:=0;
   OTFc.@[0].nb:=3;
   OTFc.@[0][1]:=Image(Sommet0);
-  OTFc.@[0][2]:=Image(Sommet2);
-  OTFc.@[0][3]:=Image(Sommet1);
+  OTFc.@[0][2]:=Image(Sommet1);
+  OTFc.@[0][3]:=Image(Sommet2);
   OTFc.@[0].iso:=(OTFc.@[0][1]+OTFc.@[0][2]+OTFc.@[0][3])/3;
   tcpt.@[1]:=1;
   OTFc.@[1].nb:=3;

@@ -1,30 +1,40 @@
 %%%
 % Puissances 4
 %%%
-\setKVdefault[ClesPQuatre]{Couleur=Gray,Largeur=2cm,LargeurUn=2cm,Multiplication,Entier,Nombre,Exposant=false,Libre=false,Texte=false,Echelle=2}%
+\def\filedatePquatre{2024/08/04}%
+\def\fileversionPquatre{0.1}%
+\message{-- \filedatePquatre\space v\fileversionPquatre}%
+%
+\setKVdefault[ClesPQuatre]{Couleur=Gray,Largeur=2cm,LargeurUn=2cm,Multiplication,Entier,Nombre,Exposant=false,Libre=false,Texte=false,Echelle=2,Correction=false}%
 \defKV[ClesPQuatre]{Addition=\setKV[ClesPQuatre]{Multiplication=false}}%
 \defKV[ClesPQuatre]{Relatif=\setKV[ClesPQuatre]{Entier=false}}%
 \defKV[ClesPQuatre]{Puissance=\setKV[ClesPQuatre]{Exposant}}%
 \defKV[ClesPQuatre]{Autre=\setKV[ClesPQuatre]{Nombre=false}\setKV[ClesPQuatre]{Libre}}%
 \defKV[ClesPQuatre]{Consignes=\setKV[ClesPQuatre]{Texte}}%
+\defKV[ClesPQuatre]{Solution=\setKV[ClesPQuatre]{Correction}\setsepchar{,}\ignoreemptyitems\readlist*\PQuatreListeS{#1}\reademptyitems}%
+\defKV[ClesPQuatre]{Graine=\PfCGraineAlea{#1}}%
 
 \newtoks\toklistePQuatreh%
 \newtoks\toklistePQuatrev%
+\newtoks\toklistePQuatres%
 \def\UpdatetoksPQuatreh#1\nil{\addtotok\toklistePQuatreh{"#1",}}%
 \def\UpdatetoksPQuatrev#1\nil{\addtotok\toklistePQuatrev{"#1",}}%
+\def\UpdatetoksPQuatres#1\nil{\addtotok\toklistePQuatres{"#1",}}%
 
 \NewDocumentCommand\PQuatre{o +m}{%
   \useKVdefault[ClesPQuatre]%
   \toklistePQuatreh{}%
   \toklistePQuatrev{}%
+  \toklistePQuatres{}%
   \setKV[ClesPQuatre]{#1}%
   \ifboolKV[ClesPQuatre]{Nombre}{%
     \ifboolKV[ClesPQuatre]{Exposant}{%
-      \def\PQuatreListe{$10^{-10}$,$10^{-9}$,$10^{-8}$,$10^{-7}$,$10^{-6}$,$10^{-5}$,$10^{-4}$,$10^{-3}$,$10^{-2}$,$10^{2}$,$10^{3}$,$10^{4}$,$10^{5}$,$10^{6}$,$10^{7}$,$10^{8}$,$10^{9}$,$10^{10}$}%
+      \def\PQuatreListe{-10,-9,-8,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9,10}%
       \MelangeListe{\PQuatreListe}{7}%
-      \readlist*\PQuatreListeH{\faa}%
+      \ignoreemptyitems\readlist*\PQuatreListeH{\faa}%
       \MelangeListe{\PQuatreListe}{7}%
-      \readlist*\PQuatreListeV{\faa}%
+      \ignoreemptyitems\readlist*\PQuatreListeV{\faa}%
+      \reademptyitems
       \foreachitem\compteur\in\PQuatreListeH{\expandafter\UpdatetoksPQuatreh\compteur\nil}%
       \foreachitem\compteur\in\PQuatreListeV{\expandafter\UpdatetoksPQuatrev\compteur\nil}%
     }{%
@@ -39,7 +49,7 @@
         \foreachitem\compteur\in\PQuatreListeV{\expandafter\UpdatetoksPQuatrev\compteur\nil}%
       }{%
         % On choisit aléatoirement les listes de nombres de -10 à -2 union 2 à 10 en faisant deux listes : horizontale et verticale
-        \def\PQuatreListe{$-10$,$-9$,$-8$,$-7$,$-6$,$-5$,$-4$,$-3$,$-2$,2,3,4,5,6,7,8,9,10}%
+        \def\PQuatreListe{-10,-9,-8,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9,10}%
         \MelangeListe{\PQuatreListe}{7}%
         \readlist*\PQuatreListeH{\faa}%
         \MelangeListe{\PQuatreListe}{7}%
@@ -55,6 +65,10 @@
     \setsepchar{,}%
     \foreachitem\compteur\in\PQuatreListes[1]{\expandafter\UpdatetoksPQuatrev\compteur\nil}%
     \foreachitem\compteur\in\PQuatreListes[2]{\expandafter\UpdatetoksPQuatreh\compteur\nil}%
+    % On crée éventuellement la liste des solutions
+    \ifboolKV[ClesPQuatre]{Correction}{%
+      \foreachitem\compteur\in\PQuatreListeS{\expandafter\UpdatetoksPQuatres\compteur\nil}%
+    }{}%
   }%
   % Une fois les listes construites, on dessine et on place les listes.
   \PQuatreGrille{\the\toklistePQuatrev}{\the\toklistePQuatreh}%
@@ -69,10 +83,12 @@
     PQEchelle=\useKV[ClesPQuatre]{Echelle};
     color PQfond;
     PQfond=\useKV[ClesPQuatre]{Couleur};
-    boolean PQLibre,PQMultiplication,PQTexte;
+    boolean PQLibre,PQMultiplication,PQTexte,Correction,Exposant;
     PQLibre:=\useKV[ClesPQuatre]{Libre};
     PQMultiplication=\useKV[ClesPQuatre]{Multiplication};
     PQTexte:=\useKV[ClesPQuatre]{Texte};
+    Correction=\useKV[ClesPQuatre]{Correction};
+    Exposant=\useKV[ClesPQuatre]{Exposant};
 
     if PQTexte:
     string PQConsignes;
@@ -111,6 +127,12 @@
     if PQLibre:
     if PQTexte:
     label.llft(TEX("\begin{minipage}{"&decimal(PQLargeurUn)&"pt}"&PQConsignes&"\end{minipage}") scaled PQEchelle,A);
+    else:
+    if PQMultiplication:
+    label.llft(TEX("$\times$") scaled PQEchelle,A);
+    else:
+    label.llft(TEX("$+$") scaled PQEchelle,A);
+    fi;
     fi;
     else:
     if PQMultiplication:
@@ -119,24 +141,72 @@
     label.llft(TEX("$+$") scaled PQEchelle,A);
     fi;
     fi;
+    %
+    string Textev[];
+    string Texteh[];
     labeloffset:=labeloffset/2;
     vardef Vertical(text t)=
     n:=0;
     for p_=t:
+    if PQLibre:
     label.lft(TEX(p_) scaled PQEchelle,A+(0,n*PQLargeur+PQLargeur/2));
+    else:
+    if Exposant:
+    label.lft(TEX("$10^{"&p_&"}$") scaled PQEchelle,A+(0,n*PQLargeur+PQLargeur/2));
+    else:
+    label.lft(TEX("\num{"&p_&"}") scaled PQEchelle,A+(0,n*PQLargeur+PQLargeur/2));
+    fi;
+    Textev[n]=p_;
+    fi;
     n:=n+1;
     endfor;
     enddef;
     vardef Horizontal(text t)=
     n:=0;
     for p_=t:
+    if PQLibre:
     label.bot(TEX(p_) scaled PQEchelle,A+(n*PQLargeur+PQLargeur/2,0));
+    else:
+    if Exposant:
+    label.bot(TEX("$10^{"&p_&"}$") scaled PQEchelle,A+(n*PQLargeur+PQLargeur/2,0));
+    else:
+    label.bot(TEX("\num{"&p_&"}") scaled PQEchelle,A+(n*PQLargeur+PQLargeur/2,0));
+    fi;
+    Texteh[n]=p_;
+    fi;
     n:=n+1;
     endfor;
     enddef;
     labeloffset:=labeloffset*4;
     Vertical(#1);
     Horizontal(#2);
+    % on affiche la solution
+    vardef AfficheSolution(text t)=
+    n:=0;
+    for p_=t:
+    label(TEX(p_),M[n mod nclargeur][n div nchauteur]);
+    n:=n+1;
+    endfor;
+    enddef;
+    if Correction:
+    if PQLibre=false:
+    for k=0 upto (nclargeur-1):
+    for l=0 upto (nchauteur-1):
+    if Exposant:
+    label(TEX("\Large$10^{\fpeval{"&Texteh[k]&"+"&Textev[l]&"}}$"),M[k][l]);
+    else:
+    if PQMultiplication:
+    label(TEX("\Huge\num{\fpeval{"&Texteh[k]&"*"&Textev[l]&"}}"),M[k][l]);
+    else:
+    label(TEX("\Huge\num{\fpeval{"&Texteh[k]&"+"&Textev[l]&"}}"),M[k][l]);
+    fi;
+    fi;
+    endfor;
+    endfor;
+    else:
+    AfficheSolution(\the\toklistePQuatres);
+    fi;
+    fi;
   \end{mplibcode}
   \else%
   \begin{mpost}[mpsettings={Largeur=\useKV[ClesPQuatre]{Largeur};Largeur=\useKV[ClesPQuatre]{Largeur};LargeurUn=\useKV[ClesPQuatre]{LargeurUn};Echelle=\useKV[ClesPQuatre]{Echelle};color fond;fond=\useKV[ClesPQuatre]{Couleur};boolean Libre,Multiplication,Texte;Libre:=\useKV[ClesPQuatre]{Libre};Multiplication=\useKV[ClesPQuatre]{Multiplication};Texte:=\useKV[ClesPQuatre]{Texte};if Texte:string Consignes;Consignes=\useKV[ClesPQuatre]{Consignes};fi;}]

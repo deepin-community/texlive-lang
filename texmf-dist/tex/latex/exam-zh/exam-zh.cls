@@ -1,12 +1,12 @@
 %
-% Copyright (c) 2022 Zeping Lee
+% Copyright (c) 2024 Zeping Lee
 % Released under the LaTeX Project Public License v1.3c License.
 % Repository: https://gitee.com/xkwxdyy/exam-zh
 %
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2023-06-28} {v0.1.27} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2024-02-15} {v0.2.1} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -87,6 +87,7 @@
 \RequirePackage { exam-zh-symbols }
 \RequirePackage { exam-zh-chinese-english }
 \RequirePackage { exam-zh-textfigure }
+\RequirePackage { exam-zh-math }
 
 \AtEndPreamble
   {
@@ -418,6 +419,8 @@
           }
         \clearpage
       }
+    % 修复 section 的超链接跳转问题
+    \int_gincr:N \c@chapter
   }
 
 % 纸张和页面布局

@@ -1,6 +1,10 @@
 %%%
 % Fonction
 %%%
+\def\filedateFonction{2024/08/04}%
+\def\fileversionFonction{0.1}%
+\message{-- \filedateFonction\space v\fileversionFonction}%
+%
 \setKVdefault[ClesFonction]{Nom=f,Variable=x,Calcul=x,Tableau=false,Largeur=5mm,Ecriture=false,Definition=false,Points=false,Tangentes=false,PasX=1,PasY=1,UniteX=1,UniteY=1,Prolonge=false,Trace=false,Catmull=false,Splines=false,Lagrange=false,Epaisseur=1,Couleur=black,CouleurTrace=black,PointsCourbe=true,Codes=false,Origine={(0,0)},Vide=false}
 \defKV[ClesFonction]{Traces=\setKV[ClesFonction]{Codes}}%
 
@@ -22,18 +26,20 @@
     \setKV[TraceG]{#1}%
     \tokPfCListeDesFonctions{}%
     \tokPfCListeDesNomsFonctions{}%
-    \xdef\PfCFooFn{\useKV[ClesFonction]{Calcul}}
-    \xdef\PfCFooNomFn{\useKV[TraceG]{NomCourbe}}
+    \xdef\PfCFooFn{\useKV[ClesFonction]{Calcul}}%
+    \xdef\PfCFooNomFn{\useKV[TraceG]{NomCourbe}}%
     \ifx\bla\PfCFooFn\bla%
-    \else
-    \readlist*\ListeDesFonctions{\PfCFooFn}
+    \else%
+      \setsepchar{,}\ignoreemptyitems
+      \readlist*\ListeDesFonctions{\PfCFooFn}%
+      \reademptyitems
     \foreachitem\compteur\in\ListeDesFonctions{\expandafter\UpdatePfCListeDesFonctions\compteur\nil}%
-    \fi
-    \ifx\bla\PfCFooNomFn\bla
-    \else
-    \readlist*\ListeDesNomsFonctions{\PfCFooNomFn}
+    \fi%
+    \ifx\bla\PfCFooNomFn\bla%
+    \else%
+    \readlist*\ListeDesNomsFonctions{\PfCFooNomFn}%
     \foreachitem\compteur\in\ListeDesNomsFonctions{\expandafter\UpdatePfCListeDesNomsFonctions\compteur\nil}%
-  \fi
+  \fi%
   \tokPfCLabelX{}%
   \tokPfCLabelY{}%
   \addtotok\tokPfCLabelX{"\useKV[TraceG]{LabelX}"}%
@@ -79,7 +85,7 @@
           \MPCourbeNew{\PfCFooListePoints}%
         }%
       }%
-    }
+    }%
     }{%
       \setsepchar{,}\ignoreemptyitems%
       \readlist*\ListeFonction{#2}%
@@ -463,6 +469,30 @@ x.u:=#2;
     else:
     draw courbe1(MinX,MaxX,25,Lagrange(x)(#1)) withpen pencircle scaled Epaisseur withcolor CoulTrace;
     fi;
+    % Détermination des MinY et MaxY
+%    MinY:=Lagrange(MinX)(#1);
+    for k=0 upto 100:
+    if Lagrange(MinX+(k/100)*(MaxX-MinX))(#1)<MinY:
+    MinY:=Lagrange(MinX+(k/100)*(MaxX-MinX))(#1);
+    fi;
+    endfor;
+    %for k=0 upto 100:
+    %if Lagrange(MinX+(k/100)*(MaxX-MinX))(#2)<MinY:
+    %MinY:=Lagrange(MinX+(k/100)*(MaxX-MinX))(#2);
+    %fi;
+    %endfor;
+%    MaxY:=Lagrange(MinX)(#1);
+    for k=0 upto 100:
+    if Lagrange(MinX+(k/100)*(MaxX-MinX))(#1)>MaxY:
+    MaxY:=Lagrange(MinX+(k/100)*(MaxX-MinX))(#1);
+    fi;
+    endfor;
+    %for k=0 upto 100:
+    %if Lagrange(MinX+(k/100)*(MaxX-MinX))(#2)>MaxY:
+    %MaxY:=Lagrange(MinX+(k/100)*(MaxX-MinX))(#2);
+    %fi;
+    %endfor;
+    %%%
     path cadreexterieur;
     cadreexterieur=(((MinX-1)*X.u*cm,(floor(MinY)-1)*Y.u*cm)--((MaxX+1)*X.u*cm,(floor(MinY)-1)*Y.u*cm)--((MaxX+1)*X.u*cm,(floor(MaxY)+1)*Y.u*cm)--((MinX-1)*X.u*cm,(floor(MaxY)+1)*Y.u*cm)--cycle);
     clip currentpicture to cadreexterieur;
@@ -1223,6 +1253,17 @@ vardef Lagrange(expr valeur)(text t)=
   % 
   RetiensCouleur(\useKV[TraceG]{CouleurTrace});
   %
+  numeric styletrace[];
+  vardef RetiensStyle(text t)=
+  n:=0;
+  for p_=t:
+  n:=n+1;
+  styletrace[n]=p_;
+  endfor;
+  enddef;
+  %
+  RetiensStyle(\useKV[TraceG]{StyleTrace});
+  %
   pair Origine,DecalageOrigine;
   Origine=(xmin,ymin)+\useKV[TraceG]{Origine};
   DecalageOrigine=\useKV[TraceG]{Origine};
@@ -1279,6 +1320,19 @@ vardef Lagrange(expr valeur)(text t)=
   n:=0;
   for p_=texto:
   n:=n+1;
+  if unknown styletrace[n]:
+  drawoptions();
+  else:
+  if styletrace[n]=1:
+  drawoptions(dashed evenly);
+  elseif styletrace[n]=2:
+  drawoptions(dashed withdots);
+  elseif styletrace[n]=3:
+  drawoptions(dashed dashpattern(on6 off3 on1.5 off3));
+  else:
+  drawoptions();
+  fi;
+  fi;
   draw courbe[n](borneinf[n],bornesup[n],100)(scantokens p_) withpen (pencircle scaled Epaisseur) withcolor if unknown colortrace[n]:black else: colortrace[n] fi;
   endfor;
   enddef;
@@ -1393,6 +1447,9 @@ vardef Lagrange(expr valeur)(text t)=
     trace u*(xmin-grillex,k)--u*(xmax+grillex,k);
     endfor;
     drawoptions();
+    else:
+    grillex:=0;
+    grilley:=0;
     fi;
     if Graduations:
     for k=gradx step gradx until (((xmax-xmin)-xpart(DecalageOrigine))*pasx):
@@ -1444,11 +1501,12 @@ vardef Lagrange(expr valeur)(text t)=
     else:
     DessineCourbes(#1);
     NommeCourbes(#2);
-    if Grille:
     clip currentpicture to polygone(u*(xmin-grillex,ymin-grilley),u*(xmax+grillex,ymin-grilley),u*(xmax+grillex,ymax+grilley),u*(xmin-grillex,ymax+grilley));
+    if Grille:
+    %clip currentpicture to polygone(u*(xmin-grillex,ymin-grilley),u*(xmax+grillex,ymin-grilley),u*(xmax+grillex,ymax+grilley),u*(xmin-grillex,ymax+grilley));
     draw polygone(u*(xmin-grillex,ymin-grilley),u*(xmax+grillex,ymin-grilley),u*(xmax+grillex,ymax+grilley),u*(xmin-grillex,ymax+grilley)) withcolor 0.75white;
     else:
-    clip currentpicture to polygone(u*(xmin,ymin),u*(xmax,ymin),u*(xmax,ymax),u*(xmin,ymax));
+    %clip currentpicture to polygone(u*(xmin,ymin),u*(xmax,ymin),u*(xmax,ymax),u*(xmin,ymax));
     fi;
     % 
     if Code:

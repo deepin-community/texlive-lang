@@ -17,7 +17,7 @@
 \usepackage{multicol}
 \usepackage{alltt,verbatim}
 
-\newcommand{\tlcurrentyear}{2023}
+\newcommand{\tlcurrentyear}{2024}
 \newcommand{\AllTeX}{All\TeX}
 \newcommand{\TL}{\TeX\ Live\xspace}
 \newcommand{\email}[1]{\texttt{#1}}
@@ -102,9 +102,7 @@
 \usepackage{tex4ht}
 
 
-
 \begin{document}
-
 
 \begin{titlepage}
 
@@ -409,8 +407,8 @@ Der Standard der Verzeichnisstruktur von \TL sieht wie folgt aus:
 \begin{description}
   \item[Systemweites Wurzelverzeichnis] kann \TL{}-Versionen aus mehreren Jahren beinhalten:
   \begin{description}
-    \item[2022] Eine Vorversion von \TL.
-    \item[2023] Die aktuelle Version.
+    \item[2023] Eine Vorversion von \TL.
+    \item[2024] Die aktuelle Version.
     \begin{description}
       \item [bin] ~
       \begin{description}
@@ -639,6 +637,9 @@ Hinweis: Wenn Sie einen eigenen Mirror von \dirname{tlnet} betreiben, dann befin
 > \Ucom{install-tl-windows.bat -help}
 \end{alltt}
 
+Füge den Aufrufen eine \texttt{.bat}-Erweiterung hinzu, wenn das gleiche Verzeichnis auch die \texttt{install-tl-windows.exe} enthält. Dies ist normalerweise nicht der Fall, es sei denn, Sie haben das Verzeichnis \dirname{tlnet} lokal gespiegelt.
+
+Nicht-ASCII-Zeichen im Pfad für die \TL\-Installation sollten vermieden werden. Diese können insbesondere unter Windows 11 ein Problem sein, wo Benutzer gezwungen sind, ein Microsoft-Netzwerkkonto zu verwenden. Einige Problemumgehungen finden Sie unter \url{https://tug.org/texlive/windows.html\#nonascii}.
 
 \begin{figure}[tb]
 \begin{boxedverbatim}
@@ -816,7 +817,7 @@ beschrieben. Als Wurzelverzeichnis für \TL (\dirname{TEXDIR}) wird unter Window
 
 Prinzipiell können Sie diesen Pfad problemlos ändern, z.\,B. wenn Sie \TL als Standardnutzer und nict als Admin installieren wollen bzw. keine Schreibrechte in dem oben angegebenen Verzeichnis besitzen.
 
-Auf Wunsch können Sie \TL also auch in Ihrem Home-Verzeichnis installieren, wenn Sie sowieso der einzige Nutzer von \TL auf Ihrem Rechner sind. Für Ihr Home-Verzeichnis können Sie den Pfad ">|~|"< verwenden und so beispielsweise \TL nach  |~/texlive/2023| installieren.
+Auf Wunsch können Sie \TL also auch in Ihrem Home-Verzeichnis installieren, wenn Sie sowieso der einzige Nutzer von \TL auf Ihrem Rechner sind. Für Ihr Home-Verzeichnis können Sie den Pfad ">|~|"< verwenden und so beispielsweise \TL nach  |~/texlive/2024| installieren.
 
 Wir empfehlen Ihnen, die Jahreszahl im Verzeichnisnamen beizubehalten. So können Sie von Jahr zu Jahr einfach die neue Version testen, ohne die alte zu entsorgen. Bei Bedarf können Sie einen symbolischen
 Link (z.B. \dirname{/usr/local/texlive-cur}) verwenden, der jeweils auf das Verzeichnis der aktuellen Version von \TL verweist.
@@ -919,8 +920,7 @@ verwenden. Die wichtigsten sind:
   Installationen auf mehreren Rechnern realisieren wollen, ohne alle Auswahlschritte der Installation immer
   wieder neu durchführen zu müssen.
 
-\item [-repository {\textsl{url/path}}] zur Auswahl einer Installationsquelle,
-  für weitere Erläuterung siehe den nächsten Kapitel.
+\item [-repository {\textsl{url/path}}] zur Auswahl einer Installationsquelle, für weitere Erläuterung siehe den nächsten Kapitel.
 
 
 \item[-in-place] Sollten Sie schon ein rsync, svn, oder eine andere Kopie von 
@@ -943,10 +943,7 @@ wobei Sie natürlich statt |ctan.example.org| einen echten Servernamen
 verwenden und wahrscheinlich auch den Rest der URL anpassen müssen.
 Eine Auflistung von \CTAN-Servern finden Sie unter \url{https://ctan.org/mirrors}.
 
-Falls Sie ein lokales Repository verwenden (also entweder direkt einen
-Verzeichnispfad oder eine \texttt{file:/}-URL angeben), dann werden
-bevorzugt Archivdateien in einem Unterverzeichnis \dirname{archive} des
-Repository verwendet, selbst wenn ausgepackte Dateien vorhanden sind.
+Falls Sie ein lokales Repository verwenden (also entweder direkt einen Verzeichnispfad oder eine \texttt{file:/}-URL angeben), dann werden bevorzugt Archivdateien in einem Unterverzeichnis \dirname{archive} des Repository verwendet, selbst wenn ausgepackte Dateien vorhanden sind.
 
 \section{Aufgaben im Anschluss an die Installation}\label{sec:postinstall}
 
@@ -975,27 +972,25 @@ aufgeführt, wie die Befehle zum Setzen der Umgebungsvariablen (z.\,B. in \filen
 aussehen könnten:
 
 \begin{verbatim}
-PATH=/usr/local/texlive/2023/bin/x86_64-linux:$PATH; export PATH
-MANPATH=/usr/local/texlive/2023/texmf-dist/doc/man:$MANPATH; export MANPATH
-INFOPATH=/usr/local/texlive/2023/texmf-dist/doc/info:$INFOPATH; export INFOPATH
+PATH=/usr/local/texlive/2024/bin/x86_64-linux:$PATH; export PATH
+MANPATH=/usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH; export MANPATH
+INFOPATH=/usr/local/texlive/2024/texmf-dist/doc/info:$INFOPATH; export INFOPATH
 \end{verbatim}
 
 
-\noindent Für \prog{csh} oder \prog{tcsh} erfolgt die Konfiguration in der Regel in der Datei~\filename{\$HOME/.cshrc}
-und könnte so aussehen:
+\noindent Für \prog{csh} oder \prog{tcsh} erfolgt die Konfiguration in der Regel in der Datei~\filename{\$HOME/.cshrc} und könnte so aussehen:
 
 \begin{verbatim}
-setenv PATH /usr/local/texlive/2023/bin/x86_64-linux:$PATH
-setenv MANPATH /usr/local/texlive/2023/texmf-dist/doc/man:$MANPATH
-setenv INFOPATH /usr/local/texlive/2023/texmf-dist/doc/info:$INFOPATH
+setenv PATH /usr/local/texlive/2024/bin/x86_64-linux:$PATH
+setenv MANPATH /usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH
+setenv INFOPATH /usr/local/texlive/2024/texmf-dist/doc/info:$INFOPATH
 \end{verbatim}
 
 \subsection{Systemweites Setzen von Umgebungsvariablen}
 \label{sec:envglobal}
 
 
-Wenn Sie als Administrator die Umgebungsvariablen global für das gesamte System setzen wollen,
-gehen wir davon aus, dass Sie sich mit der grundlegenden Systemadministration auskennen.
+Wenn Sie als Administrator die Umgebungsvariablen global für das gesamte System setzen wollen, gehen wir davon aus, dass Sie sich mit der grundlegenden Systemadministration auskennen.
 
 Daher hier nur zwei Hinweise: 
 
@@ -1005,8 +1000,8 @@ Daher hier nur zwei Hinweise:
 hinzu zu fügen:
 
 \begin{verbatim}
-MANPATH_MAP /usr/local/texlive/2023/bin/ix86_64-linux \
-            /usr/local/texlive/2023/texmf-dist/doc/man
+MANPATH_MAP /usr/local/texlive/2024/bin/ix86_64-linux \
+            /usr/local/texlive/2024/texmf-dist/doc/man
 \end{verbatim}
 
 \item Prüfen Sie, ob es auf Ihrem System eine Datei \filename{/etc/environment} gibt, in der die
@@ -1449,12 +1444,12 @@ running post install action for xetex
 install: xetex-def
 ...
 running mktexlsr
-mktexlsr: Updating /usr/local/texlive/2023/texmf-dist/ls-R...
+mktexlsr: Updating /usr/local/texlive/2024/texmf-dist/ls-R...
 ...
 running fmtutil-sys --missing
 ...
 Transcript written on xelatex.log.
-fmtutil: /usr/local/texlive/2023/texmf-var/web2c/xetex/xelatex.fmt installed.
+fmtutil: /usr/local/texlive/2024/texmf-var/web2c/xetex/xelatex.fmt installed.
 \end{alltt}
 
 Wie man sieht, beachtet \prog{tlmgr} die Abhängigkeiten von Paketen und installiert im obigen Beispiel von \XeTeX{} benötigte Komponenten nach. Weiterhin werden automatisch im Anschluss die Dateilisten der Verzeichnisbäume aktualisiert und fehlende Formate generiert.
@@ -1618,18 +1613,14 @@ erhöht werden soll, verwenden Sie stattdessen einfach \code{HKEY\_CURRENT\_USER
 
 \chapter{Anleitung zum Web2C-System}
 
-Web2C besteht aus einer Reihe von Programmen, die zusammen ein komplettes
-\TeX-System darstellen. Dazu gehören natürlich \TeX, \MF, \MP, {\BibTeX} usw.
+Web2C besteht aus einer Reihe von Programmen, die zusammen ein komplettes \TeX-System darstellen. Dazu gehören natürlich \TeX, \MF, \MP, {\BibTeX} usw.
 
 Die erste Implementierung eines \TeX-Systems in der Programmiersprache C stammt von Tomas~Rokicki und datiert zurück in das Jahr 1987. Rokicki benutzte als Basis sog. Change-Files unter \acro{UNIX}, die ursprünglich von Howard~Trickey und Pavel~Curtis entwickelt wurden. Tim~Morgan hat dieses System, für das der Name  Web-to-C\@ eingeführt wurde, gepflegt. 1990 hat Karl~Berry mit Unterstützung vieler Helfer die Weiterentwicklung übernommen und 1997 an Olaf~Weber weitergegeben, der es 2006 wieder an Karl zurückgab.
 
 Web2C läuft unter \acro{UNIX}, Windows, \macOS{}
 und auf weiteren Betriebssystemen. Es benutzt die
 Original-Quelldateien von Donald E.~Knuth und weitere in der
-Sprache \texttt{WEB} entwickelte Programme als Basis und übersetzt diese
-in C-Quell-Code. Darüber hinaus bietet das System viele Makros und
-Funktionen zur Nutzung der originalen \TeX-Software. Hier eine
-Liste der Basisprogramme eines \TeX-Systems:
+Sprache \texttt{WEB} entwickelte Programme als Basis und übersetzt diese in C-Quell-Code. Darüber hinaus bietet das System viele Makros und Funktionen zur Nutzung der originalen \TeX-Software. Hier eine Liste der Basisprogramme eines \TeX-Systems:
 
 \begin{description}
 \item[bibtex]   Verwalten von Bibliographien
@@ -3461,11 +3452,10 @@ erfordern macOS 10.14 oder höher (Mojave, Catalina, Big~Sur, Monterey). Die Bin
 
 Plattformen: Keine Änderungen an den Plattformen in diesem Jahr. Für das Release 2023 ist die Umstellung der Windows Binärdateien auf 64-Bit geplant. Eine gleichzeitige Unterstützung von 32-Bit und 64-Bit ist leider nicht möglich.
 
-\section{Gegenwart (\tlcurrentyear)}\label{tlcurrent}
-\label{sec:tlcurrent}
+\section{\TL 2023}\label{sec:2023news}
 
-Windows: wie vorab angekündigt enthält \TL{} jetzt 64-bit Windows
-Binärdateien anstelle von 32-bit Dateien. Das neue Verzeichnis für die Binaries lautet 
+
+Windows: wie vorab angekündigt enthält \TL{} jetzt 64-bit Windows Binärdateien anstelle von 32-bit Dateien. Das neue Verzeichnis für die Binaries lautet 
 daher \texttt{bin/windows}. Wir wissen, dass dies ein wenig Extra-Arbeit für Windows-Nutzer bedeutet, haben aber keine bessere Alternative gefunden. Siehe dazu die Webseite 
 (\url{https://tug.org/texlive/windows.html}).
 
@@ -3545,6 +3535,71 @@ Viewer für HINT Dokumente (erstellt von den \texttt{hitex} und
 \item Das \texttt{i386-cygwin} Verzeichnis für Binaries existiert nicht mehr, Cygwin unterstützt kein i386 mehr
 \end{itemize}
 
+\section{Gegenwart (\tlcurrentyear)}\label{tlcurrent}
+\label{sec:tlcurrent}
+
+
+Engine-unabhängige Änderungen (außer im ursprünglichen \TeX{}, e-\TeX{}, and Lua\TeX):
+
+\begin{itemize}
+\item Vermeide Abstürze, die durch \cs{output} and \cs{write} ausgelöst wurden.
+\item Kleinere Inner-Schleifen Optimierung.
+\end{itemize}
+
+\noindent Lua\TeX: 
+
+\begin{itemize}
+\item Prüfungen auf Lua-Level prüfen Datei-Zugriffe jetzt genau wie \TeX.
+\item Wenn der Lua-Wert \code{texconfig.trace\_extra\_newline} gesetzt ist, dann werden Leerzeilen im Log zwischen den Makro-Parametern ausgegeben. Von 2020--2023 war dies der Standard.
+\end{itemize}
+
+\noindent MetaPost: \begin{itemize}\raggedright
+\item Die MPFI Bibliothek für Intervall-Arithmetik wird jetzt mitgeliefert; mit \texttt{-{}-numbersystem=interval} wird sie aktiviert.
+\end{itemize}
+
+\noindent pdf\TeX: \begin{itemize}
+\item Verlässlichere Textextrahierung auf BigEndian Systemen.
+\item Mehr Checks für den Schutz vor kaputten pfb, fmt, pdf Dateien.
+\item Verhindere das Schreiben von korrupten PDFs durch unübliche PDF-Einbettungen.
+\item Handbuch wurde nach \LaTeX\ konvertiert und gründlich überarbeitet.
+\end{itemize}
+
+\noindent ep\TeX{}, eup\TeX{}: \begin{itemize}
+\item \texttt{ptekf} als neues Werkzeug zur einfachen Konvertierung von Encodings.
+\item \texttt{eptex} wird nicht mehr separat erzeugt; es läuft jetzt im \texttt{euptex} Legacy-Encoding Modus.
+\end{itemize}
+
+\noindent Xe\TeX{}: \begin{itemize}
+\item Unicode Zeichen im Dateinamen, die über BMP hinausgehen, werden unterstützt.
+\end{itemize}
+ 
+\noindent Dvipdfmx: \begin{itemize}
+\item Berechne den Zeitzonenversatz genau wie pdf\TeX.
+\item Überarbeitete Variation-Selektoren, um mit dem neuen Adobe-Japan1-UCS2 CMap arbeiten zu können.
+\item Fallback-Multibyte Zeichen in virtuellen Fonts für (u)p\TeX.
+\end{itemize}
+
+\noindent Kpathsea: \begin{itemize}
+\item Unterstützt einen erweiterten Check für sichere Dateinamen  unter  \code{TEXMF}[\code{SYS}]\code{VAR}, für Lua\AllTeX{}; neue Funktionen und korrespondierende \code{kpsewhich} Optionen.
+\item Unterstützt eine neue Variable \code{TEXMF\_OUTPUT\_DIRECTORY} (neben dem 
+traditionellen \code{TEXMFOUTPUT}), sodasd Unterprogramme auf \texttt{-{}-output-directory} zugreifen können.
+\end{itemize}
+
+\noindent CWEB: \begin{itemize}
+\item Unterstützt Lua\TeX{} als \TeX{} Engine.
+\item Fixt einen Buffer Overflow in Zeilen ohne Breakpoint.
+\end{itemize}
+
+\noindent \code{tlmgr}: \begin{itemize}
+\item Neue Aktion \code{bug} um Informationen zum Bug Reporting auszugeben.
+\item Erlaubt die Nutzung eines eigenen  Root Zertifikats auf allen Plattformen mit dem Zweck, LWP zu propagieren, insbesondere unter MacOS.
+\item Stelle fest, ob ein Remote Repository älter als die lokale Installation ist und verhindere ein Update aus der veralteten Quelle
+\item Unterstützt das Setzen der Papiergröße unter \ConTeXt{}.
+\item Stutze die Backups von tlpdb files für gespiegelte Repositories (main und tlcontrib).
+\end{itemize}
+
+\noindent Mac\TeX\ enthält jetzt das neueste Ghostscript 10.03.0, Updates von allen vier GUI Programmen, zusammen mit allen neuen TL Anpassungen. Die Binaries unterstützen noch macOS~10.14 (Mojave, 2018) und neuer. Ältere Versionen werden noch über \texttt{x86\_64-darwinlegacy} unterstützt.
+
 
 \section{Zukunft}
 
@@ -3569,4 +3624,6 @@ die \CTAN-Server im Verzeichnis \dirname{info/texlive} zur Verfügung gestellt. 
 einsehen.
 
 
+
 \end{document}
+

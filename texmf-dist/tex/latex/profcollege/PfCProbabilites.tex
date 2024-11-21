@@ -1,7 +1,11 @@
 %%%
 % Proba
 %%%
-\setKVdefault[ClesProba]{Echelle=false,Arbre=false,Branche=2,Angle=60,Rayon=0.25,LongueurEchelle=5,Affichage=0,Grille=1,Incline}
+\def\filedateProba{2024/08/15}%
+\def\fileversionProba{0.1a}%
+\message{-- \filedateProba\space v\fileversionProba}%
+%
+\setKVdefault[ClesProba]{Echelle=false,Arbre=false,Branche=2,Angle=60,Rayon=0.25,LongueurEchelle=5,Affichage=0,Grille=1,Incline,SansProba=false}
 
 \def\Updatetoksproba#1/#2\nil{\addtotok\toklistepointproba{"#1","\footnotesize #2",}}
 \def\Updatetoksprobapdf#1/#2\nil{\addtotok\toklistepointproba{"#1","\noexpand\footnotesize #2",}}
@@ -35,6 +39,8 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
+    boolean SansProba;
+    SansProba=\useKV[ClesProba]{SansProba};
     pair A,B,C[],D[];%les noeuds de l'arbre
     %Figure(-10u,-10u,10u,10u);
     A=u*(1,1);
@@ -58,8 +64,10 @@
     fi;
     marque_s:=marque_s*2;
     labeloffset:=labeloffset*3;
+    if SansProba=false:
     label.bot(btex 0 etex,A);
     label.bot(btex 1 etex,B);
+    fi;
     labeloffset:=labeloffset/3;
     n:=1;%compter les informations
     k:=1;% compter les informations noeud pour les placer
@@ -93,7 +101,7 @@
     toto(#2);
   \end{mplibcode}
   \else
-  \begin{mpost}[mpsettings={input PfCGeometrie;}]
+  \begin{mpost}[mpsettings={input PfCGeometrie;boolean SansProba;SansProba=\useKV[ClesProba]{SansProba};}]
     pair A,B,C[],D[];%les noeuds de l'arbre
     Figure(-10u,-10u,10u,10u);
     A=u*(1,1);
@@ -117,8 +125,10 @@
     fi;
     marque_s:=marque_s*2;
     labeloffset:=labeloffset*3;
+    if SansProba=false:
     label.bot(btex 0 etex,A);
     label.bot(btex 1 etex,B);
+    fi;
     labeloffset:=labeloffset/3;
     n:=1;%compter les informations
     k:=1;% compter les informations noeud pour les placer

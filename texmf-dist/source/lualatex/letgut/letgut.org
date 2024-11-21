@@ -2,7 +2,7 @@
 
 #+TITLE:     Support for the newsletter “La Lettre GUTenberg”
 #+AUTHOR:    Association GUTenberg
-#+EMAIL:     secretariat@gutenberg.eu.org
+#+EMAIL:     secretariat@gutenberg-asso.fr
 #+DESCRIPTION: ...
 #+KEYWORDS:  ...
 #+LANGUAGE:  en
@@ -54,7 +54,7 @@ new versions of the class on CTAN.
   % This field contains the version of the package.
   % The value is optional.
   % The value is restricted to 32 characters.
-  \version{0.9.7 2023-05-21}
+  \version{0.9.12 2024-10-30}
   % -------------------------------------------------------------------------
   % This field contains the name of the author(s).
   % The value is optional.
@@ -64,7 +64,7 @@ new versions of the class on CTAN.
   % This field contains the email address of the uploader.
   % The value is an email address.
   % The value is restricted to 255 characters.
-  \email{secretariat@gutenberg.eu.org}
+  \email{secretariat@gutenberg-asso.fr}
   % -------------------------------------------------------------------------
   % This field contains the name of the uploader.
   % The value is restricted to 255 characters.
@@ -131,11 +131,8 @@ new versions of the class on CTAN.
   % The value is optional.
   % The value is restricted to 8192 characters.
   \begin{announcement}
-  ### Changed
-  Announcement's title and toc entry possibly different (backward compatibility broken!)
-
   ### Fixed
-  `tabularray`'s needed library added.
+  Fatal error in case of to be attached files not found
   \end{announcement}
   % -------------------------------------------------------------------------
   % This field contains the one-liner for the package.
@@ -204,6 +201,48 @@ new versions of the class on CTAN.
   Versioning](https://semver.org/spec/v2.0.0.html).
 
   ## [Unreleased]
+
+  ## [0.9.12] - 2024-10-30
+
+  ### Fixed
+  Fatal error in case of to be attached files not found
+
+  ### Added
+  License in the README file
+
+  ## [0.9.11] - 2024-10-23
+
+  ### Fixed
+  - Bibliographic files not attached to the PDF
+
+  ## [0.9.10] - 2024-10-07
+
+  ### Changed
+  - Multiple rebuses handled
+  - Paper clips (links to source files of the articles) not in the magin anymore and separated by spaces
+  - Watermark letter and scale can now be specified
+
+  ### Fixed
+  - Wrong output with \terminal
+  - Title of publication in small capitals
+  - Options of `letgut-banner` never taken in account
+  - Not all included graphics attached to the PDF
+  - Variables wrongly local or not reset
+  - `\citeauthor` displayed family name in small caps
+
+  ## [0.9.9] - 2024-03-07
+
+  ### Fixed
+  Private scratch variables not declared.
+
+  ## [0.9.8] - 2024-02-29
+
+  ### Changed
+  - Drop use of l3keys2e, as advised.
+  - Announcements possibly neither in the ToC nor in the bookmarks.
+
+  ### Fixed
+  Floats not outside the article they belong to.
 
   ## [0.9.7] - 2023-05-21
 
@@ -308,18 +347,23 @@ letgut - Support for the newsletter “La Lettre GUTenberg”
 =========================================================
 
 About
--------
+-----
 This bundle includes a LaTeX class, a `.sty` file and an acronym file dedicated
 to the newsletter “La Lettre GUTenberg” of GUTenberg, the French TeX User Group.
 
 Release
 -------
-2023-05-21 v0.9.7
+2024-10-30 v0.9.12
 
 Development
 -----------
 Follow development, submit issues and suggest improvements at
 https://framagit.org/gutenberg/letgut.
+
+License
+-------
+Released under the LaTeX Project Public License v1.3c or later. See
+https://www.latex-project.org/lppl.txt#+end_src.
 #+end_src
 
 * How to                                                              :noexport:
@@ -388,13 +432,13 @@ the corresponding `.tex` file (which doesn't derive from an Org Mode file).
 % -------:| ----------------------------------------------------
 %  letgut:| Class for the newsletter “La Lettre GUTenberg”
 %  Author:| Association GUTenberg
-%  E-mail:| secretariat@gutenberg.eu.org
+%  E-mail:| secretariat@gutenberg-asso.fr
 % License:| Released under the LaTeX Project Public License
 %         | v1.3c or later
 %     See:| http://www.latex-project.org/lppl.txt
 %
-% Copyright (C) 1994-2023 by Association GUTenberg
-%                   <secretariat@gutenberg.eu.org>
+% Copyright (C) 1994-2024 by Association GUTenberg
+%                  <secretariat@gutenberg-asso.fr>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License (LPPL), either
@@ -438,14 +482,21 @@ We define some constant token lists immediately useful.
 
 #+begin_src  latex
   \ExplSyntaxOn
-  \tl_const:Nn \c__letgut_Lettre_tl { \emph{ Lettre } }
+  \tl_const:Nn \c__letgut_Lettre_plain_tl { Lettre }
+  \tl_const:Nn \c__letgut_Lettre_tl { \emph{ \c__letgut_Lettre_plain_tl } }
   \tl_const:Nn \c__letgut_Lettres_tl {
     \c__letgut_Lettre_tl \emph{ s }
   }
   \tl_const:Nn \c__letgut_gutenberg_tl { GUTenberg }
   \tl_const:Nn \c__letgut_association_tl { association }
+  \tl_const:Nn \c__letgut_Lettre_gutenberg_plain_tl {
+    \c__letgut_Lettre_plain_tl~\c_space_tl \c__letgut_gutenberg_tl
+  }
   \tl_const:Nn \c__letgut_Lettre_gutenberg_tl {
     \c__letgut_Lettre_tl~\c_space_tl \c__letgut_gutenberg_tl
+  }
+  \tl_const:Nn \c__letgut_la_lettre_gutenberg_plain_tl {
+    la~ \c__letgut_Lettre_gutenberg_plain_tl
   }
   \tl_const:Nn \c__letgut_la_lettre_gutenberg_tl {
     la~ \c__letgut_Lettre_gutenberg_tl
@@ -460,8 +511,8 @@ Now, we can announce the class name and its version:
 
 #+begin_src latex
   \ProvidesExplClass{letgut}
-  {2023-05-21}
-  {0.9.7}
+  {2024-10-30}
+  {0.9.12}
   {
     Class for the newsletter “The GUTenberg Letter”
   }
@@ -544,6 +595,78 @@ Some messages are declared for future use.
 :PROPERTIES:
 :CUSTOM_ID: ImplementationDeclarations-3j8g55h0jlj0
 :END:
+
+**** Scratch variables
+:PROPERTIES:
+:CUSTOM_ID: ImplementationDeclarationsScratchvariables-onuajq01p4k0
+:END:
+
+#+begin_src latex
+  \bool_new:N \g__letgut_tmpa_bool
+  \bool_new:N \g__letgut_tmpb_bool
+  \box_new:N \g__letgut_tmpa_box
+  \box_new:N \g__letgut_tmpb_box
+  \clist_new:N \g__letgut_tmpa_clist
+  \clist_new:N \g__letgut_tmpb_clist
+  \coffin_new:N \g__letgut_tmpa_coffin
+  \coffin_new:N \g__letgut_tmpb_coffin
+  \dim_new:N \g__letgut_tmpa_dim
+  \dim_new:N \g__letgut_tmpb_dim
+  \fp_new:N \g__letgut_tmpa_fp
+  \fp_new:N \g__letgut_tmpb_fp
+  \int_new:N \g__letgut_tmpa_int
+  \int_new:N \g__letgut_tmpb_int
+  \ior_new:N \g__letgut_tmpa_ior
+  \ior_new:N \g__letgut_tmpb_ior
+  \iow_new:N \g__letgut_tmpa_iow
+  \iow_new:N \g__letgut_tmpb_iow
+  \muskip_new:N \g__letgut_tmpa_muskip
+  \muskip_new:N \g__letgut_tmpb_muskip
+  \prop_new:N \g__letgut_tmpa_prop
+  \prop_new:N \g__letgut_tmpb_prop
+  \regex_new:N \g__letgut_tmpa_regex
+  \regex_new:N \g__letgut_tmpb_regex
+  \seq_new:N \g__letgut_tmpa_seq
+  \seq_new:N \g__letgut_tmpb_seq
+  \skip_new:N \g__letgut_tmpa_skip
+  \skip_new:N \g__letgut_tmpb_skip
+  \str_new:N \g__letgut_tmpa_str
+  \str_new:N \g__letgut_tmpb_str
+  \tl_new:N \g__letgut_tmpa_tl
+  \tl_new:N \g__letgut_tmpb_tl
+  \bool_new:N \l__letgut_tmpa_bool
+  \bool_new:N \l__letgut_tmpb_bool
+  \box_new:N \l__letgut_tmpa_box
+  \box_new:N \l__letgut_tmpb_box
+  \clist_new:N \l__letgut_tmpa_clist
+  \clist_new:N \l__letgut_tmpb_clist
+  \coffin_new:N \l__letgut_tmpa_coffin
+  \coffin_new:N \l__letgut_tmpb_coffin
+  \dim_new:N \l__letgut_tmpa_dim
+  \dim_new:N \l__letgut_tmpb_dim
+  \fp_new:N \l__letgut_tmpa_fp
+  \fp_new:N \l__letgut_tmpb_fp
+  \int_new:N \l__letgut_tmpa_int
+  \int_new:N \l__letgut_tmpb_int
+  \ior_new:N \l__letgut_tmpa_ior
+  \ior_new:N \l__letgut_tmpb_ior
+  \iow_new:N \l__letgut_tmpa_iow
+  \iow_new:N \l__letgut_tmpb_iow
+  \muskip_new:N \l__letgut_tmpa_muskip
+  \muskip_new:N \l__letgut_tmpb_muskip
+  \prop_new:N \l__letgut_tmpa_prop
+  \prop_new:N \l__letgut_tmpb_prop
+  \regex_new:N \l__letgut_tmpa_regex
+  \regex_new:N \l__letgut_tmpb_regex
+  \seq_new:N \l__letgut_tmpa_seq
+  \seq_new:N \l__letgut_tmpb_seq
+  \skip_new:N \l__letgut_tmpa_skip
+  \skip_new:N \l__letgut_tmpb_skip
+  \str_new:N \l__letgut_tmpa_str
+  \str_new:N \l__letgut_tmpb_str
+  \tl_new:N \l__letgut_tmpa_tl
+  \tl_new:N \l__letgut_tmpb_tl
+#+end_src
 
 *** Booleans
 :PROPERTIES:
@@ -921,13 +1044,6 @@ We close the ~\AddToHook{begindocument/before}~ argument.
 :CUSTOM_ID: ImplementationClassoptions-4meg55h0jlj0
 :END:
 
-In order to provide class options, we load the \package{l3keys2e} which provides
-\LaTeXe{} option processing using \LaTeX3 keys:
-
-  #+begin_src  latex
-    \RequirePackage{l3keys2e}
-  #+end_src
-
 We define the 2 load time options for the target audience:
 
 - ~for-readers~ (the default), for the “normal” “Lettre”,
@@ -1158,7 +1274,7 @@ We now load some packages.
   #+end_src
 - Coloured boxes, for LaTeX examples and theorems, etc.
   #+begin_src latex
-\RequirePackage{tcolorbox}
+    \RequirePackage{tcolorbox}
   #+end_src
 - Compile \TeX{} code stand-alone or as part of a document.
   #+begin_src latex
@@ -1303,7 +1419,20 @@ We close the ~\AddToHook{begindocument/before}~ argument.
        \phantomsection
        \__letgut_old_printbibliography[#1]
        \bool_if:NT \g__letgut_included_files_attached_bool {
-         \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {\seq_gput_right:Nn \g__letgut_included_files_seq {#1}}
+         \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {
+           \file_if_exist:nTF {##1}{
+             \seq_gput_right:Nn \g__letgut_included_files_seq {
+               \attachfile[
+                 description={
+                   Fichier~ bibliographique~ utilisé~ dans~ le~
+                   présent~ article~ (fichier~ `\tl_to_str:n{##1}`)
+                 },
+                 mimetype=application/x-bib
+               ]
+               {\tl_to_str:n{##1}}
+             }
+           }
+         }
        }
      }
      #+end_src
@@ -1416,14 +1545,14 @@ We close the ~\AddToHook{begindocument/before}~ argument.
               #+begin_src latex
                 % \color_fill:n {black!10}
                 \color{black!10}
-                \hbox_set:Nn \l_tmpa_box {
+                \hbox_set:Nn \l__letgut_tmpa_box {
                   \fontsize{0.25\paperwidth}{0.3\paperwidth}
                   \selectfont
                   \c__letgut_draftwatermark_text_tl
                 }
-                \hbox_set:Nn \l_tmpb_box {
+                \hbox_set:Nn \l__letgut_tmpb_box {
                   \hbox_overlap_center:n {
-                    \box_use:N \l_tmpa_box
+                    \box_use:N \l__letgut_tmpa_box
                   }
                 }
               #+end_src
@@ -1431,7 +1560,7 @@ We close the ~\AddToHook{begindocument/before}~ argument.
     diagonal of the page (angle $=\arctan(\text{paper height}/\text{paper
     width})$).
               #+begin_src latex
-                \box_rotate:Nn \l_tmpb_box {
+                \box_rotate:Nn \l__letgut_tmpb_box {
                   \fp_eval:n {
                     atand (
                     \dim_to_fp:n {\paperheight}
@@ -1440,7 +1569,7 @@ We close the ~\AddToHook{begindocument/before}~ argument.
                     )
                   }
                 }
-                \box_use:N \l_tmpb_box
+                \box_use:N \l__letgut_tmpb_box
                 }
                 }
                 }
@@ -1502,7 +1631,10 @@ We now define the options of the class:
 - ~date~ for the date of the issue, either empty (hence the current (month)
   date) or at the format ~YYYY-MM~ or as free input,
 - ~pagecolor~ (relevant only with the (default) ~screen~ load time option) for
-  a color of the page other than the default one,
+  a color of the page other than the default one (used behind the scene by the
+  ~letgut-banner~ package),
+- ~watermark letter~ for another letter than the “g” in watermark,
+- ~watermark scale~ for the case the letter in watermark is too big,
 - ~allcolorslinks~ for the color of (all) the links,
 - ~membership-reminder~ that typesets a membership reminder on the first page,
 - ~editorial~ depending on the editorial is wanted or not,
@@ -1548,6 +1680,10 @@ We now define the options of the class:
         }
       }
     }
+    , watermark~ letter .tl_gset:N = \g__letgut_watermark_letter_tl
+    , watermark~ letter .initial:n = g
+    , watermark~ scale .tl_gset:N = \g__letgut_watermark_scale_tl
+    , watermark~ scale .initial:n = 1
     , allcolorslinks .code:n = {
       \colorlet{letgut_allcolors_links}{#1}}
     , allcolorslinks .initial:V
@@ -1573,7 +1709,7 @@ We now define the options of the class:
       }
     }
   }
-  \ProcessKeysOptions { letgut }
+  \ProcessKeyOptions[ letgut ]
   \AddToHook{begindocument/before}{
     \bool_lazy_and:nnTF {\g__letgut_for_readers_bool} {!\g__letgut_paper_bool}
     {
@@ -1612,7 +1748,7 @@ We now define the headers.
   #+begin_src latex
     \fancyhf{}
     \fancyhead[RO,LE]{\thepage}
-    \fancyhead[RE,LO]{\g__letgut_mark_tl}
+    \fancyhead[RE,LO]{\scshape \g__letgut_mark_tl}
   #+end_src
 - The headers are left offset
   #+begin_src latex
@@ -1785,7 +1921,9 @@ We now define the headers.
     \tl_if_empty:NTF {#1}{
       \phantomsection\addcontentsline{toc}{title}{#2}
     }{
-      \phantomsection\addcontentsline{toc}{title}{#1}
+      \tl_if_empty:NF {#2}{
+        \phantomsection\addcontentsline{toc}{title}{#1}
+      }
     }
   }
   \NewTColorBox{announcement}{ O{} m }
@@ -1797,7 +1935,8 @@ We now define the headers.
     overlay~ unbroken~ and~ first ={
       \node[color=\l__letgut_toc_color_announce_tl]~ at~ ([yshift=8pt]title.south)
       {\pgfornament[width=0.4\linewidth]{88}};
-      \node[color=white,anchor=north~ west]~ at~ (frame.north~ west) {\huge\bfseries\aldineright{}};
+      \node[color=white,anchor=north~ west]~ at~ (frame.north~ west)
+      {\huge\bfseries\aldineright{}};
     },
     #1,
     coltitle=\l__letgut_toc_color_announce_tl,
@@ -1810,6 +1949,7 @@ We now define the headers.
    :END:
 
 #+begin_src latex
+  \int_new:N \g__letgut_rebus_int
   \NewDocumentCommand{\solution}{}{\tcblower}
   \NewDocumentCommand{\displaysolutions}{}{%
     \tcbstoprecording\tcbinputrecords%
@@ -1844,25 +1984,27 @@ We now define the headers.
       },
     }
   }
-  \NewTColorBox[auto~ counter]{rebus}{+!O{}}{%
+  \NewTColorBox{rebus}{+!O{}}{%
+    before~ title~ pre = {\int_gincr:N \g__letgut_rebus_int},
     rebus~ style,
     fonttitle=\bfseries,
     title={Rébus},
-    label={rebus@\thetcbcounter},
-    after~ upper={\vpageref[ci-dessous]{solution@\thetcbcounter}},
+    label={rebus@\int_use:N\g__letgut_rebus_int},
+    after~ upper={\vpageref[ci-dessous]{solution@\int_use:N\g__letgut_rebus_int}},
     after~ upper~ pre={
       \par\bigskip\hfill\scriptsize\itshape
       Solution\c_space_tl
     },
     lowerbox=ignored,
-    savelowerto=rebus-\thetcbcounter.tex,
-    record={\string\rebussolution*[\thetcbcounter][][]},
+    savelowerto=rebus-\int_use:N\g__letgut_rebus_int.tex,
+    record={\string\rebussolution*[\int_use:N\g__letgut_rebus_int][][]},
     #1
   }
   \NewDocumentCommand{\rebussolution}{s +o o O{}}{%
     \IfValueTF{#2}{
       \begin{tcolorbox}[
         rebus~ style,
+        label=solution@\int_use:N\g__letgut_rebus_int,
         halign=justify,
         before~ title={\lefthand{}~Solution~ du~ rébus\c_space_tl},
         title={
@@ -1935,23 +2077,23 @@ $>0$.
 #    detection of my editor.)
 
     #+begin_src latex
-      > \c_zero_int
-      {numéro~ \int_use:N\g__letgut_number_int{}~ --~ }
-      \g__letgut_date_tl
-    }
-    \str_if_empty:NTF \g__letgut_@title_str {
-      \tl_gset:Nn \g__letgut_mark_tl {
-        \textit{\c__letgut_La_lettre_gutenberg_tl}
+         > \c_zero_int
+         {numéro~ \int_use:N\g__letgut_number_int{}~ --~ }
+         \g__letgut_date_tl
+       }
+       \str_if_empty:NTF \g__letgut_@title_str {
+         \tl_gset:Nn \g__letgut_mark_tl {
+           \c__letgut_la_lettre_gutenberg_plain_tl
+         }
+       }{
+         \tl_gset:Nn \g__letgut_mark_tl {
+           \g__letgut_@title_str
+         }
+       }
+       \tl_gput_right:Nn \g__letgut_mark_tl {
+         ,~\g__letgut_title_tl
+       }
       }
-    }{
-      \tl_gset:Nn \g__letgut_mark_tl {
-        \g__letgut_@title_str
-      }
-    }
-    \tl_gput_right:Nn \g__letgut_mark_tl {
-      ,~\g__letgut_title_tl
-    }
-   }
 #+end_src
 
 ** First page handling
@@ -1980,7 +2122,7 @@ Lettre.
     {
       \begin{picture}(0,0)
         \put(-2cm,-25.275cm){
-          \includegraphics*[scale=0.96]{
+          \__letgut_orig_includegraphics*[scale=0.96]{
             \c__letgut_banner_file_tl.pdf
           }
         }
@@ -1995,11 +2137,13 @@ following code has to be postponed after the former (hence here
 ~\AddToHook{begindocument}~ and with ~\AddToHook{begindocument/before}~).
 
 #+begin_src latex
-    \msg_term:nn{letgut}{Banner~file~not~provided}
-    \RequirePackage[pagecolor={\g__letgut_pagecolor_clist}]{
-      letgut-banner
+      \msg_term:nn{letgut}{Banner~file~not~provided}
+      \RequirePackage[
+      , pagecolor = { \g__letgut_pagecolor_clist }
+      , watermark~ letter = { \g__letgut_watermark_letter_tl }
+      , watermark~ scale = { \g__letgut_watermark_scale_tl }
+      ]{letgut-banner}
     }
-  }
   #+end_src
 
 Here starts what is automatically added at the beginning of the document.
@@ -2516,7 +2660,7 @@ We define the command that lets us specify the newsletter setup.
  #+begin_src latex
    \NewDocumentCommand {\francophony} {  } {
      \raisebox{-1.5pt}{
-       \includegraphics*[width=\f@size pt]{
+       \__letgut_orig_includegraphics*[width=\f@size pt]{
          letgut-francophony-icon
        }
      }
@@ -2560,17 +2704,17 @@ For both persons and authors, the argument of:
  #+begin_src latex
 \cs_new_protected:Npn \__letgut_titlecase_name:n #1
 {
-  \seq_set_split:Nnn \l_tmpa_seq { - }  {#1}
-  \seq_set_map_x:NNn \l_tmpb_seq \l_tmpa_seq {
+  \seq_set_split:Nnn \l__letgut_tmpa_seq { - }  {#1}
+  \seq_set_map_x:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {
     \text_titlecase_first:n{ \text_lowercase:n {##1} }
   }
-  \tl_set:Nx \l_tmpa_tl {\seq_use:Nn \l_tmpb_seq {-}}
-  \seq_clear:N \l_tmpa_seq
-  \seq_set_split:NnV \l_tmpa_seq { ~ }  { \l_tmpa_tl }
-  \seq_set_map_x:NNn \l_tmpb_seq \l_tmpa_seq {
+  \tl_set:Nx \l__letgut_tmpa_tl {\seq_use:Nn \l__letgut_tmpb_seq {-}}
+  \seq_clear:N \l__letgut_tmpa_seq
+  \seq_set_split:NnV \l__letgut_tmpa_seq { ~ }  { \l__letgut_tmpa_tl }
+  \seq_set_map_x:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {
     \text_titlecase_first:n{##1}
   }
-  \seq_use:Nn \l_tmpb_seq {~}
+  \seq_use:Nn \l__letgut_tmpb_seq {~}
 }
  #+end_src
 
@@ -2600,20 +2744,20 @@ For both persons and authors, the argument of:
   \cs_new_protected:Npn \__letgut_process_list:nn #1 #2
   {
     \seq_clear:N \l__letgut_items_seq
-    \seq_set_split:Nnn \l_tmpa_seq {~and~} {#2}
+    \seq_set_split:Nnn \l__letgut_tmpa_seq {~and~} {#2}
     \IfBooleanT{#1}{
-      \seq_sort:Nn \l_tmpa_seq
+      \seq_sort:Nn \l__letgut_tmpa_seq
       {
         \str_compare:nNnTF { ##1 } > { ##2 }
         { \sort_return_swapped: }
         { \sort_return_same: }
       }
     }
-    \seq_map_inline:Nn \l_tmpa_seq {
-      \seq_set_from_clist:Nn \l_tmpb_seq {##1}
-      \seq_pop_left:NN \l_tmpb_seq \l_letgut_last_name_tl
-      \seq_pop_left:NN \l_tmpb_seq \l_letgut_first_name_tl
-      \seq_pop_left:NN \l_tmpb_seq \l_letgut_title_tl
+    \seq_map_inline:Nn \l__letgut_tmpa_seq {
+      \seq_set_from_clist:Nn \l__letgut_tmpb_seq {##1}
+      \seq_pop_left:NN \l__letgut_tmpb_seq \l_letgut_last_name_tl
+      \seq_pop_left:NN \l__letgut_tmpb_seq \l_letgut_first_name_tl
+      \seq_pop_left:NN \l__letgut_tmpb_seq \l_letgut_title_tl
       \seq_put_right:Nx \l__letgut_items_seq {
         \quark_if_no_value:NTF \l_letgut_first_name_tl {
           \__letgut_person_last_name:n {
@@ -2753,13 +2897,13 @@ We split the software's name at spaces in order to apply the dedicated
 font switch (~\ttfamily~) to all of it except to the spaces.
 
    #+begin_src latex
-       \seq_set_split:Nnn \l_tmpa_seq { ~ } { #2 }
-       \seq_set_map:NNn \l_tmpb_seq \l_tmpa_seq {{\l__letgut_softwares_font_switch_tl ##1}}
+       \seq_set_split:Nnn \l__letgut_tmpa_seq { ~ } { #2 }
+       \seq_set_map:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {{\l__letgut_softwares_font_switch_tl ##1}}
        \tl_if_empty:nTF {#1}
        {
-         \seq_use:Nn \l_tmpb_seq { ~ }
+         \seq_use:Nn \l__letgut_tmpb_seq { ~ }
        }{
-         \href{#1}{ \seq_use:Nn \l_tmpb_seq { ~ } }
+         \href{#1}{ \seq_use:Nn \l__letgut_tmpb_seq { ~ } }
        }
      }
      \cs_new_protected:Nn \__letgut_file:n
@@ -2891,14 +3035,14 @@ some \lettre{} issue:
     \tl_if_empty:nTF {#1}{
       \int_use:N \g__letgut_number_int
     }{
-      \tl_set:Nx \l_tmpa_tl {\tl_head:n { #1 }}
-      \tl_set:Nn \l_tmpb_tl { #1 }
-      \tl_case:NnF \l_tmpa_tl {
-        {\c__letgut_plus_tl}  {\int_eval:n {\g__letgut_number_int\l_tmpa_tl\tl_range:Nnn \l_tmpb_tl { 2 } { -1 }}}
-        {\c__letgut_minus_tl} {\int_eval:n {\g__letgut_number_int\l_tmpa_tl\tl_range:Nnn \l_tmpb_tl { 2 } { -1 }}}
+      \tl_set:Nx \l__letgut_tmpa_tl {\tl_head:n { #1 }}
+      \tl_set:Nn \l__letgut_tmpb_tl { #1 }
+      \tl_case:NnF \l__letgut_tmpa_tl {
+        {\c__letgut_plus_tl}  {\int_eval:n {\g__letgut_number_int\l__letgut_tmpa_tl\tl_range:Nnn \l__letgut_tmpb_tl { 2 } { -1 }}}
+        {\c__letgut_minus_tl} {\int_eval:n {\g__letgut_number_int\l__letgut_tmpa_tl\tl_range:Nnn \l__letgut_tmpb_tl { 2 } { -1 }}}
         {\c__letgut_dot_tl}   {\int_use:N \g__letgut_number_int}
       }
-      {\l_tmpb_tl}
+      {\l__letgut_tmpb_tl}
     }
   }
   \NewDocumentCommand { \lettrenumber } { s O{} } {
@@ -2910,7 +3054,7 @@ some \lettre{} issue:
 #+end_src
 
 The “\lettre” and “\lettregut” expressions are treated separately since they are
-subject to variations, depending how they are used. The corresponding commands
+subject to variations, depending on how they are used. The corresponding commands
 ~\lettre~ and ~\lettregut~ used without star nor optional argument typeset
 resp. “\lettre” and “\lettregut”:
 
@@ -3306,7 +3450,11 @@ full name of the authors.
     \citeauthor
   }
   \RenewDocumentCommand {\citeauthor} { O{} O{} m } {
-    \AtNextCite{\DeclareNameAlias{labelname}{given-family}}
+    \AtNextCite{
+      \DeclareNameAlias{labelname}{given-family}
+      \protected\def\mkbibnamefamily#1{%
+        \textnohyphenation{#1}}%
+    }
     \__letgut_old_citeauthor[#1][#2]{#3}
   }
  #+end_src
@@ -3317,7 +3465,7 @@ full name of the authors.
 :END:
 
 #+begin_src latex
-  \tl_new:N \g__letgut_bookreview_frontcover_tl
+  \tl_new:N \l__letgut_bookreview_frontcover_tl
   \tl_new:N \g__letgut_bookreview_bibkey_tl
   #+end_src
 The keys options are created.
@@ -3325,7 +3473,7 @@ The keys options are created.
   \keys_define:nn { letgut/bookreview }
   {
     title .tl_gset:N = \g__letgut_bookreview_title_tl,
-    frontcover .tl_gset:N = \g__letgut_bookreview_frontcover_tl,
+    frontcover .tl_set:N = \l__letgut_bookreview_frontcover_tl,
     bibkey .tl_gset:N = \g__letgut_bookreview_bibkey_tl,
     reviewer .tl_gset:N = \g__letgut_bookreview_reviewer_tl,
     price .tl_gset:N = \g__letgut_bookreview_price_tl,
@@ -3344,59 +3492,73 @@ All these options, when used, must receive a value.
 We create the new environment for the book reviews.
 
 #+begin_src latex
-      \cs_generate_variant:Nn \msg_warning:nnn { nnV }
-      \cs_generate_variant:Nn \msg_error:nnnn { nnVV }
-      \NewDocumentEnvironment{bookreview}{ m }
-      {
-        \keys_set:nn { letgut/bookreview } { #1 }
-        \section{\g__letgut_bookreview_title_tl}
-        \tl_if_empty:NTF \g__letgut_bookreview_frontcover_tl {
-          \msg_warning:nnV{letgut}{frontcover-missing}{
-            \g__letgut_bookreview_title_tl
-          }
-        }{
+  \cs_generate_variant:Nn \msg_warning:nnn { nnV }
+  \cs_generate_variant:Nn \msg_error:nnnn { nnVV }
+  \NewDocumentEnvironment{bookreview}{ m }
+  {
+    \tl_gclear:N \g__letgut_bookreview_price_tl
+    \keys_set:nn { letgut/bookreview } { #1 }
+    \section{\g__letgut_bookreview_title_tl}
+    \tl_if_empty:NTF \l__letgut_bookreview_frontcover_tl {
+      \msg_warning:nnV{letgut}{frontcover-missing}{
+        \g__letgut_bookreview_title_tl
+      }
+    }{
 #+end_src
 
 We check if the front cover file is available against the list of accepted
 extensions of the ~graphicx~ package.
 
 #+begin_src latex
-      \clist_map_inline:Nn \Gin@extensions {
-        \file_if_exist:nT{\g__letgut_bookreview_frontcover_tl##1}{
-          \bool_set_true:N \l_tmpa_bool
-          \clist_map_break:
-        }
-      }
-      \bool_if:NTF \l_tmpa_bool {
-        \marginpar{
-          \hspace*{\c__letgut_bookreview_frontcover_margin_sep_dim}
-          % \raggedleft
-          \raisebox{-\totalheight}{
-            \fbox{
-              \includegraphics[width=-\c__letgut_title_hoffset_dim]{
-                \g__letgut_bookreview_frontcover_tl
-              }
-            }
+  \clist_map_inline:Nn \Gin@extensions {
+    \file_if_exist:nT{\l__letgut_bookreview_frontcover_tl##1}{
+      \bool_set_true:N \l__letgut_tmpa_bool
+      \clist_map_break:
+    }
+  }
+  \bool_if:NTF \l__letgut_tmpa_bool {
+    \marginpar{
+      \hspace*{\c__letgut_bookreview_frontcover_margin_sep_dim}
+      % \raggedleft
+      \raisebox{-\totalheight}{
+        \fbox{
+          \includegraphics*[width=-\c__letgut_title_hoffset_dim]{
+            \l__letgut_bookreview_frontcover_tl
           }
         }
-      }{
-        \msg_error:nnVV
-        {letgut}
-        {frontcover-file-not-found}
-        {\g__letgut_bookreview_title_tl}
-        {\g__letgut_bookreview_frontcover_tl}
       }
     }
-    \noindent
-    \textsf{\fullcite{\g__letgut_bookreview_bibkey_tl}}
-    \tl_if_empty:NF \g__letgut_bookreview_price_tl{
-      .\c_space_tl\g__letgut_bookreview_price_tl\c_space_tl €
-    }
-    \par
+  }{
+    \msg_error:nnVV
+    {letgut}
+    {frontcover-file-not-found}
+    {\g__letgut_bookreview_title_tl}
+    {\l__letgut_bookreview_frontcover_tl}
+  }
+  }
+  \noindent
+  \textsf{\fullcite{\g__letgut_bookreview_bibkey_tl}}
+  \tl_if_empty:NF \g__letgut_bookreview_price_tl{
+    .\c_space_tl\g__letgut_bookreview_price_tl\c_space_tl €
+  }
+  \par
   }{
     \exp_args:NV \author{\g__letgut_bookreview_reviewer_tl}
     \bool_if:NT \g__letgut_included_files_attached_bool {
-      \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {\seq_gput_right:Nn \g__letgut_included_files_seq {##1}}
+      \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {
+        \file_if_exist:nTF {##1}{
+          \seq_gput_right:Nn \g__letgut_included_files_seq {
+            \attachfile[
+              description={
+                Fichier~ bibliographique~ utilisé~ dans~ le~
+                présent~ article~ (fichier~ `\tl_to_str:n{##1}`)
+              },
+              mimetype=application/x-bib
+            ]
+            {\tl_to_str:n{##1}}
+          }
+        }
+      }
     }
   }
 #+end_src
@@ -3549,14 +3711,16 @@ the current directory and is non empty. This will be applied to both the
 
 #+begin_src latex
   \cs_new_protected:Npn \__letgut_attach_non_empty_existing_file:n #1 {
-    \file_get_size:nN {./#1} \tmpa_tl
-    \quark_if_no_value:NF \tmpa_tl {
-      \tl_if_eq:NnF \tmpa_tl {0} {
-        \seq_gput_left:Nn \g__letgut_included_files_seq {
-          \attachfile[
-          description={Source~ nécessaire~ (fichier~ `#1.tex`)},
-          mimetype=application/x-tex]
-          {#1.tex}
+    \file_get_size:nN {./#1.tex} \l__letgut_tmpa_tl
+    \quark_if_no_value:NF \l__letgut_tmpa_tl {
+      \tl_if_eq:NnF \l__letgut_tmpa_tl {0} {
+        \file_if_exist:nTF {##1}{
+          \seq_gput_left:Nn \g__letgut_included_files_seq {
+            \attachfile[
+              description={Source~ nécessaire~ (fichier~ `#1.tex`)},
+              mimetype=application/x-tex]
+            {#1.tex}
+          }
         }
       }
     }
@@ -3566,9 +3730,12 @@ the current directory and is non empty. This will be applied to both the
 #+begin_src latex
   \cs_new_protected:Npn \__letgut_input_article:nn #1 #2
   {
+    \FloatBarrier
     \lstset{ style=__letgut_reset_listings_styles }
     \acresetall%
-    \input{#2}%
+    \begin{refsection}
+      \input{#2}%
+    \end{refsection}
     \bool_if:NT \g__letgut_included_files_attached_bool {
       \IfBooleanF {#1}{
         \__letgut_attach_non_empty_existing_file:n {
@@ -3594,7 +3761,7 @@ the current directory and is non empty. This will be applied to both the
           }
         }
         \seq_remove_duplicates:N \g__letgut_included_files_seq
-        \marginpar{\seq_use:Nn \g__letgut_included_files_seq { } }
+        \seq_use:Nn \g__letgut_included_files_seq { \c_space_tl }
         \seq_clear:N \g__letgut_included_files_seq
         \bool_gset_false:N \g__letgut_acronyms_file_attached_bool
         \bool_gset_false:N \g__letgut_lstlanguage_file_attached_bool
@@ -3616,10 +3783,10 @@ to the \pdf{} (if desired, otherwise, use the starred version).
 
 #+begin_src latex
   \NewCommandCopy {\__letgut_orig_includegraphics} {\includegraphics}
-  \clist_set:Nx \l_tmpa_clist {\Gin@extensions}
+  \clist_set:Nx \l__letgut_tmpa_clist {\Gin@extensions}
   \cs_new_protected:Npn \__letgut_includegraphics:nnn #1 #2 #3
   {
-    \file_if_exist:nTF {#3} {
+    \file_if_exist:nTF {./#3} {
       \bool_if:NT \g__letgut_included_files_attached_bool {
         \IfBooleanF {#1}{
           \seq_gput_left:Nn \g__letgut_included_files_seq {
@@ -3629,16 +3796,15 @@ to the \pdf{} (if desired, otherwise, use the starred version).
               présent~ article~ (fichier~ `#3`)
             },
             mimetype=image
-            ]
-            {#3}
+            ]{./#3}
           }
         }
       }
-      \__letgut_orig_includegraphics[#2]{#3}
+      \__letgut_orig_includegraphics[#2]{./#3}
     }{
-      \bool_gset_false:N \g_tmpa_bool
-      \clist_map_inline:Nn \l_tmpa_clist {%
-        \file_if_exist:nTF {#3##1} {
+      \bool_gset_false:N \g__letgut_tmpa_bool
+      \clist_map_inline:Nn \l__letgut_tmpa_clist {%
+        \file_if_exist:nT {./#3##1} {
           \clist_map_break:n {
             \bool_if:NT \g__letgut_included_files_attached_bool {
               \IfBooleanF {#1}{
@@ -3646,21 +3812,20 @@ to the \pdf{} (if desired, otherwise, use the starred version).
                   \attachfile[
                   description={Fichier~ image~ inclus~ dans~ le~ présent~ article~ (fichier~ `#3##1`)},
                   mimetype=image/##1
-                  ]
-                  {#3##1}
+                  ]{./#3##1}
                 }
               }
             }
             \__letgut_orig_includegraphics[#2]{#3}
-            \bool_gset_true:N \g_tmpa_bool
+            \bool_gset_true:N \g__letgut_tmpa_bool
           }
         }
       }
-      \bool_if:NF \g_tmpa_bool {
-        \@latex@error{File~ `#3'~ not~ found}%
-        {I~ could~ not~ locate~ the~ file~ with~ any~ of~ these~ extensions:^^J%
-          \clist_use:Nn \l_tmpa_clist { ~ }^^J\@ehc}%
-      }
+      % \bool_if:NF \g__letgut_tmpa_bool {
+      %   \@latex@error{File~ `#3'~ not~ found}%
+      %   {I~ could~ not~ locate~ the~ file~ with~ any~ of~ these~ extensions:^^J%
+      %     \clist_use:Nn \l__letgut_tmpa_clist { ~ }^^J\@ehc}%
+      % }
     }
   }
   \RenewDocumentCommand {\includegraphics} {s O{} m } {
@@ -3674,30 +3839,41 @@ to the \pdf{} (if desired, otherwise, use the starred version).
 :END:
 
 We hack the ~\addbibresource~ command in order to attach the bibliographic
-ressources to the \pdf{} (if desired, otherwise, use the starred version).
+ressources to the \pdf{}.
 
 #+begin_src latex
+  \cs_new:Nn \__letgut_extract_file_for:nn
+  {
+    \seq_clear:N \g__letgut_added_bib_resources_seq
+    \regex_extract_all:nnNT
+    {
+      \c{ #1 } \[?.*?\]?        \{ ( .*? ) \}
+    }
+    {
+      #2
+    }
+    \g__letgut_added_bib_resources_seq
+    {
+      \seq_map_indexed_inline:Nn \g__letgut_added_bib_resources_seq {
+        \int_if_odd:nT {##1}
+        {
+          \seq_gset_item:Nnn \g__letgut_added_bib_resources_seq {##1} {}
+        }
+      }
+      \seq_gremove_duplicates:N \g__letgut_added_bib_resources_seq
+      \seq_gpop:NN \g__letgut_added_bib_resources_seq \l_tmpa_tl
+    }
+  }
   \NewCommandCopy {\__letgut_orig_addbibresource} {\addbibresource}
   \cs_new_protected:Npn \__letgut_addbibresource:nnn #1 #2 #3
   {
-    \file_if_exist:nT {#3} {
-      \IfBooleanF {#1}{
-        \seq_gput_left:Nn \g__letgut_added_bib_resources_seq {
-          \attachfile[
-          description={
-            Source~ du~ fichier~ bibliographique~ utilisé~
-            dans~ le~ présent~ article~ (fichier~ `#3`)
-          },
-          mimetype=application/x-bibtex
-          ]%
-          {#3}%
-        }
-      }
-    }
     \__letgut_orig_addbibresource[#2]{#3}
   }
   \RenewDocumentCommand {\addbibresource} { s O{} m } {
     \__letgut_addbibresource:nnn {#1} {#2} {#3}
+  }
+  \AddToHookWithArguments{cmd/sa@gobble/before}{
+    \__letgut_extract_file_for:nn { addbibresource }{ #1 }
   }
 #+end_src
 
@@ -3712,14 +3888,16 @@ file to the \pdf{}.
 #+begin_src latex
   \bool_if:NT \g__letgut_included_files_attached_bool {
     \tl_const:Nn \c__letgut_acronyms_file_attached_tl {
-      \attachfile[
-      description={
-        Source~ du~ fichier~ d'acronymes~ utilisé~ dans~
-        le~ présent~ article~
-        (fichier~ `\c__letgut_acronyms_file_tl.tex`)
-      },
-      mimetype=application/x-tex]%
-      {\g__letgut_effective_acronyms_file_tl}%
+      \file_if_exist:nTF {\g__letgut_effective_acronyms_file_t}{
+        \attachfile[
+          description={
+            Source~ du~ fichier~ d'acronymes~ utilisé~ dans~
+            le~ présent~ article~
+            (fichier~ `\c__letgut_acronyms_file_tl.tex`)
+          },
+          mimetype=application/x-tex]%
+        {\g__letgut_effective_acronyms_file_tl}%
+      }
     }
     \AddToHook{cmd/ac/before}{
       \bool_gset_true:N \g__letgut_acronyms_file_attached_bool
@@ -3740,15 +3918,19 @@ file to the \pdf{}.
 
 #+begin_src latex
   \bool_if:NT \g__letgut_included_files_attached_bool {
-    \tl_const:Nn \c__letgut_lstlanguage_file_attached_tl {
-      \attachfile[
-      description={
-        Source~ du~ fichier~ de~ langages~ informatiques~ utilisé~
-        dans~ le~ présent~ article~
-        (fichier~ `\c__letgut_lstlanguage_file_tl`)
-      },
-      mimetype=application/x-tex]%
-      {../\c__letgut_lstlanguage_file_tl}%
+    \file_if_exist:nTF {../\c__letgut_lstlanguage_file_tl}{
+      \tl_const:Nn \c__letgut_lstlanguage_file_attached_tl {
+        \attachfile[
+          description={
+            Source~ du~ fichier~ de~ langages~ informatiques~ utilisé~
+            dans~ le~ présent~ article~
+            (fichier~ `\c__letgut_lstlanguage_file_tl`)
+          },
+          mimetype=application/x-tex]%
+        {../\c__letgut_lstlanguage_file_tl}%
+      }
+    }{
+      \tl_const:Nn \c__letgut_lstlanguage_file_attached_tl {}
     }
     \AddToHook{env/ltx-code/before}{
       \bool_gset_true:N \g__letgut_lstlanguage_file_attached_bool
@@ -3964,14 +4146,14 @@ The functions:
   }
   \cs_new_protected:Npn \__letgut_title_code_result_box:n #1
   {
-    Exemple~ \thetcbcounter
+    Exemple\nobreakspace\thetcbcounter
     \tl_if_empty:NF {#1} { \hypersetup{hidelinks} \c_space_tl :~#1 }
   }
   \cs_new_protected:Nn \__letgut_on_callout_page:nn
   {
-    \tl_set:Nn \l_tmpa_int {\getpagerefnumber{#1}}
-    \tl_set:Nn \l_tmpb_int {\thepage}
-    \int_compare:nNnF {\l_tmpa_int} = {\l_tmpb_int}
+    \tl_set:Nn \l__letgut_tmpa_int {\getpagerefnumber{#1}}
+    \tl_set:Nn \l__letgut_tmpb_int {\thepage}
+    \int_compare:nNnF {\l__letgut_tmpa_int} = {\l__letgut_tmpb_int}
     {#2}
   }
 #+end_src
@@ -4040,17 +4222,17 @@ We define more specifically the style of the codes with results.
             \pgfkeysalso{floatplacement=ht}%
             \pgfkeysalso{float}%
             \pgfkeysalso{label={\g__letgut_label_ltx_example_str}}%
-            \tl_set:Nx \l_tmpa_tl {
+            \tl_set:Nx \l__letgut_tmpa_tl {
               \getpagerefnumber {
                 \g__letgut_callout_label_ltx_example_str
               }
             }
-            \tl_set:Nx \l_tmpb_tl {
+            \tl_set:Nx \l__letgut_tmpb_tl {
               \getpagerefnumber {
                 \g__letgut_label_ltx_example_str
               }
             }
-            \tl_if_eq:NNF \l_tmpa_tl \l_tmpb_tl
+            \tl_if_eq:NNF \l__letgut_tmpa_tl \l__letgut_tmpb_tl
             {
               \l__letgut_reference_text_tl
               \tl_set:Nn \l__letgut_reference_text_tl {
@@ -4181,17 +4363,17 @@ We now use hooks in order to...
         \int_use:N \g__letgut_ltx_example_int
       }
       \label{\g__letgut_callout_label_ltx_example_str}
-      \tl_set:Nx \l_tmpa_tl {
+      \tl_set:Nx \l__letgut_tmpa_tl {
         \getpagerefnumber {
           \g__letgut_callout_label_ltx_example_str
         }
       }
-      \tl_set:Nx \l_tmpb_tl {
+      \tl_set:Nx \l__letgut_tmpb_tl {
         \getpagerefnumber {
           \g__letgut_label_ltx_example_str
         }
       }
-      \tl_if_eq:NNF \l_tmpa_tl \l_tmpb_tl
+      \tl_if_eq:NNF \l__letgut_tmpa_tl \l__letgut_tmpb_tl
       {
         \skip_set_eq:NN \intextsep \c__letgut_reduced_intextsep_skip
       }
@@ -4227,25 +4409,25 @@ the `lstlang0.sty` or ~letgut-lstlang.sty~ files.
         style=__letgut_reset_listings_styles,%
       }
       \tl_if_empty:nTF {#1} {
-        \tl_set:Nx \l_tmpa_tl {
+        \tl_set:Nx \l__letgut_tmpa_tl {
           alsolanguage={#2}
         }
         \exp_args:NV \__letgut_tcbset:n
         {
-          \l_tmpa_tl
+          \l__letgut_tmpa_tl
         }
       }{
-        \seq_set_from_clist:Nn \l_tmpa_seq {#1}
-        \seq_set_map_x:NNn \l_tmpb_seq \l_tmpa_seq {
+        \seq_set_from_clist:Nn \l__letgut_tmpa_seq {#1}
+        \seq_set_map_x:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {
           alsolanguage={[##1]#2}
         }
-        \tl_set:Nx \l_tmpa_tl
+        \tl_set:Nx \l__letgut_tmpa_tl
         {
-          \seq_use:Nn \l_tmpb_seq {,}
+          \seq_use:Nn \l__letgut_tmpb_seq {,}
         }
         \exp_args:NV \__letgut_tcbset:n
         {
-          \l_tmpa_tl
+          \l__letgut_tmpa_tl
         }
       }
     }
@@ -4398,67 +4580,45 @@ We define some colors used in the terminal listings.
           style=__letgut_terminal_listings_style,
           language=terminal,
         },
-        every~ listing~ line={%
-          \textcolor{__letgut_terminal_prompt}{%
-            \ttfamily%
-            \bfseries%
-            \__letgut_unselectable:n {#1\c_space_tl}
-          }
-        },
+        fontupper=\ttfamily,
+        fontlower=\ttfamily,
       },
     }
   #+end_src
 
-  We define now the command
+  We now define the command.
 
   #+begin_src latex
     \cs_new_protected:Npn \__letgut_terminal:nnnn #1 #2 #3 #4
     {
-      \bool_set_false:N \l_tmpa_bool
-      \tl_if_empty:nF {#3}{
-          \tcbset{tempfile=\jobname-stdin.tex}
-          \exp_args:Nx \scantokens
-          {
-            \token_to_str:N\begin{tcbwritetemp}
-              #3
-            \token_to_str:N\end{tcbwritetemp}
-          }
-        }
-        \tl_if_empty:nF {#4}{
-          \tcbset{tempfile=\jobname-stdout.tex}
-          \exp_args:Nx \scantokens
-          {
-            \token_to_str:N\begin{tcbwritetemp}
-              #4
-            \token_to_str:N\end{tcbwritetemp}
-          }
-        }
+      \bool_set_false:N \l__letgut_tmpa_bool
         \tl_if_empty:nTF {#3}{
           \tl_if_empty:nTF {#4}{
-            \bool_set_true:N \l_tmpa_bool
+            \bool_set_true:N \l__letgut_tmpa_bool
           }{
             \tcbset{colback=__letgut_background_terminal_stdout}
           }
         }{
           \tcbset{colback=__letgut_background_terminal_stdin}
-          \tl_if_empty:nTF {#4}{
-          }{
+          \tl_if_empty:nF {#4}{
             \tcbset{
               bicolor,
-              middle=0mm,
-              boxsep=0mm,
               colbacklower=__letgut_background_terminal_stdout,
             }
           }
         }
-        \bool_if:NF \l_tmpa_bool {
-          \begin{tcolorbox}[terminal={#1},#2]
+        \bool_if:NF \l__letgut_tmpa_bool {
+          \begin{tcolorbox}[terminal,#2]
             \lstset{aboveskip=0pt}
             \tl_if_empty:nF {#3}{
-              \tcbset{
-                tempfile=\jobname-stdin.tex,
+              \tl_if_empty:nF {#1}{
+                \textcolor{__letgut_terminal_prompt}{%
+                  \ttfamily%
+                  \bfseries%
+                  \__letgut_unselectable:n {#1\c_space_tl}
+                }
               }
-              \tcbusetemplisting
+              #3
               \tl_if_empty:nF {#4}{
                 \tcblower
               }
@@ -4468,13 +4628,12 @@ We define some colors used in the terminal listings.
                 \lstset{aboveskip=0pt}
               }
               \tcbset{
-                tempfile=\jobname-stdout.tex,
                 every~ listing~ line={},
                 listing~ options~ app={
                   language={}
                 }
               }
-              \tcbusetemplisting
+              #4
             }
           \end{tcolorbox}
         }
@@ -4495,14 +4654,14 @@ We define some colors used in the terminal listings.
 :CUSTOM_ID: ImplementationListingsUnicodecharacterswithpositionsabove256-4l6h55h0jlj0
 :END:
 
-Unicode characters with positions above 256 causes troubles in
+Unicode characters with positions above 256 cause troubles in
 listings. Here is a workaround for some of them (see
 https://tex.stackexchange.com/a/25396).
 
   #+begin_src latex
     \lst@InputCatcodes
     \def\lst@DefEC{%
-     \lst@CCECUse \lst@ProcessLetter
+      \lst@CCECUse \lst@ProcessLetter
       ^^80^^81^^82^^83^^84^^85^^86^^87^^88^^89^^8a^^8b^^8c^^8d^^8e^^8f%
       ^^90^^91^^92^^93^^94^^95^^96^^97^^98^^99^^9a^^9b^^9c^^9d^^9e^^9f%
       ^^a0^^a1^^a2^^a3^^a4^^a5^^a6^^a7^^a8^^a9^^aa^^ab^^ac^^ad^^ae^^af%
@@ -4511,10 +4670,16 @@ https://tex.stackexchange.com/a/25396).
       ^^d0^^d1^^d2^^d3^^d4^^d5^^d6^^d7^^d8^^d9^^da^^db^^dc^^dd^^de^^df%
       ^^e0^^e1^^e2^^e3^^e4^^e5^^e6^^e7^^e8^^e9^^ea^^eb^^ec^^ed^^ee^^ef%
       ^^f0^^f1^^f2^^f3^^f4^^f5^^f6^^f7^^f8^^f9^^fa^^fb^^fc^^fd^^fe^^ff%
-      ^^^^201c^^^^201d% for “ and ”
+      ^^^^201c% for “
+      ^^^^201d% for ”
       ^^^^215b% for ⅛
       ^^^^2122% for ™
       ^^^^2019% for ’
+      ^^^^0153% for œ
+      ^^^^0152% for Œ
+      ^^^^20ac% for €
+      ^^^^27e8% for ⟨
+      ^^^^27e9% for ⟩
       ^^00%
     }
     \lst@RestoreCatcodes
@@ -4565,7 +4730,7 @@ several purposes:
 - the books advertisements.
 
 #+begin_src latex :tangle ../../../tex/lualatex/letgut/letgut.lbx :exports both
-\ProvidesFile{letgut.lbx}[2023-05-21 v0.9.7 letgut localization]
+\ProvidesFile{letgut.lbx}[2024-10-30 v0.9.12 letgut localization]
 \InheritBibliographyExtras{french}
 \DeclareBibliographyStrings{
   inherit          = {french},
@@ -4579,7 +4744,7 @@ several purposes:
   create the corresponding new entry).
 
   #+begin_src latex :tangle ../../../tex/lualatex/letgut/letgut.dbx :exports both
-  \ProvidesFile{letgut.dbx}[2023-05-21 v0.9.7 letgut data model macros]
+  \ProvidesFile{letgut.dbx}[2024-10-30 v0.9.12 letgut data model macros]
   \DeclareBibliographyDriver{bookreview}{%
     \usebibmacro{bibindex}%
     \usebibmacro{begentry}%
@@ -4634,7 +4799,7 @@ several purposes:
 We provide a specific ~biblatex~ citation style .
 
 #+begin_src latex :tangle ../../../tex/lualatex/letgut/letgut.cbx :exports both
-  \ProvidesFile{letgut.cbx}[2023-05-21 v0.9.7 letgut base citation style]
+  \ProvidesFile{letgut.cbx}[2024-10-30 v0.9.12 letgut base citation style]
   \RequireCitationStyle{numeric}
 #+end_src
 
@@ -4798,162 +4963,166 @@ well...
 :CUSTOM_ID: ProvidedfilesInformationsabout\gutenberg-hqah55h0jlj0
 :END:
 
- #+begin_src latex :tangle ../../../tex/lualatex/letgut/informations-gut.tex :exports both
-   % Hey, Emacs!  This is a -*- mode: latex -*- file!
+#+begin_src latex :tangle ../../../tex/lualatex/letgut/informations-gut.tex :exports both
+  % Hey, Emacs!  This is a -*- mode: latex -*- file!
 
-   \enlargethispage{1.5cm}
-   \small
-   \vspace*{-1cm}
-   \hspace*{-1.5cm}%
-   \raisebox{-\height+0.7\baselineskip}{%
-     \begin{minipage}[t]{.6\textwidth}%\vspace{0pt}%
-       \includegraphics*[width=\linewidth]{logo-gut.pdf}
-     \end{minipage}%
-   }%
-   \hfill%
-   \begin{minipage}[t]{.5\textwidth}%\vspace{0pt}%
-     \footnotesize\raggedleft%
-     Association \gut{}\\
-     15 rue des Halles -- \textsc{bp} 74\\
-     75001 Paris\\
-     France\\
-     \url{secretariat[at]gutenberg[dot]eu[dot]org}
-   \end{minipage}%
+  \enlargethispage{1.5cm}
+  \scriptsize
+  \vspace*{-1cm}
+  \hspace*{-1.5cm}%
+  \ExplSyntaxOn
+  \raisebox{-\height+0.7\baselineskip}{%
+    \begin{minipage}[t]{.6\textwidth}%\vspace{0pt}%
+      \__letgut_orig_includegraphics*[width=\linewidth]{logo-gut.pdf}
+    \end{minipage}%
+  }%
+  \ExplSyntaxOff
+  \hfill%
+  \begin{minipage}[t]{.5\textwidth}%\vspace{0pt}%
+    \footnotesize\raggedleft%
+    Association \gut{}\\
+    15 rue des Halles -- \textsc{bp} 74\\
+    75001 Paris\\
+    France\\
+    \url{secretariat[at]gutenberg-asso[dot]fr}
+  \end{minipage}%
 
-   \begin{description}
-   \item[Site Internet :] \url{https://www.gutenberg-asso.fr/}
-   \item[\Cahiers{} :] \url{http://www.numdam.org/journals/CG/}
-   \item[Problèmes techniques :]
-     \leavevmode
-     \begin{description}
-     \item[la liste \texttt{gut} :]
-       \url{https://www.gutenberg-asso.fr/-Listes-de-diffusion-}
-     \item[le site \hologo{TeX}nique de questions et réponses :]
-       \url{https://texnique.fr/}
-     \item[la foire aux questions :]
-       \url{https://faq.gutenberg-asso.fr/}
-     \end{description}
-   \end{description}
-   %
-   \alertbox{%
-     Cette association est la vôtre : faites-nous part de
-     vos idées, de vos envies, de vos préoccupations
-     à l'adresse \url{secretariat[at]gutenberg[dot]eu[dot]org}.%
-   }
+  \begin{description}
+  \item[Site Internet :] \url{https://www.gutenberg-asso.fr/}
+  \item[\Cahiers{} :] \url{http://www.numdam.org/journals/CG/}
+  \item[Problèmes techniques :]
+    \leavevmode
+    \begin{description}
+    \item[la liste \texttt{gut} :]
+      \url{https://www.gutenberg-asso.fr/-Listes-de-diffusion-}
+    \item[le site \hologo{TeX}nique de questions et réponses :]
+      \url{https://texnique.fr/}
+    \item[la foire aux questions :]
+      \url{https://faq.gutenberg-asso.fr/}
+    \end{description}
+  \end{description}
+  %
+  \alertbox{%
+    Cette association est la vôtre : faites-nous part de
+    vos idées, de vos envies, de vos préoccupations
+    à l'adresse \url{secretariat[at]gutenberg-asso[dot]fr}.%
+  }
 
-   % \section[Association GUTenberg (tout sur l')]
-   % {Adhésion à l'association}
-   \title{Adhésion à l'association}
-   \label{letgut_label_adhesions}
+  % \section[Association GUTenberg (tout sur l')]
+  % {Adhésion à l'association}
+  \title{Adhésion à l'association}
+  \label{letgut_label_adhesions}
 
-   \begin{itemize}
-   \item % Adhésions et abonnements
-     Les adhésions sont à renouveler  en début d'année
-     pour l'année civile.
-     % \item Il n'y a pas de lettre de rappel, chaque membre
-     %   doit faire son renouvellement annuel; %\hspace*{1em}
-     %   merci de renvoyer spontanément le bulletin ci-dessous
-     %   en début d'année.
-   \item Les administrations peuvent joindre un bon de commande
-     revêtu de la signature de la personne responsable ;
-     les étudiants doivent joindre un justificatif.
-     % \item Si vous souhaitez que vos coordonnées restent
-     %   confidentielles, merci de le signaler.
-   \end{itemize}
+  \begin{itemize}
+  \item % Adhésions et abonnements
+    Les adhésions sont à renouveler  en début d'année
+    pour l'année civile.
+    % \item Il n'y a pas de lettre de rappel, chaque membre
+    %   doit faire son renouvellement annuel; %\hspace*{1em}
+    %   merci de renvoyer spontanément le bulletin ci-dessous
+    %   en début d'année.
+  \item Les administrations peuvent joindre un bon de commande
+    revêtu de la signature de la personne responsable ;
+    les étudiants doivent joindre un justificatif.
+    % \item Si vous souhaitez que vos coordonnées restent
+    %   confidentielles, merci de le signaler.
+  \end{itemize}
 
-   \vspace*{-0.7cm}
-   \section{Tarifs \the\year}
+  \vspace*{-0.7cm}
+  \section{Tarifs \the\year}
 
-   Les membres de \gut\ peuvent adhérer à l'association
-   internationale, le \acf{tug}, et recevoir son bulletin
-   \tugboat{} à un tarif préférentiel :
-   \begin{description}
-   \item[tarif normal :] 65~€ (au lieu de 85~\$)
-   \item[tarif étudiant :] 40~€ (au lieu de 55~\$)
-   \end{description}
-   % (49~€50}, étudiants et demandeurs d'emploi :
-   % 29~€, au lieu de 85\$ et % 65\$).  Voir
-   % \url{%
-   % https://www.gutenberg-asso.fr/?Adherer-en-ligne%
-   % }.
+  Les membres de \gut\ peuvent adhérer à l'association
+  internationale, le \acf{tug}, et recevoir son bulletin
+  \tugboat{} à un tarif préférentiel :
+  \begin{description}
+  \item[tarif normal :] 65~€ (au lieu de 85~\$)
+  \item[tarif étudiant :] 40~€ (au lieu de 55~\$)
+  \end{description}
+  % (49~€50}, étudiants et demandeurs d'emploi :
+  % 29~€, au lieu de 85\$ et % 65\$).  Voir
+  % \url{%
+  % https://www.gutenberg-asso.fr/?Adherer-en-ligne%
+  % }.
 
-   \footnotesize
-   \begin{center}
-     \begin{tabular}{lr}
-       \toprule
-       \textbf{Type d'adhésion}                        & \textbf{Prix} \\
-       \midrule
-       Membre individuel                               & 30~€      \\
-       Membre individuel + adhésion \acs{tug}          & 95~€      \\
-       Membre individuel étudiant/demandeur d'emploi   & 15~€      \\
-       Membre individuel étudiant + adhésion \acs{tug} & 55~€      \\
-       Association d'étudiants                         & 65~€      \\
-       Organisme à but non lucratif                    & 130~€     \\
-       Organisme à but lucratif                        & 229~€     \\
-       \bottomrule
-     \end{tabular}
-   \end{center}
+  \footnotesize
+  \begin{center}
+    \begin{tabular}{lr}
+      \toprule
+      \textbf{Type d'adhésion}                        & \textbf{Prix} \\
+      \midrule
+      Membre individuel                               & 30~€      \\
+      Membre individuel + adhésion \acs{tug}          & 95~€      \\
+      Membre individuel étudiant/demandeur d'emploi   & 15~€      \\
+      Membre individuel étudiant + adhésion \acs{tug} & 55~€      \\
+      Association d'étudiants                         & 65~€      \\
+      Organisme à but non lucratif                    & 130~€     \\
+      Organisme à but lucratif                        & 229~€     \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
 
-   \section{Règlements}
+  \section{Règlements}
 
-   Les règlements peuvent s'effectuer par :
-   \begin{itemize}
-   \item \textbf{virement bancaire}%
-     \footnote{Nous vous remercions de \textbf{privilégier}
-       le \textbf{virement bancaire}.\label{fn:1}} (\textsc{iban} :
-     FR76 1870 7000 3003 0191 3568 475)%
-     \leavevmode
+  Les règlements peuvent s'effectuer par :
+  \begin{itemize}
+  \item \textbf{virement bancaire}%
+    \footnote{Nous vous remercions de \textbf{privilégier}
+      le \textbf{virement bancaire}.\label{fn:1}} (\textsc{iban} :
+    FR76 3000 3001 0900 0372 6086 280)%
+    \leavevmode
 
-     \alertbox{%
-       Veillez à bien \emph{indiquer vos nom et prénom}
-       dans les références du virement !%
-     }
-   \item Paypal\footnotemark[\value{footnote}] :
-     \url{https://www.gutenberg-asso.fr/?Adherer-en-ligne}
-   \item bulletin et chèque\footnotemark[\value{footnote}] :
-     \url{https://www.gutenberg-asso.fr/?Adherer-a-l-association}
-   \end{itemize}
+    \alertbox{%
+      Veillez à bien \emph{indiquer vos nom et prénom}
+      dans les références du virement !%
+    }
+  \item Paypal\footnotemark[\value{footnote}] :
+    \url{https://www.gutenberg-asso.fr/?Adherer-en-ligne}
+  \item bulletin et chèque\footnotemark[\value{footnote}] :
+    \url{https://www.gutenberg-asso.fr/?Adherer-a-l-association}
+  \end{itemize}
 
-   \vfill
+  \vfill
 
-   \begin{center}
-     \begin{tblr}{
-         width=.75\linewidth,
-         colspec={
-           % < (Just not to disturb the parentheses
-           % balancing detection of my editor.)
-           >{\bfseries}r@{ }X
-         },
-         vline{1,3}={solid},
-         hline{1,7}={solid},
-         rowsep=0mm,
-         row{1} = {abovesep+=.25cm},
-         row{2} = {belowsep+=.125cm},
-         row{6} = {belowsep+=.25cm},
-         % colsep=2.5mm,
-       }
-       \SetCell[c=2]{c} \emph{La \lettregut}\\
-       \SetCell[c=2]{c} \mdseries Bulletin irrégulomestriel
-       de l'association \gut\\
-       Directeur de la publication :
-       & \person{Bideault, Patrick} \\
-       Comité de rédaction :
-       & {Patrick Bideault, Denis Bitouzé,  \\
-         Céline Chevalier \& Maxime Chupin} \\
-       Adresse de la rédaction : &
-       {
-         Association \gut\\
-         15 rue des Halles -- \textsc{bp} 74\\
-         75001 Paris
-       }
-       \\
-       \acs{issn} : & \letgutissn
-     \end{tblr}
-   \end{center}
-   \vfill
-   \mbox{}
-   \clearpage
- #+end_src
+  \mbox{}
+
+  \vfill{}
+
+  \begin{center}
+    \begin{tblr}{
+        width=.9\linewidth,
+        colspec={
+          % < (Just not to disturb the parentheses
+          % balancing detection of my editor.)
+          >{\bfseries}r@{ }X
+        },
+        vline{1,3}={solid},
+        hline{1,7}={solid},
+        rowsep=0mm,
+        row{1} = {abovesep+=.25cm},
+        row{2} = {belowsep+=.125cm},
+        row{6} = {belowsep+=.25cm},
+        % colsep=2.5mm,
+      }
+      \SetCell[c=2]{c} \emph{La \lettregut}\\
+      \SetCell[c=2]{c} \mdseries Bulletin irrégulomestriel
+      de l'association \gut\\
+      Directeur de la publication :
+      & \person{Bideault, Patrick} \\
+      Comité de rédaction :
+      & {Patrick Bideault, Denis Bitouzé,  \\
+        Céline Chevalier, Maxime Chupin \& Bastien Dumont} \\
+      Adresse de la rédaction : &
+      {
+        Association \gut\\
+        15 rue des Halles -- \textsc{bp} 74\\
+        75001 Paris
+      }
+      \\
+      \acs{issn} : & \letgutissn
+    \end{tblr}
+  \end{center}
+  \clearpage
+#+end_src
 
 ** Acronyms
 :PROPERTIES:
@@ -6359,13 +6528,19 @@ well...
       fp_zero,fp_zero_new,fparray_count,fparray_gset,fparray_gzero,%
       fparray_item,fparray_item_to_tl,fparray_new,g_file_curr_dir_str,%
       g_file_curr_ext_str,g_file_curr_name_str,g_msg_module_name_prop,%
-      g_msg_module_type_prop,g_peek_token,g_tmpa_bool,g_tmpa_box,%
-      g_tmpa_clist,g_tmpa_coffin,g_tmpa_dim,g_tmpa_fp,g_tmpa_int,%
-      g_tmpa_ior,g_tmpa_iow,g_tmpa_muskip,g_tmpa_prop,g_tmpa_regex,%
-      g_tmpa_seq,g_tmpa_skip,g_tmpa_str,g_tmpa_tl,g_tmpb_bool,g_tmpb_box,%
-      g_tmpb_clist,g_tmpb_coffin,g_tmpb_dim,g_tmpb_fp,g_tmpb_int,%
-      g_tmpb_ior,g_tmpb_iow,g_tmpb_muskip,g_tmpb_prop,g_tmpb_regex,%
-      g_tmpb_seq,g_tmpb_skip,g_tmpb_str,g_tmpb_tl,group_align_safe_begin,%
+      g_msg_module_type_prop,g_peek_token,%
+      g__letgut_tmpa_bool,g__letgut_tmpa_box,g__letgut_tmpa_clist,%
+      g__letgut_tmpa_coffin,g__letgut_tmpa_dim,g__letgut_tmpa_fp,%
+      g__letgut_tmpa_int,g__letgut_tmpa_ior,g__letgut_tmpa_iow,%
+      g__letgut_tmpa_muskip,g__letgut_tmpa_prop,g__letgut_tmpa_regex,%
+      g__letgut_tmpa_seq,g__letgut_tmpa_skip,g__letgut_tmpa_str,%
+      g__letgut_tmpa_tl,g__letgut_tmpb_bool,g__letgut_tmpb_box,%
+      g__letgut_tmpb_clist,g__letgut_tmpb_coffin,g__letgut_tmpb_dim,%
+      g__letgut_tmpb_fp,g__letgut_tmpb_int,g__letgut_tmpb_ior,%
+      g__letgut_tmpb_iow,g__letgut_tmpb_muskip,g__letgut_tmpb_prop,%
+      g__letgut_tmpb_regex,g__letgut_tmpb_seq,g__letgut_tmpb_skip,%
+      g__letgut_tmpb_str,g__letgut_tmpb_tl,%
+      group_align_safe_begin,%
       group_align_safe_end,group_begin,group_end,group_insert_after,%
       group_log_list,group_show_list,hbox,hbox_gset,hbox_gset_end,%
       hbox_gset_to_wd,hbox_overlap_center,hbox_overlap_left,%
@@ -6407,13 +6582,18 @@ well...
       l_keys_usage_load_prop,l_keys_usage_preamble_prop,l_keys_value_tl,%
       l_my_int,l_peek_token,l_text_accents_tl,l_text_case_exclude_arg_tl,%
       l_text_expand_exclude_tl,l_text_letterlike_tl,l_text_math_arg_tl,%
-      l_text_math_delims_tl,l_text_titlecase_check_letter_bool,l_tmpa_bool,%
-      l_tmpa_box,l_tmpa_clist,l_tmpa_coffin,l_tmpa_dim,l_tmpa_fp,%
-      l_tmpa_int,l_tmpa_muskip,l_tmpa_prop,l_tmpa_regex,l_tmpa_seq,%
-      l_tmpa_skip,l_tmpa_str,l_tmpa_tl,l_tmpb_bool,l_tmpb_box,%
-      l_tmpb_clist,l_tmpb_coffin,l_tmpb_dim,l_tmpb_fp,l_tmpb_int,%
-      l_tmpb_muskip,l_tmpb_prop,l_tmpb_regex,l_tmpb_seq,l_tmpb_skip,%
-      l_tmpb_str,l_tmpb_tl,legacy_if,legacy_if_gset,legacy_if_gset_false,%
+      l_text_math_delims_tl,l_text_titlecase_check_letter_bool,%
+      l__letgut_tmpa_bool,l__letgut_tmpa_box,l__letgut_tmpa_clist,%
+      l__letgut_tmpa_coffin,l__letgut_tmpa_dim,l__letgut_tmpa_fp,%
+      l__letgut_tmpa_int,l__letgut_tmpa_muskip,l__letgut_tmpa_prop,%
+      l__letgut_tmpa_regex,l__letgut_tmpa_seq,l__letgut_tmpa_skip,%
+      l__letgut_tmpa_str,l__letgut_tmpa_tl,l__letgut_tmpb_bool,%
+      l__letgut_tmpb_box,l__letgut_tmpb_clist,l__letgut_tmpb_coffin,%
+      l__letgut_tmpb_dim,l__letgut_tmpb_fp,l__letgut_tmpb_int,%
+      l__letgut_tmpb_muskip,l__letgut_tmpb_prop,l__letgut_tmpb_regex,%
+      l__letgut_tmpb_seq,l__letgut_tmpb_skip,l__letgut_tmpb_str,%
+      l__letgut_tmpb_tl,%
+      legacy_if,legacy_if_gset,legacy_if_gset_false,%
       legacy_if_gset_true,legacy_if_p,legacy_if_set,legacy_if_set_false,%
       legacy_if_set_true,lua_escape,lua_now,lua_shipout,lua_shipout_e,%
       mode_if_horizontal,mode_if_horizontal_p,mode_if_inner,%

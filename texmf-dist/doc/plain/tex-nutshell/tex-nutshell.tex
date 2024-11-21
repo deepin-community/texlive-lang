@@ -55,6 +55,7 @@
 \def\yy #1#2={\i #2 \egroup `#1#2=}
 \def\z`{`\let<=\l}
 \let\_cslinkcolor=\Blue
+\def\q`#1`{\link[cs:\csstring#1]\Blue{\tt\string#1}}
 
 % tex-nutshell.pdf includes destinations to the explanation of the primitive
 % control sequences and plain TeX macros in the form: "cs:sequence". For example,
@@ -145,8 +146,10 @@ There are four types of meanings of control sequences:
   tables, \i hbox `\hbox` creates a box in typesetting output).
 * the control sequence can be a \ii character/constant {\em character constant} 
   (declared by \i chardef `\chardef`
-  or \i mathchardef `\mathchardef` primitive command) or a font selector (declared
-  by \i font `\font` primitive command).
+  or \i mathchardef `\mathchardef` primitive command) or a
+  \ii character/equivalent {\em character equivalent}
+  (declared by \i let `\let\sequence=<character>`) or a {\em font selector}
+  (declared by \i font `\font` primitive command).
 * the control sequence can be a \ii macro {\em macro}. When it is read, it is
   replaced by its \ii replacement/text {\em replacement text} in the input queue. If there are more
   macros in the replacement text, all macros are replaced. This is called the 
@@ -805,6 +808,11 @@ If the real parameter is in the form `{...}` then the outer
 braces are removed from the parameter. For example `\Test A{C..DEF G}.. H`
 reads `C..DEF G` to the `#2`.
 
+When reading an unseparated parameter, \TeX/ ignores spaces before first
+non-space token. Suppose for example `\def\m:#1{"#1"}`. Then both
+`\m:x` and `\m: x` print `"x"` and both `\m:{a b}` and `\m: {a b}`
+print `"a b"`.
+
 The separated parameter can bring a potential problem if the user forgets the
 delimiter or the delimiter is specified incorrectly. Then \TeX/ reports an
 error. This error is reported when the first \i par `\par` is scanned as part of the
@@ -1104,6 +1112,7 @@ value given by plain \TeX/ follows.
 
 * \y`\topskip=10pt` is the distance between the top of the page box and the baseline of
   the first line.
+  \y`\splittopskip=10pt` is the same for a box remainded after \q`\vsplit`.
 
 * \y`\linepenalty=10`,
   \y`\hyphenpenalty=50`,
@@ -1144,6 +1153,9 @@ value given by plain \TeX/ follows.
   \y`\vfuzz=0.1pt`
 are parameters for the paragraph building algorithm (not described here in
 detail).
+
+* \y`\uchyph=1`, if it is positive, then words with capital first letter can
+  be hyphenated. 
 
 * \y`\hbadness=1000`,
   \y`\vbadness=1000`. \TeX/ reports a warning about \iid badness on the terminal
@@ -1225,6 +1237,8 @@ detail).
 
 * \y`\mathsurround=0pt` is the space inserted around a formula in internal math mode.
 
+* \y`\displaywidth=*` includes the width of the line with display formula.
+
 * \y`\abovedisplayskip=12pt plus3pt minus9pt`,
   \y`\abovedisplayshortskip=0pt plus3pt`,
   \y`\belowdisplayskip=12pt plus3pt minus9pt`,
@@ -1251,6 +1265,23 @@ detail).
   situations respectively: opens output routine, paragraph, internal math mode, display
   math mode, {\noda\x`\vbox`, \x`\hbox`}, is at the end of a line in a table,
   at the end of an input file, or starts the job.
+
+* \y`\maxdepth=4pt`, \y`\boxmaxdepth=\maxdimen`, \y`\splitmaxdepth=\maxdimen`
+  are maximal pagebox / ordinal `\vbox` / `\vsplit`ted box depth. If exeeds,
+  baseline si shifted down.  
+
+* \y`\delimiterfactor=901`, 
+  \y`\delimitershortfall=5pt` are parameters for calculating size of math delimiters.
+  \y`\nulldelimiterspace=1.2pt` is empty delimiter horizontal space. 
+
+* \y`\defaultskewchar=-1` sets a character \x`\skewchar` in font used for positioning math
+  accents.
+
+* \x`\fontdimen``<number><font selector>` enables access to various values
+  of given font.
+
+* \y`\pdfpagewidth=210mm`, \y`\pdfpageheight=297mm` are PDF page dimensions
+  (implemented in pdf\TeX/ and its successors).
 \enditems
 
 \sec[expand] Expandable primitive commands
@@ -1287,7 +1318,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   of the `<tokens register>` without re-tokenizing and the expand processor 
   does not expand this output in {\noda`\edef`, `\write`, `\message`}, etc., arguments.
 
-* \i scantoken `\scantokens/<expandafters>.`\z`{|<text>};` re-tokenizes \z`<text>` using the actual
+* \i scantokens `\scantokens/<expandafters>.`\z`{|<text>};` re-tokenizes \z`<text>` using the actual
   tokenizer setting. The behavior is the same as when writing \z`<text>` to a 
   virtual file and reading this file immediately. 
 
@@ -1317,6 +1348,9 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 \value Peter     % expands to \dict:Peter which expands to 21. 
 \endtt
 
+* \*\*\*\i lastnamedcs `\lastnamedcs` is the last control sequence created by
+  `\csname ...\endcsname`.
+
 * \i expandafter \z`\expandafter|<token 1><token 2>;` does the transformation
   \z`<token 1><expanded token 2>`. Then \TeX/ processes `<token 1>` followed by
   `<expanded token 2>`. 
@@ -1343,7 +1377,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 
   The `/<expandafters>.`\z`{|<text>};` syntax rule enables us to prepare \z`|<text>;` by
   `\expandafter`(s). For example \i detokenize `\detokenize{\macro}` expands to
-  `\`\c{12}`m`\c{12}`a`\c{12}`c`\c{12}`r`\c{12}`o`\c{12}. But if you need to detokenize
+  `\`\c{12}`m`\c{12}`a`\c{12}`c`\c{12}`r`\c{12}`o`\c{12}{\Blue\char9251}\c{10}. If you need to detokenize
   the `<replacement text>` of the `\macro` then use
   `\detokenize\expandafter{\macro}`. Not only `\expandafter`s should be
   here. The expand processor does full expansion here until an opening brace 
@@ -1363,17 +1397,20 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 
 * \i if \z`\if<token 1><token 2>` is true if
   \begitems \removelastskip \style a 
-  * both tokens are characters with the same Unicode (or ASCII code in classical \TeX) or
+  * both tokens are the same characters or
   * both tokens are control sequences 
    (with arbitrary meaning but not \"the character") or
-  * one token is a character, second is a control sequence equal to the character (by `\let`) or
-  * both tokens are control sequences, their meaning (set by `\let`) is the same character code.
+  * one token is a character, second is a control sequence equal to this character (by `\let`) or
+  * both tokens are control sequences, their meaning (set by `\let`) is the same character.
   \enditems
-  \removelastskip
-  \noindent Example: you can say `\let\test=a` then `\if\test a` returns true.
+  In a), c) and d), only character codes are compared, no their category codes.\nl
+  Example: you can say `\let\test=a` then `\if\test a` returns true.
 
 * \i ifx \z`\ifx|<token 1><token 2>;` is true if the meanings of \z`<token 1>`
    and \z`<token 2>` are the same. 
+
+* \*\i ifcsname `\ifcsname<text>\endcsname` is true if the control sequance
+  `<text>` is declared.
 
 * \i ifnum `\ifnum<number 1><relation><number 2>`. The `<relation>` could be
   \code{<} or \code{=} or \code{>}. It returns true if the comparison of the two
@@ -1460,7 +1497,17 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   was started. `\endinput` done in the main file causes future reading from the 
   terminal and a headache for the user.
 
+* \*\*\*\i Uchar \x`\Uchar``<number>` expands to a Unicode character
+  with given code <number>. (\XeTeX/ too).
+
 * \*\*\*\i directlua \z`\directlua {<text>}` runs a Lua script given in \z`<text>`.
+
+* \*\*\*\i luaescapestring \z`\luaescapestring {<text>}` prepares `<text>`
+  for usage as Lua string (escapes `"` and `\`).
+
+* \*\*\*\i immediateassignment `\immediateassignment`,
+  \i immediateassigned \z`\immediateassigned {<code>}` do following assignment
+  (or assignments in `<code>`) expandable.
 
 \enditems
 
@@ -1526,11 +1573,14 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   separated by a semicolon. The {\let\,=\relax `otfinfo -f <file name>.otf`} command 
   (on command line) can list them. 
   Lua\TeX/ supports alternative syntax: `{...}` instead of `"..."`.
-  Example: `\font\test={[texgyretermes-regular]:+onum;-liga} at12pt`. 
+  Example: `\font\test={[texgyretermes-regular]:+onum;-liga} at12pt`.
+  There is default font selector \x`\nullfont` which selects an \"empty font". 
 
 * \i let `\let|<control sequence>=<token>;` sets to the `<control sequence>`
   the same meaning as `<token>` has. The `<token>` can be whatever, a
   character or a control sequence.
+
+* \*\*\* \x`\glet` is equal to `\global\let`.
 
 * \i futurelet \z`\futurelet|<control sequence><token 1><token 2>;` works in two steps.
   In the first step it does \z`\let|<control sequence>=<token 2>;` and in the
@@ -1640,7 +1690,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   result of this operation. For example, you can say `\newbox\column`
   `\setbox\column=\vbox{...}` and later 
   `\setbox0=\vsplit\column to5cm`. The `\box0` is a `\vbox` containing the first 5cm of
-  saved material.
+  saved material. And the `\column` box includes the rest of the material.
 
 * \x`\lastbox` returns the last box in the current vertical or horizontal
   material and removes it. 
@@ -1699,7 +1749,8 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 \noindent {\bf More commands for creating something in typesetting output}
 
 \begitems
-* \x`\par` closes horizontal mode and finalizes a paragraph.
+* \x`\par` closes horizontal mode and finalizes a paragraph. In vertical
+  mode, it does nothing.
 * \x`\indent`, \x`\noindent`. They leave vertical mode and open a paragraph
   with/without paragraph indentation. If horizontal mode is current then 
   `\indent` inserts an empty box of `\parindent` width; `\noindent` does
@@ -1950,6 +2001,7 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 (available in pdf\TeX, \XeTeX/ and Lua\TeX)
 
 \begitems
+* \i pdfoutput `\pdfoutput` is numeric register. If its value is 1 then PDF format is geneerated.
 * \i pdfliteral \z`\pdfliteral{<text>}` puts the \z`<text>` interpreted 
   in a low level PDF language to the typesetting output. All PDF constructs
   defined in the PDF specification are allowed. The dimensions of
@@ -1959,6 +2011,8 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   A good practice is to close \z`<text>` to `q...Q` PDF commands.
   The command `\pdfliteral` is typically 
   used for generating graphics and for linear transformation.
+* \i pdfsave \i pdfrestore `\pdfsave`, `\pdfrestore` saves and restores
+  PDF graphics stack (like `q`, `Q` PDF commands).
 * \i pdfcolorstack `\pdfcolorstack<number><op>`\z`{<text>}` (where `<op>` is `push`
   or `pop` or `set`) behaves like \z`\pdfliteral{<text>}` and it is used for
   color switchers. For example when \z`<text>` is `1 0 0 rg` then the red color is
@@ -2011,6 +2065,46 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
   these absolute positions to a text file which can be read in the next run
   of \TeX/ in order to get these absolute positions by macros. 
 \enditems
+
+\noindent {\bf Selected \LuaTeX/ primitives} 
+
+\begitems
+* \x`\pdffeedback`, \x`\pdfextension`, \x`\pdfvariable` declare pdf\TeX/ 
+  \"primitives" in \LuaTeX.
+* Moreover, \LuaTeX/ uses different names for several primitives:
+  {\spaceskip=.3em plus.7em minus.1em
+  \x`\pagewidth` is \q`\pdfpagewidth`,
+  \x`\pageheight` is \q`\pdfpageheight`,
+  \x`\outputmode` is \q`\pdfoutput`,
+  \x`\savepos` is \q`\pdfsavepos`,
+  \x`\lastxpos` is \q`\pdflastxpos`,
+  \x`\lastypos` is \q`\pdflastypos`,
+  \x`\outputmode` is \q`\pdfoutput`,
+  \x`\saveimageresource` is \q`\pdfximage`,
+  \x`\lastsavedimageresourceindex` is \q`\pdflastximage`,
+  \x`\useimageresource` is \q`\pdfrefximage`,
+  \x`\protrudechars` is \q`\pdfprotrudechars`,
+  \x`\normaldeviate` is \q`\pdfnormaldeviate`,
+  \x`\uniformdeviate` is \q`\pdfuniformdeviate`,
+  \x`\setrandomseed` is \q`\pdfsetrandomseed`.
+  }
+* \x`\catcodetable`, \x`\initcatcodetable`, \x`\savecatcodetable`
+  do copy of whole catcode tables and enable to switch between them.
+* \x`\attributedef` declares a sequence as an attribute number. Similar like
+  \q`\countdef`.
+* \x`\suppressfontnotfounderror` and others switch on/off
+  error reporting in specified cases. 
+* \x`\matheqdirmode`, \x`\breakafterdirmode` one of many parameters for
+  right-to-left typesetting. 
+* \x`\crampeddisplaystyle`, \x`\crampedtextstyle`,
+  \x`\crampedscriptstyle`,\nl \x`\crampedscriptscriptstyle`
+  is a reduced math style (below fraction line, for example).
+\enditems
+
+There are many additional primitives in \LuaTeX/, see its
+\ulink[https://www.pragma-ade.com/general/manuals/luatex.pdf]{documentation}.
+Only few of them are mentioned here.
+\medskip
 
 \noindent {\bf Microtypographical extensions}
 (available in pdf\TeX/, Lua\TeX/ and not all of them in \XeTeX)
@@ -2092,6 +2186,9 @@ If it is~a~Lua\TeX/ only command then three *** are prefixed.
 * \i eqno `$$<formula>\eqno<mark>$$` puts the `<mark>` to the right
   margin as `\llap{$<mark>$}`. Analogously, 
   \i leqno `$$<formula>\leqno<mark>$$` puts it to the left margin.
+* \x`\mkern`, \x`\mskip` work like `\kern`, `\hskip`, but dimensions are
+  set in `mu`=1/18`em` units.
+* \x`\nonscript` ignores following skip command if it is used in <S> or <SS> style.
 \enditems
 
 \noindent {\bf Commands for setting math codes and math-family fonts}\par\nobreak\medskip
@@ -2351,6 +2448,7 @@ math-family font number `<d4>` and slot `<d5><d6>` for the first successor of
   does the same but without worrying about floating objects.
 \enditems
 
+\filbreak
 \noindent{\bf Macros used in math modes}
 
 \begitems
@@ -2430,8 +2528,8 @@ math-family font number `<d4>` and slot `<d5><d6>` for the first successor of
 \noindent
 Petr Olšák {\tt petr@olsak.net}\nl
 Czech Technical University in Prague\nl
-Version of the text: 0.9 (\the\year-\thed\month-\thed\day)
+Version of the text: 0.10 (\the\year-\thed\month-\thed\day)
 
 \break
 
-\end
+\bye

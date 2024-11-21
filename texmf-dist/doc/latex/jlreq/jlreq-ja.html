@@ -105,12 +105,13 @@ upLaTeX用のクラスファイルと，それに必要なJFMの組み合わせ�
 jfm-jlreqv-jidori.lua -&gt; $TEXMF/tex/luatex/jlreq</li>
 <li>jlreq.cls, jlreq-helpers.sty -&gt; $TEXMF/tex/latex/jlreq</li>
 </ul>
-<p>と配置します．<code>make install</code>とすると，$TEXMF=$TEXMFHOMEとしてこのコピーを行います．</p>
+<p>と配置します．<code>make install</code>とすると，<span
+class="math inline"><em>T</em><em>E</em><em>X</em><em>M</em><em>F</em>=</span>TEXMFHOMEとしてこのコピーを行います．</p>
 <h2 id="動作環境">動作環境</h2>
 <p>pLaTeX / upLaTeX /
 LuaLaTeX上で動きます．以下のパッケージを内部で読み込みます．</p>
 <ul>
-<li>（常時）：l3keys2e,lmodern</li>
+<li>（常時）：lmodern</li>
 <li>（LuaLaTeX非利用時）：everyhook</li>
 <li>（LuaLaTeX利用時）：luatexja,luatexja-adjust</li>
 </ul>
@@ -137,7 +138,7 @@ href="https://www.w3.org/TR/jlreq/?lang=ja">日本語組版処理の要件</a>�
 <h3 id="section"><code>\section</code></h3>
 <p><code>\section*[running head]{見出し文字列}[副題]</code>というように，通常の書式に加えて副題を受け付けられるように拡張されています．その他，<code>\part</code>（articleのみ），<code>\chapter</code>（book/reportのみ），<code>\subsection</code>，<code>\subsubsection</code>も副題を受け付けます．</p>
 <h3 id="abstract環境"><code>abstract</code>環境</h3>
-<p>プリアンブルにもかけるようになっています．プリアンブルに書かれた場合は，<code>\maketitle</code>とともに出力されます．二段組の場合は，段組にならず概要を出力することができます．</p>
+<p>プリアンブルにもかけ，そのときは<code>\maketitle</code>とともに出力されます．二段組の場合は，段組にならず概要を出力することができます．ただし今では非推奨の方法です．<code>\jlreqsetup</code>で<code>abstract_with_maketitle=true</code>を指定して<code>\maketitle</code>よりも前に書くことで同様のことができます．</p>
 <h3 id="sidenote"><code>\sidenote</code></h3>
 <p>この命令は傍注の幅が正の時にのみ定義されます．デフォルトの基本版面ではこの幅は0に設定されています．従って<code>\sidenote</code>は定義されません．後の基本版面の設定を参考にしてください．</p>
 <p><code>\sidenote</code>は傍注（縦組みの場合は脚注）を出力します．内部では<code>\marginpar</code>を使っています．デフォルトでは<code>\footnote</code>と同様の書式となりますが，<code>\jlreqsetup</code>で<code>sidenote_type=symbol</code>が指定されている場合，その書式は<code>\sidenote{該当項目}{注}</code>となります．たとえば</p>
@@ -163,7 +164,7 @@ class="sourceCode latex"><code class="sourceCode latex"><span id="cb3-1"><a href
 <h3 id="その他">その他</h3>
 <ul>
 <li><p>ルビや圏点は提供されません．<a
-href="https://github.com/zr-tex8r/PXrubrica">PXrubrica</a>または`luatexja-ruby`（LuaLaTeX，LuaTeX-jaパッケージに付属）を使うと良いかと思います．</p></li>
+href="https://github.com/zr-tex8r/PXrubrica">PXrubrica</a>または<code>luatexja-ruby</code>（LuaLaTeX，LuaTeX-jaパッケージに付属）を使うと良いかと思います．</p></li>
 <li><p>pLaTeX /
 upLaTeX利用時はそれぞれ<code>zw</code>および<code>zh</code>に展開されるマクロ<code>\zw</code>と<code>\zh</code>が定義されます．LuaLaTeX利用時はLuaTeX-ja内で同名のマクロが定義されます．</p></li>
 <li><p>日本語組版処理の要件2.3.2.dによれば，横組みにおける二段組の最後のページの各段の行数は揃えることが望ましいとされていますが，この処理は行われません．<code>nidanfloat</code>パッケージを使い，</p>
@@ -298,6 +299,10 @@ B列を指定する場合は，<code>b0j</code>から<code>b10j</code>の対応�
 <li><code>mainmatter_pagination</code>に<code>continuous</code>と<code>independent</code>は指定できません．</li>
 <li><code>appendix_pagebreak</code>，<code>appendix_pagestyle</code>，<code>appendix_pagination</code>はありません．</li>
 </ul>
+<h3 id="概要">概要</h3>
+<ul>
+<li><code>abstract_with_maketitle=[true/false]</code>：abstract環境が<code>\maketitle</code>に先行して書かれた場合，その中身を<code>\maketitle</code>とともに遅延します．二段組みの場合でも一段で出力されます．デフォルトは<code>false</code>です．<code>article</code>および<code>report</code>時のみ．</li>
+</ul>
 <h2 id="見出し">見出し</h2>
 <p>新しい見出しを<code>\New***Heading</code>という命令で作ることができます（***には見出しの種類に応じた文字列が入る）．書式はすべて</p>
 <pre><code>\New***Heading{&lt;命令名&gt;}{&lt;レベル&gt;}{&lt;設定&gt;}</code></pre>
@@ -426,8 +431,11 @@ class="sourceCode latex"><code class="sourceCode latex"><span id="cb10-1"><a hre
 <li><code>nombre=&lt;書式&gt;</code>：出力するノンブルを指定します．デフォルトは<code>\thepage</code>．</li>
 <li><code>odd_running_head=&lt;書式&gt;</code>，<code>even_running_head=&lt;書式&gt;</code>：それぞれ奇数ページ，偶数ページの柱を指定します．<code>_section</code>のように<code>_</code>から始まる名前を指定すると，対応する見出しを出力します．（<code>_section</code>だと現在の<code>\section</code>を出力する．）</li>
 <li><code>mark_format={[odd=&lt;書式&gt;/even=&lt;書式&gt;/_&lt;見出し命令名&gt;=&lt;書式&gt;],...}</code>：見出しを柱に出力する際のフォーマットを指定します．<code>mark_format={_section={節\thesection：#1},_chapter={第\thechapter 章\quad #1}}</code>のように指定します．見出し命令名の代わりに<code>odd</code>や<code>even</code>も指定でき，それぞれ奇数ページ/偶数ページの柱の書式になります．<code>\pagestyle</code>実行時に<code>\sectionmark</code>等を定義することで実現しています．</li>
-<li><code>nombre_ii=&lt;書式&gt;</code>:
-二つ目のノンブルを指定します．<code>nombre_ii_position</code>で場所指定，<code>nombre_ii_font</code>でフォント設定もできます．指定方法は<code>nombre</code>や<code>nombre_position</code>と同じです．<code>odd_running_head_ii</code>，<code>even_running_head_ii</code>，<code>running_head_ii_position</code>，<code>running_head_ii_font</code>もあります．<code>nombre_ii_position</code>や<code>running_head_ii_position</code>が指定されなかった場合，<code>yoko</code>指定時にはそれぞれ<code>nombre_position</code>および<code>running_head_position</code>と同じ位置に設定されます．<code>tate</code>指定時は一つ目のノンブルや柱に続く場所に表示されます．</li>
+<li><code>nombre_ii=&lt;書式&gt;</code>：二つ目のノンブルを指定します．<code>nombre_ii_position</code>で場所指定，<code>nombre_ii_font</code>でフォント設定もできます．指定方法は<code>nombre</code>や<code>nombre_position</code>と同じです．<code>odd_running_head_ii</code>，<code>even_running_head_ii</code>，<code>running_head_ii_position</code>，<code>running_head_ii_font</code>もあります．<code>nombre_ii_position</code>や<code>running_head_ii_position</code>が指定されなかった場合，<code>yoko</code>指定時にはそれぞれ<code>nombre_position</code>および<code>running_head_position</code>と同じ位置に設定されます．<code>tate</code>指定時は一つ目のノンブルや柱に続く場所に表示されます．</li>
+<li><code>odd_head_format=&lt;書式&gt;</code>,
+<code>odd_foot_format=&lt;書式&gt;</code>,
+<code>even_head_format=&lt;書式&gt;</code>,
+<code>even_foot_format=&lt;書式&gt;</code>：ヘッダやフッタのフォーマットを指定します．<code>#1</code>がヘッダまたはフッタ全体に書き換えられます．ただし<code>#1</code>には位置調整用のコードが入っている場合もあるので，特に<code>\NewPageStyle</code>に<code>tate</code>を指定している場合には思うようにならないこともあります．例えば奇数ページのヘッダに罫線を引くためには<code>odd_head_format={\underline{\makebox[\jlreqyokoheadlength]{#1}}}</code>とするとよいでしょう．なお，ここで使った<code>\jlreqyokoheadlength</code>は本クラスファイル内で定義されているマクロで，ヘッダの横方向の長さを与えます．（フッタの長さも同じです．）縦方向の長さ，すなわち<code>\NewPageStyle</code>で<code>tate</code>が指定されている場合の長さは<code>\jlreqtateheadlength</code>で取得できます．</li>
 </ul>
 <p><code>\RenewPageStyle</code>，<code>\ProvidePageStyle</code>，<code>\DeclarePageStyle</code>もあります．<code>\ModifyPageStyle</code>により既存のページスタイルを改変することが可能です．</p>
 <h2 id="jfm">JFM</h2>
@@ -747,6 +755,37 @@ href="LICENSE">LICENSE</a>をご覧ください．</p>
 <li>LuaLaTeX利用時の`everyhook'パッケージの利用をやめた（ドキュメントと整合的でなかった）．</li>
 <li>`enumerate'環境直前の空白が入らないことがあったのを修正．</li>
 <li><code>use_reverse_pagination</code>に関するバグ修正．</li>
+</ul></li>
+<li>2024-02-13
+<ul>
+<li>LaTeXのhookシステムのために\parをいくつか挿入．</li>
+<li><code>\jlreqsetup</code>に<code>tableofcontents_twocolumn</code>，<code>abstract_with_maketitle</code>を追加．</li>
+<li><code>everyhook</code>の機能が呼び出されていたのを削除．</li>
+<li>jfmを少し修正．</li>
+<li>見出し内で無限ループが出ることがあったのを修正．</li>
+<li>LuaLaTeX利用時に<code>stfloats</code>を読み込むようにした．</li>
+<li>ページスタイル内の位置調整を改善．</li>
+<li>そのほかいくつか改善など．</li>
+</ul></li>
+<li>2024-02-16
+<ul>
+<li>バグ修正</li>
+</ul></li>
+<li>2024-08-23
+<ul>
+<li>バグ修正</li>
+<li>内部変数名の変更</li>
+<li>英語ドキュメントに使い方を書いた</li>
+<li><code>\DeclareKeys</code>などを使うようにした．</li>
+<li>行見出しの内部処理をちょっとだけ変更．</li>
+</ul></li>
+<li>2024-09-26
+<ul>
+<li>Makefileでのパターンマッチングの使用をやめた</li>
+</ul></li>
+<li>2024-10-03
+<ul>
+<li>Makefile内のvf一覧にtfmが紛れていたのを修正．</li>
 </ul></li>
 </ul>
 <hr />

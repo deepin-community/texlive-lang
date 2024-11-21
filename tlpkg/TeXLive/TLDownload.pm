@@ -1,4 +1,4 @@
-# $Id: TLDownload.pm 69646 2024-01-31 18:17:20Z karl $
+# $Id: TLDownload.pm 71152 2024-05-02 17:03:11Z karl $
 # TeXLive::TLDownload.pm - module for abstracting the download modes
 # Copyright 2009-2024 Norbert Preining
 # This file is licensed under the GNU General Public License version 2
@@ -11,7 +11,7 @@ package TeXLive::TLDownload;
 use TeXLive::TLUtils;
 use TeXLive::TLConfig;
 
-my $svnrev = '$Revision: 69646 $';
+my $svnrev = '$Revision: 71152 $';
 my $_modulerevision;
 if ($svnrev =~ m/: ([0-9]+) /) {
   $_modulerevision = $1;
@@ -60,6 +60,7 @@ sub reinit {
   # differing case-insensitive like foo=1 and FOO=2. Even on systems
   # that have case-sensitive environments, and even about variables that
   # have nothing whatsoever to do with LWP (like foo).
+  # https://github.com/libwww-perl/libwww-perl/issues/372
   # 
   # So, only pass env_proxy=>1 when creating the UserAgent if there are
   # in fact *_proxy variables (case-insensitive, just in case) set in

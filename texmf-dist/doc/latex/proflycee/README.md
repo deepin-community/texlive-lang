@@ -8,6 +8,8 @@ proflycee est un package qui pourra vous aider à utiliser LaTeX au quotidien.
 
 ----------------
 
-Author : Cédric Pierquet
-email : cpierquet@outlook.fr
-Licence : Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
+Author   : Cédric Pierquet
+email    : cpierquet@outlook.fr
+Licences : Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
+           CC0 for cliparts (from openclipart)
+		   CC BY-SA 3.0 (from Mark Wibrow helping code)

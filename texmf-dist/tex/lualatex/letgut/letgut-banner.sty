@@ -1,20 +1,12 @@
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ProvidesExplPackage{letgut-banner}
-{2022-03-17}
-{0.9}
+{2024-10-07}
+{0.10}
 {
   Package for the banner of the newsletter "La Lettre de GUTenberg"
 }
-\RequirePackage{l3keys2e}
 \RequirePackage{xcolor}
 \RequirePackage{accsupp}
-\keys_define:nn { letgut-banner }
-{
-  , pagecolor .clist_gset:N = \g__letgutbanner_pagecolor_clist
-  , pagecolor .initial:n = { 1,1,1 }
-}
-\ProcessKeysOptions { letgut-banner }
-\AddToHook{begindocument}{
 \cs_generate_variant:Nn \color_fill:nn { nV }
 \dim_new:N \g__letgutbanner_area_height_dim
 \dim_new:N \g__letgutbanner_La_height_dim
@@ -28,6 +20,7 @@
 \dim_if_exist:NF \g__letgutbanner_first_page_shrink_dim {
   \dim_new:N \g__letgutbanner_first_page_shrink_dim
 }
+\dim_new:N \g__letgutbanner_textwidth_dim
 \cs_generate_variant:Nn \dim_const:Nn { NV }
 \dim_if_exist:NTF \c__letgut_textheight_dim {
   \dim_const:NV \c__letgutbanner_textheight_dim
@@ -37,11 +30,9 @@
   { 25cm }
 }
 \dim_if_exist:NTF \c__letgut_textwidth_dim {
-  \dim_const:NV \c__letgutbanner_textwidth_dim
-  \c__letgut_textwidth_dim
+  \dim_gset_eq:NN \g__letgutbanner_textwidth_dim \c__letgut_textwidth_dim
 }{
-  \dim_const:Nn \c__letgutbanner_textwidth_dim
-  { 14cm }
+  \dim_gset:Nn \g__letgutbanner_textwidth_dim { 14cm }
 }
 \dim_if_exist:NTF \c__letgut_lmargin_dim {
   \dim_const:NV \c__letgutbanner_lmargin_dim
@@ -101,7 +92,7 @@
 }
 \dim_const:Nn \c__letgutbanner_banner_padding_dim  { .25cm }
 \dim_const:Nn \c__letgutbanner_banner_width_dim  {
-  \c__letgutbanner_textwidth_dim
+  \g__letgutbanner_textwidth_dim
   +
   (
   \c__letgutbanner_banner_thickness_dim
@@ -117,7 +108,7 @@
 }
 \dim_const:Nn
 \c__letgutbanner_banner_horizontal_contents_width_dim {
-  \c__letgutbanner_textwidth_dim
+  \g__letgutbanner_textwidth_dim
   - (
   \c__letgutbanner_banner_thickness_dim
   -
@@ -139,7 +130,7 @@
 \geometry{
   asymmetric,
   textheight    = \c__letgutbanner_textheight_dim,
-  textwidth     = \c__letgutbanner_textwidth_dim,
+  textwidth     = \g__letgutbanner_textwidth_dim,
   lmargin       = \c__letgutbanner_lmargin_dim,
   tmargin       = \c__letgutbanner_tmargin_dim,
   head          = \c__letgutbanner_head_dim,
@@ -157,6 +148,18 @@
   \textbf{\textit{GUTenberg}}
 }
 \hbox_gset:Nn \g__letgutbanner_g_box { \textbf{g} }
+\keys_define:nn { letgut-banner }
+{
+  , pagecolor .clist_gset:N = \g__letgutbanner_pagecolor_clist
+  , pagecolor .initial:n = { 1,1,1 }
+  , watermark~ letter .code:n = {
+    \hbox_gset:Nn \g__letgutbanner_g_box { \textbf{#1} }
+  }
+  , watermark~ scale .tl_gset:N = \g__letgutbanner_watermark_scale_tl
+  , watermark~ scale .initial:n = 1
+}
+\ProcessKeyOptions [ letgut-banner ]
+\AddToHook{begindocument}{
 \dim_const:Nn \c__letgutbanner_L_width_dim {
   \box_wd:N \g__letgutbanner_L_box
 }
@@ -295,7 +298,11 @@
   \g__letgutbanner_largest_LETR_box_height_dim
 }
 \box_gresize_to_wd:Nn \g__letgutbanner_g_box {
-  \c__letgutbanner_textwidth_dim
+  \fp_to_dim:n {
+    \g__letgutbanner_watermark_scale_tl
+    *
+    \g__letgutbanner_textwidth_dim
+  }
 }
 \dim_gset:Nn \g__letgutbanner_first_page_shrink_dim {
   \c__letgutbanner_tmargin_dim
@@ -398,7 +405,13 @@
   % \color_fill:n {black!10}
   \color{ black!10 }
   \put(
-  .5\c__letgutbanner_lmargin_dim+.5\c__letgutbanner_banner_thickness_dim
+  .5\c__letgutbanner_lmargin_dim
+  +
+  .5\c__letgutbanner_banner_thickness_dim
+  +
+  \fp_to_dim:n {
+    (1-\g__letgutbanner_watermark_scale_tl)/2*\g__letgutbanner_textwidth_dim
+  }
   ,
   .5\paperheight
   +

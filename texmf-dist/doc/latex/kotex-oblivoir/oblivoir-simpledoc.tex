@@ -100,9 +100,9 @@
 
 \begin{document}
 
-\title{초간단 \obclass{} v3.2 사용법}
+\title{초간단 \obclass{} v3.3 사용법}
 
-\date{2023년 2월}
+\date{2024년 3월}
 
 \author{x-ob-liv-oir}
 
@@ -1497,13 +1497,21 @@ oblivoir에서 조금 확장했다. 기본인
 \fref{fig:chapsty}\는 \textsf{oblivoir}의 장 표제 스타일에서 사용되는
 매크로를 도시한 것이다.
 
-KTUG 사설 저장소를 통하여 설치할 수 있는\footnote{%
-	사설 저장소를 등록할 수 없는 상황이라면 직접 다운로드하라. 
-	\url{http://ftp.ktug.org/KTUG/texlive/tlnet/archive/}
-}
-ob-chapstyles라는 패키지에는 몇 가지 memoir
-chapter 스타일을 oblivoir화해둔 것이 있다. 이 자체를 그대로 써도 좋고 이를 자신만의 스타일을
-만드는 데 참고하여도 좋을 것이다.
+%KTUG 사설 저장소를 통하여 설치할 수 있는\footnote{%
+%	사설 저장소를 등록할 수 없는 상황이라면 직접 다운로드하라. 
+%	\url{http://ftp.ktug.org/KTUG/texlive/tlnet/archive/}
+%}
+%ob-chapstyles라는 패키지에는 몇 가지 memoir
+%chapter 스타일을 oblivoir화해둔 것이 있다. 이 자체를 그대로 써도 좋고 이를 자신만의 스타일을
+%만드는 데 참고하여도 좋을 것이다.
+
+\medskip
+
+\textsf{oblivoir}가 제공하는 chapter style들을 일별하려면
+다음 명령을 내린다.
+\begin{verbatim}
+texdoc obchapterstyles-doc
+\end{verbatim}
 
 \subsection{한글 pagestyle}
 
@@ -1553,20 +1561,35 @@ oblivoir가 추가적으로 제공하는 페이지 스타일로 \texttt{hangul}�
 \item 복숭아
 \end{itemize}
 
+%\subsection{sidefootnote와 footnotesinmargin}
+
+%oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 고쳤다.\footnotemark
+
+%%\verb|\sidefootnote|에서 발생하던 문제점도 해결하였다.\sidefootnote{이 각주는 사이드 풋노트이다.}
+%
+%\footnotesatfoot
+%\textsf{memoir} 설명서에 설명된 것과 동일하게 동작한다.\footnote{상세한 것은 memoir manual을 볼 것.}
+%
+
+\subsection{side(margin) 문단}
+
+\verb|texdoc obsideparas| 명령으로 읽을 수 있는 \texttt{obsideparas.pdf}는 \textsf{oblivoir}에서
+사용할 수 있는 마진 문단을 요약하고 있다. 다음 명령으로 구현할 수 있는 결과들을 보여준다.
+
+\begin{verbatim}
+    \marginpar
+    \sidepar
+    \sidebar
+    \sidefootnote
+\end{verbatim}
+
+이 문서의 소스를 참고하면 마진 문단의 설정에 관한 여러 힌트를 얻을 수 있을 것이다.
+
 \footnotesinmargin
-\textsf{memoir}의 \verb|\firmlist|와 \verb|\tightlist|는 여전히 동작한다.
-\stepcounter{footnote}
-\footnotetext{이 각주는 마진에 놓인다.} 
-\addtocounter{footnote}{-1}
-
-\subsection{sidefootnote와 footnotesinmargin}
-
-oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 고쳤다.\footnotemark
-
-\verb|\sidefootnote|에서 발생하던 문제점도 해결하였다.\sidefootnote{이 각주는 사이드 풋노트이다.}
-
+footnote를 마진에 놓기 위한 명령 \verb|\footnotesinmargin|\footnote
+{이 각주는 마진에 놓인다.}도 활용할 수 있다. 이 결과는 \verb|\sidefootnote|와는
+조금 다르다.\sidefootnote{이것은 side footnote}
 \footnotesatfoot
-\textsf{memoir} 설명서에 설명된 것과 동일하게 동작한다.\footnote{상세한 것은 memoir manual을 볼 것.}
 
 \subsection{[figtabcapt] 그림과 표의 캡션}
 
@@ -1701,6 +1724,10 @@ lwarpmk html <file>.tex
 이 작은 안내서에 더하여 간단한 \obclass\ 샘플 문서를 하나 제공한다.
 이 문서에서 여러 가지 memoir와 \obclass 의 기능을 살펴볼 수 있을 것이다.
 oblivoir-test.tex을 컴파일해보고 소스를 검토해보시기 바란다.
+
+\href{http://wiki.ktug.org/wiki/wiki.php/KtugPrivateRepository}{KTUG 사설저장소}를 이용할 수 있다면, \obclass 로 만들어진 샘플 문서 \texttt{pgreenbook}을
+살펴보는 것을 권장한다. 이주호가 처음 작성한 이 문서는 \obclass 의 좋은 단행본 작성 예제가
+될 것이고 그밖에도 도움이 되는 많은 정보를 포함하고 있다.
 
 %\subsection{fontspec 옵션과 수학 글꼴}\myLabel{sec:fontspec}{sec:폰트스펙}
 %
@@ -1863,6 +1890,9 @@ Lua\TeX 과 \XeTeX 이라는 유니코드 텍 엔진의 등장은, 이러한 모
 
 
 \section{변경 이력}
+
+\noindent
+2024년의 3.3 버전은 이전의 오류를 몇 가지 고치고 chapter style 예제를 확장했다.
 
 \noindent
 2023년의 3.2 버전은 부분적인 수정에 그쳤다. 3.1에서 발생했던 대부분의

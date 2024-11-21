@@ -1,0 +1,1530 @@
+\documentclass[full]{l3doc}
+\usepackage[scheme=chinese]{ctex}
+\usepackage{geometry}
+\usepackage{fancyvrb-ex}
+\usepackage{ninecolors}
+\usepackage{suanpan-l3}
+
+\IndexPrologue
+  {
+    % \section*{索引}
+    % \markboth{索引}{索引}
+    % \addcontentsline{toc}{section}{索引}
+    % 斜体数字说明了对应索引内容出现的页码，
+    % 带有下划线的数据给出了索引内容的定义，
+    % 其它的数字给出了索引内容引用的位置。
+    \section*{Index}
+    \markboth{Index}{Index}
+    \addcontentsline{toc}{section}{Index}
+    The~italic~numbers~denote~the~pages~where~the~
+    corresponding~entry~is~described,~
+    numbers~underlined~point~to~the~definition,~
+    all~others~indicate~the~places~where~it~is~used.
+  }
+
+\newcommand\tikzmark[1]{\tikz \coordinate[overlay, remember picture] (#1);}
+
+\geometry{
+  left=4.5cm,
+  right=2cm,
+  top=2cm,
+  bottom=2cm,
+}
+\hypersetup {
+  CJKbookmarks,
+  bookmarksopen,
+  bookmarksopenlevel=3,
+  pdfstartview=FitH,
+  pdfinfo = {
+   Title = 中国传统7珠圆珠算盘排版宏包 ,
+   Subject = A LaTeX3 package ,
+   Author = 耿楠
+ }
+}
+
+\DoNotIndex{\begin, \end}
+\setlength{\parskip}{\medskipamount}
+\DeclareDocumentEnvironment { noteen } { +b } {
+  \par\textbf{\textsf{NOTE:~}}#1\par
+} {}
+\DeclareDocumentEnvironment { notezh } { +b } {
+  \par\textbf{\textsf{注意:~}}#1\par
+} {}
+
+\AtEndDocument{
+  \newgeometry{
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm
+  }
+  \PrintChanges
+  \PrintIndex
+}
+
+\ExplSyntaxOn
+\dim_new:N \l__my_syntax_dim
+\box_new:N \g__my_syntax_box
+\NewDocumentEnvironment { Syntax } { s }
+  {
+    \dim_set:Nn \l__my_syntax_dim
+      { \textwidth }
+    \hbox_gset:Nw \g__my_syntax_box
+      \small \ttfamily
+      \begin{minipage}[t]{\l__my_syntax_dim}
+        \raggedright\obeyspaces\obeylines
+  }
+  {
+      \end{minipage}
+    \hbox_gset_end:
+    \IfValueF { #1 } { \smallskip }
+    \box_use_drop:N \g__my_syntax_box
+    \smallskip
+  }
+
+\DeclareDocumentEnvironment { Description } { o +b } {
+  \hbox_set:Nn \l_tmpa_box { #1 }
+  \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box }
+  \begin{itemize}[labelwidth=\l_tmpa_dim, align=left]
+    #2
+  \end{itemize}
+} {  }
+
+\keys_define:nn { suanpan/doc } {
+  opt .tl_set:N = \l_opt_tl,
+  desc .tl_set:N = \l_desc_tl,
+  init .tl_set:N = \l_init_tl,
+  init .initial:n = init-none,
+}
+
+\box_new:N \l__option_box
+\NewDocumentEnvironment { option } { m +b } {
+  \keys_set:nn { suanpan/doc } { #1 }
+  \hbox_set:Nw \l__option_box
+    \small \ttfamily
+    \begin{minipage}[t]{\textwidth}
+      \obeyspaces\obeylines
+      \textcolor{red}{
+        \l_opt_tl
+        \exp_args:Nx\SpecialOptionIndex{\l_opt_tl}
+      }
+      {~}\l_desc_tl
+      \hfill(
+      \tl_if_eq:NnTF \l_init_tl { init-none } { no~value }
+        { init: ~\texttt{\l_init_tl} }
+      )
+    \end{minipage}
+  \hbox_gset_end:
+  \box_use_drop:N \l__option_box
+  #2
+  \medskip
+} {  }
+
+\DeclareDocumentCommand \opt { O{} m }
+  { \__codedoc_cmd:no {#1} { #2 } }
+\ExplSyntaxOff
+
+\def\vers{\texttt{v1.2.4} }
+
+\changes{v1.0.0}{2024/08/20}{first version.}
+\changes{v1.2.4}{2024/10/13}{remove tikz patch.}
+
+\begin{document}
+\title{
+  \pkg{suanpan-l3}---算盘(Abacus)排版宏包
+  \rlap{\makebox[4cm][r]{
+    \normalsize $\Longrightarrow$ \color{red}
+    \protect\hyperlink{en}{English Version}
+    \protect\hypertarget{zh}{}
+  }}
+}
+\author{\textit{耿楠} \texttt{<nangeng@nwafu.edu.cn>}}
+\date{\the\year 年\the\month 月\the\day 日\qquad \vers
+\thanks{\url{https://gitee.com/nwafu_nan/suan-pan}}
+}
+
+\maketitle
+
+\begin{abstract}
+  \pkg{suanpan-l3}是一个基于\pkg{l3draw}和\pkg{TikZ}绘图宏包，用\pkg{Expl3}%
+  开发的中国传统7珠圆珠算盘排版宏包，它能够实现使用普通上珠、下珠
+  和底珠、顶珠及悬珠的算盘排版。该宏包提供了唯一的一个
+  \env{suanpan}算盘排版环境及仅在该环境中使用的 \tn{rod}、
+  \tn{rods}、\tn{bid}、\tn{bids}、\tn{rodmark}和\tn{mkframe}档杆、算珠
+  着色、横梁标记和边框排版命令。同时，该宏包还提供了\tn{suanpanset}%
+  命令用于对算盘外观进行设置。
+  \begin{center}
+    \begin{suanpan}[framedraw = brown2, scale = 0.45, bidsep=1.5pt,
+                    roddraw = brown3, rodfill = brown4]
+      % 各档位数字列表
+      \rods{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}
+      % 定位点
+      \rod*{4}{3}
+      \rod*{18}{17}
+      % 使用顶珠
+      \bid{12}{9}{azure5}
+      \bid{13}{9}{azure5}
+      \bid{14}{9}{azure5}
+      \bid{15}{9}{azure5}
+      \bid{16}{9}{azure5}
+      % 使用悬珠
+      \bid{17}{11}{red5}
+      \bid{18}{11}{red5}
+      \bid{19}{11}{red5}
+      \bid{20}{11}{red5}
+      \bid{21}{11}{red5}
+      % 使用底珠
+      \bid{11}{3}{olive5}
+      \bid{16}{3}{olive5}
+      \bid{21}{3}{olive5}
+      \rodmark{21,20,19,{},17,16,15,14,13,12,11,10,9,8,7,6,5,{},3,2,1}
+      \mkframe
+    \end{suanpan}
+  \end{center}
+\end{abstract}
+
+{\small
+\tableofcontents
+}
+\newpage
+
+\begin{documentation}
+
+\section{引言}
+
+\pkg{suanpan-l3}宏包是一个基于\pkg{l3draw}和\pkg{TikZ}绘图宏包，
+用\pkg{Expl3}开发的中国传统7珠圆珠算盘排版宏包，它利用\pkg{l3draw}%
+宏包，通过\env{l3coffin}容器的平移变换，将使用\pkg{TikZ}宏包绘制的
+算珠、档杆、边框等基本图元组装成算盘，从而实现算盘的排版。
+
+由于圆珠是通过圆角矩形实现的，因此当算珠数量较多时，绘制耗时较长，
+其编译速度较慢。
+
+\section{用户接口}
+
+\subsection{\env{suanpan}算盘排版环境}
+
+\begin{function}{suanpan}
+  \begin{syntax}
+    \tn{begin}|{suanpan}|\oarg{外观选项}
+    .....
+    \tn{end}|{suanpan}|
+  \end{syntax}
+\end{function}
+
+  按可选项设置的\oarg{外观选项}实现算盘排版。
+
+  在\env{suanpan}环境中，可以通过专用命令\tn{rod}%
+  (排版算盘的一个档位)，\tn{rods}(排版一组档位)，
+  \tn{bid}(指定算珠颜色)，\tn{bids}(指定内/外珠颜色)，
+  \tn{rodmark}(为档位添加标记)，\tn{mkframe}(排版边框)
+  按需实现算盘排版。
+
+  在\oarg{外观选项}中可以通过key-value的方式设置线宽、颜色、
+  缩放比例等外观属性。
+
+  通过\oarg{外观选项}设置的外观参数仅对\env{suanpan}环境局部有效。
+
+  \begin{notezh}
+    \env{suanpan}环境中\textsf{不可以出现空行}。
+  \end{notezh}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  % 为便排版，进行缩放
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rod{1}{0}
+    \rod{2}{3}
+    \rod{3}{0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{\env{suanpan}环境中的专用命令}
+
+\changes{v1.1.3}{2024/09/04}{add highlight to rod(s) and beam}
+\subsubsection{\tn{rod}单一档位排版命令}
+
+\begin{function}{\rod}
+  \begin{syntax}
+    \cs{rod} \marg{档位编号} \marg{档位数字}
+  \end{syntax}
+\end{function}
+
+  用于排版\marg{档位编号}(基于1，从左向右进行编号)参数指定的算盘
+  档位，本档的计数值由\marg{档位数字}参数指定。
+
+  \marg{档位数字}支持[0, 20]内的数字，其中[0, 9]内的
+  数字采用常规4个下珠结合1个上珠的方法进行表示，[10, 15]
+  内的数字则需要额外使用\enquote{底珠}和\enquote{顶珠}进行表示，
+  [16, 20]内的数字则需要再额外使用\enquote{悬珠}进行表示。
+
+  宏包还为\tn{rod}命令同时提供了\tn{rod*}星号命令用于排版在
+  横梁上带有计位点(圆点)的档位。
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rod{1}{1}   % 常规档位
+    \rod{2}{6}
+    \rod*{3}{10} % 计位点，使用底珠
+    \rod{4}{12}  % 使用顶珠
+    \rod{5}{18}  % 使用悬珠
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsubsection{\tn{rods}一组档位排版命令}
+
+\begin{function}{\rods}
+  \begin{syntax}
+    \cs{rods} \marg{数字列表}
+  \end{syntax}
+\end{function}
+
+  用于排版在\marg{数字列表}中用逗号分隔的一组数字指定的档位，
+  各档位编号基于1，从左向右进行自动编号。
+
+  \marg{数字列表}中的各档位数字支持[0, 20]内的数字，其中[0, 9]内的
+  数字采用常规4个下珠结合1个上珠的方法进行表示，[10, 15]
+  内的数字则需要额外使用\enquote{底珠}和\enquote{顶珠}进行表示，
+  [16, 20]内的数字则需要再额外使用\enquote{悬珠}进行表示。
+
+  \begin{notezh}
+    宏包并没有为\tn{rods}命令提供在横梁排版计位点的档位的
+    操作。如果需要，则可以使用\tn{rod*}命令对指定档位进行覆盖绘制。
+  \end{notezh}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+    \rod*{3}{12}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.0.1}{2024/08/26}{rename \tn{bidclr} to \tn{bid}.}
+\changes{v1.1.3}{2024/09/01}{add draw color option to \tn{bid},
+                             change \texttt{pos} to clist and
+                             set default bid draw color to \texttt{innerdrawcolor}.}
+\changes{v1.1.3}{2024/09/04}{add highlight to bid(s)}
+
+\subsubsection{\tn{bid}算珠着色命令}
+
+\begin{function}{\bid}
+  \begin{syntax}
+    \cs{bid} \marg{档位编号}\marg{位置列表}\marg{填充颜色}\oarg{绘制颜色}
+  \end{syntax}
+\end{function}
+
+  用于将\marg{档位编号}指定的档位中，用逗号分隔的\marg{位置列表}中
+  指定的所有算珠的填充色设置为\marg{填充颜色}指定的颜色，将其绘制
+  颜色设置为可选项\oarg{绘制颜色}(默认为内珠绘制颜色)。
+
+  一个档位中的\marg{算珠位置}自下向上，按\enquote{$1, 2, \cdots, 11$}%
+  的顺序进行编号。其中下珠占\enquote{$1, 2, \cdots, 7$}的位置，上珠占
+  \enquote{$8, 9, 10$}的位置，悬珠占\enquote{$11$}的位置。
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 0, 7, 11, 8, 19}
+    \bid{1}{1}{brown5}
+    \bid{2}{5}{brown5}
+    \bid{3}{6}{red5}
+    \bid{4}{7}{red5}
+    \bid{4}{8}{azure5}
+    \bid{4}{9}{yellow5}
+    \bid{5}{10}{violet5}
+    \bid{6}{4,5,6,11}{teal4}[magenta5]
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.1.0}{2024/08/28}{adde \tn{bids} macro.}
+\changes{v1.1.3}{2024/09/01}{change \tn{bids} macro inner bids draw color to
+                             \texttt{innerdrawcolor} and outter bids draw
+                             color to \texttt{outerdrawcolor}.}
+
+\subsubsection{\tn{bids}内珠或外珠着色命令}
+
+\begin{function}{\bids}
+  \begin{syntax}
+    \cs{bids} \marg{档位编号}\marg{档位数字}\marg{填充颜色}
+  \end{syntax}
+\end{function}
+
+  用于将\marg{档位编号}指定的档位中，所有\marg{档位数字}的内珠
+  设置为\marg{填充颜色}指定的颜色。同时，该命令还将
+  算珠绘制颜色设置内珠绘制颜色(\texttt{innerdrawcolor})。
+
+  宏包还为\tn{bids}命令同时提供了\tn{bids*}星号命令用于设置该档
+  所有外珠的颜色。此时，算珠绘制颜色设置外珠绘制颜色
+  (\texttt{outerdrawcolor})。
+
+  \begin{notezh}
+    该命令只能选择内珠或外珠进行着色，不能同时选择内珠和外珠。
+  \end{notezh}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 0, 7, 11, 8, 19}
+    \bids{3}{7}{teal4}
+    \bids*{5}{8}{azure5}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.2.0}{2024/09/04}{add \tn{rodmark} macro for marking rod(s) on beams.}
+
+\subsubsection{\tn{rodmark}横梁标记命令}
+
+\begin{function}{\rodmark}
+  \begin{syntax}
+    \cs{rodmark} \oarg{起始档位}\marg{标记列表}
+  \end{syntax}
+\end{function}
+
+  用于从\oarg{起始档位}可选项指定的档位开始，用\marg{标记列表}%
+  中逗号分隔的标记在算盘横梁上为各档位添加标记。
+
+  \begin{notezh}
+    如果\marg{标记列表}中的标记数量超出从\oarg{起始档位}开始的
+    档位数，多余的标记将被忽略。在\marg{标记列表}中，可以用一
+    对``\{\}''分组符号表示空白标记。
+  \end{notezh}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 2, 6, 6, 9, 0}
+    \rodmark{4,{},2,1,0,-1,-2}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 2, 6, 6, 9, 0}
+    \rodmark[2]{千,百,十,个}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.1.3}{2024/09/04}{highlight all frame and remove arguments of \tn{lrframe},
+                             at the same time change \tn{lrframe} to \tn{mkframe}.}
+
+\subsubsection{\tn{mkframe}边框排版命令}
+
+\begin{function}{\mkframe}
+  \begin{syntax}
+    \cs{mkframe}
+  \end{syntax}
+\end{function}
+
+  用于排版算盘的边框。
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+    \mkframe
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{\tn{suanpanset}选项设置命令}
+
+\begin{function}{\suanpanset}
+  \begin{syntax}
+    \cs{suanpanset} \marg{外观选项}
+  \end{syntax}
+\end{function}
+
+  通过\marg{外观选项}的key-value选项设置算盘的算珠、边框等元素的
+  绘制颜色、填充颜色、线条宽度；各档位之间的间距、算珠之间的间距；
+  算盘整体的缩放比例等外观属性。
+
+  通过\cs{suanpan}\marg{外观选项}设置的外观属性对后续所有算盘排版
+  操作有效。
+
+  % \begin{notezh}
+  %   由于\pkg{suanpan-l3}宏包涉及大量绘图操作，因此建议尽量减少在每个
+  %   \env{suanpan}排版环境的可选项中使用\oarg{外观选项}设置，以
+  %   节约编译时间。如需要更改算盘外观，可以在引用宏包时，通过为宏包
+  %   添加选项实现，也可以执行\tn{suanpanset}命令进行必要的
+  %   全局设置或在一定范围内进行统一设置。
+  % \end{notezh}
+
+\section{宏包选项}
+
+在\pkg{suanpan-l3}宏包中，算盘颜色、线条宽度、档位及算珠间距等
+算盘外观属性可以在引入宏包时通过\oarg{宏包选项}进行设置，
+也可以在\env{suanpan}环境的\oarg{外观选项}中进行局部设置，
+还可以通过\cs{suanpanset}命令进行全局或局部设置。
+
+强烈建议在引用宏包时通过\oarg{宏包选项}为一个文档统一全局设置
+算盘外观属性，以节约编译时间。应避免频繁\env{suanpan}环境中使用
+\oarg{宏包选项}或使用\cs{suanpanset}命令设置算盘外观属性。
+
+\pkg{suanpan-l3}宏包选项是一个英文逗号分隔的选项列表，其
+选项是\marg{key}|=|\marg{value}形式。部分选项的\marg{value}可以省略。
+对于同一选项，后续设置会覆盖以前设置。
+
+\pkg{suanpan-l3}宏包采用\LaTeX3风格的键值设置，支持不同类型以及多种层次的
+选项设定。键值列表中，``|=|''左右的空格不影响设置。但需注意，参数列表中%
+\textsf{不可以出现空行}。
+
+布尔型的参数\marg{选项}|=true|中的``|=true|''可以省略。
+
+\changes{v1.2.1}{2024/09/05}{change bid(s) figure to a single
+                             round cap line in draft and remove
+                             all highlight of bid(s), rod(s) and
+                             frame.}
+
+\subsection{草稿模式}
+
+\begin{option}{ opt = draft, desc = {= \meta{草稿模式}}, init=false }
+  设置草稿模式。
+\end{option}
+
+  \oarg{draft}选项会将算珠用圆角线冒直线实现绘制，取消所有高光效果，
+  从而加快编译速度。同时，\oarg{draft}选项还会将空档算珠绘制选项\oarg{empty}%
+  设置为\texttt{false}，也就是不绘制空档上的算珠。
+
+  \begin{notezh}
+    在草稿模式下算盘排版会与期望的排版结果有出入。
+  \end{notezh}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.53\linewidth,gobble=2]
+  % \usepackage[draft]{suanpan}
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}[draft]
+    \rods{0, 6, 12, 18, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.1.2}{2024/08/31}{add empty option to remove bids on empty rod.}
+
+\subsection{是否绘制空档算珠}
+
+\begin{option}{ opt = empty, desc = {= \meta{空档}}, init=true }
+  设置是否绘制空档算珠。
+\end{option}
+
+  \oarg{empty}选项用于选择是否绘制空档上的算珠，如果不绘制，
+  在一定程度上可以加快编译速度。
+
+  \begin{notezh}
+    如有需要，可以使用\tn{bid}或\tn{bids*}命令为空档绘制算珠。
+  \end{notezh}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.53\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}[empty = false]
+    \rods{0, 6, 12, 18, 0}
+    \bids*{5}{0}{gray6}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{线宽}
+
+\begin{option}{ opt = linewd, desc = {= \meta{线宽}}, init=2pt }
+  设置算盘绘制中的线宽。
+\end{option}
+
+  \oarg{linewd}选项用于设置算盘边框内线线宽，同时会将
+  边框外线设置为linewd的7.00倍，将档杆和算珠线宽
+  设置为linewd的0.2倍。
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, linewd = 3pt}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.2.2}{2024/09/07}{add bidh, bidd, rodd and framew options
+                             to set the base size of suanpan.}
+
+\subsection{算珠高度}
+
+\begin{option}{ opt = bidh, desc = {= \meta{算珠高度}}, init=12mm }
+  设置算珠高度。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidh = 18mm}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{算珠直径}
+
+\begin{option}{ opt = bidd, desc = {= \meta{算珠直径}}, init=23mm }
+  设置算珠直径。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidd = 36mm}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{档杆直径}
+
+\begin{option}{ opt = rodd, desc = {= \meta{档杆直径}}, init=7mm }
+  设置档杆直径。
+\end{option}
+
+\begin{noteen}
+  档杆直径rodd应该小于算珠直径bidd。
+\end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, rodd = 3mm}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{边框宽度}
+
+\begin{option}{ opt = framew, desc = {= \meta{边框宽度}}, init=13mm }
+  设置边框宽度。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, framew = 7mm}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+    \mkframe
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{档位间距}
+
+\begin{option}{ opt = rodsep, desc = {= \meta{档位间距}}, init=3.0pt }
+  设置算盘各档间的间距。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, rodsep = 15pt}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+  \begin{notezh}
+    修改档位间距会改变算盘排版的宽度。
+  \end{notezh}
+
+\subsection{算珠间距}
+
+\begin{option}{ opt = bidsep, desc = {= \meta{算珠间距}}, init=1.8pt }
+  设置算珠间的间距。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidsep = 4pt}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+  \begin{notezh}
+    修改算珠间距不会改变算盘的尺寸，但算珠高度会发生变化。
+    另外，过小的算珠高度会造成算珠圆角的畸变。
+  \end{notezh}
+
+\subsection{缩放比例}
+
+\begin{option}{ opt = scale, desc = {= \meta{缩放比例}}, init=1.0 }
+  设置算盘输出结果的整体缩放比例。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 1.20}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{边框颜色}
+
+\begin{option}{ opt = framedraw, desc = {= \meta{边框颜色}}, init=black }
+  设置算盘边框颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, framedraw = brown3}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+  \begin{notezh}
+    边框颜色包括内外边框和横梁颜色。
+  \end{notezh}
+
+\subsection{档杆绘制颜色}
+
+\begin{option}{ opt = roddraw, desc = {= \meta{档杆绘制颜色}}, init=black }
+  设置档杆绘制颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, roddraw = red8}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{档杆填充颜色}
+
+\begin{option}{ opt = rodfill, desc = {= \meta{档杆填充颜色}}, init=white }
+  设置档杆填充颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, rodfill = brown6}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{外珠绘制颜色}
+
+\begin{option}{ opt = outerdraw, desc = {= \meta{外珠绘制颜色}}, init=black }
+  设置档杆上外珠\footnote{外珠是指离梁不记数的算珠。}绘制颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, outerdraw = red8}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{外珠填充颜色}
+
+\begin{option}{ opt = outerfill, desc = {= \meta{外珠填充颜色}}, init=black!40 }
+  设置外珠填充颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, outerfill = yellow6}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{内珠绘制颜色}
+
+\begin{option}{ opt = innerdraw, desc = {= \meta{内珠绘制颜色}}, init=black }
+  设置档杆上内珠\footnote{内珠是指靠梁记数的算珠。}绘制颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, innerdraw = red8}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{内珠填充颜色}
+
+\begin{option}{ opt = innerfill, desc = {= \meta{内珠填充颜色}}, init=black}
+  设置内珠填充颜色。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, innerfill = red5}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.2.2}{2024/09/07}{add font option
+                             to set the font of mark.}
+\subsection{标记字体}
+
+\begin{option}{ opt = font, desc = {= \meta{标记字体}}, init=\tn{bfseries}\tn{Large} }
+  设置标记字体。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65,
+              font=\rmfamily\Huge}
+  \begin{suanpan}
+    \rods{0, 2, 6, 6, 9, 0}
+    \rodmark{4,3,2,1,0,-1}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\changes{v1.2.3}{2024/09/10}{change bid's highlight to shading=ball
+                             and add bidspot option to set the angle
+                             of shading.}
+
+\subsection{高光位置(角度)}
+
+\begin{option}{ opt = bidspot, desc = {= \meta{高光位置}}, init=0 }
+  设置算珠高光点的位置，用角度表示，逆时针为正。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.45\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidspot = 180}
+  \begin{suanpan}
+    \rods{0, 0, 7, 11, 8, 19}
+    \bid{1}{1}{brown5}
+    \bid{2}{5}{brown5}
+    \bid{3}{6}{red5}
+    \bid{4}{7}{red5}
+    \bid{4}{8}{azure5}
+    \bid{4}{9}{yellow5}
+    \bid{5}{10}{violet5}
+    \bid{6}{4,5,6,11}{teal4}[magenta5]
+  \end{suanpan}
+\end{SideBySideExample}
+
+\bigskip
+
+\changes{v1.1.1}{2024/08/30}{add English documentation.}
+
+\title{
+  \pkg{suanpan-l3} package for traditional Chinese 7-bids suanpan(abacus)
+  \rlap{\makebox[4cm][r]{
+    \normalsize $\Longrightarrow$ \color{red}
+    \protect\hyperlink{zh}{中文版本}
+    \protect\hypertarget{en}{}
+  }}
+}
+\author{Nan Geng \texttt{<nangeng@nwafu.edu.cn>}}
+\date{\today\qquad \vers}
+
+\maketitle
+
+\section{Introduction}
+
+\pkg{suanpan-l3} is a traditional Chinese 7-bids suanpan drawing package
+utilizes \pkg{l3draw} and \pkg{TikZ} and is developed with \pkg{Expl3}.
+It can effectively manage both upper and lower bids, while also considering
+bottom bid, top bid, and hanging bid.
+
+This package offers a unique environment for drawing suanpan,
+denoted as \env{suanpan}. Within this environment, 8 specialized macros
+are available for the creation of suanpan. The \tn{rod} macro is used
+to lay out a single rod, while the \tn{rod*} macro draws a counting point
+on this rod’s beam. The \tn{rods} macro is capable of laying out a set of rods.
+The \tn{bid} macro colors the specified bid. The \tn{bids} macro colors
+all inner bids that are near the beam, while the \tn{bids*} macro colors
+all outer bids that are far from the beam. The \tn{rodmark} macro mark all rods
+on beam. Lastly, the \tn{mkframe} macro
+is used to lay out the left and right frames of an abacus.
+
+At the same time, the package offers customization options for suanpan,
+including line width, draw color, fill color, bid space, rod space, etc.
+These can be configured through package options, \env{suanpan} environment
+options, or the \tn{suanpanset} macro.
+
+\begin{center}
+  \begin{suanpan}[framedraw = brown2, scale = 0.45, bidsep=1.5pt,
+                  roddraw = brown3, rodfill = brown4]
+    % rod's val list
+    \rods{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}
+    % counting point
+    \rod*{4}{3}
+    \rod*{18}{17}
+    % top bid
+    \bid{12}{9}{azure5}
+    \bid{13}{9}{azure5}
+    \bid{14}{9}{azure5}
+    \bid{15}{9}{azure5}
+    \bid{16}{9}{azure5}
+    % hanging bid
+    \bid{17}{11}{red5}
+    \bid{18}{11}{red5}
+    \bid{19}{11}{red5}
+    \bid{20}{11}{red5}
+    \bid{21}{11}{red5}
+    % bottom bid
+    \bid{11}{3}{olive5}
+    \bid{16}{3}{olive5}
+    \bid{21}{3}{olive5}
+    \rodmark{21,20,19,{},17,16,15,14,13,12,11,10,9,8,7,6,5,{},3,2,1}
+    \mkframe
+  \end{suanpan}
+\end{center}
+
+\section{Interface}
+
+\subsection{\env{suanpan} environment}
+
+\begin{function}{suanpan}
+  \begin{syntax}
+    \tn{begin}|{suanpan}|\oarg{options}
+    .....
+    \tn{end}|{suanpan}|
+  \end{syntax}
+\end{function}
+
+  Typesetting 7-bids Chinese suanpan with \oarg{options}.
+
+  Within the \env{suanpan} environment, \tn{rod}, \tn{rod*}, \tn{rods}, \tn{bid},
+  \tn{bids}, \tn{bids*}, \tn{rodmark} and \tn{mkframe} 8 specialized macros
+  are available for the creation of suanpan.
+
+  \oarg{options} is a key-value list for line width, draw color, fill color,
+  bid space, rod space, etc.
+
+  \oarg{options} is environment's local setting.
+
+  \begin{noteen}
+    You should remove all blank line in \env{suanpan} environment.
+  \end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rod{1}{0}
+    \rod{2}{3}
+    \rod{3}{0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{\env{suanpan}'s specialized macros}
+
+\subsubsection{\tn{rod}---single rod}
+
+\begin{function}{\rod}
+  \begin{syntax}
+    \cs{rod} \marg{num} \marg{val}
+  \end{syntax}
+\end{function}
+
+  The \tn{rod} macro is used to lay out a single rod.
+
+  The \marg{num} argument numbers the rods from left to right.
+  The \marg{val} is the number to be represented on the rod from
+  0 to 20. For number within [0, 9], it is represented using 4 lower deck
+  bids and 1 upper deck bid. Numbers within [10, 15] are represented additionally
+  using bottom bid and top bid. For numbers within [16, 20], hanging bid is also
+  required for representation.
+
+  The starred version \tn{rod*} will draw a counting point on this rod's beam.
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rod{1}{1}   % normal rod
+    \rod{2}{6}
+    \rod*{3}{10} % counting point and
+                 % bottom bid
+    \rod{4}{12}  % top bid
+    \rod{5}{18}  % hanging bid
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsubsection{\tn{rods}---a set of rods}
+
+\begin{function}{\rods}
+  \begin{syntax}
+    \cs{rods} \marg{val list}
+  \end{syntax}
+\end{function}
+
+  The \tn{rods} macro is used to lay out a set of rods.
+
+  The \marg{val list} is a value list of each rod seperated by commas.
+  Each rod number is automatically numbered from left to right.
+
+  Each value in \marg{val list} is the number to be represented on the rod from
+  0 to 20. For number within [0, 9], it is represented using 4 lower deck
+  bids and 1 upper deck bid. Numbers within [10, 15] are represented additionally
+  using bottom bid and top bid. For numbers within [16, 20], hanging bid is also
+  required for representation.
+
+  \begin{noteen}
+    The starred version \tn{rods*} for counting point is not provided.
+    Use the \tn{rod*} macro to overlay the specified rod for drawing.
+  \end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+    \rod*{3}{12}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsubsection{\tn{bid}---color bid}
+
+\begin{function}{\bid}
+  \begin{syntax}
+    \cs{bid} \marg{num}\marg{pos list}\marg{fill color}\oarg{draw color}
+  \end{syntax}
+\end{function}
+
+  The \tn{bid} macro fills the specified bid.
+
+  The \marg{num} is the same as for \tn{rod}; the \marg{fill color} argument
+  defines the fill color and the comma-seperated \marg{pos list} argument tells
+  which bid has to be colored in \marg{num} rod. The \oarg{draw color} option
+  gives the draw color(default is inner bid draw color) .
+
+  The \marg{pos} in a rod is numbered from the bottom up in the order
+  $1, 2, \cdots, 11$. The lower deck bids occupies position
+  $1, 2, \cdots, 7$, the upper deck bids occupies position $8, 9, 10$,
+  and the hanging bead occupies position $11$ between $9$ and $10$ .
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 0, 7, 11, 8, 19}
+    \bid{1}{1}{brown5}
+    \bid{2}{5}{brown5}
+    \bid{3}{6}{red5}
+    \bid{4}{7}{red5}
+    \bid{4}{8}{azure5}
+    \bid{4}{9}{yellow5}
+    \bid{5}{10}{violet5}
+    \bid{6}{4,5,6,11}{teal4}[magenta5]
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsubsection{\tn{bids}---color inner/outer bids}
+
+\begin{function}{\bids}
+  \begin{syntax}
+    \cs{bids} \marg{num}\marg{val}\marg{color}
+  \end{syntax}
+\end{function}
+
+  The \tn{bids} macro fills all inner bids that are near the beam.
+
+  \marg{num} and \marg{color} are the same as for \tn{bid};
+  the \marg{val} argument is the same as for \tn{rod}.
+
+  The \marg{color} is fill color for inner bids. it also set
+  \texttt{innercolor} to be used for inner bids drawing color.
+
+  The starred version \tn{bids*} is used to color outer bids of \marg{num} rod.
+  it also set \texttt{outercolor} to be used for inner bids drawing color.
+
+  \begin{noteen}
+    This macro can only select the inner bids or the outer bids for coloring,
+    you can't select both the inner and outer bids at the same time.
+  \end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 0, 7, 11, 8, 19}
+    \bids{3}{7}{teal4}
+    \bids*{5}{8}{azure5}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsubsection{\tn{rodmark} rod(s) marking on beam}
+
+\begin{function}{\rodmark}
+  \begin{syntax}
+    \cs{rodmark} \oarg{st}\marg{maker list}
+  \end{syntax}
+\end{function}
+
+  The \tn{rodmark} macro marks the rod(s) on the beam.
+
+  The \oarg{st} argument is the start rod and \marg{marker list}
+  is the marker list.
+
+  \begin{noteen}
+    If the number of \marg{marker List} exceeds the number of
+    rods from \oarg{st}, the excess markers will be ignored.
+    In the \marg{marker list}, it is possible to use a pair of
+    ``\{\}'' grouping to indicate blank marker.
+  \end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 2, 6, 6, 9, 0}
+    \rodmark{4,{},2,1,0,-1,-2}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 2, 6, 6, 9, 0}
+    \rodmark[2]{Q,C,X,I}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsubsection{\tn{mkframe}---layout frame}
+
+\begin{function}{\mkframe}
+  \begin{syntax}
+    \cs{mkframe}
+  \end{syntax}
+\end{function}
+
+  The \tn{mkframe} macro is used to lay out the frames of
+  a suanpan.
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.48\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+    \mkframe
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{\tn{suanpanset}}
+
+\begin{function}{\suanpanset}
+  \begin{syntax}
+    \cs{suanpanset} \marg{options}
+  \end{syntax}
+\end{function}
+
+  The \tn{suanpanset} macro offers customization options for suanpan,
+  including line width, draw color, fill color, bid space, rod space, etc.
+
+  The \marg{options} is a key-value list.
+
+  The \marg{options} seted by the \cs{suanpanset} are valid for
+  all subsequent \env{suanpan} environments.
+
+\section{options}
+
+The \pkg{suanpan-l3} package offers customization options for abacus,
+including line width, draw color, fill color, bid space, rod space, etc.
+These can be configured through package \oarg{options}, \env{suanpan}
+environment \oarg{options}, or the \tn{suanpanset} macro.
+
+It is strongly recommended that suanpan options be set globally
+for a document uniformly via \oarg{options} of packages to save compilation time.
+Frequent use of \oarg{options} in \env{suanpan} environments or
+use of the \tn{suanpanset} command to set suanpan options should be avoided.
+
+The \oarg{options} is a comma-seperated list of options in the form
+\marg{key}|=|\marg{value}. The \marg{value} can be omitted for some options.
+For the same option, subsequent settings will override the previous one.
+
+The \pkg{suanpan-l3} package uses \LaTeX3 style key settings,
+supporting different types and levels of options. In the key list,
+spaces around ``='' do not affect the settings.
+However, it is important to note that blank lines are not allowed in the list.
+
+The ``|=true|'' in the \marg{option}|=true| for Boolean types can be omitted.
+
+\subsection{draft}
+
+\begin{option}{ opt = draft, desc = {= \meta{draft}}, init=false }
+  Draft mode.
+\end{option}
+
+  The \oarg{draft} option speeds up compilation by drawing
+  bids using round cap line, at same time it will remove all
+  highlight of bid(s), rod(s) and frame.
+
+  At the same time \oarg{draft} option will set the \oarg{empty} option
+  to \texttt{false} to remove all bids on empty rod.
+
+  \begin{noteen}
+    Suanpan layout in draft mode may differ from the desired layout.
+  \end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.53\linewidth,gobble=2]
+  % \usepackage[draft]{suanpan}
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}[draft]
+    \rods{0, 6, 12, 18, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{empty}
+
+\begin{option}{ opt = empty, desc = {= \meta{empty}}, init=true }
+  Remove bids on empty rod or not.
+\end{option}
+
+  The \oarg{empty} option will remove all bids on empty rod.
+
+  \begin{noteen}
+    If necessary, you can use the \tn{bid} or \tn{bids*} macro to
+    draw bid(s) for the empty rod.
+  \end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.53\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65}
+  \begin{suanpan}[empty=false]
+    \rods{0, 6, 12, 18, 0}
+    \bids*{5}{0}{gray6}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{line width}
+
+\begin{option}{ opt = linewd, desc = {= \meta{linewd}}, init=2pt }
+  Drawing line width.
+\end{option}
+
+  The \oarg{linewd} is used to set the line width of the frame inner,
+  and will also set the line width the frame outer to 7.00 times linewd,
+  and the rod and bid line widths to 1.00 times linewd.
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, linewd = 3pt}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{bid height}
+
+\begin{option}{ opt = bidh, desc = {= \meta{bidh}}, init=12mm }
+  The height of bid.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidh = 18mm}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{bid diameter}
+
+\begin{option}{ opt = bidd, desc = {= \meta{bidd}}, init=23mm }
+  The diameter of bid.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidd = 36mm}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{rod diameter}
+
+\begin{option}{ opt = rodd, desc = {= \meta{rodd}}, init=7mm }
+  The diameter of rod.
+\end{option}
+
+\begin{noteen}
+  The rodd should be smaller than the bidd.
+\end{noteen}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, rodd = 3mm}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{frame width}
+
+\begin{option}{ opt = framew, desc = {= \meta{framew}}, init=13mm }
+  The width of frame.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, framew = 7mm}
+  \begin{suanpan}
+    \rods{0, 6, 12, 18, 0}
+    \mkframe
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{rod spacing}
+
+\begin{option}{ opt = rodsep, desc = {= \meta{rodsep}}, init=3.0pt }
+  The spacing between suanpan rods.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, rodsep = 15pt}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+  \begin{noteen}
+    The \oarg{rodsep} will change the width of the suanpan.
+  \end{noteen}
+
+\subsection{bid spacing}
+
+\begin{option}{ opt = bidsep, desc = {= \meta{bidsep}}, init=1.8pt }
+  The spacing between suanpan bids.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidsep = 4pt}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+  \begin{noteen}
+    The \oarg{bidsep} does not change the size of the suanpan.
+    But the height of each bid will be changed.
+    In addition, too small an bid height will cause distortion
+    of the rounded corners of the bid.
+  \end{noteen}
+
+\subsection{scale}
+
+\begin{option}{ opt = scale, desc = {= \meta{scale}}, init=1.0 }
+  Scaling factor of whole suanpan.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 1.20}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{frame color}
+
+\begin{option}{ opt = framedraw, desc = {= \meta{framedraw}}, init=black }
+  Frame drawing color.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, framedraw = brown3}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+  \begin{noteen}
+    Frame colors include inner and outer of frame and beam colors.
+  \end{noteen}
+
+\subsection{rod drawing color}
+
+\begin{option}{ opt = roddraw, desc = {= \meta{roddraw}}, init=black }
+  Rod drawing color.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, roddraw = red8}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{rod filling color}
+
+\begin{option}{ opt = rodfill, desc = {= \meta{rodfill}}, init=white }
+  Rod filling color.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, rodfill = brown6}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{outer bids drawing color}
+
+\begin{option}{ opt = outerdraw, desc = {= \meta{outerdraw}}, init=black }
+  The outer bids\footnote{The outer bid is that is not counted away from the beam.}drawing color.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, outerdraw = red8}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{outer bids filling color}
+
+\begin{option}{ opt = outerfill, desc = {= \meta{outerfill}}, init=black!40 }
+  The outer bids filling color。
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, outerfill = yellow6}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{inner bids drawing color}
+
+\begin{option}{ opt = innerdraw, desc = {= \meta{innerdraw}}, init=black }
+  The inner bids\footnote{The inner bid is that is counted near to the beam.}drawing color.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, innerdraw = red8}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{inner bids filling color}
+
+\begin{option}{ opt = innerfill, desc = {= \meta{innerfill}}, init=black}
+  The inner bids filling color.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.37\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, innerfill = red5}
+  \begin{suanpan}
+    \rods{0, 6, 0}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{mark font}
+
+\begin{option}{ opt = font, desc = {= \meta{font}}, init=\tn{bfseries}\tn{Large} }
+  The font of mark(s).
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+                xrightmargin=.40\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65,
+              font=\rmfamily\Huge}
+  \begin{suanpan}
+    \rods{0, 2, 6, 6, 9, 0}
+    \rodmark{4,3,2,1,0,-1}
+  \end{suanpan}
+\end{SideBySideExample}
+
+\subsection{highlight pos/angle}
+
+\begin{option}{ opt = bidspot, desc = {= \meta{bidspot}}, init=0 }
+  The bid's highlight angle.
+\end{option}
+
+\begin{SideBySideExample}[frame=single,numbers=left,%
+    xrightmargin=.45\linewidth,gobble=2]
+  \centering
+  \suanpanset{scale = 0.65, bidspot = 180}
+  \begin{suanpan}
+    \rods{0, 0, 7, 11, 8, 19}
+    \bid{1}{1}{brown5}
+    \bid{2}{5}{brown5}
+    \bid{3}{6}{red5}
+    \bid{4}{7}{red5}
+    \bid{4}{8}{azure5}
+    \bid{4}{9}{yellow5}
+    \bid{5}{10}{violet5}
+    \bid{6}{4,5,6,11}{teal4}[magenta5]
+  \end{suanpan}
+\end{SideBySideExample}
+
+\end{documentation}
+
+\end{document}

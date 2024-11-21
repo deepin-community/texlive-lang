@@ -1,5 +1,5 @@
 % proflycee-tools-stats.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %3.01a	Courbe ECC
@@ -73,6 +73,69 @@
 	\expandafter\def\csname\RegLinCoeffb\endcsname{\fpeval{\LYmoy-\csname\RegLinCoeffa\endcsname*\LXmoy}}
 	\expandafter\def\csname\RegLinCoeffr\endcsname{\fpeval{\LXYvar/sqrt(\LXvar*\LYvar)}}
 	\expandafter\def\csname\RegLinCoeffrd\endcsname{\fpeval{\csname\RegLinCoeffr\endcsname*\csname\RegLinCoeffr\endcsname}}
+}
+
+\defKV[coeffregquad]{%
+	NomCoeffa=\def\RegQuadCoeffa{#1},%
+	NomCoeffb=\def\RegQuadCoeffb{#1},%
+	NomCoeffc=\def\RegQuadCoeffc{#1},%
+	NomXmin=\def\RegQuadCoeffXmin{#1},%
+	NomXmax=\def\RegQuadCoeffXmax{#1}
+}
+
+\setKVdefault[coeffregquad]{%
+	NomCoeffa=COEFFa,%
+	NomCoeffb=COEFFb,%
+	NomCoeffc=COEFFc,%
+	NomXmin=LXmin,%
+	NomXmax=LXmax
+}
+
+\newcommand\CalculsRegQuad[3][]{%
+	\useKVdefault[coeffregquad]%
+	\setKV[coeffregquad]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%xmin et xmax
+	\expandafter\def\csname\RegQuadCoeffXmin\endcsname{\xintfloateval{min(#2)}}%
+	\expandafter\def\csname\RegQuadCoeffXmax\endcsname{\xintfloateval{max(#2)}}%
+	%listes des données
+	\def\xliste{#2}%
+	\def\yliste{#3}%
+	\readlist*\LX{\xliste}%
+	\readlist*\LY{\yliste}%
+	%taille des listes
+	\def\LNB{\inteval{\LXlen}}
+	%somme importantes
+	\xdef\LXSomme{0}%
+	\xdef\LXCSomme{0}%
+	\xdef\LYSomme{0}%
+	\xdef\LXXSomme{0}%
+	\xdef\LXYSomme{0}%
+	\xdef\LXXCSomme{0}%
+	\xdef\LXCXCSomme{0}%
+	\xdef\LXCYSomme{0}%
+	%calculs
+	\foreach \i in {1,2,...,\LNB}{%
+		\xdef\LXSomme{\xintfloateval{\LXSomme+\LX[\i]}}%
+		\xdef\LXCSomme{\xintfloateval{\LXCSomme+(\LX[\i])^2}}%
+	}%
+	\foreach \i in {1,2,...,\LNB}{%
+		\xdef\LYSomme{\xintfloateval{\LYSomme+\LY[\i]}}%
+	}%
+	\xdef\LXmoy{\xintfloateval{\LXSomme/\LNB}}%
+	\xdef\LYmoy{\xintfloateval{\LYSomme/\LNB}}%
+	\xdef\LXCmoy{\xintfloateval{\LXCSomme/\LNB}}%
+	%calculs suites
+	\foreach \i in {1,2,...,\LNB}{%
+		\xdef\LXXSomme{\xintfloateval{\LXXSomme+(\LX[\i]-\LXmoy)^2}}%
+		\xdef\LXYSomme{\xintfloateval{\LXYSomme+(\LX[\i]-\LXmoy)*(\LY[\i]-\LYmoy)}}%
+		\xdef\LXXCSomme{\xintfloateval{\LXXCSomme+(\LX[\i]-\LXmoy)*((\LX[\i])*(\LX[\i])-\LXCmoy)}}%
+		\xdef\LXCXCSomme{\xintfloateval{\LXCXCSomme+((\LX[\i])^2-\LXCmoy)^2}}%
+		\xdef\LXCYSomme{\xintfloateval{\LXCYSomme+((\LX[\i])^2-\LXCmoy)*(\LY[\i]-\LYmoy)}}%
+	}%
+	%COEFFS OK
+	\expandafter\def\csname\RegQuadCoeffb\endcsname{\xintfloateval{(\LXYSomme*\LXCXCSomme-\LXCYSomme*\LXXCSomme)/(\LXXSomme*\LXCXCSomme-(\LXXCSomme)^2)}}%
+	\expandafter\def\csname\RegQuadCoeffa\endcsname{\xintfloateval{(\LXCYSomme*\LXXSomme-\LXYSomme*\LXXCSomme)/(\LXXSomme*\LXCXCSomme-(\LXXCSomme)^2)}}%
+	\expandafter\def\csname\RegQuadCoeffc\endcsname{\xintfloateval{\LYmoy-\csname\RegQuadCoeffb\endcsname*\LXmoy-\csname\RegQuadCoeffa\endcsname*\LXCmoy}}%
 }
 
 %pour un nuage en TiKz
@@ -492,6 +555,7 @@
 	% \edef#3{\the\pgf@y}%
 % }
 
+\makeatletter
 \defKV[courbeECC]{%
 	Largeur=\def\ecc@larg@graph{#1},%
 	Hauteur=\def\ecc@haut@graph{#1},%
@@ -733,6 +797,7 @@
 	\end{tikzpicture}%
 	\CourbeECCStylesDefaut%
 }
+\makeatother
 
 %détermination 'simple' des paramètres
 \NewDocumentCommand\MedianeQuartilesECC{ m m }{%
@@ -773,6 +838,105 @@
 			}
 			{}%
 	}%
+}
+
+%====Paramètres statistiques (stockage/affichage, sans rédaction)
+\NewDocumentCommand\DeterminerParamStats{ s m O{\monmin} O{\monquartileun} O{\mamediane} O{\monquartiletrois} O{\monmax} }{%
+	%traitement de la liste, *=effectifs
+	\IfBooleanTF{#1}%
+		{%
+			\setsepchar[.]{,./}%
+			\readlist*\listeTdonneesregroup{#2}%
+			\def\TMPLST{}%
+			\foreach \i in {1,...,\listeTdonneesregrouplen}{%
+				\itemtomacro\listeTdonneesregroup[\i,1]\myelt%
+				\itemtomacro\listeTdonneesregroup[\i,2]\mynbelt%
+				\foreach \j in {1,...,\mynbelt}{%
+					\xintifboolexpr{ \i*\j == 1}%
+						{%
+							\xdef\TMPLST{\myelt}%
+						}%
+						{%
+							\xdef\TMPLST{\TMPLST,\myelt}%
+						}%
+				}%
+			}%
+		}%
+		{%
+			\xdef\TMPLST{#2}%
+			\sortasclist{\TMPLST}%
+		}%
+	\definemylist{\TMPLST}{\listeTdonneesregroup}%
+	\lenofdeflist{listeTdonneesregroup}[\nbdonnees]%
+	%médiane
+	\xintifboolexpr{ \xintiiRem{\nbdonnees}{2} == 0 }%
+		{%
+			\xdef\tmpranga{\xintfloateval{\nbdonnees/2}}%\tmpranga
+			\xdef\tmprangb{\xintfloateval{\nbdonnees/2+1}}%\tmprangb
+			\getvaluefromdeflist{listeTdonneesregroup}{\tmpranga}[\myvala]%
+			\getvaluefromdeflist{listeTdonneesregroup}{\tmprangb}[\myvalb]%
+			\xdef#5{\xintfloateval{(\myvala+\myvalb)/2}}%
+		}%
+		{%
+			\xdef\tmprang{\xintfloateval{(\nbdonnees+1)/2}}%
+			\getvaluefromdeflist{listeTdonneesregroup}{\tmprang}[#5]%
+		}%
+	%quartileun
+	\xdef\tmprangqa{\xintfloateval{ceil(0.25*\nbdonnees)}}%\tmpranga
+	\getvaluefromdeflist{listeTdonneesregroup}{\tmprangqa}[#4]%
+	%quartiletrois
+	\xdef\tmprangqc{\xintfloateval{ceil(0.75*\nbdonnees)}}%\tmpranga
+	\getvaluefromdeflist{listeTdonneesregroup}{\tmprangqc}[#6]%
+	%min/max
+	\minoflist{\TMPLST}[#3]%
+	\maxoflist{\TMPLST}[#7]%
+	%moyenne
+	\meanofdeflist{listeTdonneesregroup}[\mamoyenne]%
+	%écart-type
+	\xdef\monecarttype{0}%
+	\foreach \i in {1,...,\nbdonnees}{%
+			\getvaluefromdeflist{listeTdonneesregroup}{\i}[\myval]%
+			\xdef\monecarttype{\xintfloateval{\monecarttype+(\myval-\mamoyenne)^2}}%
+	}%
+	\xdef\monecarttype{\xintfloateval{sqrt(\monecarttype/\nbdonnees)}}%
+}
+
+\NewDocumentCommand\DeterminerMoyEctype{ s m O{\mamoyenne} O{\monecarttype} }{%
+	%traitement de la liste, *=effectifs
+	\IfBooleanTF{#1}%
+		{%
+			\setsepchar[.]{,./}%
+			\readlist*\listeTdonneesregroup{#2}%
+			\def\TMPLST{}%
+			\foreach \i in {1,...,\listeTdonneesregrouplen}{%
+				\itemtomacro\listeTdonneesregroup[\i,1]\myelt%
+				\itemtomacro\listeTdonneesregroup[\i,2]\mynbelt%
+				\foreach \j in {1,...,\mynbelt}{%
+					\xintifboolexpr{ \i*\j == 1}%
+						{%
+							\xdef\TMPLST{\myelt}%
+						}%
+						{%
+							\xdef\TMPLST{\TMPLST,\myelt}%
+						}%
+				}%
+			}%
+		}%
+		{%
+			\xdef\TMPLST{#2}%
+			\sortasclist{\TMPLST}%
+		}%
+	\definemylist{\TMPLST}{\listeTdonneesregroup}%
+	\lenofdeflist{listeTdonneesregroup}[\nbdonnees]%
+	%moyenne
+	\meanofdeflist{listeTdonneesregroup}[#3]%
+	%écart-type
+	\xdef#4{0}%
+	\foreach \i in {1,...,\nbdonnees}{%
+			\getvaluefromdeflist{listeTdonneesregroup}{\i}[\myval]%
+			\xdef#4{\xintfloateval{#4+(\myval-\mamoyenne)^2}}%
+	}%
+	\xdef#4{\xintfloateval{sqrt(#4/\nbdonnees)}}%
 }
 
 \endinput

@@ -23,23 +23,23 @@ tekstidokumentin kirjoittamisen tarpeisiin. Oppaan avulla pitäisi
 pärjätä niin hyvin, että laajennuspakettien ohjeita tarvitsee lukea vain
 harvoin.
 
-Edellisessä kappaleessa mainostettu nykyaikaisuus tarkoittaa esimerkiksi
-sitä, että tässä oppaassa keskitytään Open Type -fontteihin,
-Unicode-merkistöön ja PDF-tiedostoihin. Latexin vanha fonttitekniikka
-sivuutetaan, eikä kummallisten fonttitiedostojen ja merkistörajoitusten
-kanssa kamppailla. Oppaan ohjeet siis sopivat nykyaikaiselle tietokoneen
-käyttäjälle.
+Edellä mainostettu nykyaikaisuus tarkoittaa esimerkiksi sitä, että tässä
+oppaassa keskitytään Open Type -fontteihin, Unicode-merkistöön ja
+PDF-tiedostoihin. Latexin vanha fonttitekniikka sivuutetaan, eikä
+kummallisten fonttitiedostojen ja merkistörajoitusten kanssa kamppailla.
+Oppaan ohjeet siis sopivat nykyaikaiselle tietokoneen käyttäjälle.
 
 
 Saatavuus
 ---------
 
 Oppaan PDF-tiedosto ja lähdetiedostot ovat saatavilla
-[CTAN][CTAN]-arkistossa. PDF-tiedosto on myös Githubissa
-[julkaisusivulla](https://github.com/tlikonen/latex-opas/releases), ja
-lähdetiedostot ovat versionhallintajärjestelmässä [Githubissa][Github].
+[CTAN][]-arkistossa. PDF-tiedosto on myös Githubissa
+[julkaisusivulla][julk], ja lähdetiedostot ovat
+versionhallintajärjestelmässä [Githubissa][Github].
 
 [CTAN]:   https://ctan.org/pkg/kaytannollista-latexia
+[julk]:   https://github.com/tlikonen/latex-opas/releases
 [Github]: https://github.com/tlikonen/latex-opas
 
 
@@ -53,6 +53,19 @@ samana vuonna julkaistaan oppaasta uusi versio, lisätään versionumeroon
 kyseisen kuukauden numero, esimerkiksi versio ”2022.4” (huhtikuu 2022).
 Saman kuun aikana toinen julkaisu saa versionumeroonsa vielä päivänkin
 numeron, esimerkiksi ”2022.4.15” (15. huhtikuuta 2022).
+
+
+Osallistuminen
+--------------
+
+Voit osallistua oppaan parantamiseen esimerkiksi kirjoittamalla
+[toiveita tai vikailmoituksia][viat] tai muuten vain
+[keskustelemalla][kesk] aiheesta. Voit tietenkin myös kopioida oppaan
+lähdetiedostot itsellesi, toteuttaa parannukset itse ja julkaista ne
+jossakin (ks. lisenssi alla). Oheisista linkeistä pääset osallistumaan.
+
+[viat]: https://github.com/tlikonen/latex-opas/issues
+[kesk]: https://github.com/tlikonen/latex-opas/discussions
 
 
 Tekijänoikeus ja lisenssi
@@ -86,9 +99,9 @@ Kääntäminen ja asentaminen
 
 Latex-lähdetiedostojen kääntäminen eli latominen PDF-dokumentiksi vaatii
 useita Latexin makropaketteja ja pari fonttia. Latexin jakelukokonaisuus
-[Texlive](https://tug.org/texlive/) sisältää kaiken tarvittavan.
+[Tex Live](https://tug.org/texlive/) sisältää kaiken tarvittavan.
 Esimerkiksi [Debian](https://www.debian.org) Linux -käyttöjärjestelmässä
-asennuspaketti `texlive-full` asentaa koko Texliven.
+asennuspaketti `texlive-full` asentaa koko Tex Liven.
 
 [CTAN][CTAN]-arkistossa julkaistut lähdetiedostot käännetään
 PDF-tiedostoksi komennoilla `lualatex` ja `biber` seuraavasti:
@@ -116,9 +129,10 @@ kääntämisvaihettakin, koska ennen asentamista se varmistaa, että
 tarvittavat tiedostot on käännetty. Asennuskohde on käyttäjän
 kotihakemistossa eli polussa `$HOME/texmf`. Kohteeseen asentuu paitsi
 oppaan PDF-tiedosto myös lähdetiedostot ja tämä käsillä oleva
-`README.md`. Asentamisen jälkeen esimerkiksi Texliveen sisältyvä komento
-`texdoc` osaa löytää ja avata oppaan, kun komennolle antaa argumentiksi
-joitakin oppaan nimen kirjaimia, esimerkiksi `texdoc kaytann`.
+`README.md`. Asentamisen jälkeen esimerkiksi Tex Liveen sisältyvä
+komento `texdoc` osaa löytää ja avata oppaan, kun komennolle antaa
+argumentiksi joitakin oppaan nimen kirjaimia, esimerkiksi `texdoc
+kaytann`.
 
 Asennus poistetaan komennolla `make uninstall`. Komento tosin säilyttää
 polun `$HOME/texmf`, koska siellä voi edelleen sijaita muita Texiin ja
@@ -131,12 +145,3 @@ poistaa kaikki syntyneet tiedostot.
 
     make clean
     make distclean
-
-
-Puutteita ja suunnitelmia
--------------------------
-
-  - Lisätään biblatex-lukuun päiväysten muuttaminen (mm. urldate).
-  - Lisätään ohjeet omien pakettien ja dokumenttiluokkien tekemiseen.
-  - Mahdollisesti vaihdetaan uudempaan wrapfig2-pakettiin, kunhan se
-    yleistyy.

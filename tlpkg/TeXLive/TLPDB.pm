@@ -1,13 +1,13 @@
-# $Id: TLPDB.pm 69653 2024-01-31 21:52:46Z karl $
+# $Id: TLPDB.pm 71592 2024-06-22 21:01:54Z karl $
 # TeXLive::TLPDB.pm - tlpdb plain text database files.
-# Copyright 2007-2023 Norbert Preining
+# Copyright 2007-2024 Norbert Preining
 # This file is licensed under the GNU General Public License version 2
 # or any later version.
 
 use strict; use warnings;
 package TeXLive::TLPDB;
 
-my $svnrev = '$Revision: 69653 $';
+my $svnrev = '$Revision: 71592 $';
 my $_modulerevision = ($svnrev =~ m/: ([0-9]+) /) ? $1 : "unknown";
 sub module_revision { return $_modulerevision; }
 
@@ -362,9 +362,24 @@ sub from_file {
         # do nothing
       } else {
         unlink($tlpdbfile);
-        tldie(  "$0: TLPDB::from_file could not initialize from: $path\n"
-              . "$0: Maybe the repository setting should be changed.\n"
-              . "$0: More info: https://tug.org/texlive/acquire.html\n");
+        my $diemsg = <<END_DOWNLOAD_FAILURE_MSG;
+$0: TLPDB::from_file could not get texlive.tlpdb from: $path
+Maybe the repository setting should be changed.
+More info: https://tug.org/texlive/acquire.html
+END_DOWNLOAD_FAILURE_MSG
+
+        # If they have the Cygwin wget.exe, some other problem.
+        if ($^O eq 'cygwin'
+            && (! -x "/usr/bin/curl.exe" && ! -x "/usr/bin/wget.exe")) {
+          $diemsg .= <<END_CYGWIN_WGET_MSG;
+
+It seems you are using Cygwin and have not installed Cygwin's
+curl or wget. See the TeX Live Guide information on Cygwin for required
+and recommended packages:
+  https://tug.org/texlive/doc/texlive-en/texlive-en.html#cygwin
+END_CYGWIN_WGET_MSG
+        }
+        tldie($diemsg);
       }
     }
     # if we are still here, then either the xz version was downloaded
@@ -1662,7 +1677,7 @@ sub install_package_files {
              . "@installfiles\n"); 
       next;
     }
-    _post_install_package ($self, $tlpobj);
+    _post_install_pkg ($self, $tlpobj);
 
     # remember that we installed this package correctly
     $ret++;

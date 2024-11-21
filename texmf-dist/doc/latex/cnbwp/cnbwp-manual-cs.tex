@@ -4,7 +4,7 @@
 \usepackage{cnbwp-manual}
 \setdefaultlanguage{czech}
 \title{Návod k použití třídy \fn{cnbwp} pro psaní Working~Papers~ČNB}
-\author{Zdeněk Wagner}\date{verze 2013.12}
+\author{Zdeněk Wagner}\date{verze 2024.02}
 \def\?li{\discretionary{-}{-}{-}li}
 \begin{document}
 \maketitle
@@ -50,87 +50,34 @@ závažné chybě, případně k chybě s exotickým hlášením, takže její p
 
 \section{Instalace}\label{instalace}\index{instalace}
 Veškerá makra pro psaní Working Papers České národní banky jsou implementována v třídě
-\fn{cnbwp.cls}. Třída je distribuována v archivním souboru \fn{cnbwp.zip}. Soubor je v archivu
-uložen s cestou odpovídající standardu TDS~(\TeX\ Directory Structure). Způsob instalace se
-nepatrně liší v závislosti na konkrétní distribuci \TeX{}u.
+\fn{cnbwp.cls}. Třída včetně dokumentace je nyní součástí běžných distribucí \TeX{}u, takže ji
+můžete nainstalovat nástroji své distribuce.
 
 \subsection{\MikTeX}\label{inst.miktex}
-Soubor \fn{cnbwp.zip} rozbalíme do adresáře \url{X:\localtexmf}, kde \texttt{X:} označuje disk, na
-němž je \MikTeX{} instalován (obvykle~\texttt{C:}). Poté otevřeme menu
-\zwurl{Start/Programy/MikTeX/MikTeX Options}. Na kartě Roots si ověříme, že \url{X:\localtexmf} je
-v seznamu prohledávaných adresářů. Pokud není, přidáme jej. Pak stiskneme tlačítko \texttt{Refresh
-FNDB}. Úspěšnost instalace lze ověřit příkazem:
-
-\begin{verbatim}
-findtexmf cnbwp.cls
-\end{verbatim}
-
-\noindent Při úspěšné instalaci bude vypsána plná cesta k souboru \fn{cnbwp.cls}.
-
-\pozor Adresář \url{X:\localtexmf} je určen pro místní soubory, které nejsou standardní součástí
-\MikTeX u. Pokud přeinstalujete \MikTeX\ novou verzí, nebude tento adresář přepsán, takže o soubory
-nepřijdete.
-
-\subsection{\teTeX}\label{inst.tetex}
-Tato distribuce je standardem v unixových systémech a je dostupná i pro OS/2 resp. eComStation.
-Uvedeme si pouze instalaci v Linuxu. Instalace v OS/2 je obdobná. Liší se jen tím, že pro
-oddělování adresářů je užito zpětné lomítko a musíme explicitně zadat označení disku, na nějž jsme
-\teTeX\ nainstalovali.
-
-Soubor \fn{cnbwp.zip} rozbalíme do adresáře \url{/usr/share/texmf-local}. Při instalaci v unixových
-systémech je nutno dohlédnout na to, aby soubor
-\url{/usr/share/texmf-local/tex/latex/cnb/cnbwp.cls} neměl DOSové konce řádků. Po rozbalení souboru
-je obvykle nutné obnovit souborovou databázi příkazem \texttt{mktexlsr}.
-
-Z této distribuce vychází i \TeXLive, proto vše, co bude popsáno v následující kapitole, platí i
-pro \teTeX.
+Třída cnbwp je součástí distribuce a lze ji nainstalovat použitím konzoly. V konzoli je též možno
+povolit automatickou instalaci, takže balíček bude nainstalován, kdy jej dokument bude potřebovat.
 
 \subsection{\TeXLive}\label{inst.tl}
-\TeXLive\ je oblíbenou multiplatformní distribucí \TeX{}u. Vychází ze stejných zdrojů jako
-\hyperref[inst.tetex]{\teTeX}, instalace je tedy podobná. Adresář, do nějž rozbalíme
-\fn{cnbwp.zip}, je většinou \url{/usr/local/texlive/texmf-local} v unixových systémech,
-\url{X:\TeXLive\texmf-local} ve
-Windows. \TeXLive\ však lze nainstalovat do libovolného adresáře a dokonce můžeme mít instalováno
-několik verzí \TeXLive\ současně. Adresář, do nějž máme \fn{cnbwp.zip} rozbalit, zjistíme příkazem:
+\TeXLive\ je oblíbenou multiplatformní distribucí \TeX{}u. Třída cnbwp je součástí distribuce a lze
+ji nainstalovat v terminálovém okně příkazem
 
 \begin{verbatim}
-kpsewhich --expand-var=$TEXMFLOCAL
+tlmgr install cnbwp
 \end{verbatim}
-\index{kpsewhich}
-
-Adresářový strom \url{texmf-local} je sdílen všemi verzemi \TeXLive\ nainstalovaných na daném
-počítači. Při instalaci novější verze \TeXLive\ budou soubory nalezeny automaticky.
-
-\pozor Distribuce \TeXLive\ obvykle vyžaduje po přidání souborů spuštění programu
-\texttt{mktexlsr}. V distribucích pro Windows pro tento účel existuje i položka v Menu \TeXLive.
-Pokud programem \texttt{mktexlsr} neobnovíme databázi a před jménem adresáře s třídou \fn{cnbwp}
-jsou uvedeny dva vykřičníky, \LaTeX\ nebude schopen třídu najít. Chceme\?li zjistit, zda \LaTeX\
-třídu najde, použijeme příkaz:
-
-\begin{verbatim}
-kpsewhich cnbwp.cls -progname latex
-\end{verbatim}
-
-\noindent
-Pokud je vše v pořádku, příkaz vypíše plnou cestu k souboru \fn{cnbwp.cls}.
-
-\subsection{\emTeX}\label{inst.emtex}
-Tato distribuce je zastaralá, Eberhard Mattes ji už neudržuje. Je vhodnější přejít na jinou
-distribuci. Pokud přesto chcete používat \emTeX, rozbalte \fn{cnbwp.zip} do pomocného adresáře, v
-adresáři \url{X:\emtex\texinput\latex2e} vytvořte podadresář \fn{cnbwp} a do něj zkopírujte soubory
-\fn{cnbwp.cls} a \fn{cnbwpsizes.clo}.
-
-\subsection{Scientific Word}\label{inst.sciword}
-Návod je psán pro verzi 5.5. V této verzi rozbalte \fn{cnbwp.zip} do adresáře \url{X:\sw55\TCITeX},
-v jiných verzích se pravděpodobně bude lišit jméno kořenového adresáře. Scientific Word nedodržuje
-zcela přesně TDS, jména adresářů obsahují malá i velká písmena. Souborové systémy FAT a NTFS však
-malá a velká písmena nerozlišují, takže by to nemělo způsobit žádný problém.
 
 \subsection{Jiné distribuce}\label{inst.other}
 Při instalaci třídy \fn{cnbwp} do jiných distribucí je nutno řídit se manuálem dodávaným s
-příslušnou distribucí. Současné distribuce jsou založeny obvykle na \fn{web2c} a dodržují standard
-TDS, proto lze postupovat obdobně jako při instalaci pro \hyperref[inst.tl]{\TeXLive, viz
-kap.~\ref*{inst.tl}}.
+příslušnou distribucí. V podstatě je nutné najít adresář, kde distribuce očekává třídy a styly pro
+\LaTeX, a do něj vložit soubory \fn{cnbwp.cls} a \fn{cnbwpsizes.clo}. Do adresáře, kde jsou
+očekávány soubory pro \BibTeX, je nutno vložit \fn{abbrvcnb.bst}. V některých distribucích je nutno
+obnovit databázi jmen souborů.
+
+\subsection{Scientific Word}\label{inst.sciword}
+Návod je psán pro verzi 5.5. V této verzi rozbalte \fn{cnbwp.zip} do adresáře \url{X:\sw55\TCITeX},
+v jiných verzích se pravděpodobně bude lišit jméno kořenového adresáře. Zde vytvořte adresář
+\url{tex\latex\cnbwp} pro soubory \fn{cnbwp.cls} a \fn{cnbwpsizes.clo} a adresář
+\url{bibtex\bst\cnbwp} pro \fn{abbrvcnb.bst}. Kromě nakopírování těchto souborů žádná další akce
+není nutná.
 
 \subsection{Zpracování dokumentů ze Scientific Wordu v~jiných
 distribucích}\label{sciword.elsewhere}
@@ -143,9 +90,9 @@ podle toho, jakou distribuci používáte.
 příkazem \texttt{mktexlsr}, nebo z menu.
 
 \section{Testování instalace}\label{test.inst}
-V mnoha distribucích lze správnost instalace otestovat příkazem \texttt{kpsewhich}, jak bylo uvedeno
-v kapitole~\ref{inst.tl}. Můžeme tak ověřit, že \LaTeX\ dokáže najít třídu \fn{cnbwp} i makra z
-adresáře \fn{SWmacros}. Nemáme\?li program \texttt{kpsewhich} ve své distribuci, stačí napsat
+V mnoha distribucích lze správnost instalace otestovat příkazem \texttt{kpsewhich}, nebo
+\texttt{findtexmf} v závislosti na distribuci \TeX{}u. Můžeme tak ověřit, že \LaTeX\ dokáže najít třídu \fn{cnbwp} i makra z
+adresáře \fn{SWmacros}. Nemáme\?li ve své distribuci žádný z těchto programů, stačí napsat
 jednoduchý dokument:
 
 \begin{verbatim}
@@ -307,25 +254,34 @@ preambuli. Přesněji řečeno, makra, definující název, jména autorů a pod
 \cmd{documentclass} a \cmd{maketitle}. Jejich uvedení na samém začátku souboru tedy může
 být užitečné.
 
-Název práce zadáváme jako argument makra \xx\cmd{title}. Název bude vytištěn později, až uvedeme
-příkaz \xx\cmd{maketitle}, ale dostane se též do záhlaví:
+Název práce zadáváme jako parameter makra \xx\cmd{title}. 
+Volitelným parametrem makra \xx\cmd{title} je alternativní název pro záhlaví strany. Volitelný parametr předchází povinné parametry.
 
+Název bude vytištěn později, až uvedeme
+příkaz \xx\cmd{maketitle}, ale dostane se též do záhlaví:
 \begin{verbatim}
-\title{Fidlovačka aneb žádný hněv a žádná rvačka}
+\title{Fidlovačka aneb žádný hněv a žádná rvačka},
+\end{verbatim}
+nebo 
+\begin{verbatim}
+\title[Jenom Fidlovačka]{Fidlovačka aneb žádný hněv a žádná rvačka}
 \end{verbatim}
 
-Jména autorů zapisujeme pomocí makra \xx\cmd{author}, které vyžaduje dva parametry. V prvním
-parametru je uvedeno plné jméno, v druhém parametru název instituce. Makro se uvede pro každého
-autora samostatně např. takto:
 
+Jména autorů zapisujeme pomocí makra \xx\cmd{author}, které vyžaduje dva parametry a má jeden volitelný parameter. V prvním
+parametru je uvedeno plné jméno, v druhém parametru název instituce. 
+Volitelným parametrem je zkrácená forma jména, která se použije jen pro záhlaví strany. Volitelný parametr předchází povinné parametry.
+
+Makro se uvede pro každého autora samostatně např. takto:
 \begin{verbatim}
 \author{Kapitán Nemo}{Nautilus}
-\author{Robinson Crusoe}{Pustý ostrov}
+\author[R. Crusoe]{Robinson Crusoe}{Pustý ostrov}
 \end{verbatim}
 
 Makro \xx\cmd{maketitle} doplní před jméno posledního autora spojku „and“ podle britských pravidel,
 tj. čárka je uvedena pouze v případě, že práce má více než dva autory.
-Jména autorů jsou též přenesena do záhlaví.
+
+Jména autorů jsou přenesena do záhlaví dle volby.
 
 \subsubsection{Poděkování}\label{ack}
 Poděkování je nepovinnou součástí Working Paper. Uvádíme jej v argumentu makra
@@ -621,6 +577,7 @@ První čárka (uvnitř závorek) je součástí seznamu autorů, druhá čárka
 anglických pracích uvádíme čárku před \textit{and} v případě, kdy citace má více než dna
 autory.
 
+\DeclareRobustCommand\minus{-}% \xx\cmd{-} triggers an error
 \pozor Zapomenutá
 čárka nebo vynechané závorky okolo hodnoty obsahující čárku mají za následek chybové hlášení o
 neznámé položce s podivným jménem. Někdy se kvůli chybám tohoto typu může dokonce ztratit velká
@@ -629,7 +586,7 @@ neznámé položce s podivným jménem. Někdy se kvůli chybám tohoto typu mů
 V databázových souborech určených pro zpracování \BibTeX{}em často používáme složené závorky, jimiž
 zabraňujeme konverzi na malá či velká písmena. \LaTeX\ žádné konverze neprovádí, proto závorky
 nepotřebujeme. Můžeme však použít různá makra, např. \xx\cmd{mbox} pro zabránění nevhodnému dělení,
-\xx\cmd{-} k určení vhodného místa dělení slova, a dokonce si můžeme přímo uvnitř prostředi
+\xx\cmd{\minus} k určení vhodného místa dělení slova, a dokonce si můžeme přímo uvnitř prostředi
 \xx\texttt{thebibliography} definovat vlastní makra, jež budou v ostatních částech dokumentu
 neznámá (nebo definovaná jinak).
 
@@ -1337,8 +1294,12 @@ Pokud budete používat soubor \fn{cnbpaper.tex} jako šablonu svého dokumentu,
 které balíčky skutečně potřebujete. Nepotřebné příkazy \cmd{usepackage} vymažte. Je možné, že
 budete potřebovat nějaké další balíčky. Jedním z nich může být \xx\fn{amsmath}.
 
-\section{Změny, verze 2013.12}
+\section{Změny}
+
+\subsection{Verze 2013.12}
+
 V prosinci 2013 byly provedeny tyto změny:
+
 \begin{enumerate}
 \item Zrušeny přepínače 11pt a 12pt pro nastavení velikosti písma v dokumentu.
 \item Změna způsobu zadávání autorů, změna syntaxe makra \cmd{author}.
@@ -1351,6 +1312,15 @@ V prosinci 2013 byly provedeny tyto změny:
 \item Implementována nová makra \cmd{Note} a \cmd{Source}.
 \item Upraveno formátování jmen autorů v bibliografickém stylu \fn{abbrvcnb}.
 \item Balíček \fn{times} nahrazen balíčkem \fn{mathptmx}.
+\item Aktualizován manuál.
+\end{enumerate}
+
+\subsection{Verze 2024.2}
+
+V únoru 2024 byly provedeny tyto změny:
+
+\begin{enumerate}
+\item Přidány volitelné parametry pro sázení hlavičky strany v makrech \author a \title
 \item Aktualizován manuál.
 \end{enumerate}
 

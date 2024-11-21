@@ -1,6 +1,6 @@
-%% $Id: cnbwp.cls 67 2013-12-18 20:44:49Z zw $
+%% $Id: cnbwp.cls 85 2024-02-10 13:57:33Z zw $
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{cnbwp}[2013/12/18 LaTeX class for working papers of CNB]
+\ProvidesClass{cnbwp}[2024/02/09 LaTeX class for working papers of CNB]
 
 % Figure and table numbering, hierarchical is the default
 
@@ -225,12 +225,12 @@
         \CNB@tempdima=\textwidth \advance\CNB@tempdima -\wd\CNB@tempbox
         \vbox to \headheight{\hsize\textwidth \vss
            \hbox to \textwidth{\vbox{\hsize\wd\CNB@tempbox \box\CNB@tempbox}\hss
-               \vbox{\hsize\CNB@tempdima \raggedright \textit{\the\CNB@authors}}}\CNB@psrule}}%
+               \vbox{\hsize\CNB@tempdima \raggedright \textit{\the\CNB@Pageauthors}}}\CNB@psrule}}%
     \def\@oddhead{\let\thanks\@gobble\normalfont\normalsize
         \setbox\CNB@tempbox=\hbox{\CNB@pshskip\thepage}%
         \CNB@tempdima=\textwidth \advance\CNB@tempdima -\wd\CNB@tempbox
         \vbox to \headheight{\hsize\textwidth \vss
-           \hbox to \textwidth{\vbox{\hsize\CNB@tempdima \CNB@raggedleft \textit{\CNB@tit}}\hss
+           \hbox to \textwidth{\vbox{\hsize\CNB@tempdima \CNB@raggedleft \textit{\CNB@headertit}}\hss
                \vbox{\hsize\wd\CNB@tempbox \box\CNB@tempbox}}\CNB@psrule}}}
 
 \def\CNB@raggedleft{\parfillskip \z@ \leftskip 0pt plus .3\textwidth \relax \hskip 0mm plus .5\textwidth}
@@ -239,6 +239,7 @@
 % Title page
 \newtoks\CNB@autaddress
 \newtoks\CNB@authors
+\newtoks\CNB@Pageauthors
 \def\CNB@lastauthor{}
 
 \def\CNB@add@address#1#2{\ifcat$\the\CNB@autaddress$
@@ -257,14 +258,37 @@
       \fi
     \fi}
 
-\def\author#1#2{\CNB@add@address{#1}{#2}\CNB@add@author@with@delim\CNB@comma
+\def\CNB@add@Pageauthor@with@delim#1{\ifcat$\the\CNB@Pageauthors$
+      \ifcat$\CNB@lastauthor$ \else \CNB@Pageauthors\expandafter{\CNB@lastauthor}\fi
+    \else
+      \ifcat$\CNB@lastauthor$ \else
+        \CNB@Pageauthors\expandafter\expandafter\expandafter
+        {\expandafter\the\expandafter\CNB@Pageauthors #1}% add delimiter
+        \CNB@Pageauthors\expandafter\expandafter\expandafter
+        {\expandafter\the\expandafter\CNB@Pageauthors\CNB@lastauthor}% expanded stored author
+        \let\CNB@and\CNB@comma@and
+      \fi
+    \fi}
+
+\def\author{\@ifnextchar[{\CNB@authorShort}{\CNB@authorLong}}
+
+\def\CNB@authorShort[#1]#2#3{\CNB@add@address{#2}{#3}\CNB@add@author@with@delim\CNB@comma
+    \def\CNB@lastauthor{#1}\CNB@add@Pageauthor@with@delim\CNB@comma
+    \def\CNB@lastauthor{#2}}
+
+\def\CNB@authorLong#1#2{\CNB@add@address{#1}{#2}\CNB@add@author@with@delim\CNB@comma
+    \def\CNB@lastauthor{#1}\CNB@add@Pageauthor@with@delim\CNB@comma
     \def\CNB@lastauthor{#1}}
 
 \def\CNB@comma{\unskip, \ignorespaces}
 \def\CNB@and{\unskip\space and \ignorespaces}
 \def\CNB@comma@and{\unskip, and \ignorespaces}
 
-\def\title#{\def\CNB@tit}
+%\def\title#{\def\CNB@tit}
+\def\title{\@ifnextchar[{\CNB@Pagetitle}{\CNB@Onlytitle}}
+\def\CNB@Pagetitle[#1]#2{\def\CNB@tit{#2}\def\CNB@headertit{#1}}
+\def\CNB@Onlytitle#1{\def\CNB@tit{#1}\def\CNB@headertit{#1}}
+
 \long\def\acknowledge#1{\def\CNB@ack{\\#1}}
 \def\CNB@ack{}
 
@@ -277,10 +301,13 @@
   \vskip 25pt plus .333fil
   \begin{center}
     \let\@makefnmark\@gobble
-    \large\the\CNB@authors\,$^*$\footnotetext{\the\CNB@autaddress \CNB@ack}
+    \large\the\CNB@authors\,$^*$\CNB@putack\par
   \end{center}
   \endgroup\setcounter{footnote}{0}%
 }
+
+%\,$^*$\footnotetext{\the\CNB@autaddress \CNB@ack}
+\def\CNB@putack{\footnotetext{$^*$\the\CNB@autaddress \interlinepenalty-20 \CNB@ack}}
 
 \def\CNB@indentenv #1#2:{\begingroup \parskip\z@ \leftskip 30mm \parindent -25mm
     \rightskip \leftskip \advance\rightskip \parindent

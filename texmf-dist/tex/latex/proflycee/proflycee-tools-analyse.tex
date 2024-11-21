@@ -1,5 +1,5 @@
 % proflycee-tools-analyse.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %Correction d'un bug sur la raacine carrée... le cas où ça fait 1 !
@@ -574,6 +574,36 @@
 		}%
 }
 
+%===intégrale 'brute'
+\NewDocumentCommand\CalcIntegrale{ s O{} D<>{50} m m m }{%
+	\xintdeffloatfunc varfct(x) := #4 ;%
+	\def\TmpNmU{\xinteval{(#3)-1}}%
+	\def\TmpRes{\xintfloateval{(#6-#5)/(6*(#3))*(2*add(varfct(#5+i*(#6-#5)/(#3)),i=1..\TmpNmU)+varfct(#5)+varfct(#6)+4*add(varfct(#5+(i+0.5)*(#6-#5)/(#3)), i=0..\TmpNmU))}}%
+	\IfStrEq{#2}{}%
+		{%
+			\IfBooleanTF{#1}{\num{\TmpRes}}{\TmpRes}%
+		}%
+		{%
+			\IfBooleanTF{#1}{\num{\xintfloateval{round(\TmpRes,#2)}}}{\xintfloateval{round(\TmpRes,#2)}}%
+		}%
+	\relax
+}
+
+%===intégrale 'brute'
+\NewDocumentCommand\ValeurMoyenneIntg{ s O{} D<>{50} m m m }{%
+	\xintdeffloatfunc varfct(x) := #4 ;%
+	\def\TmpNmU{\xinteval{(#3)-1}}%
+	\def\TmpRes{\xintfloateval{(1)/(6*(#3))*(2*add(varfct(#5+i*(#6-#5)/(#3)),i=1..\TmpNmU)+varfct(#5)+varfct(#6)+4*add(varfct(#5+(i+0.5)*(#6-#5)/(#3)), i=0..\TmpNmU))}}%
+	\IfStrEq{#2}{}%
+		{%
+			\IfBooleanTF{#1}{\num{\TmpRes}}{\TmpRes}%
+		}%
+		{%
+			\IfBooleanTF{#1}{\num{\xintfloateval{round(\TmpRes,#2)}}}{\xintfloateval{round(\TmpRes,#2)}}%
+		}%
+	\relax
+}
+
 %==intégrale tikz==
 
 \defKV[methodeintegrtkz]{%
@@ -729,6 +759,7 @@
 \defKV[FracPeriod]{Inconnue=\def\FracPerVar{#1}}
 \setKVdefault[FracPeriod]{Enonce=true,d=true,Inconnue=x,Solution=false,Brut=true,Simple=false}
 
+\makeatletter
 \NewDocumentCommand\FractionPeriode{ O{} m m }{%on verra pour la mise en forme après...
 	%clés
 	\restoreKV[FracPeriod]% revenir au valeurs par défaut
@@ -810,6 +841,172 @@
 			}\par%
 		}%
 		{}%
+}
+\makeatletter
+
+%====tkz ligne convexité
+\makeatletter
+\NewDocumentCommand\tkzTabLineConvex{ s m m }{%
+	%étoilé := mode texte
+	%1 := ligne
+	%2 := liste des cases ( ccv / cvx / t / d / i / i* )
+	%calculs intermédiaires
+	\xdef\j{#2}%
+	\xdef\k{\inteval{#2+1}}%
+	%récup hauteur ligne
+	\pgfpointdiff{\pgfpointanchor{T0\j}{center}}{\pgfpointanchor{T0\k}{center}}%
+	\pgf@xa=\pgf@x
+	\pgf@ya=\pgf@y
+	\pgfmathparse{veclen(\pgf@xa,\pgf@ya)/28.45274}%
+	\global\let\tmphautligne\pgfmathresult%
+	%suite
+	\readlist*\lsttabconvex{#3}%
+	\foreach \i in {1,...,\lsttabconvexlen}{%
+		\itemtomacro\lsttabconvex[\i]{\paramcvxitem}%
+		\IfStrEqCase{\paramcvxitem}{%
+			{d}%double barre
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[double style] (N\nodedouble\j)--(N\nodedouble\k) ;%
+			}%
+			{i*}%inflexion
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=-12pt]N\nodedouble\k) ;%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=12pt]N\nodedouble\k) ;%
+				\draw (N\nodedouble\k) node[font=\tiny,text width=1.5cm,align=center] {point\\d'inflexion} ;
+			}%
+			{i}%inflexion sans texte
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=-12pt]N\nodedouble\k) ;%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=12pt]N\nodedouble\k) ;%
+			}%
+			{t}%trait
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[line width=\cmdTAB@tbs@lw,t style] (N\nodedouble\j)--(N\nodedouble\k) ;
+			}
+			{ccv}%concave
+			{%
+				\xdef\nodedouble{\inteval{(\i)/2}}%
+				\IfBooleanTF{#1}%
+				{%
+					\draw ($(M\nodedouble\j)!0.5!(M\nodedouble\k)$) node {concave} ;%
+				}%
+				{%
+					\draw[line width={1.5*\cmdTAB@tbs@lw}] ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({-0.275*\cmdTAB@tbs@espcl},{-0.25*\tmphautligne})$) parabola bend ++({0.275*\cmdTAB@tbs@espcl},{0.5*\tmphautligne})  ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({0.275*\cmdTAB@tbs@espcl},{-0.25*\tmphautligne})$) ;
+				}%
+			}%
+			{cvx}%concave
+			{%
+				\xdef\nodedouble{\inteval{(\i)/2}}%
+				\IfBooleanTF{#1}%
+				{%
+					\draw ($(M\nodedouble\j)!0.5!(M\nodedouble\k)$) node {convexe} ;%
+				}%
+				{%
+					\draw[line width={1.5*\cmdTAB@tbs@lw}] ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({-0.275*\cmdTAB@tbs@espcl},{0.25*\tmphautligne})$) parabola bend ++({0.275*\cmdTAB@tbs@espcl},{-0.5*\tmphautligne})  ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({0.275*\cmdTAB@tbs@espcl},{0.25*\tmphautligne})$) ;
+				}%
+			}%
+		}%
+	}%
+}
+\makeatother
+
+%===F.CANONIQUE & F.HOMOGRAPHIQUE
+\NewDocumentCommand\FormeCanonique{ s O{d} m m m }{%
+	\def\tmpcoeffalpha{-(#4)/(2*(#3))}%
+	\def\tmpcoeffbeta{(#3)*(-(#4)/(2*(#3)))^2+(#4)*(-(#4)/(2*(#3)))+(#5)}%
+	\def\coeffaconv{\ConversionFraction[#2]{#3}}%
+	\def\coeffalpha{\ConversionFraction[#2]{-(#4)/(2*(#3))}}%
+	\def\coeffalphamoins{\ConversionFraction[#2]{(#4)/(2*(#3))}}%
+	\def\coeffbeta{\ConversionFraction[#2]{(#3)*(-(#4)/(2*(#3)))^2+(#4)*(-(#4)/(2*(#3)))+(#5)}}%
+	\ensuremath{%
+		%on affiche a, sauf s'il vaut 1 ou -1
+		\xintifboolexpr{#3 == 1}{}{}%
+		\xintifboolexpr{#3 == -1}{-}{}%
+		\xintifboolexpr{#3 != -1 'and' #3 != 1}{\coeffaconv}{}%
+		\xintifboolexpr{\tmpcoeffalpha == 0}%
+		{%
+			x^2%
+		}%
+		{%
+			\IfBooleanTF{#1}%
+			{%
+				\xintifboolexpr{\tmpcoeffalpha < 0}%
+					{%
+						{\left(x\xintifboolexpr{\tmpcoeffalpha < 0}{-}{+}{\left(\coeffalpha\right)}\right)}^2%
+					}%
+					{%
+						{\left(x\xintifboolexpr{\tmpcoeffalpha > 0}{}{+}\coeffalphamoins\right)}^2%
+					}%
+			}%
+			{%
+				{\left(x\xintifboolexpr{\tmpcoeffalpha > 0}{}{+}\coeffalphamoins\right)}^2%
+			}%
+		}%
+		\xintifboolexpr{\tmpcoeffbeta == 0}%
+		{}%
+		{%
+			\xintifboolexpr{\tmpcoeffbeta > 0}{+}{}\coeffbeta%
+		}%
+	}%
+}
+
+\NewDocumentCommand\FonctionHomographique{ s O{t} m m m m }{%
+	\xintifboolexpr{#3 != 0}%
+	{%
+		\def\tmpcoeffSeul{(#3)/(#5)}%
+		\def\tmpcoeffNum{((#4)*(#5)-(#3)*(#6))/((#5)*(#5))}%
+		\def\tmpcoeffDenom{(#6)/(#5)}%
+		\ensuremath{%
+			\ConversionFraction[d]{\tmpcoeffSeul}%
+			+\dfrac%
+			{\ConversionFraction[#2]{\tmpcoeffNum}}%
+			{x%
+				\xintifboolexpr{#6 == 0}{}{%
+					\IfBooleanTF{#1}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{-\left(\ConversionFraction[#2]{-(\tmpcoeffDenom)}\right)}{\ConversionFraction[#2]{\tmpcoeffDenom}}%
+					}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{+}{}\ConversionFraction[#2]{\tmpcoeffDenom}%
+					}%
+				}%
+			}%
+		}%
+	}%
+	{%
+		\def\tmpcoeffNum{(#4)/(#5)}%
+		\def\tmpcoeffDenom{(#6)/(#5)}%
+		\ensuremath{%
+			\dfrac%
+			{\ConversionFraction[#2]{\tmpcoeffNum}}%
+			{x%
+				\xintifboolexpr{#6 == 0}{}{%
+					\IfBooleanTF{#1}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{-}{}\left(\ConversionFraction[#2]{-(\tmpcoeffDenom)}\right)%
+					}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{+}{}\ConversionFraction[#2]{\tmpcoeffDenom}%
+					}%
+				}%
+			}%
+		}%
+	}%
+}
+
+%----max/min
+\NewDocumentCommand\DetermineMax{ O{0.01} m m m O{\tmpmax} O{\tmpmaxvalx} }{%
+	\xdef#5{\xintfloateval{max(seq(#2,x=#3..[#1]..#4,#4))}}%
+	\xdef#6{\xintfloateval{first(seq((#2 == #5)?{x}{},x=#3..[#1]..#4,#4))}}%
+}
+
+\NewDocumentCommand\DetermineMin{ O{0.01} m m m O{\tmpmin} O{\tmpminvalx} }{%
+	\xdef#5{\xintfloateval{min(seq(#2,x=#3..[#1]..#4,#4))}}%
+	\xdef#6{\xintfloateval{first(seq((#2 == #5)?{x}{},x=#3..[#1]..#4,#4))}}%
 }
 
 \endinput

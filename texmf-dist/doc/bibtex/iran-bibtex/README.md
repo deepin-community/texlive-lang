@@ -28,7 +28,13 @@ The current version of this package (v0.3.0, and higher) supports ten types of e
 
 ### Load package
 
-Load the `iran-bibtex` package in your LaTeX file by using the `\usepackage[<bibstyle>]{iran-bibtex}` command in the preamble. With this package, there's no need to explicitly set the bibliography style using the `\bibliographystyle{<bibstyle>}` command anymore. It is recommended to load the `iran-bibtex` package before the `hyperref` package for optimal performance.
+To use the `iran-bibtex` package in your LaTeX document, simply include the command `\usepackage[<bibstyle>,<options>]{iran-bibtex}` in the preamble.
+
+With this package, there's no need to explicitly set the bibliography style using the `\bibliographystyle{<bibstyle>}` command.
+
+Any additional options specified as `<options>` will be passed to and processed by the [natbib](https://ctan.org/pkg/natbib) package.
+
+For optimal performance, it's recommended to load the `iran-bibtex` package before the `hyperref` package.
 
 ### Package's options as `<bibstyle>`
 
@@ -36,13 +42,25 @@ The bibliography styles included in this package are organized into two distinct
 
 There are five different type of `<bibstyle>` options as follows:
 
-| No. | Options                             | Description |
-| :-: | :---------------------------------- | :---------- |
-|1    |`iran`<br>`iranlatin`                | Author-date citation format, with reference items are arranged in alphabetical order. |
-|2    |`iran-plain`<br>`iranlatin-plain`    | Numerical labeled citation format, with reference items are both alphabetically sorted and numerically labeled. These styles are closely resembling the standard `plain` style. |
-|3    |`iran-year`<br>`iranlatin-year`      | Author-date citation format, with reference items are arranged in chronological order by year. |
-|4    |`iran-plainyr`<br>`iranlatin-plainyr`| Numerical labeled citation format, with reference items are both chronologically by year sorted and numerically labeled. |
-|5    |`iran-unsrt`<br>`iranlatin-unsrt`    | Numerical labeled citation format, with reference items are sorted by citation order and numerically labeled. These styles are closely resembling the standard `unsrt` style. |
+  1. For Persian documents (produced by [xepersian](https://ctan.org/pkg/xepersian) package)
+
+| No. | Options       | Description |
+| :-: | :------------ | :---------- |
+|1    |`iran`         | Author-date citation format, with reference items are arranged in alphabetical order. |
+|2    |`iran-plain`   | Numerical labeled citation format, with reference items are both alphabetically sorted and numerically labeled. This style is closely resembling the standard `plain` style. |
+|3    |`iran-year`    | Author-date citation format, with reference items are arranged in chronological order by year. |
+|4    |`iran-plainyr` | Numerical labeled citation format, with reference items are both chronologically by year sorted and numerically labeled. |
+|5    |`iran-unsrt`   | Numerical labeled citation format, with reference items are sorted by citation order and numerically labeled. This style is closely resembling the standard `unsrt` style. |
+
+  2. For non-Persian documents (produced by any processor)
+
+| No. | Options            | Description |
+| :-: | :----------------- | :---------- |
+|1    |`iranlatin`         | Author-date citation format, with reference items are arranged in alphabetical order. |
+|2    |`iranlatin-plain`   | Numerical labeled citation format, with reference items are both alphabetically sorted and numerically labeled. This style is closely resembling the standard `plain` style. |
+|3    |`iranlatin-year`    | Author-date citation format, with reference items are arranged in chronological order by year. |
+|4    |`iranlatin-plainyr` | Numerical labeled citation format, with reference items are both chronologically by year sorted and numerically labeled. |
+|5    |`iranlatin-unsrt`   | Numerical labeled citation format, with reference items are sorted by citation order and numerically labeled. This style is closely resembling the standard `unsrt` style. |
 
 ### Compilation
 
@@ -92,6 +110,19 @@ All of the other commads provided by [natbib](https://ctan.org/pkg/natbib) packa
 If you want to report any bugs or issues, please use [the issue tracker](https://github.com/farshadrasuli/iran-bibtex/issues). In doing so, please always explain your issue well enough and always include a minimal working example showing the issue.
 
 ## Change log
+
+### Version 0.4.3 (2024/08/4)
+
+  1. Fixing a minor issue that surfaced in the previous update.
+
+### Version 0.4.2 (2024/08/2)
+
+  1. Made some improvements.
+
+### Version 0.4.1 (2024/05/6)
+
+  1. Made some improvements.
+  2. Minor bugs have been fixed.
 
 ### Version 0.4.0 (2024/01/8)
 

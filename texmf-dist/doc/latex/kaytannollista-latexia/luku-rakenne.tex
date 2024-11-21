@@ -121,6 +121,52 @@ Taulukossa on mainittu ensin Latexin omat komennot ja sitten
 estävät sanojen tavuttamisen, kun taas \paketti{ragged2e}\-/ paketin
 komennot sallivat tavutuksen normaalisti.
 
+\subsection{Optinen tasaus}
+
+Tekstin tasaamisessa halutaan toisinaan jättää jotkut merkit
+tasauskohdan ulkopuolelle. Esimerkiksi suurikokoisissa otsikoissa on
+joskus alussa lainausmerkki, joka halutaan latoa tasauskohdan vasemmalle
+puolelle, jotta eri riveillä olevat sanat saadaan tasaan.
+
+\begin{tulossis}
+  \Large\makebox[0bp][r]{''}Optinen tasaus \\
+  otsikossa''
+\end{tulossis}
+
+\noindent
+Tasauskohdan ulkopuolinen lainausmerkki voidaan toteuttaa leveydettömän
+laatikon avulla (luku \ref{luku/laatikot}). Lainausmerkki kirjoitetaan
+laatikkoon, jonka leveys on nolla ja jonka sisältö tasataan laatikon
+oikeaan reunaan. Tällöin laatikko ei vie yhtään tilaa, mutta sen sisältö
+ladotaan kyseisen kohdan vasemmalle puolelle.
+
+\komentoi{makebox}
+\begin{koodilohkosis}
+\makebox[0bp][r]{''}Optinen tasaus \\
+otsikossa''
+\end{koodilohkosis}
+
+\noindent
+Toisinaan keskitetyssä monirivisessä tekstissä tai otsikossa on rivin
+lopussa yhdysmerkki, mutta keskitys ehkä halutaan toteuttaa vain
+kirjainten perusteella ja jättää yhdysmerkki sen ulkopuolelle. Sellainen
+yhdysmerkki voidaan kirjoittaa leveydettömään laatikkoon, jolloin sitä
+ei huomioida keskittämisessä.
+
+\komentoi{makebox}
+\ymparistoi{center}
+\begin{koodilohkosis}
+\begin{center}
+  \Large Latex\makebox[0bp][l]{-} \\ opas
+\end{center}
+\end{koodilohkosis}
+
+\begin{tulossis}
+  \begin{center}
+    \Large Latex\makebox[0bp][l]{-} \\ opas
+  \end{center}
+\end{tulossis}
+
 \subsection{Pystysuuntaiset välit}
 \label{luku/pystysuuntaiset-välit}
 
@@ -1437,159 +1483,24 @@ seuraavalla tavalla:
 \end{koodilohkosis}
 
 \subsection{Värit}
-\label{luku/korostus-värit}
 
 Eri värien käyttö voi sopia tekstin erilaisten osien korostamiseen.
-Esimerkiksi otsikot, taulukot tai leijuvat osat saa erottumaan
-selvemmin, kun niiden toteutuksessa käyttää värejä. Sen sijaan
-leipätekstin sisällä värejä täytynee käyttää hillitysti, sillä värikäs
-tekstipalsta näyttää rauhattomalta ja voi hidastaa lukemista.
+Esimerkiksi otsikot (luku \ref{luku/otsikot}), taulukot (luku
+\ref{luku/taulukot}) tai leijuvat osat (luku \ref{luku/leijuosat}) saa
+erottumaan selvemmin, kun niiden toteutuksessa käyttää värejä. Sen
+sijaan leipätekstissä värejä kannattaa käyttää hillitymmin, sillä
+värikäs tekstipalsta näyttää rauhattomalta. Katse voi hakeutua
+poikkeavan värisiin osiin liian helposti, mikä hidastaa lukemista.
+Värien käsittelyn tekniikkaa käsitellään luvussa \ref{luku/värit} ja
+sivun taustaväriä luvussa \ref{luku/sivun-väri}.
 
-Latexiin saa värit \pakettictan{xcolor}\-/ paketin
-avulla.\footnote{Toinen vaihtoehto on yksinkertaisempi väripaketti
-  \paketti{color}, joka sisältää värien käsittelyn perustoiminnot.} Se
-tarjoaa muun muassa komentoja, joilla tekstin väriä, tekstin taustaväriä
-tai sivun taustaväriä voi muuttaa. Lisäksi se sisältää värien
-sekoittamiseen ja muuntamiseen liittyvää tekniikkaa. Paketin komentojen
-avulla voi myös värittää taulukoiden (luku \ref{luku/taulukot}) rivit
-vuorottelevin värein.
-
-Omassa dokumentissa käytettävät värit on hyvä määritellä alussa.
-Määrittely tarkoittaa sitä, että annetaan väreille nimet -- esimerkiksi
-käyttötarkoituksen mukaan -- ja myöhemmin lähdedokumentissa viitataan
-väreihin käyttämällä alussa määriteltyjä nimiä. Näin väri on määritelty
-yhdessä paikassa ja sen muuttaminen on myöhemmin helppoa. On kyllä
-mahdollista käyttää värejä ilman etukäteismäärittelyäkin.
-
-\leijutlk{
-  \providecommand{\rivi}{}
-  \renewcommand{\rivi}[3]{\koodi{#1} & #2 & \koodi{#3}
-    & \textcolor[#1]{#3}{\rule{.9em}{.9em}} \\}
-  \begin{tabular}{llll}
-    \toprule
-    \ots{Malli}
-    & \ots{Parametrit}
-    & \multicolumn{2}{l}{\ots{Esimerkki}} \\
-    \midrule
-    \rivi{rgb}{punainen, vihreä, sininen}{1,.7,.3}
-    \rivi{HTML}{punainen vihreä sininen}{33aaf3}
-    \rivi{cmyk}{syaani, magenta, keltainen, musta}{.1,1,.5,0}
-    \rivi{hsb}{sävy, kylläisyys, kirkkaus}{.2,1,.6}
-    \rivi{gray}{harmaa}{.55}
-    \bottomrule
-  \end{tabular}
-}{
-  \caption{Erilaisia värimalleja ja niiden parametreja
-    \paketti{xcolor}\-/ paketissa}
-  \label{tlk/värimalleja}
-}
-
-Omat värit määritellään komennolla \komento{definecolor}. Se tarvitsee
-kolme argumenttia: värin nimen, värimallin ja värikoodin. Komennon
-argumenttien rakenne on seuraavanlainen:
-
-\komentoi{definecolor}
-\begin{koodilohkosis}
-\definecolor{nimi}{välimalli}{parametrit}
-\end{koodilohkosis}
-
-\noindent
-Komennon argumentti \koodi{nimi} on kirjoittajan itse valitsema nimi,
-ja se voi liittyä esimerkiksi värin käyttötarkoitukseen (''nuoli'') tai
-värin yleiseen nimeen (''keltainen''). Argumentti \koodi{väri\-malli}
-tarkoittaa värin ilmaisemisen tapaa. Niitä on useita erilaisia, mutta
-yleisimmät on koottu taulukkoon \ref{tlk/värimalleja}.
-
-Eri värimalleilla on eri määrä parametreja, joilla ilmaistaan värin
-ominaisuuksia. Kunkin parametrin arvo on yleensä desimaaliluku 0\==1,
-mutta \koodi{HTML}\-/ värimallissa parametrit ilmaistaan yhtenä kolmen
-kaksinumeroisen heksadesimaaliluvun sarjana \textsc{html}\-/
-merkintäkielen tavoin. Värin parametrit kirjoitetaan komennon
-argumenttiin \koodi{para\-metrit} ja ne erotetaan toisistaan pilkulla.
-Taulukon \ref{tlk/värimalleja} Esimerkki\-/sarakkeessa on parametrien
-antamisesta esimerkki. Muista värimalleista voi lukea
-\paketti{xcolor}\-/ paketin ohjekirjasta.
-
-Kun värit on määritelty, niitä voi käyttää eri komentojen yhteydessä.
-Tekstin väri vaihdetaan toiseksi komennolla \komento{color}, josta on
-kaksi erilaista versiota. Komento vaihtaa värin pysyvästi nykyisen
-ympäristön (luku \ref{luku/ympäristöt}) tai aaltosulkeilla (luku
-\ref{luku/aaltosulkeet}) rajatun alueen sisällä.
-
-\komentoi{color}
-\begin{koodilohkosis}
-\color{nimi}                  % väriksi ennalta määritelty ”nimi”
-\color[värimalli]{parametrit} % värimallin ja parametrien avulla
-\end{koodilohkosis}
-
-\noindent
-Toinen vaihtoehto on käyttää komentoa \komento{textcolor}, jolle
-annetaan edelliseen verrattuna vielä yksi argumentti lisää. Argumenttina
-on teksti, johon värin halutaan vaikuttavan. Vaikutusalueena on siis
-vain kyseinen teksti.
-
-\komentoi{textcolor}
-\begin{koodilohkosis}
-\textcolor{nimi}{teksti}
-\textcolor[värimalli]{parametrit}{teksti}
-\end{koodilohkosis}
-
-\noindent
-Tekstin taustaväri vaihdetaan komennoilla \komento{colorbox} ja
-\komento{fcolorbox}. Komennot luovat laatikon, jonka sisällä taustaväri
-on voimassa. Ensin mainittu komento vaihtaa vain taustavärin, ja
-jälkimmäinen sisältää lisäksi värillisen kehyksen, eli sille
-määritellään kaksi väriä.
-
-\begin{koodilohkosis}
-\colorbox{nimi}{teksti} % taustaväriksi ennalta määritelty ”nimi”
-\colorbox[värimalli]{parametrit}{teksti}
-\fcolorbox{nimi(kehys)}{nimi(tausta)}{teksti}
-\fcolorbox[värimalli]{parametrit(kehys)}{parametrit(tausta)}{teksti}
-\end{koodilohkosis}
-
-\noindent
-Kehystetyn laatikon kehysviivan leveys on mitassa \mitta{fboxrule} ja
-kehyksen etäisyys sisällöstä mitassa \mitta{fboxsep}. Seuraavassa on
-esimerkki useiden edellä mainittujen komentojen käytöstä. Tästä tuskin
-kannattaa ottaa mallia vakavaan typografiseen työhön.
-
-\komentoi{colorbox}
-\komentoi{color}
-\komentoi{definecolor}
-\komentoi{fcolorbox}
-\komentoi{setlength}
-\komentoi{textcolor}
-\mittai{fboxrule}
-\mittai{fboxsep}
-\begin{koodilohkosis}
-\definecolor{pun}{rgb}{1,.2,.2}
-\setlength{\fboxrule}{2bp} \setlength{\fboxsep}{1bp}
-\fcolorbox[gray]{.4}{.2}{\color[gray]{1}Tekstiä}
-\textcolor{pun}{voi korostaa} \colorbox{pun}{väreillä}.
-\end{koodilohkosis}
-
-\begin{tulossis}
-  \definecolor{pun}{rgb}{1,.2,.2}
-  \setlength{\fboxrule}{2bp} \setlength{\fboxsep}{1bp}
-  \fcolorbox[gray]{.4}{.2}{\color[gray]{1}Tekstiä}
-  \textcolor{pun}{voi korostaa} \colorbox{pun}{väreillä}.
-\end{tulossis}
-
-\noindent
-Sivulle voi asettaa taustavärin komennolla \komento{pagecolor}.
-Taustäväri vaihtuu nykyiselle ja seuraaville sivuille, kunnes väri
-vaihdetaan toiseksi tai poistetaan. Komennolle annetaan samanlaiset
-argumentit kuin muillekin värikomennoille. Komento \komento{nopagecolor}
-poistaa taustavärin kokonaan eli palauttaa taustan oletustilaan.
-
-\komentoi{pagecolor}
-\komentoi{nopagecolor}
-\begin{koodilohkosis}
-\pagecolor{nimi} % sivun taustaväriksi ennalta määritelty ”nimi”
-\pagecolor[värimalli]{parametrit}
-\nopagecolor
-\end{koodilohkosis}
+Tämän oppaan leipätekstissä on käytetty värejä Latexin komentojen ja
+muiden rakenteiden ilmaisemiseen, esimerkiksi \komentox{komento},
+\ymparistox{ympäristö} ja \mittax{mitta}. Värisävyt on melko tummia,
+jotta mustaa tekstiä sisältävä tekstipalsta näyttäisi verrattain
+tasaiselta eikä katse kiinnittyisi värillisiin kohtiin kovin helposti.
+Samanlaista ajatusta kannattanee toteuttaa muidenkin elementtien
+värittämisessä.
 
 \section{Sivunvaihdot ja sivujen tasaaminen}
 \label{luku/sivunvaihdot}
@@ -2661,12 +2572,44 @@ kirjaimia (a, b, c jne.).
   \label{esim/labelitem-labelenum}
 \end{esimerkki*}
 
+\leijutlk{
+  \providecommand{\rivi}{}
+  \renewcommand{\rivi}[3]{#1 & \uctunnus{#2} & #3 \\}
+  \begin{tabular}{cll}
+    \toprule
+    \multicolumn{2}{l}{\ots{Merkki ja Unicode-nimi}} & \ots{Komento} \\
+    \midrule
+    \rivi{\textbullet}{u+2022 bullet}{\komento{textbullet}}
+    \rivi{◦}{u+25e6 white bullet}{}
+    \rivi{$\circ$}{u+2218 ring operator}{\koodi{\$\mkomento{circ}\$}}
+    % \rivi{⁃}{u+2043 hyphen bullet}{}
+    % \rivi{▪}{u+25aa black small square}{}
+    \rivi{\rule[.3ex]{.5ex}{.5ex}}{}
+    {\komento{rule}\komentoargv{.3ex}\komentoarg{.5ex}\komentoarg{.5ex}}
+    \rivi{‣}{u+2023 triangular bullet}{}
+    \rivi{--}{u+2013 en dash}{\komento{textendash}, \koodi{--}}
+    \rivi{$\star$}{u+22c6 star operator}{\koodi{\$\mkomento{star}\$}}
+    \rivi{\textasteriskcentered}
+    {u+2217 asterisk operator} {\komento{textasteriskcentered}}
+    \rivi{\textperiodcentered}
+    {u+00b7 middle dot}{\komento{textperiodcentered}}
+    \bottomrule
+  \end{tabular}
+}{
+  \caption{Erilaisia luetelmamerkkejä. Komento-sarakkeen
+    \koodi{\$}\=/merkit ovat matematiikkatilan aloitus- ja
+    lopetuskomentoja}
+  \label{tlk/luetelmamerkkejä}
+}
+
 Luetelmamerkit ja luetelmien numerointitavat ovat kirjoittajan
 muutettavissa. Ympäristössä \ymparisto{itemize} luetelmamerkit tulevat
 komennosta, joka alkaa sanoilla \komentox{label\-item} ja jatkuu
 luetelman tasoa ilmaisevalla roomalaisella numerolla
 \koodi{i}\==\koodi{iv}. Komennot voi määritellä uudelleen haluamallaan
 tavalla, kuten esimerkki \ref{esim/labelitem-labelenum} osoittaa.
+Taulukkoon \ref{tlk/luetelmamerkkejä} on koottu erilaisia
+luetelmamerkkejä sekä Latex\-/ komentoja, joilla niitä voi tuottaa.
 
 \ymparisto{enumerate}\-/ ympäristössä numeroidut kohdat tulevat
 komennosta, joka alkaa sanoilla \komentox{label\-enum} ja jatkuu
@@ -2773,9 +2716,9 @@ vaikutetaan luetelman asetuksiin.
 Edellisen esimerkin argumentti \koodi{merk\-ki} sisältää tekstiä tai
 koodia, joka muodostaa luetelmakohdan merkin. Numeroimattomassa
 luetelmassa siihen voi laittaa esimerkiksi luetelmaympyrän eli komennon
-\komento{textbullet} tai ajatusviivan (\koodi{--}). Numeroidussa
-luetelmassa siihen kirjoitetaan komento, joka latoo jonkin laskurin
-arvon.
+\komento{textbullet} tai ajatusviivan (\koodi{--}). Muita esimerkkejä on
+taulukossa \ref{tlk/luetelmamerkkejä}. Numeroidussa luetelmassa siihen
+kirjoitetaan komento, joka latoo jonkin laskurin arvon.
 
 \ymparisto{list}\-/ ympäristön toinen argumentti \koodi{ase\-tuk\-set}
 sisältää mitä hyvänsä koodia, jolla vaikutetaan ympäristön asetuksiin.
@@ -2827,7 +2770,7 @@ Esimerkissä \ref{esim/list-perus} on yksinkertainen numeroitu luetelma,
 joka hyödyntää olemassa olevaa \laskuri{enumi}\-/ laskuria (luku
 \ref{luku/luetelma-perus}). Laskurin arvo ladotaan arabialaisilla
 numeroilla (\komento{arabic}). Laskurin \laskuri{enumi} sijasta voi
-käyttää mitä tahansa omaakin laskuria, kunhan luo sen etukäteen
+käyttää mitä tahansa omaakin laskuria, kunhan sen on luonut etukäteen
 komennolla \komento{newcounter} (luku \ref{luku/laskurit}). Esimerkissä
 asetetaan myös eräitä luetelman sisäisiä mittoja, joista on lisätietoa
 myöhemmin tässä alaluvussa sekä kuvassa \ref{kuva/list-mitat}.
@@ -3129,7 +3072,7 @@ täytyy käyttää komentoa \komento{noindent}.
 Toinen tyypillinen vaihtoehto on sijoittaa taulukko vaakasuunnassa sivun
 keskelle, jolloin se erottuu muusta tekstistä vielä selvemmin. Tämän voi
 toteuttaa kirjoittamalla taulukkoympäristö \ymparisto{center}\-/
-ympäristön sisään (\ref{luku/kappaleen-tasaus}).
+ympäristön sisään (luku \ref{luku/kappaleen-tasaus}).
 
 Kolmas vaihtoehto on tehdä taulukosta leijuva eli antaa Latexin
 sijoittaa se sopivaan paikkaan. Samalla taulukolle annetaan kuvateksti
@@ -3701,7 +3644,7 @@ huolehtivat myös niiden ylä- ja alapuolisesta välistä paremmin kuin
 Latexin omat viivakomennot.
 
 Taulukon rivien taustan voi värittää \pakettictan{xcolor}\-/ paketin
-(luku \ref{luku/korostus-värit}) komentojen avulla. Varsinkin leveiden
+(luku \ref{luku/värit}) komentojen avulla. Varsinkin leveiden
 taulukoiden lukemista voi helpottaa, jos rivien eri taustavärit
 vuorottelevat. Tarkemmat tiedot selviävät paketin ohjekirjasta, mutta
 seuraavan esimerkin avulla ominaisuutta pääsee kokeilemaan:
@@ -4515,7 +4458,7 @@ toisistaan erotettuja valitsimia ja niiden arvoja.
 \leijutlk{
   \providecommand{\rivi}{}
   \renewcommand{\rivi}[2]{\koodi{#1} & #2 \\}
-  \begin{tabularx}{\linewidth}{lL}
+  \begin{tabularx}{\textwidth}{lL}
     \toprule
     \ots{Valitsin} & \ots{Merkitys ja vaihtoehtoja} \\
     \midrule
@@ -4589,7 +4532,7 @@ ympäristössä.
 \leijutlk{
   \providecommand{\rivi}{}
   \renewcommand{\rivi}[2]{\koodi{#1} & #2 \\}
-  \begin{tabularx}{\linewidth}{lL}
+  \begin{tabularx}{\textwidth}{lL}
     \toprule
     \ots{Valitsin} & \ots{Merkitys ja vaihtoehtoja} \\
     \midrule
@@ -4742,9 +4685,11 @@ Niitä käytetään seuraavalla tavalla:
 \end{koodilohkosis}
 
 \begin{wrapfigure}{R}{5em}
-  \begin{tikzpicture}[x=.5em, y=.5em]
-    \draw [draw=black, fill=yellow, line width=1bp] (0,0) ellipse [x
-    radius=4, y radius=2, rotate=30];
+  \begin{tikzpicture}[x=.5em, y=.5em,
+    tyyli/.style={draw=black, fill=yellow, line width=.6bp}]
+    \draw [tyyli] (0,0) ellipse [x radius=4, y radius=1.5, rotate=45];
+    \draw [tyyli] (-2,2) circle [radius=1];
+    \draw [tyyli] (2,-2) circle [radius=1];
   \end{tikzpicture}
   \caption{Tekstipalstaan upotettu kuva}
   \label{kuva/wrapfig-esimerkki}
@@ -4886,8 +4831,8 @@ Ristiviittaukset vaativat, että Latex\-/ lähdedokumentti käännetään
 kahdesti. Ensimmäisellä kääntämiskerralla \komento{label}\-/ komennolla
 mainittujen kohteiden tiedot kirjoitetaan muistiin väliaikaistiedostoon.
 Toisella kääntämiskerralla hyödynnetään väliaikaistiedostoa ja
-\komento{ref}-, \komento{pageref}\-/\ ja \komento{nameref}\-/ komentojen
-tilalle ladotaan viittauskohteen oikeat tiedot.
+komentojen \komento{ref}, \komento{pageref} ja \komento{nameref} tilalle
+ladotaan viittauskohteen oikeat tiedot.
 
 \section{Alaviitteet}
 \label{luku/alaviitteet}
@@ -4895,12 +4840,14 @@ tilalle ladotaan viittauskohteen oikeat tiedot.
 Alaviitteet ovat sivun alareunassa olevia numeroituja tai muulla tavalla
 merkittyjä huomautuksia. Niihin viitataan sanojen tai virkkeiden perässä
 olevalla yläindeksinumerolla, \=/kirjaimella tai
-\=/symbolilla.\footnote{Tässä on esimerkki alaviitteestä.} Alaviitteiden
-tarkoituksena on lisätä tekstiin lähes huomaamaton lisätieto, joka ei
-häiritse lukemista. Se sopii asioille, joilla ei ole suurta merkitystä
-useimmille lukijoille tai jotka muuten sopivat huonosti leipätekstiin.
-Varsin usein myös tiedonlähteet ilmaistaan alaviitteiden
-avulla.\footcites[162]{kt_oik}[127--128]{typokk}
+\=/symbolilla.\footnote{Katso myös ylä- ja alaindeksejä käsittelevä luku
+  \ref{luku/ylä-alaindeksit}. Siellä mainitun \paketti{realscripts}\-/
+  paketin lataaminen on suositeltavaa, kun käyttää alaviitteitä.}
+Alaviitteiden tarkoituksena on lisätä tekstiin lähes huomaamaton
+lisätieto, joka ei häiritse lukemista. Se sopii asioille, joilla ei ole
+suurta merkitystä useimmille lukijoille tai jotka muuten sopivat
+huonosti leipätekstiin. Varsin usein myös tiedonlähteet ilmaistaan
+alaviitteiden avulla.\footcites[162]{kt_oik}[127--128]{typokk}
 
 Alaviite tehdään komennolla \komento{footnote}, jonka argumentiksi
 kirjoitetaan alaviitteeseen tuleva teksti. Oletuksena Latex latoo
@@ -5023,6 +4970,8 @@ väli hieman kasvaa.
     \rivi{norule}{vaakasuuntainen erotinviiva pois}
     \rivi{perpage}{numerointi sivukohtaiseksi}
     \rivi{bottom}{alaviite aina sivun alareunaan}
+    \rivi{ragged}{alaviitteeseen automaattinen \komento{raggedright} tai
+    \komento{RaggedRight}}
     \rivi{hang}{luetelmatyyppiset alaviitteet, riippuva sisennys}
     \rivi{multiple}{useat peräkkäiset yläindeksinumerot}
     \bottomrule
@@ -5047,6 +4996,22 @@ voi sijoittua joskus ylemmäksi, jos sivun alaosaan ladotaan leijuva osa
 tai jos sivun alareunan tasaaminen on pois päältä
 (\komento{raggedbottom}, luku \ref{luku/sivunvaihdot}).
 
+Valitsin \koodi{ragged} latoo alaviitteen tekstikappaleet
+liehureunaisena eli suorittaa automaattisesti komennon
+\komento{raggedright} tai \komento{RaggedRight} (luku
+\ref{luku/kappaleen-tasaus}). Monipuolisempi keino alaviitteen tyylin
+muokkaamiseen on komento \komento{footnotelayout}. Komennon voi
+määritellä itse haluamakseen, ja komennon määritelmään kirjoitetaan mitä
+hyvänsä komentoja, jotka halutaan suorittaa automaattisesti jokaisen
+alaviitetekstin alussa.
+
+\komentoi{footnotelayout}
+\komentoi{raggedright}
+\begin{koodilohkosis}
+\renewcommand{\footnotelayout}{\raggedright}
+\end{koodilohkosis}
+
+\noindent
 Oletuksena alaviitekappaleet ladotaan samalla tavalla kuin
 tekstikappaleet oletuksena muutenkin, eli alaviitteen ensimmäinen rivi
 on sisennetty, ja sen alussa on alaviitteen numero. Seuraavia rivejä ei
@@ -5064,7 +5029,7 @@ valitsimella \koodi{hang}. Sisennyksen suuruuteen voi vaikuttaa mitan
 \pakettii{footmisc}
 \begin{koodilohkosis}
 \usepackage[hang]{footmisc}
-\setlength{\footnotemargin}{1.5em}
+\setlength{\footnotemargin}{.8em}
 \end{koodilohkosis}
 
 \noindent
@@ -5472,7 +5437,8 @@ esimerkkiteos on peräisin esimerkistä \ref{esim/thebibliography}.
     \bottomrule
   \end{tabular}
 }{
-  \caption{\paketti{natbib}\-/paketin lähdeviittauskomentoja}
+  \caption{\paketti{natbib}\-/paketin
+    läh\-de\-viit\-taus\-ko\-men\-toja}
   \label{tlk/natbib-cite}
 }
 
@@ -6351,7 +6317,7 @@ asetuksia käsitellään luvussa \ref{luku/asiasanat-asetukset}.
 \leijutlk{
   \providecommand{\rivi}{}
   \renewcommand{\rivi}[2]{\koodi{#1} & #2 \\}
-  \begin{tabularx}{\linewidth}{lL}
+  \begin{tabularx}{\textwidth}{lL}
     \toprule
     \ots{Valitsin} & \ots{Merkitys} \\
     \midrule
@@ -6730,7 +6696,7 @@ valitsimia ja niiden arvoja. Valitsimia on koottu taulukkoon
 \leijutlk{
   \providecommand{\rivi}{}
   \renewcommand{\rivi}[2]{\koodi{#1} & #2 \\}
-  \begin{tabularx}{\linewidth}{lL}
+  \begin{tabularx}{\textwidth}{lL}
     \toprule
     \ots{Valitsin} & \ots{Merkitys ja vaihtoehtoja} \\
     \midrule
@@ -6862,7 +6828,7 @@ merkkivalikoimassa.
 \leijutlk{
   \providecommand{\rivi}{}
   \renewcommand{\rivi}[2]{\koodi{#1} & #2 \\}
-  \begin{tabularx}{\linewidth}{lL}
+  \begin{tabularx}{\textwidth}{lL}
     \toprule
     \ots{Valitsin} & \ots{Merkitys} \\
     \midrule
@@ -7044,7 +7010,7 @@ ilmaistaan tällaisten lisätietojen avulla. Esimerkki
 \ref{esim/tikz-asetuksia} havainnollistaa tavallisimpia valinnaisia
 argumentteja. Värivalitsimien \koodi{draw} ja \koodi{fill} arvoksi voi
 antaa mitä hyvänsä nimettyjä värejä, joita käsitellään tarkemmin luvussa
-\ref{luku/korostus-värit}.
+\ref{luku/värit}.
 
 \begin{esimerkki*}
   \ymparistoi{tikzpicture}
@@ -7151,13 +7117,13 @@ paketin omasta ohjekirjasta.
 \end{tikzpicture}
 \end{koodilohko}
 
-  \begin{tulossis}
+  \begin{tulos}
     \begin{tikzpicture}[x=1mm, y=1mm]
       \node (ympyrä) at (0,0) [draw, circle] {vasen};
       \node (suorakulmio) at (20,0) [draw, rectangle] {oikea};
       \draw [->, shorten >=1mm] (ympyrä) to [out=45, in=135] (suorakulmio);
     \end{tikzpicture}
-  \end{tulossis}
+  \end{tulos}
 
   \caption{Solmujen nimeäminen ja kytkeminen viivan avulla}
   \label{esim/tikz-solmujen-yhdistäminen}

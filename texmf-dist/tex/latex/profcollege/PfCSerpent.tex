@@ -1,10 +1,14 @@
 %%%
 % Serpent
 %%%
+\def\filedateSerpent{2024/08/04}%
+\def\fileversionSerpent{0.1}%
+\message{-- \filedateSerpent\space v\fileversionSerpent}%
+%
 \newtoks\tokListeSerpentPerso{}%
 \def\UpdatetoksSerpent#1\nil{\addtotok\tokListeSerpentPerso{"#1"}}%
 
-\setKVdefault[Serpent]{Cases=9,Case=1,Solution=false,PasQuad=7mm,ValeurMin=2,ValeurMax=10,Creation=false,Graines=false}
+\setKVdefault[Serpent]{Cases=9,Case=1,Solution=false,PasQuad=7mm,ValeurMin=2,ValeurMax=10,Creation=false,Graines=false,Direct=false,Disque=false,Spirale=false}
 \defKV[Serpent]{CouleurSolution=\setKV[Serpent]{Solution}}%
 \defKV[Serpent]{Perso=\setKV[Serpent]{Creation}\xdef\PfCFooCheminSerpent{#1}}%+Liste des déplacements
 \defKV[Serpent]{Graine=\setKV[Serpent]{Graines}}%
@@ -19,7 +23,14 @@
     \BuildSerpent{\the\tokListeSerpentPerso}%
     \reademptyitems%
   }{%
-    \BuildSerpent{}%
+    \ifboolKV[Serpent]{Direct}{%
+        \BuildSerpentDirect{}%
+    }{\ifboolKV[Serpent]{Spirale}{%
+        %\BuildSerpentSpirale{}%
+      }{%
+        \BuildSerpent{}%
+      }%
+    }%
   }%
 }%
 
@@ -29,10 +40,11 @@
     \mplibnumbersystem{double}%
     \begin{mplibcode}
       %
-      boolean Solution,Perso,Graines;
+      boolean Solution,Perso,Graines,Disque;
       Solution=\useKV[Serpent]{Solution};
       Perso=\useKV[Serpent]{Creation};
       Graines=\useKV[Serpent]{Graines};
+      Disque=\useKV[Serpent]{Disque};
       %
       if Graines:
       randomseed:=\useKV[Serpent]{Graine};
@@ -210,7 +222,11 @@
       fi;
       fi;
       for k=1 upto LongueurChemin:
+      if Disque:
+      trace (fullcircle scaled (2*PasQuad)) shifted (N[k]+PasQuad*(1,1));
+      else:
       trace (unitsquare scaled (2*PasQuad)) shifted N[k];
+      fi;
       endfor;
       for k=1 upto LongueurChemin-1:
       drawarrow (center (unitsquare scaled (2*PasQuad)) shifted N[k])--(center (unitsquare scaled (2*PasQuad)) shifted N[k+1]) cutbefore ((unitsquare scaled (2*PasQuad)) shifted N[k]) cutafter ((unitsquare scaled (2*PasQuad)) shifted N[k+1]);
@@ -295,6 +311,195 @@
       else:
       label.bot(TEX("$\PfCSymbolDiv"&decimal(Quotient)&"$"),St[tt]);
       fi;
+      enddef;
+      %
+      for k=2 upto LongueurChemin:
+      if (Chiffre[k-1]=1) or (Chiffre[k-1]=0):
+      % On additionne ou on multiplie si c'est un
+      if Chiffre[k-1]=1:
+      alea:=ceiling(uniformdeviate(2));
+      if alea=1:
+      EcrireSomme(k);
+      else:
+      EcrireProduit(k);
+      fi;
+      else:
+      EcrireSomme(k);
+      fi;
+      else:
+      TestPremier(Chiffre[k-1]);
+      if PremierChiffre:
+      if Chiffre[k-1]>100:
+      EcrireDifferenceCent(k);
+      else:
+      alea:=ceiling(uniformdeviate(3));
+      if alea=1:
+      EcrireSomme(k);
+      elseif alea=2:
+      EcrireDifference(k);
+      elseif alea=3:
+      EcrireProduit(k);      
+      fi;
+      fi;
+      if k=CaseDepart:
+      label(TEX("\Large"&decimal(Chiffre[k])),N[k] shifted(PasQuad*(1,1)));
+      elseif Solution:
+      label(TEX("\Large"&decimal(Chiffre[k])),N[k] shifted(PasQuad*(1,1))) withcolor CoulSolution;
+      fi;
+      else:
+      if Chiffre[k-1]>100:
+      alea:=ceiling(uniformdeviate(2));
+      if alea=1:
+      EcrireDifferenceCent(k);
+      else:
+      EcrireQuotient(k);
+      fi;
+      else:
+      alea:=ceiling(uniformdeviate(4));
+      if alea=1:
+      EcrireSomme(k);
+      elseif alea=2:
+      EcrireDifference(k);
+      elseif alea=3:
+      EcrireProduit(k);
+      elseif alea=4:
+      EcrireQuotient(k);
+      fi;
+      fi;
+      fi;
+      fi;
+      if k=CaseDepart:
+      label(TEX("\Large"&decimal(Chiffre[k])),N[k] shifted(PasQuad*(1,1)));
+      else:
+      if Solution:
+      label(TEX("\Large"&decimal(Chiffre[k])),N[k] shifted(PasQuad*(1,1))) withcolor CoulSolution;
+      fi;
+      fi;
+      endfor;
+    \end{mplibcode}
+    \mplibnumbersystem{scaled}%
+  \fi
+}%
+
+\NewDocumentCommand\BuildSerpentDirect{m}{%
+  \ifluatex%
+    \mplibforcehmode%
+    \mplibnumbersystem{double}%
+    \begin{mplibcode}
+      %
+      boolean Solution,Graines,Disque;
+      Solution=\useKV[Serpent]{Solution};
+      Graines=\useKV[Serpent]{Graines};
+      Disque=\useKV[Serpent]{Disque};
+      %
+      if Graines:
+      randomseed:=\useKV[Serpent]{Graine};
+      fi;
+      %
+      color CoulSolution;
+      if Solution:
+      CoulSolution=\useKV[Serpent]{CouleurSolution};
+      fi;
+      %
+      numeric LongueurChemin,Depart;
+      LongueurChemin=\useKV[Serpent]{Cases};
+      ValeurMin=\useKV[Serpent]{ValeurMin};
+      ValeurMax=\useKV[Serpent]{ValeurMax};
+      CaseDepart=\useKV[Serpent]{Case};
+      Depart=ValeurMin+floor(uniformdeviate(ValeurMax-ValeurMin+1));
+      %
+      PasQuad=5mm;%\useKV[Serpent]{PasQuad};
+      %
+      pair N[];
+      N[1]:=4*PasQuad*(0,0);
+      for k=2 upto LongueurChemin:
+      N[k]=N[k-1]+4*PasQuad*(1,0);
+      endfor;
+      % Tracage
+      if CaseDepart=1:
+      label(TEX("\Large"&decimal(Depart)),N[1] shifted(PasQuad*(1,1)));
+      else:
+      if Solution:
+      label(TEX("\Large"&decimal(Depart)),N[1] shifted(PasQuad*(1,1))) withcolor CoulSolution;
+      fi;
+      fi;
+      for k=1 upto LongueurChemin:
+      if Disque:
+      trace (fullcircle scaled (2*PasQuad)) shifted (N[k]+PasQuad*(1,1));
+      else:
+      trace (unitsquare scaled (2*PasQuad)) shifted N[k];
+      fi;
+      endfor;
+      %
+      path cheminfleche[];
+      path CheminFlecheBase;
+      CheminFlecheBase=(0,2*PasQuad){dir45}..(4*PasQuad,2*PasQuad);
+      for k=1 upto LongueurChemin-1:
+      cheminfleche[k]=CheminFlecheBase shifted (N[k]+(PasQuad,0));
+      %cheminfleche[k]=(center (unitsquare scaled (2*PasQuad)) shifted N[k]){dir45}..(center (unitsquare scaled (2*PasQuad)) shifted N[k+1]) cutbefore ((unitsquare scaled (2*PasQuad)) shifted N[k]) cutafter ((unitsquare scaled (2*PasQuad)) shifted N[k+1]);
+      drawarrow cheminfleche[k];
+      endfor;
+      %%drawoptions();
+      boolean PremierChiffre;
+      PremierChiffre=true;
+      %% Test Premier
+      vardef TestPremier(expr nombre)=
+      nbdiviseur:=0;
+      nbdiv:=0;
+      for k=2 upto nombre:
+      if (nombre mod k)=0:
+      nbdiviseur:=nbdiviseur+1;
+      if k<11:
+      nbdiv:=nbdiv+1;
+      Diviseur[nbdiv]:=k;
+      fi;
+      fi;
+      endfor;
+      if nbdiviseur>1:
+      PremierChiffre:=false;
+      else:
+      PremierChiffre:=true;
+      fi;
+      enddef;
+      % Les opérations
+      numeric Chiffre[];
+      pair St[];
+      Chiffre[1]=Depart;
+      %
+      vardef EcrireSomme(expr tt)=
+      Somme:=5+ceiling(uniformdeviate(10));
+      Chiffre[tt]=Chiffre[tt-1]+Somme;
+      St[tt]=point(0.5*length cheminfleche[tt-1]) of cheminfleche[tt-1];
+      label.top(TEX("$+"&decimal(Somme)&"$"),St[tt]);
+      enddef;
+      %
+      vardef EcrireProduit(expr tt)=
+      Multiple:=1+ceiling(uniformdeviate(8));
+      Chiffre[tt]=Chiffre[tt-1]*Multiple;
+      St[tt]=point(0.5*length cheminfleche[tt-1]) of cheminfleche[tt-1];
+      label.top(TEX("$\PfCSymbolTimes"&decimal(Multiple)&"$"),St[tt]);
+      enddef;
+      %
+      vardef EcrireDifferenceCent(expr tt)=
+      Difference:=ceiling(Chiffre[tt-1]-15+uniformdeviate(10));
+      Chiffre[tt]=Chiffre[tt-1]-Difference;
+      St[tt]=point(0.5*length cheminfleche[tt-1]) of cheminfleche[tt-1];
+      label.top(TEX("$-"&decimal(Difference)&"$"),St[tt]);
+      enddef;
+      %
+      vardef EcrireDifference(expr tt)=
+      Difference:=if Chiffre[tt-1]<20:1+floor(uniformdeviate(Chiffre[tt-1]-1)) else: 5+ceiling(uniformdeviate(10)) fi;
+      Chiffre[tt]=Chiffre[tt-1]-Difference;
+      St[tt]=point(0.5*length cheminfleche[tt-1]) of cheminfleche[tt-1];
+      label.top(TEX("$-"&decimal(Difference)&"$"),St[tt]);
+      enddef;
+      %
+      vardef EcrireQuotient(expr tt)=
+      choixdiv:=ceiling(nbdiv);
+      Quotient:=Diviseur[choixdiv];
+      Chiffre[tt]=Chiffre[tt-1] div Quotient;
+      St[tt]=point(0.5*length cheminfleche[tt-1]) of cheminfleche[tt-1];
+      label.top(TEX("$\PfCSymbolDiv"&decimal(Quotient)&"$"),St[tt]);
       enddef;
       %
       for k=2 upto LongueurChemin:

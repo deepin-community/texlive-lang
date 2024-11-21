@@ -1,5 +1,5 @@
 % proflycee-tools-aleatoire.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %%------EnsembleList
@@ -85,8 +85,18 @@
 
 \newcommand\NbAlea[4][0]{%entier ou décimal
 	\xintifboolexpr{#1 == 0}%
-		{\xdef#4{\fpeval{randint(#2,#3)}}}%
-		{\xdef#4{\fpeval{round(randint(#2,#3)+rand(),#1)}}}%
+		{%
+			\xdef#4{\fpeval{randint(#2,#3)}}%
+		}%
+		{%
+			\xintifboolexpr{(#3-#2) == 1}%
+				{%
+					\xdef#4{\fpeval{round(#2+rand(),#1)}}%
+				}%
+				{%
+					\xdef#4{\fpeval{round(randint(#2,#3)+rand(),#1)}}%
+				}%
+		}%
 }
 \newcommand\VarNbAlea[2]{%
 	\xdef#1{\fpeval{#2}}%

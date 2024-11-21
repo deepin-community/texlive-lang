@@ -1,0 +1,25 @@
+% main_3d.tex  LaTeX demonstraton file showing Asymptote 3D, Jim Hefferon
+\documentclass{article}
+\usepackage{graphicx}
+\graphicspath{ {asy/} }  % Path to poster graphic; dirs in curly braces,  trailing slash  
+\usepackage{asymptote}  
+\def\asydir{asy}  % No trailing slash
+% For non-manipulable 3D figures, just compile with "asy vectors" and
+% include the PDF output as with 2D figures.
+% For manipulable 3D figures: 
+% (1) Compile the .asy file with "asy -inlineimage vectors". 
+% It outputs a number of files, including .tex and .pre files, 
+% and the .pdf "poster" that you click on to start the manipulation. 
+% (2) Include the .pre line here along with one of the lines in center below
+\input asy/vectors.pre
+
+\begin{document}
+Include the output graphic directly in the text body.
+\begin{center}
+%   \asyinclude{asy/vectors.asy}  
+  \input asy/vectors.tex %
+\end{center}  
+If you use the commented-out way then run 
+\texttt{asy -inlineimage <latex-fn>-1}
+between a pair of \LaTeX{} runs of this file.
+\end{document}

@@ -1,3 +1,10 @@
+%%%
+% CAN
+%
+\def\filedateCAN{2024/08/04}%
+\def\fileversionCAN{0.1}%
+\message{-- \filedateCAN\space v\fileversionCAN}%
+%
 % Gestion de l'aléatoire (pour la CAN)
 \newcommand\ChoixAlea[4][]{%
   \ifx\bla#1\bla%
@@ -308,7 +315,8 @@
           \hline%
           \endhead%
           \xintFor* ##1 in {\xintSeq{1}{\ListeFichierslen}}\do{%
-            \ttfamily{\theCNNumQ}\stepcounter{CNNumQ}&\xdef\CNReponse{}\input{\ListeFichiers[##1]}\ifboolKV[ClesCN]{Nom}{\par\hfill\footnotesize\ttfamily\ListeFichiers[##1]}{}&\ifboolKV[ClesCN]{CAN}{\ifboolKV[ClesCN]{Nom}{\multirow{2}{*}{\CNReponse}}{\multirow{1}{*}{\CNReponse}}}{}&\\%
+            \ttfamily{\theCNNumQ}\stepcounter{CNNumQ}&\xdef\CNReponse{}\input{\ListeFichiers[##1]}\ifboolKV[ClesCN]{Nom}{\par\hfill\footnotesize\ttfamily\ListeFichiers[##1]}{}&\CNReponse%\ifboolKV[ClesCN]{CAN}{\ifboolKV[ClesCN]{Nom}{\multirow{2}{*}{\CNReponse}}{\multirow{1}{*}{\CNReponse}}}{}
+            &\\%
             \hline%
           }%
         \end{longtable}%

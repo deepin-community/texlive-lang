@@ -1,4 +1,4 @@
-%%% Copyright (C) 2015-2023 Vincent Goulet
+%%% Copyright (C) 2015-2024 Vincent Goulet
 %%%
 %%% Ce fichier fait partie du projet
 %%% «Rédaction avec LaTeX»
@@ -11,8 +11,8 @@
 
 \section{Principes de base}
 
-\begin{frame}
-  \frametitle{Rédaction}
+\begin{frame}[fragile=singleslide]
+  \frametitle{Séparation du contenu et de l'apparence}
 
   L'apparence du document est prise en charge par {\LaTeX} et
   il est généralement préférable de ne pas la modifier.
@@ -20,10 +20,108 @@
   \begin{itemize}
   \item On se concentre sur le \alert{contenu} et la \alert{structure} du
     document
-  \item Mots séparés par une ou plusieurs \alert{espaces}
-  \item Paragraphes séparés par une ou plusieurs \alert{lignes blanches}
-  \item Utilisation de \alert{commandes} pour indiquer la structure du texte
+  \item On indique la sémantique du texte et non son apparence
+    \begin{demo}
+      \begin{minipage}{0.45\linewidth}
+\begin{lstlisting}
+\textbf{\large Titre}
+\end{lstlisting}
+      \end{minipage}
+      \hfill \faArrowRight \hfill
+      \begin{minipage}{0.45\linewidth}
+\begin{lstlisting}
+\section{Titre}
+\end{lstlisting}
+      \end{minipage}
+    \end{demo}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Règles de saisie}
+
+  \begin{enumerate}[<+| only@+>]
+  \item Mots séparés par une ou plusieurs \alert{espaces}
+\begin{demo}
+    \begin{texample}
+\begin{lstlisting}
+Les espaces délimitent les
+mots. Leur nombre n'a pas
+d'importance.
+\end{lstlisting}
+      \producing
+      Les espaces délimitent les
+      mots. Leur nombre n'a pas
+      d'importance.
+    \end{texample}
+    \begin{texample}
+\begin{lstlisting}[showstringspaces=true]
+Les  espaces   délimitent
+les                 mots.
+Leur    nombre  n'a pas
+d'importance.
+\end{lstlisting}
+      \producing
+      Les  espaces   délimitent
+      les                 mots.
+      Leur    nombre  n'a pas
+      d'importance.
+    \end{texample}
+  \end{demo}
+  \item Paragraphes séparés par une ou plusieurs \alert{lignes
+      blanches}
+    \begin{demo}
+      \begin{texample}
+\begin{lstlisting}
+Les lignes blanches
+délimitent les paragraphes.
+
+Une ou plusieurs, ça ne fait
+aucune différence!
+\end{lstlisting}
+      \producing
+Les lignes blanches
+délimitent les
+paragraphes.
+
+Une ou plusieurs, ça ne fait aucune différence!
+      \end{texample}
+      \begin{texample}
+\begin{lstlisting}
+Les lignes blanches
+délimitent les paragraphes.
+
+
+Une ou plusieurs, ça ne fait
+aucune différence!
+\end{lstlisting}
+      \producing
+        Les lignes blanches  délimitent
+        les paragraphes.
+
+
+
+        Une ou plusieurs, ça ne fait aucune différence!
+      \end{texample}
+    \end{demo}
+  \item Utilisation de \alert{commandes} pour indiquer la structure du
+    texte
+    \begin{demo}
+      \begin{texample}
+\begin{lstlisting}
+Les commandes sont visibles
+dans le \textbf{texte},
+mais évidemment pas dans le
+\emph{document} fini.
+\end{lstlisting}
+        \producing
+        Les commandes sont visibles
+        dans le \textbf{texte},
+        mais évidemment pas dans le
+        \emph{document} fini.
+      \end{texample}
+    \end{demo}
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}[fragile=singleslide]
@@ -91,10 +189,10 @@ vitae ipsum vel, fermentum pellentesque orci.
   \item Débutent toujours par «\bs»
   \item Exemples de syntaxe
 \begin{lstlisting}
-\LaTeX                     % aucun argument
-\emph{toujours}            % un argument obligatoire
-\section*{Introduction}    % effet modifié
-\rule[6pt]{5mm}{2pt}       % un argument optionnel, deux obligatoires
+\LaTeX                   % aucun argument
+\emph{toujours}          % un argument obligatoire
+\section*{Introduction}  % effet modifié
+\rule[6pt]{5mm}{2pt}     % un argument optionnel, deux obligatoires
 \end{lstlisting}
    \item Commande sans argument: le nom se termine par tout
     caractère qui n'est \alert{pas une lettre} (y compris l'espace!)
@@ -120,13 +218,14 @@ vitae ipsum vel, fermentum pellentesque orci.
 \begin{frame}[fragile]
   \frametitle{{\LaTeX} en français}
 
-  Il faut charger un certain nombre de paquetages pour franciser \LaTeX.
+  Approche moderne \alert{vivement recommandée}: enregistrer le code
+  source en \link{https://fr.wikipedia.org/wiki/UTF-8}{UTF-8} et
+  compiler avec {\XeLaTeX}.
 
+  Il faut ensuite charger quelques paquetages pour franciser \LaTeX.
   \begin{itemize}
   \item \pkg{babel}: traduction des mots-clés prédéfinis,
     typographie française, coupure de mots, document multilingue
-  \item \pkg{inputenc} et \pkg{fontenc}: lettres accentuées dans le
-    code source (pdf{\LaTeX} seulement)
   \item \pkg{icomma}: virgule comme séparateur décimal
   \item \pkg{numprint}: espace comme séparateur des milliers
   \end{itemize}
@@ -139,7 +238,7 @@ vitae ipsum vel, fermentum pellentesque orci.
   \bigskip
   \centering
   \fbox{\includegraphics[viewport=108 551 502 665,%
-    clip=true,width=0.9\linewidth]{auxdoc/exercice_commandes-solution}}
+    clip=true,width=0.9\linewidth]{auxdoc/exercice-commandes-solution}}
 \end{exercice}
 
 %%% Local Variables:

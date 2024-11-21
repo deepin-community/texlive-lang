@@ -1,0 +1,142 @@
+% Chapter 1 from Asymptote tutorial Jim Hefferon
+\chapter{A first graphic}
+Making an \Asy{} input file is like making a \LaTeX{} input file,
+so you already have a feel for the basics.
+To start, 
+use your favorite editor to open a file \path{asy/unit_circle.asy}.
+\begin{minted}{Bash}
+jim@millstone:~/Documents/asy_tut/src$ cd asy
+jim@millstone:~/Documents/asy_tut/src/asy$ emacs unit_circle.asy  
+\end{minted}
+Type this text into the file and save it, or
+copy it from this document's online source.
+\begin{center}
+  \inputminted{Asymptote}{chapter1/asy/unit_circle.asy}
+\end{center}
+Get the output file \path{unit_circle.pdf} by running \Asy{} on the source.
+\begin{minted}{Bash}
+jim@millstone:~/Documents/asy_tut/src/asy$ asy unit_circle  
+\end{minted} 
+%$ Make auctex recognize end of "math"
+You can see the result in any PDF viewer.
+\begin{center}
+  \includegraphics{chapter1/asy/unit_circle.pdf}
+\end{center}
+
+
+
+
+\section{What do we have here?}
+The input \path{unit_circle.asy} illustrates a number of things.
+Globally, it shows that you must declare variables such as line~12's
+\mintinline{Asymptote}{theta}, that
+commands end with a semicolon,
+and that comments are preceded by a double slash, 
+\mintinline{Asymptote}{//}.
+
+Locally, line 2's \mintinline{Asymptote}{settings.outformat}
+variable fixes the format of output files to PDF so we needn't remember 
+each time to do that from the command line.
+Line~4's \mintinline{Asymptote}{import}
+is like a \LaTeX{} \mintinline{TeX}{\usepackage{...}} in that
+it gives us access to a module, a collection of related commands and data.
+In this case it
+gives us commands to make plots.
+In this drawing we only use its axis-making commands 
+but the second chapter has more about plots.
+
+In line~6 the \mintinline{Asymptote}{unitsize(1.5cm)} command means that
+if we describe a point $(x,y)$ then \Asy{} will interpret it as the
+location $x\cdot 1.5\text{\,cm}$ and $y\cdot 1.5\text{\,cm}$ from the origin.
+ 
+Line~9 is self-explanatory.
+Lines~12 through~15 draw the line segment from the origin to the 
+point labeled $(\cos\theta,\sin\theta)$.
+(On line~15, in addition to drawing the dot, \Asy{} labels it and
+the \mintinline{Asymptote}{E} puts that label east of the dot.)
+% Note that if after seeing the drawing we decide to adjust the angle
+% then we just need to change one number, on line~12. 
+
+Finally, lines 18 and~19 draw the axes.
+These commands have many options, most of which we did not use here,
+and we will see more of them later.
+
+One more thing.
+\Asy{} gets the point label $(\cos\theta,\sin\theta)$ and the axis labels
+by putting the given strings in a small file,
+running \LaTeX{} on it, and then extracting the result back into the
+output graphic.
+So your labels have access to all of \LaTeX's capabilities.  
+
+
+
+
+
+\section{Adjustments}
+After you get a graphic draft there are always some tweaks.
+
+First, here the axis labels are too big.
+We will replace \mintinline{Asymptote}{"$x$"}
+with \mintinline{Asymptote}{"\scriptsize $x$"}.
+(We could instead omit the label by deleting the entire
+string and the comma after it,
+which illustrates that commands
+such as \mintinline{Asymptote}{"xaxis(..)"}
+can have a variable number of arguments.
+While you are working you may want to have open the \Asy{} reference
+for a list of the options.)
+
+Second, the dot showing the generic point on the unit circle is too big.
+In the revised source below we've adjusted the size by inserting
+\mintinline{Asymptote}{dotfactor = 4} in line~22
+(the default factor is $6$).
+
+Finally, the $(\cos\theta,\sin\theta)$ label is in a different font than
+the other mathematics in this overview.
+We want that \Asy, when making the small \LaTeX{} document to create the
+in-graphic text,
+will use the same font setup as the main \path{.tex} file.
+So below we added a 
+\mintinline{Asymptote}{texpreamble("..")};~the 
+string is long so for readability we've spread it across multiple lines.
+\begin{center}
+  \inputminted{Asymptote}{chapter1/asy/unit_circle_after.asy}
+\end{center}
+\begin{center}
+  \includegraphics{chapter1/asy/unit_circle_after.pdf}
+\end{center}
+
+
+
+\section{Include the graphic in a \LaTeX{} file}
+Open a new \LaTeX{} file \path{main.tex}. 
+\begin{minted}{Bash}
+jim@millstone:~/Documents/asy_tut/src$ emacs main.tex  
+\end{minted} 
+Enter this text
+or copy it from this document's source.
+\begin{center}
+  \inputminted{TeX}{chapter1/main.tex}
+\end{center} 
+This document shows two ways to include the graphic.
+Line~11 is straightforward because
+after you've iterated through some adjustments to the figure then you   
+use \LaTeX's standard \mintinline{TeX}{\includegraphics{..}}.
+The other way, commented out, 
+uses the \mintinline{TeX}{asymptote} \LaTeX{} package
+to include the \Asy{} source file with 
+\mintinline{TeX}{\asyinclude{..}}.
+In this approach, getting the graphic is a three step process, where 
+you run ``\mintinline{Bash}{pdflatex main}'' (of course
+you can instead use ``\mintinline{Bash}{xelatex main}'' or 
+``\mintinline{Bash}{lualatex main}''), then you go into
+the \path{asy/} subdirectory and run 
+``\mintinline{Bash}{asy <latex-filename>-1}''
+(here, ``\mintinline{Bash}{asy main-1}''), then go back to the
+\LaTeX{} file's directory and run ``\mintinline{Bash}{pdflatex main}'' once more.
+In either case here is the one-page output.
+\begin{center}
+  \framebox{\includegraphics[page=1,scale=0.325,trim=0.25in 5.9in 0.25in 0.25in]{chapter1/main.pdf}}
+\end{center}
+
+

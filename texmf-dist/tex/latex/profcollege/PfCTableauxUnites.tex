@@ -1,7 +1,11 @@
 %%%
 % Tableaux d'unit\'es
 %%%
-\setKVdefault[ClesTableaux]{Virgule=true,Incline=false,Entiers=false,Decimaux=false,Milliards=false,Millions=false,Micro=false,Nano=false,Partie=false,CouleurG=gray!15,CouleurM=gray!15,Couleurm=gray!15,Couleuru=gray!15,Couleurd=gray!15,Classes=false,Nombres=false,Puissances=false,NbLignes=2,Metre=false,Are=false,Capacite=false,Carre=false,CarreA=false,Cube=false,Litre=false,Gramme=false,Fleches=false,FlechesB=false,FlechesH=false,Colonnes=false,Prefixes=false,Escalier=false,CubeA=false,Taille=5,Largeur=4.75em,Nom=PfCTableau,CodeAfter={},PuissancesSeules=false,Colonne=-1,Octet=false,CouleurGN=white,CadreGN=black,Tabcolsep=0.275\tabcolsep,Exterieur=false,Condense=false}%
+\def\filedateTableaux{2024/08/15}%
+\def\fileversionTableaux{0.1a}%
+\message{-- \filedateTableaux\space v\fileversionTableaux}%
+\message{`PfCTableauxUnites.tex' v\fileversionTableaux\space (\filedateTableaux)}
+\setKVdefault[ClesTableaux]{Virgule=true,Incline=false,Entiers=false,Decimaux=false,Milliards=false,Millions=false,Micro=false,Nano=false,Partie=false,CouleurG=gray!15,CouleurM=gray!15,Couleurm=gray!15,Couleuru=gray!15,Couleurd=gray!15,Classes=false,Nombres=false,Puissances=false,NbLignes=2,Metre=false,Are=false,Capacite=false,Carre=false,CarreA=false,Cube=false,Litre=false,Gramme=false,Fleches=false,FlechesB=false,FlechesH=false,Colonnes=false,Prefixes=false,Escalier=false,CubeA=false,Taille=5,Largeur=4.75em,Nom=PfCTableau,CodeAfter={},PuissancesSeules=false,Colonne=-1,Octet=false,CouleurGN=white,CadreGN=black,Tabcolsep=0.275\tabcolsep,Exterieur=false,Condense=false,DoubleEntree=false}%
 \defKV[ClesTableaux]{ColonnesSup=\setKV[ClesTableaux]{Exterieur}}%
 %
 \newcommand\PfCTBstrut{\rule[-1.2ex]{0pt}{3.8ex}}% Top and Bottom strut
@@ -52,7 +56,10 @@
       \xdef\PfCCoefConversion{10}%
     }{}%
     \PfCTableauIncline%
-  }{%
+  }{%Fin Escalier
+    \ifboolKV[ClesTableaux]{DoubleEntree}{%
+      \TableauDoubleEntree[#1]{#2}%
+    }{}%
     %
     %%% Clé Octet
     %

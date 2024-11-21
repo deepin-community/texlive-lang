@@ -20,7 +20,7 @@
 %<*package> 
 \NeedsTeXFormat{LaTeX2e}[2005/12/01]
 \ProvidesPackage{frenchmath}
-    [2024/01/22 v2.8 .dtx frenchmath file]
+    [2024/05/07 v3.1 .dtx Typesetting mathematics according to French rules]
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
@@ -28,23 +28,22 @@
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
 \usepackage{lmodern}
-\usepackage[lgrmath]{frenchmath}
-\usepackage[Euler]{upgreek}
-\usepackage{textalpha}
+\usepackage[lgrmath,savegreeks,otherfonts]{frenchmath}
 \usepackage{metalogo} % pour les logos XeLaTeX et LuaLaTeX
 \usepackage{sectsty}
 \usepackage{xcolor}
+%\usepackage{textalpha}
+\usepackage{tabls}
 
 \definecolor{darkbrown}{rgb}{0.5,0.1,0.1}
 \allsectionsfont{\color{darkbrown}}
-\DeclareSymbolFont{ugrfm}{U}{psy}{m}{n} % pour les lettres de upgreek avec l'option Symbol
-\DeclareMathSymbol{\upalphasym}{\mathord}{ugrfm}{`a}
-\DeclareMathSymbol{\upbetasym}{\mathord}{ugrfm}{`b}
-\DeclareMathSymbol{\uppisym}{\mathord}{ugrfm}{`p}
-\DeclareSymbolFont{cmsymbols}{OMS}{cmsy}{m}{n} % symbole \emptyset de computer modern
-\DeclareMathSymbol{\cmemptyset}{\mathord}{cmsymbols}{'73} % code octal dans cmsy
-\DeclareTextSymbol{\textmicro}{TS1}{181} % mu de micro
-\DeclareTextSymbolDefault{\textmicro}{TS1}
+
+% symbole \emptyset de computer modern au cas où on change la police de ce doc :
+\def\CMemptyset{\mathord{\text{\usefont{OMS}{cmsy}{m}{n}\symbol{'73}}}}
+% pour avoir le mu de micro :
+\DeclareTextSymbol{\textmicro}{TS1}{181}
+%\DeclareTextSymbolDefault{\textmicro}{TS1}
+
 \DisableCrossrefs
 %\CodelineIndex
 %\RecordChanges
@@ -58,6 +57,7 @@
     pdfauthor={Antoine Missier}
 }
 \begin{document}
+%\MakeShortVerb" % incompatible si placé avant
 \DocInput{frenchmath.dtx}
 %\PrintChanges
 %\PrintIndex
@@ -65,7 +65,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{519}
+% \CheckSum{322}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -114,7 +114,7 @@
 %    - ajout des macros pour les bases (i,j) et (i,j,k).}
 %
 % \changes{v1.6}{2022/10/16}{
-%    - Remplacement de icomma par ncccomma, grâce à une proposition de J. F. Burnol,
+%    - Remplacement de icomma par ncccomma, grâce à un "patch" de J. F. Burnol,
 %    - amélioration du code redéfinissant les majuscules mathématiques,
 %    - suppression de l'option capsup (capsit à false suffit),
 %    - remplacement de tgh par th pour la tangente hyperbolique.}
@@ -172,38 +172,66 @@
 % \changes{v2.8}{22/01/2024}{
 %    - Prise en compte de l'extension mathalpha qui fournit d'autres lettres cursives.}
 %
+% \changes{v2.9}{17/02/2024}{
+%    - Compatibilité entre amssymb et unicode-math réglée (par des relax)
+%        -> permet à la macro varnothing de garder l'aspect de amssymb,
+%    - compatibilité des options de lettres grecques avec unicode-math (XeLaTeX uniquement)
+%        -> nouvelles macros SaveGreekItalics et upgreekUndefined,
+%    - commentaires dans la doc pour la compatibilité avec unicode-math.}
+%
+%  \changes{v2.10}{22/02/2024}{
+%    - Changements dans la doc concernant la gestion des lettres grecques et unicode-math.}
+%
+% \changes{v3.0}{04/03/2024}{
+%    - Redéfinition de cmod qui correspond au pod de amsmath,
+%    - Modification du chargement conditionnel de dotlessj,
+%    - Copie du code de legslant, geqslant, varnothing sans importer amssymb,
+%    - Utilisation de AtEndPreamble pour pouvoir charger frenchmath avant unicode-math,
+%    - Ajout d'une table des matières.}
+% \changes{v3.0}{12/04/2024}{
+%    - Développement et intégration de l'extension mathgreeks
+%    - Mise à jour de la documentation}
+%
+% \changes{v3.1}{07/05/2024}{
+%    - Correction de bug pour les macros varnothing et  AMSvarnothing}
+%
 % \GetFileInfo{frenchmath.sty}
 %
 % \title{L'extension \textsf{frenchmath}\thanks{Ce document
-%     correspond à \textsf{frenchmath}~\fileversion, dernière modification le 22/01/2024.}}
+%     correspond à \textsf{frenchmath}~\fileversion, dernière modification le 07/05/2024.}}
 % \author{Antoine Missier \\ \texttt{antoine.missier@ac-toulouse.fr}}
-% \date{22 janvier 2024}
+% \date{7 mai 2024}
 % \maketitle
+% \tableofcontents
 %
 % \section{Introduction}
-% Cette extension, inspirée de \textsf{mafr} de Christian Obrecht~\cite{MAFR},
+% Cette extension, inspirée à l'origine de \textsf{mafr} de Christian Obrecht~\cite{MAFR},
 % permet le respect des règles typographiques des mathématiques françaises, 
-% en particulier elle permet d'obtenir automatiquement
-% les majuscules en romain (lettres droites) plutôt qu'en italique 
+% en particulier l'obtention automatique des
+% majuscules en romain (lettres droites) plutôt qu'en italique 
 % (voir~\cite{RTIN} et~\cite{IGEN}),
 % et elle gère correctement les espacements
 % pour les virgules, point-virgules et crochets.
-%
-% L'extension fournit en outre diverses macros francisées.
-% Mais contrairement à \textsf{mafr} nous avons choisi de ne pas
+% L'extension fournit en outre diverses macros francisées
+% \footnote{Contrairement à \textsf{mafr} nous avons choisi de ne pas
 % conserver le même nom de commande pour substituer 
-% des symboles français aux symboles anglais.
+% des symboles français aux symboles anglais.}.
+% Depuis la version 2.0, \textsf{frenchmath} propose en outre des options permettant
+% de composer les minuscules grecques du mode mathématique en forme droite.
 %
+% \medskip
 % D'autres solutions existent pour composer les majuscules mathématiques en romain,
-% par exemple l'extension \textsf{unicode-math} mais qui doit être compilée
-% avec \XeLaTeX\ ou \LuaLaTeX  ;
-% avec pdf\LaTeX\, nous avons les extensions \textsf{fourier} de Michel Bovani~\cite{FOUR} 
-% (avec la famille des fontes Adobe Utopia)
-% ou encore \textsf{mathdesign} de Paul Pichaureau~\cite{DESIGN} 
-% (avec les polices Adobe Utopia, URW Garamond ou Bitstream Charter). 
+% par exemple avec \XeLaTeX\ ou \LuaLaTeX\ et l'extension \textsf{unicode-math}~\cite{UNIC}.
+% Pour pdf\LaTeX\, nous avons les extensions \textsf{fourier} de Michel Bovani~\cite{FOUR} 
+% (avec la famille des fontes Adobe Utopia),
+% \textsf{mathdesign} de Paul Pichaureau~\cite{DESIGN} 
+% (avec les polices Adobe Utopia, URW Garamond ou Bitstream Charter)
+% ou encore \textsf{kpfonts} de Christophe Caignaert~\cite{KPF}.
 % Mais \textsf{frenchmath} fournit une solution générique 
-% s'adaptant à n'importe quelle police de caractères.
+% s'adaptant à n'importe quelle police de caractères
+% (et compatible avec \textsf{unicode-math}).
 %
+% \medskip
 % Certaines préconisations, telles que composer en lettre droite
 % et non en italique le symbole différentiel, 
 % les constantes mathématiques i et e~\cite{IGEN}, 
@@ -219,13 +247,10 @@
 % des ensembles de nombres |\R|, |\N|\ldots (pour $\mathbf{R}, \mathbf{N}\ldots$)
 % ainsi que celles relatives à la réalisation de feuilles d'exercices.
 %
-% Mentionnons par ailleurs l'extension \textsf{tablvar}~\cite{TABL} qui permet de réaliser 
-% de jolis tableaux de variations, spécificité des mathématiques françaises,
-% ou encore \textsf{tdsfrmath} de Yvon Henel~\cite{FRM}
-% qui fournit également beaucoup de commandes francisées.
-%
-% Depuis la version 2.0, \textsf{frenchmath} propose deux options permettant
-% de composer les minuscules grecques du mode mathématique en forme droite.
+% Mentionnons par ailleurs l'extension \textsf{tdsfrmath} de Yvon Henel~\cite{FRM}
+% qui fournit également beaucoup de commandes francisées ou encore
+% \textsf{tablvar}~\cite{TABL} qui permet de réaliser 
+% de jolis tableaux de variations, spécificité des mathématiques françaises.
 %
 % \section{Utilisation}
 %
@@ -234,15 +259,16 @@
 % \og les lettres majuscules sont toujours
 % composées en romain \fg ($A, B, C\ldots$) et non en italique 
 % (cf. \cite{RTIN} p.107, voir aussi~\cite{IGEN}).
-% En utilisant \XeLaTeX\ ou \LuaLaTeX\ avec des polices mathématiques OpenType, 
-% cette convention est assez commode à mettre en œuvre
-% \footnote{Voir les options \texttt{math-style=upright} 
-% ou \texttt{math-style=french} de l'extension \textsf{unicode-math}.} ;
+% En utilisant \XeLaTeX\ ou \LuaLaTeX, 
+% avec l'option \texttt{math-style=french} de l'extension \textsf{unicode-math},
+% cette convention est commode à mettre en œuvre,
 % par contre, avec \LaTeX\ ou pdf\LaTeX, elle est peu respectée
-% et les extensions précitées ne fonctionnent qu'avec des polices particulières.
+% et les extensions comme \textsf{mathdesign} (avec \texttt{uppercase=upright}),
+% \textsf{fourier} (avec \texttt{upright}) ou \textsf{kpfonts} (avec \texttt{uprightRoman})
+% ne fonctionnent qu'avec des polices particulières.
 % Par défaut \textsf{frenchmath} compose automatiquement les majuscules
 % mathématiques latines en romain,
-% quelle que soit la fonte utilisée.
+% quelle que soit la police utilisée.
 % Par exemple |\[ P(X)=\sum_{i=0}^{n} a_i X^i \]| donne avec \textsf{frenchmath}
 % \[ P(X)=\sum_{i=0}^{n}a_i X^i. \]
 %
@@ -288,9 +314,9 @@
 % (sans espace), sinon c'est un caractère de ponctuation.
 % \end{itemize}
 %
-% Cette deuxième approche parait meilleure, néanmoins \textsf{ncccomma}
-% ne fonctionne pas avec avec \textsf{babel-french} utilisé conjointement avec
-% l'option \texttt{autolanguage}
+% Cette deuxième approche est plus souple, néanmoins \textsf{ncccomma}
+% ne fonctionne pas avec \textsf{babel-french} utilisé conjointement avec
+% l'option \texttt{autolanguage} 
 % \footnote{L'option \texttt{autolanguage} de \textsf{numprint} utilisée 
 % conjointement avec l'option \texttt{french} de \textsf{babel} garantit un espacement
 % correct entre les groupes de trois chiffres dans les grands nombres,
@@ -302,15 +328,16 @@
 % Dans son article \emph{Intelligent commas}~\cite{BECC},
 % Claudio Beccari propose une autre solution,
 % voisine de \textsf{ncccomma}, mais qui produit le même type d'incompatibilités.
-% Le code a donc été revu et simplifié afin de régler proprement ces incompatibilités.
-% Comme bien des pays utilisent la virgule comme
+% Le code a donc été revu afin de régler ces incompatibilités.
+% Comme de nombreux pays utilisent la virgule comme
 % séparateur décimal, il fait l'objet d'une extension séparée,
-% \textsf{decimalcomma}~\cite{DECC}, qui est chargée par \textsf{frenchmath}
+% \mbox{\textsf{decimalcomma}}~\cite{DECC}, qui est chargée par \textsf{frenchmath}
 % (depuis la version 2.7).
-% Mais il est alors impératif de charger \textsf{unicode-math} \emph{avant} 
-% \textsf{frenchmath} 
-% \footnote{L'extension \textsf{icomma} présente la même limitation et doit être chargé
-% après \textsf{unicode-math}.}.
+% Bien que \textsf{decimalcomma} ne fonctionne avec \textsf{unicode-math}
+% que s'il est chargé après 
+% \footnote{L'extension \textsf{icomma} présente la même limitation et doit être chargée
+% après \textsf{unicode-math}.},
+% \textsf{frenchmath} s'est affranchi de cette contrainte (depuis la version 2.11).
 %
 % \medskip
 % Lorsque l'on utilise l'extension \textsf{pstricks-add} de \textsf{PSTricks}
@@ -327,7 +354,7 @@
 % avec \textsf{frenchmath} ;
 % le comportement de \og ;\fg devient identique à celui de \og:\fg.
 % 
-% \medskip
+% \bigskip
 % \DescribeMacro{crochets}
 % Alors que les Anglais utilisent généralement les parenthèses 
 % pour les intervalles ouverts $(0, +\infty)$, l'usage en français est d'utiliser
@@ -336,11 +363,11 @@
 % Nous avons redéfini les crochets dans l'extension \textsf{ibrackets}~\cite{BRACKETS}
 % qui est chargée par \textsf{frenchmath},
 % \DescribeMacro{[noibrackets]}
-% sauf si l'on active l'option \texttt{noibrackets}
+% sauf si on la désactive avec l'option \texttt{noibrackets}
 % \footnote{D'autres solutions existent,
 % par exemple avec l'extension \textsf{interval}
 % ou encore avec la macro \texttt{\string\DeclarePairedDelimiter}
-% de \textsf{mathtools}, mais utilisée avec des crochets,
+% de \textsf{mathtools}~\cite{TOOLS}, mais utilisée avec des crochets,
 % cette dernière est incompatible avec \textsf{ibrackets}, 
 % d'où la possibilité de désactiver \textsf{ibrackets}.}.
 % Le code 
@@ -361,8 +388,8 @@
 % et le signe}: par exemple |$x \in ] -\infty, 0]$| produit 
 % $x \in ] -\infty, 0]$ au lieu de $x \in ]-\infty, 0]$.
 % Mais au contraire lorsque l'on veut faire de l'algèbre sur les intervalles,
-% \emph{il faut laisser une espace entre le second crochet et l'opération} + ou -,
-% par exemple, |$[a,b] + [c,d]$| produit $[a,b] + [c,d]$
+% \emph{il faut laisser une espace entre le second crochet et l'opération} + ou --,
+% par exemple, |$[a,b] +[c,d]$| donne $[a,b] +[c,d]$
 % mais |$[a,b]+ [c,d]$| produit $[a,b]+ [c,d]$.
 %
 % En cas de comportement problématique, par exemple si
@@ -381,7 +408,7 @@
 % ($\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D}\ldots$).
 % En principe \textsf{frenchmath} charge l'extension \textsf{mathrsfs}
 % qui fournit ces lettres cursives, 
-% sauf si la commande |\mathscr| est déjà définie par ailleurs,
+% sauf si la commande |\mathscr| est définie par ailleurs,
 % en particulier si on utilise l'extension \textsf{mathdesign}~\cite{DESIGN}
 % ou l'option \texttt{scr} de \textsf{mathalpha}~\cite{MATAL}
 % \footnote{L'extension \textsf{mathalpha} de Michael Sharpe
@@ -392,15 +419,23 @@
 % \DescribeMacro{\infeg} \DescribeMacro{\supeg}
 % Les relations $\infeg$ et $\supeg$ s'obtiennent avec les commandes |\infeg| et |\supeg|
 % et diffèrent des versions anglaises de |\leq| ($\leq$) et |\geq| ($\geq$).
-% Ce sont des alias de |\leqslant| et |\geqslant| de l'extension \textsf{amssymb},
-% chargée par \textsf{frenchmath}.
+% Ce sont des alias de |\leqslant| et |\geqslant| de l'extension \textsf{amssymb}
+% (non chargée par \textsf{frenchmath}).
 %
 % \medskip
 % \DescribeMacro{\vide}
 % Le symbole de l'ensemble vide $\vide$ 
-% s'obtient avec |\vide| (alias de la commande |\varnothing| de l'extension \textsf{amssymb}) ;
+% s'obtient avec |\vide| (alias de la commande |\varnothing| 
+% de l'extension \textsf{amssymb}) ;
 % il diffère de celui obtenu avec |\emptyset|,
-% particulièrement laid dans la fonte classique Latin Modern : $\cmemptyset$.
+% particulièrement laid dans la fonte classique Latin Modern : $\CMemptyset$.
+%
+% \DescribeMacro{\AMSvarnothing}
+% Avec \textsf{unicode-math} et la fonte mathématique Latin Modern Math
+% (appelée avec |\setmathfont|), |\varnothing| produit le même glyphe
+% laid que |\emptyset|. Pour corriger cela, on dispose de la commande
+% |\AMSvarnothing|, qui doit être appelée dans le préambule
+% et permet d'obtenir le même glyphe que celui de \textsf{amssymb}.
 %
 % \medskip
 % \DescribeMacro{\paral}
@@ -418,10 +453,10 @@
 %
 % \medskip
 % \DescribeMacro{\cmod}
-% Le modulo se compose normalement entre parenthèses, avec |\pmod|,
-% mais on rencontre aussi, en français, le modulo entre crochets,
-% ce que permet la commande |\cmod| en respectant le bon espacement
-% propre au modulo : $ 53 \equiv 5 \cmod{12}$.
+% Le modulo se compose normalement entre parenthèses, avec |\pod| ou |\pmod|,
+% mais, en français, on le rencontre aussi entre crochets,
+% ce que permet la commande |\cmod|, en respectant le bon espacement
+% propre au modulo : $53 \equiv 5 \cmod{12}$.
 %
 % \subsection{Identifiants de \og fonctions\fg classiques}
 %
@@ -479,8 +514,9 @@
 % Les repères classiques du plan ou de l'espace seront composés 
 % avec des hauteurs de flèches homogénéisées :
 % |\Oij| compose \Oij, |\Oijk| compose \Oijk et |\Ouv| compose \Ouv
-% (utilisé dans le plan complexe). \DescribeMacro{\Ouv}
-% On peut écrire ces commandes en mode texte, sans les délimiteurs du mode mathématique.
+% (utilisé dans le plan complexe). 
+% \DescribeMacro{\Ouv}
+% Ces commandes peuvent être utilisées sans expliciter les délimiteurs du mode mathématique.
 %
 % \DescribeMacro{\Oij*} \DescribeMacro{\Oijk*} \DescribeMacro{\Ouv*}
 % Les versions étoilées utilisent le point-virgule et non la virgule
@@ -490,28 +526,30 @@
 % \medskip
 % \DescribeMacro{\ij} \DescribeMacro{\ijk}
 % Enfin les macros |\ij|
-% \footnote{Notons que la macro \texttt{\string\ij} existait déjà 
-% (ligature entre i et j pour le hollandais) et a été redéfinie.}
-% et |\ijk| composent les bases du plan et de l'espace, \ij
+% \footnote{Notons que la macro \texttt{\string\ij} existe déjà 
+% (ligature entre i et j pour le hollandais) ; elle a été redéfinie pour le mode
+% mathématique uniquement, qui doit donc ici être explicite : \texttt{\$\string\ij \$}.}
+% et |\ijk| composent les bases du plan et de l'espace, $\ij$
 % et \ijk, en homogénéisant la hauteur des flèches.
 %
 % Signalons que, pour l'extension \textsf{mathptmx} (basée sur la police de texte Times),
 % |\jmath| n'est pas disponible, mais \textsf{frenchmath} contourne ce problème
-% en chargeant alors \textsf{dotlessj}~\cite{DLJ} de David Carlisle,
+% en chargeant alors \textsf{dotlessj} de David Carlisle~\cite{DLJ},
 % ce qui permet aux macros ci-dessus de fonctionner normalement.
 %
 % \subsection{Lettres grecques}
-% La norme concernant l'usage des lettres grecques en italique ou en forme droite
-% pour les mathématiques françaises ne semble pas aussi claire que pour les lettres romaines
-% et les auteurs 
-% divergent sur ce point. Plusieurs recommandent l'usage des lettres grecques
-% minuscules en forme droite~\cite{FOUR}~\cite{DESIGN}~\cite{PMISO}, mais d'autres
-% préconisent l'italique,
-% comme pour toutes les variables mathématiques~\cite{AA}.
+% Dans les mathématiques françaises, la norme concernant l'usage 
+% des lettres grecques minuscules en italique ou en forme droite
+% ne semble pas aussi claire que pour les lettres romaines
+% et il y a parfois divergence sur ce point. 
+% Beaucoup recommandent l'usage des lettres grecques
+% minuscules en forme droite (\cite{FOUR}~\cite{DESIGN}~\cite{PMISO}), mais certains
+% auteurs préconisent l'italique,
+% comme pour toutes les variables mathématiques (\cite{AA}).
 % Le lexique des règles typographiques en usage à l’Imprimerie Nationale~\cite{RTIN}
 % les compose en forme droite et relativement grasses (p.108) 
 % sans préciser s'il s'agit vraiment d'une règle
-% s'appliquant aux variables, au même titre que celles énoncées pour l'alphabet latin.
+% s'appliquant aux variables, au même titre que celle énoncée pour l'alphabet latin.
 %
 % \medskip
 % Pour les physiciens (et chimistes) l'affaire est plus claire puisque 
@@ -519,173 +557,234 @@
 % romain (forme droite), conformément à la norme ISO~\cite{TYPMA}~\cite{NIST}~\cite{ICTNS}. 
 % Ainsi la constante $\pi \approx 3,14$ ne s'écrit pas de la même manière
 % qu'une variable $\itpi$.
+% 
+% \medskip
 % Dans la section \og How to get upright small Greek letters \fg,
 % la documentation de \textsf{isomath} de Günter Milde~\cite{ISOM} 
 % expose différentes méthodes pour obtenir les lettres grecques
 % en forme droite.
-% Par exemple les extensions \textsf{mathdesign}~\cite{DESIGN},
-% \textsf{fourier}~\cite{FOUR}
+% Par exemple les extensions \textsf{fourier}~\cite{FOUR}
+% \mbox{\textsf{mathdesign}}~\cite{DESIGN}, 
 % ou \textsf{kpfonts}~\cite{KPF} disposent d'options permettant
 % l'écriture automatique des lettres grecques minuscules en forme droite 
-% (ou des majuscules en italique).
+% (et aussi des majuscules en italique) dans la police donnée.
 % Citons également \textsf{newpxmath}, \textsf{newtxmath} 
-% \footnote{L'extension \textsf{newtxmath} doit être chargée
-% après \textsf{frenchmath} qui utilise \textsf{amssymb} car la compilation
-% produit sinon un message d'erreur pour la commande
-% \texttt{\string\Bbbk}.}
-% et \textsf{libertinust1math} 
-% de Michael Sharpe,
+% et \textsf{libertinust1math} de Michael Sharpe ou
 % \textsf{pxgreeks}, \textsf{txgreeks} 
-% \footnote{Si on utilise \textsf{amsmath} (ou \textsf{mismath}),
-% \textsf{pxgreeks} ou \textsf{txgreeks} doit être chargée 
-% \emph{après} \textsf{amsmath} (ou \textsf{mismath}),
-% pour éviter une erreur de compilation due à la redéfinition des commandes 
-% \texttt{\string\iint}, \texttt{\string\iiint}, \texttt{\string\iiiint}, 
-% \texttt{\string\idotsint}.}
 % et \textsf{libgreek} de Jean-François Burnol,
-% qui donnent de beaux résultats pour une utilisation avec 
-% respectivement les polices Palatino, Times et Libertinus.
+% qui fournissent les formes droites avec
+% les polices Palatino, Times et Libertine respectivement.
 %
-% Enfin, comme pour les majuscules, \XeLaTeX\ ou \LuaLaTeX\ réalisent cette tâche
-% automatiquement avec l'option \texttt{math-style=french} de l'extension \textsf{unicode-math}. 
-%
-% \medskip
 % Jean-François Burnol a également développé l'extension \textsf{lgrmath}~\cite{LGR}
 % qui permet d'utiliser, en mode mathématique, les différentes fontes de lettres
 % grecques accessibles par \LaTeX\ avec l'encodage LGR. La documentation
 % de l'extension indique comment consulter et utiliser les fontes accessibles 
-% sur votre distribution. 
+% sur votre distribution.
 %
 % \medskip
-% \DescribeEnv{[lgrmath]}
-% En activant l'option \texttt{lgrmath}, \textsf{frenchmath}  
-% charge cette extension avec son option \texttt{style=french} 
-% et la fonte fcm (de l'extension \textsf{cm-lgc})
-% \footnote{Évidemment il faut que \textsf{cm-lgc} soit installée
-% sur votre distribution sans quoi la fonte de substitution LGR/cmr/m/n sera utilisée.}.
-% Celle-ci se marie particulièrement bien avec la police usuelle Latin Modern.
-% Les commandes |\alpha|, |\beta|, etc.
-% produisent alors les lettres en forme droite 
-% $\alphaup$, $\betaup$, \ldots, $\piup$, etc.,
-% tandis que |\alphait|, |\betait|, etc. produisent des formes italiques
-% $\alphait$, $\betait$, \ldots, $\piit$, etc.
-% Ces dernières sont peu à notre goût, mais on conserve les lettres
-% d'origine avec |\italpha|, |\itbeta| : $\italpha$, $\itbeta$, \ldots, $\itpi$, etc.
-% On peut aussi choisir d'autres fontes en chargeant l'extension
-% \textsf{lgrmath} indépendamment de \textsf{frenchmath}
-% (voir par exemple avec l'option \texttt{font=Alegreya-LF} ou \texttt{font=Cochineal-LF}).
+% Enfin, comme pour les majuscules, l'extension \textsf{unicode-math}
+% réalise cette tâche automatiquement avec l'option \texttt{math-style=french},
+% mais nécessite une compilation \XeLaTeX\ ou \LuaLaTeX. 
 %
 % \medskip
-% \DescribeEnv{[upgreek]}
-% Avec la même philosophie, \textsf{frenchmath} fournit aussi l'option \texttt{upgreek}
-% basée sur l'extension \textsf{upgreek} de Walter Schmidt~\cite{UPGREEK} qui donne
-% accès à d'autres fontes de lettres grecques minuscules en forme droite avec 
-% |\upalpha|, |\upbeta|, etc. 
-% L'extension \textsf{upgreek} sera chargée avec son option \texttt{Symbol}
-% \footnote{L'option	\texttt{Symbol} de \textsf{upgreek} se marie bien 
-% avec une police comme Times par exemple.}
-% utilisant la police Adobe Symbol et qui produit des lettres grecques assez grasses : 
-% $\upalphasym$, $\upbetasym$, \ldots, $\uppisym$, etc.
-% Si l'on veut, par contre, utiliser l'extension \textsf{upgreek}
-% avec l'une des deux autres options disponibles, \texttt{Euler}
-% (qui produit $\upalpha, \upbeta, \ldots, \uppi$, etc.)
-% ou \texttt{Symbolsmallscale},
-% il faut charger l'extension \textsf{upgreek} avec l'option souhaitée 
-% indépendamment de \textsf{frenchmath}.
-% Mais en conservant toutefois l'option \texttt{upgreek}, \textsf{frenchmath} 
-% redéfinira les commandes |\alpha|, |\beta|, etc. 
-% pour composer automatiquement les lettres en forme droite ; 
-% les formes italiques d'origine, 
-% restant toujours disponibles avec les commandes 
-% |\italpha|, |\itbeta|, \ldots, |\itpi|, etc.
+% Avant la version 3.0, \textsf{frenchmath} disposait de deux options pour composer
+% les lettres grecques en forme droite : \texttt{lgrmath} et \texttt{upgreek}
+% \footnote{En fait il y avait une troisième option, \texttt{Upgreek}, mais celle-ci
+% est désormais obsolète.}.
+% Inspiré par le travail de Jean-François Burnol, nous avons développé, et intégré
+% à \textsf{frenchmath}, l'extension \textsf{mathgreeks}~\cite{MGREEK} 
+% qui permet d'utiliser de nombreuses fontes de lettres grecques
+% sans modifier les autres caractères et symboles.
+% Il suffit d'appeler \textsf{frenchmath} avec une des options de fonte de 
+% \textsf{mathgreeks}, de la forme \texttt{clé=valeur}. 
+% Par exemple, les lettres grecques droites de la police Utopia,
+% telles que fournies par l'extension \textsf{mathdesign}, s'obtiennent avec
+% \begin{center}
+% |\usepackage[mathdesign=Utopia]{frenchmath}|.
+% \end{center}
+% L'extension \textsf{mathdesign} elle-même ne sera pas chargée.
+% Lorsqu'une valeur n'est pas précisée, il y a toujours une valeur par défaut.
+% Par exemple pour \texttt{mathdesign}, nous avons choisi \texttt{Charter}.
+% Pour \texttt{upgreek}, la fonte par défaut est \texttt{Symbol}.
+% Pour \texttt{lgrmath}, nous avons choisi \texttt{fcm}
+% \footnote{Il faut que l'extension \textsf{cm-lgc} (développée par Alexej Kryukov)
+% soit installée sur votre distribution,
+% sans quoi la fonte de substitution LGR/lmr/m/n sera utilisée.
+% Les formes italiques du thêta $\ittheta$ ou du rho $\itrho$ de \texttt{fcm}
+% ne sont pas vraiment ceux d'usage en mathématiques, mais les formes droites
+% sont bien adaptées.
+% \texttt{Alegreya-LF} est une autre fonte assez élégante pour \texttt{lgrmath}, 
+% {\mathgreeksfont{enc=LGR,fam=Alegreya-LF,shape=n}\
+% mais produit un \texttt{\string \phi} $\phi$} moins courant et sans la variante
+% $\phi$.
+% }
+% qui se marie particulièrement bien avec la police usuelle Latin Modern.
+% Ainsi les options précédentes de \textsf{frenchmath} fonctionnent toujours.
+%
+% Les commandes |\alpha|, |\beta|, \ldots |\pi|, etc.
+% produisent alors les lettres en forme droite $\alpha$, $\beta$, \ldots, $\pi$, etc.
+% tandis que |\italpha|, |\itbeta|, \ldots, |\itpi|, etc. produisent les formes italiques
+% $\italpha$, $\itbeta$, \ldots, $\itpi$, etc.
+% Si ces dernières déplaisent, on peut activer l'option \texttt{savegreeks}
+% (option booléenne passée à \textsf{mathgreeks}) pour conserver les lettres
+% d'origine avec |\backalpha|, |\backbeta|, \ldots, |\backpi|, etc. : 
+% $\backalpha$, $\backbeta$, \ldots, $\backpi$, etc.
 %
 % \medskip
-% \DescribeEnv{[Upgreek]}
-% Avec \LaTeX, les lettres grecques majuscules sont automatiquement composées
-% en forme droite et l'option \texttt{upgreek} ne concerne que les minuscules.
-% Cependant l'extension \textsf{upgreek}
-% propose aussi |\Upgamma|, \ldots, |Upomega| : $\Upgamma, \ldots, \Upomega$.
-% Afin de conserver majuscules et minuscules dans le même style, 
-% \textsf{frenchmath} fournit l'option \texttt{Upgreek} qui redéfinit les majuscules 
-% |\Gamma|, \ldots, |\Omega| pour correspondre à ces variantes.
-% Par contre l'on n'a alors plus accès aux caractères d'origine : $\Gamma, \ldots, \Omega$.
-% L'option \texttt{Upgreek} reprend aussi
-% les minuscules grecques de l'option \texttt{upgreek}, qu'il est donc 
-% inutile d'invoquer simultanément.
+% Nous présentons ci-après quelques unes des nombreuses options possibles.
+% On se référera à la documentation de \textsf{mathgreeks}~\cite{MGREEK}
+% pour d'autres exemples ou pour les formes italiques correspondantes.
+% La seconde ligne de chaque exemple contient, outre les majuscules,
+% des variantes obtenues avec |\varpepsilon|, |\vartheta|, etc.
+% (sans effet avec la clé \texttt{lgrmath}, excepté pour |\varsigma|).
+% Les clés sans valeur sont en fait des booléens dont la valeur par défaut est \texttt{true}.
 %
 % \medskip
-% Signalons aussi l'extension \textsf{textalpha} de Günter Milde~\cite{ALPHA} qui 
-% donne accès aux lettres en forme droite \textalpha, \textbeta, \ldots,
-% \textpi, etc.,
-% mais en mode texte avec |\textalpha|, |\textbeta|, etc.
-% Ces glyphes, voisines de la fonte fcm accessible avec \textsf{lgrmath},
-% se marient également bien avec la police Latin Modern,
-% par contre le thêta produit, \texttheta, n'est pas vraiment 
-% celui qui est d'usage en mathématiques.
+% \DeleteShortVerb{\|}
+% \newcommand\eg{\texttt{=}}
+% \noindent\begin{tabular}{|l|c|}
+% \hline
+% Option \texttt{clé=valeur} & Résultat \\
+% \hline
+% \textbf{lgrmath\eg Cochineal-LF} &
+% \mathgreeksfont{enc=LGR, fam=Cochineal-LF, shape=n}
+% \greektable \\
+% \hline
+% \textbf{lgrmath\eg fcm} &
+% \mathgreeksfont{enc=LGR, fam=fcm, shape=n}
+% \greektable \\
+% \hline
+% \textbf{upgreek\eg Euler} &
+% \mathgreeksfont{enc=U, fam=eur, shape=n} 
+% \greektable \\
+% \hline
+% \textbf{upgreek\eg Symbol} &
+% \mathgreeksfont{enc=U, fam=psy, shape=n}
+% \greektable \\
+% \hline
+% \textbf{mathdesign\eg Charter} &
+% \mathgreeksfont{enc=OML, fam=mdbch, shape=n} 
+% \greektable \\
+% \hline
+% \textbf{fourier} &
+% \mathgreeksfont{enc=FML, fam=futm} 
+% \greektable \\
+% \hline
+% \textbf{pxfonts} &
+% \mathgreeksfont{enc=U, fam=pxmia} 
+% \greektable \\
+% \hline
+% \textbf{txfonts} &
+% \mathgreeksfont{enc=U, fam=txmia} 
+% \greektable \\
+% \hline
+% \textbf{libertinus} &
+% \mathgreeksfont{enc=LS1, fam=libertinust1math, shape=n} 
+% \greektable \\
+% \hline
+% \end{tabular}
+% \MakeShortVerb{|}
+
+% \bigskip
+% Une option spéciale, \texttt{libsans} (booléen), permet d'obtenir une fonte
+% sans empattement pour \texttt{libertinus}.
+% Une autre option, non présentée dans le tableau, est \textbf{kpfonts}, 
+% avec deux valeurs possibles. Enfin
+% deux autres options sont disponibles, mais pour une compilation avec
+% \LuaLaTeX\ (ou \XeLaTeX):
+% \begin{description}
+% \item[fontspec\eg \ldots] De nombreuses valeurs sont possibles, par exemple
+% \texttt{FreeSerif}, 
+% \texttt{LiberationSerif}, 
+% \texttt{GFS Artemisia},
+% \texttt{GFS Didot} (valeur par défaut)\ldots
+% mais aussi des polices non libres comme \texttt{Cambria}, \texttt{Arial},
+% \texttt{Palatino Linotype}, \texttt{Times New Roman}\ldots\
+% si elles sont installées sur votre système ;
+% nécessite de charger l'extension \textsf{fontspec}
+% \footnote{L'extension \textsf{fontspec} est chargée automatiquement par 
+% \textsf{unicode-math} ou \textsf{mathspec} (cette dernière étant spécifique à
+% \XeLaTeX), mais l'option \texttt{fontspec} permet une variété de polices 
+% TrueType ou OpenType bien plus grande que l'option \texttt{unicode-math}.}.
+%
+% \item[unicode-math\eg \ldots] 
+% Donne un beau résultat avec \texttt{Latin Modern Math} (valeur par défaut)
+% ou \texttt{STIX Two Math} ; nécessite le module \textsf{unicode-math}.
+% 
+% \end{description}
+%
+% \medskip
+% Par défaut \LaTeX\ compose les majuscules grecques en forme droite et il
+% n'est donc pas indispensable de recoder celles-ci. L'option \texttt{uppercase=false}
+% permet de conserver les majuscules d'origine : $\backGamma$, $\backDelta$, \ldots,
+% $\backOmega$ (sans le préfixe |\back...|).
 %
 % \medskip
 % Mentionnons pour finir ce commentaire de Walter Schmidt~\cite{UPGREEK} que le mu
-% utilisé pour le préfixe des unités physiques, \textmicro, doit se composer avec |\textmu|
+% utilisé pour le préfixe des unités physiques, \textmu, doit se composer avec |\textmu|
 % \footnote{L'extension \textsf{textalpha} fournit à la place \texttt{\string\textmicro}
 % (depuis 2020) car elle redéfinit \texttt{\string\textmu}.},
 % disponible en mode texte dans beaucoup de fontes (ou avec \textsf{textcomp}) ;
-% il diffère du $\mu$ droit mathématique.
+% il diffère du $\mu$ droit mathématique, obtenu avec |$\mu$| si l'on a activé
+% une des options de fonte précédentes.
+%
+%
 % \StopEventually{}
 %
 % \section{Le code}
 %
+% Les seules options de \textsf{frenchmath} sont \texttt{capsit} et \texttt{noibrackets}.
+% Tout le travail sur les lettre grecques est dorénavant géré par \textsf{mathgreeks}
+% et toute option inconnue de \textsf{frenchmath} sera passée à \textsf{mathgreeks}.
+% Auquel cas, l'on y ajoute automatiquement l'option \texttt{upright} 
+% pour composer les lettres grecques en forme droite.
+% Si l'on donne une clé ou une valeur invalide, c'est alors \textsf{mathgreeks} qui produira
+% un message d'erreur.
+%
 %    \begin{macrocode}
-\newif\ifcapsit
-\DeclareOption{capsit}{\capsittrue}
-\newif\iffrenchmathgreek % pour sauvegarder les lettres d'origine
-\newif\iflgrmath
-\DeclareOption{lgrmath}{\lgrmathtrue\frenchmathgreektrue}
-\newif\ifupgreek
-\DeclareOption{upgreek}{\upgreektrue\frenchmathgreektrue}
-\newif\ifUpgreek
-\DeclareOption{Upgreek}{\Upgreektrue\upgreektrue\frenchmathgreektrue}
-\newif\ifnoibrackets
-\DeclareOption{noibrackets}{\noibracketstrue}
+\newif\iffrenchmath@capsit
+\DeclareOption{capsit}{\frenchmath@capsittrue}
+\newif\iffrenchmath@noibrackets
+\DeclareOption{noibrackets}{\frenchmath@noibracketstrue}
+\newif\iffrenchmath@mathgreeks
+\DeclareOption*{\frenchmath@mathgreekstrue
+    \PassOptionsToPackage{\CurrentOption,upright}{mathgreeks}}
 \ProcessOptions \relax
 
-\AtBeginDocument{
-    \@ifpackageloaded{mathdesign}{
-        \PackageInfo{frenchmath}{Package mathdesign 
-            is loaded, \MessageBreak
-            I don't load mathrsfs and amssymb packages}
-    }{
-        \RequirePackage{amssymb} % \leqslant, \geqslant, \varnothing
-        \@ifundefined{mathscr}{\RequirePackage{mathrsfs}}{}
-    }
-}
-\RequirePackage{amsopn} % fournit \DeclareMathOperator
-\@ifpackageloaded{mathptmx}{\RequirePackage{dotlessj}}{}
-
 %    \end{macrocode}
-% Ce n'est qu'à la fin du préambule, donc avec |\AtBeginDocument|, que l'on examine
-% si les extensions \textsf{lgrmath} ou \textsf{upgreek} sont déjà chargées,
-% pour laisser à l'utilisateur la possibilité de les charger après \textsf{frenchmath}
-% et éviter un conflit d'option.
+% Assurer une bonne compatibilité avec \textsf{unicode-math} est un peu compliqué
+% car \textsf{unicode-math} définit ou redéfinit de nombreux symboles, lettres, 
+% signes dans |\AtBeginDocument|. Les extensions \textsf{decimalcomma} 
+% et \textsf{ibrackets} font déjà appel à |\AtBeginDocument| mais pour garantir
+% que leur action soit bien postérieure à celle de \textsf{unicode-math}
+% leur appel a été placé dans un |\AtEndPreamble|, fourni par l'extension \textsf{etoolbox}.
+% Il y a par contre un problème si on utilise une instruction comme |\MakeShortVerb"| du
+% module \textsf{shortvrb} ou |\lstMakeShortInline"| du module \mbox{\textsf{listings}}.
+% Ce type d'instruction doit agir \emph{après} \textsf{frenchmath}, donc être
+% placée après |\begin{document}| ou bien dans un |\AtBeginDocument{...}|.
+%
+% L'extension \textsf{mathptmx} ne fournit pas de |\jmath| mais considère néanmoins
+% cette commande comme existante. Dans ce cas, nous la rendons donc \og indéfinie \fg
+% pour la définir ensuite dans une commande générale faisant appel
+% à l'extension \textsf{dotlessj}.
 %    \begin{macrocode}
-\AtBeginDocument{
-  \iflgrmath
-    \@ifpackageloaded{lgrmath}{}{
-        \RequirePackage[font=fcm,style=french]{lgrmath}}
-  \fi
-  \ifupgreek
-    \@ifpackageloaded{upgreek}{}{
-        \RequirePackage[Symbol]{upgreek}}
-  \fi
-}
+\RequirePackage{amsopn} % fournit \DeclareMathOperator
 \RequirePackage{xspace} % utile pour les commandes \ssi, \Oij
-\ifnoibrackets\else\RequirePackage{ibrackets}\fi % intelligent brackets
-
-\RequirePackage{decimalcomma} %  depuis frenchmath 2.7
+\RequirePackage{etoolbox} % fournit \AtEndPreamble
+\iffrenchmath@mathgreeks \RequirePackage{mathgreeks} \fi
+\AtEndPreamble{
+  \RequirePackage{decimalcomma}
+  \iffrenchmath@noibrackets\else\RequirePackage{ibrackets}\fi
+  \@ifpackageloaded{mathptmx}{\let\jmath\@undefined}{}
+  \@ifundefined{jmath}{\RequirePackage{dotlessj}}{}
+  \@ifpackageloaded{pstricks-add}{\psset{comma=true}}{} 
+}
 
 %    \end{macrocode}
 %
 % \DescribeMacro{\DeclareMathUp}
-% Sauf si l'option \texttt{capsit} est activée, on redéfinit toutes les lettres majuscules
+% Sauf si l'on a invoqué l'option \texttt{capsup=false} (ou \texttt{capsit}),
+% on redéfinit toutes les lettres majuscules
 % du mode mathématique grâce à la commande |\DeclareMathUp|.
 % Contrairement aux bascules |\MathUp| et |\MathIt| de l'extension \textsf{mismath},
 % |\DeclareMathUp| ne fonctionne que dans le préambule, mais son code est bien plus simple
@@ -703,13 +802,14 @@
 % se trouve sur le forum de discussion \texttt{iterate190.rssing.com},
 % en réponse à \og TeX How to iterate over a comma separated list$?$\fg.
 % Que son auteur, Petr Olšák, soit remercié.
-% Cette macro a été définie de manière identique dans \textsf{mismath}, 
+% Cette macro a d'ailleurs été utilisée de manière identique dans \textsf{mismath}, 
 % mais cela ne génère pas d'incompatibilité.}.
 % |\AtBeginDocument| est nécessaire pour que ces définitions 
-% soient prises en compte avec la classe \textsf{beamer} par exemple.
+% soient prises en compte avec la classe \textsf{beamer} par exemple,
+% ou avec \textsf{unicode-math}.
 % \smallskip
 %    \begin{macrocode}
-\newcommand*\DeclareMathUp[1]{
+\providecommand*\DeclareMathUp[1]{
     \DeclareMathSymbol{#1}{\mathalpha}{operators}{`#1}}
     
 \def\apply#1#2{\apply@#1#2,\apply@,}
@@ -717,34 +817,103 @@
     \else #1{#2}\afterfi@{\apply@#1}\fi}
 \def\afterfi@#1#2\fi{\fi#1}
 
-\ifcapsit\else
-  \AtBeginDocument{
-    \apply\DeclareMathUp{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
-  }
-\fi    
-
-\AtBeginDocument{\@ifpackageloaded{pstricks-add}{\psset{comma=true}}{}}
-\DeclareMathSymbol{;}{\mathbin}{operators}{'73} % \mathpunct à l'origine
+\AtEndPreamble{\iffrenchmath@capsit\else\AtBeginDocument{
+  \apply\DeclareMathUp{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+  }\fi
+}  
 
 %    \end{macrocode}
-% Passons aux alias et identifiants de fonctions classiques.
+% En utilisant |\AtEndPreamble| (de l'extension \mbox{\textsf{etoolbox}}),
+% avec |\AtBeginDocument| à l'intérieur, on garantit que certaines actions
+% auront bien lieu après celles de \textsf{unicode-math},
+% même si \textsf{frenchmath} est chargé avant \mbox{\textsf{unicode-math}}.
+%
+% Certains symboles, provenant de \textsf{amssymb} sont déjà définis par certaines 
+% extensions (\textsf{mathdesign} ou \textsf{unicode-math}) et ne seront pas redéfinis.
+% Un avertissement sera affiché dans ce cas. Comme \textsf{amssymb} 
+% (qui utilise \textsf{amsfonts}) charge plusieurs fontes mathématiques et un grand
+% nombre de symboles pas forcément nécessaires, nous n'avons extrait que les 
+% trois symboles dont nous avons besoin dans cette extension :
+% |\leqslant|, |\geqslant| et |\varnothing|.
+%    \begin{macrocode}
+\AtEndPreamble{% au cas où frenchmath est chargé avant unicode-math 
+  \AtBeginDocument{% après actions de unicode-math
+    \DeclareMathSymbol{;}{\mathbin}{operators}{'73} % et non \mathpunct
+    \@ifundefined{mathscr}{\RequirePackage{mathrsfs}}{
+        \PackageWarningNoLine{frenchmath}{Command \string\mathscr\space
+            already defined, \MessageBreak
+            I don't load mathrsfs}
+    }
+    \@ifundefined{leqslant}{
+        \DeclareSymbolFont{AMSa}{U}{msa}{m}{n}% de amsfonts
+        \DeclareMathSymbol{\leqslant}{\mathrel}{AMSa}{"36}% de amssymb
+        \DeclareMathSymbol{\geqslant}{\mathrel}{AMSa}{"3E}
+    }{
+        \PackageWarningNoLine{frenchmath}{\string\leqslant\space
+            and \string\geqslant\space already defined,
+            \MessageBreak
+            they will not be redefined}
+    }
+    \@ifundefined{varnothing}{% de amssymb
+        \@ifundefined{text}{\RequirePackage{amstext}}{}
+        \newcommand\varnothing{% \usefont évite de déclarer AMSb
+            \mathord{\text{\usefont{U}{msb}{m}{n}\symbol{"3F}}}}
+    }{  
+        \PackageWarningNoLine{frenchmath}{\string\varnothing\space
+            already defined,
+            \MessageBreak
+            it will not be redefined,
+            \MessageBreak
+            except by using \string\AMSvarnothing}
+    }
+  }
+}
+
+%    \end{macrocode}
+% Voyons les alias et quelques commandes particulières.
+%
+% La commande |\varnothing| produit $\varnothing$ mais par contre, 
+% le symbole fournit par \textsf{unicode-math}, avec \textsf{Latin Modern Math}, 
+% est très laid et malheureusement identique à |\emptyset| : $\CMemptyset$.
+% Afin de récupérer le symbole de \textsf{amssymb}, sans être obligé de charger 
+% cette extension, nous proposons la commande |\AMSvarnothing|, 
+% à placer dans le préambule, après l'appel de \textsf{unicode-math}.
 %    \begin{macrocode}
 \newcommand\curs{\mathscr}
 \newcommand\infeg{\leqslant}
 \newcommand\supeg{\geqslant}
 \newcommand\vide{\varnothing}
+\newcommand\AMSvarnothing{% doit être appelé après \setmathfont ?
+    \AtEndPreamble{\AtBeginDocument{% après actions de unicode-math
+        \renewcommand\varnothing{%
+            \mathord{\text{\usefont{U}{msb}{m}{n}\symbol{"3F}}}}
+    }}
+}
 %    \end{macrocode}
 % La définition de |\paral| remplace, depuis la version 2.2,
 % l'ancienne définition plus simple |\mathrel{/\!\!/}|, mais qui donnait des barres 
-% trop serrées avec \textsf{mathastext} + \textsf{times} ou avec \textsf{libertinust1math}.
+% trop serrées avec \mbox{\textsf{mathastext}} + \textsf{times} 
+% ou avec \textsf{libertinust1math}.
 % Merci à Jean-François Burnol de me l'avoir fait remarquer 
 % et pour ses suggestions dans la mise au point d'une macro plus efficace.
+%
+% La macro |\cmod|, copiée du |\pod| de \textsf{amsmath} (depuis v2.11),
+% permet de gérer différemment
+% l'espacement en mode \og mathématiques centrées \fg (hors-ligne) 
+% ou en mode \og en ligne \fg.
 %    \begin{macrocode}
 \newcommand\paral{\mathrel{\ooalign{$\mkern-1.75mu/\mkern1.75mu$\cr%
     $\mkern1.75mu/\mkern-1.75mu$}}}
 \newcommand\ssi{si, et seulement si,\xspace}
-\newcommand*\cmod[1]{\quad[#1]}
+%\newcommand*\cmod[1]{\quad[#1]}
+\newif\if@display % provient de amsmath, peut être appelé 2 fois
+\everydisplay\@xp{\the\everydisplay \@displaytrue}
+\newcommand*\cmod[1]{\penalty \z@ % similaire à amsmath \allowbreak
+    \if@display\mkern 18mu\else\mkern 8mu\fi [#1]}
 
+%    \end{macrocode}
+% Passons aux identifiants de fonctions classiques.
+%    \begin{macrocode}
 \DeclareMathOperator{\pgcd}{pgcd}
 \DeclareMathOperator{\ppcm}{ppcm}
 \DeclareMathOperator{\card}{card}
@@ -761,7 +930,7 @@
 \DeclareMathOperator{\cosech}{cosech}
 
 %    \end{macrocode}
-% Présentons les commandes pour les bases et repères, qui peuvent être utilisées
+% Les commandes pour les bases et repères peuvent être utilisées
 % en mode texte grâce à |\ensuremath| (et |\xspace| qui garantit le bon espacement).
 %    \begin{macrocode}
 \newcommand\@Oij{%
@@ -788,9 +957,10 @@
     \ensuremath{\left(O ; \vec{u}, \vec{v}\,\right)}\xspace}
 \newcommand\Ouv{\@ifstar{\@@Ouv}{\@Ouv}}
 
-\AtBeginDocument{
-    \renewcommand\ij{%
-        \ensuremath{\left(\vec{\imath}, \vec{\jmath}\,\right)}\xspace}}
+\AtBeginDocument{\let\oldij\ij %\ij existe déjà (mode texte)
+    \renewcommand\ij{\TextOrMath{\oldij}{%
+        \left(\vec{\imath}, \vec{\jmath}\,\right)}}
+}
 \newcommand\ijk{%
     \ensuremath{%
         \left(\vec{\vphantom{t}\imath}, \vec{\vphantom{t}\jmath},
@@ -798,102 +968,9 @@
     \xspace}
 
 %    \end{macrocode}
-% On sauvegarde les lettres grecques d'origine dans les macros |\italpha|, \ldots, |\itomega|.
-% Le booléen |frenchmathgreek| a été activé par les options de lettres grecques
-% \texttt{lgrmath}, \texttt{upgreek} ou \texttt{Upgreek}.
-%    \begin{macrocode}
-\iffrenchmathgreek
-    \@ifundefined{italpha}{\let\italpha\alpha}{
-        \PackageWarningNoLine{frenchmath}{Command
-            \string\italpha\space already exist \MessageBreak
-            and will not be redefined, \MessageBreak
-            no more warning for the other Greek letters, \MessageBreak
-            except pi}
-    }
-    \@ifundefined{itbeta}{\let\itbeta\beta}{}
-    \@ifundefined{itgamma}{\let\itgamma\gamma}{}
-    \@ifundefined{itdelta}{\let\itdelta\delta}{}
-    \@ifundefined{itepsilon}{\let\itepsilon\epsilon}{}
-    \@ifundefined{itzeta}{\let\itzeta\zeta}{}
-    \@ifundefined{iteta}{\let\iteta\eta}{}
-    \@ifundefined{ittheta}{\let\ittheta\theta}{}
-    \@ifundefined{itiota}{\let\itiota\iota}{}
-    \@ifundefined{itkappa}{\let\itkappa\kappa}{}
-    \@ifundefined{itlambda}{\let\itlambda\lambda}{}
-    \@ifundefined{itmu}{\let\itmu\mu}{}
-    \@ifundefined{itnu}{\let\itnu\nu}{}
-    \@ifundefined{itxi}{\let\itxi\xi}{}
-    \@ifundefined{itpi}{\let\itpi\pi}{
-       \PackageWarningNoLine{frenchmath}{Command
-            \string\itpi\space already exist \MessageBreak
-            and will not be redefined}
-    }
-    \@ifundefined{itrho}{\let\itrho\rho}{}
-    \@ifundefined{itsigma}{\let\itsigma\sigma}{}
-    \@ifundefined{ittau}{\let\ittau\tau}{}
-    \@ifundefined{itupsilon}{\let\itupsilon\upsilon}{}
-    \@ifundefined{itphi}{\let\itphi\phi}{}
-    \@ifundefined{itchi}{\let\itchi\chi}{}
-    \@ifundefined{itpsi}{\let\itpsi\psi}{}
-    \@ifundefined{itomega}{\let\itomega\omega}{}
-    \@ifundefined{itvarepsilon}{\let\itvarepsilon\varepsilon}{}
-    \@ifundefined{itvartheta}{\let\itvartheta\vartheta}{}
-    \@ifundefined{itvarpi}{\let\itvarpi\varpi}{}
-    \@ifundefined{itvarsigma}{\let\itvarsigma\varsigma}{}
-    \@ifundefined{itvarphi}{\let\itvarphi\varphi}{}
-\fi
-
-\AtBeginDocument{
-  \ifupgreek
-    \renewcommand\alpha{\upalpha}
-    \renewcommand\beta{\upbeta}
-    \renewcommand\gamma{\upgamma}
-    \renewcommand\delta{\updelta}
-    \renewcommand\epsilon{\upepsilon}
-    \renewcommand\zeta{\upzeta}
-    \renewcommand\eta{\upeta}
-    \renewcommand\theta{\uptheta}
-    \renewcommand\iota{\upiota}
-    \renewcommand\kappa{\upkappa}
-    \renewcommand\lambda{\uplambda}
-    \renewcommand\mu{\upmu}
-    \renewcommand\nu{\upnu}
-    \renewcommand\xi{\upxi}
-    \renewcommand\pi{\uppi}
-    \renewcommand\rho{\uprho}
-    \renewcommand\sigma{\upsigma}
-    \renewcommand\tau{\uptau}
-    \renewcommand\upsilon{\upupsilon}
-    \renewcommand\phi{\upphi}
-    \renewcommand\chi{\upchi}
-    \renewcommand\psi{\uppsi}
-    \renewcommand\omega{\upomega}
-    \renewcommand\varepsilon{\upvarepsilon}
-    \renewcommand\vartheta{\upvartheta}
-    \renewcommand\varpi{\upvarpi}
-    \renewcommand\varrho{\upvarrho}
-    \renewcommand\varsigma{\upvarsigma}
-    \renewcommand\varphi{\upvarphi}
-  \fi
-
-  \ifUpgreek
-    \renewcommand\Gamma{\Upgamma}
-    \renewcommand\Delta{\Updelta}
-    \renewcommand\Theta{\Uptheta}
-    \renewcommand\Lambda{\Uplambda}
-    \renewcommand\Xi{\Upxi}
-    \renewcommand\Pi{\Uppi}
-    \renewcommand\Sigma{\Upsigma}
-    \renewcommand\Upsilon{\Upupsilon}
-    \renewcommand\Phi{\Upphi}
-    \renewcommand\Psi{\Uppsi}
-    \renewcommand\Omega{\Upomega}
-  \fi
-}
-%    \end{macrocode}
 %
 % \medskip
-% \begin{thebibliography}{29}
+% \begin{thebibliography}{32}
 % \begin{raggedright}
 % \bibitem{RTIN} \emph{Lexique des règles typographiques en usage à l’Imprimerie Nationale},
 % édition du 26/08/2002.
@@ -921,20 +998,25 @@
 % Claudio Beccari, CTAN, v1.2.00 2021/08/04.
 % \bibitem{MAFR} \emph{La distribution \textsf{mafr}}, Christian Obrecht, 
 % CTAN, v1.0 17/09/2006.
+% \bibitem{BABEL} \emph{A Babel language definition file for French}, extension \LaTeX\ 
+% \textsf{babel-french} de Daniel Flipo, CTAN, v3.5c 14/09/2018.
+% \bibitem{FRM} \emph{L'extension \textsf{tdsfrmath}}, Yvon Henel, 
+% CTAN, v1.3 22/06/2009.
+% \bibitem{TABL} \emph{L'extension \textsf{tablvar}}, Antoine Missier,
+% CTAN, v2.0 23/12/2023.
+% \bibitem{UNIC} \emph{Experimental Unicode mathematical typesetting: 
+% The \textsf{unicode-math} package}, Will Robertson, Philipp Stephani, Joseph Wright, 
+% Khaled Hosny, and others, CTAN, v0.8r 13/08/2023.
 % \bibitem{FOUR} \textsf{Fourier-GUT\hspace{-0.1em}\emph{enberg}},
 % Michel Bovani, CTAN, v1.3 30/01/2005.
 % \bibitem{DESIGN} \emph{The \textsf{mathdesign} package},
 % Paul Pichaureau, CTAN, v2.31 29/08/2013.
-% \bibitem{MIS} \emph{\textsf{mismath} -- Miscellaneous mathematical macros},
-% Antoine Missier, CTAN, v2.8 27/07/2023.
+% \bibitem{KPF} \emph{\textsf{Kp-Fonts} -- The Johannes Kepler project},
+% Christophe Caignaert, CTAN, v3.34 20/09/2022.
+% \bibitem{MIS} \emph{Miscellaneous mathematical macros -- The \textsf{mismath} package},
+% Antoine Missier, CTAN, v3.0 04/05/2024.
 % \bibitem{VECT} \emph{\textsf{esvect}  -- Typesetting vectors with beautiful 
 % arrow with \LaTeXe}, Eddie Saudrais, CTAN, v1.3 11/07/2013.
-% \bibitem{TABL} \emph{L'extension \textsf{tablvar}}, Antoine Missier,
-% CTAN, v2.0 23/12/2023.
-% \bibitem{FRM} \emph{L'extension \textsf{tdsfrmath}}, Yvon Henel, 
-% CTAN, v1.3 22/06/2009.
-% \bibitem{BABEL} \emph{A Babel language definition file for French}, extension \LaTeX\ 
-% \textsf{babel-french} de Daniel Flipo, CTAN, v3.5c 14/09/2018.
 % \bibitem{ICOMMA} \emph{The \textsf{icomma} package for \LaTeXe}. 
 % Walter Schmidt, CTAN, v2.0 10/03/2002.
 % \bibitem{NCC} \emph{The \textsf{ncccomma} package}. Alexander I.~Rozhenko, 
@@ -943,18 +1025,20 @@
 % 2011, No.\@1.
 % \url{https://tug.org/pracjourn/2011-1/beccari/Intcomma.pdf}
 % \bibitem{DECC} \emph{The \textsf{decimalcomma} package}. Antoine Missier,
-% CTAN, v1.1 19/12/2023.
+% CTAN, v1.4 30/12/2023.
 % \bibitem{BRACKETS} \emph{Intelligent brackets -- The \textsf{ibrackets} package},
-% Antoine Missier, v1.1 26/12/2022.
+% Antoine Missier, CTAN, v1.2 26/07/2023.
+% \bibitem{TOOLS} \emph{The \textsf{mathtools} package}, 
+% Morten Høgholm, Lars Madsen and the \LaTeX3 project, CTAN, v1.29 29/06/2022.
 % \bibitem{MATAL} \emph{The \textsf{mathalpha}, \textsc{aka} \textsf{mathalfa} package}, 
 % Michael Sharpe, CTAN, v1.143 18/11/2021.
 % \bibitem{DLJ} \emph{\textsf{dotlessj}}, David Carlisle, CTAN, v0.03 09/12/1998.
-% \bibitem{KPF} \emph{\textsf{Kp-Fonts} -- The Johannes Kepler project},
-% Christophe Caignaert, CTAN, v3.34 20/09/2022.
 % \bibitem{LGR} \emph{The \textsf{lgrmath} package}, Jean-François B., CTAN, 
 % v1.0 16/11/2022.
 % \bibitem{UPGREEK} \emph{The \textsf{upgreek} package for \LaTeXe}, Walter Schmidt, CTAN, 
 % v2.0 12/03/2003.
+% \bibitem{MGREEK} \emph{The \textsf{mathgreeks} package}, Antoine Missier, CTAN, 
+% v1.1 04/05/2024.
 % \bibitem{ALPHA} \emph{The \textsf{textalpha} package}
 % (partie de l'extension \textsf{greek-fontenc}), Günter Milde, CTAN, v2.1 14/06/2022.
 % \bibitem{COMP} \emph{\LaTeX\ Companion}, Frank Mittelbach, Michel Goossens,

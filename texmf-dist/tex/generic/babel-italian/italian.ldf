@@ -12,7 +12,7 @@
 %% 
 %% License information appended.
 \ProvidesLanguage{italian}
-      [2024/01/03 v.1.5.00 Italian support for the babel system]
+      [2024/10/10 v.1.5.01 Italian support for the babel system]
 %%
 %% Please report errors to: claudio dot beccari at gmail dot com
 %%
@@ -195,7 +195,9 @@
 }}
  \DeclareMathSymbol{\virgoladecimale}{\mathord}{letters}{"3B}
  \DeclareMathSymbol{\virgola}{\mathpunct}{letters}{"3B}
-{\catcode`,\active \gdef,{\futurelet\tempB\?}}
+
+{\catcode`,\active \protected\gdef,%
+  {\futurelet\tempB\it@tempcomma}}
 
 \DeclareRobustCommand*\periodo[1]{\overline{#1}}
 
@@ -204,7 +206,7 @@
 \if\@Cifra #1\relax\def\tempC{\virgoladecimale}%
 \@break@tfor\fi}\tempC}
 
-\DeclareRobustCommand*\?{%
+\DeclareRobustCommand*\it@tempcomma{%
   \ifx\tempB\@sptoken
     \expandafter\@firstoftwo
   \else

@@ -4,7 +4,7 @@
 \usepackage{cnbwp-manual}
 \setdefaultlanguage{english}
 \title{Manual for Using the \fn{cnbwp} Class to Write CNB~Working~Papers}
-\author{Zdeněk Wagner}\date{version 2013.12}
+\author{Zdeněk Wagner}\date{version 2024.02}
 \begin{document}
 \maketitle
 
@@ -48,97 +48,35 @@ error with a strange message (such that the cause of the error will be difficult
 occur during document preparation.
 
 \section{Installation}\label{instalace}\index{installation} All macros used for writing CNB Working
-Papers are implemented in the \fn{cnbwp.cls} class. The class is distributed in the archive file
-\fn{cnbwp.zip}. The file is saved in the archive with a path conforming to the TDS~(\TeX\ Directory
-Structure) standard. The installation method varies slightly depending on the specific \TeX{}
-distribution.
+Papers are implemented in the \fn{cnbwp.cls} class. The class is nowadays available as a part of
+the \TeX\ distributions. You can thus install it by the tools of the distribution.
 
-\subsection{\MikTeX}\label{inst.miktex} Extract the \fn{cnbwp.zip} file to the \url{X:\localtexmf}
-directory, where \texttt{X:} denotes the disk on which \MikTeX{} is installed
-(usually~\texttt{C:}). Then open the menu \zwurl{Start/Programy/MikTeX/MikTeX Options}. On the
-Roots tab, check that \url{X:\localtexmf} is on the list of directories searched. If not, add it.
-Then click \texttt{Refresh FNDB}. To determine whether \LaTeX\ will locate the class, use
-the command:
+\subsection{\MikTeX}\label{inst.miktex}
+This class is distributed with \MikTeX\ and can be installed from its console. It is even possible to
+enable \textit{installation on the fly} and the package will then be installed authomatically when
+needed.
+
+\subsection{\TeXLive}\label{inst.tl}
+\TeXLive\ is a popular multiplatform \TeX{} distribution. It includes the package which can be
+installed from the command line by
 
 \begin{verbatim}
-findtexmf cnbwp.cls
+tlmgr install cnbwp
 \end{verbatim}
-
-\noindent If everything is OK, the command will print the full path for the \fn{cnbwp.cls}
-file.
-
-\pozor The \url{X:\localtexmf} directory is intended for local files that are not a
-standard
-component of \MikTeX. If you update \MikTeX\, this directory will not be overwritten, so
-you will
-not lose the files.
-
-\subsection{\teTeX}\label{inst.tetex} This distribution is the standard in Unix systems
-and is also
-available for OS/2 and eComStation. We will describe the installation in Linux only. The
-installation in OS/2 is similar, differing only in that a backslash is used to separate
-the
-directories and the name of the disk on which \teTeX\ has been installed must be entered
-explicitly.
-
-Extract the \fn{cnbwp.zip} file to the \url{/usr/share/texmf-local} directory. When
-installing in
-Unix systems, you must make sure that the
-\url{/usr/share/texmf-local/tex/latex/cnb/cnbwp.cls} file
-does not have DOS line ends. Once the file has been extracted, the file database usually
-needs to
-be refreshed using the \texttt{mktexlsr} command.
-
-\TeXLive\ is based on this distribution, so everything described in the following
-section applies to \teTeX\ as well.
-
-\subsection{\TeXLive}\label{inst.tl} \TeXLive\ is a popular multiplatform \TeX{} distribution. It
-comes from the same sources as \hyperref[inst.tetex]{\teTeX}, so the installation is similar. The
-directory to which \fn{cnbwp.zip} should be extracted is usually
-\url{/usr/local/texlive/texmf-local} in Unix
-systems and \url{X:\TeXLive\texmf-local} in Windows. However, \TeXLive\ may be installed
-in any
-directory and you can even have several versions of \TeXLive\ installed simultaneously.
-The
-directory to which \fn{cnbwp.zip} should be extracted can be determined using the command:
-
-\begin{verbatim}
-kpsewhich --expand-var=$TEXMFLOCAL
-\end{verbatim}
-\index{kpsewhich}
-
-The \texttt{texmf-local} directory tree is shared by all \TeXLive\ versions installed on
-a computer. If a newer version is installed, the files will automatically be found.
-
-\pozor The \TeXLive\ distribution usually requires \texttt{mktexlsr} to be run after the files have
-been added. In distributions for Windows there is even an item in the \TeXLive menu for this
-purpose. If the database is not refreshed using \texttt{mktexlsr} and two exclamation marks are
-given in front of the name of the directory containing the \fn{cnbwp} class, \LaTeX\ will not be
-able to locate the class. To determine whether \LaTeX\ will locate the class, use the command:
-
-\begin{verbatim}
-kpsewhich cnbwp.cls -progname latex
-\end{verbatim}	
-
-\noindent If everything is OK, the command will print the full path for the \fn{cnbwp.cls} file.
-
-\subsection{\emTeX}\label{inst.emtex} This distribution is obsolete and Eberhard Mattes no longer
-maintains it. It is better to switch to another distribution. However, if you do want to use
-\emTeX, extract \fn{cnbwp.zip} to an auxiliary directory, create a \fn{cnb} subdirectory
-in
-\url{X:\emtex\texinput\latex2e} and copy \fn{cnbwp.cls} and \fn{cnbwpsizes.clo} into it.
+	
+\subsection{Other Distributions}\label{inst.other}
+To install the \fn{cnbwp} class in other
+distributions you will need to follow the instructions given in the manual supplied with the
+relevant distribution. Generally, you have to find path where the distribution expects \LaTeX\
+class and style files an put \fn{cnbwp.cls} and \fn{cnbwpsizes.clo} there. Afterwards you have to
+put \fn{abbrvcnb.bst} to the directory where the \BibTeX\ files are expected. It might be necessary
+to refresh the filename database.
 
 \subsection{Scientific Word}\label{inst.sciword} This manual is written for version 5.5. In this
 version, extract \fn{cnbwp.zip} to \url{X:\sw55\TCITeX}. In other versions the name of the root
-directory will probably differ. Scientific Word does not adhere strictly to TDS, as the directory
-names contain both lower-case and upper-case letters. However, the FAT and NTFS file systems are
-not case sensitive, so this should not cause any problems.
-	
-\subsection{Other Distributions}\label{inst.other} To install the \fn{cnbwp} class in other
-distributions you will need to follow the instructions given in the manual supplied with the
-relevant distribution. The current distributions are usually based on \fn{web2c} and conform to the
-TDS standard, so the installation procedure is analogous to that for \hyperref[inst.tl]{\TeXLive,
-see section~\ref*{inst.tl}}.
+directory will probably differ. In this folder you should create \url{tex\latex\cnbwp} for files
+\fn{cnbwp.cls} and \fn{cnbwpsizes.clo}, and \url{bibtex\bst\cnbwp} for \fn{abbrvcnb.bst}. Nothing
+else is needed.
 
 \subsection{Preparing Documents from Scientific Word in Other
 Distributions}\label{sciword.elsewhere} Documents created using Scientific Word require specific
@@ -150,10 +88,11 @@ using.
 \pozor Remember that in some distributions after adding files you have to refresh the database
 either using the \texttt{mktexlsr} command or from the menu.
 
-\section{Testing the Installation}\label{test.inst} In many distributions the installation can be
-tested using the \texttt{kpsewhich} command, as mentioned in section~\ref{inst.tl}. This enables
+\section{Testing the Installation}\label{test.inst} Successfull installation can be
+verified using the \texttt{kpsewhich}  or \texttt{findtexmf} command depending on the \TeX\
+distribution. This allows
 you to check whether \LaTeX\ is able to locate the \fn{cnbwp} class and the macros from the
-\fn{SWmacros} directory. If you do not have \texttt{kpsewhich} in your distribution, all you need
+\fn{SWmacros} directory. If you do not have any of these commands in your distribution, all you need
 to do is write a simple document:
 
 \begin{verbatim}
@@ -343,24 +282,23 @@ the title, the names of the authors and the acknowledgements can be written anyw
 between \cmd{documentclass} and
 \cmd{maketitle}. It can thus be useful to place them right at the beginning of the file.
 
-The title of the work is written as the argument of the \xx\cmd{title} macro. The title
-will be
-printed later, after you write the \xx\cmd{maketitle} command, but it will also be put in
-the
-header:
+The title of the work is written as the argument of the \xx\cmd{title} macro. It will also be put in the page header. This macro accepts also one optional parameter when alternative form should be used for the page header.  The title will be printed later, after you write the \xx\cmd{maketitle} command:
 
 \begin{verbatim}
 \title{Twelfth Night, or What You Will}
 \end{verbatim}
+or optionally
+\begin{verbatim}
+\title[12. Night]{Twelfth Night, or What You Will}
+\end{verbatim}
 
 
-The names of the authors are entered using the \xx\cmd{author} macro that requires two
-parameters. The first parameter conains the full name. The authors' institution is
-entered in the second argument , e.g. as follows:
+The names of the authors are entered using the \xx\cmd{author} macro that requires two parameters and has one optional parameter. The first parameter defines the full name. The authors' institution is
+entered in the second argument. Optionally, the short for of the name may be used and will be used just for the page header. Optional parameter is the first parameter, e.g. as follows:
 
 \begin{verbatim}
 \author{Captain Nemo}{Nautilus}
-\author{Robinson Crusoe}{Desert Island}
+\author[R. Crusoe]{Robinson Crusoe}{Desert Island}
 \end{verbatim}
 
 \subsubsection{Acknowledgements}\label{ack} Acknowledgements are an optional part of a
@@ -1431,7 +1369,7 @@ document or chapter (in the case of a book). You should therefore specify more t
 option so
 that \LaTeX\ has a choice. Stating the [h]\index{h@[h]} specifier alone usually results in
 the
-float being shifted to a separate page or to the end of the document. 
+float being shifted to a separate page or to the end of the document.
 
 In some cases the float \textbf{has to be} in a specific location. You thus have to tell
 \LaTeX\
@@ -1792,8 +1730,11 @@ packages you really need. Delete any unnecessary \cmd{usepackage} commands. You 
 some
 additional packages, such as \xx\fn{amsmath}.
 
-\section{Changes, Version 2013.12}
+\section{Changes}
+
+\subsection{Version 2013.12}
 The following changes were made in December, 2013:
+
 \begin{enumerate}
 \item Switches 11pt and 12pt for changing the font size were removed.
 \item The syntax of the \cmd{author} macro was changed.
@@ -1806,6 +1747,14 @@ the \fn{abstrakt} environment.
 \item New macros \cmd{Note} and \cmd{Source} were implemented.
 \item Formatting of the author names in the \fn{abbrvcnb} style was modified.
 \item The \fn{times} package replaced with the \fn{mathptmx}.
+\item The manual was updated.
+\end{enumerate}
+
+\subsection{Version 2024.2}
+The following changes were made in February, 2024:
+
+\begin{enumerate}
+\item Optional parameters for typesetting page headers were added for  \author and \title macros.
 \item The manual was updated.
 \end{enumerate}
 

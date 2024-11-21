@@ -648,14 +648,9 @@ and \emph{Japanese fonts} for fonts used in \textbf{JAchar}.
 %<ja>  （DVI出力(\cs{outputmode=0})は対応していない．）
 \item recent \href{https://github.com/latex3/luaotfload}{\Pkg{luaotfload}} (v3.1 or later recommended)
 \item \Pkg{adobemapping} (Adobe cmap and pdfmapping files)
-\item \LaTeXe\ 2020-02-02 patch level 5 or later
-%<en>  (if you want to use \LuaTeX-ja with \LaTeXe)
-%<ja>  （\LaTeXe 下で\LuaTeX-jaを使う場合）
 \item \href{https://github.com/josephwright/etoolbox/}{\Pkg{etoolbox}}
 %<en>  (if you want to use \LuaTeX-ja with \LaTeXe)
 %<ja>  （\LaTeXe 下で\LuaTeX-jaを使う場合）
-\item \Pkg{everysel} (only for \LaTeXe\ 2020-02-02~and~2020-10-01)
-\item \Pkg{filehook}, \Pkg{atbegshi}  (only for \LaTeXe\ 2020-02-02)
 \item \Pkg{ltxcmds}, \Pkg{pdftexcmds}
 \item \href{https://github.com/wspr/fontspec/}{\Pkg{fontspec}} v2.7c (or later)
 %<*en>
@@ -1472,14 +1467,19 @@ Alphabetic fonts
 &\cs{fontspec}&\cs{setmainfont}&\cs{setsansfont}&\cs{setmonofont}\\
 \midrule
 Japanese fonts
-&\cs{newjfontfamily}&\cs{renewjfontfamily}&\cs{setjfontfamily}\\
+&\cs{newjfontfamily}&\cs{renewjfontfamily}&\cs{setjfontfamily}&\cs{providejfontfamily}\\
 Alphabetic fonts
-&\cs{newfontfamily}&\cs{renewfontfamily}&\cs{setfontfamily}\\
+&\cs{newfontfamily}&\cs{renewfontfamily}&\cs{setfontfamily}&\cs{providefontfamily}\\
 \midrule
 Japanese fonts
-&\cs{newjfontface}&\cs{defaultjfontfeatures}&\cs{addjfontfeatures}\\
+&\cs{newjfontface}&\cs{renewjfontface}&\cs{setjfontface}&\cs{providejfontface}\\
 Alphabetic fonts
-&\cs{newfontface}&\cs{defaultfontfeatures}&\cs{addfontfeatures}\\
+&\cs{newfontface}&\cs{renewfontface}&\cs{setfontface}&\cs{providefontface}\\
+\midrule
+Japanese fonts
+&\cs{defaultjfontfeatures}&\cs{addjfontfeatures}\\
+Alphabetic fonts
+&\cs{defaultfontfeatures}&\cs{addfontfeatures}\\
 \bottomrule
 \end{tabular}\par}
 \end{table}
@@ -1497,14 +1497,19 @@ Alphabetic fonts
 &\cs{fontspec}&\cs{setmainfont}&\cs{setsansfont}&\cs{setmonofont}\\
 \midrule
 \emph{和文}
-&\cs{newjfontfamily}&\cs{renewjfontfamily}&\cs{setjfontfamily}\\
+&\cs{newjfontfamily}&\cs{renewjfontfamily}&\cs{setjfontfamily}&\cs{providejfontfamily}\\
 \emph{欧文}
-&\cs{newfontfamily}&\cs{renewfontfamily}&\cs{setfontfamily}\\
+&\cs{newfontfamily}&\cs{renewfontfamily}&\cs{setfontfamily}&\cs{providefontfamily}\\
 \midrule
 \emph{和文}
-&\cs{newjfontface}&\cs{defaultjfontfeatures}&\cs{addjfontfeatures}\\
+&\cs{newjfontface}&\cs{renewjfontface}&\cs{setjfontface}&\cs{providejfontface}\\
 \emph{欧文}
-&\cs{newfontface}&\cs{defaultfontfeatures}&\cs{addfontfeatures}\\
+&\cs{newfontface}&\cs{renewfontface}&\cs{setfontface}&\cs{providefontface}\\
+\midrule
+\emph{和文}
+&\cs{defaultjfontfeatures}&\cs{addjfontfeatures}\\
+\emph{欧文}
+&\cs{defaultfontfeatures}&\cs{addfontfeatures}\\
 \bottomrule
 \end{tabular}\par}
 \end{table}
@@ -3757,9 +3762,9 @@ This means the following two lines have the same meaning:
 \jfont\hoge=hogem:jfm=ujis;-kern at 3.5mm % ==> kern 無効（明示）
 \jfont\hoge=hogem:jfm=ujis at 3.5mm       % ==> kern 有効（暗黙）
 \jfont\hoge=hogem:jfm=ujis;+kern at 3.5mm % ==> kern 有効（明示）
-\DeclareFontShape{JY3}{fuga}{m}{n}{<-> s*hogem:jfm=-ujis}{}    % ==> kern 無効（明示）
-\DeclareFontShape{JY3}{fuga}{m}{n}{<-> s*hogem:jfm=ujis}{}     % ==> kern 有効（暗黙）
-\DeclareFontShape{JY3}{fuga}{m}{n}{<-> s*hogem:jfm=ujis+kern}{}% ==> kern 有効（明示）
+\DeclareFontShape{JY3}{fuga}{m}{n}{<-> s*hogem:jfm=ujis;-kern}{} % ==> kern 無効（明示）
+\DeclareFontShape{JY3}{fuga}{m}{n}{<-> s*hogem:jfm=ujis}{}       % ==> kern 有効（暗黙）
+\DeclareFontShape{JY3}{fuga}{m}{n}{<-> s*hogem:jfm=ujis;+kern}{} % ==> kern 有効（明示）
 \end{lstlisting}
 
 \item バージョン20220411.0以降では，\LuaTeX-ja読み込み時や，\Pkg{ltjclasses}, \Pkg{ltjsclasses}において
@@ -3770,7 +3775,7 @@ This means the following two lines have the same meaning:
   \ltj@stdmcfont:-kern;jfm=\ltj@stdyokojfm}{}
 \end{lstlisting}
   とOpenType機能\texttt{kern}を明示的に無効化した状態で定義する．
-  これは標準JFM(\texttt{jfm-ujis.lua}, \texttt{jfm-ujisv.lua})が
+  これは標準JFM\ (\texttt{jfm-ujis.lua}, \texttt{jfm-ujisv.lua})が
   フォント由来のカーニングが入ることを期待していないためである．
 
  \item
@@ -4857,7 +4862,7 @@ Hence we have the following result:
 %<*ja>
 （任意，バージョン2以降）
 
-優先順位付き行長調整が有効であり，かつ現在の文字クラスの文字が
+  行末文字の位置調整が有効であり，かつ現在の文字クラスの文字が
   行末に来た時に，この文字と行末の間には指定された値のいずれかの大きさのカーンが
   挿入される（\autoref{ssec:adj}参照）．
 
@@ -7624,7 +7629,7 @@ for making the difference obvious.}
  \item[「中身までみた」行送り計算]
   複数行に渡る文章を組版するときには行間に空きが入ることが普通である．
   \TeX では各行が一つずつの水平ボックスをなしていることを思い出すと，隣り合った
-  2つの行（つまり水平ボックス）の間の空きは次のようにして決まるのだった：
+  2\nobreak つの行（つまり水平ボックス）の間の空きは次のようにして決まるのだった：
   \begin{itemize}
    \item 「通常に組んだときの行間」$d$を，\cs{baselineskip}から
 	「前の行」の深さと「次の行」の高さを加えたものを引いた値とする．
@@ -7675,7 +7680,7 @@ for making the difference obvious.}
 	\begin{itemize}
 	 \item 現在のリストにおける最後のノード
 	  \footnote{最後のノードが\cs{parskip}によるグルーであった場合のみ
-		さらに一つ前のノードを参照する}が水平ボックス$h'$であり，かつ
+		さらに一つ前のノードを参照する．}が水平ボックス$h'$であり，かつ
 	  \item \cs{prevdepth}の値とその$h'$の深さの値が一致している
 	\end{itemize}
 	場合にのみ発動するようにしている．
@@ -7683,7 +7688,10 @@ for making the difference obvious.}
 	参照せず，あくまでも$h''$自身の高さ・深さのみを参照する．
 	参照するようにしてしまうと，\cs{smash}など手動で行った高さ・深さ調整の意味がなくなってしまうからである．
   \end{itemize}
-  
+  なお，現在の実装では，「中身までみる行間調整」は，外部垂直モードにおける
+  前の段落の最終行と次の段落の先頭行との間では
+  満足に動作しないことがある．これについては今後の課題である．
+
   \begin{figure}[t]
 	\noindent\centering
 	\begin{minipage}[b]{16\zw}
@@ -7835,7 +7843,7 @@ stretch_priority={kanjiskip=-35,xkanjiskip=-25,others=50}
 
 さらに，バージョン20220211.0以降では次の命令が提供される．
 \begin{cslist}
-  \item[\cs{ltjghostbeginjachar}]
+  \item[\cs{ltjghostbeforejachar}]
   \LuaTeX-ja本体が提供している\cs{ltjfakeparbegin}, \cs{ltjfakeboxbdd}と類似の命令である．
   実行された箇所が（限定・非限定を問わず）水平モードであった場合に，実行された箇所は
   「文字クラス0の\textbf{JAchar}」の直前であると，
@@ -7852,7 +7860,7 @@ A\LG  字  \par% ==> ALchar--(xkanjiskip)--\LG
 \end{LTXexample}
 
   \item[\cs{ltjghostafterjachar}]
-  \cs{ltjghostbeginjachar}と対を成す命令で，実行された箇所は
+  \cs{ltjghostbeforejachar}と対を成す命令で，実行された箇所は
   「文字クラス0の\textbf{JAchar}」の直後であると，
   \LuaTeX-jaの和文処理グルー挿入処理に認識させる．以下の実行例を参照．
 
@@ -11288,7 +11296,16 @@ $n$個あるペナルティの箇所が改行可能箇所である．いずれ�
 
 なお，段落の末尾には\cs{penalty10000}と\cs{parfillskip}由来のグルーが自動的に入るが，
 これらとの兼ね合いのため\emph{最後のクラスタについては上記のノード挿入処理は行われない}．
-段落最終行の行末文字の位置調整は，すでに述べた「行分割後の場合」における最終行の処理をそのまま用いている．
+段落最終行の行末文字の位置調整は，すでに述べた「行分割後の場合」における最終行の処理を流用しているが，
+そのままでは「段落末尾をぶら下げ組($a_1=-0.5$)にする」ことができない
+\footnote{通常時は\cs{parfillskip}の内容は\texttt{0pt plus 1fil}であるため，
+  負の長さになることはない．これに伴って，「段落末尾はぶら下げ組が望ましい」状況であっても，
+  実際には末尾の句点（とその前の数文字）がまとめて次の行に追い出されてしまう．}ため，
+\begin{itemize}
+  \item 段落末尾の\cs{penalty10000}\cs{parfillskip}の直前に，$a_1\text{\cs{zw}}$のカーンを挿入する
+  \item 行分割後，行末文字の位置調整を行う前に，そのカーンを削除する
+\end{itemize}
+という前処理を追加している．
 
 \subsection{グルーの調整}
 $|\textit{total}|$の分だけが，行中のグルーの伸び量，あるいは縮み量に応じて負担されることになる．

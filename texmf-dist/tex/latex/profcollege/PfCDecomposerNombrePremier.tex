@@ -1,10 +1,19 @@
 %%%
 % Nombre Premier
 %%%
-\setKVdefault[ClesNombrePremier]{Tableau=false,TableauVide=false,TableauVertical=false,TableauVerticalVide=false,Exposant=false,Longue=false,All=false,Arbre=false,ArbreVide=false,ArbreComplet=false,ArbreDessine=false,ArbreDessineVide=false,Entoure=false,Entourefin=false,Diviseurs=false,DiviseursT=false,Dot=\dotfill,Impose=false,ImposeAll=false,Potence=false,Decalage=10,Vide=false,CouleurFeuillage=ForestGreen,CouleurTronc=BurlyWood,CouleurFruits=Red,CouleurTexte=white}%
+\def\filedateDecompNbPremier{2024/09/01}%
+\def\fileversionDecompNbPremier{0.1a}%
+\message{-- \filedateDecompNbPremier\space v\fileversionDecompNbPremier}%
+%
+\setKVdefault[ClesNombrePremier]{Tableau=false,TableauVide=false,TableauVertical=false,TableauVerticalVide=false,Exposant=false,Longue=false,All=false,Arbre=false,ArbreVide=false,ArbreComplet=false,ArbreDessine=false,ArbreDessineVide=false,Entoure=false,Entourefin=false,Diviseurs=false,DiviseursT=false,Dot=\dotfill,Impose=false,ImposeAll=false,Potence=false,Decalage=10,Vide=false,CouleurFeuillage=ForestGreen,CouleurTronc=BurlyWood,CouleurFruits=Red,CouleurTexte=white,Poisson=false,Echelle=1cm,AngleArete=45,CouleurPoisson=white,Visible=false,Solution=false}%
 \defKV[ClesNombrePremier]{Nombre=\ifboolKV[ClesNombrePremier]{ArbreDessine}{}{\ifboolKV[ClesNombrePremier]{ArbreDessineVide}{}{\setKV[ClesNombrePremier]{Impose}}}}%
 \defKV[ClesNombrePremier]{AllNombre=\setKV[ClesNombrePremier]{ImposeAll}}%
-\defKV[ClesNombrePremier]{Impression=\setKV[ClesNombrePremier]{CouleurFeuillage=white,CouleurTronc=white,CouleurFruits=gris,CouleurTexte=black}}
+\defKV[ClesNombrePremier]{Impression=\setKV[ClesNombrePremier]{CouleurFeuillage=white,CouleurTronc=white,CouleurFruits=gris,CouleurTexte=black}}%
+\defKV[ClesNombrePremier]{ElementsVisibles=\setKV[ClesNombrePremier]{Visible}\setKV[ClesNombrePremier]{Vide}}%
+\defKV[ClesNombrePremier]{CouleurSolution=\setKV[ClesNombrePremier]{Solution}}%
+
+\newtoks\tokNPElementsVisibles%
+\def\UpdatetoksElementAfficher#1\nil{\addtotok\tokNPElementsVisibles{#1,}}%
 
 \newcommand\Decomposition[2][]{%
   \useKVdefault[ClesNombrePremier]%
@@ -26,6 +35,136 @@
   \ifboolKV[ClesNombrePremier]{ArbreDessineVide}{\setKV[ClesNombrePremier]{Vide=true}\MPArbreDessine{#2}{\useKV[ClesNombrePremier]{Nombre}}}{}%
   \ifboolKV[ClesNombrePremier]{Diviseurs}{\ListeDiviseur{#2}}{}%
   \ifboolKV[ClesNombrePremier]{DiviseursT}{\ListeDiviseurT{#2}}{}%
+  \ifboolKV[ClesNombrePremier]{Poisson}{%
+    \tokNPElementsVisibles{}%
+    \PfCTousLesDiviseurs{#2}%
+    \ifboolKV[ClesNombrePremier]{Visible}{%
+      \xdef\foo{\useKV[ClesNombrePremier]{ElementsVisibles}}%
+      \readlist*\ListeElementsAAfficher{\foo}%
+    }{%
+      \xdef\foo{-1}\readlist*\ListeElementsAAfficher{\foo}%
+    }%
+    \foreachitem\compteur\in\ListeElementsAAfficher{\expandafter\UpdatetoksElementAfficher\compteur\nil}%
+    \MPFish{\PfCPileDiviseurs}{#2}{\the\tokNPElementsVisibles}%
+  }{}%
+}%
+
+\newcommand\PfCTousLesDiviseurs[1]{%
+  %#1 : le nombre entier \`a tester
+  \xdef\anpl{#1}%\relax%
+  \xdef\bnpl{2}%\relax%
+  \xdef\pilebl{2}%\relax%
+  \xdef\PfCPileDiviseurs{1}%
+  \loop
+  \ifnum\fpeval{\bnpl}<\fpeval{\anpl}\relax
+    \modulo{\fpeval{\anpl}}{\fpeval{\bnpl}}
+    \ifnum\remainder=0\relax
+      \xdef\PfCPileDiviseurs{\PfCPileDiviseurs,\fpeval{\bnpl}}%
+    \fi
+    \xdef\bnpl{\fpeval{\bnpl+1}}%
+    \repeat
+    \xdef\PfCPileDiviseurs{\PfCPileDiviseurs,#1}%
+}%%
+
+\def\MPFish#1#2#3{
+  \ifluatex
+    \mplibforcehmode%
+    \mplibnumbersystem{double}%
+    \begin{mplibcode}
+      Echelle=\useKV[ClesNombrePremier]{Echelle};
+      AngleArete=\useKV[ClesNombrePremier]{AngleArete};
+
+      boolean Vide,Visible,Solution;
+      Vide=\useKV[ClesNombrePremier]{Vide};
+      Visible=\useKV[ClesNombrePremier]{Visible};
+      Solution=\useKV[ClesNombrePremier]{Solution};
+
+      color CoulTete,CoulSol;
+      CoulTete=\useKV[ClesNombrePremier]{CouleurPoisson};
+      if Solution:
+      CoulSol=\useKV[ClesNombrePremier]{CouleurSolution};
+      fi;
+      
+      numeric Diviseurs[];
+      vardef LectureDiviseurs(text t)=
+      n:=0;
+      for p_=t:
+        n:=n+1;
+        Diviseurs[n]=p_;
+      endfor;
+      enddef;
+
+      LectureDiviseurs(#1);
+      TotalDiviseurs:=n;
+
+      boolean RETOUR;
+      RETOUR=false;
+      
+      vardef TestVisible(expr nrt)=
+        RETOUR:=false;
+        for p_=#3:
+          if p_=nrt:
+            RETOUR:=true;
+          fi;
+        endfor;
+      enddef;   
+      
+      
+      pair Ah[],Ab[],O[],Ac;
+      O0=(0,0);
+      O[-1]=O0+Echelle*(0,1);
+      O[-2]=O0+Echelle*(0,-1);
+      fill (arccercle(O[-1],O[-2],O0)--cycle) withcolor CoulTete;
+      trace arccercle(O[-1],O[-2],O0)--cycle;
+      label.lft(TEX("\num{"&decimal(#2)&"}"),O0);
+      % 
+      for k=1 upto (TotalDiviseurs div 2):
+      if k=1:Echelle:=Echelle/2;fi;
+      O[k]-O[k-1]=Echelle*(1,0);
+      if k=1:Echelle:=Echelle*2;fi;
+      Ah[k]-O[k]=Echelle*(cosd(AngleArete),sind(AngleArete));
+      Ab[k]-O[k]=Echelle*(cosd(AngleArete),-sind(AngleArete));
+      draw O[k-1]--O[k];
+      draw Ah[k]--O[k]--Ab[k];
+      if Vide=false:
+        label.top(TEX("\num{"&decimal(Diviseurs[k])&"}"),Ah[k]);
+        label.bot(TEX("\num{"&decimal(Diviseurs[TotalDiviseurs+1-k])&"}"),Ab[k]);
+      else:
+        if Visible:
+          TestVisible(Diviseurs[k]);
+          if RETOUR:
+            label.top(TEX("\num{"&decimal(Diviseurs[k])&"}"),Ah[k]);
+          else:
+            if Solution:
+              drawoptions(withcolor CoulSol);
+              label.top(TEX("\num{"&decimal(Diviseurs[k])&"}"),Ah[k]);
+              drawoptions();
+            fi;
+          fi;
+          TestVisible(Diviseurs[TotalDiviseurs+1-k]);
+          if RETOUR:
+            label.bot(TEX("\num{"&decimal(Diviseurs[TotalDiviseurs+1-k])&"}"),Ab[k]);
+          else:
+            if Solution:
+              drawoptions(withcolor CoulSol);
+              label.bot(TEX("\num{"&decimal(Diviseurs[TotalDiviseurs+1-k])&"}"),Ab[k]);
+              drawoptions();
+            fi;
+          fi;
+        fi;
+      fi;
+      endfor;
+      if (TotalDiviseurs mod 2)<>0:
+      Ac-O[TotalDiviseurs div 2]=Echelle*(1,0);
+      draw Ac--O[TotalDiviseurs div 2];
+      if Vide=false:
+      label.rt(TEX("\num{"&decimal(Diviseurs[(TotalDiviseurs+1) div 2])&"}"),Ac);
+      fi;
+      fi;      
+    \end{mplibcode}
+  \else
+    %
+  \fi
 }%
 
 \def\MPArbre#1{%
@@ -43,7 +182,7 @@
     Ancre0:=(0,0);
     racine:=#1;
 
-    label(btex \num{#1} etex,(0,0));
+    label(TEX("\num{#1}"),(0,0));
     forever:
     PremierSimple(racine);
     exitif racine=1;
@@ -700,9 +839,9 @@
       \bnpl=\numexpr\bnpl+1\relax%
       \pilebl=\bnpl\relax%
     \fi%
-    }
-  }
-}
+    }%
+  }%
+}%
 
 \NewDocumentCommand\PfCSommeChiffres{m}{%
   \xdef\PfCSMSomme{0}%
@@ -791,16 +930,20 @@
   \newcount\anp\newcount\bnp%
   \anp=#1%
   \bnp=2\relax%
-  1 %
-  \whiledo{\bnp<\anp}{%
-    \modulo{\the\anp}{\the\bnp}{}%
-    \ifnum\remainder=0%
-    ; $\num{\the\bnp}$ %
-    \fi%
-    \bnp=\numexpr\bnp+1%
-  }%
-  et \num{\the\anp}%
-}
+  \ifnum\anp=1
+    1%
+  \else
+    1 %
+    \whiledo{\bnp<\anp}{%
+      \modulo{\the\anp}{\the\bnp}{}%
+      \ifnum\remainder=0%
+        ; $\num{\the\bnp}$ %
+      \fi%
+      \bnp=\numexpr\bnp+1%
+    }%
+    et \num{\the\anp}%
+  \fi%
+}%
 
 \newcount\anpT\newcount\bnpT\newcount\cnpT\newcount\dnpT%
 
@@ -820,15 +963,17 @@
     \begin{tabular}{c|c}%
     1&\num{#1}\\
     \xintFor* ##1 in {\xintSeq {1}{\fpeval{(\cnpT+1)/2}}}\do{%
-    \DiviseurNumero{#1}{##1}\num{\fpeval{\dnpT}}\uppercase{&}\DiviseurNumero{#1}{##1}\xintifboolexpr{\dnpT=\fpeval{#1/\dnpT}}{}{\num{\fpeval{#1/\dnpT}}}\\
+    \DiviseurNumero{#1}{##1}\num{\fpeval{\dnpT}}\uppercase{&}\DiviseurNumero{#1}{##1}\xintifboolexpr{\dnpT==\fpeval{#1/\dnpT}}{\num{\fpeval{\dnpT}}}{\num{\fpeval{#1/\dnpT}}}\\
     }
   \end{tabular}%
   \else%
     \begin{tabular}{c|c}
-    1&\num{#1}\\
+      1&\num{#1}
+      \ifnum\cnpT>1\relax\\
     \xintFor* ##1 in {\xintSeq {1}{\fpeval{\cnpT/2}}}\do{%
     \DiviseurNumero{#1}{##1}\num{\fpeval{\dnpT}}\uppercase{&}\DiviseurNumero{#1}{##1}\num{\fpeval{#1/\dnpT}}\\
-    }
+      }
+      \fi
   \end{tabular}%
   \fi%
 }%

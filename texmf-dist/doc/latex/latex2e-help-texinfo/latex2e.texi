@@ -1,8 +1,8 @@
 \input texinfo
-@c $Id: latex2e.texi 1141 2023-01-10 23:19:31Z karl $
+@c $Id: latex2e.texi 1171 2024-05-12 22:50:08Z karl $
 @comment %**start of header (This is for running Texinfo on a region.)
 @setfilename latex2e.info
-@set UPDATED January 2023
+@set UPDATED May 2024
 @include common.texi
 @settitle @LaTeX{}2e unofficial reference manual (@value{UPDATED})
 @comment %**end of header (This is for running Texinfo on a region.)
@@ -10,23 +10,21 @@
 @c latex 2.09 commands should all be present now,
 @c xx but latex2e stuff is missing.
 @c xx random list of a few of the missing items is at the end of this file
-@c xx read through latex2e news for things to update.
+@c xx read through ltnews and l3news for (lots of) things to update.
 @c
-@c xx ctan, distributions, components of TeX
+@c xx distributions, components of TeX
 @c xx classes and packages: required, additional, useful; oberdiek; fonts
 @c xx merge permuted-index
 @c xx merge latex-manual from savannah
 @c xx merge display style math
 @c xx systematically check stated math atom type vs. fontdef.dtx etc.
-@c xx check recent ltnews for (lots of) changes
 @c xx \write of non-ASCII chars (vincent mail of 14 Mar 2020 21:39:41)
 @c xx \nonstopmode etc., if they are officially supported by LaTeX?
-@c xx LaTeX defines \do at \begin{document} even though it is not documented
 @c xx JH explain nfss somewhere
 @c xx JH expand BiBTeX
 @c xx JH expand theorem, AMS math
-@c xx JH something on code listings
 @c xx JH ligatures
+@c xx \verbatiminput
 @c
 @c xx \NewCommandCopy et al. (Brian Dunn, 21 Dec 2021 06:50:17).
 @c
@@ -34,8 +32,6 @@
 @c xx commands, though some are internal and shouldn't be included.
 @c xx classes.dtx et al. define additional commands.
 @c xx See also http://ctan.org/pkg/macros2e.
-@c 
-@c xx All the special characters should be definitively described.
 
 @copying
 This document is an unofficial reference manual for @LaTeX{}, a
@@ -100,28 +96,29 @@ into another language, under the above conditions for modified versions.
 <div class='intro'> <p>This is an unofficial reference manual for
 LaTeX.  See below for the <a href='#SEC_Overview'>Table of Contents</a>. 
 If you want a tutorial then please instead visit <a
-href="https://www.learnlatex.org/"><code>learnlatex.org</code></a> or <a
-href='https://ctan.org/topic/tut-latex'>this list</a>.</p>
+href="https://www.learnlatex.org/"><code>learnlatex.org</code></a> or
+see <a href='https://ctan.org/topic/tut-latex'>this long list</a>.</p>
 
 <p>This manual has two versions.  One has <a
 href="https://latexref.xyz/">separate web pages for each section or
 subsection</a>.  It's also available as a <a
 href="https://latexref.xyz/dev/latex2e.html">single web page</a> and as
-a <a href="https://latexref.xyz/dev/latex2e.pdf">pdf</a>.  Note that
-there is also a separately-maintained <a
-href="https://latexref.xyz/fr/">French edition</a>.</p>
+a <a href="https://latexref.xyz/dev/latex2e.pdf">pdf</a>.
+Translations to French and Spanish are available at
+@url{https://ctan.org/pkg/latex2e-help-texinfo}; they're maintained
+separately.
 
 <p> This document is not official.  It has not been reviewed by the
-LaTeX maintainers.  Our goal is to cover all (non-private) LaTeX
-commands.  Your comments and contributions, including bug reports, are
-very welcome.  See <a href='https://latexref.xyz/dev/'>our project
-page</a> for more, including <a
-href='https://latexref.xyz/dev/#license'>license information</a> and
-information on how you can
-<a href='https://latexref.xyz/dev/writing.html'>contribute to this manual</a>
-as well as
-<a href='https://latexref.xyz/dev/mirroring.html'>mirror it</a>.</p>
-<!-- End of opening header -->
+LaTeX maintainers.  Our ultimate goal is to cover all (non-private)
+LaTeX commands.  Your comments and contributions, including bug
+reports, are very welcome.  See <a
+href='https://latexref.xyz/dev/'>our project page</a> for more,
+including <a href='https://latexref.xyz/dev/#license'>license
+information</a> and information on how you can <a
+href='https://latexref.xyz/dev/writing.html'>contribute to this
+manual</a> as well as <a
+href='https://latexref.xyz/dev/mirroring.html'>mirror it</a>.</p> <!--
+End of opening header -->
 @end html
 
 @titlepage
@@ -205,8 +202,8 @@ This document is an unofficial reference manual (version of
 * Page styles::			Various styles of page layout.
 * Spaces::		        Horizontal and vertical space.
 * Boxes::                       Making boxes.
-* Color::                       Defining and using colors.
 * Graphics::                    Importing graphics from outside @LaTeX{}.
+* Color::                       Defining and using colors.
 * Special insertions::		Inserting reserved and special characters.
 * Splitting the input::		Dealing with big files by splitting.
 * Front/back matter::		Tables of contents, glossaries, indexes.
@@ -248,6 +245,8 @@ by the @LaTeX{} maintainers.
 @cindex reporting bugs
 Do not send bug reports or anything else about this document to them.
 Instead, please send all comments to @email{@value{LTXREFMAN_BUGS}}.
+This is a public list; you can (un)subscribe, view the archives, etc.,
+at @url{https://lists.tug.org/latexrefman}.
 
 This document is a reference, not a tutorial.  There is a vast array
 of other information available about @LaTeX{}, at all levels.  Here
@@ -267,8 +266,7 @@ Writing your first document, with a bit of both text and math.
 A longer introduction to @LaTeX{}, translated to many languages.
 
 @item https://tug.org/begin.html
-Introduction to the @TeX{} system, including @LaTeX{}, with further
-references.
+Overview of getting started with @TeX{} and @LaTeX{}.
 
 @end table
 
@@ -294,11 +292,12 @@ along with interspersed commands. The default encoding for the text is
 UTF-8 (as of 2018). The commands specify, for example, how the text
 should be formatted. 
 
-@LaTeX{} is implemented as a set of related so-called ``macros'' which
-use Donald@tie{}E. Knuth's @TeX{} typesetting program or one of its
-derivatives, collectively known as ``engines''. Thus, the user
-produces output, typically PDF, by giving the input file to a @TeX{}
-engine. (The following sections describe all this in more detail.)
+@LaTeX{} is implemented as a set of so-called ``macros'' (a @TeX{}
+@dfn{format}) which use Donald@tie{}E. Knuth's @TeX{} typesetting
+program or one of its derivatives, collectively known as
+``engines''. Thus, the user produces output, typically PDF, by giving
+the input file to a @TeX{} engine. The following sections describe
+all this in more detail.
 
 The term @LaTeX{} is also sometimes used to mean the language in which
 the input document is marked up, that is, to mean the set of commands
@@ -315,9 +314,11 @@ sensible, such as in plain text, write it as @samp{LaTeX}.
 * Starting and ending::     The standard beginning and end of a document.
 * Output files::            Files produced.
 * @TeX{} engines::          Programs that can compile @TeX{} and @LaTeX{}.
+* Input text::              Input encodings and special characters.
 * @LaTeX{} command syntax:: General syntax of @LaTeX{} commands.
-* Environment::             An area of the source with distinct behavior.
-* CTAN::                    Our repository.
+* Environment syntax::      \begin@{envname@} ... \end@{envname@}.
+* \DocumentMetadata::       Towards accessible PDF output.
+* CTAN::                    The TeX world's general repository.
 @end menu
 
 
@@ -330,7 +331,7 @@ sensible, such as in plain text, write it as @samp{LaTeX}.
 @cindex hello, world
 
 @LaTeX{} files have a simple global structure, with a standard beginning
-and ending.  This is a small example.
+and ending.  Here is a small example:
 
 @example
 \documentclass@{article@}
@@ -345,21 +346,22 @@ Every @LaTeX{} document has a @code{\begin@{document@}} line and an
 
 @cindex document class, defined
 @noindent
-Here, the @samp{article} is the @dfn{document class}.  It is implemented
-in a file @file{article.cls}.  You can use any document class on your
-system.  A few document classes are defined by @LaTeX{} itself, and vast
-array of others are widely available.  @xref{Document classes}.
+Here, the @samp{article} is the @dfn{document class}.  It is
+implemented in a file @file{article.cls}.  You can use any document
+class available on your system.  A few document classes are defined by
+@LaTeX{} itself, and a vast array of others are available.
+@xref{Document classes}.
 
 @cindex preamble, defined
 You can include other @LaTeX{} commands between the
 @code{\documentclass} and the @code{\begin@{document@}} commands.
 This area is called the @dfn{preamble}.
 
-The @code{\begin@{document@}}, @code{\end@{document@}} pair defines an
 @cindex environment
-@dfn{environment}; the @samp{document} environment (and no others) is
-required in all @LaTeX{} documents (@pxref{document}).  @LaTeX{} make
-available to you many environments that are documented here
+The @code{\begin@{document@}} @dots{} @code{\end@{document@}} pair
+defines an @dfn{environment}; the @samp{document} environment (and no
+others) is required in all @LaTeX{} documents (@pxref{document}).
+@LaTeX{} provides many environments that are documented here
 (@pxref{Environments}).  Many more are available to you from external
 packages, most importantly those available at CTAN (@pxref{CTAN}).
 
@@ -464,8 +466,8 @@ open-ended.
 @cindex @LaTeX{} format (@code{.fmt}) files
 @cindex format files, @TeX{}
 @findex .fmt @r{file}
-@LaTeX{} is a large set of commands that is executed by a @TeX{}
-program (@pxref{Overview}). Such a set of commands is called a
+@LaTeX{} is a large set of commands (macros) that is executed by a
+@TeX{} program (@pxref{Overview}). Such a set of commands is called a
 @dfn{format}, and is embodied in a binary @code{.fmt} file, which can
 be read much more quickly than the corresponding @TeX{} source.
 
@@ -494,7 +496,8 @@ command @command{etex}, but this is plain @TeX{} (and produces
 
 In other @TeX{} distributions, @command{latex} may invoke e-@TeX{}
 rather than pdf@TeX{}.  In any case, the e-@TeX{} extensions can be
-assumed to be available in @LaTeX{}.
+assumed to be available in @LaTeX{}, and a few extensions beyond
+e-@TeX{}, particularly for file manipulation.
 
 @item lualatex
 @cindex Lua@TeX{}
@@ -524,6 +527,15 @@ and translates that to PDF using the (@code{x})@code{dvipdfmx}
 program, but this process is automatic.  The @code{.xdv} file is only
 useful for debugging.
 
+@item hilatex
+@cindex Hi@TeX{}
+@cindex HINT format
+@cindex mobile output
+If @LaTeX{} is invoked via the system command @command{hilatex}, the
+Hi@TeX{} engine is run (@url{https://ctan.org/pkg/hitex}).  This
+program produces its own format, named HINT, designed especially for
+high-quality typesetting on mobile devices.
+
 @item platex
 @itemx uplatex
 These commands provide significant additional support for Japanese and
@@ -532,7 +544,7 @@ other languages; the @code{u} variant supports Unicode.  See
 @end ftable
 
 As of 2019, there is a companion @code{-dev} command and format for
-all of the above:
+all of the above, except @code{hitex}:
 
 @ftable @code
 @item dvilualatex-dev
@@ -565,6 +577,218 @@ For more information, see ``The @LaTeX{} release workflow and the
 
 @end ftable
 
+
+@node Input text
+@section Input text
+
+To a first approximation, most input characters in @LaTeX{} print as
+themselves. But there are exceptions, as discussed in the following
+sections.
+
+@menu
+* Input encodings::
+* Ligatures::            Combined characters: ff fi fl ffi ffl `` '' -- --- `! `?
+* Special characters::   With special meaning: @code{\ @{ @} % $ & _ ^ # ~}
+@end menu
+
+
+@node Input encodings
+@subsection Input encodings
+
+@cindex character encoding
+@cindex input encodings
+@cindex encodings, input
+
+The input to @TeX{} (or any computer program) ultimately consists of a
+sequence of bytes. (Nowadays, a byte is almost universally an
+eight-bit number, i.e., an integer between 0 and 255, inclusive.) The
+input encoding defines how to interpret that sequence of bytes, and
+thus how @LaTeX{} behaves.
+
+@c UTF-8
+@cindex Unicode
+Today, by far the most common way to encode text is with @dfn{UTF-8}, a
+so-called ``Unicode Transformation Format'' which specifies how to
+transform a sequence of 8-bit bytes to Unicode code points, which are
+defined independent of any particular representation. The Unicode
+encoding defines code points for virtually all characters used
+today in written text.
+
+When @TeX{} was created, Unicode and UTF-8 did not exist and the 7-bit
+ASCII encoding was by far the most widely used. So @TeX{} does not
+require Unicode for text input. UTF-8 is a superset of ASCII, so a
+pure 7-bit ASCII document is also UTF-8.
+
+Since 2018, the default input encoding for @LaTeX{} is UTF-8. 
+Some methods for handling documents written in some other encoding,
+such as ISO-8859-1 (Latin 1), are explained in @ref{inputenc package}.
+
+You can easily find more about all these topics in any introductory
+computer text or online. For example, you might start at:
+@url{https://en.wikipedia.org/wiki/Unicode}.
+
+@node Ligatures
+@subsection Ligatures
+
+@cindex ligatures
+
+A @dfn{ligature} combines two or more letters (more generally,
+characters) into a single glyph.  For example, in Latin-based
+typography, the two letters @samp{f} and @samp{i} are often combined
+into the glyph `fi'.  
+
+@TeX{} supports ligatures automatically. To continue the example, if
+the input has the word @samp{fine}, written as four separate ASCII
+characters, @TeX{} will output the word `fine' (with the default
+fonts), with three typeset glyphs.
+
+In traditional @TeX{}, the available ligatures, if any, are defined by
+the current font.  @TeX{} also uses the ligature mechanism to produce
+a few typographical characters which were not available in any
+computer encoding when @TeX{} was invented.  In all, in the original
+Computer Modern fonts, the following input character sequences are
+defined to lead to ligatures:
+
+@cindex f-ligatures
+@cindex double quotation marks, as ligatures
+@cindex quotation marks, as ligatures
+@cindex en-dash, as ligature
+@cindex em-dash, as ligature
+@cindex inverted exclamation mark, as ligature
+@cindex inverted question mark, as ligature
+@cindex Spanish exclamation mark, as ligature
+@cindex Spanish question mark, as ligature
+
+@table @samp
+@item ff
+ff (f@r{}f ligature, U+FB00)
+@item fi
+fi (f@r{}i ligature, U+FB01)
+@item fl
+fl (f@r{}l ligature, U+FB02)
+@item ffi
+ffi (f@r{}f@r{}i ligature, U+FB03)
+@item ffl
+ffl (f@r{}f@r{}l ligature, U+FB04)
+@item ``
+`` (left double quotation mark, U+201C)
+@item ''
+'' (right double quotation mark, U+201D)
+@item --
+-- (en-dash, U+2013)
+@item ---
+--- (em-dash, U+2014)
+@item !`
+!` (inverted exclamation mark, U+00A1)
+@item ?`
+?` (inverted question mark, U+00BF)
+@end table
+
+@noindent (For the f-ligatures above, the text in parentheses shows the
+individual characters, so in the typeset output you can easily see the
+difference between the ligature and the original character sequence.)
+
+Nowadays it's usually possible to directly input the punctuation
+characters as Unicode characters, and @LaTeX{} supports that (see
+previous section).  But even today, it can still often be useful to
+use the ASCII ligature input form; for example, the difference between
+an en-dash and em-dash, as a single glyph, can be all but impossible
+to discern, but the difference between two and three ASCII hyphen
+characters is clear.  Similarly with quotation marks, in some fonts.
+
+Thus, even the engines with native support for UTF-8, namely Lua@TeX{}
+and Xe@TeX{}, also support the ASCII ligature input sequences by
+default, independent of the font used.  They also need to do so for
+compatibility.
+
+@cindex alphabetic presentation forms Unicode block
+By the way, the f-ligatures are also available in Unicode (the
+``Alphabetic Presentation Forms'' block starting at U+FB00), but it's
+almost never desirable to use them as input characters, since in
+principle it should be up to the typesetter and the current font
+whether to use ligatures.  Also, in practice, using them will
+typically cause searches to fail, that is, a search for the two
+characters @samp{fi} will not be matched by the ligature `fi' at
+U+FB01.
+
+
+@node Special characters
+@subsection Special characters: @code{\ @{ @} % $ & _ ^ # ~}
+
+@anchor{Reserved characters}@c old node name
+@cindex reserved characters, meaning of
+@cindex special characters, meaning of
+@cindex meaning of special characters
+
+Besides ligatures (see previous section), a few individual characters
+have special meaning to @LaTeX{}. They are called @dfn{reserved
+characters} or @dfn{special characters}.  Here they are:
+
+@table @samp
+@item \
+@findex \ @r{character}, meaning of
+@cindex backslash, meaning of
+Introduces a command name, as seen throughout this manual.
+
+@item @{
+@itemx @}
+@findex @{ @r{character}, meaning of
+@findex @} @r{character}, meaning of
+@cindex left brace, meaning of
+@cindex right brace, meaning of
+@cindex braces, meaning of
+@cindex curly braces, meaning of
+Delimits a required argument to a command or a level of grouping, as
+seen throughout this manual.
+
+@item % 
+@findex % @r{character}, meaning of
+@cindex percent character, meaning of
+Starts a comment: the @samp{%} and all remaining characters on the
+current line are ignored.
+
+@item $
+@findex $ @r{character}, meaning of
+@cindex dollar sign character, meaning of
+Starts and ends math mode (@pxref{Math formulas}).
+
+@item &
+@findex & @r{character}, meaning of
+@cindex ampersand character, meaning of
+Separates cells in a table (@pxref{tabular}).
+
+@item _ 
+@itemx ^
+@findex _ @r{character}, meaning of
+@findex ^ @r{character}, meaning of
+@cindex underscore character, meaning of
+@cindex hat character, meaning of
+@cindex caret character, meaning of
+Introduce a subscript or superscript, respectively, in math
+(@pxref{Subscripts & superscripts}); they produce an error outside
+math mode.  As a little-used special feature, two superscript
+characters in a row can introduce special notation for an arbitrary
+character.
+
+@item # 
+@findex # @r{character}, meaning of
+@cindex number sign character (@code{#}), meaning of
+@cindex sharp character (@code{#}), meaning of
+@cindex hash character (@code{#}), meaning of
+Stands for arguments in a macro definition (@pxref{\newcommand &
+\renewcommand}).
+
+@item ~ 
+@findex ~ @r{character}, meaning of
+@cindex tilde character, meaning of
+Produces a nonbreakable interword space (@pxref{~}).
+
+@end table
+
+@xref{Printing special characters}, for how to typeset these
+characters when you need them literally.
+
+
 @node @LaTeX{} command syntax
 @section @LaTeX{} command syntax
 
@@ -576,17 +800,18 @@ In the @LaTeX{} input file, a command name starts with a backslash
 character, @code{\}.  The name itself then consists of either
 (a)@tie{}a string of letters or (b)@tie{}a single non-letter.
 
-@LaTeX{} commands names are case sensitive so that @code{\pagebreak}
-differs from @code{\Pagebreak} (the latter is not a standard command).
-Most command names are lowercase, but in any event you must enter all
-commands in the same case as they are defined.
+@LaTeX{} commands names are case sensitive; for example,
+@code{\pagebreak} differs from @code{\Pagebreak} (the latter is not a
+standard command).  Most command names are lowercase, but in any event
+you must enter all commands in the same case as they are defined.
 
 A command may be followed by zero, one, or more arguments. These
 arguments may be either required or optional.  Required arguments are
 contained in curly braces, @code{@{...@}}.  Optional arguments are
 contained in square brackets, @code{[...]}.  Generally, but not
 universally, if the command accepts an optional argument, it comes
-first, before any required arguments.
+first, before any required arguments; optional arguments could come
+after required arguments, or both before and after.
 
 Inside of an optional argument, to use the character close square
 bracket@tie{}(@code{]}) hide it inside curly braces, as
@@ -595,10 +820,10 @@ argument comes last, with no required argument after it, then to make
 the first character of the following text be an open square bracket,
 hide it inside curly braces.
 
-@LaTeX{} has the convention that some commands have a @code{*} form that
-is related to the form without a @code{*}, such as @code{\chapter} and
-@code{\chapter*}.  The exact difference in behavior varies from command
-to command.
+@LaTeX{} has the convention that some commands have a @code{*} form
+that is closely related to the form without a @code{*}, such as
+@code{\chapter} and @code{\chapter*}.  The difference in behavior
+varies from command to command.
 
 This manual describes all accepted options and @code{*}-forms for the
 commands it covers (barring unintentional omissions, a.k.a.@: bugs).
@@ -609,11 +834,12 @@ commands it covers (barring unintentional omissions, a.k.a.@: bugs).
 As of the 2020-10-01 release of @LaTeX{}, the @package{expl3} and
 @package{xparse} packages are part of the @LaTeX{}2e format.  They
 provide a completely different underlying programming language
-syntax. We won't try to cover them in this document; see the related
+syntax. We won't try to cover that in this document; see the related
 package documentation and other @LaTeX{} manuals.
 
-@node Environment
-@section Environment
+
+@node Environment syntax
+@section Environment syntax
 
 Synopsis:
 
@@ -650,9 +876,49 @@ required (it specifies the formatting of columns).
 
 @example
 \begin@{tabular@}[t]@{r|l@}
-  ... rows of table ...
+  ... @var{rows-of-table} ...
 \end@{tabular@}
 @end example 
+
+
+@node \DocumentMetadata
+@section @code{\DocumentMetadata}: Producing tagged PDF output
+
+@findex \DocumentMetadata
+@cindex tagged PDF
+@cindex PDF, tagged
+@cindex metadata, adding
+@cindex accessibility
+
+The @code{\DocumentMetadata} command was added to @LaTeX{} in 2022.
+It enables so-called ``tagging'' of the PDF output, aiding
+accessibility of the PDF.  It is supported best with Lua@LaTeX{};
+pdf@LaTeX{} and Xe@LaTeX{} are supported as well as possible
+(@pxref{@TeX{} engines}).
+
+It is unlike nearly any other command in @LaTeX{} in that it must
+occur before the @code{\documentclass} command that starts a @LaTeX{}
+document proper (@pxref{\documentclass}).  Therefore it must be
+called with @code{\RequirePackage} rather than @code{\usepackage}
+(@pxref{\RequirePackage}).
+
+@PkgIndex{latex-lab}
+@findex documentmetadata-support-doc @r{document}
+This support is still in development, so we will not try to list all 
+the possible settings. Please see the
+@code{documentmetadata-support-doc} document, part of the
+@code{latex-lab} package (@url{https://ctan.org/pkg/latex-lab}). Here
+is a simple example which enables most tagging currently implemented:
+
+@example
+\DocumentMetadata@{testphase=@{phase-III,firstaid@}@}
+\documentclass@{article@}
+...
+@end example
+
+As you can see from the key name @code{testphase}, this is all still
+in an experimental phase. The @LaTeX{} developers strongly encourage
+users to give it a try and report problems, so it can be improved.
 
 
 @node CTAN
@@ -671,7 +937,7 @@ person or a small number of people.  For instance, many publishers have
 a package that allows authors to format papers to that publisher's
 specifications.
 
-In addition to the massive holdings, the @code{ctan.org} web site
+In addition to its massive holdings, the @code{ctan.org} web site
 offers features such as search by name or by functionality.
 
 @cindex DANTE e.V.
@@ -692,12 +958,14 @@ site. The list of mirrors is at @url{https://ctan.org/mirrors}.
 @node Document classes
 @chapter Document classes
 
+@anchor{\documentclass}
 @cindex document classes
 @cindex classes of documents
 @findex \documentclass
 
-The document's overall class is defined with this command, which is
-normally the first command in a @LaTeX{} source file.
+The document's overall class is defined with the @code{\documentclass}
+command, which is normally the first command in a @LaTeX{} source
+file.
 
 @example
 \documentclass[@var{options}]@{@var{class}@}
@@ -709,8 +977,8 @@ normally the first command in a @LaTeX{} source file.
 @findex letter @r{class}
 @findex slides @r{class}
 The following document @var{class} names are built into @LaTeX{}.
-(Many other document classes are available as separate packages;
-@pxref{Overview}.)
+Many other document classes are available as separate packages
+(@pxref{Overview}).
 
 @table @code
 @item article
@@ -736,7 +1004,7 @@ such as technical reports or theses, which may contain several chapters.
 @item slides
 @anchor{document classes slides}
 For slide presentations---rarely used nowadays. The
-@package{beamer} package is perhaps the most prevalent
+@package{beamer} package is perhaps the most prevalent replacement
 (@url{https://ctan.org/pkg/beamer}). @xref{beamer template}, for a
 small template for a beamer document.
 
@@ -745,9 +1013,9 @@ small template for a beamer document.
 Standard @var{options} are described in the next section.
 
 @menu
-* Document class options::   Global options.
-* Additional packages::       Bring in packages.
-* Class and package construction::   Create new classes and packages.
+* Document class options::           Global options.
+* \usepackage::                      Bring in additional packages.
+* Class and package creation::       Writing new classes and packages.
 @end menu
 
 
@@ -767,13 +1035,17 @@ specify more than one @var{option}, separate them with a comma.
 \documentclass[@var{option1},@var{option2},...]@{@var{class}@}
 @end example
 
+@LaTeX{} automatically passes options specified for
+@code{\documentclass} on to any other loaded classes that can handle
+them.
+
 Here is the list of the standard class options.
 
 @findex 10pt @r{option}
 @findex 11pt @r{option}
 @findex 12pt @r{option}
 All of the standard classes except @code{slides} accept the following
-options for selecting the typeface size (default is @code{10pt}):
+options for selecting the typeface size; the default is @code{10pt}:
 
 @example
 10pt  11pt  12pt
@@ -786,7 +1058,7 @@ options for selecting the typeface size (default is @code{10pt}):
 @findex legalpaper @r{option}
 @findex letterpaper @r{option}
 All of the standard classes accept these options for selecting the paper
-size (these show height by width):
+size (dimensions are listed height by width):
 
 @table @code 
 @item a4paper 
@@ -813,12 +1085,12 @@ size (these show height by width):
 @PkgIndex{geometry}
 When using one of the engines pdf@LaTeX{}, Lua@LaTeX{}, or Xe@LaTeX{}
 (@pxref{@TeX{} engines}), options other than @code{letterpaper} set
-the print area but you must also set the physical paper size.  One way
-to do that is to put @code{\pdfpagewidth=\paperwidth} and
-@code{\pdfpageheight=\paperheight} in your document's preamble.
-@PkgIndex{geometry}
-The @package{geometry} package provides flexible ways of setting the print
-area and physical page size.
+the print area but you must also set the physical paper size. Usually,
+the @package{geometry} package is the best way to do that; it
+provides flexible ways of setting the print area and physical page size.
+Otherwise, setting the paper size is engine-dependent.  For example,
+with pdf@LaTeX{}, you could include @code{\pdfpagewidth=\paperwidth} and
+@code{\pdfpageheight=\paperheight} in the preamble.
 
 @findex draft @r{option}
 @findex final @r{option}
@@ -906,33 +1178,45 @@ The @code{slides} class offers the option @code{clock} for printing
 the time at the bottom of each note.
 
 
-@node Additional packages
-@section Additional packages
+@node \usepackage
+@section @code{\usepackage}: Additional packages
 
+@anchor{Additional packages}@c original node name
 @cindex loading additional packages
 @cindex packages, loading additional
 @cindex additional packages, loading
 @findex \usepackage
-Load a package @var{pkg}, with the package options given in the comma-separated
-list @var{options}, as here.
+To load a package @var{pkg}, with the package options given in the
+comma-separated list @var{options}:
 
 @example
-\usepackage[@var{options}]@{@var{pkg}@}.
+\usepackage[@var{options}]@{@var{pkg}@}[@var{mindate}]
 @end example
 
 To specify more than one package you can separate them with a comma,
 as in @code{\usepackage@{@var{pkg1},@var{pkg2},...@}}, or use multiple
 @code{\usepackage} commands.
 
+If the @var{mindate} optional argument is given, @LaTeX{} gives a
+warning if the loaded package has an earlier date, i.e., is too old.
+The @var{mindate} argument must be in the form @code{YYYY/MM/DD}.
+More info on this: @url{https://tex.stackexchange.com/questions/47743}.
+
+@code{\usepackage} must be used in the document preamble, between the
+@code{\documentclass} declaration and the @code{\begin@{document@}}.
+Occasionally it is necessary to load packages before the
+@code{\documentclass}; see @code{\RequirePackage} for that
+(@pxref{\RequirePackage}).
+
 @cindex global options
 @cindex options, global
-Any options given in the @code{\documentclass} command that are unknown
-to the selected document class are passed on to the packages loaded with
-@code{\usepackage}.
+Any options given in the global @code{\documentclass} command that are
+unknown to the selected document class are passed on to the packages
+loaded with @code{\usepackage}.
 
 
-@node Class and package construction
-@section Class and package construction
+@node Class and package creation
+@section Class and package creation
 
 @cindex document class commands
 @cindex commands, document class
@@ -944,28 +1228,29 @@ standard header for each page, then you could create a new class
 @code{smcmemo.cls} and begin your documents with
 @code{\documentclass@{smcmemo@}}.
 
-What separates a package from a document class is that the commands in a
-package are useful across classes while those in a document class are
-specific to that class.  Thus, a command to set page headers is for a
-package while a command to make the page headers say @code{Memo from the
-SMC Math Department} is for a class.
 @cindex class and package difference
 @cindex difference between class and package
+What separates a package from a document class is that the commands in
+a package are useful across classes while those in a document class
+are specific to that class.  Thus, a command to set page headers is
+for a package while a command to make the page headers be
+@code{Memo from the SMC Math Department} is for a class.
 
-Inside of a class or package file you can use the at-sign @code{@@} as a
-character in command names without having to surround the code
-containing that command with @code{\makeatletter} and
-@code{\makeatother}.  @xref{\makeatletter & \makeatother}. This allow
-you to create commands that users will not accidentally redefine.
-Another technique is to preface class- or package-specific commands with
-some string to prevent your class or package from interfering with
-others. For instance, the class @code{smcmemo} might have commands
+Inside of a class or package definition you can use the at-sign
+@code{@@} as a character in command names without having to surround
+the code containing that command with @code{\makeatletter} and
+@code{\makeatother} (@pxref{\makeatletter & \makeatother}).  This
+allows you to create commands that users will not accidentally
+redefine.
+
+It is also highly desirable to prefix class- or package-specific
+commands with your package name or similar string, to prevent your
+definitions from clashing with those from other packages. For
+instance, the class @code{smcmemo} might have commands
 @code{\smc@@tolist}, @code{\smc@@fromlist}, etc.
-
 
 @menu
 * Class and package structure::     Layout of the file.
-* Class and package commands::      List of commands.
 @end menu
 
 
@@ -981,6 +1266,7 @@ others. For instance, the class @code{smcmemo} might have commands
 @cindex package options
 
 A class file or package file typically has four parts.  
+
 @enumerate
 @item
 In the @dfn{identification part}, the file says that it is a @LaTeX{}
@@ -1011,6 +1297,7 @@ usually does most of its work: declaring new variables, commands and
 fonts, and loading other files.
 @end enumerate
 
+@cindex class file example
 Here is a starting class file, which should be saved as @file{stub.cls}
 where @LaTeX{} can find it, for example in the same directory as the
 @file{.tex} file.
@@ -1022,443 +1309,22 @@ where @LaTeX{} can find it, for example in the same directory as the
 \ProcessOptions\relax
 \LoadClass@{article@}
 @end example
-@cindex class file example
 
 @noindent
 It identifies itself, handles the class options via the default of
 passing them all to the @code{article} class, and then loads the
 @code{article} class to provide the basis for this class's code.
 
+@findex clsguide @r{document}
+@cindex Class Guide, document
+@cindex class writing tutorial document
 For more, see the official guide for class and package writers, the
-Class Guide, at
-@url{https://www.latex-project.org/help/documentation/clsguide.pdf} (much
-of the descriptions here derive from this document), or the tutorial
-@url{https://www.tug.org/TUGboat/tb26-3/tb84heff.pdf}.
+Class Guide, at @url{https://ctan.org/pkg/clsguide} (much of the
+description here derives from this document), or the tutorial at
+@url{https://tug.org/TUGboat/tb26-3/tb84heff.pdf}.
 
-
-@node Class and package commands
-@subsection Class and package commands
-@cindex class and package commands
-@cindex commands, class and package
-
-These are the commands designed to help writers of classes or packages.
-
-@table @code
-@item \AtBeginDvi@{specials@}
-@findex \AtBeginDvi
-Save in a box register things that are written to the @file{.dvi} file
-at the beginning of the shipout of the first page of the document.
-
-@item \AtEndOfClass@{@var{code}@}
-@itemx \AtEndOfPackage@{@var{code}@}
-@findex \AtEndOfClass
-@findex \AtEndOfPackage
-Hook to insert @var{code} to be executed when @LaTeX{} finishes
-processing the current class or package.  You can use these hooks
-multiple times; the @code{code} will be executed in the order that you
-called it.  See also @ref{\AtBeginDocument}.
-
-@item \CheckCommand@{@var{cmd}@}[@var{num}][@var{default}]@{@var{definition}@}
-@itemx \CheckCommand*@{@var{cmd}@}[@var{num}][@var{default}]@{@var{definition}@}
-@findex \CheckCommand
-@findex \CheckCommand*
-@cindex new command, checking
-Like @code{\newcommand} (@pxref{\newcommand & \renewcommand}) but does
-not define @var{cmd}; instead it checks that the current definition of
-@var{cmd} is exactly as given by @var{definition} and is or is not 
-@cindex long command
-@dfn{long} as expected.  A long command is a command that accepts
-@code{\par} within an argument.  The @var{cmd} command is expected to be
-long with the unstarred version of @code{\CheckCommand}.  Raises an
-error when the check fails.  This allows you to check before you start
-redefining @code{cmd} yourself that no other package has already
-redefined this command.
-
-@item \ClassError@{@var{class name}@}@{@var{error text}@}@{@var{help text}@}
-@itemx \ClassWarning@{@var{class name}@}@{@var{warning text}@}
-@itemx \ClassWarningNoLine@{@var{class name}@}@{@var{warning text}@}
-@itemx \ClassInfo@{@var{class name}@}@{@var{info text}@}
-@itemx \ClassInfoNoLine@{@var{class name}@}@{@var{info text}@}
-@itemx \PackageError@{@var{package name}@}@{@var{error text}@}@{@var{help text}@}
-@itemx \PackageWarning@{@var{package name}@}@{@var{warning text}@}
-@itemx \PackageWarningNoLine@{@var{package name}@}@{@var{warning text}@}
-@itemx \PackageInfo@{@var{package name}@}@{@var{info text}@}
-@itemx \PackageInfoNoLine@{@var{package name}@}@{@var{info text}@}
-@findex \ClassError
-@findex \PackageError
-@findex \ClassWarning
-@findex \PackageWarning
-@findex \ClassWarningNoLine
-@findex \PackageWarningNoLine
-@findex \ClassInfo
-@findex \PackageInfo
-@findex \ClassInfoNoLine
-@findex \PackageInfoNoLine
-Produce an error message, or warning or informational messages.
-
-For @code{\ClassError} and @code{\PackageError} the message is
-@var{error text}, followed by @TeX{}'s @code{?} error prompt. If the
-user then asks for help by typing @code{h}, they see the @var{help
-text}.
-
-The four warning commands are similar except that they write
-@var{warning text} on the screen with no error prompt.  The four info
-commands write @var{info text} only in the transcript file.  The
-@code{NoLine} versions do not show the number of the line generating the
-message, while the other versions do show that number.
-
-To format the messages, including the @var{help text}: use
-@code{\protect} to stop a command from expanding, get a line break with
-@code{\MessageBreak}, and get a space with @code{\space} when a space
-character does not allow it, like after a command.  Note that @LaTeX{}
-appends a period to the messages.
-
-@item \CurrentOption
-@findex \CurrentOption
-Expands to the name of the currently-being-processed option.  Can only
-be used within the @var{code} argument of either @code{\DeclareOption}
-or @code{\DeclareOption*}.
-
-@item \DeclareOption@{@var{option}@}@{@var{code}@}
-@itemx \DeclareOption*@{@var{code}@}
-@findex \DeclareOption
-@findex \DeclareOption*
-@cindex class options
-@cindex package options
-@cindex options, class
-@cindex options, package
-Make an option available to a user to invoke in their
-@code{\documentclass} command.  For example, the @code{smcmemo} class
-could have an option @code{\documentclass[logo]@{smcmemo@}} allowing
-users to put the institutional logo on the first page.  The class file
-must contain @code{\DeclareOption@{logo@}@{@var{code}@}} (and later,
-@code{\ProcessOptions}).
-
-If you request an option that has not been declared, by default this
-will produce a warning like @code{Unused global option(s):
-[badoption].}  Change this behavior with the starred version
-@code{\DeclareOption*@{@var{code}@}}.  For example, many classes
-extend an existing class, using a command such as
-@code{\LoadClass@{article@}}, and for passing extra options to the
-underlying class use code such as this.
-
-@example
-\DeclareOption*@{%
-\PassOptionsToClass@{\CurrentOption@}@{article@}%
-@}
-@end example
-
-Another example is that the class @code{smcmemo} may allow users to keep
-lists of memo recipients in external files.  Then the user could invoke
-@code{\documentclass[math]@{smcmemo@}} and it will read the file
-@code{math.memo}.  This code handles the file if it exists and otherwise
-passes the option to the @code{article} class.
-
-@example
-\DeclareOption*@{\InputIfFileExists@{\CurrentOption.memo@}@{@}@{%
-    \PassOptionsToClass@{\CurrentOption@}@{article@}@}@}
-@end example
-
-@item \DeclareRobustCommand@{@var{cmd}@}[@var{num}][@var{default}]@{@var{definition}@} 
-@item* \DeclareRobustCommand*@{@var{cmd}@}[@var{num}][@var{default}]@{@var{definition}@}
-@findex \DeclareRobustCommand
-@findex \DeclareRobustCommand*
-@cindex new command, definition
-Like @code{\newcommand} and @code{\newcommand*} (@pxref{\newcommand &
-\renewcommand}) but these declare a robust command, even if some code
-within the @var{definition} is fragile.  (For a discussion of robust and
-fragile commands @pxref{\protect}.) Use this command to define new
-robust commands or to redefine existing commands and make them
-robust. Unlike @code{\newcommand} these do not give an error if macro
-@var{cmd} already exists; instead, a log message is put into the
-transcript file if a command is redefined.
-
-Commands defined this way are a bit less efficient than those defined
-using @code{\newcommand} so unless the command's data is fragile and the
-command is used within a moving argument, use @code{\newcommand}.
-
-@PkgIndex{etoolbox} The @package{etoolbox} package offers the commands
-@code{\newrobustcmd}, @code{\newrobustcmd*}, as well as the commands
-@code{\renewrobustcmd}, @code{\renewrobustcmd*}, and the commands
-@code{\providerobustcmd}, and @code{\providerobustcmd*}.  These are
-similar to @code{\newcommand}, @code{\newcommand*},
-@code{\renewcommand}, @code{\renewcommand*}, @code{\providecommand}, and
-@code{\providecommand*}, but define a robust @var{cmd} with two
-advantages as compared to @code{\DeclareRobustCommand}:
-@enumerate
-@item
-They use the low-level e-@TeX{} protection mechanism rather than the
-higher level @LaTeX{} @code{\protect} mechanism, so they do not incur
-the slight loss of performance mentioned above, and
-@item
-They make the same distinction between @code{\new@dots{}},
-@code{\renew@dots{}}, and @code{\provide@dots{}}, as the standard
-commands, so they do not just make a log message when you redefine
-@var{cmd} that already exists, in that case you need to use either
-@code{\renew@dots{}} or @code{\provide@dots{}} or you get an error.
-@end enumerate
-
-@item \IfFileExists@{@var{filename}@}@{@var{true code}@}@{@var{false code}@}
-@itemx \InputIfFileExists@{@var{filename}@}@{@var{true code}@}@{@var{false code}@}
-@findex \IfFileExists
-@findex \InputIfFileExists
-Execute @var{true code} if @LaTeX{} finds the file @file{@var{file
-name}} or @var{false code} otherwise.  In the first case it executing
-@var{true code} and then inputs the file.  Thus the command
-
-@example
-\IfFileExists@{img.pdf@}@{%
-  \includegraphics@{img.pdf@}@}@{\typeout@{!! img.pdf not found@}
-@end example
-
-@noindent
-will include the graphic @file{img.pdf} if it is found and otherwise
-give a warning.
-
-This command looks for the file in all search paths that @LaTeX{} uses,
-not only in the current directory.  To look only in the current
-directory do something like @code{\IfFileExists@{./filename@}@{@var{true
-code}@}@{@var{false code}@}}.  If you ask for a filename without a
-@code{.tex} extension then @LaTeX{} will first look for the file by
-appending the @code{.tex}; for more on how @LaTeX{} handles file
-extensions see @ref{\input}.
-
-@item \LoadClass[@var{options list}]@{@var{class name}@}[@var{release date}]
-@itemx \LoadClassWithOptions@{@var{class name}@}[@var{release date}]
-@findex \LoadClass
-@findex \LoadClassWithOptions
-Load a class, as with @code{\documentclass[@var{options
-list}]@{@var{class name}@}[@var{release info}]}.  An example is
-@code{\LoadClass[twoside]@{article@}}.
-
-The @var{options list}, if present, is a comma-separated list.  The
-@var{release date} is optional.  If present it must have the form
-@var{YYYY/MM/DD}.
-@c BTW, there are at-macros documented in macros2e.pdf to check the version
-@c and do some actions conditionnally on version later or not to some
-@c date.
-
-If you request a @var{release date} and the date of the package
-installed on your system is earlier, then you get a warning on the
-screen and in the log like this.
-
-@example
-You have requested, on input line 4, version `2038/01/19' of
-document class article, but only version `2014/09/29 v1.4h
-Standard LaTeX document class' is available.
-@end example
-
-The command version @code{\LoadClassWithOptions} uses the list of
-options for the current class.  This means it ignores any options passed
-to it via @code{\PassOptionsToClass}.  This is a convenience command
-that lets you build classes on existing ones, such as the standard
-@code{article} class, without having to track which options were passed.
-
-@item \ExecuteOptions@{@var{options-list}@}
-@findex \ExecuteOptions
-For each option @var{option} in the @var{options-list}, in order, this command
-executes the command @code{\ds@@@var{option}}.  If this command is not
-defined then that option is silently ignored.
-
-It can be used to provide a default option list before
-@code{\ProcessOptions}.  For example, if in a class file you want the
-default to be 11pt fonts then you could specify
-@code{\ExecuteOptions@{11pt@}\ProcessOptions\relax}.
-
-@item \NeedsTeXFormat@{@var{format}@}[@var{format date}]
-@findex \NeedsTeXFormat
-Specifies the format that this class must be run under.  Often issued
-as the first line of a class file, and most often used as:
-@code{\NeedsTeXFormat@{LaTeX2e@}}.  When a document using that class is
-processed, the format name given here must match the format that is
-actually being run (including that the @var{format} string is case
-sensitive).  If it does not match then execution stops with an error
-like @samp{This file needs format `LaTeX2e' but this is `xxx'.}
-
-To specify a version of the format that you know to have certain
-features, include the optional @var{format date} on which those features
-were implemented.  If present it must be in the form @code{YYYY/MM/DD}.
-If the format version installed on your system is earlier than
-@var{format date} then you get a warning like this.
-
-@example
-You have requested release `2038/01/20' of LaTeX, but only
-release `2016/02/01' is available.
-@end example
-
-@item \OptionNotUsed
-@findex \OptionNotUsed
-Adds the current option to the list of unused options.  Can only be used
-within the @var{code} argument of either @code{\DeclareOption} or
-@code{\DeclareOption*}.
-
-@c I cannot reproduce this behavior as it is documented in clsguide.
-@c In the absence of a @code{\DeclareOption*} declaration, @LaTeX{} issues
-@c on the console a warning like @code{LaTeX Warning: Unused global
-@c option(s): [unusedoption].} with the list of not-used options when it
-@c reaches @code{\begin@{document@}}.
-
-@item \PassOptionsToClass@{@var{option list}@}@{@var{class name}@}
-@itemx \PassOptionsToPackage@{@var{option list}@}@{@var{package name}@}
-@findex \PassOptionsToClass
-@findex \PassOptionsToPackage
-Adds the options in the comma-separated list @var{option list} to the
-options used by any future @code{\RequirePackage} or @code{\usepackage}
-command for package @var{package name} or the class @var{class name}.
-
-The reason for these commands is: you may load a package any number of
-times with no options but if you want options then you may only supply
-them when you first load the package.  Loading a package with options
-more than once will get you an error like @code{Option clash for package
-foo.} (@LaTeX{} throws an error even if there is no conflict between the
-options.)
-
-If your own code is bringing in a package twice then you can collapse
-that to once, for example replacing the two
-@code{\RequirePackage[landscape]@{geometry@}} and
-@code{\RequirePackage[margins=1in]@{geometry@}} with the single command
-@code{\RequirePackage[landscape,margins=1in]@{geometry@}}.
-
-However, imagine that you are loading @file{firstpkg} and inside that
-package it loads @file{secondpkg}, and you need the second package to be
-loaded with option @code{draft}.  Then before doing the first package
-you must queue up the options for the second package, like this.
-
-@example
-\PassOptionsToPackage@{draft@}@{secondpkg@}
-\RequirePackage@{firstpkg@}
-@end example
-
-@noindent
-(If @code{firstpkg.sty} loads an option in conflict with what you want
-then you may have to alter its source.)
-
-These commands are useful for general users as well as class and package
-writers.  For instance, suppose a user wants to load the @code{graphicx}
-package with the option @code{draft} and also wants to use a class
-@code{foo} that loads the @code{graphicx} package, but without that
-option. The user could start their @LaTeX{} file with
-@code{\PassOptionsToPackage@{draft@}@{graphicx@}\documentclass@{foo@}}.
-
-@item \ProcessOptions
-@itemx \ProcessOptions*@var{\@@options}
-@findex \ProcessOptions
-@findex \ProcessOptions*
-Execute the code for each option that the user has invoked.  Include it
-in the class file as @code{\ProcessOptions\relax} (because of the
-existence of the starred command).
-
-Options come in two types.  @dfn{Local options} have been specified for this
-particular package in the @var{options} argument of
-@code{\PassOptionsToPackage@{@var{options}@}},
-@code{\usepackage[@var{options}]}, or
-@code{\RequirePackage[@var{options}]}.  @dfn{Global options} are those given
-by the class user in @code{\documentclass[@var{options}]} (If an option
-is specified both locally and globally then it is local.)
-
-When @code{\ProcessOptions} is called for a package @file{pkg.sty}, the
-following happens:
-@enumerate
-@item
-For each option @var{option} so far declared
-with @code{\DeclareOption}, it looks to see if that option is either a
-global or a local option for @code{pkg}. If so then it executes the
-declared code.  This is done in the order in which these options were
-given in @file{pkg.sty}.
-@item
-For each remaining local option, it executes the command
-@code{\ds@@}@var{option} if it has been defined somewhere (other than by
-a @code{\DeclareOption}); otherwise, it executes the default option code
-given in @code{\DeclareOption*}. If no default option code has been
-declared then it gives an error message.  This is done in the order in
-which these options were specified.
-@end enumerate
-
-When @code{\ProcessOptions} is called for a class it works in the same
-way except that all options are local, and the default @var{code} for
-@code{\DeclareOption*} is @code{\OptionNotUsed} rather than an error.
-
-The starred version @code{\ProcessOptions*} executes the
-options in the order specified in the calling commands, rather than in
-the order of declaration in the class or package. For a package this
-means that the global options are processed first.
-
-@item \ProvidesClass@{@var{class name}@}[@var{release date} @var{brief additional information}]
-@itemx \ProvidesClass@{@var{class name}@}[@var{release date}]
-@itemx \ProvidesPackage@{@var{package name}@}[@var{release date} @var{brief additional information}]
-@itemx \ProvidesPackage@{@var{package name}@}[@var{release date}]
-@findex \ProvidesClass
-@findex \ProvidesPackage
-Identifies the class or package, printing a message to the screen and
-the log file.
-
-When you load a class or package, for example with
-@code{\documentclass@{smcmemo@}} or @code{\usepackage@{test@}}, @LaTeX{}
-inputs a file.  If the name of the file does not match the class or
-package name declared in it then you get a warning.  Thus, if you invoke
-@code{\documentclass@{smcmemo@}}, and the file @file{smcmemo.cls} has
-the statement @code{\ProvidesClass@{xxx@}} then you get a warning like
-@code{You have requested document class `smcmemo', but the document
-class provides 'xxx'.}  This warning does not prevent @LaTeX{} from
-processing the rest of the class file normally.
-
-If you include the optional argument then you must include a date,
-before any spaces, of the form @code{YYYY/MM/DD}. The rest of the
-optional argument is free-form, although it traditionally identifies the
-class, and is written to the screen during compilation and to the log
-file.  Thus, if your file @file{smcmemo.cls} contains the line
-@code{\ProvidesClass@{smcmemo@}[2008/06/01 v1.0 SMC memo class]} and
-your document's first line is @code{\documentclass@{smcmemo@}} then you
-will see @code{Document Class: smcmemo 2008/06/01 v1.0 SMC memo class}.
-
-The date in the optional argument allows class and package users to ask
-to be warned if the version of the class or package is earlier than
-@var{release date}.  For instance, a user could enter
-@code{\documentclass@{smcmemo@}[2018/10/12]} or
-@code{\usepackage@{foo@}[[2017/07/07]]} to require a class or package
-with certain features by specifying that it must be released no earlier
-than the given date.  (Although, in practice package users only rarely
-include a date, and class users almost never do.)
-
-@item \ProvidesFile@{@var{filename}@}[@var{additional information}]
-@findex \ProvidesFile
-Declare a file other than the main class and package files, such as
-configuration files or font definition files.  Put this command in that
-file and you get in the log a string like @code{File: test.config
-2017/10/12 config file for test.cls} for @var{filename} equal to
-@samp{test.config} and @var{additional information} equal to
-@samp{2017/10/12 config file for test.cls}.
-
-@item \RequirePackage[@var{option list}]@{@var{package name}@}[@var{release date}]
-@itemx \RequirePackageWithOptions@{@var{package name}@}[@var{release date}]
-@findex \RequirePackage
-@findex \RequirePackageWithOptions
-Load a package, like the command @code{\usepackage} (@pxref{Additional
-packages}). The @LaTeX{} development team strongly recommends use of
-these commands over Plain@tie{}@TeX{}'s @code{\input}; see the Class
-Guide.  An example is
-@code{\RequirePackage[landscape,margin=1in]@{geometry@}}.
-
-The @var{option list}, if present, is a comma-separated list.  The
-@var{release date}, if present, must have the form @var{YYYY/MM/DD}.  If
-the release date of the package as installed on your system is earlier
-than @var{release date} then you get a warning like @code{You have
-requested, on input line 9, version `2017/07/03' of package jhtest, but
-only version `2000/01/01' is available}.
-
-The @code{\RequirePackageWithOptions} version uses the list of options
-for the current class.  This means it ignores any options passed to it
-via @code{\PassOptionsToClass}.  This is a convenience command to allow
-easily building classes on existing ones without having to track which
-options were passed.
-
-The difference between @code{\usepackage} and @code{\RequirePackage} is
-small.  The @code{\usepackage} command is intended for the document file
-while @code{\RequirePackage} is intended for package and class files.
-Thus, using @code{\usepackage} before the @code{\documentclass} command
-causes @LaTeX{} to give error like @code{\usepackage before
-\documentclass}, but you can use @code{\RequirePackage} there.
-@end table
+@xref{Class and package commands}, for some of the commands
+specifically intended for class and package writers.
 
 
 @node Fonts
@@ -1560,7 +1426,8 @@ words with accented letters then @LaTeX{} will hyphenate them and your
 output can be copied and pasted.  (The optional second line allows you
 to directly enter accented characters into your source file.)
 
-@PkgIndex{lmodern} @PkgIndex{cm-super}
+@PkgIndex{lmodern}
+@PkgIndex{cm-super}
 If you are using an encoding such as @code{T1} and the characters appear
 blurry or do not magnify well then your fonts may be bitmapped,
 sometimes called raster or Type@tie{}3.  You want vector fonts.  Use a
@@ -1572,21 +1439,26 @@ declared, this package loads the encoding definition files, named
 @file{@var{font_encoding}enc.def}.  It also sets @code{\encodingdefault}
 to be the last encoding in the option list.
 
-These are the common values for @var{font_encoding}.
+These are the common values for @var{font_encoding}:
 
 @table @code
 @item OT1
-The original encoding for @TeX{}.  Limited to mostly English characters.
+@cindex OT1 encoding
+The original 7-bit encoding for @TeX{}.  Limited to mostly English characters.
 
 @item OMS, OML
 Math symbols and math letters encoding.
 
 @item T1
-@TeX{} text extended.  Sometimes called the Cork encoding for the Users
-Group meeting where it was developed.  Gives access to most European
-accented characters.  The most common option for this package.
+@cindex T1 encoding
+@cindex Cork encoding
+@TeX{} text extended.  Sometimes called the Cork encoding for the
+users group meeting where it was developed (1990).  Gives access to
+most European accented characters.  The most common option for this
+package.
 
 @item TS1
+@cindex TS1 (text companion) encoding
 Text Companion encoding.
 @end table
 
@@ -1602,13 +1474,13 @@ Modern family then you may need to load the package that selects your
 fonts before loading @file{fontenc}, to prevent the system from loading
 any @code{T1}@tie{}encoded fonts from the default.
 
-The @LaTeX{} team reserve encoding names starting with: @samp{T} for the
-standard text encodings with 256 characters, @samp{TS} for symbols that
-extend the corresponding T encodings, @samp{X} for test encodings,
-@samp{M} for standard math encodings with 256 characters, @samp{A} for
-special applications, @samp{OT} for standard text encodings with 128
-characters, and @samp{OM} for standard math encodings with 128
-characters (@samp{O} stands for @samp{obsolete}).
+The @LaTeX{} team reserves encoding names starting with: @samp{T} for
+the standard text encodings with 256 characters, @samp{TS} for symbols
+that extend the corresponding T encodings, @samp{X} for test
+encodings, @samp{M} for standard math encodings with 256 characters,
+@samp{A} for special applications, @samp{OT} for standard text
+encodings with 128 characters, and @samp{OM} for standard math
+encodings with 128 characters (@samp{O} stands for @samp{obsolete}).
 
 This package provides a number of commands, detailed below.  Many of
 them are encoding-specific, so if you have defined a command that works
@@ -1616,9 +1488,9 @@ for one encoding but the current encoding is different then the command
 is not in effect.
 
 @menu
-* \DeclareFontEncoding::           Define an encoding.
-* \DeclareTextAccent::             Define an accent in the encoding.
-* \DeclareTextAccentDefault::      Fallback for using an accent in the encoding.
+* \DeclareFontEncoding::          Define an encoding.
+* \DeclareTextAccent::            Define an accent in the encoding.
+* \DeclareTextAccentDefault::     Fallback for using an accent in the encoding.
 * \DeclareTextCommand & \ProvideTextCommand::  New encoding-specific command.
 * \DeclareTextCommandDefault & \ProvideTextCommandDefault::  Fallback for encoding-specific commands.
 * \DeclareTextComposite::   Directly access an accented glyph, in the encoding.
@@ -1943,14 +1815,14 @@ Define a symbol in the encoding @var{encoding} at the location
 mathematics.
 
 For example, this line from @file{t1enc.def} declares the number of the
-glyph to use for @BES{00AB,\hbox{\guillemotleft}}, the left guillemet.
+glyph to use for @BES{00AB,\hbox{\guillemetleft}}, the left guillemet.
 
 @example
-\DeclareTextSymbol@{\guillemotleft@}@{T1@}@{19@}
+\DeclareTextSymbol@{\guillemetleft@}@{T1@}@{19@}
 @end example
 
 @noindent
-The command @code{\DeclareTextCommand@{\guillemotleft@}@{T1@}@{\char
+The command @code{\DeclareTextCommand@{\guillemetleft@}@{T1@}@{\char
 19@}} has the same effect but is slower (@pxref{\DeclareTextCommand &
 \ProvideTextCommand}).
 
@@ -4122,7 +3994,7 @@ switches the chapters back to being not numbered.
 
 
 @node \@@startsection
-@section @code{\@@startsection}, typesetting sectional unit headings
+@section @code{\@@startsection}: Typesetting sectional unit headings
 
 @findex \@@startsection
 @cindex section, redefining
@@ -4136,15 +4008,15 @@ Synopsis:
 Used to help redefine the behavior of commands that start sectioning
 divisions such as @code{\section} or @code{\subsection}.
 
-Note that the @package{titlesec} package makes manipulation of sectioning
+The @package{titlesec} package makes manipulation of sectioning
 easier.  Further, while most requirements for sectioning commands can be
 satisfied with @code{\@@startsection}, some cannot.  For instance, in
 the standard @LaTeX{} @code{book} and @code{report} classes the commands
-@code{\chapter} and @code{\report} are not constructed in this way.  To
+@code{\chapter} and @code{\report} are not constructed using this.  To
 make such a command you may want to use the @code{\secdef} command.
 @c xx define, and make a cross reference to, secdef.
 
-Technically, @code{\@@startsection} has the form
+The @code{\@@startsection} macro is used like this:
 
 @example
 \@@startsection@{@var{name}@}
@@ -4169,7 +4041,7 @@ so that issuing
 
 @noindent
 redefines @code{\section} while keeping its standard calling form
-@code{\section*[@var{toctitle}]@{@var{title}@}} (in which, for reminder,
+@code{\section*[@var{toctitle}]@{@var{title}@}} (in which, as a reminder,
 the star@tie{}@code{*} is optional).  @xref{Sectioning}.  This implies
 that when you write a command like
 @code{\renewcommand@{\section@}@{...@}}, the
@@ -4226,8 +4098,8 @@ The absolute value of this length is the amount of vertical space that
 is inserted before this sectioning unit's title.  This space will be
 discarded if the sectioning unit happens to start at the beginning of a
 page.  If this number is negative then the first paragraph following the
-header is not indented, if it is non-negative then the first paragraph
-is indented.  (Note that the negative of @code{1pt plus 2pt minus 3pt}
+header is not indented; if it is non-negative then the first paragraph
+is indented.  (Example: the negative of @code{1pt plus 2pt minus 3pt}
 is @code{-1pt plus -2pt minus -3pt}.)
 
 For example, if @var{beforeskip} is @code{-3.5ex plus -1ex minus -0.2ex}
@@ -4703,7 +4575,7 @@ Environments are executed within a group.
 * tabbing::               Align text arbitrarily.
 * table::                 Floating tables.
 * tabular::               Align text in columns.
-* thebibliography::      Bibliography or reference list.
+* thebibliography::       Bibliography or reference list.
 * theorem::               Theorems, lemmas, etc.
 * titlepage::             For hand crafted title pages.
 * verbatim::              Simulating typed input.
@@ -5087,19 +4959,19 @@ displayed equation facilities.  For example, there are a number of
 ways in that package for having math text broken across lines.
 
 @findex \[...\] @r{display math}
-The construct @code{\[@var{math}\]} is a synonym for the environment
+The construct @code{\[ @var{math} \]} is a synonym for the environment
 @code{\begin@{displaymath@} @var{math} \end@{displaymath@}} but the
 latter is easier to work with in the source; for instance,
 searching for a square bracket may get false positives but the word
 @code{displaymath} will likely be unique.
 
 @findex $$...$$ @r{plain @TeX{} display math}
-(Aside: The construct @code{$$@var{math}$$} from Plain@tie{}@TeX{} is
-sometimes mistakenly used as a synonym for @code{displaymath}.  It is
+The construct @code{$$@var{math}$$} from Plain@tie{}@TeX{} is
+sometimes used as a synonym for @LaTeX{}'s @code{displaymath}.  It is
 not a synonym, and is not officially supported in @LaTeX{} at all;
 @code{$$} doesn't support the @code{fleqn} option (@pxref{Document
 class options}), has different vertical spacing, and doesn't perform
-consistency checks.)
+consistency checks.
 
 The output from this example is centered and alone on its line. 
 
@@ -5367,7 +5239,7 @@ except that @LaTeX{} puts an equation number flush to the right margin.
 The equation number is generated using the @code{equation} counter.
 
 You should have no blank lines between @code{\begin@{equation@}} and
-@code{\begin@{equation@}}, or @LaTeX{} will tell you that there is a
+@code{\end@{equation@}}, or @LaTeX{} will tell you that there is a
 missing dollar sign.
 
 @PkgIndex{amsmath}
@@ -5690,13 +5562,12 @@ see@tie{}@ref{flushright}.
 
 Unlike the @code{flushright} environment, the @code{\raggedleft}
 command does not start a new paragraph; it only changes how @LaTeX{}
-formats paragraph units.  To affect a paragraph unit's format, the
+formats paragraph units.  To affect a paragraph unit's formatting, the
 scope of the declaration must contain the blank line or @code{\end}
 command that ends the paragraph unit.
 
-For an example related to this environment, see@tie{}@ref{\raggedright},
-where one just have mutatis mutandis to replace @code{\raggedright} by
-@code{\raggedleft}.
+@xref{\raggedright}, for an example related to this environment;
+just replace @code{\raggedright} there by @code{\raggedleft}.
 
 
 @node itemize
@@ -5833,8 +5704,9 @@ within a single item (@code{\parskip} is not list-specific,
 \newenvironment@{itemize*@}%
   @{\begin@{itemize@}%
     \setlength@{\itemsep@}@{0pt@}%
-    \setlength@{\parsep@}@{0pt@}@}%
-    \setlength@{\parskip@}@{0pt@}@}%
+    \setlength@{\parsep@}@{0pt@}%
+    \setlength@{\parskip@}@{0pt@}%
+  @}%
   @{\end@{itemize@}@}
 @end example
 
@@ -5936,7 +5808,7 @@ different than the values shown here.) See also the figure that follows
 the list.  Each is a length (@pxref{Lengths}).  The vertical spaces are
 normally rubber lengths, with @code{plus} and @code{minus} components,
 to give @TeX{} flexibility in setting the page.  Change each with a
-command such as @code{\setlength@{itemsep@}@{2pt plus1pt minus1pt@}}.
+command such as @code{\setlength@{\itemsep@}@{2pt plus1pt minus1pt@}}.
 For some effects these lengths should be zero or negative.
 
 @ftable @code
@@ -7437,8 +7309,10 @@ function fact(n : integer) : integer;
          end;
 @end example
 
-@PkgIndex{algorithm2e} @PkgIndex{listings} @PkgIndex{minted}
+@PkgIndex{algorithm2e}
 @PkgIndex{fancyvrb}
+@PkgIndex{listings}
+@PkgIndex{minted}
 @noindent
 This example is just for illustration of the environment.  To actually
 typeset computer code in typewriter like this, a verbatim environment
@@ -8414,21 +8288,24 @@ help with this.
 
 @PkgIndex{listings}
 @PkgIndex{minted}
-One common use of verbatim input is to typeset computer code.  There are
-packages that are an improvement the @code{verbatim} environment.  For
-instance, one improvement is to allow the verbatim inclusion of external
-files, or parts of those files.  Such packages include @package{listings},
-and @package{minted}.
+One common use of verbatim input is to typeset computer code.  Some
+packages offer many features not provided by the @code{verbatim}
+environment; two of the most popular are @package{listings} and
+@package{minted}.  For example, they are capable of pretty-printing,
+line numbering, and selecting parts of files for a continuing listing.
 
 @PkgIndex{fancyvrb}
 @PkgIndex{verbatimbox}
 A package that provides many more options for verbatim environments is
 @package{fancyvrb}.  Another is @package{verbatimbox}.
 
-For a list of all the relevant packages, see CTAN (@pxref{CTAN}).
+For a list of all the relevant packages, see CTAN (@pxref{CTAN}),
+particularly the topics @code{listing}
+(@url{https://ctan.org/topic/listing}) and @code{verbatim}
+(@url{https://ctan.org/topic/verbatim}).
 
 @menu
-* \verb::       The macro form of the @code{verbatim} environment.
+* \verb::  The macro form of the @code{verbatim} environment.
 @end menu
 
 
@@ -8487,11 +8364,6 @@ The command's first argument is \verb*!filename with extension! and ...
 For typesetting Internet addresses, urls, the package @package{url}
 is a better option than the @code{\verb} command, since
 it allows line breaks.
-
-@PkgIndex{listings}
-@PkgIndex{minted}
-For computer code there are many packages with advantages over
-@code{\verb}.  One is @package{listings}, another is @package{minted}.
 
 @PkgIndex{cprotect}
 You cannot use @code{\verb} in the argument to a macro, for instance in
@@ -8594,7 +8466,8 @@ same time.
 * \obeycr & \restorecr::       Make each input line start a new output line.
 * \newline::                   Break the line
 * \- (hyphenation)::           Insert explicit hyphenation.
-* \discretionary::             Explicit control of the hyphen character.
+* \slash::                     Insert a breakable /.
+* \discretionary::             Explicit control of hyphenation character(s).
 * \fussy & \sloppy::           Be more or less particular with line breaking.
 * \hyphenation::               Tell @LaTeX{} how to hyphenate a word.
 * \linebreak & \nolinebreak::  Forcing & avoiding line breaks.
@@ -8813,6 +8686,23 @@ text then this forced break may look out of place, so this approach
 requires care.
 
 
+@node \slash
+@section @code{\slash}: breakable @samp{/}
+
+@findex \slash
+@cindex slash character, breakable
+
+The @code{\slash} command produces a @samp{/} character and then a
+penalty of the same value as an explicit @samp{-} character
+(@code{\exhyphenpenalty}). This allows @TeX{} to break a line at the
+@samp{/}, similar to a hyphen. Hyphenation is allowed in the word part
+preceding the @samp{/}, but not after. For example:
+
+@example
+The input\slash output of the program is complicated.
+@end example
+
+
 @node \discretionary
 @section @code{\discretionary} (generalized hyphenation point)
 @cindex hyphenation, discretionary
@@ -8960,7 +8850,7 @@ Synopsis:
 
 Declares allowed hyphenation points within the words in the list.  The
 words in that list are separated by spaces.  Show permitted points for
-hyphenation with a dash character, @code{-}.
+hyphenation with an ASCII dash character, @code{-}.
 
 Here is an example:
 
@@ -8969,7 +8859,7 @@ Here is an example:
 @end example
 
 Use lowercase letters.  @TeX{} will only hyphenate if the word matches
-exactly, no inflections are tried.  Multiple @code{\hyphenation}
+exactly; no inflections are tried.  Multiple @code{\hyphenation}
 commands accumulate.
 
 @c xx Re-align on LaTeX-fr which also mentions fontenc, and that
@@ -9268,11 +9158,10 @@ does not have these effects.
 
 @findex \samepage
 @findex samepage @r{environment}
-(There is an obsolete declaration @code{\samepage}, which tries to only
-allow a break between two paragraphs.  There is a related environment
-@code{samepage}, also obsolete.  Neither of these work reliably.  For
-more on keeping material on the same page, see the FAQ entry
-@url{https://texfaq.org/FAQ-nopagebrk}.)
+A declaration @code{\samepage} and corresponding @code{samepage}
+environment try to only allow breaks between paragraphs. They are not
+perfectly reliable.  For more on keeping material on the same page,
+see the FAQ entry @url{https://texfaq.org/FAQ-nopagebrk}.)
 
 
 @node Footnotes
@@ -9321,7 +9210,8 @@ Synopsis, one of:
 \footnote[@var{number}]@{@var{text}@}
 @end example
 
-Place a footnote @var{text} at the bottom of the current page.
+Place a footnote @var{text} at the bottom of the current page, with a
+footnote marker at the current position in the text.
 
 @example
 There are over a thousand footnotes in Gibbon's 
@@ -9357,13 +9247,17 @@ you make the change local then you may want to reset the counter with
 @anchor{footnote footnoterule}
 Produces the rule separating the main text on a page from the page's
 footnotes.  Default dimensions in the standard document classes (except
-@code{slides}, where it does not appear) is: vertical thickness of
+@code{slides}, where it does not appear) are: vertical thickness of
 @code{0.4pt}, and horizontal size of @code{0.4\columnwidth} long.
 Change the rule with something like this.
 
 @c Credit egreg: https://tex.stackexchange.com/a/21917
 @example
-\renewcommand@{\footnoterule@}@{% Kerns avoid vertical space
+% \footnoterule is expanded in vertical mode, thus \kern
+% commands ensure that no vertical space is created,
+% and the rule is separated vertically with 2pt
+% above the note text.
+\renewcommand*@{\footnoterule@}@{%
   \kern -3pt                         % This -3 is negative
   \hrule width \textwidth height 1pt % of the sum of this 1
   \kern 2pt@}                         % and this 2
@@ -9430,8 +9324,8 @@ and the third theorem.\footnotemark[\value@{footnote@}]
 If there are intervening footnotes then you must remember the value of
 the number of the common mark.  This example gives the same
 institutional affiliation to both the first and third authors
-(@code{\thanks} is a version of @code{\footnote}), by-hand giving the
-number of the footnote.
+(@code{\thanks} is a version of @code{\footnote}), by explicitly
+specifying the number of the footnote (@samp{1}).
 
 @example
 \title@{A Treatise on the Binomial Theorem@}
@@ -9441,19 +9335,6 @@ number of the footnote.
 \begin@{document@}
 \maketitle
 @end example 
-
-This uses a counter to remember the footnote number.  The third sentence
-is followed by the same footnote marker as the first.
-
-@example
-\newcounter@{footnoteValueSaver@}
-All babies are illogical.\footnote@{%
-  Lewis Carroll.@}\setcounter@{footnoteValueSaver@}@{\value@{footnote@}@}
-Nobody is despised who can manage a crocodile.\footnote@{%
-  Captain Hook.@}
-Illogical persons are despised.\footnotemark[\value@{footnoteValueSaver@}]
-Therefore, anyone who can manage a crocodile is not a baby.
-@end example
 
 @PkgIndex{cleveref}
 @PkgIndex{hyperref}
@@ -9471,6 +9352,19 @@ But the key lemma is from Tinker.\cref@{fn:TE@}
 
 @PkgIndex{hyperref}
 It will work with the package @package{hyperref}.
+
+This uses a counter to remember the footnote number.  The third sentence
+is followed by the same footnote marker as the first.
+
+@example
+\newcounter@{footnoteValueSaver@}
+All babies are illogical.\footnote@{%
+  Lewis Carroll.@}\setcounter@{footnoteValueSaver@}@{\value@{footnote@}@}
+Nobody is despised who can manage a crocodile.\footnote@{%
+  Captain Hook.@}
+Illogical persons are despised.\footnotemark[\value@{footnoteValueSaver@}]
+Therefore, anyone who can manage a crocodile is not a baby.
+@end example
 
 
 @node \footnotetext
@@ -9512,7 +9406,9 @@ causes the footnote to appear at the bottom of the page where the
 section starts, as usual, but also at the bottom of the table of
 contents, where it is not likely to be desired.  The simplest way
 to have it not appear on the table of contents is to use the optional
-argument to @code{\section}
+argument to @code{\section}.
+@c xx Same issue with table/figure captions and
+@c \listoftable/\listoffigures, and same sort of fix can be used.
 
 @example
 \section[Please]@{Please\footnote@{%
@@ -9576,7 +9472,7 @@ part of the regular footnote sequence, use the @code{\footnotemark} and
       Little is known other than her death.@}%
   \stepcounter@{mpFootnoteValueSaver@}%
     \footnotetext[\value@{mpFootnoteValueSaver@}]@{%
-      Relationship is unresolved in XXI.@}
+      Relationship is unresolved.@}
 \end@{center@}
 @end example
 
@@ -9648,6 +9544,7 @@ second.\footnotefrom@{%
 * \protect::                       Using tricky commands.
 * \ignorespaces & \ignorespacesafterend:: Discard extra spaces.
 * xspace package::                 Space after a macro, conditionally.
+* Class and package commands::     Primarily for LaTeX programmers.
 @end menu
 
 
@@ -9676,7 +9573,7 @@ Synopses, one of (three regular forms, three starred forms):
 @end example
 
 @noindent
-or all the same possibilities with @code{\renewcommand} instead of
+or the same six possibilities with @code{\renewcommand} instead of
 @code{\newcommand}:
 
 @example
@@ -9688,17 +9585,16 @@ or all the same possibilities with @code{\renewcommand} instead of
 \renewcommand*@{\@var{cmd}@}[@var{nargs}][@var{optargdefault}]@{@var{defn}@}
 @end example
 
-
 Define or redefine a command (see also @code{\DeclareRobustCommand} in
 @ref{Class and package commands}).
 
 @cindex starred form, defining new commands
 @cindex *-form, defining new commands
-@findex \long
+@findex \long@r{, not defining a command as}
 The starred form of these two forbids the arguments from containing
-multiple paragraphs of text (in plain @TeX{} terms: the commands
-are not @code{\long}).  With the default form, arguments can be
-multiple paragraphs.
+multiple paragraphs of text (i.e., a @code{\par} token; in plain
+@TeX{} terms: the commands are not @code{\long}).  With the default
+form, arguments can be multiple paragraphs.
 
 These are the parameters (examples follow):
 
@@ -10561,20 +10457,16 @@ This defines two equivalent fonts and typesets a few characters in each.
 
 All @LaTeX{} commands are either @dfn{fragile} or @dfn{robust}.  A
 fragile command can break when it is used in the argument to certain
-other commands.  Commands that contain data that @LaTeX{} writes to an
-auxiliary file and re-reads later are fragile.  This includes material
-that goes into a table of contents, list of figures, list of tables,
-etc.  Fragile commands also include line breaks, any command that has an
-optional argument, and many more. To prevent such commands from
-breaking, one solution is to preceded them with the command
-@code{\protect}.
+other commands, typically those that write material to the table of
+contents, the cross-reference file, etc.  To prevent fragile
+commands from causing errors, one solution is to precede them with the
+command @code{\protect}.
 
 For example, when @LaTeX{} runs the @code{\section@{@var{section
 name}@}} command it writes the @var{section name} text to the
 @file{.aux} auxiliary file, moving it there for use elsewhere in the
-document such as in the table of contents.  Any argument that is
-internally expanded by @LaTeX{} without typesetting it directly is
-referred to as a 
+document such as in the table of contents.  Such an argument that is
+used in multiple places is referred to as a
 @cindex moving arguments
 @dfn{moving argument}.  A command is fragile if it can
 expand during this process into invalid @TeX{} code.  Some examples of
@@ -10584,37 +10476,53 @@ command (@pxref{figure}), in the @code{\thanks@{...@}} command
 @code{array} environments (@pxref{tabular}).
 
 If you get strange errors from commands used in moving arguments, try
-preceding it with @code{\protect}.  Every fragile commands must be
+preceding it with @code{\protect}.  Each fragile command must be
 protected with their own @code{\protect}.  
 
 Although usually a @code{\protect} command doesn't hurt, length
-commands are robust and should not be preceded by a @code{\protect}
-command. Nor can a @code{\protect} command be used in the argument to
-@code{\addtocounter} or @code{\setcounter} command.
+commands such as @code{\parindent} should not be preceded by a
+@code{\protect} command (@pxref{Lengths}. Nor can a @code{\protect}
+command be used in the argument to @code{\addtocounter} or
+@code{\setcounter} command (@pxref{\setcounter} and
+@ref{\addtocounter}. These commands are already robust.
 
-In this example the @code{\caption} command gives a mysterious error
-about an extra curly brace.  Fix the problem by preceding each
-@code{\raisebox} command with @code{\protect}.
+As of the October 2019 release of @LaTeX{}
+(@url{https://www.latex-project.org/news/latex2e-news/ltnews30.pdf}),
+most commands that had been previously fragile were fixed to be
+robust. For example, any command taking an optional argument, such as
+@code{\root} or @code{\raisebox}, was fragile, but is now
+robust. Similarly, @code{\(...\)} math was fragile and is now robust
+(@code{$...$} has always been robust).
+
+@findex \verb@r{, as fragile command}
+Perhaps the most commonly used remaining fragile command is
+@code{\verb}; for example,
 
 @example
 \begin@{figure@}
   ...
-  \caption@{Company headquarters of A\raisebox@{1pt@}@{B@}\raisebox@{-1pt@}@{C@}@}
+  \caption@{This \verb|\command| causes an error.@}
 \end@{figure@}
 @end example
 
-In the next example the @code{\tableofcontents} command gives an error
-because the @code{\(..\)} in the section title expands to illegal @TeX{}
-in the @file{.toc} file.  You can solve this by changing @code{\(..\)}
-to @code{\protect\(..\protect\)}.
+Adding @code{\protect} does not help here. It's usually feasible to
+rewrite the caption (or section heading or whatever) to use
+@code{\texttt}, often the simplest solution.
+
+@PkgIndex{cprotect}
+@findex \cprotect
+Alternatively, to use @code{\verb}, you can apply the
+@code{\cprotect} command from @code{cprotect} package
+(@url{https://ctan.org/pkg/cprotect}) to the @code{\caption}:
 
 @example
-\begin@{document@}
-\tableofcontents
-...
-\section@{Einstein's \( e=mc^2 \)@}
-...
+\cprotect\caption@{This \verb|\command| is ok with \verb|\cprotect|.@}
 @end example
+
+@findex \cprotEnv
+@code{\cprotect} also allows use of @code{\begin...\end} environments
+in moving arguments, where they are normally not allowed, via a
+similar prefix command @code{\cprotEnv}.
 
 
 @node \ignorespaces & \ignorespacesafterend
@@ -10717,14 +10625,14 @@ inconvenient.  The solution is to change to
 
 
 @node xspace package
-@section xspace package
+@section @code{xspace} package
 
 @findex \xspace
 @PkgIndex{xspace}
 @cindex spaces, ignore around commands
 @cindex commands, ignore spaces
 
-Synopsis:
+This is an add-on package, not part of core @LaTeX{}. Synopsis:
 
 @example
 \usepackage@{xspace@}
@@ -10736,16 +10644,16 @@ The @code{\xspace} macro, when used at the end of a command definition,
 adds a space unless the command is followed by certain punctuation
 characters.
 
-After a command control sequence that is a control word (@pxref{Control
+After a control sequence that is a control word (@pxref{Control
 sequences}, as opposed to control symbols such as @code{\$}), @TeX{}
-gobbles blank characters.  Thus, in the first sentence below, the output
-has @samp{Vermont} placed snugly against the period, without any
-intervening space.
+gobbles blank characters.  Thus, in the first sentence below, the
+output has @samp{Vermont} placed snugly against the period, without
+any intervening space, despite the space in the input.
 
 @example
 \newcommand@{\VT@}@{Vermont@}
 Our college is in \VT .
-The \VT@{@} summers are nice.
+\VT@{@} summers are nice.
 @end example
 
 But because of the gobbling, the second sentence needs the empty curly
@@ -10767,10 +10675,10 @@ Our college is in \VT .
 
 The default exception list contains the characters @code{,.'/?;:!~-)},
 the open curly brace and the backslash-space command discussed above,
-and the commands @code{\footnote} or @code{\footnotemark}.  Add to that
-list as with @code{\xspaceaddexceptions@{\myfni \myfnii@}} which adds
-@code{\myfni} and@tie{}@code{\myfnii} to the list, and remove from that
-list as with @code{\xspaceremoveexception@{!@}}.
+and the commands @code{\footnote} or @code{\footnotemark}.  You can
+add to that list as with @code{\xspaceaddexceptions@{\myfni \myfnii@}}
+which adds @code{\myfni} and@tie{}@code{\myfnii} to the list; and you
+can remove from that list as with @code{\xspaceremoveexception@{!@}}.
 
 @c David Carlisle https://tex.stackexchange.com/a/86620/339
 A comment: many experts prefer not to use @code{\xspace}.  Putting it in
@@ -10778,7 +10686,737 @@ a definition means that the command will usually get the spacing right.
 But it isn't easy to predict when to enter empty braces because
 @code{\xspace} will get it wrong, such as when it is followed by another
 command, and so @code{\xspace} can make editing material harder and more
-error-prone than instead always inserting the empty braces.
+error-prone than instead of always inserting the empty braces.
+
+
+@node Class and package commands
+@section Class and package commands
+
+@cindex class and package commands
+@cindex package and class commands
+@cindex commands, class and package
+
+These are commands designed to help writers of classes or packages.
+
+@menu
+* \AtBeginDvi & \AtEndDvi::
+* \AtEndOfClass & \AtEndOfPackage::
+* \CheckCommand::
+* \ClassError and \PackageError and others::
+* \CurrentOption::
+* \DeclareOption::
+* \DeclareRobustCommand::
+* \ExecuteOptions::
+* \IfFileExists & \InputIfFileExists::
+* \LoadClass & \LoadClassWithOptions::
+* \NeedsTeXFormat::
+* \OptionNotUsed::
+* \PassOptionsToClass & \PassOptionsToPackage::
+* \ProcessOptions::
+* \ProvidesClass & \ProvidesPackage::
+* \ProvidesFile::
+* \RequirePackage & \RequirePackageWithOptions ::
+@end menu
+
+@node \AtBeginDvi & \AtEndDvi
+@subsection @code{\AtBeginDvi} & @code{\AtEndDvi}
+
+@anchor{\AtBeginDvi}
+@anchor{\AtEndDvi}
+@findex \AtBeginDvi
+@findex \AtEndDvi
+
+Synopsis:
+
+@example
+\AtBeginDvi@{@var{code}@}
+\AtEndDvi@{@var{code}@}
+@end example
+
+@code{\AtBeginDvi} saves, in a box register, @var{code} to be executed
+at the beginning of the shipout of the first page of the document.
+Despite the name, it applies to DVI, PDF, and XDV output.  It fills
+the @code{shipout/firstpage} hook; new code should use that hook
+directly.
+
+@PkgIndex{atenddvi}
+Similarly, @code{\AtEndDvi} (previously available only with the
+@code{atenddvi} package) is code executed when finalizing the main
+output document.
+
+
+@node \AtEndOfClass & \AtEndOfPackage
+@subsection @code{\AtEndOfClass} & @code{\AtEndOfPackage}
+
+@anchor{\AtEndOfClass}
+@anchor{\AtEndOfPackage}
+@findex \AtEndOfClass
+@findex \AtEndOfPackage
+
+Synopses:
+
+@example
+\AtEndOfClass@{@var{code}@}
+\AtEndOfPackage@{@var{code}@}
+@end example
+
+Hooks to insert @var{code} to be executed when @LaTeX{} finishes
+processing the current class resp.@: package.  
+
+These hooks can be used multiple times; each @code{code} segment will
+be executed in the order called.  Many packages and classes use these
+commands.
+
+See also @ref{\AtBeginDocument}.
+
+
+@node \CheckCommand
+@subsection @code{\CheckCommand}
+
+@findex \CheckCommand
+@cindex new command, checking definition of
+@cindex long command
+@cindex @code{\long} command, checking for
+
+Synopsis:
+
+@example
+\CheckCommand@{@var{cmd}@}[@var{num}][@var{default}]@{@var{definition}@}
+\CheckCommand* @r{(same parameters)}
+@end example
+
+Like @code{\newcommand} (@pxref{\newcommand & \renewcommand}) but does
+not define @var{cmd}; instead it checks that the current definition of
+@var{cmd} is exactly as given by @var{definition} and is or is not
+@dfn{@code{\long}} as expected.  A long command is a command that
+accepts @code{\par} within an argument.
+
+With the unstarred version of @code{\CheckCommand}, @var{cmd} is
+expected to be @code{\long}; with the starred version, @var{cmd} must
+not be @code{\long}
+
+@code{\CheckCommand} raises an error when the check fails.  This
+allows you to check before you start redefining @code{cmd} yourself
+that no other package has already redefined this command.
+
+
+@node \ClassError and \PackageError and others
+@subsection @code{\ClassError} and @code{\PackageError} and others
+
+@anchor{\ClassError}
+@anchor{\ClassWarning}
+@anchor{\ClassWarningNoLine}
+@anchor{\ClassInfo}
+@anchor{\ClassInfoNoLine}
+@anchor{\PackageError}
+@anchor{\PackageWarning}
+@anchor{\PackageWarningNoLine}
+@anchor{\PackageInfo}
+@anchor{\PackageInfoNoLine}
+
+Produce error, warning, and informational messages for classes:
+
+@table @code
+@item \ClassError@{@var{class name}@}@{@var{error-text}@}@{@var{help-text}@}
+@itemx \ClassWarning@{@var{class name}@}@{@var{warning-text}@}
+@itemx \ClassWarningNoLine@{@var{class name}@}@{@var{warning-text}@}
+@itemx \ClassInfo@{@var{class name}@}@{@var{info-text}@}
+@itemx \ClassInfoNoLine@{@var{class name}@}@{@var{info-text}@}
+@findex \ClassError
+@findex \ClassWarning
+@findex \ClassWarningNoLine
+@findex \ClassInfo
+@findex \ClassInfoNoLine
+@end table
+
+@noindent and the same for packages:
+@table @code
+@item \PackageError@{@var{package name}@}@{@var{error-text}@}@{@var{help-text}@}
+@itemx \PackageWarning@{@var{package name}@}@{@var{warning-text}@}
+@itemx \PackageWarningNoLine@{@var{package name}@}@{@var{warning-text}@}
+@itemx \PackageInfo@{@var{package name}@}@{@var{info-text}@}
+@itemx \PackageInfoNoLine@{@var{package name}@}@{@var{info-text}@}
+@findex \PackageError
+@findex \PackageWarning
+@findex \PackageWarningNoLine
+@findex \PackageInfo
+@findex \PackageInfoNoLine
+@end table
+
+For @code{\ClassError} and @code{\PackageError} the message is
+@var{error-text}, followed by @TeX{}'s `@code{?}' error prompt. If the
+user then asks for help by typing @code{h}, they see the @var{help
+text}.
+
+The four @code{Warning} commands are similar except that they write
+@var{warning-text} on the screen with no error prompt.  The four
+@code{Info} commands write @var{info-text} only in the transcript
+file.  The @code{NoLine} versions omit the number of the line
+generating the message, while the other versions do show that number.
+
+@cindex @code{\protect}, and message text
+@cindex @code{\space}, and message text
+@cindex @code{\MessageBreak}, and message text
+To format the messages, including the @var{help-text}: use
+@code{\protect} to stop a command from expanding, get a line break
+with @code{\MessageBreak}, and get a space with @code{\space} when a
+space character is ignore, most commonly after a command.
+
+@LaTeX{} appends a period to the messages.
+
+
+@node \CurrentOption
+@subsection @code{\CurrentOption}
+
+@findex \CurrentOption
+@cindex option, currently being processed
+
+Expands to the name of the option currently being processed.  This can
+only be used within the @var{code} argument of either
+@code{\DeclareOption} or @code{\DeclareOption*}.
+
+
+@node \DeclareOption
+@subsection @code{\DeclareOption}
+
+@findex \DeclareOption
+@cindex class options
+@cindex package options
+@cindex options, class
+@cindex options, package
+
+Synopsis:
+
+@example
+\DeclareOption@{@var{option}@}@{@var{code}@}
+\DeclareOption*@{@var{option}@}@{@var{code}@}
+@end example
+
+Define an option a user can include in their @code{\documentclass}
+command.  For example, a class @code{smcmemo} could have an option
+@code{logo} allowing users to put the institutional logo on the first
+page. The document would start with
+@code{\documentclass[logo]@{smcmemo@}}. To enable this, the class file
+must contain @code{\DeclareOption@{logo@}@{@var{code}@}} (and later,
+@code{\ProcessOptions}).
+
+@cindex default option processing
+@cindex option processing by default
+@cindex @code{Unused global option} warning, handling
+If you request an option that has not been declared, by default this
+will produce a warning like @code{Unused global option(s):
+[badoption].}  This can be changed by using
+@code{\DeclareOption*@{@var{code}@}}, which executes @var{code} for
+any unknown option.
+
+For example, many classes extend an existing class, using code such as
+@code{\LoadClass@{article@}} (@pxref{\LoadClass}). In this case, it
+makes sense to pass any otherwise-unknown options to the underlying
+class, like this:
+
+@example
+\DeclareOption*@{%
+  \PassOptionsToClass@{\CurrentOption@}@{article@}%
+@}
+@end example
+
+As another example, our class @code{smcmemo} might allow users to keep
+lists of memo recipients in external files, so the user could invoke
+@code{\documentclass[math]@{smcmemo@}} and it will read the file
+@code{math.memo}.  This code inputs the file if it exists, while if it
+doesn't, the option is passed to the @code{article} class:
+
+@example
+\DeclareOption*@{\InputIfFileExists@{\CurrentOption.memo@}
+  @{@}@{%
+  \PassOptionsToClass@{\CurrentOption@}@{article@}@}@}
+@end example
+
+
+@node \DeclareRobustCommand
+@subsection @code{\DeclareRobustCommand}
+
+@findex \DeclareRobustCommand
+@cindex new command, definition
+@cindex robust command, defining
+
+Synopsis:
+
+@example
+\DeclareRobustCommand@{@var{cmd}@}[@var{num}][@var{default}]@/@{@var{definition}@}
+\DeclareRobustCommand* @r{(same parameters}
+@end example
+
+@code{\DeclareRobustCommand} and its starred form are generally like
+@code{\newcommand} and @code{\newcommand*} (@pxref{\newcommand &
+\renewcommand}), with the addition that they define a so-called
+@dfn{robust} command, even if some code within the @var{definition} is
+fragile.  (For a discussion of robust and fragile commands,
+@pxref{\protect}.)
+
+Also unlike @code{\newcommand}, these do not give an error if macro
+@var{cmd} already exists; instead, a log message is put into the
+transcript file if a command is redefined.  Thus,
+@code{\DeclareRobustCommand} can be used to define new robust commands
+or to redefine existing commands, making them robust.
+
+The starred form, @code{\DeclareRobustCommand*}, disallows the
+arguments from containing multiple paragraphs, just like the starred
+form of @code{\newcommand} and @code{\renewcommand}. The meaning of
+the arguments is the same.
+
+Commands defined this way are a bit less efficient than those defined
+using @code{\newcommand} so unless the command's data is fragile and the
+command is used within a moving argument, use @code{\newcommand}.
+
+@PkgIndex{etoolbox}
+@cindex e-@TeX{}, and robust commands
+@findex \newrobustcmd @r{(@t{etoolbox} package)}
+@findex \renewrobustcmd @r{(@t{etoolbox} package)}
+@findex \providerobustcmd @r{(@t{etoolbox} package)}
+
+Related to this, the @package{etoolbox} package offers three commands
+and their starred forms: @code{\newrobustcmd}(@code{*})
+@code{\renewrobustcmd}(@code{*}), and
+@code{\providerobustcmd}(@code{*}).  They are similar to
+@code{\newcommand}, @code{\renewcommand}, and @code{\providecommand}
+and their own starred forms, but define a robust @var{cmd}. They have
+two possible advantages compared to @code{\DeclareRobustCommand}:
+
+@enumerate
+@item
+They use the low-level e-@TeX{} protection mechanism rather than the
+higher-level @LaTeX{} @code{\protect} mechanism, so they do not incur
+the slight loss of performance mentioned above, and
+
+@item
+They make the same distinction between @code{\new@dots{}},
+@code{\renew@dots{}}, and @code{\provide@dots{}}, as the standard
+commands. That is, they do not just write a log message when you
+redefine @var{cmd} that already exists; you need to use either
+@code{\renew@dots{}} or @code{\provide@dots{}}, or you get an error.
+This may or may not be a benefit.
+@end enumerate
+
+
+@node \ExecuteOptions
+@subsection @code{\ExecuteOptions}
+
+@findex \ExecuteOptions
+
+Synopsis:
+
+@example
+\ExecuteOptions@{@var{option-list}@}
+@end example
+
+@findex \ds@@@var{option}
+For each option @var{option} in @var{option-list}, in order, this
+command executes the command @code{\ds@@@var{option}}.  If this
+command is not defined then that option is silently ignored.
+
+This can be used to provide a default option list before
+@code{\ProcessOptions}.  For example, if in a class file you want the
+default to be 11pt fonts then you could specify
+@code{\ExecuteOptions@{11pt@}\ProcessOptions\relax}.
+
+
+@node \IfFileExists & \InputIfFileExists
+@subsection @code{\IfFileExists} & @code{\InputIfFileExists}
+
+@anchor{\IfFileExists}
+@anchor{\InputIfFileExists}
+@findex \IfFileExists
+@findex \InputIfFileExists
+
+Synopses:
+
+@example
+\IfFileExists@{@var{filename}@}@{@var{true-code}@}@{@var{false-code}@}
+\InputIfFileExists@{@var{filename}@}@{@var{true-code}@}@{@var{false-code}@}
+@end example
+
+@code{\IfFileExists} executes @var{true-code} if @LaTeX{} finds the
+file @file{@var{filename}} or @var{false-code} otherwise.  In the
+first case it executing @var{true-code} and then inputs the file.
+Thus the command
+
+@example
+\IfFileExists@{img.pdf@}@{%
+  \includegraphics@{img.pdf@}@}
+  @{\typeout@{!! img.pdf not found@}
+@end example
+
+@noindent
+will include the graphic @file{img.pdf} if it is found and otherwise
+give a warning.
+
+This command looks for the file in all search paths that @LaTeX{}
+uses, not only in the current directory.  To look only in the current
+directory do something like
+@code{\IfFileExists@{./@var{filename}@}@{@var{true-code}@}@{@var{false-code}@}}.
+If you ask for a filename without a @code{.tex} extension then
+@LaTeX{} will first look for the file by appending the @code{.tex};
+for more on how @LaTeX{} handles file extensions see @ref{\input}.
+
+@code{\InputIfFileExists} is similar, but, as the name states,
+automatically @code{\input}s @var{filename} if it exists.  The
+@var{true-code} is executed just before the @code{\input}; if the file
+doesn't exist, the @var{false-code} is executed.  An example:
+
+@example
+\InputIfFileExists@{mypkg.cfg@}
+  @{\PackageInfo@{Loading mypkg.cfg for configuration information@}@}
+  @{\PackageInfo@{No mypkg.cfg found@}@}
+@end example
+
+
+@node \LoadClass & \LoadClassWithOptions
+@subsection @code{\LoadClass} & @code{\LoadClassWithOptions}
+
+@anchor{\LoadClass}
+@anchor{\LoadClassWithOptions}
+@findex \LoadClass
+@findex \LoadClassWithOptions
+
+Synopses:
+
+@example
+\LoadClass[@var{options-list}]@{@var{class-name}@}[@var{release-date}]
+\LoadClassWithOptions@{@var{class-name}@}[@var{release-date}]
+@end example
+
+Load a class, as with
+@code{\documentclass[@var{options-list}]@{@var{class-name}@}[@var{release-date}]}.
+An example: @code{\LoadClass[twoside]@{article@}}.
+
+The @var{options-list}, if present, is a comma-separated list.  The
+@var{release-date} is also optional.  If present it must have the form
+@code{YYYY/MM/DD}.
+@c BTW, there are at-macros documented in macros2e.pdf to check the version
+@c and do some actions conditionnally on version later or not to some
+@c date.
+
+If you request @var{release-date} and the date of the package
+installed on your system is earlier, then you get a warning on the
+screen and in the log like this:
+
+@example
+You have requested, on input line 4, version `2038/01/19' of
+document class article, but only version `2014/09/29 v1.4h
+Standard LaTeX document class' is available.
+@end example
+
+@findex \PassOptionsToClass@r{, ignoring}
+The command version @code{\LoadClassWithOptions} uses the list of
+options for the current class.  This means it ignores any options passed
+to it via @code{\PassOptionsToClass}.  This is a convenience command
+that lets you build classes on existing ones, such as the standard
+@code{article} class, without having to track which options were passed.
+
+
+@node \NeedsTeXFormat
+@subsection @code{\NeedsTeXFormat}
+
+@findex \NeedsTeXFormat
+@cindex format, requiring
+@cindex version of format, requiring
+@cindex date of format, requiring
+
+Synopsis:
+
+@example
+\NeedsTeXFormat@{@var{format}@}[@var{format-date}]
+@end example
+
+Specifies the format that this class must be run under.  Often issued
+as the first line of a class file, and most often used as:
+@code{\NeedsTeXFormat@{LaTeX2e@}}.  When a document using that class
+is processed, the format being run must exactly match the @var{format}
+name given, including case.  If it does not match then execution stops
+with an error like @samp{This file needs format `LaTeX2e' but this is
+`plain'.}.
+
+To require a version of the format that you know to have certain
+features, include the optional @var{format-date} on which those
+features were implemented.  If present, it must be in the form
+@code{YYYY/MM/DD}.  If the format version installed on your system is
+earlier than @var{format date} then you get a warning like this.
+
+@example
+You have requested release `2038/01/20' of LaTeX, but only
+release `2016/02/01' is available.
+@end example
+
+
+@node \OptionNotUsed
+@subsection @code{\OptionNotUsed}
+
+@findex \OptionNotUsed
+
+@cindex unused options, adding to list
+@cindex options, list of unused
+Adds the current option to the list of unused options.  Can only be used
+within the @var{code} argument of either @code{\DeclareOption} or
+@code{\DeclareOption*}.
+
+@c xx I cannot reproduce this behavior as it is documented in clsguide.
+@c In the absence of a @code{\DeclareOption*} declaration, @LaTeX{} issues
+@c on the console a warning like @code{LaTeX Warning: Unused global
+@c option(s): [unusedoption].} with the list of not-used options when it
+@c reaches @code{\begin@{document@}}.
+
+
+@node \PassOptionsToClass & \PassOptionsToPackage
+@subsection @code{\PassOptionsToClass} & @code{\PassOptionsToPackage}
+
+@anchor{\PassOptionsToClass}
+@anchor{\PassOptionsToPackage}
+@findex \PassOptionsToClass
+@findex \PassOptionsToPackage
+
+Synopses:
+
+@example
+\PassOptionsToClass@{@var{options}@}@{@var{clsname}@}
+\PassOptionsToPackage@{@var{option}@}@{@var{pkgname}@}
+@end example
+
+Adds the options in the comma-separated list @var{options} to the
+options used by any future @code{\RequirePackage} or
+@code{\usepackage} command for the class @var{clsname} or the package
+@var{pkgname}, respectively.
+
+@cindex option clash
+@cindex conflict between package options
+The reason for these commands is that although you may load a package
+any number of times with no options, if you can specify options only
+the first time you load the package.  Loading a package with options
+more than once will get you an error like @code{Option clash for
+package foo.}. @LaTeX{} throws an error even if there is no conflict
+between the options.
+
+If your own code is bringing in a package twice then you can combine
+the calls; for example, replacing the two
+
+@example
+\RequirePackage[landscape]@{geometry@}
+\RequirePackage[margins=1in]@{geometry@}
+@end example
+
+@noindent with the single command
+
+@example
+\RequirePackage[landscape,margins=1in]@{geometry@}
+@end example
+
+However, suppose you are loading @file{firstpkg} and inside that
+package it loads @file{secondpkg}, and you need @code{secondpkg} to be
+loaded with option @code{draft}.  Then before load the first package
+you must tell @LaTeX{} about the desired options for the second
+package, like this:
+
+@example
+\PassOptionsToPackage@{draft@}@{secondpkg@}
+\RequirePackage@{firstpkg@}
+@end example
+
+@noindent
+If @code{firstpkg.sty} loads an option in conflict with what you want
+then you may have to alter its source, or yours.
+
+These commands are useful for general users as well as class and package
+writers.  For instance, suppose a user wants to load the @code{graphicx}
+package with the option @code{draft} and also wants to use a class
+@code{foo} that loads the @code{graphicx} package, but without that
+option. The user could start their @LaTeX{} file with
+@code{\PassOptionsToPackage@{draft@}@{graphicx@} \documentclass@{foo@}}.
+
+
+@node \ProcessOptions
+@subsection @code{\ProcessOptions}
+
+@findex \ProcessOptions
+@cindex processing options
+@cindex options, processing
+
+Synopsis:
+
+@example
+\ProcessOptions@var{\@@options}
+\ProcessOptions*@var{\@@options}
+@end example
+
+Execute the code for each option that the user has invoked.  Invoke it
+in the class file as @code{\ProcessOptions\relax} (because of the
+existence of the starred version, described below).
+
+@cindex options, global and local
+@cindex local options
+@cindex global options
+Options come in two types.  @dfn{Local options} have been specified
+for this particular package in @code{\usepackage[@var{options}]},
+@code{\RequirePackage[@var{options}]}, or the @var{options} argument
+of @code{\PassOptionsToPackage@{@var{options}@}}. @dfn{Global options}
+are those given by the class user in
+@code{\documentclass[@var{options}]}. If an option is specified both
+locally and globally then it is local.
+
+When @code{\ProcessOptions} is called for a package @file{pkg.sty}, the
+following happens:
+
+@enumerate
+@item
+For each option @var{option} so far declared with
+@code{\DeclareOption}, @code{\ProcessOptions} looks to see if that
+option is either global or local for @code{pkg}. If so, then it
+executes the declared code.  This is done in the order in which these
+options were given in @file{pkg.sty}.
+
+@item
+For each remaining local option, it executes the command
+@code{\ds@@}@var{option} if it has been defined somewhere (other than by
+a @code{\DeclareOption}); otherwise, it executes the default option code
+given in @code{\DeclareOption*}. If no default option code has been
+declared then it gives an error message.  This is done in the order in
+which these options were specified.
+@end enumerate
+
+When @code{\ProcessOptions} is called for a class it works in the same
+way except that all options are local, and the default @var{code} for
+@code{\DeclareOption*} is @code{\OptionNotUsed} rather than an error.
+
+The starred version @code{\ProcessOptions*} executes the
+options in the order specified in the calling commands, rather than in
+the order of declaration in the class or package. For a package, this
+means that the global options are processed first.
+
+
+@node \ProvidesClass & \ProvidesPackage
+@subsection @code{\ProvidesClass} & @code{\ProvidesPackage}
+
+@anchor{\ProvidesClass}
+@anchor{\ProvidesPackage}
+@findex \ProvidesClass
+@findex \ProvidesPackage
+
+Synopses:
+
+@example
+\ProvidesClass@{@var{clsname}@}[@var{release-date} @r{[}@var{info-text}@r{]}]
+\ProvidesPackage@{@var{pkgname}@}[@var{release-date} @r{[}@var{info-text}@r{]}]
+@end example
+
+Identifies the class or package being defined, printing a message to
+the screen and the log file.
+
+When you load a class or package, for example with
+@code{\documentclass@{smcmemo@}} or @code{\usepackage@{test@}},
+@LaTeX{} inputs a file (@file{smcmemo.cls} and @file{test.sty},
+respectively).  If the name of the file does not match the class or
+package name declared in it then you get a warning.  Thus, if you
+invoke @code{\documentclass@{smcmemo@}}, and the file
+@file{smcmemo.cls} has the statement @code{\ProvidesClass@{foo@}} then
+you get a warning like @code{You have requested document class
+`smcmemo', but the document class provides 'foo'.}  This warning does
+not prevent @LaTeX{} from processing the rest of the class file
+normally.
+
+If you include the optional argument then you must include a date,
+before any spaces, of the form @code{YYYY/MM/DD}. The rest of the
+optional argument is free-form, although it traditionally identifies
+the class. It is written to the screen during compilation and to the
+log file.  Thus, if your file @file{smcmemo.cls} contains the line
+@code{\ProvidesClass@{smcmemo@}[2008/06/01 v1.0 SMC memo class]} and
+your document's first line is @code{\documentclass@{smcmemo@}} then
+you will see @code{Document Class: smcmemo 2008/06/01 v1.0 SMC memo
+class}.
+
+The date in the optional argument allows class and package users to
+ask to be warned if the version of the class or package is earlier
+than @var{release date}.  For instance, a user could enter
+@code{\documentclass@{smcmemo@}[2018/10/12]} or
+@code{\usepackage@{foo@}[[2017/07/07]]} to require a class or package
+with certain features by specifying that it must be released no
+earlier than the given date.  Perhaps more importantly, the date
+serves as documentation of the last release. (In practice, package
+users rarely include a date, and class users almost never do.)
+
+
+@node \ProvidesFile
+@subsection @code{\ProvidesFile}
+
+@findex \ProvidesFile
+
+Synopsis:
+
+@example
+\ProvidesFile@{@var{filename}@}[@var{info-text}]
+@end example
+
+Declare a file other than the main class and package files, such as a
+configuration or font definition file.  It writes the given
+information to the log file, essentially like @code{\ProvidesClass}
+and @code{\ProvidesPackage} (see the previous section).
+
+For example:
+
+@example
+\ProvidesFile@{smcmemo.cfg@}[2017/10/12 config file for smcmemo.cls]
+@end example
+
+@noindent writes this into the log:
+
+@example
+File: smcmemo.cfg 2017/10/12 config file for smcmemo.cls
+@end example
+
+
+@node \RequirePackage & \RequirePackageWithOptions
+@subsection @code{\RequirePackage} & @code{\RequirePackageWithOptions}
+
+@anchor{\RequirePackage}
+@anchor{\RequirePackageWithOptions}
+@findex \RequirePackage
+@findex \RequirePackageWithOptions
+
+Synopsis:
+
+@example
+\RequirePackage[@var{option-list}]@{@var{pkgname}@}[@var{release-date}]
+\RequirePackageWithOptions@{@var{pkgname}@}[@var{release-date}]
+@end example
+
+Load a package, like the command @code{\usepackage} (@pxref{Additional
+packages}). An example:@*
+@code{\RequirePackage[landscape,margin=1in]@{geometry@}}
+
+The initial optional argument @var{option-list}, if present, must be a
+comma-separated list.  The trailing optional argument
+@var{release-date}, if present, must have the form @code{YYYY/MM/DD}.
+If the release date of the package as installed on your system is
+earlier than @var{release-date} then you get a warning like @samp{You
+have requested, on input line 9, version `2017/07/03' of package
+jhtest, but only version `2000/01/01' is available}.
+
+The @code{\RequirePackageWithOptions} variant uses the list of options
+for the current class.  This means it ignores any options passed to it
+via @code{\PassOptionsToClass}.  This is a convenience command to
+allow easily building classes on existing ones without having to track
+which options were passed.
+
+The difference between @code{\usepackage} and @code{\RequirePackage}
+is small.  The @code{\usepackage} command is intended to be used in
+documents, while @code{\RequirePackage} is intended for package and
+class files.  The most significant difference in practice is that
+@code{\RequirePackage} can be used in a document before the
+@code{\documentclass} command, while @code{\usepackage} gives an error
+there. The most common need for this nowadays is for the
+@code{\DocumentMetadata} command (@pxref{\DocumentMetadata}).
+
+The @LaTeX{} development team strongly recommends use of these and
+related commands over Plain@tie{}@TeX{}'s @code{\input}; see the Class
+Guide (@url{https://ctan.org/pkg/clsguide}).
 
 
 @node Counters
@@ -10830,7 +11468,6 @@ up to four levels of nesting (@pxref{enumerate}).
 Counters can have any integer value but they are typically positive.
 
 New counters are created with @code{\newcounter}.  @xref{\newcounter}.
-
 
 @menu
 * \alph \Alph \arabic \roman \Roman \fnsymbol:: Print value of a counter.
@@ -11159,11 +11796,11 @@ The illustrations below use these two commands.
 @end example
 
 @noindent
-This example uses those commands to show a black bar 100@tie{}points
-long between @samp{XXX} and @samp{YYY}.  This length is rigid.
+This next example uses those commands to show a black bar 100@tie{}points
+long between @samp{ABC} and @samp{XYZ}.  This length is rigid.
 
 @example
-XXX\showhbox@{100pt@}@{\blackbar@{100pt@}@}YYY
+ABC\showhbox@{100pt@}@{\blackbar@{100pt@}@}XYZ
 @end example
 
 As for rubber lengths, shrinking is simpler one: with @code{1cm minus
@@ -11173,10 +11810,10 @@ Thus, below the first one works fine, producing a space of
 98@tie{}points between the two bars.
 
 @example
-XXX\showhbox@{300pt@}@{%
+ABC\showhbox@{300pt@}@{%
   \blackbar@{101pt@}\hspace@{100pt minus 2pt@}\blackbar@{101pt@}@}YYY
 
-XXX\showhbox@{300pt@}@{%
+ABC\showhbox@{300pt@}@{%
   \blackbar@{105pt@}\hspace@{100pt minus 1pt@}\blackbar@{105pt@}@}YYY
 @end example
 
@@ -11192,10 +11829,10 @@ beyond the given amount, it will do it.  Here the first line is fine,
 producing a space of 110@tie{}points between the bars.
 
 @example
-XXX\showhbox@{300pt@}@{%
+ABC\showhbox@{300pt@}@{%
   \blackbar@{95pt@}\hspace@{100pt plus 10pt@}\blackbar@{95pt@}@}YYY
 
-XXX\showhbox@{300pt@}@{%
+ABC\showhbox@{300pt@}@{%
   \blackbar@{95pt@}\hspace@{100pt plus 1pt@}\blackbar@{95pt@}@}YYY
 @end example
 
@@ -11212,7 +11849,7 @@ If @TeX{} is setting two or more rubber lengths then it allocates the
 stretch or shrink in proportion.
 
 @example
-XXX\showhbox@{300pt@}@{%
+ABC\showhbox@{300pt@}@{%
   \blackbar@{100pt@}%  left
   \hspace@{0pt plus 50pt@}\blackbar@{80pt@}\hspace@{0pt plus 10pt@}%  middle
   \blackbar@{100pt@}@}YYY  % right
@@ -11228,7 +11865,7 @@ from the first space and 1/6 from the second.
 The @code{plus} or @code{minus} component of a rubber length can contain
 a @dfn{fill} component, as in @code{1in plus2fill}.  This gives the
 length infinite stretchability or shrinkability so that @TeX{} could set
-it to any distance.  Here the two figures will be equal-spaced across
+it to any distance.  Here the two figures will be equally spaced across
 the page.
 
 @example
@@ -12126,7 +12763,7 @@ see their documentation on CTAN.
 * Math symbols::                Various mathematical squiggles.
 * Math functions::              Math function names like sin and exp.
 * Math accents::                Accents in math.
-* Over- and Underlining::       Things over or under formulas.
+* Over- or under math::         Lines, braces, arrows over/under formulas.
 * Spacing in math mode::        Thick, medium, thin, and negative spaces.
 * Math styles::                 Determine the size of things.
 * Math miscellany::             Stuff that doesn't fit anywhere else.
@@ -14251,49 +14888,50 @@ When you are putting an accent on an i or a j, the tradition is to use
 one without a dot, @code{\imath} or @code{jmath} (@pxref{Math symbols}).
 
 
-@node Over- and Underlining
-@section Over- and Underlining
+@node Over- or under math
+@section Over- or under math
 
+@anchor{Over- and Underlining}@c original node name
 @cindex overlining
 @cindex underlining
 
-@LaTeX{} provides commands for making overlines or underlines, or
-putting braces over or under some material.
+@LaTeX{} provides commands for putting lines, braces, and arrows over
+or under math material.
 
 @ftable @code
-
-@item \underline@{@var{text}@}
-Underline @var{text}.  Works inside math mode, and outside.
+@item \underline@{@var{math}@}
+Underline @var{math}. For example: @code{\underline@{x+y@}}.
 @ifset HAS-MATH
-The result of @code{\underline@{xyz@}} is @math{\underline{xyz}}.
+The result looks like: @math{\underline{x+y}}.
 @end ifset
 The line is always completely below the text, taking account of
 descenders, so in @code{\(\underline@{y@}\)} the line is lower than in
-@code{\(\underline@{x@}\)}.  This command is fragile (@pxref{\protect}).
+@code{\(\underline@{x@}\)}.  As of approximately 2019, this command
+and others in this section are robust; before that, they were fragile
+(@pxref{\protect}).
 
 @PkgIndex{ulem}
-Note that the package @package{ulem} does text mode underlining and allows
-line breaking as well as a number of other features.  See the
-documentation on CTAN.  See also@tie{}@ref{\hrulefill & \dotfill} for
-producing a line, for such things as a signature.
+The package @package{ulem} (@url{https://ctan.org/pkg/uelem}) does
+text mode underlining and allows line breaking as well as a number of
+other features.  See also@tie{}@ref{\hrulefill & \dotfill} for
+producing a line for such things as a signature or placeholder.
         
-@item \overline@{@var{text}@}
-Put a horizontal line over @var{text}.  Works inside math mode, and
-outside.  For example, @code{\overline@{x+y@}}.
+@item \overline@{@var{math}@}
+Put a horizontal line over @var{math}. For example: @code{\overline@{x+y@}}.
 @ifset HAS-MATH
 The result looks like: @math{\overline{x+y}}.
 @end ifset
-Note that this differs from the command @code{\bar} (@pxref{Math
-accents}).
+This differs from the accent command @code{\bar} (@pxref{Math accents}).
 
 @item \underbrace@{@var{math}@}
-Put a brace under @var{math}. For example, this
-@code{(1-\underbrace@{1/2)+(1/2@}-1/3)} emphasizes the telescoping part.
+Put a brace under @var{math}. For example:
+@code{(1-\underbrace@{1/2)+(1/2@}-1/3)}.
 @ifset HAS-MATH
-The result looks like this: @math{(1-\underbrace{1/2)+(1/2}-1/3)}.
+The result looks like: @math{(1-\underbrace{1/2)+(1/2}-1/3)}.
 @end ifset
-Attach text to the brace by using the subscript command, @code{_}, or
-superscript, @code{^}, as here.
+
+You can attach text to the brace as a subscript (@code{_}) or
+superscript (@code{^}) as here:
 
 @example
 \begin@{displaymath@}
@@ -14306,15 +14944,33 @@ The superscript appears on top of the expression, and so can look
 unconnected to the underbrace.
 
 @item \overbrace@{@var{math}@}
-Put a brace over @var{math}, as with
-@code{\overbrace@{x+x+\cdots+x@}^@{\mbox@{\(k\) times@}@}}.  See also
-@code{\underbrace}.
+Put a brace over @var{math}. For example:@*
+@code{\overbrace@{x+x+\cdots+x@}^@{\mbox@{\(k\) times@}@}}.
+@ifset HAS-MATH
+The result looks like:
+@math{\overbrace{x+x+\cdots+x}^{\mbox{$k$ times}}}.
+@end ifset
+
+@item \overrightarrow@{@var{math}@}
+Put a right arrow over @var{math}. For example:
+@code{\overrightarrow@{x+y@}}.
+@ifset HAS-MATH
+The result looks like: @math{\overrightarrow{x+y}}.
+@end ifset
+
+@item \overleftarrow@{@var{math}@}
+Put a left arrow over @var{math}. For example:
+@code{\overleftarrow@{a+b@}}.
+@ifset HAS-MATH
+The result looks like: @math{\overleftarrow{a+b}}.
+@end ifset
 
 @end ftable
 
 @PkgIndex{mathtools}
-The package @package{mathtools} adds an over- and underbrace, as well as
-some improvements on the braces.  See the documentation on CTAN.
+The package @package{mathtools} (@url{https://ctan.org/pkg/mathtools})
+adds an over- and underbracket, as well as some improvements on the
+braces.
 
 
 @node Spacing in math mode
@@ -14497,11 +15153,11 @@ mode.  So if it starts a paragraph then you should first put a
 @code{\leavevmode}, as in the bottom line below.
 
 @example
-xxx xxx xxx
+Text above.
 
-\smash@{yyy@}  % no paragraph indent
+\smash@{smashed, no indent@}  % no paragraph indent
 
-\leavevmode\smash@{zzz@}  % usual paragraph indent
+\leavevmode\smash@{smashed, with indent@}  % usual paragraph indent
 @end example
 
 @PkgIndex{mathtools}
@@ -15005,6 +15661,7 @@ styles.  See its documentation.
 * \pagenumbering::      Set the style used for page numbers.
 * \pagestyle::		Change the headings/footings style.
 * \thispagestyle::      Change the headings/footings style for this page.
+* \thepage::            Changing page number representation everywhere.
 @end menu
 
 
@@ -15076,11 +15733,11 @@ To have no date, instead use @code{\date@{@}}.
 @item \thanks@{@var{text}@}
 @cindex thanks, for titlepage
 @cindex credit footnote
-Optional.  Produce a footnote.  You can use it in the author information
-for acknowledgements as illustrated above, but you can also use it in
-the title, or any place a footnote mark makes sense.  It can be any text
-at all so you can use it for any purpose, such as to print an email
-address.
+Optional.  Produce a footnote.  You can use it in the author
+information for acknowledgements as illustrated above, but you can
+also use it in the title, or anywhere that a footnote mark makes
+sense.  It can be any text at all so you can use it for any purpose,
+such as to print an email address.
 
 @item \title@{@var{text}@}
 @cindex title, for titlepage
@@ -15092,11 +15749,11 @@ yields error @samp{LaTeX Error: No \title given}.
 
 @end ftable
 
-To make your own title page, see@tie{}@ref{titlepage}. You can either
+To make your own title page, @pxref{titlepage}. You can either
 create this as a one-off or you can include it as part of a renewed
-@code{\maketitle} command.  (Many publishers will provide a class to use
+@code{\maketitle} command.  Many publishers will provide a class to use
 in place of @code{article} that formats the title according to their
-house requirements.)
+house requirements.
 
 
 @node \pagenumbering
@@ -15117,20 +15774,11 @@ contents and other page references.  This declaration has global scope
 so its effect is not stopped by an end of group such as a closing brace
 or an end of environment.
 
-In this example, before the @samp{Main} section the pages are numbered
-@samp{a}, etc.  Starting on the page containing the
-@code{\pagenumbering} call in that section, the pages are numbered
-@samp{1}, etc.
-
-@example
-\begin@{document@}\pagenumbering@{alph@}
-  ...
-\section@{Main@}\pagenumbering@{arabic@}
-  ...
-@end example
+By default, @LaTeX{} numbers pages starting at 1, using Arabic
+numerals.
 
 The argument @var{number-style} is one of the following (see
-also@tie{}@ref{\alph \Alph \arabic \roman \Roman \fnsymbol}).
+also @ref{\alph \Alph \arabic \roman \Roman \fnsymbol}).
 
 @table @code
 @item arabic
@@ -15151,23 +15799,41 @@ uppercase letters: A, B, @dots{} If you have more than 26 pages then you
 get @samp{LaTeX Error: Counter too large}.
 
 @item gobble
-@PkgIndex{hyperref} @LaTeX{} does not output a page number, although it
-does get reset.  References to that page also are blank.  (This does not
-work with the popular package @package{hyperref} so to have the page number
-not appear you may want to instead use @code{\pagestyle@{empty@}} or
-@code{\thispagestyle@{empty@}}.)
+no page number is output, though the number is still reset.
+References to that page also are blank.
+
+@PkgIndex{hyperref}
+This setting does not work with the popular package @package{hyperref},
+so to omit page numbers you may want to instead use
+@code{\pagestyle@{empty@}} or @code{\thispagestyle@{empty@}}.
 
 @end table
 
+If you want to typeset the page number in some other way, or change
+where the page number appears on the page, see@tie{}@ref{\pagestyle}
+(in short: use the @code{fancyhdr} package).  The list above of
+@LaTeX{}'s built-in numbering styles cannot be extended.
+
 Traditionally, if a document has front matter---preface, table of
-contents, etc.---then it is numbered with lowercase Roman numerals. The
-main matter of a document uses arabic.  @xref{\frontmatter & \mainmatter
-& \backmatter}.
+contents, etc.---then it is numbered with lowercase Roman
+numerals. The main matter of a document uses arabic.  @LaTeX{}
+implements this, by providing explicit commands for the different parts
+(@pxref{\frontmatter & \mainmatter & \backmatter}).
 
-If you want to change where the page number appears on the page,
-see@tie{}@ref{\pagestyle}.  If you want to change the value of the page
-number, then you manipulate the @code{page} counter (@pxref{Counters}).
+As an explicit example, before the @samp{Main} section the pages are
+numbered @samp{a}, etc.  Starting on the page containing the
+@code{\pagenumbering} call in that section, the pages are numbered
+@samp{1}, etc.
 
+@example
+\begin@{document@}\pagenumbering@{alph@}
+  ...
+\section@{Main@}\pagenumbering@{arabic@}
+  ...
+@end example
+
+If you want to change the value of the page number, then you
+manipulate the @code{page} counter (@pxref{Counters}).
 
 @node \pagestyle
 @section @code{\pagestyle}
@@ -15187,11 +15853,11 @@ Declaration that specifies how the page headers and footers are typeset,
 from the current page onwards.
 
 @PkgIndex{fancyhdr}
-A discussion with an example is below.  Note first that the package
+A discussion with an example is below.  First, however: the package
 @package{fancyhdr} is now the standard way to manipulate headers and
 footers.  New documents that need to do anything other than one of the
 standard options below should use this package.  See its documentation
-on CTAN.
+(@url{https://ctan.org/pkg/fancyhdr}).
 
 Values for @var{style}:
 
@@ -15310,6 +15976,35 @@ The @code{plain} style has a page number on it, centered in the footer.
 To make the page entirely empty, the command
 @code{\thispagestyle@{empty@}} immediately follows the second
 @code{\chapter}.
+
+
+@node \thepage
+@section @code{\thepage}
+
+@findex \thepage
+
+If you want to change the appearance of page numbers only in the page
+headers, for example by adding an ornament, typesetting in small caps,
+etc., then the @package{fancyhdr} package, as mentioned in a previous
+section, is the best approach.
+
+@cindex page number representation
+@cindex table of contents, page numbers in
+@cindex cross-references, page numbers in
+On the other hand, you may want to change how page numbers are denoted
+everywhere, including the table of contents and cross-references, as
+well as the page headers.  In this case, you should redefine
+@code{\thepage}, which is the command @LaTeX{} uses for the
+representation of page numbers.
+
+However, @code{\thepage} should do any typesetting or other
+complicated maneuvers, but merely expand to the intended page number
+representation.  The results of a complicated redefinition of
+@code{\thepage} are not predictable, but @LaTeX{}'s report of page
+numbers in diagnostic messages, at least, will become unusable.
+
+There is some discussion of this issue at
+@url{https://tex.stackexchange.com/questions/687258}.
 
 
 @node Spaces
@@ -15536,13 +16231,14 @@ Synopsis:
 @end example
 
 @findex \spacefactor
-Influence @LaTeX{}'s glue stretch and shrink behavior.  Most user-level
-documents do not use this command.
+@cindex space factor
+Influence @LaTeX{}'s stretching and shrinking of glue.  Few user-level
+documents need to use this.
 
 While @LaTeX{} is laying out the material, it may stretch or shrink the
 gaps between words.  (This space is not a character; it is called the
-@dfn{interword glue}; @pxref{\hspace}).  The @code{\spacefactor} command
-(from Plain@tie{}@TeX{}) allows you to, for instance, have the space
+@dfn{interword glue}; @pxref{\hspace}).  The @code{\spacefactor} parameter
+(a @TeX{} primitive) allows you to, for instance, have the space
 after a period stretch more than the space after a word-ending letter.
 
 After @LaTeX{} places each character, or rule or other box, it sets a
@@ -15552,45 +16248,46 @@ can happen.  A space factor that is larger than the normal value means
 that the glue can stretch more and shrink less.  Normally, the space
 factor is 1000. This value is in effect following most characters, and
 any non-character box or math formula.  But it is 3000 after a period,
-exclamation mark, or question mark, it is 2000 after a colon, 1500 after
+exclamation mark, or question mark, 2000 after a colon, 1500 after
 a semicolon, 1250 after a comma, and 0 after a right parenthesis or
 bracket, or closing double quote or single quote.  Finally, it is 999
 after a capital letter.
 
 If the space factor@tie{}@var{f} is 1000 then the glue gap will be the
 font's normal space value (for Computer Modern Roman 10 point this is
-3.3333@tie{}points).  Otherwise, if the space factor @var{f} is greater
+3.3333@dmn{pt}).  Otherwise, if the space factor @var{f} is greater
 than 2000 then @TeX{} adds the font's extra space value (for Computer
-Modern Roman 10 point this is 1.11111@tie{}points), and then the font's
+Modern Roman 10 point this is 1.11111@dmn{pt}), and then the font's
 normal stretch value is multiplied by @math{f /1000} and the normal
 shrink value is multiplied by @math{1000/f} (for Computer Modern Roman
-10 point these are 1.66666 and 1.11111@tie{}points).
+10 point these are 1.66666 and 1.11111@dmn{pt}).
 
-For example, consider the period ending @code{A man's best friend is his
-dog.}  After it, @TeX{} puts in a fixed extra space, and also allows the
-glue to stretch 3 times as much and shrink 1/3 as much, as the glue
-after @code{friend}, which does not end in a period.
+For example, consider the period ending @samp{A man's best friend is
+his dog.}.  After it, @TeX{} puts in a fixed extra space, and also
+allows the glue to stretch 3 times as much and shrink 1/3 as much, as
+the glue after @code{friend} or any of the other words, since they are
+not followed by punctuation.
 
 The rules for space factors are even more complex because they play
-additional roles.  In practice, there are two consequences.  First, if a
-period or other punctuation is followed by a right parenthesis or
-bracket, or right single or double quote then the spacing effect of that
-period carries through those characters (that is, the following glue
-will have increased stretch and shrink).  Second, if
-punctuation comes after a capital letter then its effect is not in place
-so you get an ordinary space.  This second case also affects abbreviations
-that do not end in a capital letter (@pxref{\@@}).
+additional roles.  In practice, there are two consequences.  First, if
+a period or other punctuation is followed by a right parenthesis or
+bracket, or right single or double quote then the spacing effect of
+that period carries through those characters (that is, the following
+glue will have increased stretch and shrink).  Second, if punctuation
+comes after a capital letter then the normal effect of the period is
+does not happen, so you get an ordinary space.  This second case also
+affects abbreviations that do not end in a capital letter
+(@pxref{\@@}).
 
 You can only use @code{\spacefactor} in paragraph mode or LR mode
 (@pxref{Modes}).  You can see the current value with
 @code{\the\spacefactor} or @code{\showthe\spacefactor}.
 
-(Comment, not really related to @code{\spacefactor}: if you get errors
-like @samp{You can't use `\spacefactor' in vertical mode}, or @samp{You
-can't use `\spacefactor' in math mode.}, or @samp{Improper \spacefactor}
-then you have probably tried to redefine an internal command.
-@xref{\makeatletter & \makeatother}.)
-
+Finally, not especially related to @code{\spacefactor} itself: if you
+get errors like @samp{You can't use `\spacefactor' in vertical mode},
+or @samp{You can't use `\spacefactor' in math mode.}, or
+@samp{Improper \spacefactor} then you have probably tried to redefine
+an internal command.  @xref{\makeatletter & \makeatother}.
 
 @menu
 * \@@::              Distinguish sentence-ending periods from abbreviations.  
@@ -15607,6 +16304,9 @@ then you have probably tried to redefine an internal command.
 @cindex period, sentence-ending
 @cindex period, abbreviation-ending
 @cindex period, spacing after
+@cindex sentence-ending punctuation
+@cindex non-sentence-ending punctuation
+@cindex punctuation, sentence-ending
 @anchor{\AT}@c old name
 
 Synopsis:
@@ -15615,13 +16315,11 @@ Synopsis:
 @var{capital-letter}\@@.    
 @end example
 
-Treat a period as sentence-ending, where @LaTeX{} would otherwise think
-it is part of an abbreviation.  @LaTeX{} thinks that a period ends an
-abbreviation if the period comes after a capital letter, and otherwise
-thinks the period ends the sentence.  By default, in justifying a line
-@LaTeX{} adjusts the space after a sentence-ending period (or a question
-mark, exclamation point, comma, or colon) more than it adjusts the space
-between words (@pxref{\spacefactor}).
+Treat a period (or other punctuation) as sentence-ending, where
+@LaTeX{} would otherwise think it is part of an abbreviation.
+@LaTeX{} thinks that a period ends an abbreviation if the period comes
+after a capital letter, and otherwise thinks the period ends the
+sentence.
 
 This example shows the two cases to remember.
 
@@ -15630,12 +16328,15 @@ The songs \textit@{Red Guitar@}, etc.\ are by Loudon Wainwright~III\@@.
 @end example
 
 @noindent
-The second period ends the sentence, despite that it is preceded by a
-capital.  We tell @LaTeX{} that it ends the sentence by putting
-@code{\@@} before it.  The first period ends the abbreviation
-@samp{etc.} but not the sentence.  The backslash-space, @code{\ },
-produces a mid-sentence space.
+The first period ends the abbreviation @samp{etc.} but not the
+sentence.  The backslash-space, @code{\ }, produces a mid-sentence
+space.  The second period ends the sentence, despite it being preceded
+by a capital letter.  We tell @LaTeX{} that it ends the sentence by
+putting @code{\@@} before it.
 
+@cindex right parentheses/quotes, and spacing
+@cindex parentheses and ends of sentences
+@cindex quotes and ends of sentences
 So: if you have a capital letter followed by a period that ends the
 sentence, then put @code{\@@} before the period.  This holds even if
 there is an intervening right parenthesis or bracket, or right single or
@@ -15650,17 +16351,24 @@ Use the \textit@{Instructional Practices Guide@},
 @noindent
 will have correct inter-sentence spacing after the period.
 
-The @code{\@@} command is only for a text mode. If you use it outside of
-a text mode then you get @samp{You can't use `\spacefactor' in vertical
-mode} (@pxref{Modes}).
+The @code{\@@} command is only for text modes. If you use it outside
+of a text mode then you get the error @samp{You can't use
+`\spacefactor' in vertical mode} (@pxref{Modes}).
 
-Comment: the converse case is a period ending an abbreviation whose last
-letter is not a capital letter, and that abbreviation is not the last
-word in the sentence.  For that case follow the period with a
+@cindex question marks, ending a sentence
+@cindex exclamation points, ending a sentence
+All the above applies equally to question marks and exclamation points
+as periods, since all are sentence-ending punctuation, and @LaTeX{}
+increases the space after each in the same way, when they end a
+sentence.  @LaTeX{} also increases spacing after colon, semicolon, and
+comma characters (@pxref{\spacefactor}).
+
+In addition: the converse case is a period (or other punctuation) that
+does not end a sentence.  For that case, follow the period with a
 backslash-space, (@code{\ }), or a tie, (@code{~}), or @code{\@@}.
 Examples are @code{Nat.\ Acad.\ Science}, and @code{Mr.~Bean}, and
 @code{(manure, etc.\@@) for sale} (note in the last one that the
-@code{\@@} comes before the closing parenthesis).
+@code{\@@} comes after the period but before the closing parenthesis).
 
 
 @node \frenchspacing & \nonfrenchspacing
@@ -15679,18 +16387,21 @@ Synopsis, one of:
 \nonfrenchspacing
 @end example
 
-The first declaration causes @LaTeX{} to handle spacing between
-sentences in the same way as spacing between words in the middle of a
-sentence.  The second switches back to the default handling in which
-spacing between sentences stretches or shrinks more
-(@pxref{\spacefactor}).
+@code{\frenchspacing} causes @LaTeX{} to make spacing after all
+punctuation, including periods, be the same as the space between words
+in the middle of a sentence.  @code{\nonfrenchspacing} switches back
+to the default handling in which spacing after most punctuation stretches
+or shrinks differently than a word space (@pxref{\spacefactor}).
 
-Some typographic traditions, including English, prefer to adjust the
-space between sentences (or spaces following a question mark,
-exclamation point, comma, or colon) more than the space between words
-that are in the middle of a sentence.  Declaring @code{\frenchspacing}
-(the command is from plain @TeX{}) switches to the tradition that all
-spaces are treated equally.
+In American English, the typesetting tradition is to adjust, typically
+increasing, the space after punctuation more than the space between
+words that are in the middle of a sentence.  Declaring
+@code{\frenchspacing} (the command is inherited from plain @TeX{})
+switches to the tradition that all spaces are treated equally.
+
+If your @LaTeX{} document specifies the language being used, for
+example with the @package{babel} package, the necessary settings
+should be taken care of for you.
 
 
 @node \normalsfcodes
@@ -15719,7 +16430,7 @@ Reset the @LaTeX{} space factors to the default values
 @findex \@key{SPACE}
 
 This section refers to the command consisting of two characters, a
-backslash followed by a space.@*Synopsis:
+backslash followed by a space. Synopsis:
 
 @example
 \@w{ }
@@ -15728,8 +16439,9 @@ backslash followed by a space.@*Synopsis:
 Produce a space. By default it produces white space of length
 3.33333@dmn{pt} plus 1.66666@dmn{pt} minus 1.11111@dmn{pt}.
 
-When you type one or more blanks between words, @LaTeX{} produces white
-space.  But that is different than an explicit space.  This illustrates.
+When you type one or more blanks between words, @LaTeX{} produces
+whitespace that is different than an explicit space.  This
+illustrates:
 
 @example
 \begin@{tabular@}@{rl@}
@@ -15765,9 +16477,9 @@ Under normal circumstances, @code{\}@key{TAB} and @code{\}@key{NEWLINE}
 are equivalent to backslash-space, @code{\ }.
 
 @anchor{Leading blanks}
-Please also note that in order to allow source code indentation, under
-normal circumstances, @TeX{} ignores leading blanks in a line. So the
-following prints @samp{one word}:
+In order to allow source code indentation, under normal circumstances,
+@TeX{} ignores leading blanks in a line. So the following prints
+@samp{one word}:
 
 @example
 one
@@ -15784,7 +16496,7 @@ the newline after @samp{one}, not by the space before @samp{word}.
 
 
 @node ~
-@section @code{~}
+@section @code{~}, @code{\nobreakspace}
 
 @findex ~
 @cindex tie
@@ -15799,10 +16511,14 @@ Synopsis:
 @var{before}~@var{after}
 @end example
 
+@findex \nobreakspace
+@cindex no-break space, Unicode U+00A0
 The @dfn{tie} character, @code{~}, produces a space between @var{before} and
 @var{after} at which the line will not be broken. By default the white
 space has length 3.33333@dmn{pt} plus 1.66666@dmn{pt} minus
-1.11111@dmn{pt} (@pxref{Lengths}).
+1.11111@dmn{pt} (@pxref{Lengths}).  The command @code{\nobreakspace}
+and the Unicode input character U+00A0 (also in many 8-bit encodings)
+are synonyms.
 
 @c This paragraph is not translated to French, as the French translation
 @c uses a term that means ``unbreakable''.
@@ -15821,14 +16537,14 @@ Thanks to Prof.~Lerman.
 In addition, despite the period, @LaTeX{} does not use the
 end-of-sentence spacing (@pxref{\@@}).
 
-Ties prevent the end of line separation of things where that could
-cause confusion. They also still allow hyphenation (of either of the
-tied words), so they are generally preferable to putting consecutive
-words in an @code{\mbox} (@pxref{\mbox & \makebox}). 
+Ties prevent a line break where that could cause confusion. They also
+still allow hyphenation (of either of the tied words), so they are
+generally preferable to putting consecutive words in an @code{\mbox}
+(@pxref{\mbox & \makebox}).
 
-They are also matters of taste, sometimes alarmingly dogmatic taste,
-among readers. Nevertheless, here are some usage models, many of them
-from @cite{The @TeX{}book}.
+Exactly where ties should be used is something of a matter of taste,
+sometimes alarmingly dogmatic taste, among readers. Nevertheless, here
+are some usage models, many of them from @cite{The @TeX{}book}.
 
 @itemize @bullet
 @item
@@ -16492,7 +17208,7 @@ enough to contain the @var{text}.  (They are like plain @TeX{}'s
 In the third version the optional argument @var{width} specifies the
 width of the box.  Note that the space occupied by the text need not
 equal the width of the box.  For one thing, @var{text} can be too small;
-this creates a full-line box
+this creates a full-line box:
 
 @example
 \makebox[\linewidth]@{Chapter Exam@}
@@ -16956,377 +17672,6 @@ the commands @code{\sbox} or @code{\savebox}, or the @code{lrbox}
 environment.  For more information and examples, @pxref{\sbox &
 \savebox}.  (Note that the variable name @var{box-cmd} starts with a
 backslash, @code{\}.)  This command is robust (@pxref{\protect}).
-
-
-@node Color
-@chapter Color
-
-@cindex color
-
-You can add color to text, rules, etc.  You can also have color in a box
-or on an entire page and write text on top of it.
-
-Color support comes as an additional package.  So put
-@code{\usepackage@{color@}} in your document preamble to use the
-commands described here.
-
-Many other packages also supplement @LaTeX{}'s color abilities.
-Particularly worth mentioning is @file{xcolor}, which is widely used and
-significantly extends the capabilities described here, including adding
-@samp{HTML} and @samp{Hsb} color models.
-
-@menu
-* Color package options::       Options when you load the standard package.
-* Color models::                How colors are represented.
-* Commands for color::          The available commands.
-@end menu
-
-
-@node Color package options
-@section @code{color} package options
-
-@cindex color package options
-@cindex options, color package
-
-Synopsis (must be in the document preamble):
-
-@example
-\usepackage[@var{comma-separated option list}]@{color@}
-@end example
-
-When you load the @file{color} package there are two kinds of available
-options.
-
-The first specifies the @dfn{printer driver}.  @LaTeX{} doesn't contain
-information about different output systems but instead depends on
-information stored in a file.  Normally you should not specify the
-driver option in the document, and instead rely on your system's
-default. One advantage of this is that it makes the document portable
-across systems.  For completeness we include a list of the drivers.  The
-currently relevant ones are: @file{dvipdfmx}, @file{dvips},
-@file{dvisvgm}, @file{luatex}, @file{pdftex}, @file{xetex}.  The two
-@file{xdvi} and @file{oztex} are essentially aliases for @file{dvips}
-(and @file{xdvi} is monochrome).  Ones that should not be used for new
-systems are: @file{dvipdf}, @file{dvipdfm}, @file{dviwin},
-@file{dvipsone}, @file{emtex}, @file{pctexps}, @file{pctexwin},
-@file{pctexhp}, @file{pctex32}, @file{truetex}, @file{tcidvi},
-@file{vtex} (and @file{dviwindo} is an alias for @file{dvipsone}).
-
-The second kind of options, beyond the drivers, are below.
-
-@table @code
-
-@item monochrome
-Disable the color commands, so that they do not generate errors but do
-not generate color either.
-
-@item dvipsnames
-Make available a list of 68 color names that are often used,
-particularly in legacy documents.  These color names were originally
-provided by the @file{dvips} driver, giving the option name.
-
-@item nodvipsnames
-Do not load that list of color names, saving @LaTeX{} a tiny amount of
-memory space.
-
-@end table
-
-
-@node Color models
-@section Color models
-
-@cindex color models
-
-A @dfn{color model} is a way of representing colors.  @LaTeX{}'s
-capabilities depend on the printer driver.  However, the @file{pdftex},
-@file{xetex}, and @file{luatex} printer drivers are today by far the
-most commonly used.  The models below work for those drivers.  All but
-one of these is also supported by essentially all other printer drivers
-used today.
-
-Note that color combination can be additive or subtractive.  Additive
-mixes colors of light, so that for instance combining full intensities
-of red, green, and blue produces white.  Subtractive mixes pigments,
-such as with inks, so that combining full intensity of cyan, magenta,
-and yellow makes black.
-
-@table @code
-@anchor{color models cmyk}
-@item cmyk
-A comma-separated list with four real numbers between 0 and 1,
-inclusive.  The first number is the intensity of cyan, the second is
-magenta, and the others are yellow and black.  A number value of 0 means
-minimal intensity, while a 1 is for full intensity.  This model is often
-used in color printing.  It is a subtractive model.
-
-@anchor{color models gray}
-@item gray
-A single real number between 0 and 1, inclusive.  The colors are shades
-of grey.  The number 0 produces black while 1 gives white.
-
-@anchor{color models rgb}
-@item rgb
-A comma-separated list with three real numbers between 0 and 1,
-inclusive.  The first number is the intensity of the red component, the
-second is green, and the third the blue.  A number value of 0 means that
-none of that component is added in, while a 1 means full intensity.
-This is an additive model.
-
-@anchor{color models RGB}
-@item RGB
-(@file{pdftex}, @file{xetex}, @file{luatex} drivers) A comma-separated
-list with three integers between 0 and 255, inclusive.  This model is a
-convenience for using @code{rgb} since outside of @LaTeX{} colors are
-often described in a red-green-blue model using numbers in this range.
-The values entered here are converted to the @code{rgb} model by
-dividing by 255.
-
-@anchor{color models named}
-@item named
-Colors are accessed by name, such as @samp{PrussianBlue}.  The list of
-names depends on the driver, but all support the names @samp{black},
-@samp{blue}, @samp{cyan}, @samp{green}, @samp{magenta}, @samp{red},
-@samp{white}, and @samp{yellow} (See the @code{dvipsnames} option in
-@ref{Color package options}).
-
-@end table
-
-
-@node Commands for color
-@section Commands for color
-
-@cindex color package commands
-
-These are the commands available with the @file{color} package.
-
-@menu
-* Define colors::            Give a color a name.
-* Colored text::             Text or rules in color.
-* Colored boxes::            A box of color, to write over.
-* Colored pages::            A whole page colored.
-@end menu
-
-
-@node Define colors
-@subsection Define colors
-
-@cindex color
-@cindex define color
-@cindex color, define 
-
-Synopsis:
-
-@example
-\definecolor@{@var{name}@}@{@var{model}@}@{@var{specification}@}
-@end example
-
-Give the name @var{name} to the color.  For example, after this
-
-@example
-\definecolor@{silver@}@{rgb@}@{0.75,0.75,0.74@}
-@end example
-
-@noindent
-you can use that color name with @code{Hi ho,
-\textcolor@{silver@}@{Silver@}!}.
-
-This example gives the color a more abstract name, so it could change and
-not be misleading.
-
-@example
-\definecolor@{logocolor@}@{RGB@}@{145,92,131@}    % RGB needs pdflatex
-\newcommand@{\logo@}@{\textcolor@{logocolor@}@{Bob's Big Bagels@}@}
-@end example
-
-Often a document's colors are defined in the preamble, or in the class
-or style, rather than in the document body.
-
-
-@node Colored text
-@subsection Colored text
-
-@cindex color
-@cindex colored text
-
-Synopses:
-
-@example
-\textcolor@{@var{name}@}@{...@}
-\textcolor[@var{color model}]@{@var{color specification}@}@{...@}
-@end example
-
-@noindent
-or
-
-@example
-\color@{@var{name}@}
-\color[@var{color model}]@{@var{color specification}@}
-@end example
-
-The affected text gets the color.  This line
-
-@example
-\textcolor@{magenta@}@{My name is Ozymandias, King of Kings;@}
-Look on my works, ye Mighty, and despair!
-@end example
-
-@noindent
-causes the first half to be in magenta while the rest is in black.  You
-can use a color declared with @code{\definecolor} in exactly the same
-way that we just used the builtin color @samp{magenta}.
-
-@example
-\definecolor@{MidlifeCrisisRed@}@{rgb@}@{1.0,0.11,0.0@}
-I'm thinking about getting a \textcolor@{MidlifeCrisisRed@}@{sports car@}.
-@end example
-
-The two @code{\textcolor} and @code{\color} differ in that the first is
-a command form, enclosing the text to be colored as an argument.  Often
-this form is more convenient, or at least more explicit.  The second
-form is a declaration, as in @code{The moon is made of @{\color@{green@}
-green@} cheese}, so it is in effect until the end of the current group
-or environment.  This is sometimes useful when writing macros or as
-below where it colors everything inside the @code{center} environment,
-including the vertical and horizontal lines.
-
-@example
-\begin@{center@} \color@{blue@}
-  \begin@{tabular@}@{l|r@}
-    UL &UR \\ \hline
-    LL &LR 
-  \end@{tabular@}
-\end@{center@}
-@end example
-
-You can use color in equations.  A document might have this definition
-in the preamble
-
-@example
-\definecolor@{highlightcolor@}@{RGB@}@{225,15,0@}
-@end example
-
-@noindent
-and then contain this equation.
-
-@example
-\begin@{equation@}
-  \int_a^b \textcolor@{highlightcolor@}@{f'(x)@}\,dx=f(b)-f(a)
-\end@{equation@}
-@end example
-
-Typically the colors used in a document are declared in a class or style
-but sometimes you want a one-off.  Those are the second forms in the
-synopses.
-
-@example
-Colors of \textcolor[rgb]@{0.33,0.14,0.47@}@{Purple@} and
-@{\color[rgb]@{0.72,0.60,0.37@}Gold@} for the team.
-@end example
-
-The format of @var{color specification} depends on the color model
-(@pxref{Color models}).  For instance, while @code{rgb} takes three
-numbers, @code{gray} takes only one.
-
-@example
-The selection was \textcolor[gray]@{0.5@}@{grayed out@}.
-@end example
-
-Colors inside colors do not combine.  Thus
-
-@example
-\textcolor@{green@}@{kind of \textcolor@{blue@}@{blue@}@}
-@end example
-
-@noindent
-has a final word that is blue, not a combination of blue and green.
-
-@c xx address coloring a line of a table?
-
-
-@node Colored boxes
-@subsection Colored boxes
-
-@cindex color
-@cindex colored boxes
-@cindex box, colored
-
-Synopses:
-
-@example
-\colorbox@{@var{name}@}@{...@}
-\colorbox[@var{model name}]@{@var{box background color}@}@{...@}
-@end example
-
-@noindent
-or
-
-@example
-\fcolorbox@{@var{frame color}@}@{@var{box background color}@}@{...@}
-\fcolorbox[@var{model name}]@{@var{frame color}@}@{@var{box background color}@}@{...@}
-@end example
-
-Make a box with the stated background color.  The @code{\fcolorbox}
-command puts a frame around the box.  For instance this
-
-@example
-Name:~\colorbox@{cyan@}@{\makebox[5cm][l]@{\strut@}@}
-@end example
-
-@noindent
-makes a cyan-colored box that is five centimeters long and gets its
-depth and height from the @code{\strut} (so the depth is
-@code{-.3\baselineskip} and the height is @code{\baselineskip}).  This
-puts white text on a blue background.
-
-@example
-\colorbox@{blue@}@{\textcolor@{white@}@{Welcome to the machine.@}@}
-@end example
-
-The @code{\fcolorbox} commands use the same parameters as @code{\fbox}
-(@pxref{\fbox & \framebox}), @code{\fboxrule} and @code{\fboxsep}, to
-set the thickness of the rule and the boundary between the box interior
-and the surrounding rule.  @LaTeX{}'s defaults are @code{0.4pt} and
-@code{3pt}, respectively.
-
-This example changes the thickness of the border to 0.8 points.  Note
-that it is surrounded by curly braces so that the change ends at the end
-of the second line.
-
-@example
-@{\setlength@{\fboxrule@}@{0.8pt@}
-\fcolorbox@{black@}@{red@}@{Under no circumstances turn this knob.@}@}
-@end example
-
-
-@node Colored pages
-@subsection Colored pages
-
-@cindex color
-@cindex colored page
-@cindex page, colored 
-@cindex background, colored
-
-Synopses:
-
-@example
-\pagecolor@{@var{name}@}
-\pagecolor[@var{color model}]@{@var{color specification}@}
-\nopagecolor
-@end example
-
-The first two set the background of the page, and all subsequent pages,
-to the color.  For an explanation of the specification in the second
-form @pxref{Colored text}.  The third returns the background to normal,
-which is a transparent background.  (If that is not supported use
-@code{\pagecolor@{white@}}, although that will make a white background
-rather than the default transparent background.)
-
-@example
- ...
-\pagecolor@{cyan@}
- ...
-\nopagecolor
-@end example
 
 
 @node Graphics
@@ -18084,8 +18429,8 @@ override a prior setting of @code{true}, you can set it to @code{false}.
 
 These following options allow a user to override @LaTeX{}'s method of
 choosing the graphic type based on the filename extension.  An example
-is that @code{\includegraphics[type=png,ext=.xxx,read=.xxx]@{lion@}}
-will read the file @file{lion.xxx} as though it were
+is that @code{\includegraphics[type=png,ext=.xyz,read=.xyz]@{lion@}}
+will read the file @file{lion.xyz} as though it were
 @file{lion.png}. For more on these, @pxref{\DeclareGraphicsRule}.
 
 @table @code
@@ -18294,6 +18639,376 @@ text two inches wide but keep the original height with
 @code{\resizebox@{2in@}@{\height@}@{Two inches@}}.
 
 
+@node Color
+@chapter Color
+
+@cindex color
+
+You can add color to text, rules, etc.  You can also have color in a box
+or on an entire page and write text on top of it.
+
+Color support comes as an additional package.  So put
+@code{\usepackage@{color@}} in your document preamble to use the
+commands described here.
+
+Many other packages also supplement @LaTeX{}'s color abilities.
+Particularly worth mentioning is @file{xcolor}, which is widely used and
+significantly extends the capabilities described here, including adding
+@samp{HTML} and @samp{Hsb} color models.
+
+@menu
+* Color package options::       Options when you load the standard package.
+* Color models::                How colors are represented.
+* Commands for color::          The available commands.
+@end menu
+
+
+@node Color package options
+@section @code{color} package options
+
+@cindex color package options
+@cindex options, color package
+
+Synopsis (must be in the document preamble):
+
+@example
+\usepackage[@var{comma-separated option list}]@{color@}
+@end example
+
+When you load the @file{color} package there are two kinds of available
+options.
+
+The first specifies the @dfn{printer driver}.  @LaTeX{} doesn't contain
+information about different output systems but instead depends on
+information stored in a file.  Normally you should not specify the
+driver option in the document, and instead rely on your system's
+default. One advantage of this is that it makes the document portable
+across systems.  For completeness we include a list of the drivers.  The
+currently relevant ones are: @file{dvipdfmx}, @file{dvips},
+@file{dvisvgm}, @file{luatex}, @file{pdftex}, @file{xetex}.  The two
+@file{xdvi} and @file{oztex} are essentially aliases for @file{dvips}
+(and @file{xdvi} is monochrome).  Ones that should not be used for new
+systems are: @file{dvipdf}, @file{dvipdfm}, @file{dviwin},
+@file{dvipsone}, @file{emtex}, @file{pctexps}, @file{pctexwin},
+@file{pctexhp}, @file{pctex32}, @file{truetex}, @file{tcidvi},
+@file{vtex} (and @file{dviwindo} is an alias for @file{dvipsone}).
+
+The second kind of options, beyond the drivers, are below.
+
+@table @code
+@item monochrome
+Disable the color commands, so that they do not generate errors but do
+not generate color either.
+
+@item dvipsnames
+Make available a list of 68 color names that are often used,
+particularly in legacy documents.  These color names were originally
+provided by the @file{dvips} driver, giving the option name.
+
+@item nodvipsnames
+Do not load that list of color names, saving @LaTeX{} a tiny amount of
+memory space.
+
+@end table
+
+
+@node Color models
+@section Color models
+
+@cindex color models
+
+A @dfn{color model} is a way of representing colors.  @LaTeX{}'s
+capabilities depend on the printer driver.  However, the @file{pdftex},
+@file{xetex}, and @file{luatex} printer drivers are today by far the
+most commonly used.  The models below work for those drivers.  All but
+one of these is also supported by essentially all other printer drivers
+used today.
+
+Note that color combination can be additive or subtractive.  Additive
+mixes colors of light, so that for instance combining full intensities
+of red, green, and blue produces white.  Subtractive mixes pigments,
+such as with inks, so that combining full intensity of cyan, magenta,
+and yellow makes black.
+
+@table @code
+@anchor{color models cmyk}
+@item cmyk
+A comma-separated list with four real numbers between 0 and 1,
+inclusive.  The first number is the intensity of cyan, the second is
+magenta, and the others are yellow and black.  A number value of 0 means
+minimal intensity, while a 1 is for full intensity.  This model is often
+used in color printing.  It is a subtractive model.
+
+@anchor{color models gray}
+@item gray
+A single real number between 0 and 1, inclusive.  The colors are shades
+of grey.  The number 0 produces black while 1 gives white.
+
+@anchor{color models rgb}
+@item rgb
+A comma-separated list with three real numbers between 0 and 1,
+inclusive.  The first number is the intensity of the red component, the
+second is green, and the third the blue.  A number value of 0 means that
+none of that component is added in, while a 1 means full intensity.
+This is an additive model.
+
+@anchor{color models RGB}
+@item RGB
+(@file{pdftex}, @file{xetex}, @file{luatex} drivers) A comma-separated
+list with three integers between 0 and 255, inclusive.  This model is a
+convenience for using @code{rgb} since outside of @LaTeX{} colors are
+often described in a red-green-blue model using numbers in this range.
+The values entered here are converted to the @code{rgb} model by
+dividing by 255.
+
+@anchor{color models named}
+@item named
+Colors are accessed by name, such as @samp{PrussianBlue}.  The list of
+names depends on the driver, but all support the names @samp{black},
+@samp{blue}, @samp{cyan}, @samp{green}, @samp{magenta}, @samp{red},
+@samp{white}, and @samp{yellow} (See the @code{dvipsnames} option in
+@ref{Color package options}).
+
+@end table
+
+
+@node Commands for color
+@section Commands for color
+
+@cindex color package commands
+
+These are the commands available with the @file{color} package.
+
+@menu
+* Define colors::            Give a color a name.
+* Colored text::             Text or rules in color.
+* Colored boxes::            A box of color, to write over.
+* Colored pages::            A whole page colored.
+@end menu
+
+
+@node Define colors
+@subsection Define colors
+
+@cindex color
+@cindex define color
+@cindex color, define 
+
+Synopsis:
+
+@example
+\definecolor@{@var{name}@}@{@var{model}@}@{@var{specification}@}
+@end example
+
+Give the name @var{name} to the color.  For example, after this
+
+@example
+\definecolor@{silver@}@{rgb@}@{0.75,0.75,0.74@}
+@end example
+
+@noindent
+you can use that color name with @code{Hi ho,
+\textcolor@{silver@}@{Silver@}!}.
+
+This example gives the color a more abstract name, so it could change and
+not be misleading.
+
+@example
+\definecolor@{logocolor@}@{RGB@}@{145,92,131@}    % RGB needs pdflatex
+\newcommand@{\logo@}@{\textcolor@{logocolor@}@{Bob's Big Bagels@}@}
+@end example
+
+Often a document's colors are defined in the preamble, or in the class
+or style, rather than in the document body.
+
+
+@node Colored text
+@subsection Colored text
+
+@cindex color
+@cindex colored text
+
+Synopses:
+
+@example
+\textcolor@{@var{name}@}@{...@}
+\textcolor[@var{color model}]@{@var{color specification}@}@{...@}
+@end example
+
+@noindent
+or
+
+@example
+\color@{@var{name}@}
+\color[@var{color model}]@{@var{color specification}@}
+@end example
+
+The affected text gets the color.  This line
+
+@example
+\textcolor@{magenta@}@{My name is Ozymandias, King of Kings;@}
+Look on my works, ye Mighty, and despair!
+@end example
+
+@noindent
+causes the first half to be in magenta while the rest is in black.  You
+can use a color declared with @code{\definecolor} in exactly the same
+way that we just used the builtin color @samp{magenta}.
+
+@example
+\definecolor@{MidlifeCrisisRed@}@{rgb@}@{1.0,0.11,0.0@}
+I'm thinking about getting a \textcolor@{MidlifeCrisisRed@}@{sports car@}.
+@end example
+
+The two @code{\textcolor} and @code{\color} differ in that the first is
+a command form, enclosing the text to be colored as an argument.  Often
+this form is more convenient, or at least more explicit.  The second
+form is a declaration, as in @code{The moon is made of @{\color@{green@}
+green@} cheese}, so it is in effect until the end of the current group
+or environment.  This is sometimes useful when writing macros or as
+below where it colors everything inside the @code{center} environment,
+including the vertical and horizontal lines.
+
+@example
+\begin@{center@} \color@{blue@}
+  \begin@{tabular@}@{l|r@}
+    UL &UR \\ \hline
+    LL &LR 
+  \end@{tabular@}
+\end@{center@}
+@end example
+
+You can use color in equations.  A document might have this definition
+in the preamble
+
+@example
+\definecolor@{highlightcolor@}@{RGB@}@{225,15,0@}
+@end example
+
+@noindent
+and then contain this equation.
+
+@example
+\begin@{equation@}
+  \int_a^b \textcolor@{highlightcolor@}@{f'(x)@}\,dx=f(b)-f(a)
+\end@{equation@}
+@end example
+
+Typically the colors used in a document are declared in a class or style
+but sometimes you want a one-off.  Those are the second forms in the
+synopses.
+
+@example
+Colors of \textcolor[rgb]@{0.33,0.14,0.47@}@{Purple@} and
+@{\color[rgb]@{0.72,0.60,0.37@}Gold@} for the team.
+@end example
+
+The format of @var{color specification} depends on the color model
+(@pxref{Color models}).  For instance, while @code{rgb} takes three
+numbers, @code{gray} takes only one.
+
+@example
+The selection was \textcolor[gray]@{0.5@}@{grayed out@}.
+@end example
+
+Colors inside colors do not combine.  Thus
+
+@example
+\textcolor@{green@}@{kind of \textcolor@{blue@}@{blue@}@}
+@end example
+
+@noindent
+has a final word that is blue, not a combination of blue and green.
+
+@c xx address coloring a line of a table?
+
+
+@node Colored boxes
+@subsection Colored boxes
+
+@cindex color
+@cindex colored boxes
+@cindex box, colored
+
+Synopses:
+
+@example
+\colorbox@{@var{name}@}@{...@}
+\colorbox[@var{model name}]@{@var{box background color}@}@{...@}
+@end example
+
+@noindent
+or
+
+@example
+\fcolorbox@{@var{frame color}@}@{@var{box background color}@}@{...@}
+\fcolorbox[@var{model name}]@{@var{frame color}@}@{@var{box background color}@}@{...@}
+@end example
+
+Make a box with the stated background color.  The @code{\fcolorbox}
+command puts a frame around the box.  For instance this
+
+@example
+Name:~\colorbox@{cyan@}@{\makebox[5cm][l]@{\strut@}@}
+@end example
+
+@noindent
+makes a cyan-colored box that is five centimeters long and gets its
+depth and height from the @code{\strut} (so the depth is
+@code{-.3\baselineskip} and the height is @code{\baselineskip}).  This
+puts white text on a blue background.
+
+@example
+\colorbox@{blue@}@{\textcolor@{white@}@{Welcome to the machine.@}@}
+@end example
+
+The @code{\fcolorbox} commands use the same parameters as @code{\fbox}
+(@pxref{\fbox & \framebox}), @code{\fboxrule} and @code{\fboxsep}, to
+set the thickness of the rule and the boundary between the box interior
+and the surrounding rule.  @LaTeX{}'s defaults are @code{0.4pt} and
+@code{3pt}, respectively.
+
+This example changes the thickness of the border to 0.8 points.  Note
+that it is surrounded by curly braces so that the change ends at the end
+of the second line.
+
+@example
+@{\setlength@{\fboxrule@}@{0.8pt@}
+\fcolorbox@{black@}@{red@}@{Under no circumstances turn this knob.@}@}
+@end example
+
+
+@node Colored pages
+@subsection Colored pages
+
+@cindex color
+@cindex colored page
+@cindex page, colored 
+@cindex background, colored
+
+Synopses:
+
+@example
+\pagecolor@{@var{name}@}
+\pagecolor[@var{color model}]@{@var{color specification}@}
+\nopagecolor
+@end example
+
+The first two set the background of the page, and all subsequent pages,
+to the color.  For an explanation of the specification in the second
+form @pxref{Colored text}.  The third returns the background to normal,
+which is a transparent background.  (If that is not supported use
+@code{\pagecolor@{white@}}, although that will make a white background
+rather than the default transparent background.)
+
+@example
+ ...
+\pagecolor@{cyan@}
+ ...
+\nopagecolor
+@end example
+
+
 @node Special insertions
 @chapter Special insertions
 
@@ -18304,7 +19019,7 @@ text two inches wide but keep the original height with
 special meaning do not correspond to simple characters you can type.
 
 @menu
-* Reserved characters::         Inserting @samp{# $ % & @{ @} _ ~ ^ \}
+* Printing special characters:: Inserting @samp{# $ % & @{ @} _ ~ ^ \}
 * Upper and lower case::        Make text upper or lower case.
 * Symbols by font position::    Inserting font symbols by number.
 * Text symbols::                Inserting other non-letter symbols in text.
@@ -18316,21 +19031,23 @@ special meaning do not correspond to simple characters you can type.
 @end menu
 
 
-@node Reserved characters
-@section Reserved characters
+@node Printing special characters
+@section Printing special characters
 
-@cindex reserved characters
-@cindex characters, reserved
-@cindex special characters
-@cindex characters, special
-@LaTeX{} sets aside the following characters for special purposes. For
-example, the percent sign@tie{}@code{%} is for comments.  They are
-called @dfn{reserved characters} or @dfn{special characters}. They are
-all discussed elsewhere in this manual.
+@cindex reserved characters, printing
+@cindex special characters, printing
+@cindex printing special characters
+@cindex escaping special characters
+
+@LaTeX{} sets aside a few characters for special purposes; they are
+called reserved characters or special characters. Here they are:
 
 @example
 # $ % & @{ @} _ ~ ^ \ 
 @end example
+
+The meaning of all the special characters is given elsewhere
+in this manual (@pxref{Reserved characters}).
 
 @findex \#
 @findex \$
@@ -18341,8 +19058,8 @@ all discussed elsewhere in this manual.
 @findex \@}
 If you want a reserved character to be printed as itself, in the text
 body font, for all but the final three characters in that list simply
-put a backslash@tie{}@code{\} in front of the character.  Thus,
-typing @code{\$1.23} will produce@tie{}@code{$1.23} in your output.
+put a @code{\} in front of the character.  Thus, typing @code{\$1.23}
+will produce @code{$1.23} in your output.
 
 @findex \~
 @findex \^ 
@@ -18353,13 +19070,13 @@ character receiving a tilde accent).  Similarly, to get a text body
 font circumflex use @code{\^@{@}}.  To get a backslash in the font of
 the text body, enter @code{\textbackslash@{@}}.
 
-To produce the reserved characters in a typewriter font use
-@code{\verb!!} as below (the double backslash@tie{}@code{\\} in the
-example is only there to split the lines in the output).
+To produce the reserved characters in a typewriter font, use
+@code{\verb!!} as below (the @code{\newline} in the example is there
+only to split the lines in the output).
 
 @example
 \begin@{center@}
-  \# \$ \% \& \@{ \@} \_ \~@{@} \^@{@} \textbackslash \\
+  \# \$ \% \& \@{ \@} \_ \~@{@} \^@{@} \textbackslash \newline
   \verb!# $ % & @{ @} _ ~ ^ \!
 \end@{center@}
 @end example
@@ -18493,7 +19210,9 @@ The @LaTeX{} logo.
 @cindex logo, @LaTeX{}2e
 The @LaTeX{}2e logo.
 
-@item \guillemotleft @r{(@guillemotleft{})}
+@item \guillemetleft @r{(@guillemetleft{})}
+@itemx \guillemetright @r{(@guillemetright{})}
+@itemx \guillemotleft @r{(@guillemotleft{})}
 @itemx \guillemotright @r{(@guillemotright{})}
 @itemx \guilsinglleft @r{(@guilsinglleft{})}
 @itemx \guilsinglright @r{(@guilsinglright{})}
@@ -18505,8 +19224,12 @@ The @LaTeX{}2e logo.
 @cindex single angle quotation marks
 @cindex French quotation marks
 @cindex quotation marks, French
-@guillemotleft{}, @guillemotright{}, @guilsinglleft{}, @guilsinglright{}
+@cindex guillemots, birds
+@guillemetleft{}, @guillemetright{}, @guilsinglleft{}, @guilsinglright{}
 Double and single angle quotation marks, commonly used in French.
+The commands @code{@@guillemotleft} and @code{@@guillemotright} are
+synonyms for @code{@@guillemet...}; these are misspellings inherited
+from Adobe. (Guillemots are seabirds; guillemets are French quotes.)
 
 @item \ldots
 @itemx \textellipsis
@@ -19135,61 +19858,58 @@ Synopsis:
 \usepackage[@var{encoding-name}]@{inputenc@}
 @end example
 
-Declare the input file's text encoding to be @var{encoding-name}. The
-default, if this package is not loaded, is UTF-8.  Technically,
-specifying the encoding name is optional, but in practice it is not
-useful to omit it.
+Declare the input file's text encoding to be @var{encoding-name}. (For
+basic background, @pxref{Input encodings}). The default, if this
+package is not loaded, is UTF-8.  Technically, specifying the encoding
+name is optional, but in practice it is not useful to omit it.
 
-@cindex encoding, of input files
-@cindex character encoding
-@cindex Unicode
-In a computer file, the characters are stored according to a scheme
-called the @dfn{encoding}.  There are many different encodings.  The
-simplest is ASCII, which supports 95 printable characters, not enough
-for most of the world's languages. For instance, to typeset the
-a-umlaut character @samp{@"{a}} in an ASCII-encoded @LaTeX{} source file, the
-sequence @code{\"a} is used. This would make source files for anything
-but English hard to read; even for English, often a more extensive
-encoding is more convenient.
-
-The modern encoding standard, in some ways a union of the others, is
-UTF-8, one of the representations of Unicode. This is the default for
-@LaTeX{} since 2018. 
-
-The @code{inputenc} package is how @LaTeX{} knows what encoding is
-used.  For instance, the following command explicitly says that the
-input file is UTF-8 (note the lack of a dash).
+The @code{inputenc} package tells @LaTeX{} what encoding is used.  For
+instance, the following command explicitly says that the input file is
+UTF-8 (note the lack of a dash).
 
 @example
 \usepackage[utf8]@{inputenc@}
 @end example
 
+The most common values for @var{encoding-name} are: @code{ascii},
+@code{latin1}, @code{latin2}, @code{latin3}, @code{latin4},
+@code{latin5}, @code{latin9}, @code{latin10}, @code{utf8}.
+
 Caution: use @code{inputenc} only with the pdf@TeX{} engine
-(@pxref{@TeX{} engines}).  (The Xe@TeX{} and Lua@TeX{} engines assume
-that the input file is UTF-8 encoded.)  If you invoke @LaTeX{} with
-either the @command{xelatex} command or the @command{lualatex}
-command, and try to declare a non-UTF-8 encoding with @code{inputenc},
-such as @code{latin1}, then you will get the error @code{inputenc is
-not designed for xetex or luatex}.
+(@pxref{@TeX{} engines}); with @command{xelatex} or
+@command{lualatex}, declaring a non-UTF-8 encoding with
+@code{inputenc}, such as @code{latin1}, will get the error
+@code{inputenc is not designed for xetex or luatex}.
 
 An @code{inputenc} package error such as @code{Invalid UTF-8 byte "96}
 means that some of the material in the input file does not follow the
 encoding scheme.  Often these errors come from copying material from a
-document that uses a different encoding than the input file; this one
-is a left single quote from a web page using @code{latin1} inside a
-@LaTeX{} input file that uses UTF-8.  The simplest solution is to
-replace the non-UTF-8 character with its UTF-8 equivalent, or use a
-@LaTeX{} equivalent command or character.
+document that uses a different encoding than the input file. The
+simplest solution is often to replace the non-UTF-8 character with a
+UTF-8 or @LaTeX{} equivalent.
+
+@PkgIndex luainputenc
+@findex \XeTeXinputencoding
+@findex \XeTeXdefaultencoding
+If you need to process a non-UTF-8 document with Lua@TeX{}, you can
+use the @code{luainputenc} package
+(@url{https://ctan.org/pkg/luainputenc}). With Xe@TeX{}, the
+@code{\XeTeXinputencoding} and @code{\XeTeXdefaultencoding} primitives
+can be used (for an explanation and examples, see
+@url{https://tex.stackexchange.com/questions/324948}).
+
+@pindex recode @r{to change character encoding}
+@pindex iconv @r{to change character encoding}
+It's also possible to re-encode a document from an 8-bit encoding to
+UTF-8 outside of @TeX{}, using system utilities. For example,
+@samp{recode latin1..utf8} or @samp{iconv -f latin1 -t utf8}.
 
 @findex \inputencoding
 @anchor{\inputencoding}
-In some documents, such as a collection of journal articles from a
+In a few documents, such as a collection of journal articles from a
 variety of authors, changing the encoding in mid-document may be
-necessary.  Use the command
-@code{\inputencoding@{@var{encoding-name}@}}.  The most common values
-for @var{encoding-name} are: @code{ascii}, @code{latin1},
-@code{latin2}, @code{latin3}, @code{latin4}, @code{latin5},
-@code{latin9}, @code{latin10}, and@tie{}@code{utf8}.
+necessary.  You can use the command
+@code{\inputencoding@{@var{encoding-name}@}} for this.
 
 
 @node \rule
@@ -22103,7 +22823,7 @@ pdflatex -jobname=teachers "\def\teachers@{@}\input@{main@}"
 @noindent
 The @code{jobname} option is there because otherwise both files would be
 called @file{main.pdf} and the second would overwrite the
-first. (@pxref{Jobname}.)
+first (@pxref{Jobname}).
 
 In this example we use the command line to select which parts of a
 document to include.  For a book named @file{mybook.tex} and structured
@@ -22150,19 +22870,20 @@ Here the job name is @code{thesis}.
 
 In general, @LaTeX{} is invoked as @code{@var{latex-engine}
 @var{options} @var{argument}}, where @var{latex-engine} is
-@command{pdflatex}, @command{lualatex}, etc.@: (@pxref{@TeX{} engines}).
-If @var{argument} does not start with a backslash, as is the case above
-with @code{thesis}, then @TeX{} considers it to be the name of the file
-to input as the main document. This file is referred to as the @dfn{root
-file} (@pxref{Splitting the input}, and@tie{}@ref{\input}). The name of
-that root file, without the @file{.tex} extension if any, is the
-jobname.  If @var{argument} does start with a backslash, or if @TeX{} is
-in interactive mode, then it waits for the first @code{\input} command,
-and the jobname is the argument to @code{\input}.
+@command{pdflatex}, @command{lualatex}, etc.@: (@pxref{@TeX{}
+engines}).  If @var{argument} does not start with a backslash, as is
+the case above with @code{thesis}, then @TeX{} considers it to be the
+name of the file to input as the main document. This file is referred
+to as the @dfn{root file} (@pxref{Splitting the input}, and
+@ref{\input}). The name of that root file, without the @file{.tex}
+extension if any, is the jobname.  If @var{argument} does start with a
+backslash, or if @TeX{} is in interactive mode, then it waits for the
+first @code{\input} command, and the jobname is the argument to
+@code{\input}.
 
 There are two more possibilities for the jobname.  It can be directly
 specified with the @code{-jobname} option, as in @code{pdflatex
--jobname=myname} (@pxref{Command line input} for a real example).
+-jobname=myname} (@pxref{Command line input} for a practical example).
 
 @findex texput@r{, jobname default}
 @cindex fallback jobname

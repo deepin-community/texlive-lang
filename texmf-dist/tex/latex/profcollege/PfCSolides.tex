@@ -1,10 +1,126 @@
 %%%
 % Solide et sections
 %%%
-\setKVdefault[ClesSolides]{Nom=cube,Aretes,Sommets,Pointilles,Largeur=1.5,Hauteur=1,Profondeur=0.75,ListeSommets={A,B,C,D,E,F,G,H},Rho=1500,Phi=30,Theta=20,Distance=50,Code=false,Couleur=white,Anglex=0,RayonCone=1,HauteurCone=2,HauteurPyramide=2,SommetsPyramide=5,Reguliere=false,DecalageSommet={(0,0,0)},RayonCylindre=1,HauteurCylindre=2,RayonSphere=1,AutoLabel=true,Sections=false,CoefSection=0.3,Axes=false,PointsSection={M,N,O,P},RemplisSection=false,ObjetSection={0.5,E,H,0.25,F,G,G,B}}%
+\def\filedateSolides{2024/08/20}%
+\def\fileversionSolides{0.1a}%
+\message{-- \filedateSolides\space v\fileversionSolides}%
+%
+\setKVdefault[ClesSolides]{Nom=cube,Aretes,Sommets,Pointilles,Largeur=1.5,Hauteur=1,Profondeur=0.75,ListeSommets={A,B,C,D,E,F,G,H},Rho=1500,Phi=30,Theta=20,Distance=50,Code=false,Couleur=white,Anglex=0,Arete=1,RayonCone=1,HauteurCone=2,HauteurPrisme=2,SommetsPrisme=6,HauteurPyramide=2,SommetsPyramide=5,Reguliere=false,DecalageSommet={(0,0,0)},RayonCylindre=1,HauteurCylindre=2,RayonSphere=1,AutoLabel=true,Sections=false,CoefSection=0.3,Axes=false,PointsSection={M,N,O,P},RemplisSection=false,ObjetSection={0.5,E,H,0.25,F,G,G,B}}%
 \defKV[ClesSolides]{Traces=\setKV[ClesSolides]{Code}}%
 \defKV[ClesSolides]{Section=\setKV[ClesSolides]{Sections}}%
 \defKV[ClesSolides]{CouleurSection=\setKV[ClesSolides]{RemplisSection}}%
+
+\newcommand\MPSolidePrisme[4]{%
+  \ifluatex
+    \mplibnumbersystem{double}
+    \mplibforcehmode
+    \begin{mplibcode}
+    input PfCSolid;
+    
+    boolean Pointilles,TraceArete,NommeSommets,Code,AutoLabel,Sections,RemplisSection;
+    AutoLabel:=\useKV[ClesSolides]{AutoLabel};
+    Pointilles=\useKV[ClesSolides]{Pointilles};
+    TraceArete=\useKV[ClesSolides]{Aretes};
+    NommeSommets=\useKV[ClesSolides]{Sommets};
+    Code=\useKV[ClesSolides]{Code};
+    Sections:=\useKV[ClesSolides]{Sections};
+    RemplisSection=\useKV[ClesSolides]{RemplisSection};
+    if RemplisSection:color CouleurSection;CouleurSection=\useKV[ClesSolides]{CouleurSection};fi;
+
+    color PfCOutColor;
+    PfCOutColor=Cornsilk;%\useKV[ClesSolides]{Couleur};
+    
+    string Section;
+    if Sections:Section=\useKV[ClesSolides]{Section};fi;
+    
+    %Initialisation
+    PfCRho=\useKV[ClesSolides]{Rho};
+    PfCPhi=\useKV[ClesSolides]{Phi};
+    PfCTheta=\useKV[ClesSolides]{Theta};
+    PfCDistance=\useKV[ClesSolides]{Distance};
+    anglerotationx=\useKV[ClesSolides]{Anglex};
+    hauteurprisme=\useKV[ClesSolides]{HauteurPrisme};
+    nombresommets=\useKV[ClesSolides]{SommetsPrisme};
+    Initialisation(PfCRho,PfCPhi,PfCTheta,PfCDistance);
+    typetrace:="3D";
+    typerepre:="persp";
+    eclairage:=false;
+    incolor:=white;
+    outcolor:=white;
+    if Pointilles=false:
+    pointilles:="non";
+    fi;
+
+    Ferme1:=true;
+    
+    color A,B,C,D,E,F,G,H;
+    color Sommet[];
+
+    NbS:=nombresommets;
+
+    color TS[];
+    
+    ecartangle=360/(NbS/2);
+    for k=1 upto (NbS/2):
+    repereangle:=(k-2)*ecartangle+(ecartangle*0.25+uniformdeviate(floor(ecartangle/2)));
+    TS[k]:=(cosd(repereangle),-sind(repereangle),0);
+    endfor;
+    TS[NbS/2+1]:=TS[1];
+
+    for k=1 upto (NbS/2):
+    TS[NbS/2+1+k]:=TS[k]+(0,0,hauteurprisme);
+    endfor;
+    TS[NbS+2]:=TS[NbS/2+2];
+
+    angx:=anglerotationx;
+    for k=1 upto (NbS+2):
+    TS[k]:=RotXYZ(TS[k]);
+    endfor;
+    angx:=0;
+    
+    ObjetNew1(%
+    TS1, for k=2 upto (NbS+1):TS[k], endfor TS[NbS+2]
+    )(%
+    NbS/2, for p_=1 upto NbS/2:p_, endfor
+    NbS/2, for p_=NbS/2+1 downto NbS+2:p_, endfor
+    for p=1 upto NbS/2:
+    4,p,p+1,NbS/2+1+p+1,NbS/2+1+p,%
+    endfor
+    );
+    %AffichageObjet1;
+
+    NF:=(NbS/2+2);
+    Fc[100*(NbS/2+1)]:=NbS/2;
+    for k=1 upto NbS/2:
+    Fc[100*(NbS/2+1)+k]:=k;
+    endfor;
+    Fc[100*(NbS/2+2)]:=NbS/2;
+    for k=1 upto NbS/2:
+    Fc[100*(NbS/2+2)+k]:=NbS+2-k;
+    endfor;
+    for l=1 upto NbS/2:
+    Fc[l*100]:=4;
+    %for k=1 upto 4:
+    Fc[l*100+1]:=l;Fc[l*100+4]:=l+1;Fc[l*100+3]:=NbS/2+1+l+1;Fc[l*100+2]:=NbS/2+1+l;
+    %Fc[101]:=1;Fc[102]:=2;Fc[103]:=6;Fc[104]:=5;
+    %endfor;
+    endfor;
+    DefinirSommets(#1);
+    DessineObjet;
+%    picture Depart;
+%    Depart=currentpicture;
+%    currentpicture:=nullpicture;
+%    for k=1 upto 8:
+%    dotlabel.top(decimal(k),Projette(TS[k]));
+%    endfor;
+    u:=1cm;
+    if Code:
+    \useKV[ClesSolides]{Traces};
+    fi;
+  \end{mplibcode}
+  \mplibnumbersystem{scaled}
+  \fi
+}
 
 \newcommand\MPSolideCylindre[3]{%
   \ifluatex
@@ -380,7 +496,6 @@
     if Code:
     \useKV[ClesSolides]{Traces};
     fi;
-
   \end{mplibcode}
   \mplibnumbersystem{scaled}
   \fi
@@ -622,7 +737,7 @@
 %    trace polygone(MSection1,MSection2,MSection3,MSection4);
     color dcer,ccer;
     % 1er cote -> ok
-    DotLabel("",RetiensDefSection[4]);
+    %DotLabel("",RetiensDefSection[4]);
     dcer:=Oeil-RetiensDefSection[4];
     ccer:=Normal(RetiensDefSection[4],RetiensDefSection[2],RetiensDefSection[1]);
     draw chemin(MSection1,MSection2) if (ProduitScalaire(dcer,ccer)<0):dashed evenly fi;
@@ -927,13 +1042,16 @@
   \foreachitem\compteur\in\ListeNomSommet{\expandafter\UpdatetoksSolide\compteur\nil}%\the\toksolidelistesommets%
   \IfStrEqCase{\useKV[ClesSolides]{Nom}}{%
     {cube}{%
-      \MPSolidePave{\useKV[ClesSolides]{ListeSommets}}{\the\toksolidelistesommets}{1,1,1}{\useKV[ClesSolides]{PointsSection}}{\useKV[ClesSolides]{ObjetSection}}%
+      \MPSolidePave{\useKV[ClesSolides]{ListeSommets}}{\the\toksolidelistesommets}{\useKV[ClesSolides]{Arete},\useKV[ClesSolides]{Arete},\useKV[ClesSolides]{Arete}}{\useKV[ClesSolides]{PointsSection}}{\useKV[ClesSolides]{ObjetSection}}%
     }%
     {pave}{%
       \MPSolidePave{\useKV[ClesSolides]{ListeSommets}}{\the\toksolidelistesommets}{\useKV[ClesSolides]{Profondeur},\useKV[ClesSolides]{Largeur},\useKV[ClesSolides]{Hauteur}}{\useKV[ClesSolides]{PointsSection}}{\useKV[ClesSolides]{ObjetSection}}%
     }%
     {cone}{%
       \MPSolideCone{\useKV[ClesSolides]{ListeSommets}}{\the\toksolidelistesommets}{\useKV[ClesSolides]{PointsSection}}%
+    }%
+    {prisme}{%
+      \MPSolidePrisme{\useKV[ClesSolides]{ListeSommets}}{\the\toksolidelistesommets}{}{\useKV[ClesSolides]{PointsSection}}%
     }%
     {pyramide}{%
       \MPSolidePyramide{\useKV[ClesSolides]{ListeSommets}}{\the\toksolidelistesommets}{\useKV[ClesSolides]{DecalageSommet}}{\useKV[ClesSolides]{PointsSection}}%

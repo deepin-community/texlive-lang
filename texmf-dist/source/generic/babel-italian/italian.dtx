@@ -60,7 +60,7 @@ This file is a self unpacking one.
 %</driver>
 %<code>\ProvidesLanguage{italian}
 %<*code>
-      [2024/01/03 v.1.5.00 Italian support for the babel system]
+      [2024/10/10 v.1.5.01 Italian support for the babel system]
 %</code>
 %%
 %% Please report errors to: claudio dot beccari at gmail dot com
@@ -99,7 +99,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %</driver>
 %\fi
 %
-% \CheckSum{761}
+% \CheckSum{762}
 %
 % \changes{italian-0.99}{1990/07/11}{First version, from english.doc}
 % \changes{italian-1.0}{1991/04/23}{Modified for babel 3.0}
@@ -183,6 +183,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %   group}
 % \changes{italian 1.4.08}{2024-01-03}{Modified intelligent
 %   comma}
+% \changes{itlian 1.5.01}{2024-10-10}{Modified intelligent comma so as to eliminate the |\ ?| macro}
 %
 %  \section{The Italian language}
 %    \textbf{\color{red}Important notice}: This language
@@ -364,7 +365,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    similar functionality, for example |icomma|, |ncccomma|
 %    and |decimalcomma|; |icomma|, apparently is not in
 %    conflict with |dcolumn|, but requires a space after the
-%    comma all the times it plays the r\^ole of a punctuation
+%    comma all the times it plays the rôle of a punctuation
 %    mark; |ncccomma| and |decimal comma| check if the next
 %    token is a digit, but they repeat up to ten tests every
 %    time they meet a comma, irrespective from what it is
@@ -396,7 +397,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    texts contain some math, the |\IntelligentComma| must be
 %    deactivated; an \texttt{english} environment (not available
 %    in |babel| but available in |polyglossia|, although without
-%    the functionalities connected with the English math 
+%    the functionalities connected with English math 
 %    typesetting) is defined so that, besides locally setting
 %    the English language, issues a |\NoIntelligentComma| 
 %    command; nevertheless users are still responsible to use
@@ -1150,8 +1151,8 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % document, but they will be possibly defined only at the end of
 % the preamble when it will be known if the |dcolumn| package
 % has been loaded. We do the same action if packages |icomma|.
-% |ncccomma| or |decimalcomma| have been loaded, since this
-% assumes that the user wants to use their functionality, not
+% |ncccomma| or |decimalcomma| have been loaded, since it is
+% assumed that the user wants to use their functionality, not
 % the functionality defined in this file.
 %
 % We need a command to set the comma as an active character only
@@ -1202,18 +1203,20 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % \changes{italian-1.3a}{2013/10/02}{Corrected the bug of the
 %     intelligent comma when used within the AMS alignment
 %     environments}
-%
-% Math comma activation is done only after the preamble has been
-% completed, that is after the |\begin{document}| statement has
-% been completely executed. Now we must give a definition to the
-% active comma.
+% \changes{italian 1.5.01}{2014/10/10}{Eliminated the |\ ?| macro}
+
+% Math comma activation may be done only after the preamble has
+% been completed, that is after the |\begin{document}| statement
+% has been completely executed. Now we must give a definition to
+% the active comma.
 %    \begin{macrocode}
-{\catcode`,\active \gdef,{\futurelet\tempB\?}}
+{\catcode`,\active \protected\gdef,%
+  {\futurelet\tempB\it@tempcomma}}
 %    \end{macrocode}
 % In facts the above macro lets a temporary control sequence
 % |\tempB| be an alias of the token that immediately follows
 % |\?|; |\tempB| then behaves as an implicit character if that
-% token is a single character, even a space (category cod~10)
+% token is a single token, even a space (category code~10)
 % or a closed brace {category code~3}, or an alias of a generic
 % control sequence otherwise. 
 %
@@ -1239,9 +1242,11 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % by an implicit digit, by a macro defined to be a digit, by a
 % macro that is not defined to be a digit, by a special 
 % character (for example a closed brace, an alignment command,
-% et cetera); therefore it is necessary to distinguish all these
-% situations; remember that an implicit digit cannot be used as a real digit, and a macro gets expanded when used within any
-% |\if| clause, except |\ifx|, or is prefixed with |\noexpand|.
+% and so on); therefore it is necessary to distinguish all these
+% situations; remember that an implicit digit cannot be used as
+% a real digit, and a macro gets expanded when used within any
+% |\if| clause, except |\ifx|, or if it is prefixed with
+% |\noexpand|.
 % The tests that are going to be made hereafter are therefore
 % of different kinds, according to this scheme:
 % \begin{itemize}
@@ -1258,7 +1263,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % \item
 %    we have to check if the next token is |bar| or |\overline|
 %    (or a |\periodo|, a new command added by this language
-%    description file)); we assume that these commands are used
+%    description file); we assume that these commands are used
 %    to mark the digits of the periodic component of the
 %    fractional part of a rational number.
 %    May be this assumption is not always correct, but it should
@@ -1276,9 +1281,9 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %  \item 
 %      if that |\tempB| is a macro, we have to test its
 %      nature of a digit by testing if it represents one of the
-%      ten digits; of course it we strongly discourage to let
-%      some control sequences be an aliase of one or more
-%      digits; 
+%      ten digits; of course we strongly discourage to let
+%      some control sequences be an alias of one or more
+%      digits;
 %  \item
 %      in all other cases, as it has category code~12, it is an
 %      analphabetic character.
@@ -1287,7 +1292,8 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    otherwise the |\tempB| is a special character or a command; 
 % \item 
 %    a test is made to see if it is a macro; in this case we
-%    check if has been defined to be a digit,
+%    check if has been defined to be a digit (discouraged, as
+%    remarked above);
 % \item 
 %    if it is not a macro, it must be some other kind of token
 %    for example another special character.
@@ -1312,7 +1318,8 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    balanced brace comma group |{,}| but we discourage it for
 %    new documents; in any case such a group works fine if the
 %    intelligent comma is not active, for example because a 
-%    stretch of text in a different language is being typeset.
+%    stretch of text in a different language (except English)
+%    is being typeset.
 %
 %    So first we test if the comma must act intelligently;
 %    we have to perform delicate tests; as a last resource this
@@ -1328,6 +1335,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    the sense that they don't leave any trace after execution:
 %    the third argument code is executed if the test is true,
 %    and the fourth one if it is false.
+%
 %    Notice that the tests with macros |\periodo|, |\bar|, and
 %    |\overline| are used to verify if the fractional part after
 %    the comma sets a line over its periodic component; users
@@ -1343,18 +1351,20 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    contain the six digits in the proper order, and use such
 %    macros instead of the digit string, saving themselves
 %    possible typos; everybody knows that typos are not allowed
-%    in math. But these macros should be used as arguments of
-%    |periodo|, otherwise the decimal mark test fails.
+%    in math. In any case these macros should be used as
+%     arguments of |periodo|, otherwise the decimal mark test
+%    fails: i.e.,  don't enter |$1/7=0,\oneoverseven$| but 
+%    |$1/7=0,\periodo{\oneoverseven}$|.
 %
-%    The |ifdigit| macros that is defined hereafter is a test
+%    The |\ifdigit| macros that is defined hereafter is a test
 %    made by using a \LaTeX\ kernel internal procedure that
 %    compares its only argument with one of the ten digits at a
 %    time; if the argument is a digit choses the decimal comma,
 %    otherwise the punctuation one; the test is similar but not
-%    identical to the one performed by the |nccomma| package; on
-%    the opposite the test against a space is performed with a
-%    test similar but not identical to the one done  by the
-%    |icomma| package; all other tests are specific of this
+%    identical to the one performed by the |ncccomma| package;
+%    on the opposite the test against a space is performed with
+%    a test similar but not identical to the one done by the
+%    |icomma| package; all other tests are specific to this
 %    package.
 %    \begin{macrocode}
 
@@ -1365,7 +1375,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 \if\@Cifra #1\relax\def\tempC{\virgoladecimale}%
 \@break@tfor\fi}\tempC}
 
-\DeclareRobustCommand*\?{%
+\DeclareRobustCommand*\it@tempcomma{% 
   \ifx\tempB\@sptoken
     \expandafter\@firstoftwo
   \else
@@ -1414,21 +1424,21 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %
 % In particular this macro starts testing if it is an alias for
 % a space token (category 10); then tests if it is an alias
-% of |\periodo|, or |\bar| or |\overline| and if it is the
-% decimal separator should be a decimal comma (see below);
+% of |\periodo|, or |\bar| or |\overline| and if it is, the
+% decimal mark should be a decimal comma (see below);
 % otherwise other tests are carried on. This macro then tests if
 % the argument has category code~12, i.e.\ “other character”,
 % not a letter, nor other special signs, as, for example,~|&|.
 % In case the category code is not~12, the comma must act as a
 % punctuation mark; but if its category cose is~12, it might be
-% a digit, or another character, for example an asterisk; so we
-% have to test its digit nature; the simplest way that we found
-% to test if a token is a digit, is to test if its ASCII code
-% lays within the range delimited by the ASCII codes
-% of~`0' (zero) and~`9'.
+% a digit, or another character of category code~12, for example
+% an asterisk; so we have to test its digit nature; the simplest
+% way that we found to test if a token is a digit, is to test if
+% its char code lays within the range delimited by the char
+% codes of~`0' (zero) and~`9'.
 %
 % The typesetting engines give the back tick, |`|, the property
-% that when a number is required, it yields the ASCII code if
+% that when a number is required, it yields the char code if
 % the following token is an explicit character or a macro
 % argument number; this is why we can't use the temporary
 % implicit token we just tested, but we must examine the first
@@ -1455,10 +1465,10 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    \end{macrocode}
 % The service macros |\ifcsundef|, |\ifnumless|, and
 % |\ifnumgreater| are provided by the |etoolbox| package, that
-% shall be read at most at the end of the |babel| package
+% shall be input at most at the end of the |babel| package
 % processing; therefore we must delay the code at “end preamble”
 % time, since only at that time it will be known if the main
-% language is Italian, or any other one.
+% language is Italian, or another one.
 %
 % This intelligent comma definition is pretty intelligent, but
 % it requires some kind of information from the context; this
@@ -1517,7 +1527,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %
 % In the following sections we describe some features that
 % nowadays should be considered totally obsolete. We speak about
-% OT! encoded fonts (who uses them today?); about the
+% OT1 encoded fonts (who uses them today?); about the
 % limitations of the Italian keyboard, that with modern
 % operating systems may be overridden easily; with French double
 % quotes, that are being used also in Italian, although without
@@ -1526,7 +1536,8 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % description file initial versions are more than 30 years old,
 % and in this long stretch of time many legacy documents were
 % created; the following sections describe what had to be done
-% years ago and the information may be useful to upgrade those documents 
+% years ago and the information may be useful to upgrade those
+% documents 
 %
 % \subsection*{Accents}\label{s:itkbd}
 % Most of the other language description files introduce a
@@ -1543,19 +1554,21 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % \`i, \`o, \`u, bot no \emph{uppercase} accented vowels are
 % directly available from the keyboard; the keyboard lacks
 % also the tie |~| (tilde) key, while the curly braces require
-% pressing three keys simultaneously.
+% pressing three keys simultaneously. On the opposite the
+% Italian keyboard has a key for the ‘ç’ letter that is not used
+% in Italian.
 %
 % The best solution Italians have found so far is to use a smart
-% editor that accepts shorthand definitions such that, for
+% editor that accepts shorthand definitions such that: for
 % example, by striking |"(| one gets directly |{| on the screen
-% and the same sign is saved into the \file{.tex} file; the same
+% and the same sign is saved into the \file{.tex} file. The same
 % smart editor should be capable of translating the accented
 % characters into the standard \TeX\ sequences when writing a
 % file to disk (for the sake of file portability), and to
 % transform the standard \TeX\ sequences into the corresponding
-% signs when loading a \file{.tex} file from disk to memory.
-% Such smart editors do exist and can be downloaded from the
-% \textsc{ctan} archives.
+% signs when loading a \file{.tex} file from disk to working
+% memory. Some such smart editors do exist and can be downloaded
+% from the \textsc{ctan} archives.
 %
 % \changes{italian-1.2p}{2002/07/10}{Removed redefinition of
 %    \cs{add@acc} since its functionality has been introduced
@@ -1578,10 +1591,10 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % \subsection*{\emph{Caporali} or French double quotes}
 % Although the T1 font encoding ligatures solve the problem,
 % there are some circumstances where even the T1 font encoding
-% cannot be used, either because the authors\slash typesetters
-% want to use the old deprecated OT1 encoding, or because they
-% use a font set that does not comply completely with the T1
-% font encoding; some virtual fonts, for example, are supposed
+% cannot be used, either because users prefer employing the old
+% deprecated OT1 encoding, or because they selected a font set
+% that does not completely comply with the T1 font encoding;
+% some virtual fonts, for example, are supposed
 % to implement the double Cork font encoding but actually they
 % miss some glyphs; one such virtual font set was given by the
 % \texttt{ae} virtual fonts, because they were supposed to 
@@ -1589,8 +1602,9 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % that mapped the OT1 encoded |CM| fonts to a T1 font scheme;
 % Such fonts are not distributed any more with any \TeX\ system 
 % installation, therefore if some vintage source file uses them
-% the correction is to replace them by the vector Latin Modern
-% ones.
+% the correction is to replace them by the Latin Modern ones,
+% that are vector fonts and cannot be used with the plain
+% |latex| engine.
 % 
 % The type~1 PostScript version of the |CM| fonts do exist,
 % therefore one believes to be able of using them with pdfLaTeX;
@@ -1599,9 +1613,9 @@ email: \texttt{claudio.beccari at gmail.com}}}
 % \emph{caporali}) do not exist in any OT1 encoded \texttt{cm}
 % Latin font, their glyphs must be substituted with something
 % else that fakes them. Again the best solution is to correct
-% the preamble of such vintage source file by replacing the call
-% to those old not available fonts with the vector Latin Modern
-% fonts.
+% the preamble of such vintage source files by replacing the
+% call to those old not available fonts with the vector Latin
+% Modern fonts.
 %
 % \changes{italian-1.2q}{2005/02/05}{Redefined the caporali
 %     machinery so as to avoid incompatibilities with the slides
@@ -1681,7 +1695,7 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    \end{macrocode}
 % Such macros make available the internal commands |\it@ocap|
 % and |\it@ccap|; they become available when users specify in
-% their preambles either the |\LteSymbCaporali| or in a personal
+% their preambles either the |\LtxSymbCaporali| or in a personal
 % \texttt{.sty} file the |\T@unoCaporali| command. The former
 % gets the real glyphs from the \texttt{lasy} font and deletes
 % any space after the open guillemets and before the closed
@@ -1718,9 +1732,11 @@ email: \texttt{claudio.beccari at gmail.com}}}
 %    \begin{macrocode}
 \def\CaporaliFrom#1#2#3#4{%
   \DeclareFontEncoding{#1}{}{}%
+%
   \DeclareTextCommand{\it@ocap}{T1}{%
     {\fontencoding{#1}\fontfamily{#2}%
       \selectfont\char#3\ignorespaces}}%
+%
   \DeclareTextCommand{\it@ccap}{T1}{\@kilglue
     {\fontencoding{#1}\fontfamily{#2}\selectfont\char#4}}%
 }

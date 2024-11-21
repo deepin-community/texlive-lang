@@ -1,6 +1,10 @@
 %%%
 % Thales
 %%%
+\def\filedateThales{2024/08/04}%
+\def\fileversionThales{0.1}%
+\message{-- \filedateThales\space v\fileversionThales}%
+%
 \newcount\ppcm%
 
 \newcommand\PPCM[2]{%
@@ -175,10 +179,10 @@
     % #4 point sur le segment #1#2
     % #5 point sur le segment #1#3
   \ifluatex
-  \mplibcodeinherit{enable}
+%  \mplibcodeinherit{enable}
   \mplibforcehmode
   \begin{mplibcode}
-        defaultcolormodel := \useKV[ClesThales]{ModeleCouleur};
+    defaultcolormodel := \useKV[ClesThales]{ModeleCouleur};
     u:=\useKV[ClesThales]{Echelle};
     pair A,B,C,M,N,O;%
     %On place les points A,B,C sur le cercle de mani\`ere \`a faciliter la rotation de la figure
@@ -213,7 +217,7 @@
     fill (fullcircle scaled 0.75mm) shifted (cotes1 intersectionpoint cotes4);
     fill (fullcircle scaled 0.75mm) shifted (cotes3 intersectionpoint cotes4);
   \end{mplibcode}
-  \mplibcodeinherit{disable}
+%  \mplibcodeinherit{disable}
   \else
   \begin{mpost}[mpsettings={u:=\useKV[ClesThales]{Echelle};}]
     pair A,B,C,M,N,O;%
@@ -261,7 +265,7 @@
     % #5 point sur la droite #1#3
   \ifluatex
   \mplibforcehmode
-  \mplibcodeinherit{enable}
+%  \mplibcodeinherit{enable}
   \begin{mplibcode}
         defaultcolormodel := \useKV[ClesThales]{ModeleCouleur};
     u:=\useKV[ClesThales]{Echelle};
@@ -343,7 +347,7 @@
     label(btex $//$ etex ,K);
     drawoptions();
   \end{mplibcode}
-  \mplibcodeinherit{disable}
+%  \mplibcodeinherit{disable}
   \else
   \begin{mpost}[mpsettings={u:=\useKV[ClesThales]{Echelle};boolean CouleursNum,CouleursDen;
     CouleursNum=\useKV[ClesThales]{CouleursNum};
@@ -435,7 +439,7 @@
     % #5 point sur la droite #1#3
   \ifluatex
   \mplibforcehmode
-  \mplibcodeinherit{enable}
+%  \mplibcodeinherit{enable}
   \begin{mplibcode}
     defaultcolormodel := \useKV[ClesThales]{ModeleCouleur};
     u:=\useKV[ClesThales]{Echelle};
@@ -479,7 +483,7 @@
     fill (fullcircle scaled 0.75mm) shifted (cotes1 intersectionpoint cotes2);
     fill (fullcircle scaled 0.75mm) shifted (cotes3 intersectionpoint cotes2);
   \end{mplibcode}
-  \mplibcodeinherit{disable}
+%  \mplibcodeinherit{disable}
   \else
   \begin{mpost}[mpsettings={u:=\useKV[ClesThales]{Echelle};}]
     pair A,B,C,M,N,O;%
@@ -1214,9 +1218,9 @@
         \end{array}
       \right\}\ifnum\NumA=\NumB \dfrac{\NomA\NomM}{\NomA\NomB}=\dfrac{\NomA\NomN}{\NomA\NomC}\else\dfrac{\NomA\NomM}{\NomA\NomB}\not=\dfrac{\NomA\NomN}{\NomA\NomC}\fi
     \]
-  }
+  }%
   \ifboolKV[ClesThales]{Propor}{%
-    \ifnum\NumA=\NumB Donc le tableau $\begin{array}{c|c}
+    \xintifboolexpr{\NumA==\NumB}{Donc le tableau $\begin{array}{c|c}
         \NomA\NomM&\NomA\NomN\\
         \hline
         \NomA\NomB&\NomA\NomC\\
@@ -1225,8 +1229,8 @@
     $\NomA$, $\NomM$, $\NomB$ sont align\'es dans le m\^eme ordre que les
     points $\NomA$, $\NomN$, $\NomC$. Donc les droites $(\NomM\NomN)$
     et $(\NomB\NomC)$ sont parall\`eles d'apr\`es la r\'eciproque du
-    th\'eor\`eme de Thal\`es.\else%
-    Donc les droites $(\NomM\NomN)$ et $(\NomB\NomC)$ ne sont pas parall\`eles.\fi
+    th\'eor\`eme de Thal\`es.}{%
+    Donc les droites $(\NomM\NomN)$ et $(\NomB\NomC)$ ne sont pas parall\`eles.}%
   }{%
     \xintifboolexpr{\NumA==\NumB}{%
       De plus, les points $\NomA$, $\NomM$, $\NomB$ sont align\'es dans
@@ -1234,9 +1238,9 @@
       droites $(\NomM\NomN)$ et $(\NomB\NomC)$ sont parall\`eles d'apr\`es
       la r\'eciproque du th\'eor\`eme de Thal\`es.}{%
       Donc les droites $(\NomM\NomN)$ et $(\NomB\NomC)$ ne sont pas
-      parall\`eles.}
-  }
-}
+      parall\`eles.}%
+  }%
+}%
 
 \newcommand\ReciproqueThales[8][]{%
   % #1 Cl\'es

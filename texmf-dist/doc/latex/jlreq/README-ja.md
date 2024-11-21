@@ -19,7 +19,7 @@
 ## 動作環境
 pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内部で読み込みます．
 
-* （常時）：l3keys2e,lmodern
+* （常時）：lmodern
 * （LuaLaTeX非利用時）：everyhook
 * （LuaLaTeX利用時）：luatexja,luatexja-adjust
 
@@ -48,7 +48,7 @@ pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内�
 `\section*[running head]{見出し文字列}[副題]`というように，通常の書式に加えて副題を受け付けられるように拡張されています．その他，`\part`（articleのみ），`\chapter`（book/reportのみ），`\subsection`，`\subsubsection`も副題を受け付けます．
 
 ### `abstract`環境
-プリアンブルにもかけるようになっています．プリアンブルに書かれた場合は，`\maketitle`とともに出力されます．二段組の場合は，段組にならず概要を出力することができます．
+プリアンブルにもかけ，そのときは`\maketitle`とともに出力されます．二段組の場合は，段組にならず概要を出力することができます．ただし今では非推奨の方法です．`\jlreqsetup`で`abstract_with_maketitle=true`を指定して`\maketitle`よりも前に書くことで同様のことができます．
 
 ### `\sidenote`
 この命令は傍注の幅が正の時にのみ定義されます．デフォルトの基本版面ではこの幅は0に設定されています．従って`\sidenote`は定義されません．後の基本版面の設定を参考にしてください．
@@ -204,6 +204,8 @@ pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内�
 * `mainmatter_pagination`に`continuous`と`independent`は指定できません．
 * `appendix_pagebreak`，`appendix_pagestyle`，`appendix_pagination`はありません．
 
+### 概要
+* `abstract_with_maketitle=[true/false]`：abstract環境が`\maketitle`に先行して書かれた場合，その中身を`\maketitle`とともに遅延します．二段組みの場合でも一段で出力されます．デフォルトは`false`です．`article`および`report`時のみ．
 
 ## 見出し
 新しい見出しを`\New***Heading`という命令で作ることができます（***には見出しの種類に応じた文字列が入る）．書式はすべて
@@ -340,7 +342,8 @@ pLaTeX / upLaTeX / LuaLaTeX上で動きます．以下のパッケージを内�
 * `nombre=<書式>`：出力するノンブルを指定します．デフォルトは`\thepage`．
 * `odd_running_head=<書式>`，`even_running_head=<書式>`：それぞれ奇数ページ，偶数ページの柱を指定します．`_section`のように`_`から始まる名前を指定すると，対応する見出しを出力します．（`_section`だと現在の`\section`を出力する．）
 * `mark_format={[odd=<書式>/even=<書式>/_<見出し命令名>=<書式>],...}`：見出しを柱に出力する際のフォーマットを指定します．`mark_format={_section={節\thesection：#1},_chapter={第\thechapter 章\quad #1}}`のように指定します．見出し命令名の代わりに`odd`や`even`も指定でき，それぞれ奇数ページ/偶数ページの柱の書式になります．`\pagestyle`実行時に`\sectionmark`等を定義することで実現しています．
-* `nombre_ii=<書式>`: 二つ目のノンブルを指定します．`nombre_ii_position`で場所指定，`nombre_ii_font`でフォント設定もできます．指定方法は`nombre`や`nombre_position`と同じです．`odd_running_head_ii`，`even_running_head_ii`，`running_head_ii_position`，`running_head_ii_font`もあります．`nombre_ii_position`や`running_head_ii_position`が指定されなかった場合，`yoko`指定時にはそれぞれ`nombre_position`および`running_head_position`と同じ位置に設定されます．`tate`指定時は一つ目のノンブルや柱に続く場所に表示されます．
+* `nombre_ii=<書式>`：二つ目のノンブルを指定します．`nombre_ii_position`で場所指定，`nombre_ii_font`でフォント設定もできます．指定方法は`nombre`や`nombre_position`と同じです．`odd_running_head_ii`，`even_running_head_ii`，`running_head_ii_position`，`running_head_ii_font`もあります．`nombre_ii_position`や`running_head_ii_position`が指定されなかった場合，`yoko`指定時にはそれぞれ`nombre_position`および`running_head_position`と同じ位置に設定されます．`tate`指定時は一つ目のノンブルや柱に続く場所に表示されます．
+* `odd_head_format=<書式>`, `odd_foot_format=<書式>`, `even_head_format=<書式>`, `even_foot_format=<書式>`：ヘッダやフッタのフォーマットを指定します．`#1`がヘッダまたはフッタ全体に書き換えられます．ただし`#1`には位置調整用のコードが入っている場合もあるので，特に`\NewPageStyle`に`tate`を指定している場合には思うようにならないこともあります．例えば奇数ページのヘッダに罫線を引くためには`odd_head_format={\underline{\makebox[\jlreqyokoheadlength]{#1}}}`とするとよいでしょう．なお，ここで使った`\jlreqyokoheadlength`は本クラスファイル内で定義されているマクロで，ヘッダの横方向の長さを与えます．（フッタの長さも同じです．）縦方向の長さ，すなわち`\NewPageStyle`で`tate`が指定されている場合の長さは`\jlreqtateheadlength`で取得できます．
 
 
 `\RenewPageStyle`，`\ProvidePageStyle`，`\DeclarePageStyle`もあります．`\ModifyPageStyle`により既存のページスタイルを改変することが可能です．
@@ -576,6 +579,28 @@ JFMの名前は次の通りです．`[]`で囲まれている文字は設定に�
     - LuaLaTeX利用時の`everyhook'パッケージの利用をやめた（ドキュメントと整合的でなかった）．
     - `enumerate'環境直前の空白が入らないことがあったのを修正．
     - `use_reverse_pagination`に関するバグ修正．
+* 2024-02-13
+    - LaTeXのhookシステムのために\parをいくつか挿入．
+    - `\jlreqsetup`に`tableofcontents_twocolumn`，`abstract_with_maketitle`を追加．
+    - `everyhook`の機能が呼び出されていたのを削除．
+    - jfmを少し修正．
+    - 見出し内で無限ループが出ることがあったのを修正．
+    - LuaLaTeX利用時に`stfloats`を読み込むようにした．
+    - ページスタイル内の位置調整を改善．
+    - そのほかいくつか改善など．
+* 2024-02-16
+    - バグ修正
+* 2024-08-23
+    - バグ修正
+    - 内部変数名の変更
+    - 英語ドキュメントに使い方を書いた
+    - `\DeclareKeys`などを使うようにした．
+    - 行見出しの内部処理をちょっとだけ変更．
+* 2024-09-26
+    - Makefileでのパターンマッチングの使用をやめた
+* 2024-10-03
+    - Makefile内のvf一覧にtfmが紛れていたのを修正．
+
 
 --------------
 Noriyuki Abe

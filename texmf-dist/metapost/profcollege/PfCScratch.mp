@@ -66,6 +66,8 @@ print=false;
 numeric coefprint;
 coefprint:=0.95;
 
+color White;
+White:=white;
 %texte ou symbole droite gauche
 boolean symbole;
 symbole=true;
@@ -130,7 +132,7 @@ vardef OvalVar(expr ar)=
   TAvar=OvalBox(TTv);
   Ovar=image(
       fill TAvar if print=false : withcolor OrangeTrois else : withcolor white fi;
-    draw TAvar if print=false : withcolor coefprint*white fi;
+    draw TAvar if print=false : withcolor coefprint*White fi;
     label(TEX("\barre\bfseries "&ar),(0,0)) if print=false : withcolor white fi;
     );
   Ovar:=Ovar shifted(-center Ovar);
@@ -145,7 +147,7 @@ vardef OvalList(text listelist)=
   CList=image(
     fill TAlist if print=false : withcolor OrangeListTrois else : withcolor white fi;
     draw LOCMt;
-    draw TAlist if print=false : withcolor coefprint*white fi;
+    draw TAlist if print=false : withcolor coefprint*White fi;
     );
   CList:=CList shifted(-center CList);
   CList
@@ -189,7 +191,7 @@ vardef OvalNb(expr ar)=
   tanb=OvalBox(ar);
   Onb=image(
     fill tanb withcolor white;
-    draw tanb if print=false : withcolor coefprint*white fi;
+    draw tanb if print=false : withcolor coefprint*White fi;
     label(TEX("\barre "&ar),(0,0));
     );
   Onb
@@ -202,7 +204,7 @@ vardef OvalText(expr ar)=
   TA=OvalBox(ar);
   $=image(%
     fill TA withcolor white;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX("\barre "&ar),(0,0));
     );
     $:=$ shifted(-center $);
@@ -216,9 +218,9 @@ vardef OvalOp(text listeop)=
   LOPop=ColleBoxNew(listeop);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -232,7 +234,7 @@ vardef OvalApp(text listop)=
   ta=OvalBox(TTap);
   $=image(
       fill ta if print=false : withcolor VioletAppTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     draw TTap;
     );
   $:=$ shifted(-center $);
@@ -247,7 +249,7 @@ vardef OvalSon(text listop)=
   ta=OvalBox(TTap);
   $=image(
       fill ta if print=false : withcolor SonTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     draw TTap;
     );
   $:=$ shifted(-center $);
@@ -264,7 +266,7 @@ vardef OvalMusique(expr ar)=
     TA=OvalBox(TT);
     $=image(
 	fill TA if print : withcolor white else : withcolor StyloTrois fi;
-      draw TT if print=true : withcolor coefprint*white fi;
+      draw TT if print=true : withcolor coefprint*White fi;
       );
   else:
     message("La commande --OvalStylo-- n'accepte qu'un argument de type string.");
@@ -280,7 +282,7 @@ vardef OvalMouv(expr ar)=
   ta=OvalBox(TTm);
   $=image(
     fill ta if print=false : withcolor BleuMouvTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX("\longbarre "&ar),center ta) if print=false : withcolor blanc fi;
     );
   $
@@ -297,7 +299,7 @@ vardef OvalCapMenu(expr ar)=
   TAMC=OvalBox(TTm);
   $=image(
       fill TAMC if print : withcolor white else : withcolor CapFonceTrois fi;
-    draw TAMC if print=false : withcolor coefprint*white fi;
+    draw TAMC if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center TAMC);
     );
   $
@@ -312,7 +314,7 @@ vardef OvalCap(text listecap)=
   Cap=image(
     fill TAcap if print=false : withcolor CapteurTrois else : withcolor white fi;
     draw LOCMcap;
-    draw TAcap if print=false : withcolor coefprint*white fi;
+    draw TAcap if print=false : withcolor coefprint*White fi;
     );
   Cap:=Cap shifted(-center Cap);
   Cap
@@ -327,7 +329,7 @@ vardef OvalMouvMenu(expr ar)=
   ta=OvalBox(TTm);
   $=image(
       fill ta if print=false : withcolor dBleuMouvTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center ta);
     );
   $
@@ -341,7 +343,7 @@ vardef OvalAppMenu(expr ar)=
   ta=OvalBox(TTm);
   $=image(
       fill ta if print=false : withcolor FondOvalAppMenu else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center ta);
     );
   $
@@ -359,7 +361,7 @@ vardef OvalMenuSon(expr ar)=
   TA=OvalBox(TTm);
   $=image(%
     fill TA if print : withcolor white else : withcolor DSonTrois fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center TA);
     );
   $
@@ -375,7 +377,7 @@ vardef OvalMenuControle(expr ar)=
   TA=OvalBox(TTm);
   $=image(
       fill TA if print : withcolor white else : withcolor CloneTrois fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm), center TA);
     );
   $
@@ -396,7 +398,7 @@ vardef OvalStylo(expr ar)=
     TA=OvalBox(TT);
     $=image(
 	fill TA if print : withcolor white else : withcolor OvalStyloTrois fi;
-      draw TA if print=false : withcolor coefprint*white fi;
+      draw TA if print=false : withcolor coefprint*White fi;
       label(TEX(TT),(0,0)) if print=false : withcolor white fi;
       );
   else:
@@ -430,7 +432,7 @@ vardef OvalMenuEvenement(expr ar)=
   TA=OvalBox(TTm);
   $=image(
       fill TA if print : withcolor white else : withcolor MessageTrois fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm), center TA);
     );
   $
@@ -445,7 +447,7 @@ vardef RecMouvMenu(expr ar)=
   ta=RecBox(TTm);
   $=image(
       fill ta if print=false : withcolor BleuMouvTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center ta);
     );
   $
@@ -459,7 +461,7 @@ vardef RecMenuApp(expr ar)=
   ta=RecBox(TTm);
   $=image(
       fill ta if print=false : withcolor VioletAppTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center ta);
     );
   $
@@ -474,7 +476,7 @@ vardef RecMenuOp(expr ar)=
   TA=RecBox(TTm);
   $=image(
       fill TA if print : withcolor white else : withcolor FondOvalOp fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm), center TA);
     );
   $
@@ -488,7 +490,7 @@ vardef RecMenuSon(expr ar)=
   TA=RecBox(TTm);
   $=image(
       fill TA if print : withcolor white else : withcolor SonTrois fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm), center TA);
     );
   $
@@ -502,7 +504,7 @@ vardef RecEvenementMenu(expr ar)=
   ta=RecBox(TTm);
   $=image(
       fill ta if print=false : withcolor EvenementTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center ta);
     );
   $
@@ -516,7 +518,7 @@ vardef RecMenuCap(expr ar)=
   ta=RecBox(TTm);
   $=image(
       fill ta if print=false : withcolor CapteurTrois else: withcolor white fi;
-    draw ta if print=false : withcolor coefprint*white fi;
+    draw ta if print=false : withcolor coefprint*White fi;
     label(TEX(TTm),center ta);
     );
   $
@@ -531,7 +533,7 @@ vardef RecMenuVar(expr ar)=
   TA=RecBox(TTm);
   $=image(
       fill TA if print : withcolor white else : withcolor OrangeTrois fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm), center TA);
     );
   $
@@ -546,7 +548,7 @@ vardef RecMenuList(expr ar)=
   TA=RecBox(TTm);
   $=image(
       fill TA if print : withcolor white else : withcolor OrangeListTrois fi;
-    draw TA if print=false : withcolor coefprint*white fi;
+    draw TA if print=false : withcolor coefprint*White fi;
     label(TEX(TTm), center TA);
     );
   $
@@ -599,7 +601,8 @@ vardef ColleBoxNew(text t)=%Pour coller plusieurs boites
       if string p_:
 	NBCOLLE:=Box(p_);
 	HOLD:=image(
-	    label(TEX("\sffamily\bfseries\longbarre "&p_),(0,0)) if print=false : withcolor white fi;%->ok
+%	    label(TEX("\sffamily\bfseries\longbarre "&p_),(0,0)) if print=false : withcolor white fi;%->ok
+	    label(TEX("\sffamily\barre\bfseries "&p_),(0,0)) if print=false : withcolor white fi;%->ok
 	  );
 	HOLD:=(HOLD shifted ((xpart((center HOLD)-(llcorner HOLD))+LONG,0)));
       else:
@@ -637,7 +640,7 @@ vardef AFFI(expr texta)=
   cadre=CADRE(texta);
   picture TEXT;
   TEXT=image(%
-      fill cadre withcolor if print=true :coefprint*white else: if unknown ColBloc : white else : ColBloc fi; fi;
+      fill cadre withcolor if print=true :coefprint*White else: if unknown ColBloc : white else : ColBloc fi; fi;
     draw texta;
     draw cadre withcolor CoulLignes;
     );
@@ -693,7 +696,7 @@ vardef AFFICONTROLE(expr texta)=
   cadre=CADRECONTROLE(texta);
   picture TEXT;
   TEXT=image(
-      fill cadre withcolor if print=true :coefprint*white else: if unknown ColBloc : white else : ColBloc fi; fi;
+      fill cadre withcolor if print=true :coefprint*White else: if unknown ColBloc : white else : ColBloc fi; fi;
     draw texta;
     draw tracecadre withcolor CoulLignes;
     );
@@ -734,7 +737,7 @@ vardef AFFIED(expr texta)=
   cadre=CADREED(texta);
   picture TEXT;
   TEXT=image(
-      fill cadre withcolor if print=true :coefprint*white else: if unknown ColBloc : white else : ColBloc fi; fi;
+      fill cadre withcolor if print=true :coefprint*White else: if unknown ColBloc : white else : ColBloc fi; fi;
     draw texta;
     draw cadre withcolor CoulLignes;
     );
@@ -1384,10 +1387,10 @@ vardef DoubleNote=
   save $;
   picture $;
   $=image(
-      draw (((0,0)--(0,18pt)) shifted(-12,-9pt)) withpen pencircle scaled 1bp withcolor if print: coefprint*white else: StyloTrois fi;
+      draw (((0,0)--(0,18pt)) shifted(-12,-9pt)) withpen pencircle scaled 1bp withcolor if print: coefprint*White else: StyloTrois fi;
       draw NoteImage shifted((-5,-2));
     draw NoteImage shifted((3.5,2));
-    draw (((0,0)--(0,18pt)) shifted(12,-9pt)) withpen pencircle scaled 1bp withcolor if print: 0.5*coefprint*white else: (69/255,168/255,140/255) fi;%Trop clair->(14/255,187/255,139/255);
+    draw (((0,0)--(0,18pt)) shifted(12,-9pt)) withpen pencircle scaled 1bp withcolor if print: 0.5*coefprint*White else: (69/255,168/255,140/255) fi;%Trop clair->(14/255,187/255,139/255);
 );
   $:=$ shifted(-3,0);
   $
@@ -1435,7 +1438,7 @@ vardef ImageCrayon=
   picture titi;
   titi=image(%
       draw CrayonImage shifted(-12,0);
-    draw (((0,0)--(0,18pt)) shifted(9,-9)) withpen pencircle scaled 1bp  withcolor if print: 0.5*coefprint*white else: (69/255,168/255,140/255) fi;%Trop clair->(14/255,187/255,139/255);
+    draw (((0,0)--(0,18pt)) shifted(9,-9)) withpen pencircle scaled 1bp  withcolor if print: 0.5*coefprint*White else: (69/255,168/255,140/255) fi;%Trop clair->(14/255,187/255,139/255);
      );
   titi
 enddef;
@@ -1574,7 +1577,7 @@ vardef CrayonImage=
     draw (6.496090,12.082000);
     drawoptions();
     pickup pencircle scaled 0bp;
-    draw (-3,0)--(-3,18) withcolor if print : coefprint*white else: StyloTrois fi;
+    draw (-3,0)--(-3,18) withcolor if print : coefprint*White else: StyloTrois fi;
     pickup pencircle scaled eppen;
     );
   cray:=cray shifted((0,-9pt));
@@ -1598,7 +1601,7 @@ vardef AffichageStop=
     (ulcorner texto+(0,eb)){dir180}..{dir-90}(ulcorner texto+(-eb,0))--cycle;
   picture TEXT;
   TEXT=image(
-      fill cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
+      fill cadre withcolor if print : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
     draw texto;
     draw cadre withcolor CoulLignes;
     );
@@ -1683,11 +1686,14 @@ cadre=(coindebutbloc[numblocrep]+(0.125,0.125))--
   {dir90}(llcorner texto+(0.125,0)+(0,eb))--  
   cycle;
 $=image(
-    fill cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
-  draw cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
+    fill cadre withcolor if print : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
+  draw cadre withcolor if print : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
   AA:=ahangle;
-  ahangle:=90;
-  drawarrow (lrcorner texto+(-0.625cm,0.15cm)){dir-15}..{dir90}(urcorner texto+(-0.25cm,-0.1cm)) withpen pencircle scaled2bp if print=false : withcolor white fi;
+  BB:=ahlength;
+  ahangle:=90;%90
+  ahlength:=ahlength/2;
+%  drawarrow (lrcorner texto+(-0.625cm,0.15cm)){dir-15}..{dir90}(urcorner texto+(-0.25cm,-0.1cm)) withpen pencircle scaled1.5 if print=false : withcolor white fi;
+  drawarrow (lrcorner texto+(-0.25cm,0.15cm)){dir-30}..{dir90}(urcorner texto+(-0.125cm,-0.1cm)) withpen pencircle scaled1 if print=false : withcolor white fi;
   ahangle:=AA;
   draw (coindebutbloc[numblocrep]+(0.0625+0.5cm+eb,0.125)){dir180}..
     {dir-90}(coindebutbloc[numblocrep]+(0.5cm,-eb))--
@@ -1798,8 +1804,8 @@ else:
     cycle;
 fi;
 $=image(
-    fill cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
-  draw cadre withcolor if print : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
+    fill cadre withcolor if print : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
+  draw cadre withcolor if print : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
   draw texto;
   if BlocStopAvant=false:
     draw (coindebutbloc[numblocrep]+(0.0625+0.5cm,0)+(eb,0)){dir180}..
@@ -1908,8 +1914,8 @@ vardef Sinon=
 	cycle;
     fi;
 $=image(
-    fill cadre withcolor if print=true : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
-  draw cadre withcolor if print=true : coefprint*white else : if unknown colControle : LightOrange else : colControle fi fi;
+    fill cadre withcolor if print=true : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
+  draw cadre withcolor if print=true : coefprint*White else : if unknown colControle : LightOrange else : colControle fi fi;
   if print:
     label.rt(TEX("\longbarre\sffamily\bfseries sinon"),(xpart(llcorner texto),ypart(center texto)));
   else:
@@ -2303,7 +2309,7 @@ vardef AffichageBlocDef=
       cycle;
   picture TEXT;
   TEXT=image(
-    fill cadre withcolor if print : coefprint*white else : BlocTrois fi;%if unknown colBloc : DarkPurple else: colBloc fi fi;
+    fill cadre withcolor if print : coefprint*White else : BlocTrois fi;%if unknown colBloc : DarkPurple else: colBloc fi fi;
     draw texto;
     draw cadre withcolor CoulLignes;
     );
@@ -2590,12 +2596,11 @@ vardef Demander(expr nbpas)=
   picture Dem,texto;
   if string nbpas:
     texto=ColleBoxNew("demander",OvalNb(nbpas),"et attendre");
-    ColBloc:=CapteurTrois;
-    Dem=Affichage(texto);
   else:
-    message("La commande -- Demander -- admet un argument de type string.");
-    Dem=nullpicture;
+    texto=ColleBoxNew("demander",nbpas,"et attendre");
   fi;
+  ColBloc:=CapteurTrois;
+  Dem=Affichage(texto);
   Dem
 enddef;
 
@@ -2662,7 +2667,7 @@ vardef CameraImage=
       fill (cc shifted(B+(10,3*k))) withcolor coul[k];
       draw (cc shifted(B+(10,3*k))) withcolor 0.95*coul[k];
     endfor;
-    draw ((-3,0)--(-3,18)) withcolor if print : coefprint*white else: StyloTrois fi;
+    draw ((-3,0)--(-3,18)) withcolor if print : coefprint*White else: StyloTrois fi;
     pickup pencircle scaled eppen;
     );
   $:=$ scaled 0.8;
@@ -2674,7 +2679,7 @@ vardef ImageCamera=
   picture titi;
   titi=image(
       draw CameraImage shifted(-12,-5);
-      draw (((0,0)--(0,18pt)) shifted(9,-9)) withpen pencircle scaled 1bp  withcolor if print: 0.5*coefprint*white else: (69/255,168/255,140/255) fi;
+      draw (((0,0)--(0,18pt)) shifted(9,-9)) withpen pencircle scaled 1bp  withcolor if print: 0.5*coefprint*White else: (69/255,168/255,140/255) fi;
     );
   titi
 enddef;
@@ -2734,7 +2739,7 @@ vardef VideoSur(expr nbpas,xa)=
     path ta;
     ta=OvalBox(texto);
     $=image(
-    fill ta withcolor if print: coefprint*white else: StyloTrois fi;
+    fill ta withcolor if print: coefprint*White else: StyloTrois fi;
     draw ta withcolor CoulLignes;
     %label(TEX(TTm),center ta) if print=false : withcolor blanc fi;
   draw texto;
@@ -2924,9 +2929,9 @@ vardef OpAdd(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$+$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -2939,9 +2944,9 @@ vardef OpSous(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$-$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -2954,9 +2959,9 @@ vardef OpMul(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$\times$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -2969,9 +2974,9 @@ vardef OpMulS(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$*$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -2984,9 +2989,9 @@ vardef OpDiv(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$\div$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -2999,9 +3004,9 @@ vardef OpDivS(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$/$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3014,9 +3019,9 @@ vardef OpModulo(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"modulo",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3029,9 +3034,9 @@ vardef OpAlea(expr pasun,pasdeux)=
   LOPop=ColleBoxNew("nombre aléatoire entre",if string pasun : OvalNb(pasun) else: pasun fi,"et",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3044,9 +3049,9 @@ vardef OpRegrouper(expr pasun,pasdeux)=
   LOPop=ColleBoxNew("regrouper",if string pasun : OvalNb(pasun) else: pasun fi,"et",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3059,9 +3064,9 @@ vardef OpLettre(expr pasun,pasdeux)=
   LOPop=ColleBoxNew("lettre",if string pasun : OvalNb(pasun) else: pasun fi,"de",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3074,9 +3079,9 @@ vardef OpLongueur(expr pasun)=
   LOPop=ColleBoxNew("longueur de",if string pasun : OvalNb(pasun) else: pasun fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3089,9 +3094,9 @@ vardef OpArrondi(expr pasun)=
   LOPop=ColleBoxNew("arrondi de",if string pasun : OvalNb(pasun) else: pasun fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3104,9 +3109,9 @@ vardef OpFonction(expr pasun,pasdeux)=
   LOPop=ColleBoxNew(RecMenuOp(pasun),"de",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAao=OvalBox(LOPop);
   Oop=image(
-      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAao if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LOPop;
-    draw TAao if print=false : withcolor coefprint*white fi;
+    draw TAao if print=false : withcolor coefprint*White fi;
     );
   Oop:=Oop shifted(-center Oop);
   Oop
@@ -3119,9 +3124,9 @@ vardef TestOpSup(expr pasun, pasdeux)=
   LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$>$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3134,9 +3139,9 @@ vardef TestOpInf(expr pasun, pasdeux)=
   LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$<$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3149,9 +3154,9 @@ vardef TestOpEgal(expr pasun, pasdeux)=
   LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"$=$",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3164,9 +3169,9 @@ vardef TestOpEt(expr pasun, pasdeux)=
   LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"et",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3179,9 +3184,9 @@ vardef TestOpOu(expr pasun, pasdeux)=
   LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"ou",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3194,9 +3199,9 @@ vardef TestOpNon(expr pasun)=
   LTa=ColleBoxNew("non",if string pasun : OvalNb(pasun) else: pasun fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3209,9 +3214,9 @@ vardef TestOpContient(expr pasun,pasdeux)=
   LTa=ColleBoxNew(if string pasun : OvalNb(pasun) else: pasun fi,"contient",if string pasdeux : OvalNb(pasdeux) else: pasdeux fi,"?");
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor FondOvalOp else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3224,9 +3229,9 @@ vardef AppCostume(expr pasun)=
   LTa=ColleBoxNew(RecMenuApp(pasun),"du costume");
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor VioletAppTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor VioletAppTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3239,9 +3244,9 @@ vardef AppAP(expr pasun)=
   LTa=ColleBoxNew(RecMenuApp(pasun),"de l'arrière-plan");
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor VioletAppTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor VioletAppTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3254,9 +3259,9 @@ vardef CapDistance(expr pasun)=
   LTa=ColleBoxNew("distance de",OvalCapMenu(pasun));
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3269,9 +3274,9 @@ vardef CapTemps(expr pasun)=
   LTa=ColleBoxNew(RecMenuCap(pasun),"actuelle");
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3284,9 +3289,9 @@ vardef CapNumero(expr pasun,pasdeux)=
   LTa=ColleBoxNew(RecMenuCap(pasun),"de",OvalCapMenu(pasdeux));
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3299,9 +3304,9 @@ vardef TestCapToucheObjet(expr pasun)=
   LTa=ColleBoxNew("touche le",OvalCapMenu(pasun),"?");
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3314,9 +3319,9 @@ vardef TestCapCouleur(expr pasun)=
   LTa=ColleBoxNew("couleur",OvalCouleur(redpart(pasun),greenpart(pasun),bluepart(pasun)),"touchée ?");
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3329,9 +3334,9 @@ vardef TestCapCouleurs(expr pasun,pasdeux)=
   LTa=ColleBoxNew("couleur",OvalCouleur(redpart(pasun),greenpart(pasun),bluepart(pasun)),"touche",OvalCouleur(redpart(pasdeux),greenpart(pasdeux),bluepart(pasdeux)),"?");
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3344,9 +3349,9 @@ vardef TestCapTouche(expr pasun)=
   LTa=ColleBoxNew("touche",OvalMenuCap(pasun),"pressée ?");
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3359,9 +3364,9 @@ vardef TestCapSouris=
   LTa=ColleBoxNew("souris pressée ?");
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor CapteurTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3374,9 +3379,9 @@ vardef TestListeContient(expr nbpas,nbbas)=
   LTa=ColleBoxNew(RecMenuList(nbpas),"contient",if string nbbas:OvalNb(nbbas) else: nbbas fi);
   TAa=DiamondBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3389,9 +3394,9 @@ vardef ListeElement(expr nbpas,nbbas)=
   LTa=ColleBoxNew("élément",if string nbpas:OvalNb(nbpas) else: nbpas fi,"de",RecMenuList(nbbas));
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3404,9 +3409,9 @@ vardef ListePosition(expr nbpas,nbbas)=
   LTa=ColleBoxNew("position de",if string nbpas:OvalNb(nbpas) else: nbpas fi,"de",RecMenuList(nbbas));
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $
@@ -3419,9 +3424,9 @@ vardef ListeLongueur(expr nbpas)=
   LTa=ColleBoxNew("longueur de",RecMenuList(nbpas));
   TAa=OvalBox(LTa);
   $=image(
-      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*white fi;
+      fill TAa if print=false : withcolor OrangeListTrois else : withcolor coefprint*White fi;
     draw LTa;
-    draw TAa if print=false : withcolor coefprint*white fi;
+    draw TAa if print=false : withcolor coefprint*White fi;
     );
   $:=$ shifted(-center $);
   $

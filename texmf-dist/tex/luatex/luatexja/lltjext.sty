@@ -3,7 +3,7 @@
 %
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{lltjext}[2022-08-24 v1.2k-ltj-14 Macros for vertical writing]
+\ProvidesPackage{lltjext}[2024-07-23 v1.2k-ltj-16 Macros for vertical writing]
 \RequirePackage{luatexja}
 \newcount\ltj@ext@dir
 \let\ltj@lltjext@orig@tabular=\tabular
@@ -27,7 +27,7 @@
 \def\p@stabular<#1>#2{%
    \setlength\dimen@{#2}%
    \edef\@halignto{to\the\dimen@}\p@tabular<#1>}
-\def\p@tabular<#1>{\leavevmode \hbox \bgroup 
+\def\p@tabular<#1>{\leavevmode\null \hbox \bgroup % fixed for unwanted xkanjiskip
    \ltj@ext@dir=\ltjgetparameter{direction}\relax
    $\let\@acol\@tabacol
    \let\@classz\@tabclassz
@@ -78,7 +78,7 @@
     \ifhmode \@preamerr\z@ \@@par\fi
 	\@preamble}
 \def\endarray{\crcr\egroup\egroup\@end@alignbox}
-\def\endtabular{\endarray$\egroup}
+\def\endtabular{\endarray$\egroup\null}
 \expandafter \let \csname endtabular*\endcsname = \endtabular
 % ↓中身＼周囲→　yoko  tate  utod  dtou
 % yoko          A*    B*    B     B
@@ -541,17 +541,11 @@
        \else \let\box@dir\utod
     \fi
   \fi
-\ifltj@ltfilehook@avail % LaTeX2e >= 2020-10-01
   \@defaultunitsset\@picht{#3}\unitlength
   \@defaultunitsset\@picwd{#2}\unitlength
   \setbox\@picbox\hbox to\@picwd\bgroup\box@dir
     \@defaultunitsset\@tempdimc{#4}\unitlength\hskip-\@tempdimc
     \@defaultunitsset\@tempdimc{#5}\unitlength\lower\@tempdimc\hbox\bgroup
-\else % <= 2020-02-02
-  \@picwd=#2\unitlength \@picht=#3\unitlength
-  \setbox\@picbox\hbox to\@picwd\bgroup\box@dir
-  \hskip-#4\unitlength\lower#5\unitlength\hbox\bgroup
-\fi
   \ltj@@pic@reset@blshift
   \ignorespaces}
 \def\endpicture{%
@@ -675,6 +669,7 @@
 
 %% Compatibility with array package
 
+\ExplSyntaxOn
 \def\ltj@lltjext@patch@array{%
   \patchcmd{\@tabular}{\hbox\bgroup}{%
 	\hbox\bgroup\ltj@ext@dir=\ltjgetparameter{direction}\relax}{}{}
@@ -682,10 +677,6 @@
 	{\ltj@ext@dir=\ltjgetparameter{direction}\relax}{}{}
   \expandafter\let\csname tabular*\endcsname=\ltj@lltjext@orig@tabularS
   \patchcmd{\p@stabular}{\p@tabular}{\@tabular}{}{}
-  \@ifpackagelater{array}{2018/09/13}
-    {\expandafter\@firstoftwo}
-    {\expandafter\@secondoftwo}
-  {% = for 2018/09/13 v2.4i or newer
   \def\@startpbox##1{\bgroup
     \color@begingroup
     \box@dir\adjustbaseline%%% これを追加
@@ -694,16 +685,75 @@
          \vrule \@height \ltjgetht\@arstrutbox \@width \z@
          \everypar{}}%
       }%
-  }{ % = for 2018/04/30 v2.4h or older
-  \def\@startpbox##1{\bgroup
-    \box@dir\adjustbaseline%%% これを追加
-    \setlength\hsize{##1}\@arrayparboxrestore
-      \everypar{%
-         \vrule \@height \ltjgetht\@arstrutbox \@width \z@
-         \everypar{}}%
-      }%
-  }%
   \def\@tabarray{\@ifnextchar<\p@tabarray{\p@tabarray<Z>}}
+\ifcsname tbl_save_outer_table_cols:\endcsname %%%%%% >=2024-06-01
+  \def\p@array<##1>[##2]##3{%
+    \ifnum\ltj@ext@dir=0 \ltj@ext@dir=\ltjgetparameter{direction}\relax\fi
+    \let\box@dir\relax
+    \if ##1z\relax
+      \ifnum\ltj@ext@dir=3\relax
+        \let\box@dir\utod\@tempcnta=\zstrutbox
+      \fi
+    \else
+      \if ##1y\relax
+        \let\box@dir\yoko\@tempcnta=\ystrutbox
+      \else\if ##1t\relax
+        \let\box@dir\tate\@tempcnta=\tstrutbox
+      \else\if ##1d\relax
+         \let\box@dir\dtou\@tempcnta=\dstrutbox
+      \else\if ##1u\relax
+         \let\box@dir\utod\@tempcnta=\zstrutbox
+      \fi\fi\fi\fi
+    \fi
+    \ifx\box@dir\relax
+      \ifcase\ltj@ext@dir
+         \or   \let\box@dir\dtou\@tempcnta=\dstrutbox% dtou
+         \or\or\let\box@dir\tate\@tempcnta=\tstrutbox% tate
+         \or   \let\box@dir\yoko\@tempcnta=\ystrutbox% yoko
+         \else \let\box@dir\utod\@tempcnta=\zstrutbox% utod
+      \fi
+    \fi
+    \setbox \@arstrutbox \hbox{\box@dir\vrule
+               \@height \arraystretch
+                 \dimexpr \ltjgetht\@tempcnta+\extrarowheight\relax
+               \@depth \arraystretch \ltjgetdp \@tempcnta
+               \@width \z@}%
+    \fork@array@option<##1>[##2]%
+    \tbl_save_outer_table_cols:
+    \begingroup
+    \@mkpream{##3}%
+    \tbl_count_table_cols:
+    \xdef\@preamble{
+      \noexpand\ar@ialign
+      \@halignto
+          \bgroup \@arstrut
+        \UseTaggingSocket{tbl/row/begin}
+        \tbl_init_cell_data_for_row:
+        \@preamble
+        \tabskip \z@ \cr}%
+    \endgroup
+    \@arrayleft
+    \@begin@alignbox
+    \bgroup
+    \box@dir\adjustbaseline
+    \let\@sharp####\let\protect\relax
+    \lineskip \z@
+    \baselineskip \z@
+    \mathsurround \z@
+    \let\\\@arraycr \let\tabularnewline\\\let\par\@empty
+    \UseTaggingSocket{tbl/init}
+    \@preamble
+  }
+  \def\endtabular{\endarray$\egroup
+    \UseTaggingSocket {tbl/hmode/end}\null}
+  \def\endarray{
+    \tbl_crcr:n{endarray} \egroup
+    \UseTaggingSocket{tbl/finalize}
+    \tbl_restore_outer_cell_data:
+    \egroup\@end@alignbox
+    \@arrayright \gdef\@preamble{}%
+  }
+\else %%%%%% <2024-06-01
   \def\p@array<##1>[##2]##3{%
     \ifnum\ltj@ext@dir=0 \ltj@ext@dir=\ltjgetparameter{direction}\relax\fi
     \let\box@dir\relax
@@ -738,18 +788,29 @@
     \fork@array@option<##1>[##2]%
     \begingroup
     \@mkpream{##3}%
-    \xdef\@preamble{\noexpand\ialign \noexpand \@halignto
-                    \bgroup \tabskip \z@skip \@arstrut \@preamble
-                            \tabskip \z@ \cr}%
+    \xdef\@preamble{\noexpand\ialign \@halignto
+      \bgroup \@arstrut\@preamble \tabskip \z@ \cr}%
     \endgroup
     \@arrayleft
-    \@begin@alignbox\bgroup\box@dir\adjustbaseline
-      \let\par\@empty
-      \let\@sharp####\let\protect\relax
-      \let\\\@arraycr\let\tabularnewline\\\let\par\@empty
-     \lineskip\z@skip\baselineskip\z@skip\@preamble}
-  \def\endarray{\crcr\egroup\egroup\@end@alignbox\@arrayright}
+    \@begin@alignbox
+    \bgroup
+    \box@dir\adjustbaseline
+    \let\@sharp####\let\protect\relax
+    \lineskip \z@
+    \baselineskip \z@
+    \m@th
+    \let\\\@arraycr \let\tabularnewline\\\let\par\@empty
+    \@preamble
+  }
+  \def\endtabular{\endarray\m@th$\egroup\null}
+  \def\endarray{
+    \crcr\egroup\egroup\@end@alignbox
+    \@arrayright \gdef\@preamble{}%
+  }
+\fi
+  \expandafter \let \csname endtabular*\endcsname = \endtabular
 }
+\ExplSyntaxOff
 \@ifpackageloaded{array}{%
   \let\tabular=\ltj@lltjext@orig@tabular
   \let\array=\ltj@lltjext@orig@array
@@ -759,10 +820,5 @@
   \let\ltj@lltjext@orig@array\relax
   \ltj@ExecuteAfterPackage{array}{\ltj@lltjext@patch@array}
 }
-
-%%%%%%%%%%%%%%%% LuaTeX-ja original
-
-%%\define@key[ltj]{japaram}{autouprightnum}{%      %COUNT
-%%  \ltj@@set@stack{AURN}{0}{10000}\z@#1 }
 
 \endinput

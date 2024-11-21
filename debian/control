@@ -2,7 +2,7 @@ Source: texlive-lang
 Section: tex
 Priority: optional
 Maintainer: Debian TeX Task Force <debian-tex-maint@lists.debian.org>
-Uploaders: Norbert Preining <norbert@preining.info>, Hilmar Preusse <hille42@web.de>
+Uploaders: Norbert Preining <norbert@preining.info>, Hilmar Preusse <hille42@web.de>, Hilmar Preuße <hille42@debian.org>
 Build-Depends: debhelper-compat (= 13), dh-strip-nondeterminism
 Build-Depends-Indep: sharutils, tex-common (>= 6.14), findutils (>=4.2.0)
 Standards-Version: 4.5.1
@@ -13,7 +13,7 @@ Vcs-Browser: https://github.com/debian-tex/texlive-nonbin/tree/master/texlive-la
 Package: texlive-lang-arabic
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, fonts-hosny-amiri, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-plain-generic (>= 2023.20230613)
+Depends: ${misc:Depends}, fonts-hosny-amiri, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-plain-generic (>= 2024.20240401)
 Replaces: texlive-xetex (<< 2020.20200519)
 Breaks: texlive-base (<< 2022.20220405), texlive-xetex (<< 2020.20200519)
 Description: TeX Live: Arabic
@@ -92,7 +92,7 @@ Description: TeX Live: Arabic
 Package: texlive-lang-cjk
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, poppler-data, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-binaries (>= 2023.20230311), texlive-latex-base (>= 2023.20230613)
+Depends: ${misc:Depends}, poppler-data, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-binaries (>= 2024.20240313), texlive-latex-base (>= 2024.20240401)
 Recommends: latex-cjk-all (>= 4.6.0+cvs20060714-2), ruby, texlive-lang-chinese, texlive-lang-japanese, texlive-lang-korean
 Replaces: texlive-xetex (<< 2021.20220204)
 Breaks: texlive-base (<< 2022.20220405), texlive-xetex (<< 2021.20220204)
@@ -135,7 +135,7 @@ Description: TeX Live: Chinese/Japanese/Korean (base)
 Package: texlive-lang-korean
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, fonts-baekmuk, fonts-unfonts-core, fonts-unfonts-extra, texlive-base (>= 2022.20220405), texlive-binaries (>= 2023.20230311), texlive-lang-cjk (>= 2023.20230613)
+Depends: ${misc:Depends}, fonts-baekmuk, fonts-unfonts-core, fonts-unfonts-extra, texlive-base (>= 2022.20220405), texlive-binaries (>= 2024.20240313), texlive-lang-cjk (>= 2024.20240401)
 Conflicts: ko.tex-bin
 Provides: ko.tex
 Breaks: texlive-base (<< 2022.20220405)
@@ -171,7 +171,7 @@ Description: TeX Live: Korean
 Package: texlive-lang-chinese
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, fonts-arphic-bkai00mp, fonts-arphic-bsmi00lp, fonts-arphic-gbsn00lp, fonts-arphic-gkai00mp, texlive-base (>= 2022.20220405), texlive-lang-cjk (>= 2023.20230613)
+Depends: ${misc:Depends}, fonts-arphic-bkai00mp, fonts-arphic-bsmi00lp, fonts-arphic-gbsn00lp, fonts-arphic-gkai00mp, texlive-base (>= 2022.20220405), texlive-lang-cjk (>= 2024.20240401)
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: Chinese
  Support for Chinese; additional packages in collection-langcjk.
@@ -220,6 +220,11 @@ Description: TeX Live: Chinese
  .
  qyxf-book -- Book Template for Qian Yuan Xue Fu
  .
+ sjtutex -- LaTeX classes for Shanghai Jiao Tong University
+ .
+ suanpan-l3 -- Traditional Chinese 7-bids suanpan (abacus) package based on
+ l3draw
+ .
  texlive-zh-cn -- TeX Live manual (Chinese)
  .
  texproposal -- A proposal prototype for LaTeX promotion in Chinese
@@ -248,13 +253,13 @@ Description: TeX Live: Chinese
 Package: texlive-lang-japanese
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ruby, texlive-base (>= 2022.20220405), texlive-binaries (>= 2023.20230311), texlive-lang-cjk (>= 2023.20230613)
+Depends: ${misc:Depends}, ruby, texlive-base (>= 2022.20220405), texlive-binaries (>= 2024.20240313), texlive-lang-cjk (>= 2024.20240401)
 Conflicts: ptex-jisfonts
 Recommends: fonts-ipaexfont-gothic, fonts-ipaexfont-mincho, fonts-ipafont-gothic, fonts-ipafont-mincho, texlive-latex-recommended
 Provides: okumura-clsfiles, ptex-jisfonts, vfdata-morisawa5
 Suggests: fonts-noto-cjk-extra
-Replaces: mendexk
-Breaks: texlive-base (<< 2022.20220405), texlive-extra-utils (<< 2023.20230613)
+Replaces: mendexk, texlive-binaries (<< 2024)
+Breaks: texlive-base (<< 2022.20220405), texlive-binaries (<< 2024), texlive-extra-utils (<< 2023.20230613)
 Description: TeX Live: Japanese
  Support for Japanese; additional packages are in collection-langcjk.
  .
@@ -270,6 +275,8 @@ Description: TeX Live: Japanese
  bxbase -- BX bundle base components
  .
  bxcjkjatype -- Typeset Japanese with pdfLaTeX and CJK
+ .
+ bxcoloremoji -- Use color emojis more conveniently
  .
  bxghost -- Ghost insertion for proper xkanjiskip
  .
@@ -395,7 +402,7 @@ Description: TeX Live: Japanese
 Package: texlive-lang-cyrillic
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-binaries (>= 2023.20230311), texlive-latex-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-binaries (>= 2024.20240313), texlive-latex-base (>= 2024.20240401)
 Replaces: texlive-base (<< 2019.20190506)
 Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2022.20220405)
 Description: TeX Live: Cyrillic
@@ -503,7 +510,7 @@ Description: TeX Live: Cyrillic
 Package: texlive-lang-czechslovak
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-binaries (>= 2023.20230311), texlive-lang-english (>= 2023.20230613), texlive-lang-european (>= 2023.20230613), texlive-lang-french (>= 2023.20230613), texlive-lang-german (>= 2023.20230613), texlive-lang-italian (>= 2023.20230613), texlive-lang-polish (>= 2023.20230613), texlive-lang-spanish (>= 2023.20230613), texlive-latex-base (>= 2023.20230613), texlive-luatex (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-binaries (>= 2024.20240313), texlive-lang-english (>= 2024.20240401), texlive-lang-european (>= 2024.20240401), texlive-lang-french (>= 2024.20240401), texlive-lang-german (>= 2024.20240401), texlive-lang-italian (>= 2024.20240401), texlive-lang-polish (>= 2024.20240401), texlive-lang-spanish (>= 2024.20240401), texlive-latex-base (>= 2024.20240401), texlive-luatex (>= 2024.20240401)
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: Czech/Slovak
  Support for Czech/Slovak.
@@ -542,7 +549,7 @@ Description: TeX Live: Czech/Slovak
 Package: texlive-lang-english
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Replaces: texlive-base (<< 2022.20220923)
 Breaks: texlive-base (<< 2022.20220405), texlive-base (<< 2022.20220923)
 Description: TeX Live: US and UK English
@@ -559,6 +566,9 @@ Description: TeX Live: US and UK English
  around-the-bend -- Typeset exercises in TeX, with answers
  .
  ascii-chart -- An ASCII wall chart
+ .
+ asy-overview -- A brief overview of the Asymptote language for drawing
+ mathematical graphics
  .
  biblatex-cheatsheet -- BibLaTeX/Biber 'cheat sheet'
  .
@@ -685,11 +695,15 @@ Description: TeX Live: US and UK English
  .
  tlmgrbasics -- A simplified documentation for tlmgr
  .
+ typstfun -- List of equivalent Typst function names of LaTeX commands
+ .
  undergradmath -- LaTeX Math for Undergraduates cheat sheet
  .
  visualfaq -- A Visual LaTeX FAQ
  .
  webguide -- Brief Guide to LaTeX Tools for Web publishing
+ .
+ wrapstuff-doc-en -- English version of the wrapstuff package documentation
  .
  xetexref -- Reference documentation of XeTeX
  .
@@ -699,7 +713,7 @@ Description: TeX Live: US and UK English
 Package: texlive-lang-european
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Replaces: texlive-base (<< 2019.20190506)
 Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2022.20220405)
 Description: TeX Live: Other European languages
@@ -773,7 +787,7 @@ Description: TeX Live: Other European languages
  .
  hrlatex -- LaTeX support for Croatian documents
  .
- huaz -- Automatic Hungarian definite articles
+ huaz -- Automatic definite articles for Hungarian
  .
  hulipsum -- Hungarian dummy text (Lorum ipse)
  .
@@ -850,7 +864,7 @@ Description: TeX Live: Other European languages
 Package: texlive-lang-french
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: French
  Support for French and Basque.
@@ -893,6 +907,10 @@ Description: TeX Live: French
  algorithms
  .
  facture -- Generate an invoice
+ .
+ faq-fr -- French LaTeX FAQ (sources)
+ .
+ faq-fr-gutenberg -- Sources of the GUTenberg French LaTeX FAQ and PDF files
  .
  formation-latex-ul -- Introductory LaTeX course in French
  .
@@ -956,7 +974,7 @@ Description: TeX Live: French
 Package: texlive-lang-german
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Replaces: texlive-xetex (<< 2020.20200519)
 Breaks: texlive-base (<< 2022.20220405), texlive-xetex (<< 2020.20200519)
 Description: TeX Live: German
@@ -1009,7 +1027,7 @@ Description: TeX Live: German
  .
  latexcheat-de -- A LaTeX cheat sheet, in German
  .
- lshort-german -- German version of A Short Introduction to LaTeX2e:
+ lshort-german -- German version of "A Short Introduction to LaTeX2e":
  LaTeX2e-Kurzbeschreibung
  .
  lualatex-doc-de -- Guide to LuaLaTeX (German translation)
@@ -1063,7 +1081,7 @@ Description: TeX Live: German
 Package: texlive-lang-greek
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, fonts-gfs-baskerville, fonts-gfs-porson, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-binaries (>= 2023.20230311)
+Depends: ${misc:Depends}, fonts-gfs-baskerville, fonts-gfs-porson, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-binaries (>= 2024.20240313)
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: Greek
  Support for Greek.
@@ -1123,7 +1141,7 @@ Description: TeX Live: Greek
 Package: texlive-lang-italian
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: Italian
  Support for Italian.
@@ -1170,7 +1188,7 @@ Description: TeX Live: Italian
 Package: texlive-lang-other
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, fonts-sil-padauk (>= 3.003-1), fonts-tlwg-garuda-otf, fonts-tlwg-kinnari-otf, fonts-tlwg-laksaman-otf, fonts-tlwg-loma-otf, fonts-tlwg-mono-otf, fonts-tlwg-norasi-otf, fonts-tlwg-purisa-otf, fonts-tlwg-sawasdee-otf, fonts-tlwg-typewriter-otf, fonts-tlwg-typist-otf, fonts-tlwg-typo-otf, fonts-tlwg-umpush-otf, fonts-tlwg-waree-otf, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-binaries (>= 2023.20230311)
+Depends: ${misc:Depends}, fonts-sil-padauk (>= 3.003-1), fonts-tlwg-garuda-otf, fonts-tlwg-kinnari-otf, fonts-tlwg-laksaman-otf, fonts-tlwg-loma-otf, fonts-tlwg-mono-otf, fonts-tlwg-norasi-otf, fonts-tlwg-purisa-otf, fonts-tlwg-sawasdee-otf, fonts-tlwg-typewriter-otf, fonts-tlwg-typist-otf, fonts-tlwg-typo-otf, fonts-tlwg-umpush-otf, fonts-tlwg-waree-otf, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-binaries (>= 2024.20240313)
 Replaces: texlive-base (<< 2019.20190506)
 Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2022.20220405)
 Description: TeX Live: Other languages
@@ -1312,7 +1330,7 @@ Description: TeX Live: Other languages
 Package: texlive-lang-polish
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613), texlive-binaries (>= 2023.20230311), texlive-latex-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401), texlive-binaries (>= 2024.20240313), texlive-latex-base (>= 2024.20240401)
 Suggests: texlive-fonts-extra
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: Polish
@@ -1359,7 +1377,7 @@ Description: TeX Live: Polish
 Package: texlive-lang-portuguese
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Breaks: texlive-base (<< 2022.20220405)
 Description: TeX Live: Portuguese
  Support for Portuguese.
@@ -1394,7 +1412,7 @@ Description: TeX Live: Portuguese
 Package: texlive-lang-spanish
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-base (>= 2022.20220405), texlive-base (>= 2024.20240401)
 Replaces: texlive-base (<< 2019.20190506)
 Breaks: texlive-base (<< 2019.20190506), texlive-base (<< 2022.20220405)
 Description: TeX Live: Spanish
@@ -1426,11 +1444,13 @@ Description: TeX Live: Spanish
  .
  lshort-spanish -- Short introduction to LaTeX, Spanish translation
  .
+ quran-es -- Spanish Translations for the quran package
+ .
  texlive-es -- TeX Live manual (Spanish)
 
 Package: texlive-lang-all
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, texlive-lang-arabic (>= 2023.20230613), texlive-lang-chinese (>= 2023.20230613), texlive-lang-cjk (>= 2023.20230613), texlive-lang-cyrillic (>= 2023.20230613), texlive-lang-czechslovak (>= 2023.20230613), texlive-lang-english (>= 2023.20230613), texlive-lang-european (>= 2023.20230613), texlive-lang-french (>= 2023.20230613), texlive-lang-german (>= 2023.20230613), texlive-lang-greek (>= 2023.20230613), texlive-lang-italian (>= 2023.20230613), texlive-lang-japanese (>= 2023.20230613), texlive-lang-korean (>= 2023.20230613), texlive-lang-other (>= 2023.20230613), texlive-lang-polish (>= 2023.20230613), texlive-lang-portuguese (>= 2023.20230613), texlive-lang-spanish (>= 2023.20230613)
+Depends: ${misc:Depends}, texlive-lang-arabic (>= 2024.20240401), texlive-lang-chinese (>= 2024.20240401), texlive-lang-cjk (>= 2024.20240401), texlive-lang-cyrillic (>= 2024.20240401), texlive-lang-czechslovak (>= 2024.20240401), texlive-lang-english (>= 2024.20240401), texlive-lang-european (>= 2024.20240401), texlive-lang-french (>= 2024.20240401), texlive-lang-german (>= 2024.20240401), texlive-lang-greek (>= 2024.20240401), texlive-lang-italian (>= 2024.20240401), texlive-lang-japanese (>= 2024.20240401), texlive-lang-korean (>= 2024.20240401), texlive-lang-other (>= 2024.20240401), texlive-lang-polish (>= 2024.20240401), texlive-lang-portuguese (>= 2024.20240401), texlive-lang-spanish (>= 2024.20240401)
 Description: TeX Live: metapackage depending on all TeX Live language packages
  This package pulls in all texlive-lang-* packages. 

@@ -1,0 +1,58 @@
+\documentclass{book}
+\usepackage{../asy_sty/asy_tut}
+
+% For 3D PRC asymptote
+% See: https://github.com/vectorgraphics/asymptote/blob/master/doc/externalprc.tex
+% Compile .asy files with asy -inlineimage <fn>
+\RequirePackage{asymptote}
+\def\asydir{chapter4/asy}
+\graphicspath{ {asy/} {chapter4/asy/} }
+% uncomment for 3D graphics: 
+\input chapter4/asy/vectors.pre
+\input chapter4/asy/planes.pre
+\input chapter4/asy/washer.pre
+\usepackage[bigfiles]{media9}
+
+
+\includeonly{
+  cover/cover,
+  preface/preface,
+  chapter1/chapter1,
+  chapter2/chapter2,
+  chapter3/chapter3,
+  chapter4/chapter4,
+  appendix/appendix
+}
+
+\begin{document}
+\frontmatter
+\newcommand{\includefiledir}{cover}
+\include{\includefiledir /cover}
+\renewcommand{\includefiledir}{preface}
+\include{\includefiledir /preface}
+\mainmatter
+\renewcommand{\includefiledir}{chapter1}
+\include{\includefiledir /chapter1}
+\renewcommand{\includefiledir}{chapter2}
+\include{\includefiledir /chapter2}
+\renewcommand{\includefiledir}{chapter3}
+\include{\includefiledir /chapter3}
+\renewcommand{\includefiledir}{chapter4}
+\include{\includefiledir /chapter4}
+\backmatter
+\renewcommand{\includefiledir}{appendix}
+\include{\includefiledir /appendix}
+\end{document}
+
+%
+% These lines tells gnu-emacs to typeset with the default tex engine
+% which requires Unicode encoding only (utf-8)
+% ^c^t^s for toggling synctex. 
+% ^-Shift-Click to move from pdf to source, Command-Shift-Click on OSX
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: default
+%%% TeX-command-extra-options: " -shell-escape"
+%%% TeX-source-correlate-method-active: synctex
+%%% coding: utf-8
+%%% End:

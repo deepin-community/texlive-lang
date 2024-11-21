@@ -22,49 +22,30 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2005/12/01]
 \ProvidesPackage{frenchmath}
-    [2024/01/22 v2.8 .dtx frenchmath file]
-\newif\ifcapsit
-\DeclareOption{capsit}{\capsittrue}
-\newif\iffrenchmathgreek % pour sauvegarder les lettres d'origine
-\newif\iflgrmath
-\DeclareOption{lgrmath}{\lgrmathtrue\frenchmathgreektrue}
-\newif\ifupgreek
-\DeclareOption{upgreek}{\upgreektrue\frenchmathgreektrue}
-\newif\ifUpgreek
-\DeclareOption{Upgreek}{\Upgreektrue\upgreektrue\frenchmathgreektrue}
-\newif\ifnoibrackets
-\DeclareOption{noibrackets}{\noibracketstrue}
+    [2024/05/07 v3.1 .dtx Typesetting mathematics according to French rules]
+
+\newif\iffrenchmath@capsit
+\DeclareOption{capsit}{\frenchmath@capsittrue}
+\newif\iffrenchmath@noibrackets
+\DeclareOption{noibrackets}{\frenchmath@noibracketstrue}
+\newif\iffrenchmath@mathgreeks
+\DeclareOption*{\frenchmath@mathgreekstrue
+    \PassOptionsToPackage{\CurrentOption,upright}{mathgreeks}}
 \ProcessOptions \relax
 
-\AtBeginDocument{
-    \@ifpackageloaded{mathdesign}{
-        \PackageInfo{frenchmath}{Package mathdesign
-            is loaded, \MessageBreak
-            I don't load mathrsfs and amssymb packages}
-    }{
-        \RequirePackage{amssymb} % \leqslant, \geqslant, \varnothing
-        \@ifundefined{mathscr}{\RequirePackage{mathrsfs}}{}
-    }
-}
 \RequirePackage{amsopn} % fournit \DeclareMathOperator
-\@ifpackageloaded{mathptmx}{\RequirePackage{dotlessj}}{}
-
-\AtBeginDocument{
-  \iflgrmath
-    \@ifpackageloaded{lgrmath}{}{
-        \RequirePackage[font=fcm,style=french]{lgrmath}}
-  \fi
-  \ifupgreek
-    \@ifpackageloaded{upgreek}{}{
-        \RequirePackage[Symbol]{upgreek}}
-  \fi
-}
 \RequirePackage{xspace} % utile pour les commandes \ssi, \Oij
-\ifnoibrackets\else\RequirePackage{ibrackets}\fi % intelligent brackets
+\RequirePackage{etoolbox} % fournit \AtEndPreamble
+\iffrenchmath@mathgreeks \RequirePackage{mathgreeks} \fi
+\AtEndPreamble{
+  \RequirePackage{decimalcomma}
+  \iffrenchmath@noibrackets\else\RequirePackage{ibrackets}\fi
+  \@ifpackageloaded{mathptmx}{\let\jmath\@undefined}{}
+  \@ifundefined{jmath}{\RequirePackage{dotlessj}}{}
+  \@ifpackageloaded{pstricks-add}{\psset{comma=true}}{}
+}
 
-\RequirePackage{decimalcomma} %  depuis frenchmath 2.7
-
-\newcommand*\DeclareMathUp[1]{
+\providecommand*\DeclareMathUp[1]{
     \DeclareMathSymbol{#1}{\mathalpha}{operators}{`#1}}
 
 \def\apply#1#2{\apply@#1#2,\apply@,}
@@ -72,23 +53,61 @@
     \else #1{#2}\afterfi@{\apply@#1}\fi}
 \def\afterfi@#1#2\fi{\fi#1}
 
-\ifcapsit\else
-  \AtBeginDocument{
-    \apply\DeclareMathUp{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
-  }
-\fi
+\AtEndPreamble{\iffrenchmath@capsit\else\AtBeginDocument{
+  \apply\DeclareMathUp{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+  }\fi
+}
 
-\AtBeginDocument{\@ifpackageloaded{pstricks-add}{\psset{comma=true}}{}}
-\DeclareMathSymbol{;}{\mathbin}{operators}{'73} % \mathpunct à l'origine
+\AtEndPreamble{% au cas où frenchmath est chargé avant unicode-math
+  \AtBeginDocument{% après actions de unicode-math
+    \DeclareMathSymbol{;}{\mathbin}{operators}{'73} % et non \mathpunct
+    \@ifundefined{mathscr}{\RequirePackage{mathrsfs}}{
+        \PackageWarningNoLine{frenchmath}{Command \string\mathscr\space
+            already defined, \MessageBreak
+            I don't load mathrsfs}
+    }
+    \@ifundefined{leqslant}{
+        \DeclareSymbolFont{AMSa}{U}{msa}{m}{n}% de amsfonts
+        \DeclareMathSymbol{\leqslant}{\mathrel}{AMSa}{"36}% de amssymb
+        \DeclareMathSymbol{\geqslant}{\mathrel}{AMSa}{"3E}
+    }{
+        \PackageWarningNoLine{frenchmath}{\string\leqslant\space
+            and \string\geqslant\space already defined,
+            \MessageBreak
+            they will not be redefined}
+    }
+    \@ifundefined{varnothing}{% de amssymb
+        \@ifundefined{text}{\RequirePackage{amstext}}{}
+        \newcommand\varnothing{% \usefont évite de déclarer AMSb
+            \mathord{\text{\usefont{U}{msb}{m}{n}\symbol{"3F}}}}
+    }{
+        \PackageWarningNoLine{frenchmath}{\string\varnothing\space
+            already defined,
+            \MessageBreak
+            it will not be redefined,
+            \MessageBreak
+            except by using \string\AMSvarnothing}
+    }
+  }
+}
 
 \newcommand\curs{\mathscr}
 \newcommand\infeg{\leqslant}
 \newcommand\supeg{\geqslant}
 \newcommand\vide{\varnothing}
+\newcommand\AMSvarnothing{% doit être appelé après \setmathfont ?
+    \AtEndPreamble{\AtBeginDocument{% après actions de unicode-math
+        \renewcommand\varnothing{%
+            \mathord{\text{\usefont{U}{msb}{m}{n}\symbol{"3F}}}}
+    }}
+}
 \newcommand\paral{\mathrel{\ooalign{$\mkern-1.75mu/\mkern1.75mu$\cr%
     $\mkern1.75mu/\mkern-1.75mu$}}}
 \newcommand\ssi{si, et seulement si,\xspace}
-\newcommand*\cmod[1]{\quad[#1]}
+\newif\if@display % provient de amsmath, peut être appelé 2 fois
+\everydisplay\@xp{\the\everydisplay \@displaytrue}
+\newcommand*\cmod[1]{\penalty \z@ % similaire à amsmath \allowbreak
+    \if@display\mkern 18mu\else\mkern 8mu\fi [#1]}
 
 \DeclareMathOperator{\pgcd}{pgcd}
 \DeclareMathOperator{\ppcm}{ppcm}
@@ -129,103 +148,16 @@
     \ensuremath{\left(O ; \vec{u}, \vec{v}\,\right)}\xspace}
 \newcommand\Ouv{\@ifstar{\@@Ouv}{\@Ouv}}
 
-\AtBeginDocument{
-    \renewcommand\ij{%
-        \ensuremath{\left(\vec{\imath}, \vec{\jmath}\,\right)}\xspace}}
+\AtBeginDocument{\let\oldij\ij %\ij existe déjà (mode texte)
+    \renewcommand\ij{\TextOrMath{\oldij}{%
+        \left(\vec{\imath}, \vec{\jmath}\,\right)}}
+}
 \newcommand\ijk{%
     \ensuremath{%
         \left(\vec{\vphantom{t}\imath}, \vec{\vphantom{t}\jmath},
         \vec{\vphantom{t}\smash{k}}\,\right)}%
     \xspace}
 
-\iffrenchmathgreek
-    \@ifundefined{italpha}{\let\italpha\alpha}{
-        \PackageWarningNoLine{frenchmath}{Command
-            \string\italpha\space already exist \MessageBreak
-            and will not be redefined, \MessageBreak
-            no more warning for the other Greek letters, \MessageBreak
-            except pi}
-    }
-    \@ifundefined{itbeta}{\let\itbeta\beta}{}
-    \@ifundefined{itgamma}{\let\itgamma\gamma}{}
-    \@ifundefined{itdelta}{\let\itdelta\delta}{}
-    \@ifundefined{itepsilon}{\let\itepsilon\epsilon}{}
-    \@ifundefined{itzeta}{\let\itzeta\zeta}{}
-    \@ifundefined{iteta}{\let\iteta\eta}{}
-    \@ifundefined{ittheta}{\let\ittheta\theta}{}
-    \@ifundefined{itiota}{\let\itiota\iota}{}
-    \@ifundefined{itkappa}{\let\itkappa\kappa}{}
-    \@ifundefined{itlambda}{\let\itlambda\lambda}{}
-    \@ifundefined{itmu}{\let\itmu\mu}{}
-    \@ifundefined{itnu}{\let\itnu\nu}{}
-    \@ifundefined{itxi}{\let\itxi\xi}{}
-    \@ifundefined{itpi}{\let\itpi\pi}{
-       \PackageWarningNoLine{frenchmath}{Command
-            \string\itpi\space already exist \MessageBreak
-            and will not be redefined}
-    }
-    \@ifundefined{itrho}{\let\itrho\rho}{}
-    \@ifundefined{itsigma}{\let\itsigma\sigma}{}
-    \@ifundefined{ittau}{\let\ittau\tau}{}
-    \@ifundefined{itupsilon}{\let\itupsilon\upsilon}{}
-    \@ifundefined{itphi}{\let\itphi\phi}{}
-    \@ifundefined{itchi}{\let\itchi\chi}{}
-    \@ifundefined{itpsi}{\let\itpsi\psi}{}
-    \@ifundefined{itomega}{\let\itomega\omega}{}
-    \@ifundefined{itvarepsilon}{\let\itvarepsilon\varepsilon}{}
-    \@ifundefined{itvartheta}{\let\itvartheta\vartheta}{}
-    \@ifundefined{itvarpi}{\let\itvarpi\varpi}{}
-    \@ifundefined{itvarsigma}{\let\itvarsigma\varsigma}{}
-    \@ifundefined{itvarphi}{\let\itvarphi\varphi}{}
-\fi
-
-\AtBeginDocument{
-  \ifupgreek
-    \renewcommand\alpha{\upalpha}
-    \renewcommand\beta{\upbeta}
-    \renewcommand\gamma{\upgamma}
-    \renewcommand\delta{\updelta}
-    \renewcommand\epsilon{\upepsilon}
-    \renewcommand\zeta{\upzeta}
-    \renewcommand\eta{\upeta}
-    \renewcommand\theta{\uptheta}
-    \renewcommand\iota{\upiota}
-    \renewcommand\kappa{\upkappa}
-    \renewcommand\lambda{\uplambda}
-    \renewcommand\mu{\upmu}
-    \renewcommand\nu{\upnu}
-    \renewcommand\xi{\upxi}
-    \renewcommand\pi{\uppi}
-    \renewcommand\rho{\uprho}
-    \renewcommand\sigma{\upsigma}
-    \renewcommand\tau{\uptau}
-    \renewcommand\upsilon{\upupsilon}
-    \renewcommand\phi{\upphi}
-    \renewcommand\chi{\upchi}
-    \renewcommand\psi{\uppsi}
-    \renewcommand\omega{\upomega}
-    \renewcommand\varepsilon{\upvarepsilon}
-    \renewcommand\vartheta{\upvartheta}
-    \renewcommand\varpi{\upvarpi}
-    \renewcommand\varrho{\upvarrho}
-    \renewcommand\varsigma{\upvarsigma}
-    \renewcommand\varphi{\upvarphi}
-  \fi
-
-  \ifUpgreek
-    \renewcommand\Gamma{\Upgamma}
-    \renewcommand\Delta{\Updelta}
-    \renewcommand\Theta{\Uptheta}
-    \renewcommand\Lambda{\Uplambda}
-    \renewcommand\Xi{\Upxi}
-    \renewcommand\Pi{\Uppi}
-    \renewcommand\Sigma{\Upsigma}
-    \renewcommand\Upsilon{\Upupsilon}
-    \renewcommand\Phi{\Upphi}
-    \renewcommand\Psi{\Uppsi}
-    \renewcommand\Omega{\Upomega}
-  \fi
-}
 
 \endinput
 %%

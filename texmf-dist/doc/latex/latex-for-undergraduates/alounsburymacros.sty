@@ -1,4 +1,4 @@
-% alounsburymacros.sty	 1.0.2   2022/10/06
+% alounsburymacros.sty	 1.03   2024/2/27
 % Andrew Lounsbury
 
 % This file was not generated from source code. 
@@ -6,21 +6,20 @@
 
 % Marking this file as a package
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{alounsburymacros}[2022/10/06 1.0.2 miscellaneous commands]
+\ProvidesPackage{mymacros}[2024/2/27 1.0.3 miscellaneous commands]
 
 % This allows commands that use things from these packages to work even if we 
 % haven't put them in \usepackage{} in the preamble. 
 \RequirePackage{forloop, mathrsfs, mathtools, nicefrac, xcolor}
 % Otherwise, we could list packages we often use to avoid having to include them 
 % in the preamble of our tex files. 
-%===================================================================================%
-% In other words, the use of \usepackage{} for packages other than alounsburymacros %
-% at the beginning of LaTeX_for_Undergraduates.tex is merely there for the sake of 	%
-% example.    																		%
-%===================================================================================%
-\RequirePackage{amsmath, amsfonts, amssymb, amsthm, cancel, calligra, enumitem, fancyvrb, graphicx, pagecolor, pifont, suppose, totcount, upgreek, verbatim, verse}
-\RequirePackage{fontenc}
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% In other words, the use of \usepackage{} for packages other than mymacros at the  *
+% beginning of LaTeX_for_Undergraduates.tex is merely there for the sake of example.*
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+\RequirePackage{amsmath, amsfonts, amssymb, amsthm, cancel, calligra, enumitem, fancyvrb, fontenc, graphicx, istgame, multicol, pagecolor, pifont, soul, totcount, upgreek, ulem, verbatim, verse}
 \PassOptionsToPackage{T1}{fontenc}
+\PassOptionsToPackage{normalem}{ulem}
 
 % GENERAL COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % From enumitem package
@@ -30,8 +29,9 @@
 	parsep=0pt,
 }
 
-% For <...> arguments in LaTeX_for_Undergraduates.tex
+% For <...> options in LaTeX_for_Undergraduates.tex
 \newcommand*{\opt}[1]{$\langle$\textit{#1}$\rangle$}
+\newcommand*{\mopt}[1]{\text{$\langle$\textit{#1}$\rangle$}}
 
 % Troubleshooting
 \newcommand{\ee}{\end{enumerate}}
@@ -39,14 +39,6 @@
 
 % LaTeX Workshop autocompletes \par to \paragraph{}, which gets annoying. 
 \newcommand{\p}{\par}
-
-% Horizontal separator with option to add label
-\newcommand*{\hl}[1][\unskip]{%
-	\noindent\textbf{#1} \\%
-	\makebox{%
-		\rule[1.5ex]{0.75\paperwidth}{0.8pt}%
-	}%
-}
 
 % \renewcommand overrides a command that has already been defined. 
 % In the proof environment, \qedsymbol defaults to a white square. 
@@ -64,6 +56,7 @@
 % The second {} contains what will be displayed. 
 \newtheorem{claim}{Claim} 	% numbered
 \newtheorem*{claim*}{Claim} % not numbered
+\newtheorem{conjecture}{Conjecture}
 \newtheorem*{conjecture*}{Conjecture}
 \newtheorem{corollary}{Corollary}
 \newtheorem*{corollary*}{Corollary}
@@ -77,15 +70,22 @@
 \newtheorem*{theorem*}{Theorem}
 
 \theoremstyle{definition} 	% removes italics from the following
+\newtheorem{axiom}{Axiom}
+\newtheorem*{axiom*}{Axiom}
 \newtheorem{case}{Case}
 \newtheorem{counterexample}{Counterexample}
 \newtheorem*{counterexample*}{Counterexample}
 \newtheorem{definition}{Definition}
 \newtheorem*{definition*}{Definition}
+\newtheorem{definitions}{Definitions}
+\newtheorem*{definitions*}{Definitions}
 \newtheorem{example}{Example}
 \newtheorem*{example*}{Example}
+\newtheorem{examples}{Examples}
+\newtheorem*{examples*}{Examples}
 \newtheorem{nonexample}{Non-Example}
 \newtheorem*{nonexample*}{Non-Example}
+\newtheorem{fact}{Fact}
 \newtheorem*{fact*}{Fact}
 \newtheorem{notation}{Notation}
 \newtheorem*{notation*}{Notation}
@@ -147,6 +147,9 @@
 \newtheorem*{cremark*}{\colorbox{cyan}{Remark}}
 %-----------------------------------------------------------------
 
+% For double row separators in arrays
+\newcommand{\hhline}{\hline\hline}
+
 % For inductive proofs and recursive definitions
 \newcommand{\bc}{\textbf{\underline{Base case}: }}
 \newcommand{\ind}{\textbf{\underline{Induction step}: }}
@@ -167,11 +170,11 @@
 \newcommand{\on}{\text{ on}\ }
 \newcommand{\ona}{\text{ on a}\ }
 \newcommand{\ow}{\text{o/w}\ }			% otherwise
-\newcommand{\st}{\text{s.t.}\ }			% such that
+\newcommand{\suchthat}{\text{s.t.}\ }	% such that
 \newcommand{\mst}{\text{ s.t.}\ }		% math such that
 \newcommand{\ou}{\text{ or}\ }
 \renewcommand{\over}{\text{ over}\ }
-\newcommand{\so}{\text{ so}\ }
+\newcommand{\alors}{\text{ so}\ }
 \newcommand{\tms}{\text{ times}\ } 		% for \underbrace{...}_{n times}
 \newcommand{\undef}{\text{undef.}\ }
 \newcommand{\with}{\text{ with}\ }
@@ -204,11 +207,12 @@
 \newcommand{\mbf}{\mathbf} 								% math bold face
 \newcommand*{\ol}[1]{\overline{#1}}
 \newcommand*{\ttt}[1]{\texttt{#1}}
-\newcommand*{\ul}[1]{\underline{#1}}
+\newcommand*{\unl}[1]{\underline{#1}}
 \newcommand{\vn}{\varnothing}
 \newcommand{\wt}{\widetilde}
 
 % My notations
+\newcommand*{\ine}[1]{{\in_{#1}}}
 \newcommand*{\msum}[3]{\sum\limits_{#1=#2}^{#3}} 		% my sum
 \newcommand*{\mprod}[3]{\prod\limits_{#1=#2}^{#3}}		% my prod
 \newcommand*{\mcap}[3]{\cap_{#1=#2}^{#3}}				% etc.
@@ -236,6 +240,7 @@
 \newcommand{\cmark}{\ding{51}\ }				% pifont
 \newcommand{\xmark}{\ding{55}\ }
 \newcommand*{\cb}[2]{\colorbox{#1}{#2}} 	% xcolor
+\newcommand*{\cbb}[1]{\colorbox{blue}{#1}}
 \newcommand*{\cbr}[1]{\colorbox{red}{#1}}
 \newcommand{\cbg}{\cb{darkpastelgreen}}
 \newcommand*{\cby}[1]{\colorbox{yellow}{#1}}
@@ -255,7 +260,7 @@
 	\pagecolor{black}
 	\color{white}
 }
-\DeclareOption*{\PackageWarning{alounsburymacros}{Unknown '\CurrentOption'}}
+\DeclareOption*{\PackageWarning{mymacros}{Unknown '\CurrentOption'}}
 \ProcessOptions\relax
 
 %--------------------------------------------------------------------------
@@ -288,10 +293,10 @@
 %-------------------------------------------------------------------------
 
 % ALGEBRA
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand{\O}{\mathcal{O}}
 
-% ALGEBRAIC GEOMETRY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ALGEBRAIC GEOMETRY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\V}{\mathbf{V}}
 \newcommand{\I}{\mathbf{I}}
 \newcommand{\Va}{\V_a}
@@ -387,6 +392,11 @@
 \newcommand{\lims}{\ol\Lim\ } 				% alternative limsup
 \newcommand{\Max}{\max\limits}
 \newcommand{\Min}{\min\limits}
+
+\newcommand{\Bigwedge}{\bigwedge\limits}
+\newcommand{\Bigvee}{\bigvee\limits}
+\newcommand{\Land}{\Bigwedge}
+\newcommand{\Lor}{\Bigvee}
 
 \newcommand{\Inf}{\inf\limits}
 \newcommand{\Sup}{\sup\limits}
@@ -530,8 +540,9 @@
 % contradiction
 \newcommand{\contra}{\ensuremath{\rightarrow\mspace{-2.5mu}\leftarrow}}
 \newcommand{\ex}{\exists}
-\newcommand{\fall}{\forall}
-\newcommand{\fa}{\,\forall}
+\newcommand{\nex}{\nexists}
+\newcommand{\fa}{\forall}
+\newcommand{\fall}{\,\forall}
 % forward implication
 \newcommand{\fim}{%
 	\mbox{
@@ -552,7 +563,9 @@
 \newcommand{\slor}{\,\lor\, }		% space logical or
 \newcommand{\tf}{\therefore\,}		% I sometimes prefer a little space after this. 
 
-\newcommand{\bij}{\longleftrightarrow}	% bijection
+\newcommand{\bic}{\longleftrightarrow}	% biconditional
+\newcommand{\notbic}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{"}$\hidewidth\cr$\bic$}}}}
 \newcommand{\varbij}{\hookrightarrow\hspace{-8pt}\rightarrow}
 \newcommand{\inj}{\rightarrowtail}		% one-to-one
 \newcommand{\varinj}{\hookrightarrow}
@@ -575,9 +588,11 @@
 \newcommand{\proves}{\vd}
 \newcommand{\vdd}{\vDash}			% satisfies
 \newcommand{\satisfies}{\vdd}
+\newcommand{\yields}{\vd}
+\newcommand{\entails}{\vdd}
 
-\newcommand{\nec}{\scalebox{0.75}{$\square$}}		% necessarily
-\newcommand{\poss}{\scalebox{1.25}{$\diamond$}}		% possibly
+\DeclareMathOperator{\nec}{\scalebox{0.75}{$\square$}}				% necessarily
+\DeclareMathOperator{\poss}{\scalebox{1.25}{$\diamond$}}	% possibly
 
 \newcommand{\fA}{\mathfrak{A}}
 \newcommand{\fB}{\mathfrak{B}}
@@ -586,6 +601,39 @@
 \newcommand{\isnt}{\text{ is not\ }}
 \newcommand{\IFF}{\text{ iff\ }}
 \newcommand{\sbar}{\ol{s}}
+
+\newcommand{\xor}{\veebar}
+\DeclareMathOperator*{\Xor}{\underline{\bigvee\limits}}
+\newcommand{\symdif}{\ominus}
+
+\newcommand{\this}[1]{\ul{this}_{#1}}
+\newcommand{\spec}[1]{\ul{is}_{#1}}
+
+\newcommand{\en}{\mathcal{N}}
+
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\dom}{\mathrm{dom}}
+
+\newcommand{\com}{\mathrm{com}}
+\newcommand{\inc}{\mathrm{inc}}
+\newcommand{\eni}{\mathrm{eni}}
+\newcommand{\exc}{\mathrm{exc}}
+\newcommand{\fut}{\mathrm{fut}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\past}{\mathrm{past}}
+\newcommand{\pos}{\mathrm{poss}}
+\newcommand{\pot}{\mathrm{pot}}
+\newcommand{\pres}{\mathrm{pres}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\sh}{\mathrm{sh}}
+
+\newcommand{\wasin}{\blacktriangleleft}
+\newcommand{\wasnotin}{\not\blacktriangleleft}
+\newcommand{\willin}{\lessdot}
+\newcommand{\willnotin}{
+  \mathrel{\not\mkern-5mu\lessdot}}
+
+% \newcommand{\spec}[1]{\mathfrak{S}_{#1}}
 
 % PDE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\dtau}{\,d\tau}
@@ -648,3 +696,30 @@
 		\textbf{***}\vspace{-0.25cm}
 	\end{center}
 }
+
+\newtotcounter{numSS}
+\newtotcounter{numM}
+\newcommand{\adds}{
+	\addtocounter{numSS}{1}
+	\addtocounter{total}{1}
+}
+\newcommand{\addm}{
+	\addtocounter{numM}{1}
+	\addtocounter{total}{1}
+}
+\newcounter{piecewise}
+\newcommand{\addp}{%
+	(\thepiecewise)
+	\addtocounter{piecewise}{1}
+}
+\newcounter{reading}
+\newcommand{\addr}{%
+	(\thereading)
+	\addtocounter{reading}{1}
+}
+\newcounter{stem}
+\newcommand{\addstem}{%
+	(\thestem)
+	\addtocounter{stem}{1}
+}
+\newcommand{\push}{\vfill\null\columnbreak}

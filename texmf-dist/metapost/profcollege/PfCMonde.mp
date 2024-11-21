@@ -32,6 +32,9 @@ payscolor=tan;
 vardef flamme=reverse(2mm*(0.5,1){dir90}..2mm*(0.75,1.5)..{dir90}2mm*(1,2))--2mm*(0.5,1){dir=-90}..2mm*(1,0.5)..{dir=90}2mm*(1.5,1)--((2mm*(0.5,1){dir90}..2mm*(0.75,1.5)..{dir90}2mm*(1,2)) reflectedabout (2mm*(1,0),2mm*(1,0)+2mm*(0,1)))--cycle
 enddef;
 
+%
+pair poubelle;
+
 %Les marques
 
 string marque_p;
@@ -148,6 +151,15 @@ enddef;
 vardef FZ(expr t,v)=rayon*sind(c*t)
 enddef;
 
+vardef FXx(expr t,v)=rayon*cosd(t)*cosd(v)
+enddef;
+
+vardef FYy(expr t,v)=rayon*cosd(t)*sind(v)
+enddef;
+
+vardef FZz(expr t,v)=rayon*sind(t)
+enddef;
+
 %Paramètres et macros de représentation
 vardef Initialisation(expr r,t,p,d)=
   Rho:=r;
@@ -224,6 +236,25 @@ vardef MaillageSphere=
   MaillageS;
 enddef;
 
+vardef MaillageSphereCoord=
+%  InitialiseMaillage(((phim div 10)+1)*pi/12,((phip div 10)-1)*pi/12,pi/12,-pi,pi,pi/12);
+  InitialiseMaillage(-pi/2,pi/2,pi/18,-pi,pi,pi/12);
+  %MaillageS;
+  path Maillage[];
+  nbmor:=0;
+  for k=-90 step 10 until 90:
+    for l=-180 step 10 until 180:
+      nbl:=nbl+1;
+      if ProduitScalaire(1/2[(FXx(k,l),FYy(k,l),FZz(k,l)),(FXx(k+10,l+10),FYy(k+10,l+10),FZz(k+10,l+10))]-pte3,Oeil-pte3)>0:
+	nbmor:=nbmor+1;
+	Maillage[nbmor]=Projgeo((FXx(k,l),FYy(k,l),FZz(k,l)))..Projgeo((FXx(k,l+10),FYy(k,l+10),FZz(k,l+10)));
+	draw Maillage[nbmor] if k=0: withpen pencircle scaled 1 withcolor Crimson fi;
+	draw Projgeo((FXx(k,l),FYy(k,l),FZz(k,l)))..Projgeo((FXx(k+10,l),FYy(k+10,l),FZz(k+10,l))) if l=0:withpen pencircle scaled 1 withcolor LightSteelBlue fi;
+      fi;
+    endfor;
+  endfor;  
+enddef;
+
 boolean maille;
 maille=false;
 
@@ -273,9 +304,19 @@ vardef lecture(expr nomfichier,fond)=
   numeric ll;
   ll:=0;
   nbpts:=scantokens readfrom nomfichier;
-  for k=1 upto (nbpts div 3):
+%  for k=1 upto (nbpts div 3):
+%    pair latlon;
+%    latlon=((scantokens readfrom nomfichier)+(scantokens readfrom nomfichier)+(scantokens readfrom nomfichier))/3;
+  if nbpts<Allegee:
+    Alleg:=1;
+  else:
+    Alleg:=Allegee;
+  fi;
+  for k=1 upto (nbpts div Alleg):
     pair latlon;
-    latlon=((scantokens readfrom nomfichier)+(scantokens readfrom nomfichier)+(scantokens readfrom nomfichier))/3;
+    latlon=((scantokens readfrom nomfichier) for l=2 upto Alleg:
+	+(scantokens readfrom nomfichier)
+    endfor)/Alleg;
     Coord[k]=rayon*(cosd(xpart(latlon/60))*cosd(ypart(latlon/60)),cosd(xpart(latlon/60))*sind(ypart(latlon/60)),sind(xpart(latlon/60)));
     if ((xpart(latlon/60)>phim) and (xpart(latlon/60)<phip)):
       if ProduitScalaire(Coord[k]-pte3,Oeil-pte3)>0:
@@ -292,7 +333,7 @@ vardef lecture(expr nomfichier,fond)=
   path pays;
   if ll>0:
     pays=Projgeo(Pays[1])
-    for l=2 upto (nbpts div 3):
+    for l=2 upto (nbpts div Alleg):%(nbpts div 3):
       --Projgeo(Pays[l])
     endfor;
     if noncolore=true:
@@ -300,7 +341,7 @@ vardef lecture(expr nomfichier,fond)=
     else:
       fill pays--cycle withcolor fond;
     fi;
-    draw pays;
+    draw pays withpen pencircle scaled 0.25;
     clip currentpicture to cercles(pte3,pte1,pte3,pte1,pte4);
   fi;
 enddef;
@@ -316,9 +357,19 @@ vardef Lectureiles=
     ll:=0;
     nbpts:=scantokens readfrom nomfichiermul;
     fond=scantokens readfrom nomfichiermul;
-    for k=1 upto nbpts:
+    %if nbpts<Allegee:
+    Alleg:=1;
+    %else:
+    %  Alleg:=2;%pas Allegee car sinon des artefacts apparaissent
+    %fi;
+    for k=1 upto (nbpts div Alleg):
       pair latlon;
-      latlon=scantokens readfrom nomfichiermul;
+      latlon=((scantokens readfrom nomfichiermul) for l=2 upto Alleg:
+	  +(scantokens readfrom nomfichiermul)
+      endfor)/Alleg;
+%    for k=1 upto nbpts:
+%      pair latlon;
+%      latlon=scantokens readfrom nomfichiermul;
       Coord[k]=rayon*(cosd(xpart(latlon/60))*cosd(ypart(latlon/60)),cosd(xpart(latlon/60))*sind(ypart(latlon/60)),sind(xpart(latlon/60)));
       if ((xpart(latlon/60)>phim) and (xpart(latlon/60)<phip)):
 	if ProduitScalaire(Coord[k]-pte3,Oeil-pte3)>0:
@@ -334,7 +385,7 @@ vardef Lectureiles=
     path pays;
      if ll>0:
       pays=Projgeo(Pays[1])
-      for l=2 upto nbpts:
+      for l=2 upto (nbpts div Alleg):%nbpts:
 	--Projgeo(Pays[l])
       endfor;
       if noncolore=true:
@@ -342,8 +393,14 @@ vardef Lectureiles=
       else:
 	fill pays--cycle withcolor fond;
       fi;
-      draw pays;
+      draw pays withpen pencircle scaled 0.25;
       clip currentpicture to cercles(pte3,pte1,pte3,pte1,pte4);
+    fi;
+    % rustine pour tout lire chaque partie de Ile.dat
+    if Alleg>1:
+      for po=1 upto (nbpts mod Alleg):
+	poubelle:=scantokens readfrom nomfichiermul;
+      endfor;
     fi;
   endfor;
   closefrom nomfichiermul;
@@ -629,13 +686,23 @@ vardef lecturep(expr nomfichier,fond)=
   nbpts:=scantokens readfrom nomfichier;
   numeric ll;
   ll=0;
-  for k=1 upto nbpts:
+  if nbpts<Allegee:
+    Alleg:=4;
+  else:
+    Alleg:=Allegee;
+  fi;
+%  for k=1 upto nbpts:
+  for k=1 upto (nbpts div Alleg):
     pair latlon;
-    latlon=scantokens readfrom nomfichier;
+%    latlon=scantokens readfrom nomfichier;
+%    latlon=((scantokens readfrom nomfichier)+(scantokens readfrom nomfichier)+(scantokens readfrom nomfichier))/3;
+    latlon=((scantokens readfrom nomfichier) for l=2 upto Alleg:
+	+(scantokens readfrom nomfichier)
+    endfor)/Alleg;
     if projection="mercator":
-      Coord[k]=mercatorc(xpart(latlon/60),ypart(latlon/60))
+      Coord[k]=mercatorc(xpart(latlon/60),ypart(latlon/60));
     elseif projection="winkel":
-      Coord[k]=winkelc(xpart(latlon/60),ypart(latlon/60))
+      Coord[k]=winkelc(xpart(latlon/60),ypart(latlon/60));
     elseif projection="cylindrique":
       Coord[k]=cylindriquec(xpart(latlon/60),ypart(latlon/60));
     elseif projection="simple":
@@ -661,11 +728,14 @@ vardef lecturep(expr nomfichier,fond)=
   fi;
   if ll>0:
     pays=Coord[1]
-    for l=4 step 3 until ll:%upto ll:
+%    for l=4 step 3 until ll:%upto ll:4-3
+      for l=2 upto (nbpts div Alleg):
       --Coord[l]
     endfor;
     if noncolore=true:
-      fill pays--cycle withcolor payscolor;
+      if Impression=false:
+	fill pays--cycle withcolor payscolor;
+      fi;
     else:
       fill pays--cycle withcolor fond;
     fi;
@@ -689,9 +759,20 @@ vardef Lectureilesp=
     fond=scantokens readfrom nomfichiermul;
     numeric ll;
     ll=0;
-    for k=1 upto nbpts:
+%%%%%%%%%%%%
+    if nbpts<Allegee:
+      Alleg:=1;
+    else:
+      Alleg:=Allegee;
+    fi;
+    %%%%%%%%
+%    for k=1 upto nbpts:
+    for k=1 upto (nbpts div Alleg):
       pair latlon;
-      latlon=scantokens readfrom nomfichiermul;
+%      latlon=scantokens readfrom nomfichiermul;
+      latlon=((scantokens readfrom nomfichiermul) for l=2 upto Alleg:
+	  +(scantokens readfrom nomfichiermul)
+      endfor)/Alleg;
       if projection="mercator":
 	Coord[k]=mercatorc(xpart(latlon/60),ypart(latlon/60));
       elseif projection="winkel":
@@ -716,19 +797,26 @@ vardef Lectureilesp=
     endfor;
     path pays;
     if (projection="mercator") or (projection="winkel") or (projection="cylindrique") or (projection="simple") or (projection="bonne"):
-      ll:=nbpts
+      ll:=(nbpts div Alleg)
     fi;
     if ll>0:
       pays=Coord[1]
-      for l=2 upto ll:
+%      for l=2 upto ll:
+	for l=2 upto (nbpts div Alleg):
 	--Coord[l]
-      endfor;
+     endfor;
       if noncolore=true:
 	fill pays--cycle withcolor payscolor;
       else:
 	fill pays--cycle withcolor fond;
       fi;
       draw pays;
+    fi;
+    % rustine pour tout lire chaque partie de Ile.dat
+    if Alleg>1:
+      for po=1 upto (nbpts mod Alleg):
+	poubelle:=scantokens readfrom nomfichiermul;
+      endfor;
     fi;
   endfor;
   closefrom nomfichiermul;
@@ -1605,6 +1693,11 @@ vardef mappemonde(expr longobs,latobs)=
   if maillage=true:
     drawoptions(withcolor couleurmaillage);
     MaillageSphere;
+    drawoptions();
+  fi;
+  if maillagecoord=true:
+    drawoptions(withpen pencircle scaled 0.25 withcolor couleurmaillage);
+    MaillageSphereCoord;
     drawoptions();
   fi;
   if maille=true:

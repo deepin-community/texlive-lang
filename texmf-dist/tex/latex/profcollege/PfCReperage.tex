@@ -1,6 +1,10 @@
 %%%
 % Reperage
 %%%
+\def\filedateReperage{2024/08/04}%
+\def\fileversionReperage{0.1}%
+\message{-- \filedateReperage\space v\fileversionReperage}%
+%
 \setKVdefault[ClesReperage]{Unitex=1,Pasx=1,Unitey=1,Pasy=1,Unitez=1,Pasz=1,DemiDroite=false,Droite=false,Plan=false,Trace=false,ListeSegment={},Espace=false,Sphere=false,AnglePhi=30,CouleurLa=white,CouleurLon=Tomato,AffichageUnites=true,MarquePrimaire=true,AffichageNom=false,AffichageGrad=false,AffichageAbs=0,AffichageCoord=false,LectureCoord=false,ValeurUnitex=1,ValeurUnitey=1,ValeurOrigine=0,NomOrigine=O,EchelleEspace=50,CouleurCoord=black,Thermometre=false,Mercure=false,CouleurMercure=black,Celsius,Kelvin=false,Farenheit=false,ValeurMin=-4000,ValeurMax=4000,ValeurMiny=-4000,ValeurMaxy=4000,Etages=4,Code=false,Globe=false,Rho=1500,Phi=22,Theta=10,CouleurE=orange,CouleurG=green,Axes=false,TypeProj="persp",Niveaux=false,Decale=false,Tiret=false,Cadre=false,ModeleCouleur=5,EchelleCroix=1,CouleurCroix=black}
 \defKV[ClesReperage]{Traces=\setKV[ClesReperage]{Code}}%
 \defKV[ClesReperage]{Niveau=\setKV[ClesReperage]{Etages=#1}\setKV[ClesReperage]{Niveaux}}%
@@ -737,6 +741,7 @@
   % #4 : la liste courte des noms des points.
   % #5 : liste des points pour les string
   \ifluatex
+    \mplibforcehmode
     \begin{mplibcode}
       defaultcolormodel := \useKV[ClesReperage]{ModeleCouleur};
       boolean Tiret,Code,AffichageGrad,Cadre;
@@ -1305,14 +1310,22 @@
     if minx>(-pasx-1):
     minx:=-2*pasx-1;
     fi;
-    if DemiDroite:
-    minx:=0;
-    fi;
     if minx<\useKV[ClesReperage]{ValeurMin}:
     minx:=\useKV[ClesReperage]{ValeurMin};
     fi;
     if maxx>\useKV[ClesReperage]{ValeurMax}:
     maxx:=\useKV[ClesReperage]{ValeurMax};
+    fi;
+    % Pour gérer les cas des droites où toutes les valeurs sont soit positives soit négatives
+%    if maxx<pasx:
+%    maxx:=pasx+1;
+%    fi;
+%    if minx>-pasx:
+%    minx:=-pasx-1;
+%    fi;
+    %
+    if DemiDroite:
+    minx:=0;
     fi;
     % -----
     pair A,B,C;
@@ -1424,7 +1437,15 @@
     pointe(unitp*(valeur[n],0));
     drawoptions();
     elseif ACoord=1:
+    %
+    if Decale:
+    drawarrow (unitp*valeur[n],-7mm if (n mod 2)=0:-5mm fi)--(unitp*valeur[n],-3mm);
+    label.bot(TEX("\footnotesize\num{\fpeval{"&decimal(ValeurOrigine)&"+"&decimal(ValeurUnitex-(ValeurOrigine))&"*"&decimal(valeur[n])&"/"&decimal(pasx)&"}}"),unitp*(valeur[n],-7mm if (n mod 2)=0:-5mm fi));
+    else:
+    %drawarrow (unitp*valeur[n],-7mm)--(unitp*valeur[n],-3mm);
+    %label.bot(TEX("\pointilles[1cm]"),(unitp*valeur[n],-7mm));
     label.bot(TEX("\footnotesize\num{\fpeval{"&decimal(ValeurOrigine)&"+"&decimal(ValeurUnitex-(ValeurOrigine))&"*"&decimal(valeur[n])&"/"&decimal(pasx)&"}}"),unitp*(valeur[n],0));
+    fi;
     drawoptions(withcolor CouleurCroix);
     pointe(unitp*(valeur[n],0));
     drawoptions();
@@ -1464,16 +1485,29 @@
     else:
     label.bot(TEX("\footnotesize\num{\fpeval{"&decimal(ValeurOrigine)&"+"&decimal(ValeurUnitex-ValeurOrigine)&"*"&decimal(valeur[n])&"/"&decimal(pasx)&"}}"),unitp*(valeur[n],0));
     fi;
-        drawoptions(withcolor CouleurCroix);
-        pointe(unitp*(valeur[n],0));
-        drawoptions();
+    drawoptions(withcolor CouleurCroix);
+    pointe(unitp*(valeur[n],0));
+    drawoptions();
     fi;
     elseif AffichageCoord=1:
     if p_<>"":
+    if Decale:
+    Labeloffset:=labeloffset;
+    labeloffset:=2pt;
+    if (valeur[n]<>0) and (valeur[n]<>pasx):
+    drawarrow (unitp*valeur[n],-7mm if (n mod 2)=0:-5mm fi)--(unitp*valeur[n],-3mm);
+    label.bot(TEX("\footnotesize\num{\fpeval{"&decimal(ValeurOrigine)&"+"&decimal(ValeurUnitex-(ValeurOrigine))&"*"&decimal(valeur[n])&"/"&decimal(pasx)&"}}"),(unitp*valeur[n],-7mm if (n mod 2)=0:-5mm fi));
+    fi;
+    labeloffset:=Labeloffset;
+    else:
+    %drawarrow (unitp*valeur[n],-7mm)--(unitp*valeur[n],-3mm);
+    %label.bot(TEX("\pointilles[1cm]"),(unitp*valeur[n],-7mm));
     label.bot(TEX("\footnotesize\num{\fpeval{"&decimal(ValeurOrigine)&"+"&decimal(ValeurUnitex-(ValeurOrigine))&"*"&decimal(valeur[n])&"/"&decimal(pasx)&"}}"),unitp*(valeur[n],0));
-        drawoptions(withcolor CouleurCroix);
-        pointe(unitp*(valeur[n],0));
-        drawoptions();
+    fi;
+    %label.bot(TEX("\footnotesize\num{\fpeval{"&decimal(ValeurOrigine)&"+"&decimal(ValeurUnitex-(ValeurOrigine))&"*"&decimal(valeur[n])&"/"&decimal(pasx)&"}}"),unitp*(valeur[n],0));
+    drawoptions(withcolor CouleurCroix);
+    pointe(unitp*(valeur[n],0));
+    drawoptions();
     fi;
     fi;
     fi;

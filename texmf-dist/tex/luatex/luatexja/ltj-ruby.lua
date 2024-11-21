@@ -3,7 +3,7 @@
 --
 luatexbase.provides_module({
   name = 'luatexja.ruby',
-  date = '2022-12-31',
+  date = '2024-09-06',
   description = 'Ruby annotation',
 })
 luatexja.ruby = {}
@@ -37,7 +37,7 @@ local setwhd = node.direct.setwhd
 local setlist = node.direct.setlist
 local setvalue = node.direct.setdata
 
-local node_new = node.direct.new
+local node_new = luatexja.dnode_new
 local node_remove = node.direct.remove
 local node_next =  node.direct.getnext
 local node_copy, node_tail = node.direct.copy, node.direct.tail
@@ -45,6 +45,7 @@ local node_free = node.direct.flush_node or node.direct.free
 local get_attr, set_attr = node.direct.get_attribute, node.direct.set_attribute
 local insert_before, insert_after = node.direct.insert_before, node.direct.insert_after
 local hpack = node.direct.hpack
+local node_inherit_attr = luatexja.node_inherit_attr
 
 local id_hlist  = node.id 'hlist'
 local id_vlist  = node.id 'vlist'
@@ -175,10 +176,10 @@ do
             set_attr(nh, attr_icflag,
               get_attr_icflag(nh) + PROCESSED_BEGIN_FLAG)
             setnext(node_tail(h), nh)
-            setlist(f, nil); node_free(f)
+            setlist(f, nil)
             setlist(b, nil); node_free(b)
             local g = luatexja.jfmglue.main(h,false)
-            return hpack(g)
+            g = node_inherit_attr(hpack(g),f); node_free(f); return g
          else
             return f
          end
@@ -207,6 +208,7 @@ end
 -- box の中身のノードは再利用される
 local enlarge
 do
+   local dimensions = node.direct.dimensions
    local FROM_JFM       = luatexja.icflag_table.FROM_JFM
    local PROCESSED      = luatexja.icflag_table.PROCESSED
    local KANJI_SKIP     = luatexja.icflag_table.KANJI_SKIP
@@ -239,18 +241,22 @@ do
          hx = node_next(hx)
       end
       -- 先頭の空白を挿入
-      local k = node_new(id_glue);
-      setglue(k, prenw, round(pre*65536), 0, 2, 0)
-      h = insert_before(h, h, k);
+      local k1 = node_new(id_glue);
+      setglue(k1, prenw, round(pre*65536), 0, 2, 0)
+      h = insert_before(h, h, k1);
       -- 末尾の空白を挿入
-      local k = node_new(id_glue);
-      setglue(k, postnw, round(post*65536), 0, 2, 0)
-      insert_after(h, node_tail(h), k);
+      local k2 = node_new(id_glue);
+      setglue(k2, postnw, round(post*65536), 0, 2, 0)
+      insert_after(h, node_tail(h), k2);
       -- hpack
-      setlist(box, nil); node_free(box)
-      box = hpack(h, new_width, 'exactly')
-      setheight(box, hh); setdepth(box, hd)
-      return box
+      setlist(box, nil);
+      local new_box = node_inherit_attr(hpack(h, new_width, 'exactly'), box)
+      setheight(new_box, hh); setdepth(new_box, hd)
+      node_free(box); 
+      local gset, gsign, go 
+        = getfield(new_box,'glue_set'), getfield(new_box,'glue_sign'), getfield(new_box,'glue_order')
+      return new_box, (dimensions(gset, gsign, go, k1, node_next(k1))), (dimensions(gset, gsign, go, k2))
+      -- return value: (enlarged box), (width of left glue), (width of right glue)
    end
 end
 
@@ -307,15 +313,18 @@ function luatexja.ruby.texiface(rst, rtlr, rtlp)
 end
 
 ----------------------------------------------------------------
--- pre_line_break
+-- pre_linebreak
 ----------------------------------------------------------------
 
 -- r, p の中身のノードは再利用される
 local function enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
    -- r: ルビ部分の格納された box，p: 同，親文字
+   -- no_begin: 行頭形ではないか
+   -- no_end: 行末形ではないか
    local rwidth = getwidth(r)
    local sumprot = rwidth - getwidth(p) -- >0
    local pre_intrusion, post_intrusion
+   local pre_protrusion, post_protrusion
    local ppre, pmid, ppost = tmp_tbl.ppre, tmp_tbl.pmid, tmp_tbl.ppost
    local mapre, mapost = tmp_tbl.mapre, tmp_tbl.mapost
    local intmode = (tmp_tbl.mode//4)%8
@@ -325,17 +334,17 @@ local function enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
        mapre = min(mapre,mapost); mapost = mapre
    end
    if intmode == 0 then --  とりあえず組んでから決める
-      p = enlarge(p, rwidth, ppre, pmid, ppost, 0, 0)
+      p, pre_protrusion, post_protrusion = enlarge(p, rwidth, ppre, pmid, ppost, 0, 0)
       pre_intrusion  = min(mapre, round(ppre*getfield(p, 'glue_set')*65536))
       post_intrusion = min(mapost, round(ppost*getfield(p, 'glue_set')*65536))
    elseif intmode == 1 then
       pre_intrusion = min(mapre, sumprot);
       post_intrusion = min(mapost, max(sumprot-pre_intrusion, 0))
-      p = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
+      p, pre_protrusion, post_protrusion = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
    elseif intmode == 2 then
       post_intrusion = min(mapost, sumprot);
       pre_intrusion = min(mapre, max(sumprot-post_intrusion, 0))
-      p = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
+      p, pre_protrusion, post_protrusion = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
    elseif intmode==3 then
       local n = min(mapre, mapost)*2
       if n < sumprot then
@@ -343,7 +352,7 @@ local function enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
       else
          pre_intrusion = sumprot//2; post_intrusion = sumprot - pre_intrusion
       end
-      p = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
+      p, pre_protrusion, post_protrusion = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
       pre_intrusion = min(mapre, pre_intrusion + round(ppre*getfield(p, 'glue_set')*65536))
       post_intrusion = min(mapost, post_intrusion + round(ppost*getfield(p, 'glue_set')*65536))
    else  --  intmode == 4
@@ -354,7 +363,7 @@ local function enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
       else
          pre_intrusion, post_intrusion = mapre, min(mapost, sumprot-mapre)
       end
-      p = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
+      p, pre_protrusion, post_protrusion = enlarge(p, rwidth, ppre, pmid, ppost, pre_intrusion, post_intrusion)
    end
    setshift(r, -pre_intrusion)
    local rwidth = rwidth - pre_intrusion - post_intrusion
@@ -371,24 +380,29 @@ local function enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
            post_jfmgk = (post_intrusion > 0)
        end
     end
-   return r, p, orig_post_intrusion, post_jfmgk
+    return r, p, orig_post_intrusion, post_jfmgk, 
+      pre_protrusion - pre_intrusion, post_protrusion - post_intrusion
 end
 
 -- ルビボックスの生成（単一グループ）
 -- returned value: <new box>, <ruby width>, <post_intrusion>
 local max_margin
-local function new_ruby_box(r, p, tmp_tbl, no_begin, no_end)
+local function new_ruby_box(r, p, tmp_tbl, no_begin, no_end, w)
+   -- no_begin: 行頭形ではないか
+   -- no_end: 行末形ではないか
    local post_intrusion, post_jfmgk = 0, false
    local imode
    local ppre, pmid, ppost = tmp_tbl.ppre, tmp_tbl.pmid, tmp_tbl.ppost
    local mapre, mapost = tmp_tbl.mapre, tmp_tbl.mapost
    local rpre, rmid, rpost, rsmash
+   local protrusion = {0, 0}; tmp_tbl[tmp_tbl.index] = protrusion
    imode = tmp_tbl.mode//0x100000; rsmash = (imode%2 ==1)
    imode = imode//2; rpost = imode%8;
    imode = (imode-rpost)/8;  rmid  = imode%8;
    imode = (imode-rmid)/8;   rpre  = imode%8
    if getwidth(r) > getwidth(p) then  -- change the width of p
-      r, p, post_intrusion, post_jfmgk = enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
+      r, p, post_intrusion, post_jfmgk, protrusion[1], protrusion[2]
+        = enlarge_parent(r, p, tmp_tbl, no_begin, no_end)
    elseif getwidth(r) < getwidth(p) then -- change the width of r
       r = enlarge(r, getwidth(p), rpre, rmid, rpost, 0, 0)
       post_intrusion = 0
@@ -406,7 +420,7 @@ local function new_ruby_box(r, p, tmp_tbl, no_begin, no_end)
       end
       if need_repack then
          local rt = r
-         r = hpack(getlist(r), getwidth(r), 'exactly')
+         r = node_inherit_attr(hpack(getlist(r), getwidth(r), 'exactly'), r)
          setlist(rt, nil); node_free(rt);
       end
    end
@@ -416,7 +430,8 @@ local function new_ruby_box(r, p, tmp_tbl, no_begin, no_end)
    insert_after(r, k, p); setnext(p, nil)
    if tmp_tbl.rubydepth >= 0 then setdepth(r, tmp_tbl.rubydepth) end
    if tmp_tbl.baseheight >= 0 then setheight(p, tmp_tbl.baseheight) end
-   a = node.direct.vpack(r); setshift(a, 0)
+   a = node_inherit_attr(node.direct.vpack(r), p) 
+   setshift(a, 0)
    set_attr(a, attr_ruby, post_intrusion)
    set_attr(a, attr_ruby_post_jfmgk, post_jfmgk and 1 or 0)
    if rsmash or getheight(a)<getheight(p) then
@@ -437,7 +452,10 @@ local max_allow_pre, max_allow_post
 local flush_list = node.direct.flush_list
 -- 中付き熟語ルビ，cmp containers
 -- 「文字の構成を考えた」やつはどうしよう
-local function pre_low_cal_box(w, cmp)
+local pre_low_cal_box
+do
+   local node_prev = node.direct.getprev
+pre_low_cal_box = function (w, cmp)
    local rb = {}
    local pb = {}
    local kf = {}
@@ -450,18 +468,24 @@ local function pre_low_cal_box(w, cmp)
    local coef = {} -- 連立一次方程式の拡大係数行列
    local rtb = expand_3bits(rst.stretch)
 
+   local kb, ka
+   if rst.quirk_protrusion then
+       kb = node_prev(node_tail(wv)); ka = node_next(kb)
+       node_remove(wv, kb); node_remove(wv, ka)
+   end
    -- node list 展開・行末形の計算
    local nt, nta, ntb = wv, nil, nil -- nt*: node temp
    rst.ppre, rst.pmid, rst.ppost = rtb[6], rtb[5], rtb[4]
    rst.mapre, rst.mapost = max_allow_pre, 0
-  for i = 1, cmp do
+   for i = 1, cmp do
       nt = node_next(nt); rb[i] = nt; nta = concat(nta, node_copy(nt))
       nt = node_next(nt); pb[i] = nt; ntb = concat(ntb, node_copy(nt))
       coef[i] = {}
       for j = 1, 2*i do coef[i][j] = 1 end
       for j = 2*i+1, 2*cmp+1 do coef[i][j] = 0 end
+      rst.index = i
       kf[i], coef[i][2*cmp+2]
-         = new_ruby_box(node_copy(nta), node_copy(ntb), rst, true, false)
+         = new_ruby_box(node_copy(nta), node_copy(ntb), rst, true, false, w)
    end
    node_free(nta); node_free(ntb)
 
@@ -474,8 +498,9 @@ local function pre_low_cal_box(w, cmp)
       for j = 1, 2*i-1 do coef[cmp+i][j] = 0 end
       for j = 2*i, 2*cmp+1 do coef[cmp+i][j] = 1 end
       nta = concat(node_copy(rb[i]), nta); ntb = concat(node_copy(pb[i]), ntb)
+      rst.index = 2*cmp+1-i
       kf[cmp+i], coef[cmp+i][2*cmp+2]
-         = new_ruby_box(node_copy(nta), node_copy(ntb), rst, false, true)
+         = new_ruby_box(node_copy(nta), node_copy(ntb), rst, false, true, w)
    end
 
    -- ここで，nta, ntb には全 container を連結した box が入っているので
@@ -484,13 +509,17 @@ local function pre_low_cal_box(w, cmp)
    for j = 1, 2*cmp+1 do coef[2*cmp+1][j] = 1 end
    rst.ppre, rst.pmid, rst.ppost = rtb[3], rtb[2], rtb[1]
    rst.mapre, rst.mapost = max_allow_pre, max_allow_post
+   rst.index = 2*cmp+1
    kf[2*cmp+1], coef[2*cmp+1][2*cmp+2], post_intrusion_backup, post_jfmgk_backup
-      = new_ruby_box(nta, ntb, rst, true, true)
+      = new_ruby_box(nta, ntb, rst, true, true, w)
 
    -- w.value の node list 更新．
    local nt = wv
    flush_list(node_next(wv))
    for i = 1, 2*cmp+1 do setnext(nt, kf[i]); nt = kf[i]  end
+   if rst.quirk_protrusion then
+       insert_after(wv, nt, kb); insert_after(wv, kb, ka);
+   end
 
    if cmp==1 then     solve_1(coef)
    elseif cmp==2 then solve_2(coef)
@@ -498,6 +527,7 @@ local function pre_low_cal_box(w, cmp)
       gauss(coef) -- 掃きだし法で連立方程式形 coef を解く
    end
    return coef
+end
 end
 
 local first_whatsit
@@ -512,25 +542,40 @@ do
 end
 
 local next_cluster_array = {}
+local pre_high
 -- ノード追加
-local function pre_low_app_node(head, w, cmp, coef, ht, dp)
+do
+   local node_prev = node.direct.getprev
+   local KINSOKU = luatexja.icflag_table.KINSOKU
+   local function pre_low_app_node (head, w, cmp, coef, ht, dp)
    -- メインの node list 更新
-   local nt = node_new(id_glue)
+   local nt = node_new(id_glue, nil, w) -- INHERIT ATTRIBUTES OF w
    setglue(nt, coef[1][2*cmp+2], 0, 0, 0, 0)
    set_attr(nt, attr_ruby, 1); set_attr(w, attr_ruby, 2)
    head = insert_before(head, w, nt)
    nt = w
    for i = 1, cmp do
       -- rule
-      local nta = node_new(id_rule, 0);
+      local nta = node_new(id_rule, 0, w); -- INHERIT ATTRIBUTES OF w
       setwhd(nta, coef[i*2][2*cmp+2], ht, dp)
       insert_after(head, nt, nta)
       set_attr(nta, attr_ruby, 2*i+1)
       -- glue
       if i~=cmp or not next_cluster_array[w] then
-         nt = node_new(id_glue); insert_after(head, nta, nt)
+         nt = node_new(id_glue, nil, w);  -- INHERIT ATTRIBUTE OF w
+         insert_after(head, nta, nt)
       else
-         nt = next_cluster_array[w]
+         nt = next_cluster_array[w]; local f = node_next(nta)
+         while f and f~=nt do
+            if getid(f)==id_glue then
+               node_remove(head, nt); insert_before(head, f, nt); f = nil
+            else if getid(f)==id_penalty and get_attr_icflag(f)==KINSOKU then
+                 node_inherit_attr(f, w) -- INHERIT ATTRIBUTE OF w; for lua-ul
+                 set_attr(f, attr_icflag, KINSOKU)
+               end
+               f = node_next(f)
+            end
+         end
       end
       setglue(nt, coef[i*2+1][2*cmp+2], 0, 0, 0, 0)
       set_attr(nt, attr_ruby, 2*i+2)
@@ -540,14 +585,13 @@ local function pre_low_app_node(head, w, cmp, coef, ht, dp)
    next_cluster_array[w]=nil
    return head, first_whatsit(node_next(nt))
 end
-
-local function pre_high(ahead)
+pre_high = function (ahead)
    if not ahead then return ahead end
    local head = to_direct(ahead)
    post_intrusion_backup, post_jfmgk_backup = 0, false
    local n = first_whatsit(head)
    while n do
-      if getsubtype(n) == sid_user and getfield(n, 'user_id') == RUBY_PRE then
+       if getsubtype(n) == sid_user and getfield(n, 'user_id') == RUBY_PRE then
          local nv = getvalue(n)
          local rst = getvalue(nv)
          max_allow_pre = rst.pre or 0
@@ -567,13 +611,13 @@ local function pre_high(ahead)
          if rst.exclude_pre_jfmgk_from_prev_ruby
             and atr>0 and ((old_break_info[atr]  or post_intrusion_backup) > 0) then
             -- 「直前のルビが文字に進入→現在のルビの和文処理グルーへの進入はなし」という状況
-            rst.before_jfmgk = 0
+            max_allow_pre = 0;rst.before_jfmgk = 0
          end
          post_intrusion_backup, post_jfmgk_backup = 0, false
          max_allow_post = rst.post or 0
          max_margin = rst.maxmargin or 0
          local coef = pre_low_cal_box(n, rst.count)
-         local s = node_tail(nv) --ルビ文字
+         local s = node_tail(nv); if rst.quirk_protrusion then s = node_prev(node_prev(s)) end --ルビ文字
          head, n = pre_low_app_node(
             head, n, rst.count, coef, getheight(s), getdepth(s)
          )
@@ -583,11 +627,11 @@ local function pre_high(ahead)
    end
    return to_node(head)
 end
+end
 luatexbase.add_to_callback('pre_linebreak_filter', pre_high, 'ltj.ruby.pre', 100)
-luatexbase.add_to_callback('hpack_filter', pre_high, 'ltj.ruby.pre', 100)
 
 ----------------------------------------------------------------
--- post_line_break
+-- post_linebreak
 ----------------------------------------------------------------
 local post_lown
 do
@@ -595,47 +639,110 @@ do
       local id = get_attr(wv, attr_ruby_id) or 0
       if id>0 and cache_handle then
          cache_handle:write(
-            'lrob[' .. tostring(id) .. ']=' .. num .. '\nlrob[' .. tostring(-id) .. ']=' .. tostring(bool) .. '\n')
+            'lrob[' .. tostring(id) .. ']=' .. tostring(num) .. '\nlrob[' .. tostring(-id) .. ']=' .. tostring(bool) .. '\n')
       end
    end
-
+   local node_prev = node.direct.getprev
+   local function new_kern(inherit, num)
+    local k = node_new(id_kern, 1, inherit); setkern(k, num); set_attr(kt, attr_icflag, PROCESSED);
+      return k;
+   end
    post_lown = function (rs, rw, cmp, ch)
       -- ch: the head of `current' hlist
       if #rs ==0 or not rw then return ch end
       local hn = get_attr(rs[1], attr_ruby)
       local fn = get_attr(rs[#rs], attr_ruby)
-      local wv = getvalue(rw)
+      local wv = getvalue(rw); local rst = getvalue(wv)
       if hn==1 then
          if fn==2*cmp+2 then
-            local hn = node_tail(wv)
-            node_remove(wv, hn)
-            insert_after(ch, rs[1], hn)
-            set_attr(hn, attr_icflag,  PROCESSED)
-            write_aux(wv, get_attr(hn, attr_ruby), get_attr(hn, attr_ruby_post_jfmgk))-- 行中形
+            -- 行中形  
+            local nn = node_tail(wv); 
+            if rst.quirk_protrusion then
+               local prot_b,prot_a = rst[fn-1][1], rst[fn-1][2]
+               local ka=nn; local kb = node_prev(nn); nn = node_prev(kb)
+               node_remove(wv, nn); node_remove(wv, kb); node_remove(wv, ka)
+               if prot_b~=0 then
+                   setkern(kb, prot_b); insert_after(ch, rs[1], kb);
+                   local kt = new_kern(rw, -prot_b); insert_after(ch, kb, kt); 
+                   insert_after(ch, kt, nn);
+               else 
+                   node_free(kb); insert_after(ch, rs[1], nn)
+               end
+               if prot_a~=0 then
+                  local kt = new_kern(rw, -prot_a); insert_after(ch, nn, kt);
+                  setkern(ka, prot_a); insert_after(ch, kt, ka);
+               else node_free(ka)
+               end   
+            else 
+               node_remove(wv, nn); insert_after(ch, rs[1], nn)
+            end
+            set_attr(nn, attr_icflag, PROCESSED)
+            write_aux(wv, get_attr(nn, attr_ruby), get_attr(nn, attr_ruby_post_jfmgk))
          else
-            local deg, hn = (fn-1)/2, wv
-            for i = 1, deg do hn = node_next(hn) end;
-            node_remove(wv, hn)
-            setnext(hn, nil)
-            insert_after(ch, rs[1], hn)
-            set_attr(hn, attr_icflag,  PROCESSED)
-            write_aux(wv, get_attr(hn, attr_ruby), get_attr(hn, attr_ruby_post_jfmgk))
+            -- 行末形
+            local deg, nn = (fn-1)/2, wv; for i = 1, deg do nn = node_next(nn) end
+            if rst.quirk_protrusion then
+               local prot_b = rst[deg][1]
+               local ka = node_tail(wv); local kb = node_prev(ka);
+               node_remove(wv, nn); setnext(nn, nil); node_remove(wv, kb);
+               if prot_b~=0 then
+                   setkern(kb, prot_b); insert_after(ch, rs[1], kb);
+                   local kt = new_kern(rw, -prot_b); insert_after(ch, kb, kt); 
+                   insert_after(ch, kt, nn);
+               else 
+                   node_free(kb); insert_after(ch, rs[1], nn)
+               end
+               if deg==cmp then
+                  local prot_a = rst[deg][2]; node_remove(wv,ka)
+                  if prot_a~=0 then
+                     local kt = new_kern(rw, -prot_a); insert_after(ch, nn, kt);
+                     setkern(ka, prot_a); insert_after(ch, kt, ka);
+                  else node_free(ka)
+                  end   
+               end   
+            else 
+               node_remove(wv, nn); setnext(nn, nil); insert_after(ch, rs[1], nn)
+            end
+
+            set_attr(nn, attr_icflag, PROCESSED)
+            write_aux(wv, get_attr(nn, attr_ruby), get_attr(nn, attr_ruby_post_jfmgk))
          end
       else
-         local deg, hn = max((hn-1)/2,2), wv
-         for i = 1, cmp+deg-1 do hn = node_next(hn) end
+         -- 行頭形
+         local nn = wv; for i = 1, cmp+max((hn-1)/2,2)-1 do nn = node_next(nn) end
          -- -1 is needed except the case hn = 3,
          --   because a ending-line form is removed already from the list
-         node_remove(wv, hn); setnext(hn, nil)
-         insert_after(ch, rs[1], hn)
-         set_attr(hn, attr_icflag,  PROCESSED)
+         if rst.quirk_protrusion then
+            local deg=(hn-1)/2; local prot_b = rst[2*cmp+1-deg][1]
+            local ka = node_tail(wv); node_remove(wv, nn); setnext(nn, nil);
+            if deg==1 then
+               local kb = node_prev(ka); node_remove(wv, kb);
+               if prot_b~=0 then
+                   setkern(kb, prot_b); insert_after(ch, rs[1], kb);
+                   local kt = new_kern(rw, -prot_b); insert_after(ch, kb, kt); 
+                   insert_after(ch, kt, nn);
+               else 
+                   node_free(kb); insert_after(ch, rs[1], nn)
+               end
+            else insert_after(ch, rs[1], nn)
+            end
+            local prot_a = rst[2*cmp+1-deg][2]; node_remove(wv,ka)
+            if prot_a~=0 then
+               local kt = new_kern(rw, -prot_a); insert_after(ch, nn, kt);
+               setkern(ka, prot_a); insert_after(ch, kt, ka);
+            else node_free(ka)
+            end
+         else
+            node_remove(wv, nn); setnext(nn, nil); insert_after(ch, rs[1], nn)
+         end
+
+         set_attr(nn, attr_icflag, PROCESSED)
          if fn == 2*cmp-1 then
-            write_aux(wv, get_attr(hn, attr_ruby), get_attr(hn, attr_ruby_post_jfmgk))
+            write_aux(wv, get_attr(nn, attr_ruby), get_attr(nn, attr_ruby_post_jfmgk))
          end
       end
       for i = 1,#rs do
-         local ri = rs[i]
-         ch = node_remove(ch, ri); node_free(ri);
+         local ri = rs[i]; ch = node_remove(ch, ri); node_free(ri)
       end
       -- cleanup
       if fn >= 2*cmp+1 then node_free(rw) end
@@ -644,72 +751,85 @@ do
 end
 
 local traverse_id = node.direct.traverse_id
-local function post_high_break(head)
-   local rs = {}   -- rs: sequence of ruby_nodes,
-   local rw = nil  -- rw: main whatsit
-   local cmp = -2  -- dummy
-   for h in traverse_id(id_hlist, to_direct(head)) do
-      for i = 1, #rs do rs[i] = nil end
-      local ha = getlist(h)
+local post_high_hbox, post_high_break
+do
+   local rs, rw = {}, nil -- rs: sequence of ruby_nodes, rw: main whatsit
+   local cmp
+   post_high_break =  function (head)
+      for h in traverse_id(id_hlist, to_direct(head)) do
+         for i = 1, #rs do rs[i] = nil end
+         local ha = getlist(h);
+         while ha do
+            local hai = getid(ha)
+            local i = ((hai == id_glue and getsubtype(ha)==0)
+                       or (hai == id_rule and getsubtype(ha)==0)
+                       or (hai == id_whatsit and getsubtype(ha)==sid_user
+                           and getfield(ha, 'user_id', RUBY_POST)))
+                  and get_attr(ha, attr_ruby) or 0
+            if i==0 then
+               ha = node_next(ha)
+            elseif i==1 then
+               setlist(h, post_lown(rs, rw, cmp, getlist(h)))
+               for i = 2, #rs do rs[i] = nil end -- rs[1] is set by the next statement
+               rs[1], rw = ha, nil; ha = node_next(ha)
+            elseif i==2 then
+               rw = ha
+               cmp = getvalue(getvalue(rw)).count
+               local hb, hc =  node_remove(getlist(h), rw)
+               setlist(h, hb); ha = hc
+            else -- i>=3
+               rs[#rs+1] = ha; ha = node_next(ha)
+            end
+         end
+         setlist(h, post_lown(rs, rw, cmp, getlist(h)))
+      end
+      return head
+   end
+   post_high_hbox = function (ahead)
+      for i = 1, #rs do rs[i] = nil end; rw = nil
+      local ha = to_direct(ahead); local head = ha
       while ha do
          local hai = getid(ha)
          local i = ((hai == id_glue and getsubtype(ha)==0)
-                       or (hai == id_rule and getsubtype(ha)==0)
-                       or (hai == id_whatsit and getsubtype(ha)==sid_user
-                              and getfield(ha, 'user_id', RUBY_POST)))
-            and get_attr(ha, attr_ruby) or 0
+                    or (hai == id_rule and getsubtype(ha)==0)
+                    or (hai == id_whatsit and getsubtype(ha)==sid_user
+                        and getfield(ha, 'user_id', RUBY_POST)))
+               and get_attr(ha, attr_ruby) or 0
          if i==0 then
             ha = node_next(ha)
          elseif i==1 then
-            setlist(h, post_lown(rs, rw, cmp, getlist(h)))
+            head = post_lown(rs, rw, cmp, head)
             for i = 2, #rs do rs[i] = nil end -- rs[1] is set by the next statement
             rs[1], rw = ha, nil; ha = node_next(ha)
          elseif i==2 then
             rw = ha
             cmp = getvalue(getvalue(rw)).count
-            local hb, hc =  node_remove(getlist(h), rw)
-            setlist(h, hb); ha = hc
-         else -- i>=3
+            head, ha = node_remove(head, rw)
+         else -- i >= 3
             rs[#rs+1] = ha; ha = node_next(ha)
          end
       end
-      setlist(h, post_lown(rs, rw, cmp, getlist(h)))
+      return to_node(post_lown(rs, rw, cmp, head))
    end
-   return head
 end
-
-local function post_high_hbox(ahead)
-   local ha = to_direct(ahead); local head = ha
-   local rs = {};  -- rs: sequence of ruby_nodes,
-   local rw = nil; -- rw: main whatsit
-   local cmp
-   while ha do
-      local hai = getid(ha)
-      local i = ((hai == id_glue and getsubtype(ha)==0)
-                    or (hai == id_rule and getsubtype(ha)==0)
-                    or (hai == id_whatsit and getsubtype(ha)==sid_user
-                           and getfield(ha, 'user_id', RUBY_POST)))
-         and get_attr(ha, attr_ruby) or 0
-      if i==0 then
-         ha = node_next(ha)
-      elseif i==1 then
-         head = post_lown(rs, rw, cmp, head)
-         for i = 2, #rs do rs[i] = nil end -- rs[1] is set by the next statement
-         rs[1], rw = ha, nil; ha = node_next(ha)
-      elseif i==2 then
-         rw = ha
-         cmp = getvalue(getvalue(rw)).count
-         head, ha = node_remove(head, rw)
-      else -- i >= 3
-         rs[#rs+1] = ha; ha = node_next(ha)
-      end
+do
+   -- pre_append_to_vlist_filter.lua: distributed with lua-ul
+   local found = kpse.find_file('pre_append_to_vlist_filter.lua', 'lua')
+   if not found then
+      luatexbase.add_to_callback('post_linebreak_filter', post_high_break, 'ltj.ruby.post_break')
+   else
+      require 'pre_append_to_vlist_filter'
+      luatexbase.add_to_callback('pre_append_to_vlist_filter', 
+         function(head, loc) 
+             return (loc~='post_linebreak') and head or post_high_break(head)
+         end,
+         'ltj.ruby.post_break',
+         (luatexbase.priority_in_callback('pre_append_to_vlist_filter', 'add underlines to list') or 1))
    end
-   return to_node(post_lown(rs, rw, cmp, head))
+   luatexbase.add_to_callback('hpack_filter', 
+     function(head) return post_high_hbox(pre_high(head)) end, 'ltj.ruby', 
+     luatexbase.priority_in_callback('hpack_filter', 'add underlines to list') or nil)
 end
-
-luatexbase.add_to_callback('post_linebreak_filter', post_high_break, 'ltj.ruby.post_break', 100)
-luatexbase.add_to_callback('hpack_filter', post_high_hbox, 'ltj.ruby.post_hbox', 101)
-
 
 ----------------------------------------------------------------
 -- for jfmglue callbacks
@@ -736,7 +856,7 @@ do
                      p = 0
                   end
                   rst.pre = -p; rst.exclude_pre_from_prev_ruby = (s<0);
-                   rst.exclude_pre_jfmgk_from_prev_ruby = (ltjs.table_current_stack[RIPOST +Nq.char] or 0)<0;
+                  rst.exclude_pre_jfmgk_from_prev_ruby = (ltjs.table_current_stack[RIPOST +Nq.char] or 0)<0;
                end
                if Nq.prev_ruby then
                   set_attr(lp, attr_ruby, Nq.prev_ruby)
@@ -757,6 +877,11 @@ do
             end
          elseif rst.pre < 0 then -- auto
             rst.pre = 0
+         end
+         if rst.quirk_protrusion then
+            local lk = node_new(id_kern, 1, Nq.nuc, lp); set_attr(lk, attr_icflag, PROCESSED)
+            insert_after(lpv, node_tail(lpv), lk)
+            insert_after(lpv, node_tail(lpv), node_new(id_kern, 1))
          end
          return Np
       else
@@ -780,10 +905,12 @@ do
    end
    local RIPOST = luatexja.stack_table_index.RIPOST
    local abs = math.abs
+   local ltjj_after_hlist=luatexja.jfmglue.after_hlist
+   local ltjj_check_box_high=luatexja.jfmglue.check_box_high
    local function whatsit_after_callback(s, Nq, Np, head)
       if not s and  getfield(Nq.nuc, 'user_id') == RUBY_PRE then
          if Np then
-            local last_glue = node_new(id_glue)
+            local last_glue = node_new(id_glue, nil, Nq.nuc) -- INHERIT ATTRIBUTE OF Nq.nuc
             set_attr(last_glue, attr_icflag, 0)
             insert_before(Nq.nuc, Np.first, last_glue)
             Np.first = last_glue
@@ -798,8 +925,8 @@ do
          end
          local x =  node_next(node_next(nqnv))
          for i = 2, rst.count do x = node_next(node_next(x)) end
-         Nq.last_char = luatexja.jfmglue.check_box_high(Nq, getlist(x), nil)
-         luatexja.jfmglue.after_hlist(Nq)
+         Nq.last_char = ltjj_check_box_high(Nq, getlist(x), nil)
+         ltjj_after_hlist(Nq)
          if Np and Np.id ~=id_pbox_w and type(Np.char)=='number' then
             -- Np is a JAchar
             if rst.post < 0 then -- auto
@@ -812,11 +939,14 @@ do
             Np.prev_ruby = get_attr(getvalue(Nq.nuc), attr_ruby_id)
             -- 前のクラスタがルビであったことのフラグ
          else -- 直前が文字以外
-            local nqnv = getvalue(Nq.nuc)
-            local rst = getvalue(nqnv)
             if rst.post < 0 then -- auto
                rst.post = 0
             end
+         end
+         if rst.quirk_protrusion then
+            local lk = node_tail(nqnv);
+            node_inherit_attr(lk, Nq.nuc, Np and Np.nuc)
+            set_attr(lk, attr_icflag, PROCESSED)
          end
          return head
       else

@@ -1,11 +1,13 @@
 %% code part of frkim
+%% v1.1   (\AddRule extended, \RenewVowels added)
 %% v1.0.2 (\frkhangulfont, \bf)
 %% v1.0.1 (\AddRule)
-%% v1.1 (\jamoul)
+%% v1.1   (\jamoul)
 %% 
 \char_set_catcode_other:N \@
 
 \clist_const:Nn \c_hgvow_clist { a, e, o, u, y, i, @, * }
+\tl_set:Nn \zero_const { x }
 
 \tl_new:N \g_cho_tl
 \tl_new:N \g_jun_tl
@@ -175,7 +177,7 @@
 		{ 0 }	{%%% 직전이 0이면 초성 확정
 					\tl_if_empty:NT \l_currtk_tl  %%% 어두에 모음 => 초성을 'ㅇ'으로
 					{
-						\tl_set:Nn \l_currtk_tl { x }
+						\tl_set:No \l_currtk_tl { \zero_const }
 					}
 					
 					\tl_gset:NV \g_cho_tl \l_currtk_tl
@@ -390,32 +392,33 @@
 {
 	\bool_if:NF \opt_zeroisx_bool
 	{
-		\regex_replace_all:nnN { ' } { x } \g_cho_tl
+		\exp_args:Nno
+		\regex_replace_all:nnN { ' } { \zero_const } \g_cho_tl
 	}
 	\tl_if_empty:NF \g_cho_tl
 	{
-		\prop_get:NVNTF \c_frkcho_prop \g_cho_tl \l_tmpone_tl 
+		\prop_get:NVNTF \l_usercho_prop \g_cho_tl \l_tmpone_tl 
 			{ \tl_use:N \l_tmpone_tl }
 			{
-				\prop_get:NVNT \l_usercho_prop \g_cho_tl \l_tmpone_tl
+				\prop_get:NVNT \c_frkcho_prop \g_cho_tl \l_tmpone_tl
 				{ \tl_use:N \l_tmpone_tl }
 			}
 	}
 	\tl_if_empty:NF \g_jun_tl
 	{
-		\prop_get:NVNTF \c_frkjung_prop \g_jun_tl \l_tmptwo_tl 
+		\prop_get:NVNTF \l_userjung_prop \g_jun_tl \l_tmptwo_tl 
 			{ \tl_use:N \l_tmptwo_tl }
 			{
-				\prop_get:NVNT \l_userjung_prop \g_jun_tl \l_tmptwo_tl
+				\prop_get:NVNT \c_frkjung_prop \g_jun_tl \l_tmptwo_tl
 				{ \tl_use:N \l_tmptwo_tl }
 			}
 	}
 	\tl_if_empty:NF \g_jon_tl 
 	{
-		\prop_get:NVNTF \c_frkjong_prop \g_jon_tl \l_tmpthr_tl 
+		\prop_get:NVNTF \l_userjong_prop \g_jon_tl \l_tmpthr_tl 
 			{ \tl_use:N \l_tmpthr_tl }
 			{
-				\prop_get:NVNT \l_userjong_prop \g_jon_tl \l_tmpthr_tl
+				\prop_get:NVNT \c_frkjong_prop \g_jon_tl \l_tmpthr_tl
 				{ \tl_use:N \l_tmpthr_tl }
 			}
 	}
@@ -592,6 +595,16 @@
 
 	\int_compare:nT { #1 < \seq_count:N \l_inputpar_seq }
 	{ \par }
+}
+
+\NewDocumentCommand \RenewVowels { m }
+{
+	\clist_set:Nn \c_hgvow_clist { @, *, #1 }
+}
+
+\NewDocumentCommand \RenewLeadingZero { m }
+{
+	\tl_set:Nn \zero_const { #1 }
 }
 
 \endinput

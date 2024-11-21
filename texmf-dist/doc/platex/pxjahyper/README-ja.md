@@ -73,6 +73,17 @@ pxjahyper-enc パッケージ ー 文字コード設定
 更新履歴
 --------
 
+  * Version 1.5  〈2024/08/25〉
+      - アンカー文字列での動作を修正。
+
+  * Version 1.4  〈2024/08/14〉
+      - 設定キー `fallback-warn` を追加。
+      - 設定キー `fallback-cidm` を追加。
+      - `force-unicode` オプションを非推奨とし、警告を出す。
+      - 開発者用命令 `\pxjahyperBadCharacter` を追加。
+      - オプション `autodvidriver`、`fallback-geta`、`fallback-delete`
+        を非推奨にする。
+
   * Version 1.3  〈2023/03/01〉
       - “pTeX + hyperref unicode モード”を正式にサポートする。これに
         伴い、unicode モードに関する警告を削除。

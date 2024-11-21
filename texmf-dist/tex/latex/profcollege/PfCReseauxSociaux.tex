@@ -1,9 +1,13 @@
 %%%
 % Twitter
 %%%
-\setKVdefault[Twitter]{Largeur=0.95\linewidth,Auteur=Christophe,Date=\today,Url=ViveLaTeX,EchelleLogo=0.035,Logo=DrStrange,Publie=false}
+\def\filedateReseaux{2024/08/04}%
+\def\fileversionReseaux{0.1}%
+\message{-- \filedateReseaux\space v\fileversionReseaux}%
+%
+\setKVdefault[Twitter]{Largeur=0.95\linewidth,Auteur=Christophe,Date=\today,Url=ViveLaTeX,EchelleLogo=0.035,Logo=DrStrange,Publie=false}%
 
-\NewEnviron{Twitter}[1][]{%
+\NewDocumentEnvironment{Twitter}{o+b}{%
   \useKVdefault[Twitter]%
   \setKV[Twitter]{#1}%
   \xdef\EchelleLogo{\useKV[Twitter]{EchelleLogo}}%
@@ -26,16 +30,16 @@
     left=3em,
     bottom=2em]
     \vspace*{0.5em}\par
-    \BODY%
+    #2
   \end{tcolorbox}
-}
+}{}%
 
 %%%
 % Facebook
 %%%
-\setKVdefault[Facebook]{Largeur=0.95\linewidth,Auteur=Christophe,Date=\today,Heure=3:14,EchelleLogo=0.035,Logo=DrStrange,Publie=false}
+\setKVdefault[Facebook]{Largeur=0.95\linewidth,Auteur=Christophe,Date=\today,Heure=3:14,EchelleLogo=0.035,Logo=DrStrange,Publie=false}%
 
-\NewEnviron{Facebook}[1][]{%
+\NewDocumentEnvironment{Facebook}{o+b}{%
   \useKVdefault[Facebook]%
   \setKV[Facebook]{#1}%
   \xdef\EchelleLogo{\useKV[Facebook]{EchelleLogo}}%
@@ -68,18 +72,17 @@
     colframe=gray!15,
     top=2em,
     left=3em,
-    bottom=4em]
-    %\vspace*{0.5em}\par
-    \BODY%
+    bottom={\ifboolKV[Facebook]{Publie}{4em}{2em}}]
+    #2
   \end{tcolorbox}
-}
+}{}%
 
 %%%
 % Instagram
 %%%
-\setKVdefault[Instagram]{Largeur=0.95\linewidth,Auteur=Christophe,Expediteur=Pierre,Date=\today,Temps=34,Publie=false,Logo=DrStrange,LogoEx=tiger,EchelleLogo=0.035,Texte={}}
+\setKVdefault[Instagram]{Largeur=0.95\linewidth,Auteur=Christophe,Expediteur=Pierre,Date=\today,Temps=34,Publie=false,Logo=DrStrange,LogoEx=tiger,EchelleLogo=0.035,Texte={}}%
 
-\NewEnviron{Instagram}[1][]{%
+\NewDocumentEnvironment{Instagram}{o+b}{%
   \useKVdefault[Instagram]%
   \setKV[Instagram]{#1}%
   \xdef\EchelleLogo{\useKV[Instagram]{EchelleLogo}}%
@@ -113,16 +116,16 @@
     top=3em,
     left=3em,
     bottom=7em]
-    \BODY%
+    #2
   \end{tcolorbox}
-}
+}{}%
 
 %%%
 % Snapchat
 %%%
-\setKVdefault[Snapchat]{Largeur=0.95\linewidth,Auteur=Christophe,Date=\today,Temps=34,Logo=DrStrange,EchelleLogo=0.035,Texte=Envoyer un Chat}
+\setKVdefault[Snapchat]{Largeur=0.95\linewidth,Auteur=Christophe,Date=\today,Temps=34,Logo=DrStrange,EchelleLogo=0.035,Texte=Envoyer un Chat}%
 
-\NewEnviron{Snapchat}[1][]{%
+\NewDocumentEnvironment{Snapchat}{o+b}{%
   \useKVdefault[Snapchat]%
   \setKV[Snapchat]{#1}%
   \xdef\EchelleLogo{\useKV[Snapchat]{EchelleLogo}}%
@@ -154,6 +157,43 @@
     top=3em,
     left=3em,
     bottom=3em]
-    \BODY%
+    #2
   \end{tcolorbox}
-}
+}{}%
+
+%%%
+% Mastodon
+%%%
+\setKVdefault[Mastodon]{Largeur=0.95\linewidth,Auteur=Christophe,Date=2~j,Url=ViveLaTeX,EchelleLogo=0.035,Logo=DrStrange,Publie=false}%
+
+\NewDocumentEnvironment{Mastodon}{o+b}{%
+  \useKVdefault[Mastodon]%
+  \setKV[Mastodon]{#1}%
+  \xdef\EchelleLogo{\useKV[Mastodon]{EchelleLogo}}%
+  \begin{tcolorbox}[%
+    enhanced,%
+    overlay unbroken and first={%
+      \node[anchor=west,xshift=3em,yshift=-2em] at (frame.north west) {%
+        \begin{tabular}{l}
+          \textbf{\useKV[Mastodon]{Auteur}}\\
+          {\color{gray}@\ttfamily \useKV[Mastodon]{Url}}
+        \end{tabular}};
+      \node[anchor=center,xshift=1em+2mm,yshift=-2em] at (frame.north west) {\LogoTW{\useKV[Mastodon]{Logo}}{\EchelleLogo}};
+      \node[anchor=center,yshift=-2em,xshift=-2em] at (frame.north east) {\faGlobeAmericas~\useKV[Mastodon]{Date}};                                       
+      \coordinate[yshift=1em] (A) at (frame.south west);
+      \coordinate[yshift=1em] (B) at (frame.south east);
+      \node[] (C1) at ($(A)!0.1!(B)$) {\faReply\ifboolKV[Mastodon]{Publie}{~\fpeval{randint(1,10)}}{}};
+      \node[] (C2) at ($(A)!0.29!(B)$) {\faRetweet};%\ifboolKV[Mastodon]{Publie}{~\fpeval{randint(1,10)}}{}};
+      \node[] (C3) at ($(A)!0.48!(B)$) {\faStar[regular]};%\ifboolKV[Mastodon]{Publie}{~\fpeval{randint(1,10)}}{}};
+        \node[] (C4) at ($(A)!0.67!(B)$) {\faBookmark[regular]};
+        \node[] (C5) at ($(A)!0.85!(B)$) {...};
+    },
+    colback=white,
+    colframe=gray!15,
+    top=2em,
+    left=3em,
+    bottom=2em]
+    \vspace*{1em}\par
+    #2
+  \end{tcolorbox}
+}{}%

@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2022 Zeping Lee
+% Copyright (c) 2024 Zeping Lee
 % Released under the LaTeX Project Public License v1.3c License.
 % Repository: https://gitee.com/xkwxdyy/exam-zh
 %
@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2023-06-28} {v0.1.27}
+\ProvidesExplPackage {exam-zh-question} {2024-02-15} {v0.2.1}
   {exam-zh question module}
 
 
@@ -205,7 +205,7 @@
     index               = 1,
     points              = 0 ,
     show-points         = auto ,
-    points-separate-par = true ,
+    points-separate-par = false ,
     show-answer         = false ,
     top-sep             = .25em plus .25em minus .1em ,
     bottom-sep          = .25em plus .25em minus .1em ,
@@ -229,6 +229,20 @@
     \group_end:
   }
   {}
+% \NewDocumentEnvironment { question } { O { } }
+%   {
+%     % \bool_set_false:N \l__examzh_question_problem_style_bool
+%     \group_begin:
+%       \group_begin:
+%         \tcbverbatimwrite { \jobname-tempfile.exam }
+%   }
+%   {
+%         \endtcbverbatimwrite
+%       \group_end:
+%       \__examzh_question_begin:nn {#1} { \input{\jobname-tempfile.exam} }
+%       \__examzh_question_end:nn {#1} { \input{\jobname-tempfile.exam} } 
+%     \group_end:
+%   }
 
 % 解答题
 \NewDocumentEnvironment { problem } { O { } +b }
@@ -1003,7 +1017,9 @@
   }
 \keys_define:nn { exam-zh }
   { paren .meta:nn = { exam-zh / paren } {#1} }
-\NewDocumentCommand \paren { O { } }
+
+% TODO：在 paren 里面增加键值控制
+\NewDocumentCommand \paren { s O { } }
   {
     % 如果开了 show answer 就默认 show paren 
     \bool_if:NT \l__examzh_question_show_paren_answer_bool
@@ -1026,11 +1042,25 @@
         \hbox:n
           {
             （
-            \hbox_to_wd:nn { 3em }
-              {
-                \bool_if:NT \l__examzh_question_show_paren_answer_bool
-                  { \hfill \__examzh_paren_print_answer:n {#1} \hfill }
-              }
+            % \hbox_to_wd:nn { 2em }
+              % {
+                \bool_if:NTF \l__examzh_question_show_paren_answer_bool
+                  % { \hfill \__examzh_paren_print_answer:n {#1} \hfill }
+                  {
+                    \IfBlankTF{#2}
+                      {
+                        % 显示答案，但是 \paren 里没有输入答案
+                        \kern 2em
+                      }
+                      {
+                        \kern0.7em \__examzh_paren_print_answer:n {#2} \kern0.7em
+                      }
+                  }
+                  {
+                    % \paren* 表示不显示答案时是长宽度，\paren 表示不显示答案时是短宽度
+                    \IfBooleanTF{#1}{ \kern 3em }{ \kern 2em }
+                  }
+              % }
             ） \kern -.4em
           }
       }
@@ -1085,7 +1115,7 @@
       { \bool_set_true:N \l__examzh_fillin_width_fill_bool },
     width-type / normal .code:n =
       { \bool_set_false:N \l__examzh_fillin_width_fill_bool },
-    color .tl_set:N = \l__examzh_fillin_color_tl,
+    box-color .tl_set:N = \l__examzh_fillin_box_color_tl,
     text-color .tl_set:N = \l__examzh_fillin_text_color_tl,
     no-answer-type .choices:nn =
       { blacktriangle, counter, none, hidden }
@@ -1104,7 +1134,7 @@
     type                     = line,
     show-answer              = false,
     width                    = 3em,
-    color                    = black,
+    box-color                = black,
     text-color               = black,
     no-answer-type           = blacktriangle,
     no-answer-counter-index  = 1,
@@ -1514,7 +1544,7 @@
       {
         rounded~rectangle~west~arc = convex,
         draw, rounded~rectangle,
-        color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl
+        color = \l__examzh_fillin_box_color_tl, text = \l__examzh_fillin_text_color_tl
       }
   }
 \cs_new:Npn \__examzh_fillin_circle_T:
@@ -1541,7 +1571,7 @@
   {
     \hspace* { .5em minus .5em }
     \begin{tikzpicture}[baseline = -3pt]
-      \node[draw, color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl] 
+      \node[draw, color = \l__examzh_fillin_box_color_tl, text = \l__examzh_fillin_text_color_tl] 
         { \box_use_drop:N \l_tmpa_box };
     \end{tikzpicture}
     \hspace* { .5em minus .5em }
@@ -1550,7 +1580,7 @@
   {
     \hspace* { 0.5em plus .5em minus .5em }
     \begin{tikzpicture}[baseline = -3pt]
-      \node[draw, color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl] 
+      \node[draw, color = \l__examzh_fillin_box_color_tl, text = \l__examzh_fillin_text_color_tl] 
         { \phantom{a} };
     \end{tikzpicture}
     \hspace* { 0.5em plus .5em minus .5em }
@@ -1641,10 +1671,27 @@
   }
 
 \str_new:N \l__examzh_solution_blank_type_str
+\bool_new:N \g__examzh_solution_show_bool
+\bool_new:N \g__examzh_solution_show_move_bool
 \keys_define:nn { exam-zh / solution }
   {
-    show-solution .bool_set:N = \l__examzh_solution_show_bool,
-    show-answer .bool_set:N = \l__examzh_solution_show_bool,
+    % show-solution .bool_set:N = \g__examzh_solution_show_bool,
+    show-solution .choice:,
+    show-solution / hide .code:n =
+      {
+        \bool_gset_false:N \g__examzh_solution_show_bool
+      },
+    show-solution / show-stay .code:n =
+      {
+        \bool_gset_true:N \g__examzh_solution_show_bool
+        \bool_gset_false:N \g__examzh_solution_show_move_bool
+      },
+    show-solution / show-move .code:n =
+      {
+        \bool_gset_true:N \g__examzh_solution_show_bool
+        \bool_gset_true:N \g__examzh_solution_show_move_bool
+      },
+    % show-answer .bool_set:N = \g__examzh_solution_show_bool,
     show-qed      .bool_set:N = \l__examzh_solution_show_qed_bool,
     qedsymbol     .tl_set:N = \l__examzh_solution_qedsymbol_tl,
     label-content  .tl_set:N   = \l__examzh_solution_label_content_tl,
@@ -1666,7 +1713,7 @@
   }
 \keys_set:nn { exam-zh / solution }
   {
-    show-solution      = false,
+    show-solution      = hide,
     show-qed           = true,
     qedsymbol          = $\square$,
     label-content      = {解答},
@@ -1685,18 +1732,45 @@
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
 % 解答题环境
+\iow_new:N \g__write_soltion_to_auxfile
+% 生成变体函数
+\cs_generate_variant:Nn \iow_open:Nn { Nx }
+\int_new:N \g__examzh_solution_aux_index_int
 \NewDocumentEnvironment { solution } { O{ } +b }
   {
     % \addvspace { \l__examzh_solution_top_sep_skip }
     \keys_set:nn { exam-zh / solution } {#1}
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
-    \bool_if:NTF \l__examzh_solution_show_bool
+    \bool_if:NTF \g__examzh_solution_show_bool
       {
-        \vspace { \l__examzh_solution_top_sep_skip }
-        \__examzh_solution_print_answer:n {#2}
-        \par    
-        \vspace { \l__examzh_solution_bottom_sep_skip }
+        \bool_if:NTF \g__examzh_solution_show_move_bool
+          {
+            % 这个方法成功
+            \iow_open:Nn \g__write_soltion_to_auxfile {examzh \int_use:N \g__examzh_question_index_int .solution}
+            \iow_now:Nx \g__write_soltion_to_auxfile 
+              {
+                \par \noindent
+                \int_eval:n { \g__examzh_question_index_int - 1 }.  【解析】
+                \exp_not:n {#2}
+                \par \exp_not:n { \vspace*{1ex} }
+              }
+            \iow_close:N \g__write_soltion_to_auxfile
+
+            % 下面的方法失败
+            % \group_begin:
+            % \tl_set:Nn \tcb@verbatim@begin@hook 
+            %   { \iow_now:Nx \tcb@out { \int_use:N \g__examzh_question_index_int } }
+            % \tcbverbatimwrite {examzh \int_use:N \g__examzh_question_index_int .solution} #2
+            % \endtcbverbatimwrite
+            % \group_end:
+          }
+          {
+            \vspace { \l__examzh_solution_top_sep_skip }
+            \__examzh_solution_print_answer:n {#2}
+            \par    
+            \vspace { \l__examzh_solution_bottom_sep_skip }
+          }
       }
       {
         \str_case:VnF \l__examzh_solution_blank_type_str
@@ -1712,6 +1786,31 @@
     % \addvspace { \l__examzh_solution_bottom_sep_skip }
   }
   {}
+
+\AtEndDocument
+  {
+    \bool_if:NT \g__examzh_solution_show_move_bool
+      {
+        \newpage
+        \begin{center}
+          \zihao{-2} \heiti \makebox[5em][s]{参考答案}
+        \end{center}
+        \vspace*{3ex}
+
+        \kaishu
+        \int_compare:nNnT { \g__examzh_question_index_int } > { 0 }
+          {
+            \int_step_inline:nn { \g__examzh_question_index_int }
+              {
+                \file_if_exist:nT { examzh #1 .solution }
+                  { \file_input:n { examzh #1 .solution } }
+              }
+          }
+      }
+  }
+
+
+
 \cs_new:Npn \__examzh_solution_simply_hide_solution:n #1
   {
     \begin{tcolorbox}

@@ -1,0 +1,180 @@
+% Chapter 3 from Asymptote tutorial Jim Hefferon
+\chapter{Paths and pens}
+
+\section{Paths}
+This plots a function that is generic in that it isn't 
+derived from a simple expression such as $\cos x$ or $x+(1/(x-1))$.
+We will use it for the classic Calculus 
+lesson
+illustrating that
+the curve is locally well-approximated by the line,
+by zooming in on a point of tangency.
+\begin{center}
+  \includegraphics{chapter3/asy/zoom.pdf}
+\end{center}
+Here is the source of that graphic.
+\begin{center}
+  \inputminted{Asymptote}{chapter3/asy/zoom.asy}
+\end{center}
+Line~7's \mintinline{Asymptote}{generic_fcn_plot} is a 
+\mintinline{Asymptote}{path}.
+It joins some points 
+with smooth curves, using the \mintinline{Asymptote}{..} operator.
+(I often use this path
+so I included a copy in \path{jh.asy}
+as \mintinline{Asymptote}{GENERIC_FCN_PLOT}.)
+Earlier, when we drew a vertical asymptote line we instead connected two
+points with a \mintinline{Asymptote}{--} operator, which gives a line segment.
+There are other connectors but these two are the most common.
+
+In line~17, \Asy's 
+\mintinline{Asymptote}{dir(..)} command gives the direction of the
+tangent line as a unit vector.
+The two lines after that produce its graph.
+As part of this, line~18 uses that \mintinline{Asymptote}{d.y} is the second
+component of the pair \mintinline{Asymptote}{d} 
+and \mintinline{Asymptote}{d.x} is its first component,
+so the tangent line's slope is the ratio 
+\mintinline{Asymptote}{d.y/d.x}.
+
+As to line~15's \mintinline{Asymptote}{c_time = times(f, c)[0]}, 
+\Asy{} joins the points with piecewise cubic Bézier curves,
+just as \MF{} and \MP{} do. 
+These curves are
+parametrized by a variable called `time'.
+By definition, the initial point $(0,-0.25)$ is at time~$0$, the next point 
+$(1,0.35)$ is at time~$1$, etc.
+(To forestall any confusion:~the time has nothing to do with the
+first coordinate, it comes from when the point is specified in the
+path.)
+Intermediate points have intermediate times.
+This illustrates, showing some times.
+\begin{center}
+  \includegraphics{chapter3/asy/zoom_times.pdf}
+\end{center}
+The \mintinline{Asymptote}{times(..)} command returns an array of times
+where the path intersects the vertical line 
+$x=\text{\mintinline{Asymptote}{c}}$.
+We extract the first one (in this case the only one) with the 
+\mintinline{Asymptote}{[0]}.
+Then line~16's \mintinline{Asymptote}{c_point = point(f,c_time)} returns
+that point as a \mintinline{Asymptote}{pair}.
+(Incidentally, the time points need not be evenly spaced on a curve, meaning that
+there may be a different arc length between $t=2.0$ and~$2.5$ than there is 
+between $t=2.5$ and~$3.0$.)
+
+The source for the prior graphic shows two useful aspects of
+\Asy{} that are new.
+\begin{center}
+  \inputminted{Asymptote}{chapter3/asy/zoom_times.asy}
+\end{center}
+The first of those is in line~19.
+The \mintinline{Asymptote}{format("$%0.02f$",t)} 
+turns the floating point number~$t$ into the string used in the label.
+
+The other is in lines~17 through~20, where the code has an iteration.
+One strength of \Asy{} is that it is a standard programming language,
+with clean constructs that are like those you use in other languages
+in your daily work.
+This iteration is over an array but an integer iteration
+\mintinline{Asymptote}{for(int i=0; i<4; ++i)}
+is in the next example.
+ 
+That next example shows zooming in on the
+point of tangency in four steps.
+Here's the output.
+\begin{center}
+  \hspace{2em}%
+  \vcenteredhbox{\includegraphics{chapter3/asy/zoom_iterate000.pdf}}%
+  \hspace{1em plus 1fill}%
+  \vcenteredhbox{\includegraphics{chapter3/asy/zoom_iterate001.pdf}}%
+  \hspace{1em plus 1fill}%
+  \vcenteredhbox{\includegraphics{chapter3/asy/zoom_iterate002.pdf}}%
+  \hspace{1em plus 1fill}%
+  \vcenteredhbox{\includegraphics{chapter3/asy/zoom_iterate003.pdf}}%
+  \hspace*{2em}%
+\end{center}
+
+The source \path{asy/zoom_iterate.asy}
+is more complex than the others that we have seen.
+One reason is that this one file produces four pictures, 
+so that we needn't maintain
+four separate \path{.asy} files with lots of overlap.
+The four output files are produced in the loop between lines~17 and~47.
+Line~18 creates a new 
+\mintinline{Asymptote}{picture}
+and line~46 outputs it.
+The files are named 
+\path{zoom_iterate000.pdf} \ldots{} \path{zoom_iterate003.pdf};~the 
+form of that name is given by the string
+\mintinline{Asymptote}{OUTPUT_FN}.
+\begin{center}
+  \inputminted{Asymptote}{chapter3/asy/zoom_iterate.asy}
+\end{center}
+
+Besides using a single input to create multiple output files,
+there are two other things that are new here.
+One is line~19's
+\mintinline{Asymptote}{size(pic, 3cm, 0)}.
+This makes each output graphic be three centimeters wide and as tall as
+required, setting the size of the $x$ and~$y$ units as needed to 
+get that width.
+The result is a zooming-in on successively shorter intervals of the $x$~axis.
+
+The other new thing 
+is that rescaling the units to make the
+entire figure three centimeters wide
+would put the plotted function very far above the
+$x$~axis.
+So we have moved the function down near the axis.
+This transformation applies not just to the function but also to the tangent
+line and to the point $(c,f(c))$, so we have broken this
+transformation out as a separate thing,
+in line~32.   
+%\mintinline{Asymptote}{transform f_trans = shift(0,0.5*delta)*shift(0,-1*c_point.y)}.
+Transformations are applied with the star operator, 
+as on lines~33, 34, and~36.
+
+In the next section we will see one more thing about paths, 
+that if a path is closed then we can fill it.
+ 
+
+
+
+
+\section{Pens}
+When you draw something you need  to specify some properties, such as its color
+or thickness if you are drawing a curve, or the font if you are
+writing text.
+\Asy{} binds those properties together as a 
+\mintinline{Asymptote}{pen}. 
+
+This source gives a picture showing the area computed with $\int_{a}^{b}f(x)\,dx$.
+\begin{center}
+  \inputminted{Asymptote}{chapter3/asy/integral.asy}
+\end{center}
+Here is the resulting graphic.
+\begin{center}
+  \includegraphics{chapter3/asy/integral.pdf}
+\end{center}
+The    
+\mintinline{Asymptote}{buildcycle(left_side, f, right_side, bottom)}
+on line~20 is new.
+It takes paths surrounding the region of interest and
+constructs the path that is the region's boundary.
+(A more common way to make a cyclic path is to end with 
+\mintinline{Asymptote}{cycle}, as with 
+\mintinline{Asymptote}{path triangle = (0,0)--(0,1)--(1,0)--cycle}.)
+
+Then line~23's \mintinline{Asymptote}{fill(region, NEUTRAL_COLOR+opacity(0.5))} 
+covers the region using a pen that, in addition to
+its color, allows some of the material behind it to show through.
+Note that some PDF viewers have trouble with opacity so your results may vary
+but one viewer that gives good results is Adobe's Reader.
+
+The \Asy{} reference gives many options for pens.
+Another is on line~25 where we draw the slice
+using the pen 
+\mintinline{Asymptote}{HIGHLIGHT_COLOR+squarecap} so that the 
+slice bottom lies flat on the axis.
+

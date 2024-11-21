@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
-%% This file is “iran-unsrt.bst”, v0.1.0 (2024/01/8)
+%% This file is “iran-unsrt.bst”, v0.1.2 (2024/08/2)
 %% generated with the DOCSTRIP utility, then modified to support
 %% bilingual (English/Latin, and Persian/Farsi) in accordance with the
 %% “Iran Manual of Style Citation Guide” (1st edn., 2016).
@@ -1447,15 +1447,10 @@ FUNCTION {format.full.label.names}
             if$
             t "others" =
               {
-                " " * bbl.etal *
+                " " * label.etal *
               }
               {
-                numnames #2 >
-                  { label.comma * }
-                  'skip$
-                if$
-                label.and
-                separate.by.space * t *
+                label.comma * label.and separate.by.space * t *
               }
             if$
           }
@@ -1937,7 +1932,7 @@ FUNCTION {field.doi}
   doi empty$
     { "" }
     {
-      bbl.doi "u" change.case$ ":\doi{" * doi * "}" *
+      bbl.doi "u" change.case$ ":~\doi{" * doi * "}" *
     }
   if$
 }
@@ -2267,7 +2262,7 @@ FUNCTION {field.url}
   url duplicate$ empty$
     { pop$ "" }
     {
-      bbl.url "u" change.case$ ": \url{" * swap$ * "}" *
+      bbl.url "u" change.case$ ":~\url{" * swap$ * "}" *
     }
   if$
 }

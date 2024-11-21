@@ -27,12 +27,16 @@
 \MakeShortVerb*{|}
 %%%%%%%%%%%%%%%%
 
-\makeatletter
+\makeatletter % adjust for lmodern
 {\lccode`\!=`\_
 \lowercase{%
 \protected\gdef\_{\ifdefstrequal{\f@family}{\ttdefault}{!}%
   {\leavevmode\vrule width .45em height -.2ex depth .3ex\relax}%
 }}
+\global\let\adj@underbar@\_
+\catcode`\_=13
+\gdef\adj@underbar{% depend on ptex-manual.sty
+  \catcode`\_=13 \let_\adj@underbar@}
 }
 \makeatother
 
@@ -41,7 +45,7 @@
 \begin{document}
 \title{\emph{\epTeX について}}
 \author{北川 弘典\null
-\thanks{\url{http://osdn.jp/projects/eptex/wiki/},\ 
+\thanks{\url{https://github.com/h-kitagawa/eptex-wiki/blob/main/README.md},\ 
 e-mail: \texttt{h\_kitagawa2001(at)yahoo.co.jp}}}
 \date{version \the\epTeXversion，\today}
 \maketitle
@@ -208,18 +212,18 @@ tracing機能や条件判断文の強化などあるが，そこら辺はパッ�
 以下，\eTeX 拡張を\pTeX 拡張とマージするにあたって調整した箇所を述べる．
 \begin{cslist}
  \csitem[\.{lastnodetype} (read-only integer)]
-  \pTeX 拡張では，\TeX と比較して\node{dir\_node}と\node{disp\_node}という2種類のノードが
+  \pTeX 拡張では，\TeX と比較して\node{dir_node}と\node{disp_node}という2種類のノードが
   追加された．前者は，現在のリストの中に違う組方向のboxを挿入する際に寸法を補正するために作られ，
   \.{hbox}や\.{vbox}のコンテナとなっている．
   また後者は，欧文文字のベースライン補正のために使われる．
 
   \epTeX~110102まではこれらのノードも\.{lastnodetype}の値として出力させるようにした．
   しかし，両者ともに\epTeX が自動的に挿入する（ユーザーが意識する必要はない）ノードであることから，
-  \epTeX~110227以降では\node{dir\_node}と\node{disp\_node}は
+  \epTeX~110227以降では\node{dir_node}と\node{disp_node}は
   \.{lastnodetype}の対象とする「最後のノード」とはならないようにしている
   \footnote{%
-    最後のノードが\node{dir\_node}であった場合，\.{lastnodetype}はそのノードが格納している
-    \node{hlist\_node}か\node{vlist\_node}の種類を返す．
+    最後のノードが\node{dir_node}であった場合，\.{lastnodetype}はそのノードが格納している
+    \node{hlist_node}か\node{vlist_node}の種類を返す．
   }．\\
   \parbox{.9\linewidth}{%
   \begin{multilist}{3}{\hfil\hskip1.5zw#:&\quad#\qquad\hfil}
@@ -300,8 +304,8 @@ tracing機能や条件判断文の強化などあるが，そこら辺はパッ�
   上記で「和文文字コードとして有効かどうか」は，関数|is_char_kanji|を参照．
   この関数は内部コードによって異なるため，マクロで実装するのは面倒であるが，
   \epTeX~190709以降では\.{iffontchar}で容易に実現できる．
-  なお，内部Unicodeの\upTeX では任意の非負の値が和文文字コードとして有効なため，
-  |is_char_kanji|は非負かどうかの判定になっている．
+  なお，内部Unicodeの\upTeX では0以上0xFFFFFF以下の値が和文文字コードとして
+  有効である．% https://github.com/texjporg/tex-jp-build/issues/160
 \end{dangerous}
 
 
@@ -685,7 +689,7 @@ p\number\ptexversion.\number\ptexminorversion\ptexrevision-%
 「，」の後の半角空きと，「『」の前の半角空きが両方
 入ってしまうという\pTeX の和文処理の仕様
 \footnote{%
-  \TeX82 の欧文のカーニングや合字処理も同じような仕様になっている．
+  \TeX82の欧文のカーニングや合字処理も同じような仕様になっている．
   例えば\texttt{W\.{relax}\ oWo}からはW\relax oWoという出力になり，
   Wとoの間のカーニングが\.{relax}によって挿入されなくなったことがわかる．
 }による．
@@ -1351,7 +1355,7 @@ $3$\,sp）だが，どこか気になるところである．
 \begin{thebibliography}{99}
  \bibitem{h7k} 北川 弘典，「計算数学II　作業記録」，2008．\\
   \url{https://osdn.jp/projects/eptex/document/resume/ja/1/resume.pdf}ほか，
-  本pdfと同じディレクトリにある\texttt{eptex\_resume.pdf}がそれにあたる．
+  本PDFと同じディレクトリにある\file{eptex_resume.pdf}がそれにあたる．
  \bibitem{yamamoto} 山本 和義，「数式famの制限とluatex」，
   掲示板「\TeX\ Q\ \&\ A」，2009/02/12．\\
   \url{https://oku.edu.mie-u.ac.jp/~okumura/texfaq/qa/52744.html}
@@ -1378,7 +1382,7 @@ $3$\,sp）だが，どこか気になるところである．
   |\lastnodechar| の実装」，\TeX~Forum，2014/11/19．
   \url{https://okumuralab.org/tex/mod/forum/discuss.php?d=1435#p8053}
  \bibitem{lnc} 北川 弘典，「|\lastnodechar| プリミティブについて」，2014/12/15．\\
-  \url{https://ja.osdn.net/projects/eptex/wiki/lastnodechar}
+  \url{https://github.com/h-kitagawa/eptex-wiki/blob/main/lastnodechar/README.md}
  \bibitem{xe5} Joseph Wright, ``[XeTeX] |\(pdf)mdfivesum|'',
   2015/07/01,\\
   \url{http://tug.org/pipermail/xetex/2015-July/026044.html}

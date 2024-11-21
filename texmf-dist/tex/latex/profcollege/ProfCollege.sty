@@ -2,9 +2,9 @@
 % licence    : Released under the LaTeX Project Public License v1.3c
 % or later, see http://www.latex-project.org/lppl.txtf
 \NeedsTeXFormat{LaTeX2e}%
-\def\filedate{2024/01/22}%
+\def\filedate{2024/09/04}%
 \let\PfCfiledate\filedate%
-\def\fileversion{0.99-z-z}%
+\def\fileversion{0.99-A-j}%
 \let\PfCfileversion\fileversion%
 \ProvidesPackage{ProfCollege}[\filedate\space v\fileversion\space Aide pour utiliser LaTeX au college]%
 
@@ -14,6 +14,20 @@
 
 \newif\if@shellescape \@shellescapetrue%
 \newif\if@amssymb \@amssymbtrue%
+%
+\newif\if@Euro \@Eurotrue
+\newif\if@CFA \@CFAfalse
+\newif\if@CFP \@CFPfalse
+\newif\if@CHF \@CHFfalse
+\newif\if@US \@USfalse
+\newif\if@UK \@UKfalse
+
+\DeclareOption{CFA}{\@Eurofalse\@CFAtrue}%
+\DeclareOption{CFP}{\@Eurofalse\@CFPtrue}%
+\DeclareOption{CHF}{\@Eurofalse\@CHFtrue}%
+\DeclareOption{UK}{\@Eurofalse\@UKtrue}%
+\DeclareOption{US}{\@Eurofalse\@UStrue}%
+%
 \DeclareOption{nonshellescape}{\@shellescapefalse}%
 \DeclareOption{nonamssymb}{\@amssymbfalse}%
 \ProcessOptions\relax%
@@ -25,8 +39,8 @@
 % mathématiques
 \RequirePackage{siunitx}%
 \sisetup{%
-  locale=FR,%
-  mode = match, propagate-math-font = true,%
+  locale=FR,mode = match,
+  propagate-math-font = true,%
   reset-math-version = false, reset-text-family = false,%
   reset-text-series = false, reset-text-shape = false,%
   text-family-to-math = true, text-series-to-math = true,%
@@ -48,6 +62,30 @@
 \DeclareSIUnit{\EuRo}{€}%
 \DeclareSIUnit{\Dollar}{\$}%
 \DeclareSIUnit{\LivreSterling}{£}%
+\DeclareSIUnit{\PfCCFA}{F.C.F.A.}%
+\DeclareSIUnit{\PfCCFP}{F.C.F.P.}%
+\DeclareSIUnit{\PfCCHF}{CHF}%
+
+%
+\if@CFA%
+  \DeclareSIUnit{\DeviseDefaut}{F.C.F.A.}%
+\fi%
+\if@CFP%
+  \DeclareSIUnit{\DeviseDefaut}{F.C.F.P.}%
+\fi%
+\if@CHF%
+  \DeclareSIUnit{\DeviseDefaut}{CHF}%
+\fi%
+\if@Euro%
+  \DeclareSIUnit{\DeviseDefaut}{€}%
+\fi%
+\if@US%
+  \DeclareSIUnit{\DeviseDefaut}{\Dollar}%
+\fi%
+\if@UK%
+  \DeclareSIUnit{\DeviseDefaut}{\LivreSterling}%
+\fi%
+
 
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 %\PassOptionsToPackage{table,svgnames}{xcolor}
@@ -86,9 +124,7 @@
 \RequirePackage{listofitems}%
 \RequirePackage{datatool}%
 \RequirePackage{multido}%
-
 \RequirePackage{xlop}%
-\RequirePackage{xfp}%
 
 \RequirePackage{tcolorbox}%
 \tcbuselibrary{breakable,external,fitting,hooks,magazine,poster,raster,skins,theorems,listings,listingsutf8}
@@ -98,7 +134,7 @@
 %https://tex.stackexchange.com/questions/58656/best-way-to-draw-a-chevron-diagram-using-tikz
 \usetikzlibrary{calc,shapes,arrows,tikzmark,chains,positioning,shapes.symbols,babel,fit,backgrounds}%
 
-\RequirePackage{suffix}%pour la commande étoilée
+%\RequirePackage{suffix}%pour la commande étoilée
 
 \RequirePackage{multicol}%
 
@@ -107,7 +143,7 @@
 \RequirePackage{stackengine}%
 \RequirePackage[thicklines]{cancel}%
 
-\RequirePackage{fontawesome5}%Pour l'environnement Twitter
+\RequirePackage{fontawesome5}%
 \RequirePackage{pifont}%Pour la commande \Autonomie
 \RequirePackage{nicematrix}%
 \NiceMatrixOptions{allow-duplicate-names}%
@@ -115,30 +151,18 @@
 \let\myoldmulticolumn\multicolumn%
 \AtBeginEnvironment{tabular}{\let\multicolumn\myoldmulticolumn}%
 
-\RequirePackage{multirow}%
+%\RequirePackage{multirow}%
 \RequirePackage{longtable}
 
 \RequirePackage{fmtcount}%
 \FCloadlang{french}%
 
 % https://stackoverflow.com/questions/3391103/how-to-make-the-grayed-round-box-using-tiks
-\RequirePackage{environ}%
+%\RequirePackage{environ}%
 
 %%%%% Quelques besoins particuliers
 
 \def\bla{}%JCC :) Pour les tests sur arguments vides
-
-%% Colorer en mode mathématique. \color ne gère pas les espaces propres au mode mathématique. Donc besoin de changer
-% https://tex.stackexchange.com/questions/21598/how-to-color-math-symbols
-%\makeatletter%
-%\def\mathcolor#1#{\@mathcolor{#1}}%
-%\def\@mathcolor#1#2#3{%
-%  \protect\leavevmode%
-%  \begingroup%
-%    \color#1{#2}#3%
-%  \endgroup%
-%}%
-%\makeatother%
 
 % Pb ProfCollege<->Chinois soulev\'e par Denis
 % Solution by egreg :)
@@ -254,28 +278,6 @@
 
 \newlength{\LongBoitePoint}
 
-\NewDocumentCommand\PointsSuspensionold{sm}{%
-  \setbox2=\hbox{\ldotp}%
-  \setlength{\LongBoitePoint}{\wd2}%
-  \IfBooleanTF{#1}{%
-    \Suspensionfill%
-  }{%
-    \setbox1=\hbox{#2}%
-    \StrLen{#2}[\LongueurPoints]%
-    \ifmmode%
-      \mathinner{%
-        \xintFor* ##1 in {\xintSeq{1}{\LongueurPoints}}\do{%
-          \ldotp%
-        }%
-      }%
-    \else%
-      \xintFor* ##1 in {\xintSeq{1}{\fpeval{round(\wd1/\wd2)}}}\do{%
-        \ldotp%
-      }%
-    \fi%
-  }%
-}%
-
 \NewDocumentCommand\PointsSuspension{m}{%
   \setbox2=\hbox{\ldotp}%
   \setlength{\LongBoitePoint}{\wd2}%
@@ -305,19 +307,68 @@
 \kern\z@}%
 
 \NewDocumentCommand\PfCdotover{}{\leavevmode\cleaders\hb@xt@ .22em{\hss $\cdot$\hss}\hfill\kern\z@}%
-
 \makeatother%
 
 \NewDocumentCommand\pointilles{o}{%
   \IfNoValueTF{#1}{\Dotfill}{\makebox[#1]{\Dotfill}}%
 }%
 
-\NewDocumentCommand\Lignespointilles{m}{%
-  \xintifboolexpr{\fpeval{#1}>1}{%
-    \xintFor* ##1 in {\xintSeq {1}{\fpeval{#1}}}\do{%
-      \pointilles\par%
-    }%
+\NewDocumentCommand\PfCNbLignesRestantes{}{%
+  \edef\measurepage{\dimexpr\pagegoal-\pagetotal\relax}%
+  \xintifboolexpr{\fpeval{\the\measurepage}>\fpeval{\the\textheight}}{%
+    \edef\measurepage{\dimexpr\textheight\relax}%
   }{}%
+  \xdef\PfCResteLignes{\fpeval{trunc((\the\measurepage)/(\baselineskip),0)}}%
+}%
+
+\NewDocumentCommand\PfCLignesFinales{}{%
+  \PfCNbLignesRestantes%
+  \xintFor* ##1 in {\xintSeq {1}{\PfCResteLignes}}\do{%
+    \pointilles\par%
+  }%
+}%
+
+\NewDocumentCommand\Lignespointilles{m}{%
+  \ifx\bla#1\bla%
+    \par\PfCLignesFinales%
+  \else%
+    \xintifboolexpr{\fpeval{#1}>1}{%
+      \xintFor* ##1 in {\xintSeq {1}{#1}}\do{%
+        \pointilles\par%
+      }%
+    }{}%
+  \fi
+}%
+
+\newlength{\PfCLongueurBarreHor}
+\setKVdefault[PfCLigneCompleter]{Ecart=20pt,Couleurs=false}%
+\defKV[PfCLigneCompleter]{Couleur=\setKV[PfCLigneCompleter]{Couleurs}}%
+
+\NewDocumentCommand\ListeACompleter{som}{%
+  \useKVdefault[PfCLigneCompleter]%
+  \setKV[PfCLigneCompleter]{#2}%
+  \ifboolKV[PfCLigneCompleter]{Couleurs}{\colorlet{PfCLC}{\useKV[PfCLigneCompleter]{Couleur}}}{}%
+  \setlength{\PfCLongueurBarreHor}{\useKV[PfCLigneCompleter]{Ecart}}%
+  \setsepchar{,}\reademptyitems%
+  \readlist*\ListeTiti{#3}%
+  \foreachitem\compteur\in\ListeTiti{%
+    \itemtomacro\ListeTiti[\compteurcnt]\PfCCaractere%
+    \StrChar{\PfCCaractere}{1}[\RetiensElmt]%
+    \IfStrEq{\RetiensElmt}{!}{%
+      \IfBooleanTF{#1}{%
+        \ifboolKV[PfCLigneCompleter]{Couleurs}{\colorlet{saved}{.}\color{PfCLC}}{}\StrGobbleLeft{\PfCCaractere}{1}\ifboolKV[PfCLigneCompleter]{Couleurs}{\color{saved}}{}%
+      }{%
+        \hbox to \PfCLongueurBarreHor{\hrulefill}%
+      }
+    }{%
+      \ListeTiti[\compteurcnt]%
+    }%
+    \ifnum\compteurcnt=\ListeTitilen\relax%
+      .%
+    \else%
+      ,
+    \fi%
+  }%
 }%
 
 %https://tex.stackexchange.com/questions/128991/frac-or-inference-rule-with-dotted-line
@@ -467,16 +518,76 @@
   \day=\the\PfCrappeljour\relax%
 }
 
-\newcommand\MelangeLettres[2]{%
+\NewDocumentCommand\MelangeLettres{smm}{%
   % #2 Nombre d'éléments à conserver
+  % #3 Nom de la commande qui reçoit la liste.
   \setsepchar{,}\ignoreemptyitems%
   \readlist*\ListeInter{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}%
   \xdef\faa{}% Liste construite
   \xdef\fii{}% Liste détruite
-  \xintFor* ##1 in {\xintSeq{1}{#1}}\do{%
+  \IfBooleanTF{#1}{%
+    \xintFor* ##1 in {\xintSeq{1}{#2}}\do{%
+      \xintifboolexpr{\ListeInterlen>1}{%
+        \xdef\Alea{\fpeval{randint(\ListeInterlen)}}%
+        \xdef\faa{\faa\ListeInter[\Alea],}%
+        \xdef\fii{}%
+        \xintFor* ##2 in {\xintSeq{1}{\ListeInterlen}}\do{%
+          \xintifboolexpr{##2 == \Alea}{%
+          }{%
+            \xdef\fii{\fii \ListeInter[##2],}%
+          }%
+        }%
+      }{%
+        \xdef\faa{\faa\ListeInter[1]}%
+      }%
+      \readlist*\ListeInter{\fii}%
+    }%
+  }{%
+    \xintFor* ##1 in {\xintSeq{1}{#2}}\do{%
+      \xintifboolexpr{\ListeInterlen>1}{%
+        \xdef\Alea{\fpeval{randint(\ListeInterlen)}}%
+        \xdef\faa{\faa\ListeInter[\Alea]}%
+        \xdef\fii{}%
+        \xintFor* ##2 in {\xintSeq{1}{\ListeInterlen}}\do{%
+          \xintifboolexpr{##2 == \Alea}{%
+          }{%
+            \xdef\fii{\fii \ListeInter[##2],}%
+          }%
+        }%
+      }{%
+        \xdef\faa{\faa\ListeInter[1]}%
+      }%
+      \readlist*\ListeInter{\fii}%
+    }%
+  }%
+  \xdef#3{\faa}%
+}%
+
+\NewDocumentCommand\MelangeListe{smm}{%
+  \IfBooleanTF{#1}{%
+    %Si on cherche un seul élément, on peut l'utiliser directement 
+    \MelangeListeOne{#2}{#3}%
+  }{%
+    \MelangeListeNoOne{#2}{#3}%
+  }%
+}
+
+\NewDocumentCommand\MelangeListeOne{mm}{%
+  % #1 Liste à mélanger
+  % #2 Nombre d'éléments à conserver
+  \setsepchar{,}\ignoreemptyitems%
+  \readlist*\ListeInter{#1}%
+  \xdef\faa{}% Liste construite
+  \xdef\fii{}% Liste détruite
+  % on crée les #2 premieres solutions.
+  \xintFor* ##1 in {\xintSeq{1}{#2}}\do{%
     \xintifboolexpr{\ListeInterlen>1}{%
       \xdef\Alea{\fpeval{randint(\ListeInterlen)}}%
-      \xdef\faa{\faa\ListeInter[\Alea]}%
+      \ifnum\fpeval{##1}=1\relax
+        \xdef\faa{\ListeInter[\Alea]}%
+      \else
+        \xdef\faa{\faa,\ListeInter[\Alea]}%
+      \fi
       \xdef\fii{}%
       \xintFor* ##2 in {\xintSeq{1}{\ListeInterlen}}\do{%
         \xintifboolexpr{##2 == \Alea}{%
@@ -485,14 +596,14 @@
         }%
       }%
     }{%
-      \xdef\faa{\faa\ListeInter[1]}%
+      \xdef\faa{\faa,\ListeInter[1]}%
     }%
     \readlist*\ListeInter{\fii}%
   }%
-  \xdef#2{\faa}%
+  \reademptyitems%
 }%
 
-\newcommand\MelangeListe[2]{%
+\NewDocumentCommand\MelangeListeNoOne{mm}{%
   % #1 Liste à mélanger
   % #2 Nombre d'éléments à conserver
   \setsepchar{,}\ignoreemptyitems%
@@ -519,24 +630,55 @@
   \reademptyitems%
 }%
 
+\newcommand\MelangeListeNewTwo[2]{%
+  % #1 Liste à mélanger
+  % #2 Nombre d'éléments à conserver
+  \setsepchar{,}\ignoreemptyitems%
+  \readlist*\ListeInter{#1}%
+%  \xdef\faa{}% Liste construite
+  \xdef\fii{}% Liste détruite
+  % on crée les #2 premieres solutions.
+  \xintFor* ##1 in {\xintSeq{1}{#2}}\do{%
+    \xintifboolexpr{\ListeInterlen>1}{%
+      \xdef\Alea{\fpeval{randint(\ListeInterlen)}}%
+      \ifnum\fpeval{##1}=1\relax
+        \xdef\faa{\ListeInter[\Alea]}%
+      \else
+        \xdef\faa{\faa,\ListeInter[\Alea]}%
+      \fi
+      \xdef\fii{}%
+      \xintFor* ##2 in {\xintSeq{1}{\ListeInterlen}}\do{%
+        \xintifboolexpr{##2 == \Alea}{%
+        }{%
+          \xdef\fii{\fii \ListeInter[##2],}%
+        }%
+      }%
+    }{%
+      \xdef\faa{\faa \ListeInter[1]}%
+    }%
+    \readlist*\ListeInter{\fii}%
+  }%
+  \reademptyitems%
+}%
+
 %%%
 % Smiley
 %%% https://tex.stackexchange.com/questions/3695/smileys-in-latex/227226
 \tikzset{face/.style={shape=circle,minimum size=4ex,shading=radial,outer sep=0pt, inner color=white!50!yellow,outer color= yellow!70!orange}}
 
 \newcommand\emoticon[2][]{%
-\scalebox{.5}{\begin{tikzpicture}
-\node[face,#1,draw,thick] (emoticon) {};
+\scalebox{.5}{\begin{tikzpicture}%
+\node[face,#1,draw,thick] (emoticon) {};%
 %% The eyes are fixed.
 \draw[fill=white] (-1ex,0ex) ..controls (-0.5ex,0.2ex)and(0.5ex,0.2ex)..(1ex,0.0ex) ..controls ( 1.5ex,1.5ex)and( 0.2ex,1.7ex)..(0ex,0.4ex) ..controls (-0.2ex,1.7ex)and(-1.5ex,1.5ex)..(-1ex,0ex)--cycle;
 #2%
 \end{tikzpicture}}%
-}
+}%
 
-\newcommand\pupils{
+\newcommand\pupils{%
 %% standard pupils
-\fill[shift={(0.5ex,0.5ex)},rotate=80] (0,0) ellipse (0.3ex and 0.15ex);
-\fill[shift={(-0.5ex,0.5ex)},rotate=100] (0,0) ellipse (0.3ex and 0.15ex);}
+\fill[shift={(0.5ex,0.5ex)},rotate=80] (0,0) ellipse (0.3ex and 0.15ex);%
+\fill[shift={(-0.5ex,0.5ex)},rotate=100] (0,0) ellipse (0.3ex and 0.15ex);}%
 
 \def\RKsmallsmile{%
 \emoticon{%
@@ -544,14 +686,14 @@
 %% mouth
 \draw[thick] (-0.5ex,-1ex)..controls (-0.25ex,-1.25ex)and(0.25ex,-1.25ex)..(0.5ex,-1ex);
 }%\emoticon
-}
+}%
 
 \def\RKsmile{%
 \emoticon{%
 \pupils
 \draw[thick] (-1ex,-1ex)..controls (-0.5ex,-1.5ex)and(0.5ex,-1.5ex)..(1ex,-1ex);
 }%\emoticon
-}
+}%
 
 \def\RKbigsmile{%
 \emoticon{%
@@ -559,7 +701,7 @@
 %% mouth
 \draw[thick] (-1.5ex,-0.5ex)..controls (-0.7ex,-1.7ex)and(0.7ex,-1.7ex)..(1.5ex,-0.5ex);
 }%\emoticon
-}
+}%
 
 \def\RKsad{%
 \emoticon{%
@@ -569,7 +711,7 @@
 %% mouth
 \draw[thick] (-1ex,-1ex)..controls(-0.5ex,-0.5ex)and(0.5ex,-0.5ex)..(1ex,-1ex);
 }%\emoticon
-}
+}%
 
 \def\RKneutral{%
 \emoticon{%
@@ -579,7 +721,7 @@
 %% mouth
 \draw[thick] (-0.5ex,-1ex)--(0.5ex,-1ex);
 }%\emoticon
-}
+}%
 
 \def\RKconfused{%
 \emoticon{%
@@ -604,19 +746,19 @@
   (-1.00ex,1.00ex)--(-1.20ex,1.10ex)
   (-0.35ex,1.15ex)--(-0.25ex,1.35ex);
 }%\emoticon
-}
+}%
 
 \def\RKangry{%
 \emoticon{%
 %% pupils
-\fill[shift={( 0.5ex,0.5ex)},rotate=90] (0,0) ellipse (0.3ex and 0.15ex);
-\fill[shift={(-0.5ex,0.5ex)},rotate=90] (0,0) ellipse (0.3ex and 0.15ex);
+\fill[shift={( 0.5ex,0.5ex)},rotate=90] (0,0) ellipse (0.3ex and 0.15ex);%
+\fill[shift={(-0.5ex,0.5ex)},rotate=90] (0,0) ellipse (0.3ex and 0.15ex);%
 %% mouth
-\draw[thick] (-1ex,-1ex)..controls(-0.5ex,-0.5ex)and(0.5ex,-0.5ex)..(1ex,-1ex);
+\draw[thick] (-1ex,-1ex)..controls(-0.5ex,-0.5ex)and(0.5ex,-0.5ex)..(1ex,-1ex);%
 %% eyebrows
-\draw[thick] (0.2ex,1.15ex)--(0.5ex,1.6ex)(-0.2ex,1.15ex)--(-0.5ex,1.6ex);
+\draw[thick] (0.2ex,1.15ex)--(0.5ex,1.6ex)(-0.2ex,1.15ex)--(-0.5ex,1.6ex);%
 }%\emoticon
-}
+}%
 
 \def\RKlookup{%
 \emoticon{%
@@ -708,12 +850,23 @@
 
 \setsepchar[*]{,*/}\ignoreemptyitems
 \readlist*\ListeMateriaux{aluminium/'/2.7,chêne/e~/0.69,bouleau/e~/0.65,sapin/e~/0.45,polystyrène/e~/1.04,porcelaine/la/2.5,acier/'/7.85,cuivre/e~/8.92,fer/e~/7.86,or/'/19.3,argent/'/10.5,bronze/e~/8.4,plomb/e~/11.35,marbre/e~/2.75,laiton/e~/7.3,titane/e~/4.5,PVC/e~/1.38}
-\setsepchar{,}
+\setsepchar{,}\reademptyitems
 
 %Internationalisation
 \def\PfCSymbolTimes{\times}%
 \def\PfCSymbolDiv{\div}%
 
+\input{PfCCheque}
+\input{PfCCalculsDetailles}
+\input{PfCTableauDoubleEntree}
+\input{PfCUrneProba}
+\input{PfCProbaFrequence}
+\input{PfCVisualisationMulDeci}
+\input{PfCArbreChiffre}
+\input{PfCAssemblagesSolides}
+\input{PfCTicketCaisse}
+\input{PfCRecyclage}
+\input{PfCDontCountDots}
 \input{PfCConversion}
 \input{PfCCritere}
 \input{PfCLego}
@@ -842,7 +995,7 @@
 %%%
 \newcommand\Puissances[2]{%
   \ensuremath{%
-    \xintifboolexpr{#2==0}{1}{\xintifboolexpr{#2>0}{\xdef\TotalP{\fpeval{#2-1}}#1\multido{\i=1+1}{\TotalP}{\times#1}}{\xdef\TotalP{\fpeval{-#2-1}}\frac{1}{#1\multido{\i=1+1}{\TotalP}{\times#1}}}}%
+    \xintifboolexpr{#2==0}{1}{\xintifboolexpr{#2>0}{\xdef\TotalP{\fpeval{#2-1}}#1\xintFor* ##1 in{\xintSeq{1}{\TotalP}}\do{\times#1}}{\xdef\TotalP{\fpeval{-#2-1}}\frac{1}{#1\xintFor* ##1 in{\xintSeq{1}{\TotalP}}\do{\times#1}}}}%
   }%
 }%
 
@@ -854,3 +1007,7 @@
 \input{PfCProgrammeCalcul}
 \input{PfCPapiers}
 \input{PfCScratch}
+
+\RequirePackage{PfCInfixRPN}
+
+\input{PfCArbreCalcul}

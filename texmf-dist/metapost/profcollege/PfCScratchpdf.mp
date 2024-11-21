@@ -2595,12 +2595,11 @@ vardef Demander(expr nbpas)=
   picture Dem,texto;
   if string nbpas:
     texto=ColleBoxNew("demander",OvalNb(nbpas),"et attendre");
-    ColBloc:=CapteurTrois;
-    Dem=Affichage(texto);
   else:
-    message("La commande -- Demander -- admet un argument de type string.");
-    Dem=nullpicture;
+    texto=ColleBoxNew("demander",nbpas,"et attendre");
   fi;
+  ColBloc:=CapteurTrois;
+  Dem=Affichage(texto);
   Dem
 enddef;
 

@@ -1,7 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{jlreq-complements}[2022/11/28 jlreq-complements]
-\RequirePackage{jlreq-helpers}[2022/11/28]
-\RequirePackage{l3keys2e}
+\ProvidesPackage{jlreq-complements}[2024/08/23 jlreq-complements]
+\RequirePackage{jlreq-helpers}[2024/02/13]
 
 \ExplSyntaxOn
 
@@ -9,7 +8,7 @@
 \str_new:N \g__jlreq_complements_engine_str
 \tl_new:N \g__jlreq_complements_finally
 
-\keys_define:nn { jlreq-complements } {
+\DeclareKeys [jlreq-complements] {
   setupname .code:n = {
     \str_set:Nn \g__jlreq_complements_setupname_str {#1}
   },
@@ -20,8 +19,8 @@
   lualatex .code:n = { \str_set:Nn \g__jlreq_complements_engine_str { lualatex } },
   lualatex .value_forbidden:n = true,
 }
-\keys_set:nn { jlreq-complements } { setupname = jlreqcomplementssetup }
-\ProcessKeysOptions { jlreq-complements }
+\SetKeys [jlreq-complements] { setupname = jlreqcomplementssetup }
+\ProcessKeyOptions [jlreq-complements]
 
 \str_if_empty:NT \g__jlreq_complements_engine_str {
   \jlreq@helper@guessengine
@@ -37,7 +36,8 @@
 
 \str_if_eq:VnTF \g__jlreq_complements_engine_str { lualatex } {
   \prg_new_conditional:Nnn \__jlreq_complements_iftdir: { T, F, TF} {
-    \int_compare_p:n { (\ltjgetparameter{direction}-(\ltjgetparameter{direction}/8)*8) == 3 } 
+    \int_compare:nTF { (\ltjgetparameter{direction}-(\ltjgetparameter{direction}/8)*8) == 3 } 
+      { \prg_return_true: } { \prg_return_false: }
   }
 }{
   \prg_new_conditional:Nnn \__jlreq_complements_iftdir: { T, F, TF} { \iftdir \prg_return_true: \else \prg_return_false: \fi }

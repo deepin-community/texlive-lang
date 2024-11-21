@@ -1,6 +1,6 @@
 %% File `memhangul-common.sty`
 %%
-%% (C) Copyright 2013-2021 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2013-2024 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -17,7 +17,7 @@
 %%% 편, 장 섹션 타이틀 재설정
 %%% 절의 섹션 타이틀은 수정하지 않음.
 %%
-\ProvidesPackage{memhangul-common}[2022/11/04]
+\ProvidesPackage{memhangul-common}[2024/03/06]
 
 \let\@CHAPAPP\@chapapp
 \def\refreshprepostchapters{%
@@ -1023,7 +1023,8 @@
 \makeoddhead{hangul}{}{}{\normalfont\small\rightmark~\makebox[2em][r]{\normalfont\normalsize\sffamily\thepage}}
 \makeevenhead{hangul}{\makebox[2em][l]{\normalfont\normalsize\sffamily\thepage}~\normalfont\small\leftmark}{}{}
 
-%%%%%%%%%%%%%%%% chapterstyles %%%%%%%%%%%%%%%
+%%%%% chapter styles %%%%
+
 \makechapterstyle{default}{%
   \renewcommand{\post@chapter}{\chaptername}%
   \renewcommand{\chapnamefont}{\normalfont\huge\bfseries}
@@ -1051,117 +1052,7 @@
   \renewcommand*{\hchaptertitlehead}{\chaptername~\thechapter}
 }
 
-\makechapterstyle{section}{%
-%  \renewcommand{\printchaptername}{}
-  \renewcommand{\chapternamenum}{\enskip}
-  \renewcommand{\prechapternum}{}
-  \renewcommand{\postchapternum}{}
-  \renewcommand{\chapnumfont}{\normalfont\Huge\bfseries}
-  \renewcommand{\printchapternum}{\chapnumfont \thechapter\space}
-  \renewcommand{\afterchapternum}{}
-}
-
-%% for appendix
-\makechapterstyle{appendixsection}{%
-%  \renewcommand{\printchaptername}{\chapnumfont\@chapapp}
-  \renewcommand{\chapternamenum}{\enskip}
-  \renewcommand{\prechapternum}{\chapnumfont\@chapapp}
-  \renewcommand{\postchapternum}{}
-  \renewcommand{\chapnumfont}{\normalfont\Huge\bfseries}
-  \renewcommand{\printchapternum}{\chapnumfont \thechapter\space}
-  \renewcommand{\afterchapternum}{}
-}
-
-\makechapterstyle{article}{%
-  \renewcommand{\chapterheadstart}{\vspace{\beforechapskip}}
-  \setlength{\beforechapskip}{3.5ex \@plus 1ex \@minus .2ex}
-  \setlength{\afterchapskip}{2.3ex \@plus .2ex}
-%  \renewcommand{\printchaptername}{}
-  \renewcommand{\prechapternum}{}
-  \renewcommand{\chapternamenum}{}
-  \renewcommand{\postchapternum}{}
-  \renewcommand{\chaptitlefont}{\normalfont\Large\bfseries}
-  \renewcommand{\chapnumfont}{\normalfont\Large\bfseries}
-  \renewcommand{\printchapternum}{\chapnumfont \thechapter\quad}
-  \renewcommand{\afterchapternum}{}
-}
-
-\makechapterstyle{hangnum}{%
-  \renewcommand{\chapnumfont}{\chaptitlefont}
-  \settowidth{\chapindent}{\chapnumfont 999}
-%  \renewcommand{\printchaptername}{}
-  \renewcommand{\chapternamenum}{}
-  \renewcommand{\prechapternum}{}
-  \renewcommand{\postchapternum}{}
-  \renewcommand{\printchapternum}{%
-    \noindent\llap{\makebox[\chapindent][l]{\chapnumfont \thechapter}}}
-  \renewcommand{\afterchapternum}{}
-}
-
-%\newlength{\chapindent}
-
-\makechapterstyle{companion}{%
-  \chapterstyle{default}
-  \renewcommand*{\chapnamefont}{\normalfont\LARGE\scshape}
-  \renewcommand*{\printchaptername}{\raggedleft\chapnamefont \@chapapp}
-  \renewcommand*{\prechapternum}{\raggedleft\chapnamefont \pre@chapter}
-  \renewcommand*{\chapnumfont}{\normalfont\Huge}
-  \setlength{\chapindent}{\marginparsep}
-  \addtolength{\chapindent}{\marginparwidth}
-  \renewcommand*{\printchaptertitle}[1]{%
-    \begin{adjustwidth}{}{-\chapindent}
-      \raggedleft \chaptitlefont ##1\par\nobreak
-    \end{adjustwidth}}} 
-
-%% for appendix.
-\makechapterstyle{appendixcompanion}{%
-  \renewcommand{\chapnamefont}{\normalfont\LARGE\scshape}
-  \renewcommand{\prechapternum}{\raggedleft\chapnamefont \@chapapp}
-%  \renewcommand{\printchaptername}{\raggedleft\chapnamefont \pre@chapter}
-  \renewcommand{\chapnumfont}{\normalfont\Huge}
-  \renewcommand{\postchapternum}{}
-  \setlength{\chapindent}{\marginparsep}
-  \addtolength{\chapindent}{\marginparwidth}
-  \renewcommand{\printchaptertitle}[1]{%
-    \begin{adjustwidth}{}{-\chapindent}
-      \raggedleft \chaptitlefont ##1\par\nobreak
-    \end{adjustwidth}}
-}
-
-\makechapterstyle{demo}{
-%  \renewcommand{\printchaptername}{\centering}
-  \renewcommand{\prechapternum}{\centering}
-  \renewcommand{\printchapternum}{\chapnumfont \numtoName{\c@chapter}}
-  \renewcommand{\postchapternum}{}
-  \renewcommand{\chaptitlefont}{\normalfont\Huge\sffamily}
-  \renewcommand{\printchaptertitle}[1]{%
-    \hrule\vskip\onelineskip \raggedleft \chaptitlefont ##1}
-  \renewcommand{\afterchaptertitle}{\vskip\onelineskip \hrule\vskip \afterchapskip}
-}
-
-\makechapterstyle{demovar}{
-%  \renewcommand{\printchaptername}{\centering}
-  \renewcommand{\prechapternum}{\centering}
-  \renewcommand{\printchapternum}{\chapnumfont \hNum{chapter}}
-  \renewcommand{\postchapternum}{\post@chapter}
-  \renewcommand{\chaptitlefont}{\normalfont\Huge\sffamily}
-  \renewcommand{\printchaptertitle}[1]{%
-    \hrule\vskip\onelineskip \raggedleft \chaptitlefont ##1}
-  \renewcommand{\afterchaptertitle}{\vskip\onelineskip \hrule\vskip \afterchapskip}
-}
-
-%% for appendix
-\makechapterstyle{appendixdemo}{
-%  \renewcommand{\printchaptername}{\centering\chapnumfont\@chapapp}
-  \renewcommand{\prechapternum}{\centering\chapnumfont\@chapapp}
-  \renewcommand{\printchapternum}{\chapnumfont \@Alph\c@chapter}
-  \renewcommand{\postchapternum}{\ }
-  \renewcommand{\chaptitlefont}{\normalfont\Huge\sffamily}
-  \renewcommand{\printchaptertitle}[1]{%
-    \hrule\vskip\onelineskip \raggedleft \chaptitlefont ##1}
-  \renewcommand{\afterchaptertitle}{\vskip\onelineskip \hrule\vskip \afterchapskip}
-}
-
+\RequirePackage{obchapterstyles}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% appendix %%%%%%%%%%%%%%%%%%%%%%%%%

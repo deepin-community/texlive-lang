@@ -1,26 +1,30 @@
 %%%
 % Ecriture des nombres en lettres
 %%%
-\setKVdefault[ClesEcriture]{Math=false,Majuscule=false,E=false,Tradition=false,Zero=false}
+\def\filedateEcrireLettres{2024/08/04}%
+\def\fileversionEcrireLettres{0.1}%
+\message{-- \filedateEcrireLettres\space v\fileversionEcrireLettres}%
+%
+\setKVdefault[ClesEcriture]{Math=false,Majuscule=false,E=false,Tradition=false,Zero=false}%
 
 \newcommand\EcriturePluriel[1]{%
   \xintifboolexpr{#1 > 1}{s}{}%
-}
+}%
 
 \newcommand\EcritureDecimale{%
   \StrLen{\ListeEcriture[2]}[\LongueurDecimale]%
   \xintifboolexpr{\LongueurDecimale == 6}{%
     ~millionième\EcriturePluriel{\ListeEcriture[2]}%
   }{\xintifboolexpr{\LongueurDecimale == 5}{%
-     ~cent-millième\EcriturePluriel{\ListeEcriture[2]}
+     ~cent-millième\EcriturePluriel{\ListeEcriture[2]}%
     }{\xintifboolexpr{\LongueurDecimale == 4}{%
-        ~dix-millième\EcriturePluriel{\ListeEcriture[2]}
+        ~dix-millième\EcriturePluriel{\ListeEcriture[2]}%
       }{\xintifboolexpr{\LongueurDecimale == 3}{%
-          ~millième\EcriturePluriel{\ListeEcriture[2]}
+          ~millième\EcriturePluriel{\ListeEcriture[2]}%
         }{\xintifboolexpr{\LongueurDecimale == 2}{%
-            ~centième\EcriturePluriel{\ListeEcriture[2]}
+            ~centième\EcriturePluriel{\ListeEcriture[2]}%
           }{\xintifboolexpr{\LongueurDecimale == 1}{%
-              ~dixième\EcriturePluriel{\ListeEcriture[2]}
+              ~dixième\EcriturePluriel{\ListeEcriture[2]}%
             }{}%
           }%
         }%

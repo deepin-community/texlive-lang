@@ -1,7 +1,7 @@
 # LaTeX for Undergraduates
 ## Author: Andrew Lounsbury, alounsbury8@gmail.com
-## Version 1.0.2
-## 2022/10/06
+## Version 1.0.3
+## 2024/2/27
 ## License: Public Domain
 ## Author's Note
 

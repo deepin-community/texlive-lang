@@ -37,7 +37,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 \ProvidesLanguage{latvian}
-        [2018/02/19 v2.0b Latvian support from the babel system]
+        [2024/04/27 v2.0c Latvian support from the babel system]
 \LdfInit{latvian}\captionslatvian
 \ifx\l@latvian\@undefined
   \@nopatterns{Latvian}
@@ -109,11 +109,13 @@
 
 \EndBabelCommands
 \gdef\the@chapter{%
-  \ifx\chapter\undefined\relax\else
-  \ifnum\c@chapter>\z@\thechapter\fi\fi}
+  \ifx\c@chapter\@undefined\else
+    \ifnum\c@chapter>\z@\thechapter\fi
+  \fi}
 \def\thechapter{%
-  \ifx\chapter\undefined\relax\else
-  \arabic{chapter}.\fi}
+  \ifx\c@chapter\@undefined\else
+    \arabic{chapter}.%
+  \fi}
 \def\thesection{\the@chapter\arabic{section}.}
 \def\thesubsection{\thesection\arabic{subsection}.}
 \def\thesubsubsection{\thesubsection\arabic{subsubsection}.}

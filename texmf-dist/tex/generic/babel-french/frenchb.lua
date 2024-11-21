@@ -1,7 +1,7 @@
 --[[
    File `frenchb.lua’ generated from frenchb.dtx
-         [2023-12-19 v3.5r French support from the babel system]
-   Copyright © 2014-2023 Daniel Flipo
+         [2024-07-25 v3.6c French support from the babel system]
+   Copyright © 2014-2024 Daniel Flipo
    <daniel (dot) flipo (at) free (dot) fr>
    License LPPL: see french.ldf.
 --]]
@@ -36,6 +36,7 @@ local copy_node    = node.copy
 local node_id      = node.id
 local HLIST        = node_id("hlist")
 local TEMP         = node_id("temp")
+local DISC         = node_id("disc")
 local KERN         = node_id("kern")
 local GLUE         = node_id("glue")
 local GLYPH        = node_id("glyph")
@@ -160,7 +161,8 @@ local function french_punctuation (head)
                    if next then
                       next_id = next.id
                    end
-                   if next_id and next_id == GLYPH then
+                   if next_id and
+                      (next_id == GLYPH or next_id == DISC) then
                       auto = false
                    end
                 end

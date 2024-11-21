@@ -1,6 +1,9 @@
 %%%
 % Distributivit\'e
 %%%
+\def\filedateDistributivite{2024/08/04}%
+\def\fileversionDistributivite{0.1}%
+\message{-- \filedateDistributivite\space v\fileversionDistributivite}%
 % https://tex.stackexchange.com/questions/168972/draw-arrows-to-show-multiplication-pattern-distributive-property/169278?noredirect=1 
 \newcommand\Tikzmark[1]{%
   \tikz[remember picture,baseline,inner sep=0pt]{%
@@ -430,7 +433,9 @@
   \fi
 }
 
-\newcommand\Affichage[4][]{%
+% \newcommand\Affichage[4][]{%
+
+\NewDocumentCommand\Affichage{ommm}{%
   \setKV[ClesDistributivite]{#1}%On lit les arguments optionnels
   \def\LETTRE{\useKV[ClesDistributivite]{Lettre}}%
   \ensuremath{%
@@ -594,10 +599,12 @@
             }{%
               \ifboolKV[ClesDistributivite]{Numerique}{%
                 \xintifboolexpr{\useKV[ClesDistributivite]{Etape}==0}{%
-                  \num{\fpeval{#2+#3}}\times\num{\fpeval{#4+#5}}\multido{\i=2+1}{4}{=\Distri[Numerique,Etape=\i]{#2}{#3}{#4}{#5}}%
+                  % \num{\fpeval{#2+#3}}\times\num{\fpeval{#4+#5}}\multido{\i=2+1}{4}{=\Distri[Numerique,Etape=\i]{#2}{#3}{#4}{#5}}%
+                  \num{\fpeval{#2+#3}}\times\num{\fpeval{#4+#5}}\xintFor* ##1 in{\xintSeq{2}{4}}\do{=\Distri[Numerique,Etape=##1]{#2}{#3}{#4}{#5}}%
                 }{%
                   \xintifboolexpr{\useKV[ClesDistributivite]{Etape}==-1}{%
-                    \Distri[Numerique,Etape=3]{#2}{#3}{#4}{#5}\multido{\i=2+-1}{2}{=\Distri[Numerique,Etape=\i]{#2}{#3}{#4}{#5}}=\num{\fpeval{(#2+#3)*(#4+#5)}}%
+                    % \Distri[Numerique,Etape=3]{#2}{#3}{#4}{#5}\multido{\i=2+-1}{2}{=\Distri[Numerique,Etape=\i]{#2}{#3}{#4}{#5}}=\num{\fpeval{(#2+#3)*(#4+#5)}}%
+                    \Distri[Numerique,Etape=3]{#2}{#3}{#4}{#5}\xintFor* ##1 in{\xintSeq{2}{0}}\do{=\Distri[Numerique,Etape=##1]{#2}{#3}{#4}{#5}}=\num{\fpeval{(#2+#3)*(#4+#5)}}%
                   }{%
                     \xintifboolexpr{\useKV[ClesDistributivite]{Etape}==1}{\num{\fpeval{#2+#3}}\times\num{\fpeval{#4+#5}}}{}%
                     \xintifboolexpr{\useKV[ClesDistributivite]{Etape}==2}{\num{\fpeval{#2+#3}}\times(\num{#4}\xintifboolexpr{#5>0}{+}{-}\num{\fpeval{abs(#5)}})}{}%

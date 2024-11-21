@@ -1,7 +1,11 @@
 %%%
 % Horloges
 %%%
-\setKVdefault[ClesHorloge]{Aiguilles,Numerique=false,Secondes,Cadre,Rayon=1,Impression=false}
+\def\filedateHorloge{2024/08/12}%
+\def\fileversionHorloge{0.1a}%
+\message{-- \filedateHorloge\space v\fileversionHorloge}%
+%
+\setKVdefault[ClesHorloge]{Aiguilles,Numerique=false,Secondes,Cadre,Rayon=1,Impression=false,Sombre=false}
 
 \NewDocumentCommand\Horloge{ }{%On désactive les :
   \begingroup
@@ -62,13 +66,19 @@
   \ifluatex
   \mplibforcehmode
   \begin{mplibcode}
-    boolean Secondes,Impression;
+    boolean Secondes,Impression,Sombre;
     Secondes=\useKV[ClesHorloge]{Secondes};
     Impression=\useKV[ClesHorloge]{Impression};
+    Sombre=\useKV[ClesHorloge]{Sombre};
     if Impression:
+    if Sombre:
+    LightSteelBlue:=0.8*white;
+    Crimson:=black;
+    else:
     LightSteelBlue:=0.9*white;
     Crimson:=0.5*white;
     fi;
+    fi;
     u:=0.5u;
     draw Afficheur(#1 div10,0);
     draw Afficheur(#1 mod10,0) shifted(u*(1,0));
@@ -80,9 +90,21 @@
     draw Afficheur(#3 div10,0) shifted(u*(6,0));
     draw Afficheur(#3 mod10,0) shifted(u*(7,0));
     fi;
+    if Sombre:
+    draw bbox currentpicture;
+    fi;
   \end{mplibcode}
   \else
-  \begin{mpost}[mpsettings={boolean Secondes;Secondes=\useKV[ClesHorloge]{Secondes};}]
+  \begin{mpost}[mpsettings={boolean Secondes,Impression,Sombre;Secondes=\useKV[ClesHorloge]{Secondes};Impression=\useKV[ClesHorloge]{Impression};Sombre=\useKV[ClesHorloge]{Sombre};}]
+    if Impression:
+    if Sombre:
+    LightSteelBlue:=0.8*white;
+    Crimson:=black;
+    else:
+    LightSteelBlue:=0.9*white;
+    Crimson:=0.5*white;
+    fi;
+    fi;
     u:=0.5u;
     draw Afficheur(#1 div10,0);
     draw Afficheur(#1 mod10,0) shifted(u*(1,0));
@@ -93,6 +115,9 @@
     draw Afficheur(10,0) shifted(u*(5,0));
     draw Afficheur(#3 div10,0) shifted(u*(6,0));
     draw Afficheur(#3 mod10,0) shifted(u*(7,0));
+    fi;
+    if Sombre:
+    draw bbox currentpicture;
     fi;
   \end{mpost}
   \fi

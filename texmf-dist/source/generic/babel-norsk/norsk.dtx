@@ -33,7 +33,7 @@
 %<norsk>\ProvidesLanguage{norsk}
 %\fi
 %\ProvidesFile{norsk.dtx}
-        [2024/01/26 v2.0j Norwegian support from the babel system]
+        [2024/03/18 v2.0k Norwegian support from the babel system]
 %\iffalse
 %%File `norsk.dtx'
 %% Babel package for LaTeX version 2e
@@ -79,6 +79,8 @@
 % \changes{norsk-1.2h}{1996/10/10}{Moved the definition of
 %    \cs{atcatcode} right to the beginning.}
 % \changes{norsk-2.0j}{2024/01/23}{Dual load norwegian/norsk}
+% \changes{norsk-2.0k}{2024/03/18}{Fix bug with missing language in
+%    language.dat}
 %
 %
 %  \section{The Norwegian language}
@@ -158,15 +160,15 @@
 % \changes{norsk-1.2d}{1994/06/26}{Now use \cs{@nopatterns} to produce
 %    the warning}
 %    \begin{macrocode}
-\expandafter\ifx\csname l@\CurrentOption\endcsname\relax
-  \def\bbl@tempa#1{% 
-    \ifx#1\@undefined\else
+\def\bbl@tempa#1{%
+  \ifx#1\@undefined\else
+    \expandafter\ifx\csname l@\CurrentOption\endcsname\relax
       \expandafter\adddialect\csname l@\CurrentOption\endcsname#1%
-    \fi}% Last wins:
-  \bbl@tempa\l@nynorsk
-  \bbl@tempa\l@norsk
-  \bbl@tempa\l@norwegian
-\fi
+    \fi
+  \fi}% First wins:
+\bbl@tempa\l@norwegian
+\bbl@tempa\l@norsk
+\bbl@tempa\l@nynorsk
 \expandafter\ifx\csname l@\CurrentOption\endcsname\relax
   \@nopatterns{\CurrentOption}
   \expandafter\adddialect\csname l@\CurrentOption\endcsname\z@

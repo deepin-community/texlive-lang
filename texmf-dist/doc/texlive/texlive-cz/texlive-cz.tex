@@ -1,9 +1,9 @@
 %
-% texlive-cz/texlive-cz.tex - TeXlive 2022 documentation 
+% texlive-cz/texlive-cz.tex - TeXlive 2024 documentation 
 % CzechoSlovak translation (some parts are in Czech and some
 % are in Slovak :-)
 %
-% file is in the UTF8 encoding  $Id: texlive-cz.tex 62854 2022-03-21 14:37:53Z sojka $
+% file is in the UTF8 encoding  $Id: texlive-cz.tex 72437 2024-10-01 11:46:53Z sojka $
 %
 % Pokud chcete opravit chyby v~tomto textu, a nemáte oprávnění pro opravy
 % přímo v~texlive svn repozitáři, posílejte návrhy změn na adresu
@@ -14,6 +14,8 @@
 % Public domain.
 %
 % History:
+% 2024/03/24: v1.73 translation of 2024 modifications (JB)
+% 2023/03/05: v1.72 translation of 2023 modifications (JB)
 % 2022/03/20: v1.71 last minute fixes and additions (PS)
 % 2022/03/18: v1.70 last minute fixes and additions (PS)
 % 2022/03/09: v1.69 translation of 2022 modifications (JB)
@@ -92,10 +94,10 @@
 %
 % version, metadata as macros
 %
-\newcommand\thisyear{2022}
-\newcommand\lastyear{2021}
-\newcommand\cstlversion{1.71}
-\newcommand\cstldate{20.\ b\v rezna 2022} %\thisyear}
+\newcommand\thisyear{2024}
+\newcommand\lastyear{2023}
+\newcommand\cstlversion{1.73}
+\newcommand\cstldate{24.\ b\v rezna 2024} %\thisyear}
 %
 % macros for different version of document:
 % - in Zpravodaj CSTUG (with different layout)
@@ -256,9 +258,9 @@
 \fi
 
 Překlad 
-  2004--2022 Ján Buša, 
+  2004--2024 Ján Buša, 
   2001 Janka Chlebíková,
-  2003--2022 Petr Sojka a 
+  2003--2024 Petr Sojka a 
   2003 Petra Sojková 
 je šířen pod GNU FDL licencí.
   
@@ -283,7 +285,7 @@ Back-Cover Texts.
 
 Tento dokument popisuje základní vlastnosti distribuce \TeXLive{} \thisyear,
 což je instalace \TeX{}u a příbuzných programů pro \acro{GNU}/Linux a další
-unixové systémy, \MacOSX{} a (32bitové) systémy Windows.
+unixové systémy, \macOS{} a systémy Windows.
 
 \TL{} můžete získat stažením z~internetu nebo na \TKCS{} \DVD.
 Některé skupiny uživatelů \TeX{}u distribuují \DVD\ svým členům. 
@@ -308,19 +310,16 @@ najdete na konci tohoto dokumentu, v~oddílu~\ref{sec:history}.
 \label{sec:os-support}
 
 \TL{} obsahuje binárky pro mnohé unixové platformy
-včetně \GNU/Linux, \MacOSX a Cygwin. 
+včetně \GNU/Linux, \macOS a Cygwin. 
 Obsažené zdrojové texty mohou být zkompilovány
 pro platformy, pro které neposkytujeme binárky.
 
 Co se týče Windows: podporovány jsou Windows~7 a pozdější verze.
 Windows Vista a 2000 ještě bude \emph{pravděpodobně} z~větší části fungovat,
 ale \TL{} se dokonce nenainstaluje pod Windows XP a dřívějšími. 
-Pro Windows nejsou k~dispozici zvláštní 64bitové \file{.exe} soubory, ale
-32bitové binárky by měly běžet na 64bitových systémech. Ale podívejte se na
-\url{https://tug.org/texlive/windows.html} pro možnosti přidání
-64bitových binárních souborů. 
+\TL{} zahrnuje 64bitové binárky pro Windows.
 			
-Alternativní řešení pro Windows a \MacOSX{} najdete 
+Alternativní řešení pro Windows a \macOS{} najdete 
 v~oddíle~\ref{sec:tlcoll-dists}.
 
 \subsection{Základní instalace \protect\TL{}}
@@ -340,7 +339,7 @@ sekcích (na stránce~\pageref{sec:install}), zde jen souhrn:
 \item Instalační dávka pro Unix se jmenuje \filename{install-tl}; na
 Windows byste místo toho měli vyvolat \filename{install-tl-windows}.
 Instalační program bude pracovat v~grafickém režimu při volbě 
-\code{-gui} (výchozí pro Windows a starší \MacOSX) nebo v~textovém režimu
+\code{-gui} (výchozí pro Windows) nebo v~textovém režimu
 při zadání volby \code{-gui=text} (výchozí pro všechny ostatní). 
 
 \item Součástí instalace je program
@@ -356,7 +355,7 @@ balíků a na různé konfigurační činnosti.
 \label{sec:security}
 
 Pokud je nám známo, hlavní programy \TeX{u} jsou (a vždy byly)
-extrémně robustní. Nicméně programy dodané v~rámci \TeX\ Live nemusí dosahovat
+extrémně robustní. Nicméně programy dodané v~rámci \TL\ nemusí dosahovat
 stejné úrovně, navzdory nejlepšímu úsilí všech. Jako vždy při použití programů
 pro nedůvěryhodný vstup musíte být opatrní; pro zvýšení bezpečnosti použijte
 nový podadresář nebo \singleuv{chroot}.
@@ -415,26 +414,23 @@ ty nejobskurnější. Dokument najdete na stránce  \url{https://texfaq.org}.
   knihy, manuály a články o~všech aspektech systému \TeX{}.
 
 \item [archivy diskusních skupin]
-  Základní fóra pro hledání řešení problémů \TeX{}u zahrnují 
-  stránku \LaTeX{}ovské komunity \url{https://latex.org}, 
-  stránku kolektivně editovaných dotazů a odpovědí \url{https://tex.stackexchange.com},
-  newsovou skupinu \ctt{} a e-mailovou diskusní
-  skupinu \email{texhax@tug.org}. V~archivech těchto zdrojů
-  najdete tisíce předchozích dotazů a odpovědí z~minulých let čekajících na vaše
-  hledání. Nahlédněte na dva poslední zmíněné zdroje
-  \url{http://groups.google.com/group/comp.text.tex/topics}, a na
-  \url{https://tug.org/mail-archives/texhax}. Dotazem do obecného
-  vyhledávacího stroje %jako \url{http://google.com/} 
-  také nic nepokazíte a pro specifika češtiny a slovenštiny najdete další zdroje
-  odkazované na \url{http://www.cstug.cz/}.
+Obecné vyhledávání na webu nikdy neuškodí.
+Základní fóra pro hledání řešení problémů \TeX{}u zahrnují 
+stránku \LaTeX{}ovské komunity \url{https://latex.org}, 
+stránku kolektivně editovaných dotazů a odpovědí \url{https://tex.stackexchange.com},
+a e-mailovou diskusní skupinu \email{texhax@tug.org}. 
+V~archivech těchto zdrojů najdete tisíce předchozích dotazů 
+a odpovědí z~minulých let pro vaše potěšení z hledání.
+Pro specifika češtiny a slovenštiny najdete další zdroje
+odkazované na \url{http://www.cstug.cz/}.
   
 \item [kladení dotazů] Pokud nemůžete najít odpověď na svou otázku,
-  můžete ji položit na \url{http://latex-community.org/} a
-  \url{https://tex.stackexchange.com/} prostřednictvím jejich webových rozhraní, 
-  na \ctt{} přes Google nebo newsového klienta nebo e-mailem na \email{texhax@tug.org}.
-  Ale dříve, než tak učiníte, \emph{prosím,} přečtěte si toto heslo FAQ,
-  abyste maximalizovali vyhlídky na získání užitečné odpovědi:
-  \url{https://texfaq.org/FAQ-askquestion}.
+můžete ji položit na \url{http://latex.org/} a
+\url{https://tex.stackexchange.com/} prostřednictvím jejich webových rozhraní, 
+nebo e-mailem na \email{texhax@tug.org} (k odeslání není nutné se přihlásit).
+Ale dříve, než tak učiníte, \emph{prosím,} přečtěte si toto heslo FAQ,
+abyste maximalizovali vyhlídky na získání užitečné odpovědi:
+\url{https://texfaq.org/FAQ-askquestion}.
 
 \item [podpora \TL{}] Pokud chcete poslat
   chybové hlášení, připomínku nebo poznámku k~distribuci
@@ -459,42 +455,37 @@ Přihlaste se, čtěte a začněte odpovídat tam, kde můžete.
 \section{Přehled \protect\TeX Live}
 \label{sec:overview.tl}
 
-Tento oddíl popisuje obsah \TL{} a \TKCS{}, jejíž je částí.
+Tento oddíl popisuje obsah \TL{} stejně jako \TKCS{}, jejíž je částí.
 
-%Dvě hlavní instalační dávky pro Unix a \MacOSX{} jsou
+%Dvě hlavní instalační dávky pro Unix a \macOS{} jsou
 %\texttt{install-tl.sh} a \texttt{install-pkg.sh}. Jsou
 %popsány v~oddíle~\ref{sec:unix.install} na
 %straně~\pageref{sec:unix.install}.
 %V~dalším oddíle popíšeme strukturu a obsah \TL{}.
 
 
-\subsection{Kolekce \protect\TeX{}u: \protect\TL, pro\protect\TeX{}t, Mac\protect\TeX}
+\subsection{Kolekce \protect\TeX{}u: \protect\TL, Mac\protect\TeX, Mik\protect\TeX, CTAN}
 \label{sec:tlcoll-dists}
 
 \DVD{} \TKCS{} zahrnuje následující:
 
 \begin{description}
-\item [\TL] Úplný systém \TeX{}, k~nainstalování na disk.
+\item [\TL] Obsáhlý multiplatformní systém \TeX{}, k~nainstalování na disk.
 Domovská stránka: \url{https://tug.org/texlive/}.
 
-\item [Mac\TeX] pro \MacOSX, přidává nativní \MacOSX\ 
-(aktuálně pojmenován macOS by Apple, avšak v~tomto dokumentu budeme používat starý název) 
-instalační program a jiné aplikace Mac k~\TL{}. Domovská stránka:
+\item [Mac\TeX] pro \macOS, přidává nativní 
+instalační program \macOS\ a jiné aplikace Mac k~\TL{}. Domovská stránka:
 \url{https://tug.org/mactex/}.
 
-\item [pro\TeX{}t] Rozšíření systému \MIKTEX\ pro Windows.
-\ProTeXt\ přidává k~\MIKTEX u nové doplňkové nástroje 
-a zjednodušuje instalaci. Je plně nezávislý na \TL{} 
-a má své vlastní příkazy. 
-Domovská stránka: \url{https://tug.org/protext/}.
+\item [\MIKTEX] Další obsáhlá multiplatformní distribuce \TeX{}u pro Windows, GNU/Linux a \macOS\ (ale pouze binární soubory Windows
+jsou zahrnuty na DVD). Má integrovaného správce balíčků, který podle potřeby nainstaluje chybějící součásti z internetu.
+Domovská stránka: \url{https://miktex.org/}.
 
 \item [CTAN] Výpis obrazovky archivu \CTAN{} (\url{https://ctan.org}).
+\CTAN{} nemá stejné podmínky pro kopírování jako \TL{}, proto buďte pozorní při šíření nebo modifikaci.
 
 \end{description}
 
-\CTAN{}, \pkgname{protext} a \dirname{texmf-extra}
-nemají stejné podmínky pro kopírování jako \TL{}, 
-proto buďte pozorní při šíření nebo modifikaci.
 
 
 \subsection{Popis kořenových adresářů \protect\TL{}}
@@ -537,12 +528,12 @@ použít programy \cmdname{texdoc} nebo \cmdname{texdoctk}.
 Samotná tato příručka \TL\ je k~dispozici v~několika 
 jazycích v~adresáři \dirname{texmf-dist/doc/texlive}:
 \begin{itemize*}
-\item{česko-slovenská:} \OnCD{texmf-dist/doc/texlive/texlive-cz}
-\item{německá:} \OnCD{texmf-dist/doc/texlive/texlive-de}
 \item{anglická:} \OnCD{texmf-dist/doc/texlive/texlive-en}
+\item{česko-slovenská:} \OnCD{texmf-dist/doc/texlive/texlive-cz}
 \item{francouzská:} \OnCD{texmf-dist/doc/texlive/texlive-fr}
 \item{italská:} \OnCD{texmf-dist/doc/texlive/texlive-it}
 \item{japonská:} \OnCD{texmf-dist/doc/texlive/texlive-ja}
+\item{německá:} \OnCD{texmf-dist/doc/texlive/texlive-de}
 \item{polská:} \OnCD{texmf-dist/doc/texlive/texlive-pl}
 \item{ruská:} \OnCD{texmf-dist/doc/texlive/texlive-ru}
 \item{srbská:} \OnCD{texmf-dist/doc/texlive/texlive-sr}
@@ -577,12 +568,11 @@ které jsou uloženy v~sourozeneckém adresáři \code{bin/}\,.
 \item [TEXMFSYSVAR] Strom (uživateli v~instalaci sdílený) 
 používaný programy 
 \verb+texconfig-sys+, \verb+updmap-sys+, \verb+fmtutil-sys+ 
-a také \verb+tlmgr+, na (cache) uložení runtime
+a \verb+tlmgr+, na (cache) uložení runtime
 údajů, jako jsou soubory formátů a generované \code{.map} soubory.
 %
 \item [TEXMFSYSCONFIG] Strom (uživateli v~instalaci sdílený) 
-používaný nástroji 
-\verb+texconfig-sys+, \verb+updmap-sys+ a \verb+fmtutil-sys+ 
+používaný \verb+texconfig-sys+, \verb+updmap-sys+ a \verb+fmtutil-sys+ 
 na uložení modifikovaných konfiguračních údajů.
 %
 \item [TEXMFLOCAL] Strom, který mohou použít administrátoři na instalaci 
@@ -621,9 +611,9 @@ Standardní struktura je:
       \begin{ttdescription}
         \item [i386-linux] binárky systému \GNU/Linux (32-bitové)
         \item [...]
-        \item [x86\_64-darwin] binárky systému \MacOSX
+        \item [x86\_64-darwin] binárky systému \macOS
         \item [x86\_64-linux] binárky systému \GNU/Linux (64-bitové)        
-        \item [win32] binárky systému Windows
+        \item [windows] binárky systému Windows (64bitové) 
       \end{ttdescription}
 			\item [texmf-dist\ \ ]      \envname{TEXMFDIST} a \envname{TEXMFMAIN}
       \item [texmf-var \ \ ]      \envname{TEXMFSYSVAR}, \envname{TEXMFCACHE}
@@ -683,7 +673,7 @@ interpret Lua. Jeho web je \url{http://www.luatex.org/} a
 referenční příručka je \OnCD{texmf-dist/doc/luatex/base/luatex.pdf}. 
 
 \item [(e)(u)p\TeX] má nativní podporu pro požadavky japonské sazby; 
-p\TeX\ je základní motor, zatímco e- varianty přidávají funkce \eTeX\ a u- přidává podporu Unicode. 
+p\TeX\ je základní sázecí program, zatímco e- varianty přidávají funkce \eTeX\ a u- přidává podporu Unicode. 
 
 \item [\XeTeX] přidává podporu vstupního kódování
 Unicode a OpenType\slash TrueType a systémových fontů, implementovaných
@@ -701,7 +691,7 @@ Viz \OnCD{texmf-dist/doc/aleph/base}.
 \end{description}
 
 
-\subsection{Další za zmínku stojící programy na \protect\TeXLive}
+\subsection{Další za zmínku stojící programy na \protect\TL}
 
 Na \TL{} najdete několik často používaných programů:
 
@@ -729,7 +719,7 @@ do/z~\dvi{} souborů.
 
 \item [pdfjam, pdfjoin, \ldots] pomůcky pro PDF.
 
-\item [context, mtxrun] Con\TeX{}t a PDF procesor.
+\item [context, mtxrun] \ConTeXt\ a PDF procesor.
 
 \item [htlatex, \ldots] \cmdname{tex4ht}: konvertor \AllTeX{}
 do HTML (a~XML, DocX  a dalších formátů).
@@ -749,9 +739,9 @@ Na \url{https://tug.org/texlive/acquire.html}
 najdete více informací a další způsoby získání softwaru.
 
 \begin{description}
-\item [Síťový instalátor, .zip nebo .tar.gz:] stáhněte z~\CTAN{}u, 
+\item [Síťový instalátor, .zip nebo .tar.gz:] stáhněte si archiv z~\CTAN{}u, 
 z~adresáře \dirname{systems/texlive/tlnet}; url
-\url{http://mirror.ctan.org/systems/texlive/tlnet}
+\url{https://mirror.ctan.org/systems/texlive/tlnet}
 by Vás měl přesměrovat na blízký, aktuální mirror.
 Můžete získat \filename{install-tl.zip}, který může
 být použit pod Unixem a Windows, nebo jenom pro Unix
@@ -842,15 +832,15 @@ unixových systémů Cygwin implicitně
 neobsahuje všechny nezbytné programy, které instalátor \TL{} potřebuje. 
 Viz sekci~\ref{sec:cygwin}.
 
-\subsubsection{\MacOSX}
+\subsubsection{\macOS}
 \label{sec:macosx}
 
-Jak již bylo zmíněno v~sekci~\ref{sec:tlcoll-dists}, pro \MacOSX\ je 
+Jak již bylo zmíněno v~sekci~\ref{sec:tlcoll-dists}, pro \macOS\ je 
 připravena samostatná distribuce, nazvaná 
 Mac\TeX\ (\url{https://tug.org/mactex}).
 Doporučujeme použít původní instalační program 
 Mac\TeX u namísto instalátoru \TL\
-pod \MacOSX, protože původní (nativní) instalátor provede  
+pod \macOS, protože původní (nativní) instalátor provede  
 několik nastavení specifických pro Mac, zejména umožňuje 
 snadné přepínání mezi různými vydáními \TL\ na počítačích Mac, pomocí %takzvané 
 datové struktury \TeX{}Dist. 
@@ -894,9 +884,12 @@ Pro úplný seznam různých voleb zadejte:
 \textbf{Poznámka.} Pokud stejný adresář obsahuje také \texttt{install-tl-windows.exe}, přidejte příponu \texttt{.bat}. 
 Obvykle tomu tak nebude (pokud jste nezrcadlili adresář \dirname{tlnet} lokálně).
 
+V cestě pro instalaci \TL\ je třeba se vyhnout jiným znakům než ASCII. To může být problém zejména pod Windows 11, kde uživatelé jsou nuceni používat síťový účet Microsoft. Viz \url{https://tug.org/texlive/windows.html\#nonascii} pro některé
+řešení.
+
 \begin{figure}[tb]
 \begin{boxedverbatim}
-Installing TeX Live 2022 from: ...
+Installing TeX Live 2024 from: ...
 Platform: x86_64-linux => 'GNU/Linux on x86_64'
 Distribution: inst (compressed)
 Directory for temporary files: /tmp
@@ -908,11 +901,11 @@ Detected platform: GNU/Linux on Intel x86_64
 <S> set installation scheme: scheme-full
 
 <C> customizing installation collections
-    40 collections out of 41, disk space required: 7239 MB
+    40 collections out of 41, disk space required: 8296 MB (free: 138718 MB)
 
 <D> directories:
     TEXDIR (the main TeX directory):
-    /usr/local/texlive/2022
+    /usr/local/texlive/2024
    ...
 
  <O> options:
@@ -1024,22 +1017,21 @@ a dílčích nabídkách:
 \begin{boxedverbatim}
 Available platforms:
 ===============================================================================
-a [ ] Cygwin on Intel x86 (i386-cygwin)
-b [ ] Cygwin on x86_64 (x86_64-cygwin)
-c [ ] MacOSX current (10.14-) on ARM/x86_64 (universal-darwin)
-d [ ] MacOSX legacy (10.6-) on x86_64 (x86_64-darwinlegacy)
-e [ ] FreeBSD on x86_64 (amd64-freebsd)
-f [ ] FreeBSD on Intel x86 (i386-freebsd)
-g [ ] GNU/Linux on ARM64 (aarch64-linux)
-h [ ] GNU/Linux on ARMhf (armhf-linux)
-i [ ] GNU/Linux on Intel x86 (i386-linux)
-j [X] GNU/Linux on x86_64 (x86_64-linux)
-k [ ] GNU/Linux on x86_64 with musl (x86_64-linuxmusl)
-l [ ] NetBSD on x86_64 (amd64-netbsd)
-m [ ] NetBSD on Intel x86 (i386-netbsd)
-o [ ] Solaris on Intel x86 (i386-solaris)
-p [ ] Solaris on x86_64 (x86_64-solaris)
-s [ ] Windows (win32)
+a [ ] Cygwin on x86_64 (x86_64-cygwin)
+b [ ] MacOSX current (10.14-) on ARM/x86_64 (universal-darwin)
+c [ ] MacOSX legacy (10.6-) on x86_64 (x86_64-darwinlegacy)
+d [ ] FreeBSD on x86_64 (amd64-freebsd)
+e [ ] FreeBSD on Intel x86 (i386-freebsd)
+f [ ] GNU/Linux on ARM64 (aarch64-linux)
+g [ ] GNU/Linux on RPi(32-bit) and ARMv7 (armhf-linux)
+h [ ] GNU/Linux on Intel x86 (i386-linux)
+i [X] GNU/Linux on x86_64 (x86_64-linux)
+j [ ] GNU/Linux on x86_64 with musl (x86_64-linuxmusl)
+k [ ] NetBSD on x86_64 (amd64-netbsd)
+l [ ] NetBSD on Intel x86 (i386-netbsd)
+m [ ] Solaris on Intel x86 (i386-solaris)
+o [ ] Solaris on x86_64 (x86_64-solaris)
+p [ ] Windows (64-bit) (windows)
 \end{boxedverbatim}
 \vskip-.5\baselineskip
 \caption{Nabídka binárek}\label{fig:bin_text}
@@ -1061,16 +1053,17 @@ s~dvojitým zaváděcím procesem.
 \begin{boxedverbatim}
 Select a scheme:
 ====================================================================
- a [X] full scheme (everything)
- b [ ] medium scheme (small + more packages and languages)
- c [ ] small scheme (basic + xetex, metapost, a few languages)
- d [ ] basic scheme (plain and latex)
- e [ ] minimal scheme (plain only)
- f [ ] ConTeXt scheme
- g [ ] GUST TeX Live scheme
- h [ ] infrastructure-only scheme (no TeX at all)
- i [ ] teTeX scheme (more than medium, but nowhere near full)
- j [ ] custom selection of collections
+a [X] full scheme (everything)
+b [ ] medium scheme (small + more packages and languages)
+c [ ] small scheme (basic + xetex, metapost, a few languages)
+d [ ] basic scheme (plain and latex)
+e [ ] minimal scheme (plain only)
+f [ ] infrastructure-only scheme (no TeX at all)
+g [ ] book publishing scheme (core LaTeX and add-ons)
+h [ ] ConTeXt scheme
+i [ ] GUST TeX Live scheme
+j [ ] teTeX scheme (more than medium, but nowhere near full)
+k [ ] custom selection of collections
 \end{boxedverbatim}
 \vskip-.5\baselineskip
 \caption{Nabídka schémat}\label{fig:schemetext}
@@ -1102,7 +1095,7 @@ balíků, a balík (nejnižší úroveň seskupování v~\TL) obsahuje vlastní
 soubory \TeX ovských maker, soubory fontů atd. 
 
 Pokud chcete získat větší kontrolu, než jakou poskytuje nabídka kolekcí, 
-po instalaci můžete použít program \TeX\ Live Manager (\prog{tlmgr}) 
+po instalaci můžete použít program \TL\ Manager (\prog{tlmgr}) 
 (viz sekci~\ref{sec:tlmgr}); jeho použitím můžete řídit 
 instalaci na úrovni balíků.
 
@@ -1113,8 +1106,8 @@ Standardní uspořádání je popsáno v~sekci~\ref{sec:texmftrees},
 \p.\pageref{sec:texmftrees}. 
 
 Standardní umístění instalačního adresáře je
-\dirname{/usr/local/texlive/2022} pro Unix
-a \verb|C:\texlive\2022| pod Windows.
+\dirname{/usr/local/texlive/2024} pro Unix
+a \verb|C:\texlive\2024| pod Windows.
 Toto uspořádání umožňuje mít mnoho paralelních instalací \TL, jednu pro každé vydání
 (typicky podle roku, jako tady),
 a můžete mezi nimi přepínat pouhou změnou vyhledávací cesty.
@@ -1128,8 +1121,8 @@ Nemusíte být zrovna rootem nebo administrátorem, když
 instalujete \TL, ale potřebujete oprávnění na zápis do cílového adresáře.
 
 V systému Windows obvykle nemusíte být správcem
-na vytvoření \verb|C:\texlive\2022| (nebo obecněji,
-\verb|%SystemDrive%\texlive\2022|). 
+na vytvoření \verb|C:\texlive\2024| (nebo obecněji,
+\verb|%SystemDrive%\texlive\2024|). 
 
 Instalační adresáře mohou být také změněny nastavením různých proměnných 
 prostředí před spuštěním instalátoru (pravděpodobně
@@ -1142,7 +1135,7 @@ nebo dalších detailů.
 Rozumnou alternativou je adresář uvnitř vašeho domovského
 adresáře, zvlášť když chcete být výhradním uživatelem. 
 K~označení domovského adresáře použijte vlnku, `|~|',
-například `|~/texlive/2022|'.
+například `|~/texlive/2024|'.
 
 Doporučujeme do názvu začlenit rok, což umožní paralelní
 společné zachování různých vydání \TL{} vedle sebe. Můžete 
@@ -1168,8 +1161,8 @@ nemusí být soubory k~nalezení.
 průběžně generovaných dočasných dat specifických pro každého uživatele. 
 \dirname{TEXMFCACHE} je název proměnné, která se používá pro tento účel 
 Lua\LaTeX{}em a \ConTeXt{}em 
-MkIV (viz oddíl~\ref{sec:context_mkiv},
-na straně~\pageref{sec:context_mkiv}); její implicitní hodnota je 
+MkIV (viz oddíl~\ref{sec:context},
+na straně~\pageref{sec:context}); její implicitní hodnota je 
 \dirname{TEXMFSYSVAR}, nebo (pokud tato neumožňuje zápis) \dirname{TEXMFVAR}.
 
 
@@ -1230,12 +1223,12 @@ který přišel s~touto volbou, tj. specifikací systémových adresářů.
 Nejbezpečnější a doporučený přístup je ponechat volbu neoznačenou.
 
 \item[after install, set CTAN as source for package updates:]
-Pro instalaci z~\DVD je
+Pro instalaci z~\DVD nebo obrazu \ISO\ je
 tato volba implicitně umožněna, protože uživatel obvykle chce uskutečnit
 následné aktualizace balíků z~archivu \CTAN, kde jsou průběžně 
 aktualizovány po celý rok. Jediný důvod pro jejich potlačení 
-přicháí v~úvahu, pokud instalujete jenom část z~\DVD\ a plánujete
-rozšírit instalaci později. V~každém případě úložiště balíku pro
+přichází v~úvahu, pokud instalujete jenom část z~\DVD\ a plánujete
+rozšířit instalaci později. V~každém případě úložiště balíku pro
 instalátor a pro poinstalační aktualizace mohou být nastaveny nezávisle
 podle potřeby; viz oddíl~\ref{sec:location}
  a oddíl~\ref{sec:dvd-install-net-updates}.
@@ -1277,13 +1270,17 @@ Následují nejběžnější volby:
 
 \begin{ttdescription}
 \item[-gui] Použijte \GUI{} instalátor pokud je to možné. Toto si vyžaduje
-Tcl/Tk ve verzi 8.5 nebo vyšší. Toto bylo distribuováno s~\MacOSX, až do
-Monterey; poté budete muset nainstalovat Tcl/Tk sami, pokud nezvolíte
+Tcl/Tk ve verzi 8.5 nebo vyšší. Toto bylo distribuováno se starším \macOS; pro Big Sur a pozdější
+budete muset nainstalovat Tcl/Tk sami, pokud nezvolíte
 použití instalačního programu Mac\TeX\. Tcl/Tk je 
 distribuován s~\TL{} pod Windows. Starší volby \texttt{-gui=perltk} 
 a \texttt{-gui=wizard} jsou stále ještě k~dispozici, ale vyvolají stejné \GUI{} rozhraní; 
 pokud Tcl/Tk a Perl/Tk nejsou k~dispozici, pokračuje instalace 
 v~textovém režimu.   
+
+with older \macOS;
+for Big Sur and later
+
 
 \item[-no-gui] Vynutí si použití instalátoru v~textovém režimu.
 
@@ -1295,7 +1292,7 @@ v~textovém režimu.
 %  languages.
 
 \item[-lang {\sl LL}] Specifikuje jazyk instalačního rozhraní jako 
-  jeho standardní, obvykle dvoupísmený, kód. Instalátor se pokusí 
+  jeho standardní, obvykle dvoupísmenný, kód. Instalátor se pokusí 
   automaticky určit správný jazyk, ale když selže nebo když správný jazyk není
   k~dispozici, použije angličtinu jako nouzové řešení. 
   Pro získání seznamu všech podporovaných jazyků spusťte
@@ -1336,7 +1333,7 @@ v~textovém režimu.
 \label{sec:location}
 
 Implicitní síťový repozitář balíků je zrcadlo CTAN zvolené automaticky
-použitím \url{http://mirror.ctan.org}.
+použitím \url{https://mirror.ctan.org}.
 
 Pokud ho chcete přepsat, může být hodnotou umístění 
 adresa url s~\texttt{ftp:}, \texttt{http:}, \texttt{https:}, 
@@ -1395,18 +1392,18 @@ být vhodné editovat soubor \filename{$HOME/.profile} a řádky, které je pot�
 budou vypadat následovně:
 
 \begin{sverbatim}
-PATH=/usr/local/texlive/2022/bin/x86_64-linux:$PATH; export PATH
-MANPATH=/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH; export MANPATH
-INFOPATH=/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH; export INFOPATH
+PATH=/usr/local/texlive/2024/bin/x86_64-linux:$PATH; export PATH
+MANPATH=/usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH; export MANPATH
+INFOPATH=/usr/local/texlive/2024/texmf-dist/doc/info:$INFOPATH; export INFOPATH
 \end{sverbatim}
 
 Pro \prog{csh} nebo \prog{tcsh} je editovaný soubor 
 typicky \filename{$HOME/.cshrc} a
 řádky k~přidání mohou vypadat jako:
 \begin{sverbatim}
-setenv PATH /usr/local/texlive/2022/bin/x86_64-linux:$PATH
-setenv MANPATH /usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH
-setenv INFOPATH /usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH
+setenv PATH /usr/local/texlive/2024/bin/x86_64-linux:$PATH
+setenv MANPATH /usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH
+setenv INFOPATH /usr/local/texlive/2024/texmf-dist/doc/info:$INFOPATH
 \end{sverbatim}
 
 Pokud nejste na platformě \code{x86\_64-linux}, použijte příslušný
@@ -1429,8 +1426,8 @@ Naše dvě rady jsou: 1)~můžete vyhledat soubor
 \filename{/etc/manpath.config} a pokud existuje, přidejte řádky jako
 
 \begin{sverbatim}
-MANPATH_MAP /usr/local/texlive/2022/bin/x86_64-linux \
-            /usr/local/texlive/2022/texmf-dist/doc/man
+MANPATH_MAP /usr/local/texlive/2024/bin/x86_64-linux \
+            /usr/local/texlive/2024/texmf-dist/doc/man
 \end{sverbatim}
 
 A za 2)~vyhledejte soubor \filename{/etc/environment},
@@ -1440,7 +1437,7 @@ proměnné prostředí.
 V~každém (Unixovém) adresáři binárek vytváříme také symbolický 
 odkaz na adresář \dirname{texmf-dist/doc/man} s~názvem \code{man}.
 Některé programy \code{man}, jako například standardní
-\MacOSX\ \code{man}, ho automaticky najdou, což odstraňuje
+\macOS\ \code{man}, ho automaticky najdou, což odstraňuje
 potřebu jakéhokoliv nastavování dokumentačních stránek.
 
 \subsubsection{Internetové aktualizace po instalaci z~\protect\DVD}
@@ -1452,7 +1449,7 @@ tohoto povelu -- \emph{poté}, co jste aktualizovali vaši
 vyhledávací cestu (jako to bylo popsané v~předcházejícím oddíle):
 
 \begin{alltt}
-> \Ucom{tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet}
+> \Ucom{tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet}
 \end{alltt}
 
 Toto řekne programu \cmdname{tlmgr}, aby pro následující
@@ -1471,30 +1468,29 @@ můžete deklarovat konkrétní zrcadlo \CTAN{}u ze seznamu na stránce
 \label{sec:font-conf-sys}
 
 \XeTeX\ a Lua\TeX\ mohou používat jakýkoli font instalovaný 
-v~systému, nejenom ty, které se nacházejí
-v~\TeX{}ovských stromech. Provádí to prostřednictvím 
-podobných, ale ne identických metod.
+v~systému, nejenom ty, které se nacházejí v~\TeX{}ovských stromech. 
+Takové systémové fonty (nejsou součástí \TL) jsou obvykle přístupné zadáním názvu písma, např. `\code{Liberation Serif}', 
+i když lze použít i systémový název souboru. 
 
-Pod Windows jsou fonty dodané s~\TL\ automaticky
-dostupné pro \XeTeX.
-Na \MacOSX, na automatické hledání fontů dle jména
-jsou potřeba další kroky; prosím vizte web Mac\TeX u
-(\url{https://tug.org/mactex}). 
-Pro ostatní unixové systémy potřebujete dokonfigurovat 
-systém dle následujícího postupu tak, aby byl \XeTeX\ 
-schopen najít fonty dodané s~\TL\ 
-prostřednictvím vyhledávání jmen fontů systémem.
+Související problém je zpřístupnění písem z distribuce \TL\
+jako systémová písma, které je následně zpřístupní podle názvu písma.
 
-Pro usnadnění, když se instaluje balík \pkgname{xetex} 
-(buď ve výchozí instalaci, nebo později), 
-se vytváří potřebný konfigurační soubor 
-\filename{TEXMFSYSVAR/fonts/conf/texlive-fontconfig.conf}.
+Pro Lua\TeX: pro přístup podle názvu písma není třeba dělat nic zvláštního. Všechny
+fonty v \TL\ by měly být stejně přístupné buď podle názvu písma nebo
+podle názvu souboru pro Lua\TeX, prostřednictvím balíčku \pkgname{luaotfload}, který
+podporuje jak \LaTeX\, tak prostý \TeX. Seznam názvů fontů \pkgname{luaotfload} může být nutné přebudovat pro nová písma; toto je spuštěno
+automaticky při pokusu o načtení fontu, který ještě není znám.
 
-Pro nastavení fontů \TL{} pro použití v~rámci 
-celého systému (za předpokladu, že máte odpovídající oprávnění), 
-postupujte následovně:
+Pro \XeTeX: pod Windows jsou fonty dodané s~\TL\ automaticky
+dostupné (spuštěním programu \cmdname{fc-cache} poskytnutého pro Windows jako součást \TL).
+Pro Mac se budete muset poradit s další dokumentaci. Pro jiné systémy než \macOS, je postup následující.
+
+Když je nainstalován balíček \pkgname{xetex} (buď na začátku
+instalace nebo později), je vytvořen potřebný konfigurační soubor
+\filename{TEXMFSYSVAR/fonts/conf/texlive-fontconfig.conf}. Chcete-li vytvořit
+\TL\ fonty dostupné jako systémové fonty (za předpokladu, že máte odpovídající oprávnění),
 \begin{enumerate*}
-\item Zkopírujte soubor \filename{texlive-fontconfig.conf} do adresáře
+\item Zkopírujte tento soubor \filename{texlive-fontconfig.conf} do adresáře (obvykle)
 \dirname{/etc/fonts/conf.d/09-texlive.conf}.
 \item Spusťte \Ucom{fc-cache -fsv}.
 \end{enumerate*}
@@ -1502,46 +1498,51 @@ Pokud nemáte postačující práva k~provedení výše popsaných kroků,
 nebo chcete-li učinit fonty \TL{} dosažitelné pro jediného uživatele, 
 můžete učinit následující:
 \begin{enumerate*}
-\item Zkopírujte soubor \filename{texlive-fontconfig.conf} do
-  \filename{~/.fonts.conf}, kde \filename{~} označuje váš 
+\item Zkopírujte soubor \filename{texlive-fontconfig.conf} (obvykle) do
+  \filename{~/.fonts.conf.d/09-texlive.conf}, kde \filename{~} označuje váš 
   domovský adresář.
 \item Spusťte \Ucom{fc-cache -fv}.
 \end{enumerate*}
 
-Pokud chcete uvidět jména všech systémových fontů, můžete 
+Pokud chcete uvidět jména všech dostupných systémových fontů, můžete 
 spustit příkaz \code{fc-list}.  
 Příkaz \code{fc-list : family style file spacing} 
-(všechny argumenty jsou písmenkové řetězce) 
+(všechny tyto argumenty jsou písmenkové řetězce) 
 ukáže některou obecně zajímavou informaci.
 
 
-\subsubsection{\protect\ConTeXt{} Mark IV}
+\subsubsection{\protect\ConTeXt{} LMTX and MKIV}
+\label{sec:context}
 \label{sec:context_mkiv}
 
-\singleuv{Starý} \ConTeXt{} (Mark II) a \singleuv{nový} \ConTeXt{}
-(Mark IV) by měly po instalaci \TL{} fungovat bez dalších zásahů
+\singleuv{Starý} \ConTeXt{} (Mark IV nebo MkIV) a \singleuv{nový} \ConTeXt{}
+(LMTX nebo MkXL) by měly po instalaci \TL{} fungovat bez dalších zásahů
 a neměly by vyžadovat zvláštní pozornost, pokud budete k~aktualizacím 
 používat \verb+tlmgr+.
 
-Protože však \ConTeXt{} MkIV nepoužívá knihovnu kpathsea, 
-určité nastavení bude požadováno vždy, když budete instalovat nové 
-soubory ručně (bez použití \verb+tlmgr+). Po ukončení takové instalace 
-musí každý uživatel MkIV spustit:
+\ConTeXt{} nepoužívá knihovnu Kpathsea ani systém \code{ls-R}
+soubory; místo toho \ConTeXt{} udržuje pro uživatele databázi souborů
+pro všechny známé stromy. Spuštěním \code{mktexlsr} se tyto databáze neaktualizují
+přímo, ale \ConTeXt{} je automaticky znovu sestaví
+při dalším spuštění. (Implementují to soubory specifické pro \TL \code{cont-sys.mkiv} a
+\code{cont-sys.mkxl}.)
+
+Pokud budete někdy chtít tyto databáze ručně znovu sestavit, spusťte pro jednu nebo obě:
 \begin{sverbatim}
-context --generate
+mtxrun --generate           # LMTX
+mtxrun --luatex --generate  # MkIV
 \end{sverbatim}
-pro obnovení diskové cache údajů \ConTeXt{}u.
 Výsledné soubory jsou uloženy do proměnné \code{TEXMFCACHE},
 jejíž přednastavená hodnota v~\TL\ je \verb+TEXMFSYSVAR;TEXMFVAR+. 
 
-\ConTeXt\ MkIV bude číst ze všech cest uvedených 
+
+\ConTeXt\ bude číst ze všech cest uvedených 
 v~\verb+TEXMFCACHE+ a zapisovat do první zapisovatelné cesty. 
 Při čtení v~případě duplicitních údajů v~paměti cache získá
 přednost poslední nalezený prvek.
 
-Pro další informace viz
-\url{https://wiki.contextgarden.net/Running_Mark_IV}.
-
+Pro další informace viz \url{https://wiki.contextgarden.net/LMTX}\\
+a \url{https://wiki.contextgarden.net/Running_Mark_IV}.
 
 \subsubsection{Začleňování lokálních a osobních maker}
 \label{sec:local_personal_macros}
@@ -1566,7 +1567,7 @@ v~\dirname{TEXMFLOCAL/tex/latex} nebo
 nebudou soubory nalezeny.
 Můžete ji obnovit povelem \cmdname{mktexlsr} nebo použít tlačítko
 \singleuv{Update file database} na záložce \singleuv{Actions} programu
-\TeX\ Live Manager v~režimu \GUI.
+\TL\ Manager v~režimu \GUI.
 
 Standardně je každá z~těchto proměnných definována jako 
 samostatný adresář, jak je vidět. To však není nezbytně nutné. 
@@ -1614,7 +1615,7 @@ obyčejný editor; nic \TeX{}ovsky specifické se nevyžaduje.
 
 Zbytek tohto oddílu udává některé základní postupy testování funkcionality
 nového systému. Zde uvádíme příkazy Unixu; pod
-\MacOSX{} nebo Windows pravděpodobně budete spouštět testy pomocí
+\macOS{} nebo Windows pravděpodobně budete spouštět testy pomocí
 grafického rozhraní, avšak principy jsou stejné.
 
 \begin{enumerate}
@@ -1719,7 +1720,8 @@ oddíl~\ref{sec:font-conf-sys}.
 \subsection{Odinstalování \TL}
 \label{sec:uninstall}
 
-Chcete-li odinstalovat \TL\ (po úspěšné instalaci) použijte: 
+Chcete-li odinstalovat \TL\ (po úspěšné instalaci; pro Windows viz
+níže) použijte: 
 
 \begin{alltt}
 	> \Ucom{tlmgr uninstall --all}
@@ -1786,8 +1788,7 @@ Zdroje jsou také k~dispozici na CTAN. Domovská stránka AUC\TeX{}u je \url{htt
   \item \cmdname{Texmaker} je volný (free) software, k~dispozici 
         z~\url{https://www.xmlmath.net/texmaker}.
   \item \cmdname{TeXstudio} začínalo jako odbočka programu \cmdname{Texmaker}
-        s~dodatečnými rysy; dostupné z~\url{https://texstudio.org/}
-        a v~distribuci pro\TeX{}t.
+        s~dodatečnými rysy; dostupné z~\url{https://texstudio.org/}.
   \item \cmdname{TeXnicCenter} je volný software, 
         k~dispozici z~\url{https://www.texniccenter.org}.
   \item \cmdname{TeXworks} je volný software, k~dispozici 
@@ -1904,7 +1905,7 @@ přizpůsobit tuto nabídku.
 %Samozřejmě si můžete také vypálit \ISO\ obraz na \DVD, pokud
 %to uznáte za užitečné.
 %
-%Systémy \GNU/Linux/Unix s~pracovní plochou, včetně \MacOSX, 
+%Systémy \GNU/Linux/Unix s~pracovní plochou, včetně \macOS, 
 %jsou schopné namontovat \ISO. Windows 8 je první (!) verzí Windows,
 %která to dokáže. Nezávisle na tom se nic 
 %nemění v~porovnání s~běžnou instalací na pevném disku,
@@ -1926,7 +1927,7 @@ přizpůsobit tuto nabídku.
 %\url{http://tug.org/texlive/w32client.html}, které pracují téměř stejně 
 %dobře pro \ISO\ jako pro síťovou instalaci.
 %
-%Pod \MacOSX bude TeXShop schopen použít DVD
+%Pod \macOS bude TeXShop schopen použít DVD
 %instalaci, pokud symbolický odkaz \filename{/usr/texbin} ukazuje na 
 %příslušný adresář binárek, například
 %\begin{verbatim}
@@ -1945,8 +1946,8 @@ přizpůsobit tuto nabídku.
 \label{sec:tlmgr}
 
 \begin{figure}[tb]
-	\def\figdesc{\prog{tlshell} \GUI, ukazující menu \singleuv{Actions} (\MacOSX)}
-	\tlpng{tlshell-macos}{\linewidth}{\figdesc}
+	\def\figdesc{\prog{tlshell} \GUI, ukazující menu \singleuv{Actions} (\macOS)}
+    \tlpng{tlshell-linux}{\linewidth}{\figdesc}
 	\caption{\figdesc}
 	\label{fig:tlshell}
 \end{figure}
@@ -1986,8 +1987,7 @@ rozhraní, avšak nyní doporučujeme používat \prog{tlmgr}.
 
 \TL{} obsahuje několik \GUI{} pro \prog{tlmgr}. 
 Dva pozoruhodné: (1) Obr.~\ref{fig:tlshell} ukazuje \cmdname{tlshell},
-který je napsán v~Tcl/Tk a pracuje mimo \singleuv{box}u pod Windows
-a \MacOSX. (2) Obr.~\ref{fig:tlcockpit} ukazuje \prog{tlcockpit},
+který je napsán v~Tcl/Tk a pod Windows pracuje mimo \singleuv{box}u. (2) Obr.~\ref{fig:tlcockpit} ukazuje \prog{tlcockpit},
 který vyžaduje Java ve verzi~8 nebo vyšší a JavaFX. 
 Oba jsou dodány jako samostatné balíčky.
 
@@ -2035,12 +2035,12 @@ running post install action for xetex
 install: xetex-def
 ...
 running mktexlsr
-mktexlsr: Updating /usr/local/texlive/2022/texmf-dist/ls-R...
+mktexlsr: Updating /usr/local/texlive/2024/texmf-dist/ls-R...
 ...
 running fmtutil-sys --missing
 ...
 Transcript written on xelatex.log.
-fmtutil: /usr/local/texlive/2022/texmf-var/web2c/xetex/xelatex.fmt installed.
+fmtutil: /usr/local/texlive/2024/texmf-var/web2c/xetex/xelatex.fmt installed.
 \end{fverbatim}
 
 Jak můžete vidět, \prog{tlmgr} nainstaluje závislosti
@@ -2125,8 +2125,9 @@ a protože \GUI{} instalačního programu a tlshell jsou napsány v Tcl/Tk,
 zahrnuje \TL{} \singleuv{skryté} kopie těchto programů.  
 Programy \TL{}, které je potřebují, vědí, kde je najdou, ale
 neprozrazují jejich přítomnost nastavením proměnných prostředí nebo 
-registrů. Nejsou to úplné instalace a neměly by překážet žádným 
-systémovým instalacím Perlu, Tcl/Tk nebo Ghostscriptu.
+registrů. Kromě Ghostscriptu to nejsou úplné instalace a neměly by překážet žádným 
+systémovým instalacím Perlu, Tcl/Tk nebo Ghostscriptu. Jak říct \TL{}, že chcete použít své vlastní externí instalace pro dodané
+skripty v \TL viz pododdíl \ref{sec:externalwndws}. 
 
 \item[dviout.] Nainstalován je také \prog{dviout}, prohlížeč
   DVI souborů.  Nejdříve, když prohlížíte soubory pomocí 
@@ -2148,12 +2149,45 @@ systémovým instalacím Perlu, Tcl/Tk nebo Ghostscriptu.
   \cmdname{pdffonts}, \ldots).
      
 \item[\prog{fc-listi}, \prog{fc-cache}, \ldots] Nástroj z~knihovny 
-  fontconfig pomáhá \XeTeX{}u efektivněji zacházet s~fonty pod Windows.  
+  \pkgname{fontconfig} pomáhá \XeTeX{}u najít systémové fonty pod Windows.  
   Můžete použít \prog{fc-list} k~určení jmen fontů 
   k~předání příkazu \XeTeX{}u \cs{font} s~rozšířenou funkcionalitou. 
   Pokud je to potřebné, nejdříve spusťte \prog{\mbox{fc-cache}}
   k~aktualizaci informací o~fontech.
 \end{description}
+
+\subsection{Použití externích instalací Perlu, Tcl/Tk a Ghostscriptu}
+\label{sec:externalwndws}
+
+Normálně bude \TL{} rovněž pro skripty přidané v~rámci \TL\ používat svůj vestavěný Perl, Tcl/Tk a Ghostscript. Pokud chcete použít vlastní externí
+verze, pak to můžete nakonfigurovat v~souboru \file{texmf.cnf} \emph{v kořenovém adresáři instalace}.
+
+Pro Perl potřebujete přidat řádek 
+\begin{verbatim}
+	TEXLIVE_WINDOWS_TRY_EXTERNAL_PERL = 1
+\end{verbatim}
+\TL{} (konkrétně \file{bin/windows/runscript.tlu}) pak bude hledat \file{perl.exe} na vyhledávací cestě, kromě skriptů, které patří
+do infrastruktury \TL{}. Toto je nejpravděpodobnější užitečné nastavení; ačkoli \TL{} Perl obsahuje mnoho dalších
+modulů, nemůže podporovat všechny skripty třetích stran. 
+% This is the most likely setting of the three to be useful; ???
+% although the \TL{} Perl includes many additional modules, it cannot support all third-party scripts.
+
+Podobně pro Tcl/Tk potřebujete řádek
+\begin{verbatim}
+	TEXLIVE_WINDOWS_TRY_EXTERNAL_TCL = 1
+\end{verbatim}
+\TL{} pak bude hledat \file{tclkit.exe}, \file{wish.exe},
+\file{wish85.exe}, \file{wish86.exe} a \file{wish87.exe} na vyhledávací cestě.
+
+Ghostscript se zpracovává odlišně v tom, že musíte zadat
+název souboru nebo úplnou cestu k~vašemu příkazovému řádku Ghostscript:
+\begin{alltt}
+	TEXLIVE_WINDOWS_EXTERNAL_GS = \var{path of command-line ghostscript}
+\end{alltt}
+Dalším rozdílem je, že Ghostscript dodáván s \TL\
+je úplný, pouze s~vynechanými dokumentací a ovladači tiskárny. Je tedy nepravděpodobné, že jej budete muset přepsat.
+
+O \file{texmf.cnf} viz též oddíl \ref{sec:configfiles}.
 
 \subsection{User Profile je Home}
 \label{sec:winhome}
@@ -2271,8 +2305,8 @@ na Web-to-C\@. V~roku 1990 Karl Berry prebral túto prácu,
 asistoval pri tuctoch dodatočných príspevkov a v~roku 1997 podal
 taktovku Olafovi Weberovi, ktorý ju v~roku 2006 vrátil Karlovi.
 
-\Webc{} systém beží pod Unixom, 32bitovými Windows,
-\acro{MacOSX} a inými operačnými systémami. Používa originálne
+\Webc{} systém beží pod Unixom, Windows,
+\macOS{} a inými operačnými systémami. Používa originálne
 \TeX{} zdrojové súbory od Donalda Knutha a ostatné základné programy napísané
 v~systéme kultivovaného programovania \web{}, 
 ktoré sú preložené do zdrojového kódu jazyka~C. 
@@ -2409,6 +2443,7 @@ použitím ladiacích možností (pozri \singleuv{Ladenie} na
 strane~\pageref{sec:debugging}).
 
 \subsubsection{Konfiguračné súbory}
+\label{sec:configfiles}
 
 \KPS{} číta počas behu z~\emph{konfiguračných súborov}
 s~menom \file{texmf.cnf} vyhľadávaciu cestu a ďalšie definície.
@@ -2939,13 +2974,12 @@ viac detailov o~narábaní s~mapovými súbormi PostScriptu).
 
 V~tomto bode sa \cmdname{dvips} identifikuje používateľovi\,\ldots
 \begin{alltt}\ifSingleColumn
-This is dvips(k) 5.92b Copyright 2002 Radical Eye Software (www.radicaleye.com)
-\else\small{}This is dvips(k) 5.92b Copyright 2002 Radical Eye ...
+This is dvips(k) 5.92b Copyright 2002 Radical Eye Software 
+\else\small{}This is dvips(k) 5.92b Copyright 2002 Radical Eye 
 \fi\end{alltt}% decided to accept slight overrun in tub case
 \ifSingleColumn
 \noindent\ldots potom pokračuje v~hľadaní prológového súboru
 \file{texc.pro}:
-
 \begin{alltt}\small
 kdebug:start search(file=texc.pro, must\_exist=0, find\_all=0,
   path=.:~/tex/dvips//:!!/usr/local/texmf/dvips//:
@@ -3078,7 +3112,7 @@ Děkujeme:
 %B% Kaja Christiansen prováděla neúnavně opakované
 %B% rekompilace na různých unixových platformách. Vladimir Volovich odvedl
 %B% vynikající práci na vyčištění zdrojových textů a provedl mnohá
-%B% vylepšení, zatímco Gerben Wierda dělal veškerou práci pro \MacOSX.
+%B% vylepšení, zatímco Gerben Wierda dělal veškerou práci pro \macOS.
 
 \begin{itemize*}
 \item Anglickému, německému, holandskému a polskému sdružení 
@@ -3124,12 +3158,12 @@ opustil v~červnu 2009 a tuto dokumentaci věnujeme jeho památce.
 za pokračující rozšiřování možností \TeX u.
 
 \item Hartmutu Henkelovi za významný příspěvek k~vývoji
-pdf\TeX u, Lua\TeX u atp.
+pdf\TeX{}u, Lua\TeX{}u atp.
 
 \item Shunshaku Hirata, za originálnejší a pokračování práce na DVIPDFM$x$. 
 %for much original and continuing on DVIPDFM$x$.
 
-\item Tacu Hoekwaterovi za významné úsilí při obnovení vývoje \MP u i
+\item Tacu Hoekwaterovi za významné úsilí při obnovení vývoje \MP{}u i
 samotného (Lua)\TeX{}u (\url{http://luatex.org}), za začlenění 
 \ConTeXt{}u do systému \TL, 
 za přidání vícevláknové funkčnosti programu Kpathsea a mnoho dalšího.
@@ -3218,7 +3252,7 @@ věnujeme pokračující práci jeho paměti.
 
 \item Olafu Weberovi za jeho pečlivou údržbu \Webc v~minulých letech.
 
-\item Gerbenu Wierdovi za vytvoření a údržbu původní podpory \MacOSX.
+\item Gerbenu Wierdovi za vytvoření a údržbu původní podpory \macOS.
 
 \item Grahamu Williamsovi, tvůrci \TeX\ Catalogue.
 
@@ -3233,21 +3267,20 @@ pro různé stroje.
 Tvůrci binárek:
 Ettore Aldrovandi (\pkgname{i386-solaris}, \pkgname{x86\_64-solaris}),
 Marc Baudoin (\pkgname{amd64-netbsd}, \pkgname{i386-netbsd}),
-Ken Brown (\pkgname{i386-cygwin}, \pkgname{x86\_64-cygwin}),
-Johannes Hielschier (\pkgname{aarch64-linux}),
-Simon Dales (\pkgname{armhf-linux}),
-Akira Kakuto (\pkgname{win32}),
+Ken Brown (\pkgname{x86\_64-cygwin}),
+Akira Kakuto (\pkgname{windows}),
 Dick Koch (\pkgname{x86\_64-darwin}),
-Mojca Miklavec (\pkgname{amd64-freebsd},
-\pkgname{i386-freebsd},
-\pkgname{x86\_64-darwinlegacy},
+Mojca Miklavec (\pkgname{x86\_64-darwinlegacy}),
+Norbert Preining (%
+\pkgname{aarch64-linux},
+\pkgname{armhf-linux},
+\pkgname{i386-freebsd}, \pkgname{amd64-freebsd},
+\pkgname{i386-linux}, \pkgname{x86\_64-linux},
 \pkgname{i386-solaris}, \pkgname{x86\_64-solaris},
-\pkgname{sparc-solaris}),
-Norbert Preining (\pkgname{i386-linux},
-\pkgname{x86\_64-linux},
 \pkgname{x86\_64-linuxmusl}).
 Pro informaci o~procesu budování \TL{}, viz
 \url{https://tug.org/texlive/build.html}.
+
 
 Překladatelé této příručky:
 Carlos Enriquez Figueras (španělština),
@@ -3261,8 +3294,7 @@ v~letech 2001--2015 kromě výše uvedených autorů Jaromír Kuben,
 Milan Matlák, Zbyněk Michálek, Tomáš Obšívač,
 Karel Píška, Tomáš Polešovský, Libor Škarvada, Zdeněk Wagner a další.
 Michal Mádr editoval \code{cs.po} a přeložil soubor \code{README.EN}.}
-Boris Veytsman (ruština), 
-Zofia Walczak (polština),
+Boris Veytsman \& Vladimir Lomov (ruština),
 Uwe Ziegenhagen (němčina).  
 Webovská stránka dokumentace \TL{} je \url{https://tug.org/texlive/doc.html}.
 
@@ -3312,7 +3344,7 @@ verzi \teTeX{}u a nové vydání \Webc{} (7.3).
 Pro páté vydání (březen 2000) bylo mnoho částí \CD{} revidováno
 a zkontrolováno a byly aktualizovány stovky
 balíků. Detaily o~balících byly uloženy v~souborech \acro{XML}.
-Ale hlavní změnou pro \TeX\ Live~5 bylo vynětí
+Ale hlavní změnou pro \TL~5 bylo vynětí
 softwaru, na kterém byla jakákoliv omezení na šíření
 (non-free software). Vše uložené na \TL{} je nyní
 slučitelné s~tzv.\ \singleuv{Debian Free Software Guide\-lines}
@@ -3329,7 +3361,7 @@ nejen makra, fonty, ale je také připraven odpovídající
 soubor \texttt{language.dat}.
 
 Sedmé vydání v~roce 2002 mělo podstatné rozšíření v~přidání
-podpory \MacOSX{}, kromě množství aktualizací balíků a programů.
+podpory \macOS{}, kromě množství aktualizací balíků a programů.
 Důležitým cílem byla opětná integrace s~\teTeX{}em
 a korekce odchylek z~pátého a šestého vydání.
 
@@ -3423,8 +3455,7 @@ umístěny v~novém podadresáři \dirname{scripts} stromů \dirname{texmf*}
 a mohou být vyhledávány prostřednictvím 
 \verb|kpsewhich -format=texmfscripts|.  Pokud tedy máte programy 
 volající tyto dávky, budou muset být nastaveny. Viz
-\CDref{texmf.doc/doc/english/tds/tds.html\#Scripts} 
-{\texttt{texmf-doc/doc/english/tds/tds.html\#Scripts}}. 
+\url{https://tug.org/tds/tds.html\#Scripts}.
 
 \item Téměř všechny formáty umožňují většinu znaků tisknout 
 bez konverze pomocí překladového souboru 
@@ -3434,21 +3465,21 @@ plus \uv{tab}, \uv{vertikální tab} a \uv{form feed} jsou považovány
 za tisknutelné a nejsou konvertovány. Výjimky tvoří plain \TeX\
 (jen 32--127 jsou tisknutelné), \ConTeXt\ (0--255 tisknutelné) a formáty
 systému \OMEGA. Toto implicitní chování je téměř stejné jako 
-v~\TL\,2003, ale je implementováno čistěji, s~více možnostmi přizpůsobení.
+v~\TL\ 2003, ale je implementováno čistěji, s~více možnostmi přizpůsobení.
 Viz \CDref{texmf-dist/doc/web2c/web2c.html\#TCX-files}
 {\texttt{texmf-dist/doc/web2c/web2c.html\#TCX-files}}. 
 (Mimochodem, se vstupem Unicode může \TeX\ na výstupu vypsat posloupnosti
 částečných znaků při výpisu chybových kontextů, protože je bytově orientován.)
 
-\item \textsf{pdfetex} je teď implicitní stroj pro všechny formáty 
-kromě samotného (plain) \textsf{tex}u.  (Ten samozřejmě generuje DVI,
-když je spuštěn jako \textsf{latex} atd.)  To znamená, kromě jiných
-věcí, že  mikrotypografické rozšíření \textsf{pdftex}u je dostupné
-v~\LaTeX u, \ConTeXt u atd., stejně jako rozšíření 
-\eTeX u (\OnCD{texmf-dist/doc/etex/base/}). 
+\item \pkgname{pdfetex} je teď implicitní stroj pro všechny formáty 
+kromě samotného (plain) \pkgname{tex}u.  (Ten samozřejmě generuje DVI,
+když je spuštěn jako \pkgname{latex} atd.)  To znamená, kromě jiných
+věcí, že  mikrotypografické rozšíření \pkgname{pdftex}u je dostupné
+v~\LaTeX{}u, \ConTeXt{}u atd., stejně jako rozšíření 
+\eTeX{}u (\OnCD{texmf-dist/doc/etex/base/}). 
 
 To také znamená, že užití balíku \pkgname{ifpdf} (pracuje s~plainem 
-i \LaTeX em) nebo ekvivalentního kódu je \emph{důležitější 
+i \LaTeX{}em) nebo ekvivalentního kódu je \emph{důležitější 
 než kdykoliv předtím}, protože jednoduché testování, zda 
 je \cs{pdfoutput} nebo nějaký jiný primitiv definován, 
 není spolehlivý způsob určení, zda je generován PDF 
@@ -3489,9 +3520,9 @@ Unicode (v~UTF-8). Viz \OnCD{texmf-dist/doc/generic/enctex/} a
 \url{http://olsak.net/enctex.html}.
 
 \item Aleph, nový stroj kombinující \eTeX\ a \OMEGA, je nyní k~dispozici.
-Informace najdete na \OnCD{texmf-dist/doc/aleph/base}
+Nějaké informace jsou k~dispozici na \OnCD{texmf-dist/doc/aleph/base}
 a \url{https://texfaq.org/FAQ-enginedev}. Formát pro 
-Aleph, založený na \LaTeX u, se jmenuje \textsf{lamed}.  
+Aleph, založený na \LaTeX u, se jmenuje \pkgname{lamed}.  
 
 \item Nejnovější vydání \LaTeX u má novou verzi LPPL -- teď
 oficiálně schválená Debian licence. Rozmanité další aktualizace najdete
@@ -3513,18 +3544,18 @@ relativně zřídka se používají a my jsme potřebovali místo.
 například \cmdname{initex}.  Funkčnost instrukce \cmdname{ini} byla po
 celá léta přístupná prostřednictvím volby \optname{-ini} na~příkazovém řádku. 
 
-\item Podpora platformy \textsf{i386-openbsd} byla zrušena. 
+\item Podpora platformy \pkgname{i386-openbsd} byla zrušena. 
 Jelikož balíček \pkgname{tetex} v~BSD Ports systému 
 je dostupný a GNU/Linux a FreeBSD binárky byly 
 dostupné, zdálo se nám, že čas dobrovolníků může být využit
 lépe někde jinde.
-\item Na \textsf{sparc-solaris} (přinejmenším) jste možná 
+\item Na \pkgname{sparc-solaris} (přinejmenším) jste možná 
 museli nastavovat proměnné prostředí
 \envname{LD\_LIBRARY\_PATH}, aby běžely programy \pkgname{t1utils}.  
 Je to tím, že jsou kompilovány v~C++,
 a neexistuje standardní umístění \singleuv{runtime} knihoven.  
 (To není novinka roku 2004, ale nebylo to dřív zdokumentováno.)  
-Podobně na \textsf{mips-irix} jsou \singleuv{runtime} knihovny pro MIPS
+Podobně na \pkgname{mips-irix} jsou \singleuv{runtime} knihovny pro MIPS
 7.4 nezbytné.
 \end{itemize}
 
@@ -3699,11 +3730,11 @@ případech zůstaly metriky \emph{nezměněny}. Domovská stránka AMS fontů j
 \url{https://ams.org/tex/amsfonts.html}.
 
 Pomocný program -- nový \GUI{} editor -- \TeX{}works 
-je zahrnut pro Windows, ale také v~Mac\TeX u.  
+je zahrnut pro Windows, ale také v~Mac\TeX{}u.  
 Pro jiné platformy a další informace viz domovskou 
 stránku \TeX{}works \url{https://tug.org/texworks}. 
 Je to multi-platformní prostředí
-inspirované editorem TeXShop v~\MacOSX, zaměřené 
+inspirované editorem TeXShop v~\macOS, zaměřené 
 na jednoduché použití.
 
 Grafický program Asymptote je zahrnutý pro více platforem. Realizuje
@@ -3799,7 +3830,7 @@ Výhodou je, že instalace z~fyzického \DVD\ je mnohem rychlejší.
 
 \subsubsection{2011}
 
-Binárky \MacOSX\ (\code{universal-darwin} a
+Binárky \macOS\ (\code{universal-darwin} a
 \code{x86\_64-darwin}) nyní pracují jenom pro Leopard nebo pozdější; Panther a
 Tiger již nejsou podporovány.
 
@@ -3939,7 +3970,7 @@ parametrem \code{numberprecision}; nová definice makra \code{drawdot}
 v~\filename{plain.mp}, podle Donalda Knutha, mimo jiné odstraňuje chyby ve výstupech 
 SVG a PNG.
 
-Con\TeX{}tová pomůcka \cmdname{pstopdf} bude odstraněna jako samostatný 
+\ConTeXt{}ová pomůcka \cmdname{pstopdf} bude odstraněna jako samostatný 
 příkaz v~určité době po vydání kvůli konfliktům s~pomůckami OS
 téhož názvu. Stále může být (i teď) vyvolána jako 
 \code{mtxrun --script pstopdf}.
@@ -3951,7 +3982,7 @@ a nejsou vykonavatelné na uživatelské úrovni.
 Toto může být navráceno, pokud se to ukáže jako problematické.  
 Byl přidán nový skript \code{psjoin}.
 
-Přerozdělení \TeX\ Live pro Mac\TeX\ (sekce~\ref{sec:macosx}) již
+Přerozdělení \TL\ pro Mac\TeX\ (sekce~\ref{sec:macosx}) již
 nezahrnuje výběrové balíky pouze pro Mac pro fonty Latin Modern a
 \TeX\ Gyre, jelikož pro jednotlivé uživatele je dostatečně jednoduché 
 začlenit je do systému. Program \cmdname{convert} z~ImageMagick 
@@ -3980,7 +4011,7 @@ v~základním \LaTeX u. Podrobnosti obsahují zahrnuté dokumenty
 
 Vnitřně nyní \LaTeXe\ zahrnuje konfiguraci Unicode-related stroje
 (jehož znaky jsou písmena, názvy primitivů atd.), který byl
-původně součástí \TeX\ Live.  Tato změna je zamýšlena
+původně součástí \TL.  Tato změna je zamýšlena
 jako neviditelná pro uživatele; 
 několik vnitřních řídících příkazů nízké úrovně
 bylo přejmenováno nebo odstraněno, ale vnější chování 
@@ -4004,7 +4035,7 @@ analogické k~\prog{up*tex}.
 
 Mac\TeX:\ Aktualizace zařazeného balíku Ghostscript  
 pro podporu CJK. Panel preferencí \TeX ové distribuce
-pracuje nyní v~Yosemite (\MacOSX~10.10).  
+pracuje nyní v~Yosemite (\macOS~10.10).  
 Resource-fork font suitcases (obecně bez přípony) \XeTeX\ už 
 nepodporuje; podpora data-fork suitcases
 (\code{.dfont}) zůstává.
@@ -4015,7 +4046,7 @@ Skripty Web2C \prog{mktex*} (včetně \prog{mktexlsr}, \prog{mktextfm},
 \prog{mktexpk}) upřednostňují nyní programy v~jejich vlastních adresářích,
 místo vždy používané existující proměnné \envname{PATH}.
 
-Platformy: \pkgname{*-kfreebsd} jsou odstraněny, protože \TeX\ Live je nyní 
+Platformy: \pkgname{*-kfreebsd} jsou odstraněny, protože \TL\ je nyní 
 snadno dostupný prostřednictvím mechanismu systémových platforem.
 Podpora pro několik dalších platforem je dostupná ve formě uživatelských binárek
 (\url{https://tug.org/texlive/custom-bin.html}). Navíc jsou některé 
@@ -4048,8 +4079,7 @@ Pokud je nastavena i proměnná
 \TeX ových primitiv \cs{year}, \cs{month}, \cs{day}
 a \cs{time}. Manuál pdf\TeX u má příklady a detaily.
 
-pdf\TeX: Nové primitivy \cs{pdfinfoomitdate}, \cs{pdftrailerid},
-\cs{pdfsuppressptexinfo}, na nastavení hodnot objevujících se v~PDF
+pdf\TeX: Tři nové primitivy \cs{pdfinfoomitdate}, \cs{pdfsuppressptexinfo}, \cs{pdftrailerid}, na nastavení hodnot objevujících se v~PDF
 výstupu, které se normálně mění při každém spuštění
 (časové známky). Ovlivní pouze výstup PDF, ne DVI.
 
@@ -4076,7 +4106,7 @@ nová volba \code{-a} vynechává všechny úpravy.
 \end{itemize*}
 
 Mac\TeX:\ The \TeX\ Distribution Preference Panel byl zrušen; jeho 
-funkcionalita je nyní v~\TeX\ Live Utility; přibalené aplikace GUI
+funkcionalita je nyní v~\TL\ Utility; přibalené aplikace GUI
 jsou aktualizovány; nový skript \code{cjk-gs-integrate} 
 pro spuštění uživateli, kteří si přejí začlenit různé
 fonty CJK do Ghostscriptu.
@@ -4114,12 +4144,12 @@ chování, tedy to, kdy \uv{první nastavení vyhrává}.
 \cs{pdfnormaldeviate}, \cs{pdfrandomseed}, \cs{pdfsetrandomseed},
 \cs{pdfelapsedtime}, \cs{pdfresettimer} z~pdf\TeX{}u.
 
-Mac\TeX:\ Jako v~tomto roce, pouze vydání \MacOSX, pro která Apple ještě 
+Mac\TeX:\ Jako v~tomto roce, pouze vydání \macOS, pro která Apple ještě 
 vydává bezpečnostní záplaty, budou podporovány v~Mac\TeX{}u pod
 platformou s~názvem |x86_64-darwin|; v~současnosti sa tím myslí Yosemite,
-El~Capitan a Sierra (10.10 a novší). Binárky pro starší verze \MacOSX\
-nejsou zahrnuty v~Mac\TeX{}u, ale stále ještě jsou dostupné v~\TeX\
-Live (|x86_64-darwinlegacy|, \code{i386-darwin}, \code{powerpc-darwin}).
+El~Capitan a Sierra (10.10 a novší). Binárky pro starší verze \macOS\
+nejsou zahrnuty v~Mac\TeX{}u, ale stále ještě jsou dostupné v~\TL\
+(|x86_64-darwinlegacy|, \code{i386-darwin}, \code{powerpc-darwin}).
 
 Infrastruktura: Strom \envname{TEXMFLOCAL} je nyní prohledáván před
 \envname{TEXMFSYSCONFIG} a \envname{TEXMFSYSVAR} (implicitně); je naděje,
@@ -4187,7 +4217,7 @@ programu pokud selže výstupní ovladač; opraveny různé UTF-8 a další prim
 Mac\TeX:\ Viz změny podpory verze níže. 
 Navíc, soubory instalovány do \code{/Applications/TeX/} programem Mac\TeX\ 
 byly reorganizovány pro větší srozumitelnost; nyní toto místo obsahuje čtyři GUI programy 
-(BibDesk, LaTeXiT, \TeX\ Live Utility a TeXShop) na nejvyšší úrovni a adresáře
+(BibDesk, LaTeXiT, \TL\ Utility a TeXShop) na nejvyšší úrovni a adresáře
 s~dalšími nástroji a dokumentací.
 
 \code{tlmgr}: nové front-end \code{tlshell} (Tcl/Tk) a
@@ -4235,7 +4265,7 @@ pdf\TeX: Nový primitiv \cs{expanded}; pokud je parametr
 je vypuštěn z~výstupu PDF, protože nemůže být garantovaně správný, jak to
 požadují PDF/A-2 a PDF/A-3.
 
-Xe\TeX: Nové primitivy \cs{expanded},
+Xe\TeX: Nové primitivy pro podporu napříč různými verzemi sázecích programů: \cs{expanded},
 \cs{creationdate},
 \cs{elapsedtime},
 \cs{filedump}, 
@@ -4244,8 +4274,7 @@ Xe\TeX: Nové primitivy \cs{expanded},
 \cs{resettimer}, 
 \cs{normaldeviate}, 
 \cs{uniformdeviate}, 
-\cs{randomseed}; extend \cs{Ucharcat} to produce active
-characters.
+\cs{randomseed}; rozšiřují \cs{Ucharcat} pro vytvoření aktivních znaků.
 
 \code{tlmgr}: Podporuje \code{curl} jako program na stahování;
 pro lokální zálohování používá \code{lz4} a gzip před \code{xz}, pokud jsou k~dispozici;
@@ -4259,7 +4288,7 @@ a vyvolává nové GUI Tcl/TK (viz oddíly~\ref{sec:basic} a~\ref{sec:graphical-
 Nástroje:
 \begin{itemize*}
 	\item \code{cwebbin} (\url{https://ctan.org/pkg/cwebbin}) je nyní 
-	implementace CWEB v~\TeX\ Live, s~podporou pro více jazykových dialektů,
+	implementace CWEB v~\TL, s~podporou pro více jazykových dialektů,
 	včetně programu \code{ctwill} na výrobu mini-indexů. 
 	
 	\item \code{chkdvifont}: poskytuje informace o fontech z~\dvi{} souborů, také
@@ -4302,8 +4331,7 @@ Všeobecně:
 	
 \end{itemize}
 
-ep\TeX, eup\TeX: Nové primitivy \cs{Uchar}, \cs{Ucharcat},
-\cs{current(x)spacingmode}, \cs{ifincsname}; opraveny \cs{fontchar??} a
+ep\TeX, eup\TeX: Několik nových primitivů, většinou pro podporu mezi verzemi sázecích programů:  \cs{Uchar}, \cs{Ucharcat}, \cs{current(x)spacingmode}, \cs{ifincsname}; také opraveny \cs{fontchar??} a
 \cs{iffontchar}. Jenom pro eup\TeX: \cs{currentcjktoken}.
 
 Lua\TeX: Integrace s~knihovnou HarfBuzz, dostupná jako nové stroje 
@@ -4329,16 +4357,18 @@ vyšší (High~Sierra, Mojave a Catalina);
 \texttt{x86\_64-darwinlegacy} podporuje 10.6 a novější.
 Mac\TeX\ je na systému autorizován pro běh a programy příkazové řádky mají zajištěné spouštění, 
 jak nyní vyžaduje Apple pro instalační balíčky. 
-BibDesk a \TeX\ Live Utility v~Mac\TeX{}u protože nejsou pro systém autorizovány, 
+BibDesk a \TL\ Utility v~Mac\TeX{}u protože nejsou pro systém autorizovány, 
 ale soubor \filename{README} obsahuje seznam url, kde je možné je získat.
+
+|x86_64-darwinlegacy|: zrušena podpora X11, včetně \cmdname{xdvi}.
 
 \code{tlmgr} a infrastruktura: \begin{itemize*}
 	\item Automaticky (jednou) zopakuje balíčky, které se nepodaří stáhnout.
 	\item Nová volba \texttt{tlmgr check texmfdbs}, na kontrolu souhlasu (konzistence)
 	souborů \texttt{ls-R} a specifikací \texttt{!!}\ pro každý strom.
 	\item Používejí verzované názvy souborů pro balíčkové kontejnery, jako\newline 
-	v~\texttt{tlnet/archive/\textsl{pkgname}.rNNN.tar.xz}; 
-	mělo by to být neviditelné pro uživatele, ale je to výrazná změna v~distribuci.
+	v~\texttt{tlnet/archive/\textsl{pkgname}.rNNN.tar.xz}. 
+	Tohle by mělo být neviditelné pro uživatele, ale je to výrazná změna v~distribuci.
 	\item \texttt{catalogue-date} informace již nejsou šířeny z~\TeX~Catalogue, 
 	protože to často nesouviselo s aktualizacemi balíčků.
 \end{itemize*}
@@ -4379,10 +4409,10 @@ zobecněná varianta nového \cs{tracingstacklevels}.
 MetaPost:
 \begin{itemize*}
 \item Podpora proměnné prostředí |SOURCE_DATE_EPOCH| pro reprodukovatelný výstup.
-\item Vyhne se chybnému konečnému \texttt {\%} v~mpto.
+\item Vyhne se chybnému konečnému \texttt {\%} v~\texttt{mpto}.
 \item Popsaná volba \texttt {-T}, další opravy příručky.
 \item Hodnota \texttt{epsilon} se změnila v~binárním a desítkovém režimu, takže\newline
-	|mp_solve_rising_cubic| nyní funguje podle očekávání. 
+	funkce |mp_solve_rising_cubic| nyní funguje podle očekávání. 
 \end{itemize*}
 
 pdf\TeX{}:
@@ -4400,6 +4430,11 @@ Xe\TeX{}: Opravy matematického vyrovnání párů (kerningu).
 
 Dvipdfmx:
 \begin{itemize*}
+\item Ghostscript je nyní ve výchozím nastavení bezpečně vyvolán; pro potlačení 
+(tedy za předpokladu, že všechny vstupní soubory jsou důvěryhodné) použijte
+\verb|-i dvipdfmx-unsafe.cfg|. Chcete-li použít PSTricks s \XeTeX em, je to tak
+vyžadováno, jako~v:\\
+\verb|xetex -output-driver="xdvipdfmx -i dvipdfmx-unsafe.cfg -q -E" ...|
 \item Pokud soubor s~obrázkem nebyl nalezen, ukončení se špatným stavem.
 \item Rozšířená speciální syntaxe pro podporu barev.
 \item Specials pro manipulaci |ExtGState|.
@@ -4407,6 +4442,7 @@ Dvipdfmx:
 \item Experimentální podpora rozšířeného |fnt_def| \code{dviluatex}u.
 \item Podpora nové vlastnosti virtuálního písma pro záložní definici japonského písma. 
 \end{itemize*}
+
 
 Dvips:
 \begin{itemize*}
@@ -4438,9 +4474,7 @@ jsou letos součástí Mac\TeX{}u.
 \texttt{texmf-var/web2c/tlmgr-commands.log}. 
 \end{itemize*}
 
-\htmlanchor{news}
-\subsection{Současnost -- 2022}
-\label{sec:tlcurrent}
+\subsubsection{2022}
 
 Všeobecné: \begin{itemize}
 	\item Nový stroj \code{hitex}, který vytváří svůj vlastní HINT formát,
@@ -4472,13 +4506,13 @@ Lua\TeX{}:
 \begin{itemize*}
 	\item Podporuje strukturované destinace z~PDF 2.0.
 	\item PNG /Smask pro PDF 2.0.
-	\item Variabilní rozhraní písma pro luahbtex.
+	\item Variabilní rozhraní písma pro \code{luahbtex}.
 	\item Různé výchozí styly odmocnin v~mathdefaultsmode. 
 	\item Možnost volit specifické dělení (\cs{discretionary}
           ve vybraném bloku.  % Optionally block selected discretionary creation.
 	\item Vylepšení implementace písem TrueType.
 	\item Efektivnější alokace \cs{fontdimen}.
-	\item Ignoruje odstavce s~pouze lokálním uzlem \texttt{par}
+	\item Ignoruje odstavce s~pouze lokálním uzlem \code{par}
           následovaným synchronizačními uzly směru. 
 \end{itemize*}
 
@@ -4523,7 +4557,7 @@ Dvipdfmx: \begin{itemize*}
 \end{itemize*}
 
 Dvips: Ve výchozím nastavení se nepokoušejte o automatické nastavení média pro otočené
-velikosti papíru; nová volba \texttt{--landscaperotate} ho znovu povolí. 
+velikosti papíru; nová volba \texttt{-{}-landscaperotate} ho znovu povolí. 
 
 \code{upmendex}: Experimentální podpora pro arabské a hebrejské skripty;
 vylepšená klasifikace znaků a jazyková podpora. 
@@ -4548,6 +4582,202 @@ Platformy: Žádné změny v~podpoře platforem pro tento rok (2022). Nicméně,
 pro vydání v~příštím roce (2023) plánujeme přechod binárních souborů Windows z~32-bit na 64-bit. 
 Bohužel nedokážeme realizovat podporu pro oba současně. 
 
+% 
+\subsubsection{2023}
+
+Windows:
+Jak bylo oznámeno dříve, \TL{} nyní obsahuje 64bitové
+binární soubory pro  Windows namísto 32bitových. Nový název adresáře je
+\texttt{bin/windows} (nezdá se správné vkládat 64bitové binární soubory do
+adresáře pojmenovaného ``32''). Víme, že to způsobí dodatečnou práci pro uživatele Windows, ale zdálo se, že neexistuje žádná lepší alternativa. Pokud potřebujete podporu 32bitového systému Windows, budete si muset nainstalovat \TL{} 2022. Od Windows~11 dále, Windows na ARM podporují emulaci 64bitové verze
+AMD/Intel a tak může používat aktuální \TL. Nicméně Windows~10 na ARM
+neumí emulovat Intel/AMD 64-bit, a proto bude potřebovat také 32-bitový
+\TL{}.  
+Viz samostatnou webovou stránku  \TL{} pro Windows (\url{https://tug.org/texlive/windows.html}).
+
+Rozšíření pro různé verze sázecích programů (kromě původních \TeX{}u a e-\TeX{}u):
+\cs{special} následované novým klíčovým slovem \uv{\texttt{shipout}} zpožďuje rozšíření tokenů argumentů
+do času \cs{shipout}, jako non-\verb|\immediate\write|.{\raggedright\par}
+
+\noindent ep\TeX{}, eup\TeX{}:
+\begin{itemize*}
+	\item \uv{Prvotní} (u)ptex již není sestavován; (u)ptex nyní běží v~režimu kompatibility e(u)ptexu. Totéž platí pro nástroje p\TeX{}u, které jsou uvedeny níže.
+	\item Nová primitiva: \cs{tojis}, \cs{ptextracingfonts}, \cs{ptexfontname}.
+	\item Pro \cs{font} je podporována nová syntaxe pro JIS/UCS.
+\end{itemize*}
+
+\noindent Lua\TeX: 
+\begin{itemize*}
+\item Nový primitiv \cs{variablefam} umožňuje zachovat třídu matematických znaků a zároveň nechat rodinu, aby se přizpůsobila.
+\item Vylepšené oblasti anotací r2l.
+\item %cross-engine 
+\uv{Zpožďující \cs{special}} pro různé verze sázecích programů popsaný výše.
+\item V~Lua\TeX{}u 1.17.0, vydaném v~květnu 2023:
+knihovna socketů je nyní ve výchozím nastavení zakázána; nová možnost příkazového řádku
+\code{--socket} to umožňuje, stejně jako \code{--shell-escape} (ne
+\code{--shell-restricted}). Navíc knihovna mime je nyní vždy
+dostupná a nové funkce \code{os.socketsleep} a
+\code{os.socketgettime} jsou také vždy k dispozici. Nakonec nějaké obskurní způsoby, jak obejít různé bezpečnostní prvky, byly opraveny.
+\end{itemize*}
+
+\noindent MetaPost: Opravy chyb. \texttt{svg->dx} a \texttt{svg->dy} jsou nyní pro lepší přesnost \texttt{double}; aktualizován \verb|mp_begin_itration|; 
+ opraven únik paměti v~\texttt{mplib}.
+
+\noindent pdf\TeX{}: 
+\begin{itemize*}
+	\item Nový primitiv \cs{pdfomitinfodict} k~ úplnému vynechání slovníku \texttt{/Info}.
+	\item Nový primitiv \cs{pdfomitprocset} pro ovládání vynechání pole \texttt{/ProcSet}: \texttt{/ProcSet} je zahrnuto, pokud je tento parametr záporný, nebo pokud je tento parametr nulový a pdftex generovuje výstup PDF~1.x.
+	\item S~\cs{pdfinterwordspaceon}, pokud aktuální kódování písma má na pozici 32 znak \texttt{/space}, je použit; v opačném případě se používá
+	\texttt{/space} z~(nového) výchozího písma \texttt{pdftexspace}. Toto výchozí písmo lze přepsat novým primitivem \cs{pdfspacefont}. Stejný nový postup se používá pro
+	\cs{pdffakespace}.
+\end{itemize*}
+
+\noindent p\TeX{} a další: 
+\begin{itemize*}
+	\item Jak bylo uvedeno výše, \texttt{ptex} nyní spouští \texttt{eptex} v~režimu kompatibility místo toho, aby byl sestaven samostatně.
+	\item Nástroje p\TeX{}u (pbibtex, pdvitype, ppltotf, ptftopl) sloučeny do odpovídajících verzí up\TeX{}u, běží v~režimu kompatibility.
+\end{itemize*}
+
+\noindent Xe\TeX: opraven výpočet \cs{topskip} a \cs{splittopskip}, když je aktivní \cs{XeTeXupwardsmode}; 
+%cross-engine
+\uv{zpožďující \cs{special}} popsaný výše.
+
+\noindent Dvipdfmx: nová volba \texttt{-{}-pdfm-str-utf8} pro vytvoření \uv{pdfmark} a/nebo záložky.
+
+
+\noindent \BibTeX: 
+\begin{itemize*}
+	\item Tato varianta Bib\TeX{}u je většinou směrem zpětně kompatibilní s~\BibTeX{}em,
+	s~mnohem lepší vícejazyčnou podporou (založenou na Unicode). Byla v~\TL\ několik let.
+	\item Letos byly přidány další funkce pro podporu jazyků CJK, některé se rozšířily z japonského (u)pbibtexu a dalších programů.
+\end{itemize*}
+
+\noindent Kpathsea: podpora odhadu kódování vstupních souborů pro platformy Unixu jako na Windows; povolena pro (\texttt{e})\texttt{p}(\texttt{la})\texttt{tex}, \texttt{pbibtex},
+\texttt{mendex}.
+
+\noindent \code{tlmgr} a infrastruktura: 
+\begin{itemize*}
+	\item výchozí pro textové rozhraní na \macOS,
+	\item nejprve nainstaluje základní balíčky, instalaci ostatních balíčků opakuje jedenkrát (pokud stahování nebo instalace pro daný balíček selže),
+	\item vykonávají se jednodušší kontroly dostatku místa na disku.
+\end{itemize*}
+
+\noindent Mac\TeX{}: 
+\begin{itemize*}
+	\item Mac\TeX{} a jeho binární složka \texttt{universal-darwin}
+	vyžadují \macOS~10.14 nebo vyšší (Mojave, Catalina, Big~Sur, Monterey,
+	Ventura). Binární složka \texttt{x86\_64-darwinlegacy}, k~dispozici pouze
+	s~unixovým \texttt{install-tl}, podporuje 10.6 (Snow~Leopard) a pozdější.
+	
+\item Balíček GUI v~Mac\TeX{}u nyní obsahuje \texttt{hintview}, prohlížeč dokumentů HINT pro \macOS\ (vytvořený pomocí sázecích programů pro mobilní zařízení \texttt{hitex} a
+\texttt{hilatex}; viz webovou stránku Hi\TeX{}u \url{https://hint.userweb.mwn.de/hint/hitex.html}). Balíček GUI již
+nenainstaluje složku dokumentů a nahradí je stručným \texttt{READ~ME} pro nové uživatele a stránkou o \texttt{hintview}.
+	
+\item The GUI package in Mac\TeX{} now contains \texttt{hintview}, a macOS
+	viewer for HINT documents (created by the \texttt{hitex} and
+	\texttt{hilatex} engines for mobile devices; see the Hi\TeX{} web page,
+	\url{https://hint.userweb.mwn.de/hint/hitex.html}). The GUI package no
+	longer installs a folder of documents, replacing them with a short
+	\texttt{READ~ME} for new users and a page about \texttt{hintview}.
+	
+\item Složka \texttt{Extras} dalšího softwaru \TeX{} na DVD byla nahrazena dokumentem obsahujícím odkazy na stránky ke stažení.
+\end{itemize*}
+	
+\noindent Platformy: 
+\begin{itemize*}
+	\item Jak bylo zmíněno výše, nový binární adresář \texttt{windows} obsahuje 64bitové binární soubory pro Windows a
+	\item binární adresář \texttt{bin/win32} je pryč, protože nemůžeme podporovat 32bitové a 64bitové Windows současně.
+	\item Binární adresář \texttt{i386-cygwin} je pryč, protože Cygwin již nepodporuje i386.
+\end{itemize*}
+
+\htmlanchor{news}
+\subsection{Současnost: 2024}
+\label{sec:tlcurrent}
+
+Změny pro různé verze sázecích programů (kromě původních \TeX{}, e-\TeX{} a Lua\TeX{}u):
+\begin{itemize*}
+\item Vyhněte se zhroucení při nesprávném použití párů \cs{output} a \cs{write}.
+\item Drobná optimalizace vnitřní smyčky. (Obě tyto změny jsou způsobeny
+Davidem Fuchsem.)
+\end{itemize*}
+
+\noindent Lua\TeX: \begin{itemize*}
+\item Kontroly na úrovni Lua pro zápis do souborů, které jsou nyní podobné jako
+kontroly na úrovni \TeX{}u.
+\item Pokud je nastavena hodnota Lua \code{texconfig.trace\_extra\_newline},
+v~protokolu mezi parametry makra se vypisují prázdné řádky. V~r. 2020--2023 tomu tak bylo standardně; před tím takové prázdné řádky nebyly nikdy na výstupu, což je chování ostatních verzí sázecích programů.
+\item V minulosti \code{texlua} pod Windows (nikoli \code{luatex} a ne
+jakákoli jiná platforma), interně prováděl rozšíření zástupných znaků na
+argumenty. To se již neděje.
+\end{itemize*}
+
+\noindent MetaPost: \begin{itemize*}\raggedright
+\item MPFI knihovna nyní zahrnuta pro intervalovou aritmetiku; umožněno volbou
+\texttt{-{}-numbersystem=interval}.
+\end{itemize*}
+
+\noindent pdf\TeX: \begin{itemize*}
+\item Spolehlivější extrakce textu na systémech BigEndian.
+\item Více kontrol proti poškozeným souborům pfb, fmt, pdf.
+\item Vyhněte se psaní poškozeného pdf vzhledem k~neobvyklým zahrnutím pdf.
+\item Příručka převedena na \LaTeX\ a důkladně zkontrolována,
+ačkoli podstatné aktualizace jsou minimální.
+\end{itemize*}
+
+\noindent ep\TeX{}, eup\TeX{}: \begin{itemize*}
+\item Nový jednoduchý nástroj pro převod kódování \texttt{ptekf}.
+\item \texttt{eptex} se již nestaví samostatně; běží v;režimu legacy-encoding programu \texttt{euptex}.
+\end{itemize*}
+
+\noindent Xe\TeX{}: \begin{itemize*}
+\item Podporovány jsou znaky Unicode v~názvech souborů mimo BMP.
+\end{itemize*}
+
+\noindent Dvipdfmx: \begin{itemize*}
+\item Vypočítá posun časové zóny stejným způsobem jako pdf\TeX.
+\item Ovládejte selektory variací, abyste si poradili s novým Adobe-Japan1-UCS2 CMap.
+\item Záložní vícebajtové znaky ve virtuálních fontech na OFM fonty pro (u)p\TeX.
+\item Podpora klíčového slova \code{named} ve \uv{special} \code{pdf:image}.
+\end{itemize*}
+
+\noindent Kpathsea: \begin{itemize*}
+\item Podpora rozšířené kontroly bezpečných jmen souborů, která také umožňuje
+zápis pod \code{TEXMF}[\code{SYS}]\code{VAR}, pro Lua\AllTeX{}; nové
+funkce a odpovídající volby \code{kpsewhich}.
+\item Podpora nové proměnné \code{TEXMF\_OUTPUT\_DIRECTORY} (vedle
+tradiční \code{TEXMFOUTPUT}), takže podprogramy mohou mít přístup k~ nastavení \texttt{-{}-output-directory} při vyvolání sázecího programu.
+\end{itemize*}
+
+\noindent CWEB: \begin{itemize*}
+\item Podpora Lua\TeX{}u jako backend sázecího programu \TeX{}u.
+\item Opraveno přetečení vyrovnávací paměti na řádcích bez bodu přerušení.
+\end{itemize*}
+
+\noindent \code{tlmgr}: \begin{itemize*}
+\item Nová akce \code{bug}, která pomůže najít informace o hlášení chyb.
+\item Použijte náš vlastní balíček kořenových certifikátů na všech platformách pro podporu LWP v širším měřítku, zejména na macOS.
+\item Detekujte vzdálené úložiště starší než místní instalace (tj. zastaralé zrcadlo) a neaktualizujte, abyste předešli nesprávnému odstranění balíčků.
+\item Podpora nastavení velikosti papíru v~\ConTeXt{}u.
+\item Ořízněte zálohy souborů tlpdb pro zrcadlená úložiště (hlavní a tlcontrib).
+\end{itemize*}
+
+\noindent Platformy: \begin{itemize*}
+\item Obraz ISO opět obsahuje binární soubory pro všechny platformy. 
+V~posledních několika letech byly některé binární sady oříznuty, ale letos
+nevytváříme fyzické DVD jako výhodu pro skupinu uživatelů, takže můžeme
+znovu vše zahrnout. Také, dokonce i maximálně-prořezaný
+obraz je příliš velký na to, aby se vešel na jednovrstvé DVD, takže prořezávání nemá žádný
+přínos pro dobrovolné napalovače v roce 2024. Více informací na
+\url{https://tug.org/texcollection/}.
+\item Robert Alessi poskytuje binární soubory pro nativní instalaci \TL{}
+pod OpenBSD na \url{https://sr.ht/~ralessi/texlive-openbsd/}.
+\end{itemize*}
+
+
+\noindent Mac\TeX: nyní obsahuje nejnovější Ghostscript 10.03.0, aktualizace
+ze všech čtyř programů GUI spolu se všemi novými změnami \TL{}  (jako vždy). Binární soubory stále podporují macOS~10.14 (Mojave, 2018) a novější. (Jako obvykle,
+starší verze Mac jsou podporovány binárními soubory \texttt{x86\_64-darwinlegacy}, které jsou součástí \TL{}, ale ne Mac\TeX{}.)
+
 \subsection{Budoucnost}
 
 Máme v~úmyslu pokračovat v~pravidelných vydáních \TL{} a rádi bychom poskytovali
@@ -4559,7 +4789,7 @@ Viz, prosím, \url{https://tug.org/texlive/contribute.html}.
 
 Prosíme, pošlete opravy, návrhy, náměty a nabídky pomoci na:
 \begin{quote}
-\email{tex-live@tug.org}\\
+\email{tex-live@tug.org} {\small (nemusíte se přihlásit, abyste mohli posílat příspěvky)}\\
 \url{https://tug.org/texlive}
 \end{quote}
 \smallskip\nobreak

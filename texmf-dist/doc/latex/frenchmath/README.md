@@ -4,7 +4,7 @@
 ## Presentation
 
 The package provides:
-- roman uppercase letters in mathematical mode according to French rule (can be optionnally disabled),
+- roman uppercase letters in mathematical mode according to French rule (can be optionally disabled),
 - correct spacing in math mode after commas, before a semicolon and around square brackets,
 - some useful macros and aliases for symbols used in France: `\infeg`, `\supeg`, `\paral`,...
 - several macros for writing French operator names like pgcd, ppcm, Card, rg, Vect,...

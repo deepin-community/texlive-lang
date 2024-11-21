@@ -1,7 +1,11 @@
 %%%
 % Diff\'erentes représentations graphiques
 %%%
-\setKVdefault[TraceG]{Millimetre=false,Grille=false,Graduations=false,PasGradX=1,PasGradY=1,PasGrilleX=1,PasGrilleY=1,Xmin=-5.5,Xmax=5.5,Xstep=1,Ymin=-5.5,Ymax=5.5,Ystep=1,Bornea=-5.5,Borneb=5.5,LabelX={},LabelY={},LegendeX=false,LegendeY=false,LabelC=0.5,NomCourbe={},Origine={(5.5,5.5)},Fonction=false,Points=false,Invisible=false,CouleurPoint=red,CouleurTrace=black,Epaisseur=1,Relie=false,RelieSegment=false,Marque=dot,Code=false,Vide=false,NbPointsCourbe=100,Tiret=false}%
+\def\filedateRepGraph{2024/08/20}%
+\def\fileversionRepGraph{0.1a}%
+\message{-- \filedateRepGraph\space v\fileversionRepGraph}%
+%
+\setKVdefault[TraceG]{Millimetre=false,Grille=false,Graduations=false,PasGradX=1,PasGradY=1,PasGrilleX=1,PasGrilleY=1,Xmin=-5.5,Xmax=5.5,Xstep=1,Ymin=-5.5,Ymax=5.5,Ystep=1,Bornea=-5.5,Borneb=5.5,LabelX={},LabelY={},LegendeX=false,LegendeY=false,LabelC=0.5,NomCourbe={},Origine={(5.5,5.5)},Fonction=false,Points=false,Invisible=false,CouleurPoint=red,CouleurTrace=black,Epaisseur=1,Relie=false,RelieSegment=false,Marque=dot,Code=false,Vide=false,NbPointsCourbe=100,Tiret=false,StyleTrace=0,Date=false}%
 \defKV[TraceG]{Traces=\setKV[TraceG]{Code}}%
 \defKV[TraceG]{LabelX=\setKV[TraceG]{LegendeX}}%
 \defKV[TraceG]{LabelY=\setKV[TraceG]{LegendeY}}%
@@ -35,6 +39,8 @@
     y.u=1cm/\useKV[TraceG]{Ystep};
     grillex=\useKV[TraceG]{PasGrilleX};
     grilley=\useKV[TraceG]{PasGrilleY};
+    pasgradx=\useKV[TraceG]{PasGradX};
+    pasgrady=\useKV[TraceG]{PasGradY};
     pos=\useKV[TraceG]{LabelC};
 
     marque_p:=str \useKV[TraceG]{Marque};
@@ -49,6 +55,9 @@
     LegendeX:=\useKV[TraceG]{LegendeX};
     LegendeY:=\useKV[TraceG]{LegendeY};
 
+    boolean Date;
+    Date=\useKV[TraceG]{Date};
+    
     boolean Relie;
     Relie=\useKV[TraceG]{Relie};
 
@@ -73,12 +82,16 @@
     fi;
     
     if Graduations:
-    for k=0 step grillex until (xmax-xmin):
+    for k=0 step pasgradx until (xmax-xmin):
     trace ((0,-0.5mm)--(0,0.5mm)) shifted ((k*x.u,0) shifted Origine) withpen pencircle scaled1.25;
+    if Date:
+    label.bot(TEX(decimal(xmin+k)),(k*x.u,0) shifted Origine);
+    else:
     label.bot(TEX("\num{"&decimal(xmin+k)&"}"),(k*x.u,0) shifted Origine);
+    fi;
     endfor;
     label.ulft(TEX("\num{"&decimal(ymin)&"}"),(0,0) shifted Origine);
-    for k=grilley step grilley until (ymax-ymin):
+    for k=pasgrady step pasgrady until (ymax-ymin):
     trace ((-0.5mm,0)--(0.5mm,0)) shifted ((0,k*y.u) shifted Origine) withpen pencircle scaled1.25;
     label.lft(TEX("\num{"&decimal(ymin+k)&"}"),(0,k*y.u) shifted Origine);
     endfor;

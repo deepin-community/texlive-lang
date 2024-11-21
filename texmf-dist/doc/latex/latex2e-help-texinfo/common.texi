@@ -1,7 +1,8 @@
-@c $Id: common.texi 1089 2022-08-12 20:30:20Z vincentb1 $
+@c $Id: common.texi 1168 2024-05-06 17:11:09Z karl $
 @c Public domain.
 @set LTXREFMAN_HOME_PAGE https://latexref.xyz
 @set LTXREFMAN_BUGS latexrefman@@tug.org
+
 @clear HAS-MATH 
 @iftex
 @set HAS-MATH
@@ -9,18 +10,29 @@
 \then\@c
 @end macro
 @end iftex
+@c
 @ifnottex
 @macro iftexthenelse {then,else}
 \else\@c
 @end macro
 @end ifnottex
+
+@c package reference.
 @macro package {packagename}
 @code{\packagename\}
 @end macro
-@c used to remove something form the spell checker
+
+@c used to remove something from the spell checker.
 @macro identity {x}
 \x\
 @end macro
+
+@c so we can use \mbox in @math/@tex blocks. Should never be used outside.
+@iftex
+@macro mbox {text}
+@hbox{\text\}
+@end macro
+@end iftex
 
 @tex
 \globaldefs=1

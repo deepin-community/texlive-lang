@@ -10,11 +10,11 @@
 %% -------------------------------------------------------------
 %% 
 %% It may be distributed and/or modified under the
-%% conditions of the LaTeX Project Public License, either version 1.3
+%% conditions of the LaTeX Project Public License, either version 1.3c
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
 %%   http://www.latex-project.org/lppl.txt
-%% and version 1.3 or later is part of all distributions of LaTeX
+%% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2003/12/01 or later.
 %% 
 %% This work has the LPPL maintenance status "maintained".
@@ -24,10 +24,10 @@
 %% Please report errors to: <daniel (dot) flipo (at) free (dot) fr>
 %% 
 \ProvidesLanguage{french}
-         [2023-12-19 v3.5r French support from the babel system]
+         [2024-07-25 v3.6c French support from the babel system]
 %%
 %%  Babel package for LaTeX version 2e
-%%  Copyright © 1996-2023
+%%  Copyright © 1996-2024
 %%            by Daniel Flipo <daniel (dot) flipo (at) free (dot) fr>
 %%
 \LdfInit\CurrentOption{FBclean@on@exit}
@@ -252,6 +252,7 @@
     \fb@info{No need for active punctuation characters\\
              with this version of LuaTeX!}
   \fi
+
   \newcommand*{\set@glue@table}[1]{%
     \directlua {
       local s = token.get_meaning("FB#1space")
@@ -503,9 +504,10 @@
   \DeclareRobustCommand\rmfamilyFB{\FB@spacing@on  \rmfamilyORI}
   \DeclareRobustCommand\sffamilyFB{\FB@spacing@on  \sffamilyORI}
 \fi
+\providecommand\texorpdfstring[2]{#1}
 \DeclareRobustCommand*{\NoAutoSpacing}{%
-  \FB@spacing@off
-  \ifFB@active@punct\shorthandoff{;:!?}\fi
+  \texorpdfstring{\FB@spacing@off
+                  \ifFB@active@punct\shorthandoff{;:!?}\fi}{}%
 }
 \ifLaTeXe
 \else
@@ -524,7 +526,6 @@
   \fi
   \let\xspace\relax
 \fi
-\providecommand\texorpdfstring[2]{#1}
 \newcommand*{\FB@og}{\texorpdfstring{\@FB@og}{\guillemotleft\space}}
 \newcommand*{\FB@fg}{\texorpdfstring{\@FB@fg}{\space\guillemotright}}
 \newcommand*{\FB@guillspace}{\penalty\@M\FBguillspace}
@@ -777,39 +778,22 @@
   \providecommand*{\textbackslash}{{\char"005C}}
   \providecommand*{\textasciicircum}{{\char"005E}}
   \providecommand*{\textasciitilde}{{\char"007E}}
-  \newcommand*{\FB@degre}{°}
+  \DeclareRobustCommand*{\degre}{°}
 \else
-  \ifLaTeXe
-    \newcommand*{\FB@degre}{\r{}}
-  \fi
+  \DeclareRobustCommand*{\degre}{\textdegree}
 \fi
 \DeclareRobustCommand*{\boi}{\textbackslash}
 \DeclareRobustCommand*{\circonflexe}{\textasciicircum}
 \DeclareRobustCommand*{\tild}{\textasciitilde}
-\DeclareRobustCommand*{\degre}{%
-  \texorpdfstring{\FB@degre}{\textdegree}}
 \newcommand*{\at}{@}
 \DeclareRobustCommand*{\degres}{\degre}
 \ifLaTeXe
   \AtBeginDocument{%
-    \@ifpackageloaded{fontspec}{}{%
-      \ifdefined\DeclareEncodingSubset
-        \DeclareRobustCommand*{\degres}{%
+    \@ifpackageloaded{fontspec}{}%
+        {\DeclareRobustCommand*{\degres}{%
           \texorpdfstring{\hbox{\UseTextSymbol{TS1}{\textdegree}}}%
                          {\textdegree}}%
-      \else
-        \def\Warning@degree@TSone{\FBWarning
-             {Degrees would look better in TS1-encoding:%
-              \MessageBreak add \protect
-              \usepackage{textcomp} to the preamble.%
-              \MessageBreak Degrees used}}
-        \DeclareRobustCommand*{\degres}{%
-          \texorpdfstring{\hbox to 0.3em{\hss\degre\hss}%
-                          \Warning@degree@TSone
-                          \global\let\Warning@degree@TSone\relax}%
-                          {\textdegree}}%
-      \fi
-    }%
+        }%
   }
 \fi
 \newif\ifFB@icomma
@@ -1012,7 +996,7 @@
 }
 \newcommand{\FBWarning}[1]{\PackageWarning{french.ldf}{#1}}
 \bgroup
-  \catcode`:=12 \catcode`>=12 \relax
+  \catcode`: =12 \catcode`> =12 \relax
   \long\gdef\STD@makecaption#1#2{%
     \vskip\abovecaptionskip
     \sbox\@tempboxa{#1: #2}%
@@ -1124,16 +1108,10 @@
                 BEFORE babel/french; reported}%
    \fi
 }
-\newcommand*{\frenchsetup}[1]{%
-  \setkeys{FB}{#1}%
-}%
-\@onlypreamble\frenchsetup
-\let\frenchbsetup\frenchsetup
-\@onlypreamble\frenchbsetup
+\NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \newif\ifFBShowOptions
 \newif\ifFBStandardLayout           \FBStandardLayouttrue
 \newif\ifFBGlobalLayoutFrench       \FBGlobalLayoutFrenchtrue
-\newif\ifFBReduceListSpacing
 \newif\ifFBStandardListSpacing      \FBStandardListSpacingtrue
 \newif\ifFBListOldLayout
 \newif\ifFBListItemsAsPar
@@ -1195,284 +1173,312 @@
     \FBAutoSpaceFootnotestrue
     \FBCustomiseFigTabCaptionstrue
   \fi
-  \RequirePackage{keyval}%
-  \define@key{FB}{ShowOptions}[true]%
-          {\csname FBShowOptions#1\endcsname}%
-  \define@key{FB}{StandardLayout}[true]%
-          {\ifFB@mainlanguage@FR
-             \csname FBStandardLayout#1\endcsname
-           \else
-             \PackageWarning{french.ldf}%
-               {Option `StandardLayout' skipped:\MessageBreak
-                French is *not* babel's last option.\MessageBreak
-                Reported}%
-           \fi
-           \ifFBStandardLayout
-             \FBStandardListSpacingtrue
-             \FBStandardItemizeEnvtrue
-             \FBStandardItemLabelstrue
-             \FBStandardEnumerateEnvtrue
-             \FBIndentFirstfalse
-             \FBFrenchFootnotesfalse
-             \FBAutoSpaceFootnotesfalse
-           \else
-             \FBStandardListSpacingfalse
-             \FBStandardItemizeEnvfalse
-             \FBStandardItemLabelsfalse
-             \FBStandardEnumerateEnvfalse
-             \FBIndentFirsttrue
-             \FBFrenchFootnotestrue
-             \FBAutoSpaceFootnotestrue
-           \fi}%
-  \define@key{FB}{GlobalLayoutFrench}[true]%
-          {\ifFB@mainlanguage@FR
-            \csname FBGlobalLayoutFrench#1\endcsname
-           \else
-             \PackageWarning{french.ldf}%
-               {Option `GlobalLayoutFrench' skipped:\MessageBreak
-                French is *not* babel's last option.\MessageBreak
-                Reported}%
-           \fi}%
-  \define@key{FB}{ReduceListSpacing}[true]%
-          {\csname FBReduceListSpacing#1\endcsname
-           \ifFBReduceListSpacing \FBStandardListSpacingfalse
-           \else \FBStandardListSpacingtrue\fi
-           }%
-  \define@key{FB}{StandardListSpacing}[true]%
-          {\csname FBStandardListSpacing#1\endcsname}%
-  \define@key{FB}{ListOldLayout}[true]%
-          {\csname FBListOldLayout#1\endcsname
-           \ifFBListOldLayout
-             \FBStandardEnumerateEnvtrue
-             \renewcommand*{\FrenchLabelItem}{\textendash}%
-           \fi}%
-  \define@key{FB}{CompactItemize}[true]%
-          {\csname FBCompactItemize#1\endcsname
-           \ifFBCompactItemize
-             \FBStandardItemizeEnvfalse
-             \FBStandardEnumerateEnvfalse
-           \else
-             \FBStandardItemizeEnvtrue
-             \FBStandardEnumerateEnvtrue
-           \fi}%
-  \define@key{FB}{StandardItemizeEnv}[true]%
-          {\csname FBStandardItemizeEnv#1\endcsname}%
-  \define@key{FB}{StandardEnumerateEnv}[true]%
-          {\csname FBStandardEnumerateEnv#1\endcsname}%
-  \define@key{FB}{StandardItemLabels}[true]%
-          {\csname FBStandardItemLabels#1\endcsname}%
-  \define@key{FB}{ItemLabels}%
-          {\renewcommand*{\FrenchLabelItem}{#1}}%
-  \define@key{FB}{ItemLabeli}%
-          {\renewcommand*{\Frlabelitemi}{#1}}%
-  \define@key{FB}{ItemLabelii}%
-          {\renewcommand*{\Frlabelitemii}{#1}}%
-  \define@key{FB}{ItemLabeliii}%
-          {\renewcommand*{\Frlabelitemiii}{#1}}%
-  \define@key{FB}{ItemLabeliv}%
-          {\renewcommand*{\Frlabelitemiv}{#1}}%
-  \define@key{FB}{StandardLists}[true]%
-          {\csname FBStandardLists#1\endcsname
-           \ifFBStandardLists
-             \FBStandardListSpacingtrue
-             \FBStandardItemizeEnvtrue
-             \FBStandardEnumerateEnvtrue
-             \FBStandardItemLabelstrue
-           \else
-             \FBStandardListSpacingfalse
-             \FBStandardItemizeEnvfalse
-             \FBStandardEnumerateEnvfalse
-             \FBStandardItemLabelsfalse
-           \fi}%
-  \define@key{FB}{ListItemsAsPar}[true]%
-          {\csname FBListItemsAsPar#1\endcsname}
-  \define@key{FB}{IndentFirst}[true]%
-          {\csname FBIndentFirst#1\endcsname}%
-  \define@key{FB}{FrenchFootnotes}[true]%
-          {\csname FBFrenchFootnotes#1\endcsname}%
-  \define@key{FB}{AutoSpaceFootnotes}[true]%
-          {\csname FBAutoSpaceFootnotes#1\endcsname}%
-  \define@key{FB}{AutoSpacePunctuation}[true]%
-          {\csname FBAutoSpacePunctuation#1\endcsname}%
-  \define@key{FB}{OriginalTypewriter}[true]%
-          {\csname FBOriginalTypewriter#1\endcsname}%
-  \define@key{FB}{ThinColonSpace}[true]%
-          {\csname FBThinColonSpace#1\endcsname
-           \ifFBThinColonSpace
-             \renewcommand*{\FBcolonspace}{\FBthinspace}%
-           \fi}%
-  \define@key{FB}{ThinSpaceInFrenchNumbers}[true]%
-          {\csname FBThinSpaceInFrenchNumbers#1\endcsname}%
-  \define@key{FB}{FrenchSuperscripts}[true]%
-          {\csname FBFrenchSuperscripts#1\endcsname}
-  \define@key{FB}{LowercaseSuperscripts}[true]%
-          {\csname FBLowercaseSuperscripts#1\endcsname}
-  \define@key{FB}{PartNameFull}[true]%
-          {\csname FBPartNameFull#1\endcsname}%
-  \define@key{FB}{CustomiseFigTabCaptions}[true]%
-          {\csname FBCustomiseFigTabCaptions#1\endcsname}%
-  \define@key{FB}{OldFigTabCaptions}[true]%
-          {\csname FBOldFigTabCaptions#1\endcsname
-           \ifFBOldFigTabCaptions
-             \def\FB@capsep@fix{\babel@save\FBCaption@Separator
-                    \def\FBCaption@Separator{\CaptionSeparator}}%
+}
+\DeclareKeys[FBsetup]
+  {
+    ShowOptions.if               = FBShowOptions                        ,
+    StandardLayout.default:n     = {true}                               ,
+    StandardLayout.code          = \FBStandardLayout@setup{#1}          ,
+    GlobalLayoutFrench.default:n = {true}                               ,
+    GlobalLayoutFrench.code      = \FBGlobalLayout@setup{#1}            ,
+    StandardListSpacing.if       = FBStandardListSpacing                ,
+    ReduceListSpacing.ifnot      = FBStandardListSpacing                ,
+    ListOldLayout.default:n      = {true}                               ,
+    ListOldLayout.code           = \FBListOldLayout@setup{#1}           ,
+    CompactItemize.default:n     = {true}                               ,
+    CompactItemize.code          = \FBCompactItemize@setup{#1}          ,
+    StandardItemizeEnv.if        = FBStandardItemizeEnv                 ,
+    StandardEnumerateEnv.if      = FBStandardEnumerateEnv               ,
+    StandardItemLabels.if        = FBStandardItemLabels                 ,
+    ItemLabels.store             = \FrenchLabelItem                     ,
+    ItemLabeli.store             = \Frlabelitemi                        ,
+    ItemLabelii.store            = \Frlabelitemii                       ,
+    ItemLabeliii.store           = \Frlabelitemiii                      ,
+    ItemLabeliv.store            = \Frlabelitemiv                       ,
+    StandardLists.default:n      = {true}                               ,
+    StandardLists.code           = \FBStandardLists@setup{#1}           ,
+    ListItemsAsPar.if            = FBListItemsAsPar                     ,
+    IndentFirst.if               = FBIndentFirst                        ,
+    FrenchFootnotes.if           = FBFrenchFootnotes                    ,
+    AutoSpaceFootnotes.if        = FBAutoSpaceFootnotes                 ,
+    AutoSpacePunctuation.if      = FBAutoSpacePunctuation               ,
+    OriginalTypewriter.if        = FBOriginalTypewriter                 ,
+    ThinColonSpace.default:n     = {true}                               ,
+    ThinColonSpace.code          = \FBThinColonSpace@setup{#1}          ,
+    ThinSpaceInFrenchNumbers.if  = FBThinSpaceInFrenchNumbers           ,
+    FrenchSuperscripts.if        = FBFrenchSuperscripts                 ,
+    LowercaseSuperscripts.if     = FBLowercaseSuperscripts              ,
+    PartNameFull.if              = FBPartNameFull                       ,
+    CustomiseFigTabCaptions.if   = FBCustomiseFigTabCaptions            ,
+    OldFigTabCaptions.default:n  = {true}                               ,
+    OldFigTabCaptions.code       = \FBOldFigTabCaptions@setup{#1}       ,
+    SmallCapsFigTabCaptions.default:n = {true}                          ,
+    SmallCapsFigTabCaptions.code = \FBSmallCapsFigTabCaptions@setup{#1} ,
+    SuppressWarning.default:n    = {true}                               ,
+    SuppressWarning.code         = \FBSuppressWarning@setup{#1}         ,
+    INGuillSpace.default:n       = {true}                               ,
+    INGuillSpace.code            = \FBINGuillSpace@setup{#1}            ,
+    InnerGuillSingle.if          = FBInnerGuillSingle                   ,
+    EveryParGuill.default:n      = {open}                               ,
+    EveryParGuill.code           = \FBEveryParGuill@setup{#1}           ,
+    EveryLineGuill.default:n     = {open}                               ,
+    EveryLineGuill.code          = \FBEveryLineGuill@setup{#1}          ,
+    UnicodeNoBreakSpaces.default:n = {true}                             ,
+    UnicodeNoBreakSpaces.code    = \FBUnicodeNoBreakSpaces@setup{#1}    ,
+    og.code                      = \FBog@setup{#1}                      ,
+    fg.code                      = \FBfg@setup{#1}                      ,
+}
+\newcommand*{\frenchsetup}[1]{%
+  \SetKeys[FBsetup]{#1}%
+}%
+\@onlypreamble\frenchsetup
+\let\frenchbsetup\frenchsetup
+\@onlypreamble\frenchbsetup
+\newcommand*{\FBStandardLayout@setup}[1]%
+  {\ifFB@mainlanguage@FR
+     \csname FBStandardLayout#1\endcsname
+   \else
+     \PackageWarning{french.ldf}%
+         {Option `StandardLayout' skipped:\MessageBreak
+          French is *not* babel's last option.\MessageBreak
+          Reported}%
+   \fi
+   \ifFBStandardLayout
+     \FBStandardListSpacingtrue
+     \FBStandardItemizeEnvtrue
+     \FBStandardItemLabelstrue
+     \FBStandardEnumerateEnvtrue
+     \FBIndentFirstfalse
+     \FBFrenchFootnotesfalse
+     \FBAutoSpaceFootnotesfalse
+   \else
+     \FBStandardListSpacingfalse
+     \FBStandardItemizeEnvfalse
+     \FBStandardItemLabelsfalse
+     \FBStandardEnumerateEnvfalse
+     \FBIndentFirsttrue
+     \FBFrenchFootnotestrue
+     \FBAutoSpaceFootnotestrue
+   \fi
+  }
+\newcommand*{\FBGlobalLayout@setup}[1]%
+  {\ifFB@mainlanguage@FR
+     \csname FBGlobalLayoutFrench#1\endcsname
+   \else
+     \PackageWarning{french.ldf}%
+       {Option `GlobalLayoutFrench' skipped:\MessageBreak
+        French is *not* babel's last option.\MessageBreak
+        Reported}%
+   \fi
+  }
+\newcommand*{\FBListOldLayout@setup}[1]%
+  {\csname FBListOldLayout#1\endcsname
+   \ifFBListOldLayout
+     \FBStandardEnumerateEnvtrue
+     \renewcommand*{\FrenchLabelItem}{\textendash}%
+   \fi
+  }
+\newcommand*{\FBCompactItemize@setup}[1]%
+  {\csname FBCompactItemize#1\endcsname
+   \ifFBCompactItemize
+     \FBStandardItemizeEnvfalse
+     \FBStandardEnumerateEnvfalse
+   \else
+     \FBStandardItemizeEnvtrue
+     \FBStandardEnumerateEnvtrue
+   \fi
+  }
+\newcommand*{\FBStandardLists@setup}[1]%
+  {\csname FBStandardLists#1\endcsname
+   \ifFBStandardLists
+     \FBStandardListSpacingtrue
+     \FBStandardItemizeEnvtrue
+     \FBStandardEnumerateEnvtrue
+     \FBStandardItemLabelstrue
+   \else
+     \FBStandardListSpacingfalse
+     \FBStandardItemizeEnvfalse
+     \FBStandardEnumerateEnvfalse
+     \FBStandardItemLabelsfalse
+   \fi
+  }
+\newcommand*{\FBThinColonSpace@setup}[1]%
+  {\csname FBThinColonSpace#1\endcsname
+   \ifFBThinColonSpace
+     \renewcommand*{\FBcolonspace}{\FBthinspace}%
+   \fi
+  }
+\newcommand*{\FBOldFigTabCaptions@setup}[1]%
+  {\csname FBOldFigTabCaptions#1\endcsname
+   \ifFBOldFigTabCaptions
+     \def\FB@capsep@fix{\babel@save\FBCaption@Separator
+             \def\FBCaption@Separator{\CaptionSeparator}}%
              \addto\extrasfrench{\FB@capsep@fix}%
              \ifdefined\extrasacadian
                \addto\extrasacadian{\FB@capsep@fix}%
              \fi
-           \fi}%
-  \define@key{FB}{SmallCapsFigTabCaptions}[true]%
-          {\csname FBSmallCapsFigTabCaptions#1\endcsname
-           \ifFBSmallCapsFigTabCaptions
-           \else \let\FBfigtabshape\relax \fi}%
-  \define@key{FB}{SuppressWarning}[true]%
-          {\csname FBSuppressWarning#1\endcsname
-           \ifFBSuppressWarning
-             \renewcommand{\FBWarning}[1]{}%
-           \fi}%
-  \define@key{FB}{INGuillSpace}[true]%
-          {\csname FBINGuillSpace#1\endcsname
-           \ifFBINGuillSpace
-             \renewcommand*{\FBguillspace}{\space}%
-           \fi}%
-  \define@key{FB}{InnerGuillSingle}[true]%
-          {\csname FBInnerGuillSingle#1\endcsname}%
-  \define@key{FB}{EveryParGuill}[open]%
-          {\expandafter\let\expandafter
-             \FBeveryparguill\csname FBguill#1\endcsname
-           \ifx\FBeveryparguill\FBguillopen
-           \else\ifx\FBeveryparguill\FBguillclose
-                \else\ifx\FBeveryparguill\FBguillnone
-                     \else
-                       \let\FBeveryparguill\FBguillopen
-                       \FBWarning{Wrong value for `EveryParGuill':
-                                  try `open',\MessageBreak
-                                  `close' or `none'. Reported}%
-                     \fi
-                \fi
-           \fi}%
-  \define@key{FB}{EveryLineGuill}[open]%
-          {\ifFB@luatex@punct
-             \expandafter\let\expandafter
-               \FBeverylineguill\csname FBguill#1\endcsname
-             \ifx\FBeverylineguill\FBguillopen
-             \else\ifx\FBeverylineguill\FBguillclose
-                  \else\ifx\FBeverylineguill\FBguillnone
-                       \else
-                         \let\FBeverylineguill\FBguillnone
-                         \FBWarning{Wrong value for `EveryLineGuill':
-                                    try `open',\MessageBreak
-                                    `close' or `none'. Reported}%
-                       \fi
-                  \fi
-             \fi
-           \else
-             \FBWarning{Option `EveryLineGuill' skipped:%
-                        \MessageBreak this option is for
-                        LuaTeX *only*.\MessageBreak Reported}%
-           \fi}%
-  \define@key{FB}{UnicodeNoBreakSpaces}[true]%
-          {\ifFB@luatex@punct
-             \csname FBucsNBSP#1\endcsname
-             \ifFBucsNBSP \FB@ucsNBSP=\@ne \fi
-           \else
-             \FBWarning{Option `UnicodeNoBreakSpaces' skipped:%
-                        \MessageBreak this option is for
-                        LuaTeX *only*.\MessageBreak Reported}%
-           \fi
-          }%
-  \def\FB@parse#1#2\endparse{\def\FB@second{#2}}%
-  \define@key{FB}{og}%
-          {\ifFBunicode
-             \ifFB@luatex@punct
-               \FB@addGUILspace=1 \relax
-             \fi
-             \ifFB@xetex@punct
-               \XeTeXcharclass"13   = \FB@guilo
-               \XeTeXcharclass"AB   = \FB@guilo
-               \XeTeXcharclass"A0   = \FB@guilnul
-               \XeTeXcharclass"202F = \FB@guilnul
-             \fi
-             \ifFB@active@punct
-               \FBWarning{Option og=« not supported with this version
-                          of\MessageBreak LuaTeX/XeTeX; reported}%
-             \fi
-           \else
-             \newcommand*{\FB@@og}{%
-                \ifFBfrench
-                  \ifFB@spacing\FB@og\ignorespaces
-                  \else\guillemotleft
-                  \fi
-                \else\guillemotleft\fi}%
-             \AtBeginDocument{%
-                \ifdefined\uc@dclc
-                  \uc@dclc{171}{default}{\FB@@og}%
-                \else
-                  \FB@parse#1\endparse
-                  \ifx\FB@second\@empty
-                    \ifdefined\mule@def
-                      \mule@def{11}{\FB@@og}%
-                    \else
-                      \ifdefined\DeclareInputText
-                        \@tempcnta`#1\relax
-                        \DeclareInputText{\the\@tempcnta}{\FB@@og}%
-                      \else
-                        \FBWarning{Option `og' requires package
-                                   inputenc;\MessageBreak reported}%
-                      \fi
-                    \fi
-                  \else
-                    \DeclareUnicodeCharacter{00AB}{\FB@@og}%
-                  \fi
-                \fi}%
-           \fi
-          }%
-  \define@key{FB}{fg}%
-          {\ifFBunicode
-             \ifFB@luatex@punct
-               \FB@addGUILspace=1 \relax
-             \fi
-             \ifFB@xetex@punct
-               \XeTeXcharclass"14   = \FB@guilf
-               \XeTeXcharclass"BB   = \FB@guilf
-               \XeTeXcharclass"A0   = \FB@guilnul
-               \XeTeXcharclass"202F = \FB@guilnul
-             \fi
-             \ifFB@active@punct
-               \FBWarning{Option fg=» not supported with this version
-                          of\MessageBreak LuaTeX/XeTeX; reported}%
-             \fi
-           \else
-             \newcommand*{\FB@@fg}{%
-                \ifFBfrench
-                  \ifFB@spacing\FB@fg
-                  \else\guillemotright
-                  \fi
-                \else\guillemotright\fi}%
-             \AtBeginDocument{%
-                \ifdefined\uc@dclc
-                  \uc@dclc{187}{default}{\FB@@fg}%
-                \else
-                  \FB@parse#1\endparse
-                  \ifx\FB@second\@empty
-                    \ifdefined\mule@def
-                      \mule@def{27}{{\FB@@fg}}%
-                    \else
-                      \ifdefined\DeclareInputText
-                        \@tempcnta`#1\relax
-                        \DeclareInputText{\the\@tempcnta}{\FB@@fg}%
-                      \else
-                        \FBWarning{Option `fg' requires package
-                                   inputenc;\MessageBreak reported}%
-                      \fi
-                    \fi
-                  \else
-                    \DeclareUnicodeCharacter{00BB}{\FB@@fg}%
-                  \fi
-                \fi}%
-           \fi
-          }%
-}
+   \fi
+  }
+\newcommand*{\FBSmallCapsFigTabCaptions@setup}[1]%
+  {\csname FBSmallCapsFigTabCaptions#1\endcsname
+   \ifFBSmallCapsFigTabCaptions
+   \else
+     \let\FBfigtabshape\relax
+   \fi
+  }
+\newcommand*{\FBSuppressWarning@setup}[1]%
+  {\csname FBSuppressWarning#1\endcsname
+   \ifFBSuppressWarning
+     \renewcommand{\FBWarning}[1]{}%
+   \fi
+  }
+\newcommand*{\FBINGuillSpace@setup}[1]%
+  {\csname FBINGuillSpace#1\endcsname
+   \ifFBINGuillSpace
+     \renewcommand*{\FBguillspace}{\space}%
+   \fi
+  }
+\newcommand*{\FBEveryParGuill@setup}[1]%
+  {\expandafter\let\expandafter
+      \FBeveryparguill\csname FBguill#1\endcsname
+   \ifx\FBeveryparguill\FBguillopen
+   \else\ifx\FBeveryparguill\FBguillclose
+        \else\ifx\FBeveryparguill\FBguillnone
+             \else
+               \let\FBeveryparguill\FBguillopen
+               \FBWarning{Wrong value for `EveryParGuill':
+                          try `open',\MessageBreak
+                          `close' or `none'. Reported}%
+              \fi
+        \fi
+   \fi
+  }
+\newcommand*{\FBEveryLineGuill@setup}[1]%
+  {\ifFB@luatex@punct
+     \expandafter\let\expandafter
+        \FBeverylineguill\csname FBguill#1\endcsname
+     \ifx\FBeverylineguill\FBguillopen
+     \else\ifx\FBeverylineguill\FBguillclose
+          \else\ifx\FBeverylineguill\FBguillnone
+               \else
+                 \let\FBeverylineguill\FBguillnone
+                 \FBWarning{Wrong value for `EveryLineGuill':
+                            try `open',\MessageBreak
+                            `close' or `none'. Reported}%
+               \fi
+          \fi
+     \fi
+   \else
+     \FBWarning{Option `EveryLineGuill' skipped:%
+                \MessageBreak this option is for
+                LuaTeX *only*.\MessageBreak Reported}%
+   \fi
+  }
+\newcommand*{\FBUnicodeNoBreakSpaces@setup}[1]%
+  {\ifFB@luatex@punct
+     \csname FBucsNBSP#1\endcsname
+     \ifFBucsNBSP \FB@ucsNBSP=\@ne \fi
+   \else
+     \FBWarning{Option `UnicodeNoBreakSpaces' skipped:%
+                \MessageBreak this option is for
+                LuaTeX *only*.\MessageBreak Reported}%
+   \fi
+  }%
+\def\FB@parse#1#2\endparse{\def\FB@second{#2}}%
+\newcommand*{\FB@@og}%
+  {\ifFBfrench
+     \ifFB@spacing \FB@og\ignorespaces
+     \else \guillemotleft
+     \fi
+   \else \guillemotleft
+   \fi
+  }
+\newcommand*{\FB@@fg}%
+  {\ifFBfrench
+     \ifFB@spacing \FB@fg
+     \else \guillemotright
+     \fi
+   \else \guillemotright
+   \fi
+  }
+\newcommand*{\FBog@setup}[1]%
+  {\ifFBunicode
+     \ifFB@luatex@punct
+       \FB@addGUILspace=1 \relax
+     \fi
+     \ifFB@xetex@punct
+       \XeTeXcharclass"13   = \FB@guilo
+       \XeTeXcharclass"AB   = \FB@guilo
+       \XeTeXcharclass"A0   = \FB@guilnul
+       \XeTeXcharclass"202F = \FB@guilnul
+     \fi
+     \ifFB@active@punct
+       \FBWarning{Option og=« not supported with this version of
+                  \MessageBreak LuaTeX/XeTeX; reported}% »
+     \fi
+   \else
+     \AtBeginDocument{%
+        \ifdefined\uc@dclc
+          \uc@dclc{171}{default}{\FB@@og}%
+        \else
+          \FB@parse#1\endparse
+          \ifx\FB@second\@empty
+            \ifdefined\mule@def
+              \mule@def{11}{\FB@@og}%
+            \else
+              \ifdefined\DeclareInputText
+                \@tempcnta`#1\relax
+                \DeclareInputText{\the\@tempcnta}{\FB@@og}%
+              \else
+                \FBWarning{Option `og' requires package
+                           inputenc;\MessageBreak reported}%
+              \fi
+            \fi
+          \else
+            \DeclareUnicodeCharacter{00AB}{\FB@@og}%
+          \fi
+        \fi}%
+   \fi
+  }
+\newcommand*{\FBfg@setup}[1]%
+  {\ifFBunicode
+     \ifFB@luatex@punct
+       \FB@addGUILspace=1 \relax
+     \fi
+     \ifFB@xetex@punct
+       \XeTeXcharclass"14   = \FB@guilf
+       \XeTeXcharclass"BB   = \FB@guilf
+       \XeTeXcharclass"A0   = \FB@guilnul
+       \XeTeXcharclass"202F = \FB@guilnul
+     \fi
+     \ifFB@active@punct
+       \FBWarning{Option fg=» not supported with this version of
+                  \MessageBreak LuaTeX/XeTeX; reported}%
+     \fi
+   \else
+     \AtBeginDocument{%
+        \ifdefined\uc@dclc
+          \uc@dclc{187}{default}{\FB@@fg}%
+        \else
+          \FB@parse#1\endparse
+          \ifx\FB@second\@empty
+             \ifdefined\mule@def
+               \mule@def{27}{{\FB@@fg}}%
+             \else
+               \ifdefined\DeclareInputText
+                 \@tempcnta`#1\relax
+                 \DeclareInputText{\the\@tempcnta}{\FB@@fg}%
+               \else
+                 \FBWarning{Option `fg' requires package
+                            inputenc;\MessageBreak reported}%
+                 \fi
+               \fi
+          \else
+            \DeclareUnicodeCharacter{00BB}{\FB@@fg}%
+          \fi
+        \fi}%
+   \fi
+  }
 \newcommand*{\FBprocess@options}{%
   \@ifpackageloaded{enumitem}{%
      \ifFBStandardItemizeEnv
@@ -1524,7 +1530,7 @@
     \ifFBStandardItemizeEnv
     \else
       \PackageWarning{french.ldf}%
-        {babel-french will not customize lists' layout\MessageBreak
+        {babel-french will not customise lists' layout\MessageBreak
          when French is not the main language,\MessageBreak
          reported}%
     \fi
@@ -1547,7 +1553,7 @@
     {\ifnprt@autolanguage
        \providecommand*{\npstylefrench}{}%
        \ifFBThinSpaceInFrenchNumbers
-         \renewcommand*{\FBthousandsep}{\,}%
+         \renewcommand*{\FBthousandsep}{\FBthinspace}%
        \fi
        \g@addto@macro\npstylefrench{\npthousandsep{\FBthousandsep}}%
      \fi
@@ -1687,11 +1693,11 @@
 }
 \def\listFB#1#2{\listORI{#1}{\FB@listVsettings #2}}
 \let\endlistFB\endlistORI
-\newcommand*{\FrenchLabelItem}{\textemdash}
-\newcommand*{\Frlabelitemi}{\FrenchLabelItem}
-\newcommand*{\Frlabelitemii}{\FrenchLabelItem}
-\newcommand*{\Frlabelitemiii}{\FrenchLabelItem}
-\newcommand*{\Frlabelitemiv}{\FrenchLabelItem}
+\renewcommand*{\FrenchLabelItem}{\textemdash}
+\renewcommand*{\Frlabelitemi}{\FrenchLabelItem}
+\renewcommand*{\Frlabelitemii}{\FrenchLabelItem}
+\renewcommand*{\Frlabelitemiii}{\FrenchLabelItem}
+\renewcommand*{\Frlabelitemiv}{\FrenchLabelItem}
 \newdimen\listindentFB
 \setlength{\listindentFB}{-1pt}
 \newdimen\descindentFB
@@ -1854,18 +1860,6 @@
     \@afterindenttrue
   \fi}
 \addto\extrasfrench{\bbl@frenchindent}
-\AtBeginDocument{\@ifpackageloaded{bigfoot}%
-                   {\PackageInfo{french.ldf}%
-                     {bigfoot package in use.\MessageBreak
-                      babel-french will NOT customise footnotes;%
-                      \MessageBreak reported}}%
-                   {\let\@footnotemarkORI\@footnotemark
-                    \def\@footnotemarkFB{\leavevmode\unskip\unkern
-                                         \,\@footnotemarkORI}%
-                    \ifFBAutoSpaceFootnotes
-                      \let\@footnotemark\@footnotemarkFB
-                    \fi}%
-                }
 \newdimen\parindentFFN
 \parindentFFN=10in
 \newcommand*{\dotFFN}{.}
@@ -1911,10 +1905,28 @@
     \llap{\@thefnmark}\dotFFN\kernFFN
   \fi}
 \providecommand\@makefntextFB[1]{\insertfootnotemarkFB #1}
+\newcommand*{\FBfnmarkspace}{\kern .5\fontdimen2\font}
+\def\@footnotemarkFB{\leavevmode\unskip\unkern
+                     \protect\FBfnmarkspace\@footnotemarkORI}%
 \providecommand\localleftbox[1]{}
 \AtBeginDocument{%
-   \@ifpackageloaded{bigfoot}{}%
-      {\ifdim\parindentFFN<10in
+  \@ifpackageloaded{footnotebackref}%
+      {\FBFrenchFootnotesfalse
+       \PackageWarning{french.ldf}%
+          {footnotebackref package loaded.\MessageBreak
+           babel-french will NOT customise footnotes;%
+           \MessageBreak reported}}%
+      {}%
+   \@ifpackageloaded{bigfoot}%
+      {\PackageWarning{french.ldf}%
+          {bigfoot package in use.\MessageBreak
+           babel-french will NOT customise footnotes;%
+           \MessageBreak reported}}%
+      {\let\@footnotemarkORI\@footnotemark
+       \ifFBAutoSpaceFootnotes
+         \let\@footnotemark\@footnotemarkFB
+       \fi
+       \ifdim\parindentFFN<10in
        \else
          \parindentFFN=\parindent
          \ifdim\parindentFFN<1.5em \parindentFFN=1.5em \fi
@@ -1972,7 +1984,7 @@
            \localleftbox{\FBeveryline@quote}}%
        \fi
     }%
-}
+  }
 \newcommand*{\AddThinSpaceBeforeFootnotes}{\FBAutoSpaceFootnotestrue}
 \newcommand*{\FrenchFootnotes}{\FBFrenchFootnotestrue}
 \newcommand*{\StandardFootnotes}{\FBFrenchFootnotesfalse}

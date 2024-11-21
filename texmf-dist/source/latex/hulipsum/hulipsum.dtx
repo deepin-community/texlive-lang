@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright 2018-2020 by Tibor Tomacs
+% Copyright 2018-2024 by Tibor Tomacs
 %
 % Hungarian dummy text (Lorum ipse) for demonstrating the textual elements of a document template
 % All paragraphs are taken with permission from http://www.lorumipse.hu/. 
@@ -24,15 +24,14 @@
 %<*driver>
 \ProvidesFile{hulipsum.dtx}
 %</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-%<package>\ProvidesPackage{hulipsum}[2020/11/03 v1.1 Hungarian dummy text (Lorum ipse)]
+%<package>\NeedsTeXFormat{LaTeX2e}[2022/06/20]
+%<package>\ProvidesPackage{hulipsum}[2024/04/12 v1.3 Hungarian dummy text (Lorum ipse)]
 %
 %<*driver>
 \documentclass{ltxdoc}
 \OnlyDescription
+\AddToHook{begindocument/before}[doc/hyperref]{\hypersetup{pdfstartview=FitH,colorlinks,allcolors=black}}
 \usepackage[a4paper,margin=25mm]{geometry}
-\usepackage[pdfstartview=FitH,colorlinks,allcolors=black]{hyperref}
-\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{listings,xcolor}
@@ -60,8 +59,8 @@ keepspaces]}
 %
 % \GetFileInfo{hulipsum.sty}
 %
-% \title{The {\bfseries\sffamily hulipsum} package\\{\large v1.1 (2020/11/03)}}
-% \author{Tibor Tómács\\{\normalsize\url{tomacs.tibor@uni-eszterhazy.hu}}}
+% \title{The {\bfseries\sffamily hulipsum} package\\{\large v1.3 (2024/04/12)}}
+% \author{Tibor Tómács\\{\normalsize\href{mailto:tomacs.tibor@gmail.com}{\texttt{tomacs.tibor@gmail.com}}}}
 % \date{}
 % \maketitle
 % \thispagestyle{empty}
@@ -104,13 +103,32 @@ keepspaces]}
 %
 % \verbinline|\hulipsumsave*[!<num1>!-!<num2>!]\hulipsumexp| is equivalent to \verbinline|\hulipsum*[!<num1>!-!<num2>!]|.
 % 
-% \item\commandinline|\hulipsumdocument|\\
-% It creates a blind document with title, author, date, table of contents, chapter, section, subsection, subsubsection, paragraph, subparagraph, figure, lists and bibliography.
-% 
-% \item\commandinline|\hulipsumdocument[part]|\\
-% It works like \verbinline|\hulipsumdocument|, but it creates a part before the chapter and section.
-% \end{description}
+% \item\commandinline|\hulipsumdocument[!<options>!]|\\
+% It creates a blind document with title, author, date, table of contents, part, chapter, section, subsection, subsubsection, paragraph, subparagraph, figure, lists, equations and bibliography.
 %
+% The \commandinline|!<options>!| are:
+%
+% \begin{description}
+% \item \commandinline|maketitle=!<boolean>!| \hfill (default: \texttt{true})\\
+% Adds \verbinline|\maketitle|, if the \commandinline|!<boolean>!| is \texttt{true}.
+%
+% \item \commandinline|tableofcontents=!<boolean>!| \hfill (default: \texttt{true})\\
+% Adds \verbinline|\tableofcontents|, if the \commandinline|!<boolean>!| is \texttt{true}.
+%
+% \item \commandinline|part=!<boolean>!| \hfill (default: \texttt{false})\\
+% Adds \verbinline|\part{...}| before the chapter and section, if the \commandinline|!<boolean>!| is \texttt{true}.
+%
+% \item \commandinline|abstract=!<boolean>!| \hfill (default: \texttt{true})\\
+% Adds an \texttt{abstract} environment, if the \commandinline|!<boolean>!| is \texttt{true}.
+%
+% \item \commandinline|math=!<boolean>!| \hfill (default: \texttt{true})\\
+% Adds a mathematical formula, if the \commandinline|!<boolean>!| is \texttt{true}.
+%
+% \item \commandinline|bibliography=!<boolean>!| \hfill (default: \texttt{true})\\
+% Adds \texttt{thebibliography} environment, if the \commandinline|!<boolean>!| is \texttt{true}.
+% \end{description}
+% The \texttt{=true} can be omitted in the options. For example \verbinline|\hulipsumdocument[part,math=false]|.
+% \end{description}
 % \StopEventually
 %
 %    \begin{macrocode}
@@ -210,19 +228,29 @@ keepspaces]}
 \newif\if@hulipsum@firstexpand@
 \@hulipsum@firstexpand@true
 
-\newcommand{\hulipsumdocument}[1][]{%
+\newcommand{\hulipsumdocument}[1][]{
 \if@hulipsum@firstexpand@
-\global\@hulipsum@firstexpand@false%
-\def\hulipsum@part{#1}%
-\def\hulipsum@partcheck{part}%
+\global\@hulipsum@firstexpand@false
+\begingroup
+\DeclareKeys{
+  maketitle.if=@hulipsum@maketitle,
+  tableofcontents.if=@hulipsum@tableofcontents,
+  part.if=@hulipsum@part,
+  abstract.if=@hulipsum@abstract,
+  math.if=@hulipsum@math,
+  bibliography.if=@hulipsum@bibliography}
+\SetKeys{maketitle,part=false,abstract,tableofcontents,math,bibliography,#1}
+\if@hulipsum@maketitle
 \@ifundefined{title}{}{\title{L\'{o}rum ipse}}
 \@ifundefined{author}{}{\author{Nyomasek Bob\'{o}}}
+\@ifundefined{supervisor}{}{\supervisor{Dr. Szel\'{e}s Gerg\H{o}\\ egyetemi docens}\author{Nyomasek Bob\'{o}\\ matematika szak}}
+\@ifundefined{institute}{}{\institute{Matematikai és Informatikai Intézet}}
+\@ifundefined{city}{}{\city{Eger}}
 \@ifundefined{maketitle}{}{\maketitle}
-\@ifundefined{tableofcontents}{}{\tableofcontents}
-\@ifundefined{abstract}{}{\begin{abstract}\hulipsum[1]\end{abstract}}
-\ifx\hulipsum@part\hulipsum@partcheck%
-\@ifundefined{part}{}{\part{Borzaszt\'{o}an cog\'{a}lis pat\'{a}s}}
 \fi
+\if@hulipsum@tableofcontents\@ifundefined{tableofcontents}{}{\tableofcontents}\fi
+\if@hulipsum@abstract\@ifundefined{abstract}{}{\begin{abstract}\hulipsum[1]\end{abstract}}\fi
+\if@hulipsum@part\@ifundefined{part}{}{\part{Borzaszt\'{o}an cog\'{a}lis pat\'{a}s}}\fi
 \@ifundefined{chapter}{}{\chapter{Fog\'{a}s n\'{e}lk\"{u}l nem vark\'{a}l}}
 \@ifundefined{section}{}{\section{A vandoba h\'{e}t matlan}}
 \hulipsum[1-2]
@@ -274,11 +302,18 @@ keepspaces]}
 \end{description}
 \end{description}
 \end{description}}
+\if@hulipsum@math
+$\mathrm{e}^x=\sum_{n=0}^\infty\frac{x^n}{n!}$ minden val\'{o}s $x$ eset\'{e}n.
+\[\mathrm{e}^x=\sum_{n=0}^\infty\frac{x^n}{n!}\quad\forall x\in\mathbf{R}.\]
+\fi
+\if@hulipsum@bibliography
 \@ifundefined{thebibliography}{}{%
 \begin{thebibliography}{1}
 \bibitem{a} \textsc{Nyomasek Bob\'{o}}, \emph{L\'{o}rum ipse}, Handana Kiad\'{o}, 1980.
 \bibitem{b} \textsc{Szel\'{e}s Gerg\H{o}}, \emph{A griszt\'{a}s talt\'{a}s kirg\'{e}szei}, \"{U}d\"{o}sv\'{e}ny Kiad\'{o}, 2010.
 \end{thebibliography}}
+\fi
+\endgroup
 \fi
 }
 

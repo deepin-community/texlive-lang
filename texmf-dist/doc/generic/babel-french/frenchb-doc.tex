@@ -120,7 +120,7 @@
 
 \title{Mode d’emploi du module \ext{babel-french}}
 \author{\href{mailto:daniel.flipo@free.fr}{Daniel \textsc{Flipo}}}
-\newcommand*{\latestversion}{3.5r}
+\newcommand*{\latestversion}{3.6c}
 \date{Version {\latestversion} -- \today}
 
 \begin{document}
@@ -135,7 +135,7 @@
   trouve à la section~\ref{sec:changes-3.0} p.~\pageref{sec:changes-3.0}.
 
   La version actuelle de frenchb (\latestversion), dont le nom officiel est
-  \ext{babel-french}, est prévue pour fonctionner aussi bien avec les anciens
+  \ext{babel-french}, est conçue pour fonctionner aussi bien avec les anciens
   formats TeX comme pdf(La)TeX qu’avec les nouveaux Lua(La)TeX et Xe(La)TeX.
 
   Les mises à jour de \ext{babel-french} sont désormais affichées très
@@ -157,11 +157,6 @@
   \vspace{-\baselineskip}\noindent
   \descindentFB=0pt
   \begin{description}
-  \item[30 avril 2017] Utiliser |\frenchsetup{}| de préférence à
-    |\frenchbsetup{}|, voir p.~\pageref{sec:Perso}.
-    Personnalisation de la commande |\part{}|, voir p.~\pageref{ssec:captions}.
-  \item[31 août 2017] Ajout de l’option \fbo{UnicodeNoBreakSpaces},
-    voir p.~\pageref{ucs-nbsp}.
   \item[30 janvier 2018] Adaptation à la version 3.4a, voir
     section~\ref{ssec:changes-3.4}.
   \item[24 février 2018] Regroupement par thèmes des options de \fbsetup{}.
@@ -183,6 +178,8 @@
     voir p.~\pageref{par-in-lists}.
   \item[19 déc. 2023] \ext{babel-french} est maintenant compatible
     avec \pkg{ucharclasses} (XeLaTeX). \file{frenchb.ins} supprimée.
+  \item[22 mai 2024] Adaptation à la version 3.6a, voir
+    section~\ref{ssec:changes-3.6}.
   \end{description}
 \end{abstract}
 \egroup
@@ -267,7 +264,7 @@ le faire dépend du format utilisé :
   commandes\\
   |\usepackage[T1]{fontenc}|\\
   |\usepackage{lmodern}|\\
-  rapellons que la déclaration du codage d’entrée n’est nécessaire que si
+  rappelons que la déclaration du codage d’entrée n’est nécessaire que si
   celui-ci n’est pas le codage par défaut (|utf8| depuis 2018), par exemple
   |latin9| ou |latin1| ou |applemac|, etc.\\
   |\usepackage[latin9]{inputenc}|
@@ -880,8 +877,9 @@ La liste étant longue, les options sont regroupées par thèmes.
 
 \item [AutoSpaceFootnotes=false (true*)] supprime l’espace fine
   insécable ajoutée par défaut avant l’appel de chaque note dans le texte
-  courant. Cette option affecte la totalité du document.
-
+  courant.   Cette option affecte la totalité du document.
+  L’espace éventuellement ajoutée peut être ajustée, la commande par défaut
+  est : |\newcommand*{\FBfnmarkspace}{\kern .5\fontdimen2\font}|
 \end{description}
 
 \subsubsection*{Ponctuation haute}
@@ -1123,10 +1121,10 @@ La liste étant longue, les options sont regroupées par thèmes.
   section~\ref{sec:description}, p.~\pageref{sec:description}.
 
 \item [LowercaseSuperscripts=false (true)] rend possible d’avoir des lettres
-  supérieures en capitales (est-ce bien utile ?).  Par défaut, la nouvelle
-  commande |\up| (sauf si elle est redéfinie en |\textsuperscript| par l’option
-  précédente) empêche le passage en capitales des lettres supérieures dans les
-  hauts de pages par exemple.
+  supérieures en capitales (est-ce bien utile ?).  Par défaut, la commande
+  |\up| (sauf si elle est redéfinie en |\textsuperscript| par l’option
+  précédente) empêche le passage en capitales des lettres supérieures dans
+  les hauts de pages par exemple.
 
 \item [SuppressWarning=true (false)] peut être utilisée pour supprimer les
   avertissements non essentiels émis par \ext{babel-french}.
@@ -1521,10 +1519,31 @@ aurait :
 }
 
 %\newpage
-\section{Changements entre les versions 3.5 et 2.6}
+\section{Changements entre les versions \latestversion{} et 3.4 (2018)}
 \label{sec:changes-3.0}
 
-\subsection{Changements entre les versions \latestversion{} et 3.4d}
+\subsection{Changements entre les versions \latestversion{} et 3.5s}
+\label{ssec:changes-3.6}
+
+Un bug affectant l’utilisation de la commande |\NoAutoSpacing| dans les
+signets \pkg{hyperref} a été corrigé en version 3.6b.
+
+La version 3.6a n’a plus recours à l’extension \pkg{keyval} pour gérer les
+options, les commandes internes du noyau LaTeX (\pkg{l3keys})
+|\DeclareKeys{}| et |\SetKeys{}| sont utilisées.\\
+L’espace fine ajoutée avant l’appel des notes de bas de pages est maintenant
+personnalisable (suggestion de Thomas Savary) ; le nom de la commande est
+|\FBfnmarkspace{}|, c’est une \emph{vraie} espace fine (demie espace-mot de la
+police courante) contrairement à la commande LaTeX |\,| alias |\thinspace|%
+\footnote{Elles sont définies pour fonctionner aussi en mode mathématique.}
+précédemment utilisée qui chasse toujours 1/6em.  Les deux définitions
+coïncident pour les polices dont l’espace-mot vaut 1/3em, (cas le plus
+courant), l’écart est infime pour celles qui chassent moins : il est par
+exemple de $(1/6-1/8)12=0,5$pt en 12pt pour une police dont l’espace-mot
+chasse 1/4em.  Il est toujours possible de revenir à l’ancien comportement en
+codant |\renewcommand\FBfnmarkspace{\,}|.
+
+\subsection{Changements entre les versions  3.5a et 3.4d}
 \label{ssec:changes-3.5}
 
 La version 3.5a propose une nouvelle option \fbo{ListItemsAsPar} qui permet
@@ -1603,6 +1622,11 @@ chargé avec l’extension \pkg{fontsetup} lorsque le moteur XeTeX est utilisé.
 D’autre part le fichier \file{frenchb.ins} n’est plus nécessaire pour extraire
 les fichiers \file{*.ldf} de \file{frenchb.dtx} (voir~\file{README.md}).
 
+\vspace{\parskip}
+La version 3.5s désactive l’option \opt{FrenchFootnotes} lorsque l’extension
+\pkg{footnotebackref} est chargée, les deux étant incompatibles ; un message
+d’avertissement est affiché dans le fichier \file{.log}.
+
 \subsection{Changements entre les versions  3.4d et 3.3d}
 \label{ssec:changes-3.4}
 
@@ -1666,116 +1690,6 @@ judicieux de renommer la commande de personnalisation |\frenchbsetup{}| en
 De nouvelles possibilités de personnalisation de la commande |\part{}| ont été
 introduites, voir page~\pageref{ssec:captions}.
 
-\subsection{Changements entre les versions 3.2h et 3.1m}
-\label{ssec:changes-3.2}
-
-La version 3.2g modifie le comportement par défaut de la commande |\frquote{}|
-sous LuaTeX qui est maintenant le même que sous XeTeX ou pdfTeX.
-Il suffit d’ajouter l’option \fbo{EveryLineGuill=open} pour retrouver le
-comportement des versions précédentes.
-
-Depuis la version 3.2f, \ext{babel-french} est compatible avec l’extension
-\ext{icomma} qui offre une solution alternative à la commande
-|\DecimalMathComma|.
-
-La construction des notes de bas de page a été revue pour les classes
-\cls{beamer}, \cls{memoir} et koma-script (\cls{scrartcl}, \cls{scrreprt}
-et \cls{scrbook}). Le rendu final est conservé mais les possibilités de
-personnalisation offertes par ces classes pour la présentation des notes de
-bas de page (changement de police, de couleur, etc.) sont désormais
-disponibles même lorsque l’option \fbo{FrenchFootnotes} est activée.
-
-Un vieux bug affectant le comportement de |\frquote{}| lorsque l’extension
-\ext{xspace} est chargée, a été corrigé.
-
-Les commandes |\NoAutoSpacing|, |\ttfamilyFB|, |\rmfamilyFB| et |\sffamilyFB|
-ont été complètement réécrites dans la version~3.2c afin de leur assurer un
-comportement identique quel que soit le moteur utilisé, pdfTeX, XeTeX ou
-LuaTeX.
-
-\textbf{{babel-french} v.3.2b et suivantes, mise en garde pour les
-  utilisateurs de Lua(La)TeX :}
-\nopagebreak
-La version~3.2b est la première compatible avec la version~0.95 de LuaTeX
-incluse dans TeXLive~2016. Les changements intervenus dans la structure des
-nœuds de type \textit{glue} rendent cette nouvelle version de LuaTeX
-incompatible avec les précédentes. Le code lua contenu dans les versions 3.2b
-et suivantes de \file{frenchb.lua} ne fonctionne pas avec les versions de
-LuaTeX antérieures à 0.95, aussi à partir de la version~3.2b \ext{babel-french}
-revient aux caractères actifs pour la gestion de la ponctuation haute avec les
-moteurs LuaTeX antérieurs à 0.95 !
-La bonne solution consiste à installer rapidement TeXLive~2016 ou une autre
-distribution contenant LuaTeX~0.95.
-En revanche il n’y a aucun problème de compatibilité ascendante avec les
-moteurs XeTeX et pdfTeX.
-
-\subsection{Changements entre les versions  3.1m et 3.0c}
-\label{ssec:changes-3.1}
-
-{\sloppy
-  Ajout de la commande |\frquote{}| et de sa variante |\frquote*{}|
-  recommandées pour saisir les citations, notamment les citations imbriquées
-  ou celles s’étendant sur plusieurs paragraphes, voir p.~\pageref{frquote}
-  et les nouvelles options \fbo{EveryParGuill}, \fbo{EveryLineGuill} et
-  \fbo{InnerGuillSingle}.
-\par}
-
-Nouvelle option \fbo{SmallCapsFigTabCaptions}, voir p.~\pageref{scfigtab}.
-
-\subsection{Changements entre les versions 3.0c et 2.6h}
-\label{ssec:changes-3.0}
-
-Plusieurs modifications de fond ont motivé le passage à la version~3.0.
-
-\begin{itemize}
-
-\item \ext{babel-french} ne fonctionne désormais qu’avec la version~3.9
-  de Babel ce qui donne accès à une syntaxe plus agréable pour modifier les
-  \textit{captions}, voir p.~\pageref{captionsfrench}.
-  Le séparateur utilisé dans les légendes de figures et de tableaux est
-  choisi de manière globale pour toutes les langues, voir
-  p.~\pageref{captionseparator}.
-
-\item La gestion des options par \fbsetup{} a été complètement remaniée ; deux
-  nouvelles options ont été ajoutées.
-
-\item La variante « canadien » du français fonctionne désormais comme un vrai
-  \textit{dialect} au sens de Babel ; parallèlement le français ne devrait
-  plus être désigné que sous le nom \opt{french}, à la fois en option de
-  |\usepackage[...]{babel}|%
-  \footnote{Le mieux est encore de mettre toutes les déclarations de langues
-    en option de \cs{documentclass}.}
-  et en argument de |\selectlanguage{}| et consorts.
-  Les variantes \opt{frenchb} et \opt{francais} sont encore tolérées mais
-  sans aucune garantie de pérennité.
-
-\item \ext{babel-french} ne charge plus le fichier \file{frenchb.cfg} ; la
-  personnalisation passe par l’utilisation exclusive de \fbsetup{}.
-
-\item Les étiquettes des listes \env{description} sont positionnées comme
-  celles des listes \env{itemize} et \env{enumerate} avec un retrait
-  paramétrable |\listindentFB| par rapport à la marge gauche.
-
-\item Enfin et c’est probablement le plus important, le recours aux
-  caractères actifs est supprimé pour la gestion de la ponctuation haute
-  lorsqu’un format basé sur LuaTeX%
-  \footnote{C’est déjà le cas pour XeTeX depuis la version~2.5 de
-    \ext{babel-french}.}
-  est utilisé (LuaLaTeX par exemple).
-  Le mécanisme des caractères actifs est remplacé par un appel aux
-  \textit{callbacks} |pre_linebreak_filter| et |hpack_filter|%
-  \footnote{Depuis la version 3.1g c’est le\textit{callbacks} \texttt{kerning}
-    qui est mis en œuvre à la place.}.
-
-  La base du code |lua| se trouve dans l’exposé de Paul Isambert
-  à la journée GUT’2010. Un grand merci à Paul pour cette source d’inspiration
-  et pour ses suggestions lors de la relecture finale de \file{frenchb.lua}.
-
-\end{itemize}
-
-À partir de la version 3.0c, \ext{babel-french} laisse le contrôle total des
-listes à la classe \cls{beamer} (option \fbo{StandardLists} automatiquement
-activée) ; nouvelle option \fbo{INGuillSpace} (voir p.~\pageref{INGuillspace}).
 
 \subsection{Comment recompiler un document écrit pour
                 {babel-french}~2.x ?}

@@ -33,13 +33,18 @@
 		}
 	}
 	\author{Andrew Lounsbury}
-	\date{October 6, 2022}
+	\date{February 27, 2024}
 	\maketitle
 	
 	\vspace{1.5in}
+
 	To put a title on a simple homework assignment, you only need lines \texttt{31}-\texttt{37} in the code (\texttt{LaTeX\_for\_Undergraduates.tex}) instead of an entire \texttt{titlepage}, but you don't necessarily have to use this method. You can put the title, your name, and the date on the paper however you'd like. \\
 
 	As you read this, use the keyboard shortcut Ctrl + F to search for specific things in the code so that you can compare the code precisely to what's being printed. 
+	\vspace{1.5in}
+	\begin{center}
+		\includegraphics[width=0.15\textwidth]{TechSignatureSeal_Purple_RGB.jpg}
+	\end{center}
 \end{titlepage}
 
 \tableofcontents
@@ -476,7 +481,7 @@ makes it much easier to see where everything is.
 	When nesting block delimiters inside of each other, it is often beneficial to use an abbreviation of \verb$\boldsymbol$ to bold the outer delimiters. For instance, $g^{-1}\bs((c,d)\bs)$ is a little better than $g^{-1}((c,d))$. 
 \end{notation}
 
-\subsection{Displaying Multiple Lines of Math} \label{subsec:multiple-lines}
+\subsection{Displaying Multiple Lines of Math and Trees} \label{subsec:multiple-lines}
 There are several ways to display multiple lines of math. Some environments have predefined numbering. Add a \texttt{*} when you \texttt{begin} and \texttt{end} the environment to remove numbering. Note that \verb$\\$ creates a new row. 
 
 \subsubsection{\texttt{gather}} \label{subsubsec:gather}
@@ -549,18 +554,39 @@ Arrays may also be used to display charts in math mode, and can be nested inside
 		\begin{array}{|c||c|c|}
 			\hline
 			G_1 & A & B \\ \hline\hline
-			A & \mathbf{8},\mathbf{8} & \mathbf{6},6 \\ \hline
-			B & 6,\mathbf{6} & 2,2 \\ \hline
+			A & (8),(8) & (6),6 \\ \hline
+			B & 6,(6) & 2,2 \\ \hline
 		\end{array}
 		&
 		\begin{array}{|c||c|c|}
 			\hline
 			G_2 & A & B \\ \hline\hline
-			A & 3,3 & 1, \mathbf{5} \\ \hline
-			B & \mathbf{5},1 & \mathbf{2},\mathbf{2} \\ \hline
+			A & (-3), (-3) & (0), -5 \\ \hline
+			B & -5,(0) & -1, -1 \\ \hline
 		\end{array}
 	\end{array}
 \]
+
+\subsubsection{Trees}
+While we're talking about games, we ought to make note of many tree-drawing packages out there, such as \href{https://ctan.org/pkg/istgame}{\texttt{istgame}}, which allows the user to draw game trees: 
+\begin{center}
+    \begin{istgame}
+        \xtdistance{15mm}{40mm} % {vertical length}{horizontal length}
+        \istroot(0)(0,0){$w_{i-1}$}
+            \istb[very thick, blue]{Challenge}[above left]
+            \istb{Stay}[above right]
+            \endist
+        \xtdistance{10mm}{15mm}
+        \istroot(1)(0-1)<120>{$w_i$}
+            \istb[very thick, blue]{Relegate}[al]{2, 2}
+            \istb{Stay}[ar]{$-2, -1$}
+            \endist
+        \istroot(2)(0-2)<30>{$w_i$}
+            \istb[very thick, blue]{Relegate}[al]{1, 2}
+            \istb{Stay}[ar]{$-1, -1$}
+            \endist
+    \end{istgame}
+\end{center}
 
 \subsubsection{Matrices} \label{subsubsec:matrices}
 Math mode must be specified for matrices. 
@@ -657,7 +683,6 @@ The \texttt{kbordermatrix} package displays matrices with row and column labels.
 \subsection{Escape Sequences and White-space in Math Mode} \label{subsec:escape}
 Use \verb$\$ to insert characters that would otherwise be used in \LaTeX\ syntax. Some examples are \_, \%, \#, \$, \{, \}, and similarly, \verb$\lbrack$ and \verb$\rbrack$. \par
 Additionally, there are various ways to insert a space in math mode (but some of these may also be used in paragraph mode.) 
-\newpage
 \[
 	\begin{array}{||l||c||c||}
 	\hline \text{\texttt{\textbackslash !} (negative thin)} & \phi(x) \!\forall x & \rightarrow\!\leftarrow \\ \hline\hline
@@ -691,7 +716,6 @@ The command \verb$\newcommand*{\macroname}[$\opt{n}\verb$]{$\opt{definition}\ver
 }
 is invoked with \opt{n} arguments $\mathit{\langle a_1 \rangle,\dots,\langle a_n \rangle}$ as \verb%\macroname{%$\langle\mathit{a_1}\rangle$\verb%}%$\cdots$\verb%{%$\langle\mathit{a_n}\rangle$\verb%}%. 
 In the \opt{definition}, \texttt{\#i} indicates where the \texttt{i}-th argument \opt{$a_i$} will be placed, and \verb$\hfill$ inserts white-space until a space---the space in a matrix entry, for instance---is filled. 
-\pagebreak
 \[
 	\begin{array}{c|c|c|c|c}
 		\fivevec{1}{2}{333}{44500}{5} &

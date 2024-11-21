@@ -1,7 +1,7 @@
 %%
 %% This is file 'pxjahyper.sty'.
 %%
-%% Copyright (c) 2012-2023 Takayuki YATO (aka. "ZR")
+%% Copyright (c) 2012-2024 Takayuki YATO (aka. "ZR")
 %%   GitHub:   https://github.com/zr-tex8r
 %%   Twitter:  @zr_tex8r
 %%
@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{pxjahyper}[2023/03/01 v1.3]
+\ProvidesPackage{pxjahyper}[2024/08/25 v1.5]
 \def\pxhy@pkgname{pxjahyper}
 \providecommand{\bxDebug}[1]{}
 
@@ -51,16 +51,21 @@
 \newif\ifpxhy@otfmacros
 \newif\ifpxhy@Uchar@avail
 \newif\ifpxhy@ucs@avail
+\newif\ifpxhy@toucs@avail
 \let\pxhy@jsclasses@name\relax
 \newif\ifpxhy@jlreq@cls
 \newif\ifpxhy@fallback@geta
+\newif\ifpxhy@fallback@warn
+\newif\ifpxhy@fallback@cidm
 \newif\ifpxhy@extjis@map
 \newif\ifpxhy@extjis@use
 \newif\ifpxhy@ajhankaku@chars
 
 %%<*> \pxjahypersetup{<key>=<value>,...}
-\newcommand*\pxjahypersetup{%
-  \setkeys{\pxhy@pkgname}%
+\@ifdefinable\pxjahypersetup{%
+  \DeclareRobustCommand*\pxjahypersetup{%
+    \setkeys{\pxhy@pkgname}%
+  }%
 }
 %% \pxhy@handle@key{<key>}{<value>}{<name>}
 \def\pxhy@handle@key#1#2#3{%
@@ -91,7 +96,7 @@
 \DeclareOption{resetdvidriver}{%
   \let\pxhy@driver\@undefined
 }
-\DeclareOption{autodvidriver}{%
+\DeclareOption{autodvidriver}{% DEPRECATED
   \let\pxhy@driver\@undefined
 }
 \DeclareOption{auto}{% DEPRECATED
@@ -171,14 +176,15 @@
 \DeclareOption{nootfmacros}{%
   \pxhy@otfmacrosfalse
 }
-\DeclareOption{fallback-geta}{%
+\DeclareOption{fallback-geta}{% DEPRECATED
   \pxjahypersetup{fallback=geta}%
 }
-\DeclareOption{fallback-delete}{%
+\DeclareOption{fallback-delete}{% DEPRECATED
   \pxjahypersetup{fallback=delete}%
 }
-\DeclareOption{force-unicode}{%
-  \let\pxhy@force@unicode=t
+\DeclareOption{force-unicode}{% DEPRECATED
+  \PackageWarningNoLine\pxhy@pkgname
+   {'force-unicode' is DEPRECATED and ignored}%
 }
 \DeclareOption{disable-Ux}{% for debug
   \let\pxhy@disable@Ux=t
@@ -194,6 +200,16 @@
 }
 \let\pxhy@kv@fallback@@geta\pxhy@fallback@getatrue
 \let\pxhy@kv@fallback@@delete\pxhy@fallback@getafalse
+% 'fallback-warn=<bool>'
+\pxhy@fallback@warntrue
+\define@key{\pxhy@pkgname}{fallback-warn}[true]{%
+  \pxhy@handle@key{fallback-warn}{#1}{fallback@warn#1}%
+}
+% 'fallback-cidm=<bool>'
+\pxhy@fallback@cidmtrue
+\define@key{\pxhy@pkgname}{fallback-cidm}[true]{%
+  \pxhy@handle@key{fallback-cidm}{#1}{fallback@cidm#1}%
+}
 % 'extjis=<bool>'
 \pxhy@extjis@usetrue
 \define@key{\pxhy@pkgname}{extjis}[true]{%
@@ -289,6 +305,8 @@
 \pxhy@check\Uchar{\pxhy@Uchar@availtrue}
 %% pxhy@ucs@avail switch
 \pxhy@check\ucs{\pxhy@ucs@availtrue}
+%% pxhy@toucs@avail switch
+\pxhy@check\toucs{\pxhy@toucs@availtrue}
 
 %% pxhy@extjis@map switch
 % Note that 'tounicode' is necessary.
@@ -311,6 +329,8 @@
 \@ifl@t@r\fmtversion{2021/11/15}{%
   \chardef\pxhy@hook@system=2
 }{\@ifl@t@r\fmtversion{2020/02/02}{%
+  % NB. We need to support this intermediate version, because
+  % the hook order matters here.
   \chardef\pxhy@hook@system=1
 }{}}
 
@@ -328,16 +348,25 @@
   \pxhy@uniescapetrue
 \fi\fi
 
-% hyperref 'unicode' is allowed only on upLaTeX.
-\ifnum0\ifpxhy@hy@unicode\ifpxhy@uptex\else
-    \ifx t\pxhy@force@unicode\else1\fi\fi\fi>\z@
-%  \PackageWarningNoLine\pxhy@pkgname
-%   {The support for the hyperref 'unicode' mode\MessageBreak
-%    on the pTeX engine is currently experimental}%
-\fi
+%% \pxhy@if@really@unicode{<true>}{<false>}
+% Tests if hyperref unicode-mode is *currently* in effect.
+% (Assuming unicode-mode is enabled by the settings.)
+\let\pxhy@if@really@unicode\@undefined
+
+% hyperref 'unicode' mode
 \ifpxhy@hy@unicode
   \pxhy@uniescapefalse
   %\pxhy@otfutftrue
+  % placed at the top of the hook
+  \AtEndOfPackage{\ltx@GlobalPrependToMacro\pdfstringdefPreHook{%
+    \ifx\ifpdfstringunicode\@undefined
+      \ifHy@unicode \let\pxhy@if@really@unicode\@firstoftwo
+      \else \let\pxhy@if@really@unicode\@secondoftwo
+      \fi
+    \else % '\ifpdfstringunicode' is provided by hyperref
+      \let\pxhy@if@really@unicode\ifpdfstringunicode
+    \fi
+  }}
 \fi
 % otfcid requrires otfutf.
 \ifpxhy@otfutf \else \ifpxhy@otfcid
@@ -429,8 +458,7 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 \fi
 
 %% \pxhy@geta : GETA MARK
-\pxhy@get@jchar{\jis"222E}
-\let\pxhy@geta\pxhy@jchar
+\pxhy@let@jchar@jc\pxhy@geta{222E}
 
 %% \pxhy@print@geta
 \def\pxhy@print@geta{%
@@ -472,12 +500,42 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   #1\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
 }
 
+%% \pxhy@ifempty{<text>}{<true>}{<false>}
+\def\pxhy@ifempty#1{%
+  \pxhy@cond\ifx\pxhy@mt#1\pxhy@mt\fi
+}
+
+%% \pxhy@E\newrobustcmd*\CS...
+% Does \newrobustcmd* if etoolbox is available;
+% does \DeclareRobustCommand* otherwise.
+\def\pxhy@E\newrobustcmd*#1{%
+  \def\pxhy@next{\providecommand*\pxhy@next}%
+  \@ifdefinable#1{\def\pxhy@next{\DeclareRobustCommand*#1}}%
+  \pxhy@next
+}
+
+%% \pxhy@read@num{<text>}\CScont
+\def\pxhy@read@num#1{%
+  \expandafter\pxhy@read@num@a\number#1\pxhy@mk#1\pxhy@mk#1\pxhy@mk
+}
+\def\pxhy@read@num@a#1#2\pxhy@mk{%
+  \expandafter\pxhy@read@num@b\romannumeral\if-#1\else-\fi
+}
+\def\pxhy@read@num@b#1\pxhy@mk#2\pxhy@mk{%
+  \expandafter\pxhy@read@num@c\number\pxhy@ifempty{#1}{#2}{}\pxhy@mk
+}
+\def\pxhy@read@num@c#1\pxhy@mk#2{%
+  \pxhy@cond\ifnum#1<\z@\fi{#2{0}}{#2{#1}}%
+}
+
 %--------------------------------------- Helpers (e-TeX)
 \ifpxhy@etex
 
 %% packages
 \ifpxhy@etoolbox
   \RequirePackage{etoolbox}[2011/01/03]%v2.1
+  \robustify\pxjahypersetup
+  \let\pxhy@E\relax
 \fi
 
 %% \pxhy@if@star{<varient>}{<normal>}
@@ -709,7 +767,7 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
     \pxhy@cond \ifpxhy@utfXVI \fi{%
       \pxhy@uchex@big#1"000000\pxhy@end
     }{%else
-      \pxhy@uchex@out{#1}%
+      \pxhy@uchex@out@pre{#1}%
     }%
   }{%else
     \pxhy@uchex@small#1"0000\pxhy@end
@@ -719,7 +777,7 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   \pxhy@uchex@small@a#1#2#3#4#5\pxhy@end
 }
 \def\pxhy@uchex@small@a#1"#2\pxhy@end{%
-  \pxhy@uchex@out{#2#1}%
+  \pxhy@uchex@out@pre{#2#1}%
 }
 \def\pxhy@uchex@big#1#2#3#4#5#6#7#8\pxhy@end{%
   \pxhy@uchex@big@a#1#2#3#4#5#6#7\pxhy@end
@@ -741,17 +799,92 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
       \csname pxhy@qh/3#6\endcsname
 }
 \def\pxhy@uchex@big@d#1#2#3#4#5\pxhy@end{%
-  \pxhy@uchex@out{D#1#2#3}%
-  \pxhy@uchex@out{D#4#5}%
+  \pxhy@uchex@out@pre{D#1#2#3}%
+  \pxhy@uchex@out@pre{D#4#5}%
 }
 \edef\pxhy@uchex@error{%
-  \noexpand\pxhy@uchex@out{\pxhy@uc@REPL}%
+  \noexpand\pxhy@uchex@out@pre{\pxhy@uc@REPL}%
 }
+\def\pxhy@uchex@out@pre#1{%
+  \pxhy@if@in@anchor{% then Unicode does not work
+    \pxjahyperBadCharacter{U+#1}%
+  }{%else
+    \pxhy@uchex@out{#1}%
+  }%
+}
+
+%--------------------------------------- Unavailable characters
+
+%%<+> \pxjahyperBadCharacter{<label>}
+\newcommand*\pxjahyperBadCharacter[1]{%
+  \pxhy@if@in@anchor{%
+    #1;% label is output as-is
+  }{%else
+    \ifpxhy@fallback@warn
+      % issue a warning
+      \pxhy@bad@character@a{#1}%
+    \fi
+    \pxhy@print@geta
+  }%
+}
+\def\pxhy@bad@character@a#1{%
+  % Here the control sequence with name <label> is supposed to be
+  % undefined. This token is intentionally left in the stream.
+  % Then this unknown token will be detected by the hyperref process
+  % and cause it to issue an warning
+  % "Token not allowed in a PDF string (... removing `\<label>'".
+  \expandafter\ifx\csname<#1>\endcsname\relax
+    \csname<#1>\endcsname
+  % If the token should be defined, it is replaced for safety.
+  \else \csname pxhy@<#1>\endcsname
+  \fi
+}
+
+%% \pxhy@fallback@num{<prefix>}<fast>{<number>}
+% Makes a bad character with label '<prefix><number>', after parsing
+% the given number input.
+\def\pxhy@fallback@num#1#2#3{%
+  \if \ifpxhy@fallback@warn T\else \pxhy@if@in@anchor{T}{F}\fi T%
+    \if t#2%
+      \expandafter\pxhy@fallback@num@a\expandafter{\number#3}{#1}%
+    \else
+      \pxhy@read@num{#3}\pxhy@fallback@num@a{#1}%
+    \fi
+  \else
+    \pxjahyperBadCharacter{}%
+  \fi
+}
+\def\pxhy@fallback@num@a#1#2{%
+  \pxjahyperBadCharacter{#2#1}%
+}
+
+%--------------------------------------- Stuffs for anchor strings
+
+% Sometimes \pdfstringdef is invoked to form anchor strings.
+% There "unicode-mode" of hyperref is temporarily disabled;
+% moreover, ToUnicode specials are not applied to such strings.
+% Consequently, only ASCII characters can be used there.
+% Anchor strings are for identification and not presentation;
+% so special fallback for special characters are needed.
+
+%% \pxhy@if@in@anchor{<true>}{<false>}
+% Tests if we are inside anchors.
+\let\pxhy@if@in@anchor\@secondoftwo
+\ifx\Hy@PageAnchorSlide\@undefined\else
+  % We resort to some heuristics....
+  \g@addto@macro\Hy@PageAnchorSlide{%
+    \let\pxhy@if@in@anchor\@firstoftwo
+  }
+\fi
 
 %--------------------------------------- Hooks to pdfstringdef
 
 %% variables
 \let\pxhy@str\relax
+
+%%<+> \Ux{<hex>}
+% (This is a dummy declaration.)
+\ifodd\z@ \providecommand*\Ux[1]{} \fi
 
 %% \pxhy@Ux
 % The definition of \Ux in PDF strings.
@@ -760,16 +893,22 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 \ifpxhy@hy@unicode              %<*unicode>
 
   %% \pxhy@Ux
+  % In hyperref "unicode" mode, \unichar is used.
   \def\pxhy@Ux{\pxhy@uchex}%
   \pxhy@utfXVIfalse
   \def\pxhy@uchex@out#1{%
-    \unichar{"#1}%
+    \pxhy@if@really@unicode{%
+      \unichar{"#1}%
+    }{%else % something wrong!
+      \pxjahyperBadCharacter{U+#1}%
+    }%
   }
 
 \else\ifpxhy@Uchar@avail           %<*Uchar>
   \ifpxhy@uptex
 
     %% \pxhy@Ux
+    % On upTeX with \Uchar, \Uchar is used.
     \def\pxhy@Ux{\pxhy@uchex}
     \pxhy@utfXVIfalse
     \def\pxhy@uchex@out#1{\Uchar"#1 }
@@ -777,29 +916,31 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   \else\ifpxhy@ucs@avail
 
     %% \pxhy@Ux
+    % On pTeX with \Uchar and \ucs, we convert the Unicode value to
+    % an internal-code value (using \ucs) and apply \Uchar to it.
     \def\pxhy@Ux{\pxhy@uchex}
     \pxhy@utfXVIfalse
     \def\pxhy@uchex@out#1{%
       \expandafter\pxhy@uchex@out@a\ucs"#1\pxhy@mk{#1}%
     }
     \chardef\pxhy@max@asc="7F
-    \def\pxhy@uchex@out@a#1\pxhy@mk#2{%
-      \ifnum#1<\z@
-        \ifnum"#2>\pxhy@max@asc
+    \def\pxhy@uchex@out@a#1\pxhy@mk#2{% #1:internal #2:Unicode
+      \ifnum#1<\z@ % not in internal (or JIS)
+        \ifnum"#2>\pxhy@max@asc % not ASCII
           \ifpxhy@extjis@use
+            % try special conversion
             \expandafter\pxhy@uchex@out@b\csname
                 pxhy@uc/\number"#2\endcsname{#2}%
           \else \pxhy@uchex@out@b\relax{#2}%
           \fi
-        \else \Uchar"#2
+        \else \Uchar"#2 % ASCII
         \fi
-      \else \Uchar#1
+      \else \Uchar#1 % in internal-code
       \fi
     }
-    \def\pxhy@uchex@out@b#1#2{%
-      \ifx#1\relax
-        \@nameuse{U+#2}%
-        \pxhy@print@geta
+    \def\pxhy@uchex@out@b#1#2{% #2:Unicode
+      \ifx#1\relax % not supported
+        \pxjahyperBadCharacter{U+#2}%
       \else #1%
       \fi
     }
@@ -808,6 +949,9 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 \else\ifpxhy@uptex              %<*upTeX>
 
   %% \pxhy@Ux
+  % On upTeX without \Uchar, we convert the Unicode value to a ja-char
+  % token using \pxhy@get@jchar, which is not fully expandable.
+  % So we need \pdfstringdefPostHook.
   \def\pxhy@Ux{\pxhy@uchex}%
   \pxhy@utfXVIfalse
 
@@ -912,7 +1056,7 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 \fi
 
 %--------------------------------------- Fix for high-byte protection
-\ifpxhy@etex
+\ifpxhy@hy@unicode\else \ifpxhy@etex
 \begingroup
 % Check for high-byte protection.
 \catcode"EF=\active \catcode`\^=7
@@ -949,7 +1093,7 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 
 \fi
 \endgroup
-\fi
+\fi\fi
 %--------------------------------------- Support for 'otfutf'
 \ifpxhy@otfutf
 
@@ -960,8 +1104,7 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   \def\pxhy@UTF{\pxhy@uchex}
   \pxhy@utfXVIfalse
   \def\pxhy@uchex@out#1{%
-    \@nameuse{U+#1}% issue a warning
-    \pxhy@print@geta
+    \pxjahyperBadCharacter{U+#1}%
   }
 \else
   \let\pxhy@UTF\pxhy@Ux
@@ -999,26 +1142,22 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 
 %% \pxhy@CID{<cid>}
 \def\pxhy@CID#1{%
-  \expandafter\expandafter\expandafter\pxhy@cid@aux
-      \bxjaCidToUcsHex{#1}\pxhy@mk{\pxhy@xdetokenize{#1}}%
+  \pxhy@triexpandafter\pxhy@cid@aux\bxjaCidToUcsHex{#1}@f{#1}%
 }
 %% \pxhy@fast@CID{<cid>}
 \def\pxhy@fast@CID#1{%
-  \expandafter\expandafter\expandafter\pxhy@cid@aux
-      \bxjaFastCidToUcsHex{#1}\pxhy@mk{\number#1}%
+  \pxhy@triexpandafter\pxhy@cid@aux\bxjaFastCidToUcsHex{#1}@t{#1}%
 }
 \ifx\pxhy@Ux\@undefined
-  \def\pxhy@cid@aux#1\pxhy@mk#2{%
-    \@nameuse{CID+#2}% issue a warning
-    \pxhy@print@geta
+  \def\pxhy@cid@aux#1@#2#3{%
+    \pxhy@fallback@num{CID+}#2{#3}%
   }
 \else
-\def\pxhy@cid@aux#1\pxhy@mk#2{%
+\def\pxhy@cid@aux#1@#2#3{%
   \ifnum"#1>\z@
     \pxhy@Ux{#1}%
   \else
-    \@nameuse{CID+#2}%
-    \pxhy@print@geta
+    \pxhy@fallback@num{CID+}#2{#3}%
   \fi
 }
 \fi
@@ -1059,11 +1198,30 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   \fi
 }
 
+%% \pxhy@CIDC{<cid>} / \pxhy@CIDK{<cid>} / \pxhy@CIDT{<cid>}
+\def\pxhy@CIDC{\pxhy@fallback@num{CIDC+}f}
+\def\pxhy@CIDK{\pxhy@fallback@num{CIDK+}f}
+\def\pxhy@CIDT{\pxhy@fallback@num{CIDT+}f}
+
+%% \pxhy@dispatch@fallback@cidm
+\@onlypreamble\pxhy@dispatch@fallback@cidm
+\def\pxhy@dispatch@fallback@cidm{%
+  \global\let\pxhy@dispatch@fallback@cidm\relax
+  \ltx@GlobalPrependToMacro\pdfstringdefPreHook{%
+    \ifpxhy@fallback@cidm
+      \let\CIDC\pxhy@CIDC
+      \let\CIDK\pxhy@CIDK
+      \let\CIDT\pxhy@CIDT
+    \fi
+  }%
+}
+
 %% enable hooks
 \pxhy@hook@after@package{otf}{\pxhy@dispatch@otfcid}
 \ifpxhy@otfmacros
   \pxhy@hook@after@package{ajmacros}{\pxhy@dispatch@otfmacros}
 \fi
+\pxhy@hook@after@package{mlcid}{\pxhy@dispatch@fallback@cidm}
 
 \fi
 %--------------------------------------- Extended JIS mapping
@@ -1160,7 +1318,8 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 
 %%<+> \pxDeclarePdfTextCommand{\CS}{<jis>}{<ucs>}
 \@onlypreamble\pxDeclarePdfTextCommand
-\newcommand*\pxDeclarePdfTextCommand[3]{%
+\pxhy@E\newrobustcmd*\pxDeclarePdfTextCommand[3]{%
+  \pxhy@prepare@txtcmd#1%
   \pxhy@decl@pdf@tc{#2}{#3}%
    {\DeclareTextCommand{#1}{\pxhy@pdfenc}}%
    {\pxhy@revoke@pdf@tc{#1}}%
@@ -1168,7 +1327,8 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 
 %%<+> \pxDeclarePdfTextComposite{\CS}{<arg>}{<jis>}{<ucs>}
 \@onlypreamble\pxDeclarePdfTextComposite
-\newcommand*\pxDeclarePdfTextComposite[4]{%
+\pxhy@E\newrobustcmd*\pxDeclarePdfTextComposite[4]{%
+  \pxhy@prepare@txtcmd#1%
   \pxhy@decl@pdf@tc{#3}{#4}%
    {\DeclareTextCompositeCommand{#1}{\pxhy@pdfenc}{#2}}%
    {\pxhy@revoke@pdf@tcc{#1}{#2}}%
@@ -1202,8 +1362,8 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
 %% \pxhy@decl@pdf@tc
 \@onlypreamble\pxhy@decl@pdf@tc
 \def\pxhy@decl@pdf@tc#1#2{%
-  \edef\pxhy@next{{#1}{\ifx\pxhy@mt#2\pxhy@mt FFFD\else#2\fi}}%
-  \expandafter\pxhy@get@body\pxhy@next
+  \edef\pxhy@next{{#1}{#2}}%
+  \uppercase\expandafter{\expandafter\pxhy@get@body\pxhy@next}%
   \ifx\pxhy@body\@undefined
     \let\pxhy@next\@secondoftwo
   \else
@@ -1217,21 +1377,60 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   #2{#1}%
 }
 
+%% \pxhy@prepare@txtcmd\CS
+% If \CS is defined and not an encoding-aware command,
+% let \[?\CS] be equivalent to \CS, so that doing
+% \DeclareTextCommand\CS... will keep the original meaning of \CS.
+\@onlypreamble\pxhy@prepare@txtcmd
+\def\pxhy@next#1#2\pxhy@end{%#1='\',#2='cmd'
+  \def\pxhy@prepare@txtcmd##1{%
+    \ifx##1\@undefined\else
+      \def\pxhy@tmpb{\pxhy@prepare@txtcmd@c##1}%
+      \expandafter\pxhy@prepare@txtcmd@a\meaning##1{}->#1 \pxhy@end
+    \fi
+  }%
+  \def\pxhy@prepare@txtcmd@a##1->#1##2 ##3\pxhy@end{%
+    \pxhy@prepare@txtcmd@b##2_{}-#2_\pxhy@end
+  }%
+  \def\pxhy@prepare@txtcmd@b##1-#2_##2\pxhy@end{%
+    % if not an encoding-aware command...
+    \ifx\pxhy@mt##2\pxhy@mt \pxhy@tmpb \fi
+  }%
+}\expandafter\pxhy@next\string\cmd\pxhy@end
+\def\pxhy@prepare@txtcmd@c#1{%
+  \expandafter\let\csname?\string#1\endcsname#1%
+}
+
 %% \pxhy@get@body{<jis>}{<ucs>}
 \@onlypreamble\pxhy@get@body
+\@onlypreamble\pxhy@get@body@a
+\def\pxhy@get@body#1#2{%
+  \edef\pxhy@next{%
+   {\ifx\pxhy@mt#1\pxhy@mt -1\else \jis"#1\fi}%
+   {\ifx\pxhy@mt#2\pxhy@mt
+      \ifx\pxhy@mt#1\pxhy@mt -1%
+      \else\ifpxhy@uptex \jis"#1%
+      \else\ifpxhy@toucs@avail \toucs\jis"#1%
+      \else -1\fi\fi\fi
+    \else \number"#2%
+    \fi}}%
+  \expandafter\pxhy@get@body@a\pxhy@next
+}
 \ifpxhy@uptex                   %<*upTeX>
-  \def\pxhy@get@body#1#2{%
-    \pxhy@get@jchar{\ucs"#2}%
+  \def\pxhy@get@body@a#1#2{%
+    \pxhy@get@jchar{\ifnum#2<\z@ "FFFD\else#2\fi}%
     \let\pxhy@body\pxhy@jchar
   }%
 \else\ifpxhy@hy@unicode         %<*unicode>
-  \def\pxhy@get@body#1#2{%
-    \def\pxhy@body{\unichar{"#2}}%
+  \def\pxhy@get@body@a#1#2{%
+    \edef\pxhy@body{%
+      \noexpand\unichar{\ifnum#2<\z@ "FFFD\else#2\fi}}%
   }%
 \else\ifpxhy@uniescape          %<*uniescape>
     \def\pxhy@get@body#1#2{%
       \ifx\pxhy@mt#1\pxhy@mt
-        \def\pxhy@body{\0x#2}%
+        \edef\pxhy@body{\noexpand\0x%
+          \ifx\pxhy@mt#2\pxhy@mt FFFD\else#2\fi}%
       \else
         \pxhy@get@jchar{\jis"#1}%
         \let\pxhy@body\pxhy@jchar
@@ -1239,14 +1438,14 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
     }%
 \else                           %<*!>
   \chardef\pxhy@cc@jis@only=1
-    \def\pxhy@get@body#1#2{%
-      \ifx\pxhy@mt#1\pxhy@mt
-        \let\pxhy@body\@undefined
-      \else
-        \pxhy@get@jchar{\jis"#1}%
-        \let\pxhy@body\pxhy@jchar
-      \fi
-    }%
+  \def\pxhy@get@body@a#1#2{%
+    \ifnum#1<\z@
+      \let\pxhy@body\@undefined
+    \else
+      \pxhy@get@jchar{#1}%
+      \let\pxhy@body\pxhy@jchar
+    \fi
+  }%
 \fi\fi\fi                       %</>
 
 %%%%%%%%%%%%%%%%%%%% the definitions
@@ -1695,14 +1894,14 @@ pxhy@fallback@geta = \ifpxhy@fallback@geta true\else false\fi^^J%
   %% register to 'disable' list
   \ltx@GlobalPrependToMacro\pdfstringdefPreHook{\pxhy@disable@tc@commands}
 
-\else                           %<*!textcmd>
+\else                           %<*!charcmds>
 
 \@onlypreamble\pxDeclarePdfTextCommand
 \newcommand*\pxDeclarePdfTextCommand[3]{}
 \@onlypreamble\pxDeclarePdfTextComposite
 \newcommand*\pxDeclarePdfTextComposite[4]{}
 
-\fi                             %</textcmd>
+\fi                             %</charcmds>
 %--------------------------------------- Enable hyperref unicode
 \ifpxhy@hy@unicode
 

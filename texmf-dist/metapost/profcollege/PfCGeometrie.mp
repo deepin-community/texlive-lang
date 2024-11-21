@@ -526,6 +526,8 @@ enddef;
 vardef marque_para(expr dd,ee,pa)=
   save im;
   picture im;
+  string totem;
+  totem="//";
   pair kk,ll,mn,mo;
   kk=point(pa*length dd) of dd;
   ll=projection(kk,point(0.25*length ee) of ee,point(0.5*length ee) of ee);
@@ -534,7 +536,8 @@ vardef marque_para(expr dd,ee,pa)=
   im=image(
     drawarrow mo--kk;
     drawarrow symetrie(mo,mn)--ll;
-    label(btex // etex,mn);
+%    label(btex $//$ etex,mn);
+    label(totem,mn);
     );
   im
 enddef;
@@ -551,13 +554,14 @@ vardef marque_Para(text totem)(expr dd,ee,pa)=
       drawarrow (mn{dir(210+angle(mn-mo))}..{dir(150+angle(mn-mo))}kk) cutbefore cercles(mn,3mm);
     drawarrow symetrie((mn{dir(210+angle(mn-mo))}..{dir(150+angle(mn-mo))}kk) cutbefore cercles(mn,3mm),mn);
     trace cercles(mn,3mm);
-    for p_=totem:
-    if p_="":
-      label(btex // etex ,mn);
-    else:
-      label(btex ? etex,mn);
-    fi;
-    endfor;
+%    for p_=totem:
+%    if p_="":
+%      label(btex $//$ etex ,mn);
+%    else:
+%      label(btex ? etex,mn);
+    label(totem,mn);
+%    fi;
+%    endfor;
     );
   im
 enddef;

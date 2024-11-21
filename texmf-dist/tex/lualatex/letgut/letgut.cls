@@ -6,13 +6,13 @@
 % -------:| ----------------------------------------------------
 %  letgut:| Class for the newsletter “La Lettre GUTenberg”
 %  Author:| Association GUTenberg
-%  E-mail:| secretariat@gutenberg.eu.org
+%  E-mail:| secretariat@gutenberg-asso.fr
 % License:| Released under the LaTeX Project Public License
 %         | v1.3c or later
 %     See:| http://www.latex-project.org/lppl.txt
 %
-% Copyright (C) 1994-2023 by Association GUTenberg
-%                   <secretariat@gutenberg.eu.org>
+% Copyright (C) 1994-2024 by Association GUTenberg
+%                  <secretariat@gutenberg-asso.fr>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License (LPPL), either
@@ -31,14 +31,21 @@
 % ]{expl3}
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ExplSyntaxOn
-\tl_const:Nn \c__letgut_Lettre_tl { \emph{ Lettre } }
+\tl_const:Nn \c__letgut_Lettre_plain_tl { Lettre }
+\tl_const:Nn \c__letgut_Lettre_tl { \emph{ \c__letgut_Lettre_plain_tl } }
 \tl_const:Nn \c__letgut_Lettres_tl {
   \c__letgut_Lettre_tl \emph{ s }
 }
 \tl_const:Nn \c__letgut_gutenberg_tl { GUTenberg }
 \tl_const:Nn \c__letgut_association_tl { association }
+\tl_const:Nn \c__letgut_Lettre_gutenberg_plain_tl {
+  \c__letgut_Lettre_plain_tl~\c_space_tl \c__letgut_gutenberg_tl
+}
 \tl_const:Nn \c__letgut_Lettre_gutenberg_tl {
   \c__letgut_Lettre_tl~\c_space_tl \c__letgut_gutenberg_tl
+}
+\tl_const:Nn \c__letgut_la_lettre_gutenberg_plain_tl {
+  la~ \c__letgut_Lettre_gutenberg_plain_tl
 }
 \tl_const:Nn \c__letgut_la_lettre_gutenberg_tl {
   la~ \c__letgut_Lettre_gutenberg_tl
@@ -48,8 +55,8 @@
 }
 \ExplSyntaxOff
 \ProvidesExplClass{letgut}
-{2023-05-21}
-{0.9.7}
+{2024-10-30}
+{0.9.12}
 {
   Class for the newsletter “The GUTenberg Letter”
 }
@@ -102,6 +109,70 @@
 \sys_if_engine_luatex:F {
   \msg_fatal:nn{letgut}{Wrong~engine}
 }
+\bool_new:N \g__letgut_tmpa_bool
+\bool_new:N \g__letgut_tmpb_bool
+\box_new:N \g__letgut_tmpa_box
+\box_new:N \g__letgut_tmpb_box
+\clist_new:N \g__letgut_tmpa_clist
+\clist_new:N \g__letgut_tmpb_clist
+\coffin_new:N \g__letgut_tmpa_coffin
+\coffin_new:N \g__letgut_tmpb_coffin
+\dim_new:N \g__letgut_tmpa_dim
+\dim_new:N \g__letgut_tmpb_dim
+\fp_new:N \g__letgut_tmpa_fp
+\fp_new:N \g__letgut_tmpb_fp
+\int_new:N \g__letgut_tmpa_int
+\int_new:N \g__letgut_tmpb_int
+\ior_new:N \g__letgut_tmpa_ior
+\ior_new:N \g__letgut_tmpb_ior
+\iow_new:N \g__letgut_tmpa_iow
+\iow_new:N \g__letgut_tmpb_iow
+\muskip_new:N \g__letgut_tmpa_muskip
+\muskip_new:N \g__letgut_tmpb_muskip
+\prop_new:N \g__letgut_tmpa_prop
+\prop_new:N \g__letgut_tmpb_prop
+\regex_new:N \g__letgut_tmpa_regex
+\regex_new:N \g__letgut_tmpb_regex
+\seq_new:N \g__letgut_tmpa_seq
+\seq_new:N \g__letgut_tmpb_seq
+\skip_new:N \g__letgut_tmpa_skip
+\skip_new:N \g__letgut_tmpb_skip
+\str_new:N \g__letgut_tmpa_str
+\str_new:N \g__letgut_tmpb_str
+\tl_new:N \g__letgut_tmpa_tl
+\tl_new:N \g__letgut_tmpb_tl
+\bool_new:N \l__letgut_tmpa_bool
+\bool_new:N \l__letgut_tmpb_bool
+\box_new:N \l__letgut_tmpa_box
+\box_new:N \l__letgut_tmpb_box
+\clist_new:N \l__letgut_tmpa_clist
+\clist_new:N \l__letgut_tmpb_clist
+\coffin_new:N \l__letgut_tmpa_coffin
+\coffin_new:N \l__letgut_tmpb_coffin
+\dim_new:N \l__letgut_tmpa_dim
+\dim_new:N \l__letgut_tmpb_dim
+\fp_new:N \l__letgut_tmpa_fp
+\fp_new:N \l__letgut_tmpb_fp
+\int_new:N \l__letgut_tmpa_int
+\int_new:N \l__letgut_tmpb_int
+\ior_new:N \l__letgut_tmpa_ior
+\ior_new:N \l__letgut_tmpb_ior
+\iow_new:N \l__letgut_tmpa_iow
+\iow_new:N \l__letgut_tmpb_iow
+\muskip_new:N \l__letgut_tmpa_muskip
+\muskip_new:N \l__letgut_tmpb_muskip
+\prop_new:N \l__letgut_tmpa_prop
+\prop_new:N \l__letgut_tmpb_prop
+\regex_new:N \l__letgut_tmpa_regex
+\regex_new:N \l__letgut_tmpb_regex
+\seq_new:N \l__letgut_tmpa_seq
+\seq_new:N \l__letgut_tmpb_seq
+\skip_new:N \l__letgut_tmpa_skip
+\skip_new:N \l__letgut_tmpb_skip
+\str_new:N \l__letgut_tmpa_str
+\str_new:N \l__letgut_tmpb_str
+\tl_new:N \l__letgut_tmpa_tl
+\tl_new:N \l__letgut_tmpb_tl
 \bool_new:N \g__letgut_title_empty_bool
 \bool_new:N \g__letgut_paper_bool
 \bool_new:N \l__letgut_in_footnote_bool
@@ -318,7 +389,6 @@
 \seq_new:N \l__letgut_first_last_names_items_seq
 \seq_new:N \g__letgut_included_files_seq
 \seq_new:N \g__letgut_added_bib_resources_seq
-\RequirePackage{l3keys2e}
 \int_new:N \g__letgut_date_month_int
 \int_new:N \g__letgut_date_year_int
 
@@ -496,7 +566,20 @@
   \phantomsection
   \__letgut_old_printbibliography[#1]
   \bool_if:NT \g__letgut_included_files_attached_bool {
-    \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {\seq_gput_right:Nn \g__letgut_included_files_seq {#1}}
+    \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {
+      \file_if_exist:nTF {##1}{
+        \seq_gput_right:Nn \g__letgut_included_files_seq {
+          \attachfile[
+            description={
+              Fichier~ bibliographique~ utilisé~ dans~ le~
+              présent~ article~ (fichier~ `\tl_to_str:n{##1}`)
+            },
+            mimetype=application/x-bib
+          ]
+          {\tl_to_str:n{##1}}
+        }
+      }
+    }
   }
 }
 \defbibheading{title}[\refname]{%
@@ -549,17 +632,17 @@
         \Huge
 % \color_fill:n {black!10}
 \color{black!10}
-\hbox_set:Nn \l_tmpa_box {
+\hbox_set:Nn \l__letgut_tmpa_box {
   \fontsize{0.25\paperwidth}{0.3\paperwidth}
   \selectfont
   \c__letgut_draftwatermark_text_tl
 }
-\hbox_set:Nn \l_tmpb_box {
+\hbox_set:Nn \l__letgut_tmpb_box {
   \hbox_overlap_center:n {
-    \box_use:N \l_tmpa_box
+    \box_use:N \l__letgut_tmpa_box
   }
 }
-\box_rotate:Nn \l_tmpb_box {
+\box_rotate:Nn \l__letgut_tmpb_box {
   \fp_eval:n {
     atand (
     \dim_to_fp:n {\paperheight}
@@ -568,7 +651,7 @@
     )
   }
 }
-\box_use:N \l_tmpb_box
+\box_use:N \l__letgut_tmpb_box
 }
 }
 }
@@ -616,6 +699,10 @@
       }
     }
   }
+  , watermark~ letter .tl_gset:N = \g__letgut_watermark_letter_tl
+  , watermark~ letter .initial:n = g
+  , watermark~ scale .tl_gset:N = \g__letgut_watermark_scale_tl
+  , watermark~ scale .initial:n = 1
   , allcolorslinks .code:n = {
     \colorlet{letgut_allcolors_links}{#1}}
   , allcolorslinks .initial:V
@@ -641,7 +728,7 @@
     }
   }
 }
-\ProcessKeysOptions { letgut }
+\ProcessKeyOptions[ letgut ]
 \AddToHook{begindocument/before}{
   \bool_lazy_and:nnTF {\g__letgut_for_readers_bool} {!\g__letgut_paper_bool}
   {
@@ -659,7 +746,7 @@
 }
 \fancyhf{}
 \fancyhead[RO,LE]{\thepage}
-\fancyhead[RE,LO]{\g__letgut_mark_tl}
+\fancyhead[RE,LO]{\scshape \g__letgut_mark_tl}
 \fancyheadoffset[L]{\c__letgut_hoffset_dim}
 \pagestyle{fancy}
 \reversemarginpar
@@ -755,7 +842,9 @@
   \tl_if_empty:NTF {#1}{
     \phantomsection\addcontentsline{toc}{title}{#2}
   }{
-    \phantomsection\addcontentsline{toc}{title}{#1}
+    \tl_if_empty:NF {#2}{
+      \phantomsection\addcontentsline{toc}{title}{#1}
+    }
   }
 }
 \NewTColorBox{announcement}{ O{} m }
@@ -767,11 +856,13 @@
   overlay~ unbroken~ and~ first ={
     \node[color=\l__letgut_toc_color_announce_tl]~ at~ ([yshift=8pt]title.south)
     {\pgfornament[width=0.4\linewidth]{88}};
-    \node[color=white,anchor=north~ west]~ at~ (frame.north~ west) {\huge\bfseries\aldineright{}};
+    \node[color=white,anchor=north~ west]~ at~ (frame.north~ west)
+    {\huge\bfseries\aldineright{}};
   },
   #1,
   coltitle=\l__letgut_toc_color_announce_tl,
 }
+\int_new:N \g__letgut_rebus_int
 \NewDocumentCommand{\solution}{}{\tcblower}
 \NewDocumentCommand{\displaysolutions}{}{%
   \tcbstoprecording\tcbinputrecords%
@@ -806,25 +897,27 @@
     },
   }
 }
-\NewTColorBox[auto~ counter]{rebus}{+!O{}}{%
+\NewTColorBox{rebus}{+!O{}}{%
+  before~ title~ pre = {\int_gincr:N \g__letgut_rebus_int},
   rebus~ style,
   fonttitle=\bfseries,
   title={Rébus},
-  label={rebus@\thetcbcounter},
-  after~ upper={\vpageref[ci-dessous]{solution@\thetcbcounter}},
+  label={rebus@\int_use:N\g__letgut_rebus_int},
+  after~ upper={\vpageref[ci-dessous]{solution@\int_use:N\g__letgut_rebus_int}},
   after~ upper~ pre={
     \par\bigskip\hfill\scriptsize\itshape
     Solution\c_space_tl
   },
   lowerbox=ignored,
-  savelowerto=rebus-\thetcbcounter.tex,
-  record={\string\rebussolution*[\thetcbcounter][][]},
+  savelowerto=rebus-\int_use:N\g__letgut_rebus_int.tex,
+  record={\string\rebussolution*[\int_use:N\g__letgut_rebus_int][][]},
   #1
 }
 \NewDocumentCommand{\rebussolution}{s +o o O{}}{%
   \IfValueTF{#2}{
     \begin{tcolorbox}[
       rebus~ style,
+      label=solution@\int_use:N\g__letgut_rebus_int,
       halign=justify,
       before~ title={\lefthand{}~Solution~ du~ rébus\c_space_tl},
       title={
@@ -872,7 +965,7 @@
  }
  \str_if_empty:NTF \g__letgut_@title_str {
    \tl_gset:Nn \g__letgut_mark_tl {
-     \textit{\c__letgut_La_lettre_gutenberg_tl}
+     \c__letgut_la_lettre_gutenberg_plain_tl
    }
  }{
    \tl_gset:Nn \g__letgut_mark_tl {
@@ -890,7 +983,7 @@
   {
     \begin{picture}(0,0)
       \put(-2cm,-25.275cm){
-        \includegraphics*[scale=0.96]{
+        \__letgut_orig_includegraphics*[scale=0.96]{
           \c__letgut_banner_file_tl.pdf
         }
       }
@@ -898,9 +991,11 @@
   }
 }{
 \msg_term:nn{letgut}{Banner~file~not~provided}
-  \RequirePackage[pagecolor={\g__letgut_pagecolor_clist}]{
-    letgut-banner
-  }
+  \RequirePackage[
+  , pagecolor = { \g__letgut_pagecolor_clist }
+  , watermark~ letter = { \g__letgut_watermark_letter_tl }
+  , watermark~ scale = { \g__letgut_watermark_scale_tl }
+  ]{letgut-banner}
 }
 \AddToHook{begindocument/end}
 {
@@ -1216,7 +1311,7 @@
 }
 \NewDocumentCommand {\francophony} {  } {
   \raisebox{-1.5pt}{
-    \includegraphics*[width=\f@size pt]{
+    \__letgut_orig_includegraphics*[width=\f@size pt]{
       letgut-francophony-icon
     }
   }
@@ -1238,17 +1333,17 @@
 }
 \cs_new_protected:Npn \__letgut_titlecase_name:n #1
 {
-  \seq_set_split:Nnn \l_tmpa_seq { - }  {#1}
-  \seq_set_map_x:NNn \l_tmpb_seq \l_tmpa_seq {
+  \seq_set_split:Nnn \l__letgut_tmpa_seq { - }  {#1}
+  \seq_set_map_x:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {
     \text_titlecase_first:n{ \text_lowercase:n {##1} }
   }
-  \tl_set:Nx \l_tmpa_tl {\seq_use:Nn \l_tmpb_seq {-}}
-  \seq_clear:N \l_tmpa_seq
-  \seq_set_split:NnV \l_tmpa_seq { ~ }  { \l_tmpa_tl }
-  \seq_set_map_x:NNn \l_tmpb_seq \l_tmpa_seq {
+  \tl_set:Nx \l__letgut_tmpa_tl {\seq_use:Nn \l__letgut_tmpb_seq {-}}
+  \seq_clear:N \l__letgut_tmpa_seq
+  \seq_set_split:NnV \l__letgut_tmpa_seq { ~ }  { \l__letgut_tmpa_tl }
+  \seq_set_map_x:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {
     \text_titlecase_first:n{##1}
   }
-  \seq_use:Nn \l_tmpb_seq {~}
+  \seq_use:Nn \l__letgut_tmpb_seq {~}
 }
 \cs_new_protected:Nn \__letgut_person_last_name:n
 {
@@ -1272,20 +1367,20 @@
 \cs_new_protected:Npn \__letgut_process_list:nn #1 #2
 {
   \seq_clear:N \l__letgut_items_seq
-  \seq_set_split:Nnn \l_tmpa_seq {~and~} {#2}
+  \seq_set_split:Nnn \l__letgut_tmpa_seq {~and~} {#2}
   \IfBooleanT{#1}{
-    \seq_sort:Nn \l_tmpa_seq
+    \seq_sort:Nn \l__letgut_tmpa_seq
     {
       \str_compare:nNnTF { ##1 } > { ##2 }
       { \sort_return_swapped: }
       { \sort_return_same: }
     }
   }
-  \seq_map_inline:Nn \l_tmpa_seq {
-    \seq_set_from_clist:Nn \l_tmpb_seq {##1}
-    \seq_pop_left:NN \l_tmpb_seq \l_letgut_last_name_tl
-    \seq_pop_left:NN \l_tmpb_seq \l_letgut_first_name_tl
-    \seq_pop_left:NN \l_tmpb_seq \l_letgut_title_tl
+  \seq_map_inline:Nn \l__letgut_tmpa_seq {
+    \seq_set_from_clist:Nn \l__letgut_tmpb_seq {##1}
+    \seq_pop_left:NN \l__letgut_tmpb_seq \l_letgut_last_name_tl
+    \seq_pop_left:NN \l__letgut_tmpb_seq \l_letgut_first_name_tl
+    \seq_pop_left:NN \l__letgut_tmpb_seq \l_letgut_title_tl
     \seq_put_right:Nx \l__letgut_items_seq {
       \quark_if_no_value:NTF \l_letgut_first_name_tl {
         \__letgut_person_last_name:n {
@@ -1377,13 +1472,13 @@
 }
 \cs_new_protected:Nn \__letgut_software:nn
 {
-\seq_set_split:Nnn \l_tmpa_seq { ~ } { #2 }
-  \seq_set_map:NNn \l_tmpb_seq \l_tmpa_seq {{\l__letgut_softwares_font_switch_tl ##1}}
+\seq_set_split:Nnn \l__letgut_tmpa_seq { ~ } { #2 }
+  \seq_set_map:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {{\l__letgut_softwares_font_switch_tl ##1}}
   \tl_if_empty:nTF {#1}
   {
-    \seq_use:Nn \l_tmpb_seq { ~ }
+    \seq_use:Nn \l__letgut_tmpb_seq { ~ }
   }{
-    \href{#1}{ \seq_use:Nn \l_tmpb_seq { ~ } }
+    \href{#1}{ \seq_use:Nn \l__letgut_tmpb_seq { ~ } }
   }
 }
 \cs_new_protected:Nn \__letgut_file:n
@@ -1486,14 +1581,14 @@
   \tl_if_empty:nTF {#1}{
     \int_use:N \g__letgut_number_int
   }{
-    \tl_set:Nx \l_tmpa_tl {\tl_head:n { #1 }}
-    \tl_set:Nn \l_tmpb_tl { #1 }
-    \tl_case:NnF \l_tmpa_tl {
-      {\c__letgut_plus_tl}  {\int_eval:n {\g__letgut_number_int\l_tmpa_tl\tl_range:Nnn \l_tmpb_tl { 2 } { -1 }}}
-      {\c__letgut_minus_tl} {\int_eval:n {\g__letgut_number_int\l_tmpa_tl\tl_range:Nnn \l_tmpb_tl { 2 } { -1 }}}
+    \tl_set:Nx \l__letgut_tmpa_tl {\tl_head:n { #1 }}
+    \tl_set:Nn \l__letgut_tmpb_tl { #1 }
+    \tl_case:NnF \l__letgut_tmpa_tl {
+      {\c__letgut_plus_tl}  {\int_eval:n {\g__letgut_number_int\l__letgut_tmpa_tl\tl_range:Nnn \l__letgut_tmpb_tl { 2 } { -1 }}}
+      {\c__letgut_minus_tl} {\int_eval:n {\g__letgut_number_int\l__letgut_tmpa_tl\tl_range:Nnn \l__letgut_tmpb_tl { 2 } { -1 }}}
       {\c__letgut_dot_tl}   {\int_use:N \g__letgut_number_int}
     }
-    {\l_tmpb_tl}
+    {\l__letgut_tmpb_tl}
   }
 }
 \NewDocumentCommand { \lettrenumber } { s O{} } {
@@ -1784,15 +1879,19 @@
   \citeauthor
 }
 \RenewDocumentCommand {\citeauthor} { O{} O{} m } {
-  \AtNextCite{\DeclareNameAlias{labelname}{given-family}}
+  \AtNextCite{
+    \DeclareNameAlias{labelname}{given-family}
+    \protected\def\mkbibnamefamily#1{%
+      \textnohyphenation{#1}}%
+  }
   \__letgut_old_citeauthor[#1][#2]{#3}
 }
-\tl_new:N \g__letgut_bookreview_frontcover_tl
+\tl_new:N \l__letgut_bookreview_frontcover_tl
 \tl_new:N \g__letgut_bookreview_bibkey_tl
 \keys_define:nn { letgut/bookreview }
 {
   title .tl_gset:N = \g__letgut_bookreview_title_tl,
-  frontcover .tl_gset:N = \g__letgut_bookreview_frontcover_tl,
+  frontcover .tl_set:N = \l__letgut_bookreview_frontcover_tl,
   bibkey .tl_gset:N = \g__letgut_bookreview_bibkey_tl,
   reviewer .tl_gset:N = \g__letgut_bookreview_reviewer_tl,
   price .tl_gset:N = \g__letgut_bookreview_price_tl,
@@ -1805,49 +1904,63 @@ title .value_required:n = true,
 \cs_generate_variant:Nn \msg_error:nnnn { nnVV }
 \NewDocumentEnvironment{bookreview}{ m }
 {
+  \tl_gclear:N \g__letgut_bookreview_price_tl
   \keys_set:nn { letgut/bookreview } { #1 }
   \section{\g__letgut_bookreview_title_tl}
-  \tl_if_empty:NTF \g__letgut_bookreview_frontcover_tl {
+  \tl_if_empty:NTF \l__letgut_bookreview_frontcover_tl {
     \msg_warning:nnV{letgut}{frontcover-missing}{
       \g__letgut_bookreview_title_tl
     }
   }{
 \clist_map_inline:Nn \Gin@extensions {
-      \file_if_exist:nT{\g__letgut_bookreview_frontcover_tl##1}{
-        \bool_set_true:N \l_tmpa_bool
-        \clist_map_break:
-      }
-    }
-    \bool_if:NTF \l_tmpa_bool {
-      \marginpar{
-        \hspace*{\c__letgut_bookreview_frontcover_margin_sep_dim}
-        % \raggedleft
-        \raisebox{-\totalheight}{
-          \fbox{
-            \includegraphics[width=-\c__letgut_title_hoffset_dim]{
-              \g__letgut_bookreview_frontcover_tl
-            }
-          }
+  \file_if_exist:nT{\l__letgut_bookreview_frontcover_tl##1}{
+    \bool_set_true:N \l__letgut_tmpa_bool
+    \clist_map_break:
+  }
+}
+\bool_if:NTF \l__letgut_tmpa_bool {
+  \marginpar{
+    \hspace*{\c__letgut_bookreview_frontcover_margin_sep_dim}
+    % \raggedleft
+    \raisebox{-\totalheight}{
+      \fbox{
+        \includegraphics*[width=-\c__letgut_title_hoffset_dim]{
+          \l__letgut_bookreview_frontcover_tl
         }
       }
-    }{
-      \msg_error:nnVV
-      {letgut}
-      {frontcover-file-not-found}
-      {\g__letgut_bookreview_title_tl}
-      {\g__letgut_bookreview_frontcover_tl}
     }
   }
-  \noindent
-  \textsf{\fullcite{\g__letgut_bookreview_bibkey_tl}}
-  \tl_if_empty:NF \g__letgut_bookreview_price_tl{
-    .\c_space_tl\g__letgut_bookreview_price_tl\c_space_tl €
-  }
-  \par
+}{
+  \msg_error:nnVV
+  {letgut}
+  {frontcover-file-not-found}
+  {\g__letgut_bookreview_title_tl}
+  {\l__letgut_bookreview_frontcover_tl}
+}
+}
+\noindent
+\textsf{\fullcite{\g__letgut_bookreview_bibkey_tl}}
+\tl_if_empty:NF \g__letgut_bookreview_price_tl{
+  .\c_space_tl\g__letgut_bookreview_price_tl\c_space_tl €
+}
+\par
 }{
   \exp_args:NV \author{\g__letgut_bookreview_reviewer_tl}
   \bool_if:NT \g__letgut_included_files_attached_bool {
-    \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {\seq_gput_right:Nn \g__letgut_included_files_seq {##1}}
+    \seq_map_inline:Nn \g__letgut_added_bib_resources_seq {
+      \file_if_exist:nTF {##1}{
+        \seq_gput_right:Nn \g__letgut_included_files_seq {
+          \attachfile[
+            description={
+              Fichier~ bibliographique~ utilisé~ dans~ le~
+              présent~ article~ (fichier~ `\tl_to_str:n{##1}`)
+            },
+            mimetype=application/x-bib
+          ]
+          {\tl_to_str:n{##1}}
+        }
+      }
+    }
   }
 }
 \DeclareRobustCommand*\LKey[1]{%
@@ -1925,23 +2038,28 @@ title .value_required:n = true,
   }
 }
 \cs_new_protected:Npn \__letgut_attach_non_empty_existing_file:n #1 {
-  \file_get_size:nN {./#1} \tmpa_tl
-  \quark_if_no_value:NF \tmpa_tl {
-    \tl_if_eq:NnF \tmpa_tl {0} {
-      \seq_gput_left:Nn \g__letgut_included_files_seq {
-        \attachfile[
-        description={Source~ nécessaire~ (fichier~ `#1.tex`)},
-        mimetype=application/x-tex]
-        {#1.tex}
+  \file_get_size:nN {./#1.tex} \l__letgut_tmpa_tl
+  \quark_if_no_value:NF \l__letgut_tmpa_tl {
+    \tl_if_eq:NnF \l__letgut_tmpa_tl {0} {
+      \file_if_exist:nTF {##1}{
+        \seq_gput_left:Nn \g__letgut_included_files_seq {
+          \attachfile[
+            description={Source~ nécessaire~ (fichier~ `#1.tex`)},
+            mimetype=application/x-tex]
+          {#1.tex}
+        }
       }
     }
   }
 }
 \cs_new_protected:Npn \__letgut_input_article:nn #1 #2
 {
+  \FloatBarrier
   \lstset{ style=__letgut_reset_listings_styles }
   \acresetall%
-  \input{#2}%
+  \begin{refsection}
+    \input{#2}%
+  \end{refsection}
   \bool_if:NT \g__letgut_included_files_attached_bool {
     \IfBooleanF {#1}{
       \__letgut_attach_non_empty_existing_file:n {
@@ -1967,7 +2085,7 @@ title .value_required:n = true,
         }
       }
       \seq_remove_duplicates:N \g__letgut_included_files_seq
-      \marginpar{\seq_use:Nn \g__letgut_included_files_seq { } }
+      \seq_use:Nn \g__letgut_included_files_seq { \c_space_tl }
       \seq_clear:N \g__letgut_included_files_seq
       \bool_gset_false:N \g__letgut_acronyms_file_attached_bool
       \bool_gset_false:N \g__letgut_lstlanguage_file_attached_bool
@@ -1978,10 +2096,10 @@ title .value_required:n = true,
   \__letgut_input_article:nn { #1 } { #2 }
 }
 \NewCommandCopy {\__letgut_orig_includegraphics} {\includegraphics}
-\clist_set:Nx \l_tmpa_clist {\Gin@extensions}
+\clist_set:Nx \l__letgut_tmpa_clist {\Gin@extensions}
 \cs_new_protected:Npn \__letgut_includegraphics:nnn #1 #2 #3
 {
-  \file_if_exist:nTF {#3} {
+  \file_if_exist:nTF {./#3} {
     \bool_if:NT \g__letgut_included_files_attached_bool {
       \IfBooleanF {#1}{
         \seq_gput_left:Nn \g__letgut_included_files_seq {
@@ -1991,16 +2109,15 @@ title .value_required:n = true,
             présent~ article~ (fichier~ `#3`)
           },
           mimetype=image
-          ]
-          {#3}
+          ]{./#3}
         }
       }
     }
-    \__letgut_orig_includegraphics[#2]{#3}
+    \__letgut_orig_includegraphics[#2]{./#3}
   }{
-    \bool_gset_false:N \g_tmpa_bool
-    \clist_map_inline:Nn \l_tmpa_clist {%
-      \file_if_exist:nTF {#3##1} {
+    \bool_gset_false:N \g__letgut_tmpa_bool
+    \clist_map_inline:Nn \l__letgut_tmpa_clist {%
+      \file_if_exist:nT {./#3##1} {
         \clist_map_break:n {
           \bool_if:NT \g__letgut_included_files_attached_bool {
             \IfBooleanF {#1}{
@@ -2008,58 +2125,70 @@ title .value_required:n = true,
                 \attachfile[
                 description={Fichier~ image~ inclus~ dans~ le~ présent~ article~ (fichier~ `#3##1`)},
                 mimetype=image/##1
-                ]
-                {#3##1}
+                ]{./#3##1}
               }
             }
           }
           \__letgut_orig_includegraphics[#2]{#3}
-          \bool_gset_true:N \g_tmpa_bool
+          \bool_gset_true:N \g__letgut_tmpa_bool
         }
       }
     }
-    \bool_if:NF \g_tmpa_bool {
-      \@latex@error{File~ `#3'~ not~ found}%
-      {I~ could~ not~ locate~ the~ file~ with~ any~ of~ these~ extensions:^^J%
-        \clist_use:Nn \l_tmpa_clist { ~ }^^J\@ehc}%
-    }
+    % \bool_if:NF \g__letgut_tmpa_bool {
+    %   \@latex@error{File~ `#3'~ not~ found}%
+    %   {I~ could~ not~ locate~ the~ file~ with~ any~ of~ these~ extensions:^^J%
+    %     \clist_use:Nn \l__letgut_tmpa_clist { ~ }^^J\@ehc}%
+    % }
   }
 }
 \RenewDocumentCommand {\includegraphics} {s O{} m } {
   \__letgut_includegraphics:nnn {#1} {#2} {#3}
 }
+\cs_new:Nn \__letgut_extract_file_for:nn
+{
+  \seq_clear:N \g__letgut_added_bib_resources_seq
+  \regex_extract_all:nnNT
+  {
+    \c{ #1 } \[?.*?\]?        \{ ( .*? ) \}
+  }
+  {
+    #2
+  }
+  \g__letgut_added_bib_resources_seq
+  {
+    \seq_map_indexed_inline:Nn \g__letgut_added_bib_resources_seq {
+      \int_if_odd:nT {##1}
+      {
+        \seq_gset_item:Nnn \g__letgut_added_bib_resources_seq {##1} {}
+      }
+    }
+    \seq_gremove_duplicates:N \g__letgut_added_bib_resources_seq
+    \seq_gpop:NN \g__letgut_added_bib_resources_seq \l_tmpa_tl
+  }
+}
 \NewCommandCopy {\__letgut_orig_addbibresource} {\addbibresource}
 \cs_new_protected:Npn \__letgut_addbibresource:nnn #1 #2 #3
 {
-  \file_if_exist:nT {#3} {
-    \IfBooleanF {#1}{
-      \seq_gput_left:Nn \g__letgut_added_bib_resources_seq {
-        \attachfile[
-        description={
-          Source~ du~ fichier~ bibliographique~ utilisé~
-          dans~ le~ présent~ article~ (fichier~ `#3`)
-        },
-        mimetype=application/x-bibtex
-        ]%
-        {#3}%
-      }
-    }
-  }
   \__letgut_orig_addbibresource[#2]{#3}
 }
 \RenewDocumentCommand {\addbibresource} { s O{} m } {
   \__letgut_addbibresource:nnn {#1} {#2} {#3}
 }
+\AddToHookWithArguments{cmd/sa@gobble/before}{
+  \__letgut_extract_file_for:nn { addbibresource }{ #1 }
+}
 \bool_if:NT \g__letgut_included_files_attached_bool {
   \tl_const:Nn \c__letgut_acronyms_file_attached_tl {
-    \attachfile[
-    description={
-      Source~ du~ fichier~ d'acronymes~ utilisé~ dans~
-      le~ présent~ article~
-      (fichier~ `\c__letgut_acronyms_file_tl.tex`)
-    },
-    mimetype=application/x-tex]%
-    {\g__letgut_effective_acronyms_file_tl}%
+    \file_if_exist:nTF {\g__letgut_effective_acronyms_file_t}{
+      \attachfile[
+        description={
+          Source~ du~ fichier~ d'acronymes~ utilisé~ dans~
+          le~ présent~ article~
+          (fichier~ `\c__letgut_acronyms_file_tl.tex`)
+        },
+        mimetype=application/x-tex]%
+      {\g__letgut_effective_acronyms_file_tl}%
+    }
   }
   \AddToHook{cmd/ac/before}{
     \bool_gset_true:N \g__letgut_acronyms_file_attached_bool
@@ -2069,15 +2198,19 @@ title .value_required:n = true,
   }
 }
 \bool_if:NT \g__letgut_included_files_attached_bool {
-  \tl_const:Nn \c__letgut_lstlanguage_file_attached_tl {
-    \attachfile[
-    description={
-      Source~ du~ fichier~ de~ langages~ informatiques~ utilisé~
-      dans~ le~ présent~ article~
-      (fichier~ `\c__letgut_lstlanguage_file_tl`)
-    },
-    mimetype=application/x-tex]%
-    {../\c__letgut_lstlanguage_file_tl}%
+  \file_if_exist:nTF {../\c__letgut_lstlanguage_file_tl}{
+    \tl_const:Nn \c__letgut_lstlanguage_file_attached_tl {
+      \attachfile[
+        description={
+          Source~ du~ fichier~ de~ langages~ informatiques~ utilisé~
+          dans~ le~ présent~ article~
+          (fichier~ `\c__letgut_lstlanguage_file_tl`)
+        },
+        mimetype=application/x-tex]%
+      {../\c__letgut_lstlanguage_file_tl}%
+    }
+  }{
+    \tl_const:Nn \c__letgut_lstlanguage_file_attached_tl {}
   }
   \AddToHook{env/ltx-code/before}{
     \bool_gset_true:N \g__letgut_lstlanguage_file_attached_bool
@@ -2194,14 +2327,14 @@ literate=*%
 }
 \cs_new_protected:Npn \__letgut_title_code_result_box:n #1
 {
-  Exemple~ \thetcbcounter
+  Exemple\nobreakspace\thetcbcounter
   \tl_if_empty:NF {#1} { \hypersetup{hidelinks} \c_space_tl :~#1 }
 }
 \cs_new_protected:Nn \__letgut_on_callout_page:nn
 {
-  \tl_set:Nn \l_tmpa_int {\getpagerefnumber{#1}}
-  \tl_set:Nn \l_tmpb_int {\thepage}
-  \int_compare:nNnF {\l_tmpa_int} = {\l_tmpb_int}
+  \tl_set:Nn \l__letgut_tmpa_int {\getpagerefnumber{#1}}
+  \tl_set:Nn \l__letgut_tmpb_int {\thepage}
+  \int_compare:nNnF {\l__letgut_tmpa_int} = {\l__letgut_tmpb_int}
   {#2}
 }
 \tl_set:Nn \l__letgut_reference_text_tl {
@@ -2245,17 +2378,17 @@ sidebyside@true/.code={%
   \pgfkeysalso{floatplacement=ht}%
   \pgfkeysalso{float}%
   \pgfkeysalso{label={\g__letgut_label_ltx_example_str}}%
-  \tl_set:Nx \l_tmpa_tl {
+  \tl_set:Nx \l__letgut_tmpa_tl {
     \getpagerefnumber {
       \g__letgut_callout_label_ltx_example_str
     }
   }
-  \tl_set:Nx \l_tmpb_tl {
+  \tl_set:Nx \l__letgut_tmpb_tl {
     \getpagerefnumber {
       \g__letgut_label_ltx_example_str
     }
   }
-  \tl_if_eq:NNF \l_tmpa_tl \l_tmpb_tl
+  \tl_if_eq:NNF \l__letgut_tmpa_tl \l__letgut_tmpb_tl
   {
     \l__letgut_reference_text_tl
     \tl_set:Nn \l__letgut_reference_text_tl {
@@ -2337,17 +2470,17 @@ overlay={
     \int_use:N \g__letgut_ltx_example_int
   }
   \label{\g__letgut_callout_label_ltx_example_str}
-  \tl_set:Nx \l_tmpa_tl {
+  \tl_set:Nx \l__letgut_tmpa_tl {
     \getpagerefnumber {
       \g__letgut_callout_label_ltx_example_str
     }
   }
-  \tl_set:Nx \l_tmpb_tl {
+  \tl_set:Nx \l__letgut_tmpb_tl {
     \getpagerefnumber {
       \g__letgut_label_ltx_example_str
     }
   }
-  \tl_if_eq:NNF \l_tmpa_tl \l_tmpb_tl
+  \tl_if_eq:NNF \l__letgut_tmpa_tl \l__letgut_tmpb_tl
   {
     \skip_set_eq:NN \intextsep \c__letgut_reduced_intextsep_skip
   }
@@ -2368,25 +2501,25 @@ overlay={
     style=__letgut_reset_listings_styles,%
   }
   \tl_if_empty:nTF {#1} {
-    \tl_set:Nx \l_tmpa_tl {
+    \tl_set:Nx \l__letgut_tmpa_tl {
       alsolanguage={#2}
     }
     \exp_args:NV \__letgut_tcbset:n
     {
-      \l_tmpa_tl
+      \l__letgut_tmpa_tl
     }
   }{
-    \seq_set_from_clist:Nn \l_tmpa_seq {#1}
-    \seq_set_map_x:NNn \l_tmpb_seq \l_tmpa_seq {
+    \seq_set_from_clist:Nn \l__letgut_tmpa_seq {#1}
+    \seq_set_map_x:NNn \l__letgut_tmpb_seq \l__letgut_tmpa_seq {
       alsolanguage={[##1]#2}
     }
-    \tl_set:Nx \l_tmpa_tl
+    \tl_set:Nx \l__letgut_tmpa_tl
     {
-      \seq_use:Nn \l_tmpb_seq {,}
+      \seq_use:Nn \l__letgut_tmpb_seq {,}
     }
     \exp_args:NV \__letgut_tcbset:n
     {
-      \l_tmpa_tl
+      \l__letgut_tmpa_tl
     }
   }
 }
@@ -2502,62 +2635,40 @@ overlay={
       style=__letgut_terminal_listings_style,
       language=terminal,
     },
-    every~ listing~ line={%
-      \textcolor{__letgut_terminal_prompt}{%
-        \ttfamily%
-        \bfseries%
-        \__letgut_unselectable:n {#1\c_space_tl}
-      }
-    },
+    fontupper=\ttfamily,
+    fontlower=\ttfamily,
   },
 }
 \cs_new_protected:Npn \__letgut_terminal:nnnn #1 #2 #3 #4
 {
-  \bool_set_false:N \l_tmpa_bool
-  \tl_if_empty:nF {#3}{
-      \tcbset{tempfile=\jobname-stdin.tex}
-      \exp_args:Nx \scantokens
-      {
-        \token_to_str:N\begin{tcbwritetemp}
-          #3
-        \token_to_str:N\end{tcbwritetemp}
-      }
-    }
-    \tl_if_empty:nF {#4}{
-      \tcbset{tempfile=\jobname-stdout.tex}
-      \exp_args:Nx \scantokens
-      {
-        \token_to_str:N\begin{tcbwritetemp}
-          #4
-        \token_to_str:N\end{tcbwritetemp}
-      }
-    }
+  \bool_set_false:N \l__letgut_tmpa_bool
     \tl_if_empty:nTF {#3}{
       \tl_if_empty:nTF {#4}{
-        \bool_set_true:N \l_tmpa_bool
+        \bool_set_true:N \l__letgut_tmpa_bool
       }{
         \tcbset{colback=__letgut_background_terminal_stdout}
       }
     }{
       \tcbset{colback=__letgut_background_terminal_stdin}
-      \tl_if_empty:nTF {#4}{
-      }{
+      \tl_if_empty:nF {#4}{
         \tcbset{
           bicolor,
-          middle=0mm,
-          boxsep=0mm,
           colbacklower=__letgut_background_terminal_stdout,
         }
       }
     }
-    \bool_if:NF \l_tmpa_bool {
-      \begin{tcolorbox}[terminal={#1},#2]
+    \bool_if:NF \l__letgut_tmpa_bool {
+      \begin{tcolorbox}[terminal,#2]
         \lstset{aboveskip=0pt}
         \tl_if_empty:nF {#3}{
-          \tcbset{
-            tempfile=\jobname-stdin.tex,
+          \tl_if_empty:nF {#1}{
+            \textcolor{__letgut_terminal_prompt}{%
+              \ttfamily%
+              \bfseries%
+              \__letgut_unselectable:n {#1\c_space_tl}
+            }
           }
-          \tcbusetemplisting
+          #3
           \tl_if_empty:nF {#4}{
             \tcblower
           }
@@ -2567,13 +2678,12 @@ overlay={
             \lstset{aboveskip=0pt}
           }
           \tcbset{
-            tempfile=\jobname-stdout.tex,
             every~ listing~ line={},
             listing~ options~ app={
               language={}
             }
           }
-          \tcbusetemplisting
+          #4
         }
       \end{tcolorbox}
     }
@@ -2584,7 +2694,7 @@ overlay={
 }
 \lst@InputCatcodes
 \def\lst@DefEC{%
- \lst@CCECUse \lst@ProcessLetter
+  \lst@CCECUse \lst@ProcessLetter
   ^^80^^81^^82^^83^^84^^85^^86^^87^^88^^89^^8a^^8b^^8c^^8d^^8e^^8f%
   ^^90^^91^^92^^93^^94^^95^^96^^97^^98^^99^^9a^^9b^^9c^^9d^^9e^^9f%
   ^^a0^^a1^^a2^^a3^^a4^^a5^^a6^^a7^^a8^^a9^^aa^^ab^^ac^^ad^^ae^^af%
@@ -2593,10 +2703,16 @@ overlay={
   ^^d0^^d1^^d2^^d3^^d4^^d5^^d6^^d7^^d8^^d9^^da^^db^^dc^^dd^^de^^df%
   ^^e0^^e1^^e2^^e3^^e4^^e5^^e6^^e7^^e8^^e9^^ea^^eb^^ec^^ed^^ee^^ef%
   ^^f0^^f1^^f2^^f3^^f4^^f5^^f6^^f7^^f8^^f9^^fa^^fb^^fc^^fd^^fe^^ff%
-  ^^^^201c^^^^201d% for “ and ”
+  ^^^^201c% for “
+  ^^^^201d% for ”
   ^^^^215b% for ⅛
   ^^^^2122% for ™
   ^^^^2019% for ’
+  ^^^^0153% for œ
+  ^^^^0152% for Œ
+  ^^^^20ac% for €
+  ^^^^27e8% for ⟨
+  ^^^^27e9% for ⟩
   ^^00%
 }
 \lst@RestoreCatcodes

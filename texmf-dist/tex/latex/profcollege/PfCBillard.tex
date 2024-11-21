@@ -1,6 +1,10 @@
 %%%
 % Billard
 %%%
+\def\filedateBillard{2024/08/28}%
+\def\fileversionBillard{0.1a}%
+\message{-- \filedateBillard\space v\fileversionBillard}%
+%
 \newtoks\tokPfCMotBillard{}%
 
 \def\UpdateTokBillard#1\nil{\addtotok\tokPfCMotBillard{"#1"}}%
@@ -227,11 +231,9 @@
 }%
 
 \def\MPBillardSolution#1#2#3{%
-  % \mplibcodeinherit{enable}%
   \mplibforcehmode
   \xdef\PfCNomBillard{\useKV[ClesBillard]{Nom}}
   \begin{mplibcode}[\PfCNomBillard]
-%    Figure(0,0,\useKV[ClesBillard]{Longueur}+2cm,\useKV[ClesBillard]{Largeur}+3cm);
     trace rec;
     % Tracés
     drawarrow Pt[1]--(Pt[1]+1.5cm*unitvector(Pt[2]-Pt[1])) withpen pencircle scaled 1.25;
@@ -253,14 +255,16 @@
     else:
     dotlabel.bot(TEX(substring(0,1) of #1),Pt[1]);
     fi;
+    path segmenttest;
     for k=2 upto BLong:
-    if (demidroite(1/1000[Pt[k-1],Pt[k]],Pt[k]) intersectiontimes cote[1])<>(-1,-1):
+    segmenttest:=(9/10)[Pt[k-1],Pt[k]]--(11/10)[Pt[k-1],Pt[k]];
+    if segmenttest intersectiontimes cote[1]<>(-1,-1):
     dotlabel.bot(TEX(substring(k-1,k) of #1),Pt[k]);
-    elseif (demidroite(1/1000[Pt[k-1],Pt[k]],Pt[k]) intersectiontimes cote[2])<>(-1,-1):
+    elseif segmenttest intersectiontimes cote[2]<>(-1,-1):
     dotlabel.rt(TEX(substring(k-1,k) of #1),Pt[k]);
-    elseif (demidroite(1/1000[Pt[k-1],Pt[k]],Pt[k]) intersectiontimes cote[3])<>(-1,-1):
+    elseif segmenttest intersectiontimes cote[3]<>(-1,-1):
     dotlabel.top(TEX(substring(k-1,k) of #1),Pt[k]);
-    elseif (demidroite(1/1000[Pt[k-1],Pt[k]],Pt[k]) intersectiontimes cote[4])<>(-1,-1):
+    elseif segmenttest intersectiontimes cote[4]<>(-1,-1):
     dotlabel.lft(TEX(substring(k-1,k) of #1),Pt[k]);
     fi;
     endfor;
@@ -270,5 +274,4 @@
     label.top(TEX(substring(k-1,k) of #1),((xpart(Co),5mm)-center Reponse)+(k-1)*(7mm,0)+(2.5mm,0));
     endfor;
   \end{mplibcode}%
-%  \mplibcodeinherit{disable}%
 }%
